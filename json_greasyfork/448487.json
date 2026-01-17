@@ -1,0 +1,33 @@
+{
+  "id": 448487,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-26T10:59:54.000Z",
+  "code_updated_at": "2022-07-29T03:55:01.000Z",
+  "namespace": "local",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 939565,
+      "name": "Nikhil Jain",
+      "created_at": "2022-07-26T10:56:45.000Z",
+      "url": "https://greasyfork.org/users/939565-nikhil-jain"
+    }
+  ],
+  "name": "add url in title bar",
+  "description": "add url in title bar of the web browser",
+  "url": "https://greasyfork.org/scripts/448487-add-url-in-title-bar",
+  "code_url": "https://update.greasyfork.org/scripts/448487/add%20url%20in%20title%20bar.user.js",
+  "code_size": 568,
+  "license": "none",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 492741,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-17T09:35:36.000Z",
+  "code_updated_at": "2024-04-17T10:14:07.000Z",
+  "namespace": "npm/vite-plugin-monkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1158055,
+      "name": "f4bio",
+      "created_at": "2023-08-24T06:45:44.000Z",
+      "url": "https://greasyfork.org/users/1158055-f4bio"
+    }
+  ],
+  "name": "Plan Coordinates NG",
+  "description": "A userscript to make show the coordinates of the picture-elements in HomeAssistant",
+  "url": "https://greasyfork.org/scripts/492741-plan-coordinates-ng",
+  "code_url": "https://update.greasyfork.org/scripts/492741/Plan%20Coordinates%20NG.user.js",
+  "code_size": 30361,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

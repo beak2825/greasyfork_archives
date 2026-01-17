@@ -1,0 +1,34 @@
+{
+  "id": 418670,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-15T18:06:10.000Z",
+  "code_updated_at": "2020-12-15T18:06:10.000Z",
+  "namespace": "jiba.gay",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 702782,
+      "name": "Northman David",
+      "created_at": "2020-11-08T06:39:30.000Z",
+      "url": "https://greasyfork.org/users/702782-northman-david",
+      "scripts": []
+    }
+  ],
+  "name": "Discuz 附件批量辅助",
+  "description": "解决discuz论坛只能单个而无法批量上传附件(注意：这个代码仅限特定网站使用，其他网站不可用...)",
+  "url": "https://greasyfork.org/scripts/418670-discuz-%E9%99%84%E4%BB%B6%E6%89%B9%E9%87%8F%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/418670/Discuz%20%E9%99%84%E4%BB%B6%E6%89%B9%E9%87%8F%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 44367,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

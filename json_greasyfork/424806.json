@@ -1,0 +1,34 @@
+{
+  "id": 424806,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-10T08:27:17.000Z",
+  "code_updated_at": "2021-05-10T08:48:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 756649,
+      "name": "StevenEzio",
+      "created_at": "2021-04-09T07:57:30.000Z",
+      "url": "https://greasyfork.org/users/756649-stevenezio",
+      "scripts": []
+    }
+  ],
+  "name": "CheatYuan",
+  "description": "For TiPaiPai Automatic Item Qs Observing",
+  "url": "https://greasyfork.org/scripts/424806-cheatyuan",
+  "code_url": "https://update.greasyfork.org/scripts/424806/CheatYuan.user.js",
+  "code_size": 9104,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

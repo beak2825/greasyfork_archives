@@ -1,0 +1,35 @@
+[
+  {
+    "id": 417795,
+    "daily_installs": 0,
+    "total_installs": 567,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-04T01:38:27.000Z",
+    "code_updated_at": "2020-12-04T01:39:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 712347,
+        "name": "Ren Baoshuo",
+        "created_at": "2020-12-04T01:33:42.000Z",
+        "url": "https://greasyfork.org/users/712347-ren-baoshuo"
+      }
+    ],
+    "name": "洛谷题目难度修改器",
+    "description": "让您做的每一道洛谷题目都是黑题",
+    "url": "https://greasyfork.org/scripts/417795-%E6%B4%9B%E8%B0%B7%E9%A2%98%E7%9B%AE%E9%9A%BE%E5%BA%A6%E4%BF%AE%E6%94%B9%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/417795/%E6%B4%9B%E8%B0%B7%E9%A2%98%E7%9B%AE%E9%9A%BE%E5%BA%A6%E4%BF%AE%E6%94%B9%E5%99%A8.user.js",
+    "code_size": 380,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

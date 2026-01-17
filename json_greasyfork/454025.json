@@ -1,0 +1,59 @@
+{
+  "id": 454025,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-31T11:43:32.000Z",
+  "code_updated_at": "2022-10-31T11:43:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 977579,
+      "name": "TheLuigiplayer",
+      "created_at": "2022-10-31T11:40:38.000Z",
+      "url": "https://greasyfork.org/users/977579-theluigiplayer",
+      "scripts": [
+        {
+          "id": 454025,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-31T11:43:32.000Z",
+          "code_updated_at": "2022-10-31T11:43:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Autospinner",
+          "description": "Automatic spinner for Kolex.gg",
+          "url": "https://greasyfork.org/scripts/454025-autospinner",
+          "code_url": "https://update.greasyfork.org/scripts/454025/Autospinner.user.js",
+          "code_size": 914,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Autospinner",
+  "description": "Automatic spinner for Kolex.gg",
+  "url": "https://greasyfork.org/scripts/454025-autospinner",
+  "code_url": "https://update.greasyfork.org/scripts/454025/Autospinner.user.js",
+  "code_size": 914,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 467728,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-02T14:10:14.000Z",
+  "code_updated_at": "2023-06-26T10:55:35.000Z",
+  "namespace": "https://forum.blackrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1087424,
+      "name": "Manera",
+      "created_at": "2023-05-30T16:26:31.000Z",
+      "url": "https://greasyfork.org/users/1087424-manera",
+      "scripts": []
+    }
+  ],
+  "name": "Курация администрации // VLADIKAVKAZ",
+  "description": "Мой",
+  "url": "https://greasyfork.org/scripts/467728-%D0%BA%D1%83%D1%80%D0%B0%D1%86%D0%B8%D1%8F-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D0%B8-vladikavkaz",
+  "code_url": "https://update.greasyfork.org/scripts/467728/%D0%9A%D1%83%D1%80%D0%B0%D1%86%D0%B8%D1%8F%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D0%B8%20%20VLADIKAVKAZ.user.js",
+  "code_size": 69189,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

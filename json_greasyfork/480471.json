@@ -1,0 +1,33 @@
+{
+  "id": 480471,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-21T15:59:16.000Z",
+  "code_updated_at": "2025-10-31T11:19:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1203270,
+      "name": "Michal Hornok",
+      "created_at": "2023-10-24T12:47:32.000Z",
+      "url": "https://greasyfork.org/users/1203270-michal-hornok"
+    }
+  ],
+  "name": "UEFA Soupiska",
+  "description": "Tlačítko na soupisku a editorial API",
+  "url": "https://greasyfork.org/scripts/480471-uefa-soupiska",
+  "code_url": "https://update.greasyfork.org/scripts/480471/UEFA%20Soupiska.user.js",
+  "code_size": 6510,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

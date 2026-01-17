@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468355,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-10T10:45:15.000Z",
+    "code_updated_at": "2023-06-10T10:45:14.000Z",
+    "namespace": "https://google.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1095523,
+        "name": "oguz_L",
+        "created_at": "2023-06-10T09:53:04.000Z",
+        "url": "https://greasyfork.org/users/1095523-oguz-l"
+      }
+    ],
+    "name": "Superior Economy 2023",
+    "description": "This will put a music visualizer whenever you search for a currency graph for turkish lira on Google.",
+    "url": "https://greasyfork.org/scripts/468355-superior-economy-2023",
+    "code_url": "https://update.greasyfork.org/scripts/468355/Superior%20Economy%202023.user.js",
+    "code_size": 9303,
+    "license": "GPLV3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 414280,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-23T02:57:49.000Z",
+  "code_updated_at": "2020-11-12T01:55:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 455990,
+      "name": "MashiroCat",
+      "created_at": "2020-03-08T13:40:20.000Z",
+      "url": "https://greasyfork.org/users/455990-mashirocat",
+      "scripts": [
+        {
+          "id": 454036,
+          "daily_installs": 1,
+          "total_installs": 33,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-31T14:26:42.000Z",
+          "code_updated_at": "2022-10-31T14:48:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "豆瓣获取书单数据cnblogs-SimpleMemory",
+          "description": "快速复制豆瓣书籍数据为书单格式",
+          "url": "https://greasyfork.org/scripts/454036-%E8%B1%86%E7%93%A3%E8%8E%B7%E5%8F%96%E4%B9%A6%E5%8D%95%E6%95%B0%E6%8D%AEcnblogs-simplememory",
+          "code_url": "https://update.greasyfork.org/scripts/454036/%E8%B1%86%E7%93%A3%E8%8E%B7%E5%8F%96%E4%B9%A6%E5%8D%95%E6%95%B0%E6%8D%AEcnblogs-SimpleMemory.user.js",
+          "code_size": 2414,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AdminInputer",
+  "description": "phpcms adminHelper!",
+  "url": "https://greasyfork.org/scripts/414280-admininputer",
+  "code_url": "https://update.greasyfork.org/scripts/414280/AdminInputer.user.js",
+  "code_size": 19433,
+  "license": null,
+  "version": "2.7.0",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

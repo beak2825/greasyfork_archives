@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455801,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-01T16:03:02.000Z",
+    "code_updated_at": "2022-12-01T16:05:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 990842,
+        "name": "s9732",
+        "created_at": "2022-12-01T15:50:41.000Z",
+        "url": "https://greasyfork.org/users/990842-s9732"
+      }
+    ],
+    "name": "HideReviewRank",
+    "description": "Boardgamememoの評価を一時的に隠すスクリプト。評価のエリアをマウスオーバーしている間だけ評価の数値が表示されます",
+    "url": "https://greasyfork.org/scripts/455801-hidereviewrank",
+    "code_url": "https://update.greasyfork.org/scripts/455801/HideReviewRank.user.js",
+    "code_size": 1193,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

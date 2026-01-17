@@ -1,0 +1,33 @@
+{
+  "id": 431231,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-23T09:02:32.000Z",
+  "code_updated_at": "2021-08-23T16:24:39.000Z",
+  "namespace": "vk.com/CharaDemon",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 807662,
+      "name": "charademon",
+      "created_at": "2021-08-23T08:11:35.000Z",
+      "url": "https://greasyfork.org/users/807662-charademon"
+    }
+  ],
+  "name": "Content-Replacer",
+  "description": "Кастомные пикчи, мемасики и т.д.",
+  "url": "https://greasyfork.org/scripts/431231-content-replacer",
+  "code_url": "https://update.greasyfork.org/scripts/431231/Content-Replacer.user.js",
+  "code_size": 5311,
+  "license": null,
+  "version": "2.6",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

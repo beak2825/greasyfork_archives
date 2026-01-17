@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436763,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-08T15:35:08.000Z",
+    "code_updated_at": "2021-12-10T09:43:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 850435,
+        "name": "magicwenli",
+        "created_at": "2021-12-08T15:31:30.000Z",
+        "url": "https://greasyfork.org/users/850435-magicwenli"
+      }
+    ],
+    "name": "玫枫跟打器（小鹤音形提示）",
+    "description": "给玫枫跟打器添加一个小鹤音形提示",
+    "url": "https://greasyfork.org/scripts/436763-%E7%8E%AB%E6%9E%AB%E8%B7%9F%E6%89%93%E5%99%A8-%E5%B0%8F%E9%B9%A4%E9%9F%B3%E5%BD%A2%E6%8F%90%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/436763/%E7%8E%AB%E6%9E%AB%E8%B7%9F%E6%89%93%E5%99%A8%EF%BC%88%E5%B0%8F%E9%B9%A4%E9%9F%B3%E5%BD%A2%E6%8F%90%E7%A4%BA%EF%BC%89.user.js",
+    "code_size": 2378,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

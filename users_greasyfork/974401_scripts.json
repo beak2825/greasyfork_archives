@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455940,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-03T15:11:12.000Z",
+    "code_updated_at": "2022-12-03T15:11:12.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 974401,
+        "name": "AstragoDE",
+        "created_at": "2022-10-23T18:43:08.000Z",
+        "url": "https://greasyfork.org/users/974401-astragode"
+      }
+    ],
+    "name": "YouTube chapter auto open",
+    "description": "Automatically opens the YouTube chapter selection.",
+    "url": "https://greasyfork.org/scripts/455940-youtube-chapter-auto-open",
+    "code_url": "https://update.greasyfork.org/scripts/455940/YouTube%20chapter%20auto%20open.user.js",
+    "code_size": 1983,
+    "license": "This work © 2022 by AstragoDE is licensed under CC BY-SA 4.0",
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

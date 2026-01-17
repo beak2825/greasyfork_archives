@@ -1,0 +1,33 @@
+{
+  "id": 442984,
+  "daily_installs": 1,
+  "total_installs": 114,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-08T12:39:59.000Z",
+  "code_updated_at": "2022-04-08T18:12:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 584930,
+      "name": "Therrom",
+      "created_at": "2020-06-11T11:56:20.000Z",
+      "url": "https://greasyfork.org/users/584930-therrom"
+    }
+  ],
+  "name": "Twitch Theatermode",
+  "description": "Auto activate theater mode on twitch",
+  "url": "https://greasyfork.org/scripts/442984-twitch-theatermode",
+  "code_url": "https://update.greasyfork.org/scripts/442984/Twitch%20Theatermode.user.js",
+  "code_size": 614,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

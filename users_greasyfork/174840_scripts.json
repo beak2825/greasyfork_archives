@@ -1,0 +1,35 @@
+[
+  {
+    "id": 430462,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-07T16:03:10.000Z",
+    "code_updated_at": "2021-08-11T16:44:46.000Z",
+    "namespace": "http://blog.gobyte.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174840,
+        "name": "shanlan",
+        "created_at": "2018-03-14T13:03:59.000Z",
+        "url": "https://greasyfork.org/users/174840-shanlan"
+      }
+    ],
+    "name": "培训视频下载",
+    "description": "为培训网页创建视频下载按钮",
+    "url": "https://greasyfork.org/scripts/430462-%E5%9F%B9%E8%AE%AD%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/430462/%E5%9F%B9%E8%AE%AD%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 5611,
+    "license": null,
+    "version": "0.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

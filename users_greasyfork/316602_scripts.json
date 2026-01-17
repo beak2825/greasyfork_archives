@@ -1,0 +1,101 @@
+[
+  {
+    "id": 493052,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-21T03:41:38.000Z",
+    "code_updated_at": "2024-04-21T03:41:38.000Z",
+    "namespace": "ny_gray_remove",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 316602,
+        "name": "諾揚",
+        "created_at": "2019-07-09T14:17:32.000Z",
+        "url": "https://greasyfork.org/users/316602-%E8%AB%BE%E6%8F%9A"
+      }
+    ],
+    "name": "黑白首页，灰白首页，黑色首页去除",
+    "description": "移除部分网站首页的灰白效果",
+    "url": "https://greasyfork.org/scripts/493052-%E9%BB%91%E7%99%BD%E9%A6%96%E9%A1%B5-%E7%81%B0%E7%99%BD%E9%A6%96%E9%A1%B5-%E9%BB%91%E8%89%B2%E9%A6%96%E9%A1%B5%E5%8E%BB%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/493052/%E9%BB%91%E7%99%BD%E9%A6%96%E9%A1%B5%EF%BC%8C%E7%81%B0%E7%99%BD%E9%A6%96%E9%A1%B5%EF%BC%8C%E9%BB%91%E8%89%B2%E9%A6%96%E9%A1%B5%E5%8E%BB%E9%99%A4.user.js",
+    "code_size": 605,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472394,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-04T06:35:47.000Z",
+    "code_updated_at": "2026-01-02T18:21:58.000Z",
+    "namespace": "lr-toolbox-VideoPlay",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 316602,
+        "name": "諾揚",
+        "created_at": "2019-07-09T14:17:32.000Z",
+        "url": "https://greasyfork.org/users/316602-%E8%AB%BE%E6%8F%9A"
+      }
+    ],
+    "name": "💯视频VIP解析 - NY长期维护",
+    "description": "⭕精选解析线路⭕去除广告⭕自由选择站内外解析⭕不能用请联系NY别不好意思",
+    "url": "https://greasyfork.org/scripts/472394-%E8%A7%86%E9%A2%91vip%E8%A7%A3%E6%9E%90-ny%E9%95%BF%E6%9C%9F%E7%BB%B4%E6%8A%A4",
+    "code_url": "https://update.greasyfork.org/scripts/472394/%F0%9F%92%AF%E8%A7%86%E9%A2%91VIP%E8%A7%A3%E6%9E%90%20-%20NY%E9%95%BF%E6%9C%9F%E7%BB%B4%E6%8A%A4.user.js",
+    "code_size": 30277,
+    "license": "MIT License",
+    "version": "2026.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 431019,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-18T17:32:04.000Z",
+    "code_updated_at": "2022-04-13T04:21:18.000Z",
+    "namespace": "DisableSpaceBarScroll",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 316602,
+        "name": "諾揚",
+        "created_at": "2019-07-09T14:17:32.000Z",
+        "url": "https://greasyfork.org/users/316602-%E8%AB%BE%E6%8F%9A"
+      }
+    ],
+    "name": "B站禁用空格下翻",
+    "description": "禁用空格键、UP键、DN键影响滚动条",
+    "url": "https://greasyfork.org/scripts/431019-b%E7%AB%99%E7%A6%81%E7%94%A8%E7%A9%BA%E6%A0%BC%E4%B8%8B%E7%BF%BB",
+    "code_url": "https://update.greasyfork.org/scripts/431019/B%E7%AB%99%E7%A6%81%E7%94%A8%E7%A9%BA%E6%A0%BC%E4%B8%8B%E7%BF%BB.user.js",
+    "code_size": 620,
+    "license": "MIT License",
+    "version": "1.01",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

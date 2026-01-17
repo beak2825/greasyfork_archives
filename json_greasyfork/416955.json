@@ -1,0 +1,33 @@
+{
+  "id": 416955,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-28T11:38:08.000Z",
+  "code_updated_at": "2021-06-12T14:46:10.000Z",
+  "namespace": "http://ziyuandcn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 395339,
+      "name": "Sherwin",
+      "created_at": "2019-11-06T07:30:38.000Z",
+      "url": "https://greasyfork.org/users/395339-sherwin"
+    }
+  ],
+  "name": "试客巴一键申请",
+  "description": "按品类一键申请",
+  "url": "https://greasyfork.org/scripts/416955-%E8%AF%95%E5%AE%A2%E5%B7%B4%E4%B8%80%E9%94%AE%E7%94%B3%E8%AF%B7",
+  "code_url": "https://update.greasyfork.org/scripts/416955/%E8%AF%95%E5%AE%A2%E5%B7%B4%E4%B8%80%E9%94%AE%E7%94%B3%E8%AF%B7.user.js",
+  "code_size": 18774,
+  "license": null,
+  "version": "2.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

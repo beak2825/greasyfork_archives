@@ -1,0 +1,33 @@
+{
+  "id": 440766,
+  "daily_installs": 0,
+  "total_installs": 106,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-01T10:43:25.000Z",
+  "code_updated_at": "2025-11-04T17:57:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 881676,
+      "name": "Ybibo",
+      "created_at": "2022-03-01T05:47:56.000Z",
+      "url": "https://greasyfork.org/users/881676-ybibo"
+    }
+  ],
+  "name": "小叶的b站学习助手（视频时间查询器+视频倍速播放）",
+  "description": "这一款专为B站用户打造的实用小工具，包含了B站视频的倍速播放（支持快捷键和控制面板设置），以及视频时间查询器（够便捷地计算视频的总时长，并根据不同的倍速计算实际的观看时间）。这款工具除了提供精确的时间统计，还具备窗口拖动、动态样式调整等功能，非常适合在B站学习课程的用户使用；2.x版本将“倍速功能”单独拆分到独立UI和单独热键监听中，并且原来的“时间计算”功能保持不变。",
+  "url": "https://greasyfork.org/scripts/440766-%E5%B0%8F%E5%8F%B6%E7%9A%84b%E7%AB%99%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B-%E8%A7%86%E9%A2%91%E6%97%B6%E9%97%B4%E6%9F%A5%E8%AF%A2%E5%99%A8-%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE",
+  "code_url": "https://update.greasyfork.org/scripts/440766/%E5%B0%8F%E5%8F%B6%E7%9A%84b%E7%AB%99%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B%EF%BC%88%E8%A7%86%E9%A2%91%E6%97%B6%E9%97%B4%E6%9F%A5%E8%AF%A2%E5%99%A8%2B%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE%EF%BC%89.user.js",
+  "code_size": 25911,
+  "license": "AGPL License",
+  "version": "2.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

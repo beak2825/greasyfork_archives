@@ -1,0 +1,33 @@
+{
+  "id": 471760,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-26T13:12:18.000Z",
+  "code_updated_at": "2023-07-28T10:09:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber"
+    }
+  ],
+  "name": "Vertragssignature Dr. Lori 2",
+  "description": "Anforderung an GwG - digitale Signatur",
+  "url": "https://greasyfork.org/scripts/471760-vertragssignature-dr-lori-2",
+  "code_url": "https://update.greasyfork.org/scripts/471760/Vertragssignature%20Dr%20Lori%202.user.js",
+  "code_size": 13193,
+  "license": null,
+  "version": "4.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

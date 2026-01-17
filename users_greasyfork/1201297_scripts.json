@@ -130,5 +130,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493467,
+    "daily_installs": 1,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T13:07:16.000Z",
+    "code_updated_at": "2024-04-25T13:07:16.000Z",
+    "namespace": "alienperfect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201297,
+        "name": "Alien Perfect",
+        "created_at": "2023-10-21T14:36:58.000Z",
+        "url": "https://greasyfork.org/users/1201297-alien-perfect"
+      }
+    ],
+    "name": "Auto Next Round (Geoguessr)",
+    "description": "Takes you to the next round immediately after guessing.",
+    "url": "https://greasyfork.org/scripts/493467-auto-next-round-geoguessr",
+    "code_url": "https://update.greasyfork.org/scripts/493467/Auto%20Next%20Round%20%28Geoguessr%29.user.js",
+    "code_size": 1344,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491038,
+    "daily_installs": 0,
+    "total_installs": 74,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-27T21:36:26.000Z",
+    "code_updated_at": "2024-03-27T21:36:26.000Z",
+    "namespace": "alienperfect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201297,
+        "name": "Alien Perfect",
+        "created_at": "2023-10-21T14:36:58.000Z",
+        "url": "https://greasyfork.org/users/1201297-alien-perfect"
+      }
+    ],
+    "name": "Profile Pictures in Friend List (Geoguessr)",
+    "description": "Shows profile pictures in friend list",
+    "url": "https://greasyfork.org/scripts/491038-profile-pictures-in-friend-list-geoguessr",
+    "code_url": "https://update.greasyfork.org/scripts/491038/Profile%20Pictures%20in%20Friend%20List%20%28Geoguessr%29.user.js",
+    "code_size": 1335,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485963,
+    "daily_installs": 0,
+    "total_installs": 278,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-29T10:15:22.000Z",
+    "code_updated_at": "2024-01-29T10:15:22.000Z",
+    "namespace": "alienperfect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201297,
+        "name": "Alien Perfect",
+        "created_at": "2023-10-21T14:36:58.000Z",
+        "url": "https://greasyfork.org/users/1201297-alien-perfect"
+      }
+    ],
+    "name": "Faster Minimap (Geoguessr)",
+    "description": "Close map on hover faster",
+    "url": "https://greasyfork.org/scripts/485963-faster-minimap-geoguessr",
+    "code_url": "https://update.greasyfork.org/scripts/485963/Faster%20Minimap%20%28Geoguessr%29.user.js",
+    "code_size": 1359,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 483541,
+    "daily_installs": 1,
+    "total_installs": 514,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-31T16:44:59.000Z",
+    "code_updated_at": "2025-05-28T10:39:22.000Z",
+    "namespace": "alienperfect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201297,
+        "name": "Alien Perfect",
+        "created_at": "2023-10-21T14:36:58.000Z",
+        "url": "https://greasyfork.org/users/1201297-alien-perfect"
+      }
+    ],
+    "name": "Guess Peek (Geoguessr)",
+    "description": "Click on your pin to see where you've guessed!",
+    "url": "https://greasyfork.org/scripts/483541-guess-peek-geoguessr",
+    "code_url": "https://update.greasyfork.org/scripts/483541/Guess%20Peek%20%28Geoguessr%29.user.js",
+    "code_size": 6894,
+    "license": null,
+    "version": "1.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477953,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-21T15:15:16.000Z",
+    "code_updated_at": "2023-10-22T17:42:10.000Z",
+    "namespace": "alienperfect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201297,
+        "name": "Alien Perfect",
+        "created_at": "2023-10-21T14:36:58.000Z",
+        "url": "https://greasyfork.org/users/1201297-alien-perfect"
+      }
+    ],
+    "name": "Geoguessr Minimap Wizard",
+    "description": "Lets you see satellite imagery, terrain, OpenStreetMap, etc.",
+    "url": "https://greasyfork.org/scripts/477953-geoguessr-minimap-wizard",
+    "code_url": "https://update.greasyfork.org/scripts/477953/Geoguessr%20Minimap%20Wizard.user.js",
+    "code_size": 5014,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

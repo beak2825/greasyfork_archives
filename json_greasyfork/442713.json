@@ -1,0 +1,59 @@
+{
+  "id": 442713,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-04T09:03:19.000Z",
+  "code_updated_at": "2022-04-04T21:43:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 897528,
+      "name": "Dreechu",
+      "created_at": "2022-04-04T08:57:11.000Z",
+      "url": "https://greasyfork.org/users/897528-dreechu",
+      "scripts": [
+        {
+          "id": 442713,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-04T09:03:19.000Z",
+          "code_updated_at": "2022-04-04T21:43:31.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BAC Alliance template",
+          "description": "BAC for r/place",
+          "url": "https://greasyfork.org/scripts/442713-bac-alliance-template",
+          "code_url": "https://update.greasyfork.org/scripts/442713/BAC%20Alliance%20template.user.js",
+          "code_size": 3025,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BAC Alliance template",
+  "description": "BAC for r/place",
+  "url": "https://greasyfork.org/scripts/442713-bac-alliance-template",
+  "code_url": "https://update.greasyfork.org/scripts/442713/BAC%20Alliance%20template.user.js",
+  "code_size": 3025,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

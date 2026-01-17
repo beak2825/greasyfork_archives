@@ -1,0 +1,34 @@
+{
+  "id": 439598,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-05T14:44:03.000Z",
+  "code_updated_at": "2022-02-07T01:05:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 868115,
+      "name": "gogobmn",
+      "created_at": "2022-01-23T05:28:46.000Z",
+      "url": "https://greasyfork.org/users/868115-gogobmn",
+      "scripts": []
+    }
+  ],
+  "name": "Leaderboard in not dumb place",
+  "description": "urmom",
+  "url": "https://greasyfork.org/scripts/439598-leaderboard-in-not-dumb-place",
+  "code_url": "https://update.greasyfork.org/scripts/439598/Leaderboard%20in%20not%20dumb%20place.user.js",
+  "code_size": 3325,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

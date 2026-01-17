@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482773,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-20T18:53:13.000Z",
+    "code_updated_at": "2024-01-17T05:36:37.000Z",
+    "namespace": "https://greasyfork.org/users/1236617",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1236617,
+        "name": "thebanon",
+        "created_at": "2023-12-20T04:09:55.000Z",
+        "url": "https://greasyfork.org/users/1236617-thebanon"
+      }
+    ],
+    "name": "SUPER Thin Core",
+    "description": "A TinyChat Launcher improving moderation, enabling bots, and sharing themes in a compact userscript.",
+    "url": "https://greasyfork.org/scripts/482773-super-thin-core",
+    "code_url": "https://update.greasyfork.org/scripts/482773/SUPER%20Thin%20Core.user.js",
+    "code_size": 25799,
+    "license": "Copyright (C) thebanon",
+    "version": "0.26.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

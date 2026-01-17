@@ -1,0 +1,34 @@
+{
+  "id": 444111,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-28T00:05:54.000Z",
+  "code_updated_at": "2022-10-14T05:46:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 785573,
+      "name": "吴大师",
+      "created_at": "2021-06-21T01:33:16.000Z",
+      "url": "https://greasyfork.org/users/785573-%E5%90%B4%E5%A4%A7%E5%B8%88",
+      "scripts": []
+    }
+  ],
+  "name": "应急管理干部学习",
+  "description": "应急管理干部学习，由吴大师编写",
+  "url": "https://greasyfork.org/scripts/444111-%E5%BA%94%E6%80%A5%E7%AE%A1%E7%90%86%E5%B9%B2%E9%83%A8%E5%AD%A6%E4%B9%A0",
+  "code_url": "https://update.greasyfork.org/scripts/444111/%E5%BA%94%E6%80%A5%E7%AE%A1%E7%90%86%E5%B9%B2%E9%83%A8%E5%AD%A6%E4%B9%A0.user.js",
+  "code_size": 2817,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

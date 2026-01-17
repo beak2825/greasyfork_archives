@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441101,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-07T20:42:37.000Z",
+    "code_updated_at": "2022-03-07T20:42:37.000Z",
+    "namespace": "https://greasyfork.org/ru/users/136230-eisenstein",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 136230,
+        "name": "EisenStein",
+        "created_at": "2017-06-27T12:36:06.000Z",
+        "url": "https://greasyfork.org/users/136230-eisenstein"
+      }
+    ],
+    "name": "Проверка внешних скриптов на соответствие Правилам GreasyFork",
+    "description": "Проверка внешних скриптов на соответствие правилам GreasyFork",
+    "url": "https://greasyfork.org/scripts/441101-%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0-%D0%B2%D0%BD%D0%B5%D1%88%D0%BD%D0%B8%D1%85-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D1%81%D0%BE%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%81%D1%82%D0%B2%D0%B8%D0%B5-%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0%D0%BC-greasyfork",
+    "code_url": "https://update.greasyfork.org/scripts/441101/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0%20%D0%B2%D0%BD%D0%B5%D1%88%D0%BD%D0%B8%D1%85%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2%20%D0%BD%D0%B0%20%D1%81%D0%BE%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%81%D1%82%D0%B2%D0%B8%D0%B5%20%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0%D0%BC%20GreasyFork.user.js",
+    "code_size": 6602,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

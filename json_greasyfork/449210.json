@@ -1,0 +1,34 @@
+{
+  "id": 449210,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-09T09:51:06.000Z",
+  "code_updated_at": "2022-08-09T09:51:06.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 944516,
+      "name": "Jeb Kerman",
+      "created_at": "2022-08-09T02:42:08.000Z",
+      "url": "https://greasyfork.org/users/944516-jeb-kerman",
+      "scripts": []
+    }
+  ],
+  "name": "xlsxStyle.utils.js",
+  "description": "一个导出excel文件的实用工具",
+  "url": "https://greasyfork.org/scripts/449210-xlsxstyle-utils-js",
+  "code_url": "https://update.greasyfork.org/scripts/449210/1079581/xlsxStyleutilsjs.js",
+  "code_size": 29899,
+  "license": null,
+  "version": "0.0.1.20220809095106",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

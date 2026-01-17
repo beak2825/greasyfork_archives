@@ -1,0 +1,101 @@
+[
+  {
+    "id": 490387,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-20T17:28:39.000Z",
+    "code_updated_at": "2024-03-20T17:28:39.000Z",
+    "namespace": "https://userscript.moukaeritai.work/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 747335,
+        "name": "zjplab",
+        "created_at": "2021-03-15T03:23:30.000Z",
+        "url": "https://greasyfork.org/users/747335-zjplab"
+      }
+    ],
+    "name": "ChatGPT Auto Prompt Sender",
+    "description": "Automates sending of the next pre-filled prompt in ChatGPT after the current response completion.",
+    "url": "https://greasyfork.org/scripts/490387-chatgpt-auto-prompt-sender",
+    "code_url": "https://update.greasyfork.org/scripts/490387/ChatGPT%20Auto%20Prompt%20Sender.user.js",
+    "code_size": 2122,
+    "license": "MIT License",
+    "version": "0.9.8.20231001",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474089,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-28T14:58:41.000Z",
+    "code_updated_at": "2024-01-19T16:12:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 747335,
+        "name": "zjplab",
+        "created_at": "2021-03-15T03:23:30.000Z",
+        "url": "https://greasyfork.org/users/747335-zjplab"
+      }
+    ],
+    "name": "LinkedIn Company Matcher Revised",
+    "description": "Check if LinkedIn job company is in IND km sponsor list",
+    "url": "https://greasyfork.org/scripts/474089-linkedin-company-matcher-revised",
+    "code_url": "https://update.greasyfork.org/scripts/474089/LinkedIn%20Company%20Matcher%20Revised.user.js",
+    "code_size": 3754,
+    "license": "Mozilla Public License 2.0",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423577,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-19T14:35:18.000Z",
+    "code_updated_at": "2022-12-28T11:51:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 747335,
+        "name": "zjplab",
+        "created_at": "2021-03-15T03:23:30.000Z",
+        "url": "https://greasyfork.org/users/747335-zjplab"
+      }
+    ],
+    "name": "Stats for Nerds",
+    "description": "Shortcuts for YouTube stats for nerds. Press S to open, press W to close.",
+    "url": "https://greasyfork.org/scripts/423577-stats-for-nerds",
+    "code_url": "https://update.greasyfork.org/scripts/423577/Stats%20for%20Nerds.user.js",
+    "code_size": 1110,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

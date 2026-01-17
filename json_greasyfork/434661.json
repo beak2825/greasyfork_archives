@@ -1,0 +1,33 @@
+{
+  "id": 434661,
+  "daily_installs": 0,
+  "total_installs": 841,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-30T09:40:02.000Z",
+  "code_updated_at": "2022-04-01T17:29:38.000Z",
+  "namespace": "https://gitee.com/linhq1999/OhMyScript",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 651136,
+      "name": "LinHQ1999",
+      "created_at": "2020-06-25T15:44:06.000Z",
+      "url": "https://greasyfork.org/users/651136-linhq1999"
+    }
+  ],
+  "name": "笔趣阁优化",
+  "description": "专注阅读",
+  "url": "https://greasyfork.org/scripts/434661-%E7%AC%94%E8%B6%A3%E9%98%81%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/434661/%E7%AC%94%E8%B6%A3%E9%98%81%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 31487,
+  "license": "MIT License",
+  "version": "5.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

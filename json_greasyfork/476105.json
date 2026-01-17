@@ -1,0 +1,59 @@
+{
+  "id": 476105,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-26T10:34:58.000Z",
+  "code_updated_at": "2023-09-26T10:35:58.000Z",
+  "namespace": "https://github.com/aslkeaxn/404toArchive",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1181301,
+      "name": "aslkeaxn",
+      "created_at": "2023-09-26T10:27:56.000Z",
+      "url": "https://greasyfork.org/users/1181301-aslkeaxn",
+      "scripts": [
+        {
+          "id": 476105,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-26T10:34:58.000Z",
+          "code_updated_at": "2023-09-26T10:35:58.000Z",
+          "namespace": "https://github.com/aslkeaxn/404toArchive",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "404toArchive",
+          "description": "Redirects from a 404 page to an archive backup when possible",
+          "url": "https://greasyfork.org/scripts/476105-404toarchive",
+          "code_url": "https://update.greasyfork.org/scripts/476105/404toArchive.user.js",
+          "code_size": 1028,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "404toArchive",
+  "description": "Redirects from a 404 page to an archive backup when possible",
+  "url": "https://greasyfork.org/scripts/476105-404toarchive",
+  "code_url": "https://update.greasyfork.org/scripts/476105/404toArchive.user.js",
+  "code_size": 1028,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

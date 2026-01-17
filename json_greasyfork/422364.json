@@ -1,0 +1,33 @@
+{
+  "id": 422364,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-27T05:10:04.000Z",
+  "code_updated_at": "2021-02-27T05:10:03.000Z",
+  "namespace": "https://www.bilibili.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 682545,
+      "name": "ResFeng",
+      "created_at": "2020-08-25T14:10:21.000Z",
+      "url": "https://greasyfork.org/users/682545-resfeng"
+    }
+  ],
+  "name": "Pure bilibili",
+  "description": "Offer a pure bilibili home page",
+  "url": "https://greasyfork.org/scripts/422364-pure-bilibili",
+  "code_url": "https://update.greasyfork.org/scripts/422364/Pure%20bilibili.user.js",
+  "code_size": 3233,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

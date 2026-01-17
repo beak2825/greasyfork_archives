@@ -1,0 +1,33 @@
+{
+  "id": 478011,
+  "daily_installs": 0,
+  "total_installs": 61,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-22T17:17:14.000Z",
+  "code_updated_at": "2023-11-02T16:41:52.000Z",
+  "namespace": "https://greasyfork.org/en/users/1200276-awesome4",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1200276,
+      "name": "Awesome158",
+      "created_at": "2023-10-20T11:31:29.000Z",
+      "url": "https://greasyfork.org/users/1200276-awesome158"
+    }
+  ],
+  "name": "Webnovel TagFilter",
+  "description": "Effortlessly hide or include novels with specific tags on Webnovel.com. Filter novels for a more tailored reading experience.",
+  "url": "https://greasyfork.org/scripts/478011-webnovel-tagfilter",
+  "code_url": "https://update.greasyfork.org/scripts/478011/Webnovel%20TagFilter.user.js",
+  "code_size": 8532,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

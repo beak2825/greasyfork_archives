@@ -1,0 +1,33 @@
+{
+  "id": 474918,
+  "daily_installs": 1,
+  "total_installs": 204,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-09T19:28:54.000Z",
+  "code_updated_at": "2023-09-10T10:04:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 979339,
+      "name": "Torch light",
+      "created_at": "2022-11-04T19:37:57.000Z",
+      "url": "https://greasyfork.org/users/979339-torch-light"
+    }
+  ],
+  "name": "Разблокировать флажок возрастного ограничения",
+  "description": "Разблокирует чекбокс возрастного ограничения на Rutube.",
+  "url": "https://greasyfork.org/scripts/474918-%D1%80%D0%B0%D0%B7%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C-%D1%84%D0%BB%D0%B0%D0%B6%D0%BE%D0%BA-%D0%B2%D0%BE%D0%B7%D1%80%D0%B0%D1%81%D1%82%D0%BD%D0%BE%D0%B3%D0%BE-%D0%BE%D0%B3%D1%80%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D0%BD%D0%B8%D1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/474918/%D0%A0%D0%B0%D0%B7%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%20%D1%84%D0%BB%D0%B0%D0%B6%D0%BE%D0%BA%20%D0%B2%D0%BE%D0%B7%D1%80%D0%B0%D1%81%D1%82%D0%BD%D0%BE%D0%B3%D0%BE%20%D0%BE%D0%B3%D1%80%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D0%BD%D0%B8%D1%8F.user.js",
+  "code_size": 1200,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

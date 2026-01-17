@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460608,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-23T16:31:47.000Z",
+    "code_updated_at": "2023-02-23T16:31:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1031941,
+        "name": "Z blast",
+        "created_at": "2023-02-23T16:29:17.000Z",
+        "url": "https://greasyfork.org/users/1031941-z-blast"
+      }
+    ],
+    "name": "Huya Styles",
+    "description": "update huya styles",
+    "url": "https://greasyfork.org/scripts/460608-huya-styles",
+    "code_url": "https://update.greasyfork.org/scripts/460608/Huya%20Styles.user.js",
+    "code_size": 1614,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

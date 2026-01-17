@@ -1,0 +1,35 @@
+[
+  {
+    "id": 446912,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-23T13:19:19.000Z",
+    "code_updated_at": "2022-06-23T13:19:18.000Z",
+    "namespace": "violentmonkey scripttt",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928299,
+        "name": "RestinPeace Waluigi",
+        "created_at": "2022-06-22T19:54:55.000Z",
+        "url": "https://greasyfork.org/users/928299-restinpeace-waluigi"
+      }
+    ],
+    "name": "Auto refresh mealninja.me",
+    "description": "Refreshes every 5 minutes mealninja.me",
+    "url": "https://greasyfork.org/scripts/446912-auto-refresh-mealninja-me",
+    "code_url": "https://update.greasyfork.org/scripts/446912/Auto%20refresh%20mealninjame.user.js",
+    "code_size": 487,
+    "license": "N/A",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

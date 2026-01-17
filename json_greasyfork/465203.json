@@ -1,0 +1,59 @@
+{
+  "id": 465203,
+  "daily_installs": 0,
+  "total_installs": 183,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-30T17:34:34.000Z",
+  "code_updated_at": "2023-05-06T17:18:37.000Z",
+  "namespace": "penishaver666",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1070819,
+      "name": "penishaver666",
+      "created_at": "2023-04-30T17:13:25.000Z",
+      "url": "https://greasyfork.org/users/1070819-penishaver666",
+      "scripts": [
+        {
+          "id": 465203,
+          "daily_installs": 0,
+          "total_installs": 183,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-30T17:34:34.000Z",
+          "code_updated_at": "2023-05-06T17:18:37.000Z",
+          "namespace": "penishaver666",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Omegle Enhanced",
+          "description": "Adds features to Omegle: timestamps, interest-only chats",
+          "url": "https://greasyfork.org/scripts/465203-omegle-enhanced",
+          "code_url": "https://update.greasyfork.org/scripts/465203/Omegle%20Enhanced.user.js",
+          "code_size": 2715,
+          "license": "MIT License",
+          "version": "0.22",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Omegle Enhanced",
+  "description": "Adds features to Omegle: timestamps, interest-only chats",
+  "url": "https://greasyfork.org/scripts/465203-omegle-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/465203/Omegle%20Enhanced.user.js",
+  "code_size": 2715,
+  "license": "MIT License",
+  "version": "0.22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

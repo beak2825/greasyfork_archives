@@ -1,0 +1,59 @@
+{
+  "id": 492529,
+  "daily_installs": 0,
+  "total_installs": 190,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-14T17:14:52.000Z",
+  "code_updated_at": "2024-04-14T17:14:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1288354,
+      "name": "the men the men",
+      "created_at": "2024-04-14T16:53:50.000Z",
+      "url": "https://greasyfork.org/users/1288354-the-men-the-men",
+      "scripts": [
+        {
+          "id": 492529,
+          "daily_installs": 0,
+          "total_installs": 190,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-14T17:14:52.000Z",
+          "code_updated_at": "2024-04-14T17:14:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Better Roblox Website",
+          "description": "Makes the Roblox Site look better.",
+          "url": "https://greasyfork.org/scripts/492529-better-roblox-website",
+          "code_url": "https://update.greasyfork.org/scripts/492529/Better%20Roblox%20Website.user.js",
+          "code_size": 4920,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Better Roblox Website",
+  "description": "Makes the Roblox Site look better.",
+  "url": "https://greasyfork.org/scripts/492529-better-roblox-website",
+  "code_url": "https://update.greasyfork.org/scripts/492529/Better%20Roblox%20Website.user.js",
+  "code_size": 4920,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

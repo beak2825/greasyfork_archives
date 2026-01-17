@@ -1,0 +1,33 @@
+{
+  "id": 461530,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-09T14:08:24.000Z",
+  "code_updated_at": "2023-03-09T14:08:24.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1038948,
+      "name": "Шухрат Роматов",
+      "created_at": "2023-03-09T04:37:38.000Z",
+      "url": "https://greasyfork.org/users/1038948-%D1%88%D1%83%D1%85%D1%80%D0%B0%D1%82-%D1%80%D0%BE%D0%BC%D0%B0%D1%82%D0%BE%D0%B2"
+    }
+  ],
+  "name": "Jon_Vinici",
+  "description": "Жб АДМ+ОБЖ",
+  "url": "https://greasyfork.org/scripts/461530-jon-vinici",
+  "code_url": "https://update.greasyfork.org/scripts/461530/Jon_Vinici.user.js",
+  "code_size": 22856,
+  "license": "MIT License",
+  "version": "666",
+  "locale": "sr",
+  "deleted": false,
+  "visibility": "public"
+}

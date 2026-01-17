@@ -1,0 +1,200 @@
+[
+  {
+    "id": 469703,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-29T07:11:29.000Z",
+    "code_updated_at": "2023-12-16T13:50:58.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443894,
+        "name": "Paladin-M",
+        "created_at": "2020-02-11T14:45:40.000Z",
+        "url": "https://greasyfork.org/users/443894-paladin-m"
+      }
+    ],
+    "name": "kxtool",
+    "description": "@license           End-User License Agreement",
+    "url": "https://greasyfork.org/scripts/469703-kxtool",
+    "code_url": "https://update.greasyfork.org/scripts/469703/1296888/kxtool.js",
+    "code_size": 17355,
+    "license": null,
+    "version": "0.0.1.20231216135058",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469054,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-20T08:34:40.000Z",
+    "code_updated_at": "2023-06-20T08:34:40.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443894,
+        "name": "Paladin-M",
+        "created_at": "2020-02-11T14:45:40.000Z",
+        "url": "https://greasyfork.org/users/443894-paladin-m"
+      }
+    ],
+    "name": "StreamSaver",
+    "description": "streamsaver@2.0.5/StreamSaver.js",
+    "url": "https://greasyfork.org/scripts/469054-streamsaver",
+    "code_url": "https://update.greasyfork.org/scripts/469054/1208001/StreamSaver.js",
+    "code_size": 9942,
+    "license": null,
+    "version": "0.0.1.20230620083440",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469053,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-20T08:24:59.000Z",
+    "code_updated_at": "2023-06-20T08:24:59.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443894,
+        "name": "Paladin-M",
+        "created_at": "2020-02-11T14:45:40.000Z",
+        "url": "https://greasyfork.org/users/443894-paladin-m"
+      }
+    ],
+    "name": "jsQR",
+    "description": "jsQR.js",
+    "url": "https://greasyfork.org/scripts/469053-jsqr",
+    "code_url": "https://update.greasyfork.org/scripts/469053/1207999/jsQR.js",
+    "code_size": 256886,
+    "license": null,
+    "version": "0.0.1.20230620082459",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 468820,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-16T16:22:32.000Z",
+    "code_updated_at": "2023-06-16T16:22:32.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443894,
+        "name": "Paladin-M",
+        "created_at": "2020-02-11T14:45:40.000Z",
+        "url": "https://greasyfork.org/users/443894-paladin-m"
+      }
+    ],
+    "name": "m3u8-hls",
+    "description": "m3u8",
+    "url": "https://greasyfork.org/scripts/468820-m3u8-hls",
+    "code_url": "https://update.greasyfork.org/scripts/468820/1208011/m3u8-hls.js",
+    "code_size": 9411,
+    "license": null,
+    "version": "0.0.1.20230616162232",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 468518,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-12T16:29:18.000Z",
+    "code_updated_at": "2023-06-14T10:51:58.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443894,
+        "name": "Paladin-M",
+        "created_at": "2020-02-11T14:45:40.000Z",
+        "url": "https://greasyfork.org/users/443894-paladin-m"
+      }
+    ],
+    "name": "addqrcode",
+    "description": "qrcode",
+    "url": "https://greasyfork.org/scripts/468518-addqrcode",
+    "code_url": "https://update.greasyfork.org/scripts/468518/1204970/addqrcode.js",
+    "code_size": 8911,
+    "license": null,
+    "version": "0.0.1.20230614105158",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 468468,
+    "daily_installs": 0,
+    "total_installs": 12227,
+    "fan_score": "55.8",
+    "good_ratings": 13,
+    "ok_ratings": 1,
+    "bad_ratings": 3,
+    "created_at": "2023-06-12T02:13:37.000Z",
+    "code_updated_at": "2025-08-19T15:40:40.000Z",
+    "namespace": "Z3JlYXN5Zm9yaw==",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443894,
+        "name": "Paladin-M",
+        "created_at": "2020-02-11T14:45:40.000Z",
+        "url": "https://greasyfork.org/users/443894-paladin-m"
+      }
+    ],
+    "name": "【科学工具箱】整合好玩实用的各种功能，不定时持续更新中...",
+    "description": "网站视频下载、图片批量下载。在线视频播放器。可以画中画播放。支持大部分网站视频、音频、图片等资源的下载，智能抠图去水印，新增二维码工具、新增m3u8视频下载、画中画功能",
+    "url": "https://greasyfork.org/scripts/468468-%E7%A7%91%E5%AD%A6%E5%B7%A5%E5%85%B7%E7%AE%B1-%E6%95%B4%E5%90%88%E5%A5%BD%E7%8E%A9%E5%AE%9E%E7%94%A8%E7%9A%84%E5%90%84%E7%A7%8D%E5%8A%9F%E8%83%BD-%E4%B8%8D%E5%AE%9A%E6%97%B6%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD",
+    "code_url": "https://update.greasyfork.org/scripts/468468/%E3%80%90%E7%A7%91%E5%AD%A6%E5%B7%A5%E5%85%B7%E7%AE%B1%E3%80%91%E6%95%B4%E5%90%88%E5%A5%BD%E7%8E%A9%E5%AE%9E%E7%94%A8%E7%9A%84%E5%90%84%E7%A7%8D%E5%8A%9F%E8%83%BD%EF%BC%8C%E4%B8%8D%E5%AE%9A%E6%97%B6%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD.user.js",
+    "code_size": 19227,
+    "license": "End-User License Agreement",
+    "version": "27",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

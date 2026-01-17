@@ -1,0 +1,33 @@
+{
+  "id": 461453,
+  "daily_installs": 0,
+  "total_installs": 3674,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-03-08T13:34:55.000Z",
+  "code_updated_at": "2023-03-21T04:21:32.000Z",
+  "namespace": "http://csgo.isfunc.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 895285,
+      "name": "倔强的阿飞",
+      "created_at": "2022-03-30T06:40:10.000Z",
+      "url": "https://greasyfork.org/users/895285-%E5%80%94%E5%BC%BA%E7%9A%84%E9%98%BF%E9%A3%9E"
+    }
+  ],
+  "name": "CSGO选品工具-BUFF/STEAM",
+  "description": "ISFUNC出品的一款免费用于csgo饰品选品的脚本",
+  "url": "https://greasyfork.org/scripts/461453-csgo%E9%80%89%E5%93%81%E5%B7%A5%E5%85%B7-buff-steam",
+  "code_url": "https://update.greasyfork.org/scripts/461453/CSGO%E9%80%89%E5%93%81%E5%B7%A5%E5%85%B7-BUFFSTEAM.user.js",
+  "code_size": 11440,
+  "license": "MIT License",
+  "version": "1.04",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

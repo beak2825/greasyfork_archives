@@ -1,0 +1,34 @@
+{
+  "id": 471188,
+  "daily_installs": 0,
+  "total_installs": 87,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-19T07:42:11.000Z",
+  "code_updated_at": "2023-07-19T07:53:40.000Z",
+  "namespace": "https://github.com/Sec-ant/weread-scraper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1130406,
+      "name": "lazyvip",
+      "created_at": "2023-07-19T06:09:18.000Z",
+      "url": "https://greasyfork.org/users/1130406-lazyvip",
+      "scripts": []
+    }
+  ],
+  "name": "微信读书 备份html",
+  "description": "备份微信读书为html，在原作者Sec-ant的基础上进行汉化和增加页面按钮",
+  "url": "https://greasyfork.org/scripts/471188-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6-%E5%A4%87%E4%BB%BDhtml",
+  "code_url": "https://update.greasyfork.org/scripts/471188/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%20%E5%A4%87%E4%BB%BDhtml.user.js",
+  "code_size": 17762,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

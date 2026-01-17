@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488858,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-03T05:45:17.000Z",
+    "code_updated_at": "2024-09-09T23:13:01.000Z",
+    "namespace": "=",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268720,
+        "name": "SADNESS81",
+        "created_at": "2024-03-01T05:50:24.000Z",
+        "url": "https://greasyfork.org/users/1268720-sadness81"
+      }
+    ],
+    "name": "Pixiv Repeated Artworks Hider",
+    "description": "Hides an artwork after it appears 3 times",
+    "url": "https://greasyfork.org/scripts/488858-pixiv-repeated-artworks-hider",
+    "code_url": "https://update.greasyfork.org/scripts/488858/Pixiv%20Repeated%20Artworks%20Hider.user.js",
+    "code_size": 12446,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

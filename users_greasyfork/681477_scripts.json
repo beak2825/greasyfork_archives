@@ -1,0 +1,68 @@
+[
+  {
+    "id": 477332,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-13T07:45:15.000Z",
+    "code_updated_at": "2023-10-14T14:16:42.000Z",
+    "namespace": "ROC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 681477,
+        "name": "roczyl",
+        "created_at": "2020-08-21T09:19:48.000Z",
+        "url": "https://greasyfork.org/users/681477-roczyl"
+      }
+    ],
+    "name": "Study crack",
+    "description": "2023/10/14 22:05:00",
+    "url": "https://greasyfork.org/scripts/477332-study-crack",
+    "code_url": "https://update.greasyfork.org/scripts/477332/Study%20crack.user.js",
+    "code_size": 1621,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 476550,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-02T08:09:41.000Z",
+    "code_updated_at": "2023-10-02T12:37:36.000Z",
+    "namespace": "roczyl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 681477,
+        "name": "roczyl",
+        "created_at": "2020-08-21T09:19:48.000Z",
+        "url": "https://greasyfork.org/users/681477-roczyl"
+      }
+    ],
+    "name": "书法考试批量导入白名单",
+    "description": "书法考试批量导入白名单功能",
+    "url": "https://greasyfork.org/scripts/476550-%E4%B9%A6%E6%B3%95%E8%80%83%E8%AF%95%E6%89%B9%E9%87%8F%E5%AF%BC%E5%85%A5%E7%99%BD%E5%90%8D%E5%8D%95",
+    "code_url": "https://update.greasyfork.org/scripts/476550/%E4%B9%A6%E6%B3%95%E8%80%83%E8%AF%95%E6%89%B9%E9%87%8F%E5%AF%BC%E5%85%A5%E7%99%BD%E5%90%8D%E5%8D%95.user.js",
+    "code_size": 4660,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458565,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-19T21:48:00.000Z",
+    "code_updated_at": "2023-01-25T04:38:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1014393,
+        "name": "ZenithRogue",
+        "created_at": "2023-01-19T21:43:17.000Z",
+        "url": "https://greasyfork.org/users/1014393-zenithrogue"
+      }
+    ],
+    "name": "Wikipedia Spacing Fixer Upper",
+    "description": "Script/Style to adjust the spacing/layout on Wikipedia following the January 2023 redesign.",
+    "url": "https://greasyfork.org/scripts/458565-wikipedia-spacing-fixer-upper",
+    "code_url": "https://update.greasyfork.org/scripts/458565/Wikipedia%20Spacing%20Fixer%20Upper.user.js",
+    "code_size": 2674,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

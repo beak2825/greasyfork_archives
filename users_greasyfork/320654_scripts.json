@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438648,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-17T00:55:53.000Z",
+    "code_updated_at": "2022-01-17T00:55:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 320654,
+        "name": "𝘚yntāx",
+        "created_at": "2019-07-26T05:00:58.000Z",
+        "url": "https://greasyfork.org/users/320654-%F0%9D%98%9Aynt%C4%81x"
+      }
+    ],
+    "name": "Disable tank upgrades",
+    "description": "pentagonis best ol",
+    "url": "https://greasyfork.org/scripts/438648-disable-tank-upgrades",
+    "code_url": "https://update.greasyfork.org/scripts/438648/Disable%20tank%20upgrades.user.js",
+    "code_size": 784,
+    "license": "syntax",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

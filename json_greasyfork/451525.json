@@ -1,0 +1,33 @@
+{
+  "id": 451525,
+  "daily_installs": 0,
+  "total_installs": 80,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-17T11:56:23.000Z",
+  "code_updated_at": "2022-10-29T18:41:20.000Z",
+  "namespace": "https://github.com/to",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 684865,
+      "name": "to",
+      "created_at": "2020-09-03T11:03:07.000Z",
+      "url": "https://greasyfork.org/users/684865-to"
+    }
+  ],
+  "name": "YouTube - Hide Watched",
+  "description": "YouTube - Hide Watched.",
+  "url": "https://greasyfork.org/scripts/451525-youtube-hide-watched",
+  "code_url": "https://update.greasyfork.org/scripts/451525/YouTube%20-%20Hide%20Watched.user.js",
+  "code_size": 1299,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

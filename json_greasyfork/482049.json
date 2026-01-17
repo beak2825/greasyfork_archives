@@ -1,0 +1,34 @@
+{
+  "id": 482049,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-12T18:23:47.000Z",
+  "code_updated_at": "2023-12-12T18:23:47.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1232917,
+      "name": "Кар",
+      "created_at": "2023-12-12T18:19:04.000Z",
+      "url": "https://greasyfork.org/users/1232917-%D0%BA%D0%B0%D1%80",
+      "scripts": []
+    }
+  ],
+  "name": "OREL | Скрипт для кураторов форума.",
+  "description": "Специально для BlackRussia || OREL by Karim Collins",
+  "url": "https://greasyfork.org/scripts/482049-orel-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/482049/OREL%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+  "code_size": 40649,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

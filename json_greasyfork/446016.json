@@ -1,0 +1,59 @@
+{
+  "id": 446016,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-05T04:45:10.000Z",
+  "code_updated_at": "2023-12-13T18:14:33.000Z",
+  "namespace": "hbybyyang",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 921975,
+      "name": "lsby",
+      "created_at": "2022-06-04T12:26:18.000Z",
+      "url": "https://greasyfork.org/users/921975-lsby",
+      "scripts": [
+        {
+          "id": 446016,
+          "daily_installs": 0,
+          "total_installs": 35,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-05T04:45:10.000Z",
+          "code_updated_at": "2023-12-13T18:14:33.000Z",
+          "namespace": "hbybyyang",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "隐藏百度首页昵称",
+          "description": "2022/6/5 12:16:12",
+          "url": "https://greasyfork.org/scripts/446016-%E9%9A%90%E8%97%8F%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%98%B5%E7%A7%B0",
+          "code_url": "https://update.greasyfork.org/scripts/446016/%E9%9A%90%E8%97%8F%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%98%B5%E7%A7%B0.user.js",
+          "code_size": 2979,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "隐藏百度首页昵称",
+  "description": "2022/6/5 12:16:12",
+  "url": "https://greasyfork.org/scripts/446016-%E9%9A%90%E8%97%8F%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%98%B5%E7%A7%B0",
+  "code_url": "https://update.greasyfork.org/scripts/446016/%E9%9A%90%E8%97%8F%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%98%B5%E7%A7%B0.user.js",
+  "code_size": 2979,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 487531,
+    "daily_installs": 0,
+    "total_installs": 138,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-17T15:56:38.000Z",
+    "code_updated_at": "2024-06-17T21:55:11.000Z",
+    "namespace": "Hide_Reposts_on_Twitter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 47,
+        "name": "Owyn",
+        "created_at": "2014-03-04T22:45:56.000Z",
+        "url": "https://greasyfork.org/users/47-owyn"
+      }
+    ],
+    "name": "Hide Reposts on Twitter",
+    "description": "Hides reposts (retweets) when scrolling",
+    "url": "https://greasyfork.org/scripts/487531-hide-reposts-on-twitter",
+    "code_url": "https://update.greasyfork.org/scripts/487531/Hide%20Reposts%20on%20Twitter.user.js",
+    "code_size": 1075,
+    "license": "MIT License",
+    "version": "1.21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439678,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-07T17:35:46.000Z",
+    "code_updated_at": "2024-09-25T14:09:39.000Z",
+    "namespace": "wasd_scroll",
+    "support_url": "https://github.com/Owyn/WASD_Scroll/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 47,
+        "name": "Owyn",
+        "created_at": "2014-03-04T22:45:56.000Z",
+        "url": "https://greasyfork.org/users/47-owyn"
+      }
+    ],
+    "name": "WASD Scroll hotkeys for websites",
+    "description": "Use WASD keys to scroll, not just arrow buttons",
+    "url": "https://greasyfork.org/scripts/439678-wasd-scroll-hotkeys-for-websites",
+    "code_url": "https://update.greasyfork.org/scripts/439678/WASD%20Scroll%20hotkeys%20for%20websites.user.js",
+    "code_size": 4052,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 457680,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-05T12:49:31.000Z",
+  "code_updated_at": "2023-01-08T15:48:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 986651,
+      "name": "Matthew Mcloughlin",
+      "created_at": "2022-11-22T20:04:14.000Z",
+      "url": "https://greasyfork.org/users/986651-matthew-mcloughlin",
+      "scripts": []
+    }
+  ],
+  "name": "RPG Script",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/457680-rpg-script",
+  "code_url": "https://update.greasyfork.org/scripts/457680/RPG%20Script.user.js",
+  "code_size": 1409,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

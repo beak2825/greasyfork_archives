@@ -1,0 +1,33 @@
+{
+  "id": 485916,
+  "daily_installs": 0,
+  "total_installs": 94,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-28T20:19:28.000Z",
+  "code_updated_at": "2024-01-28T22:06:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1254447,
+      "name": "Sixthtotheninth",
+      "created_at": "2024-01-28T17:55:35.000Z",
+      "url": "https://greasyfork.org/users/1254447-sixthtotheninth"
+    }
+  ],
+  "name": "HIDE PLAYER",
+  "description": "Hide specific player on bonk.io with Alt+H",
+  "url": "https://greasyfork.org/scripts/485916-hide-player",
+  "code_url": "https://update.greasyfork.org/scripts/485916/HIDE%20PLAYER.user.js",
+  "code_size": 1233,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

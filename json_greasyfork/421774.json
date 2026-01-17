@@ -1,0 +1,33 @@
+{
+  "id": 421774,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-16T11:55:05.000Z",
+  "code_updated_at": "2021-02-16T11:55:05.000Z",
+  "namespace": "https://ingthemis.service-now.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 149802,
+      "name": "AngeloNdira",
+      "created_at": "2017-08-20T07:48:43.000Z",
+      "url": "https://greasyfork.org/users/149802-angelondira"
+    }
+  ],
+  "name": "Export DRA controls",
+  "description": "Export DRA controls.",
+  "url": "https://greasyfork.org/scripts/421774-export-dra-controls",
+  "code_url": "https://update.greasyfork.org/scripts/421774/Export%20DRA%20controls.user.js",
+  "code_size": 2084,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

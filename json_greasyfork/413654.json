@@ -1,0 +1,59 @@
+{
+  "id": 413654,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-17T13:39:03.000Z",
+  "code_updated_at": "2020-10-17T13:39:03.000Z",
+  "namespace": "https://github.com/torta",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 695921,
+      "name": "torta",
+      "created_at": "2020-10-17T13:27:15.000Z",
+      "url": "https://greasyfork.org/users/695921-torta",
+      "scripts": [
+        {
+          "id": 413654,
+          "daily_installs": 0,
+          "total_installs": 39,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-17T13:39:03.000Z",
+          "code_updated_at": "2020-10-17T13:39:03.000Z",
+          "namespace": "https://github.com/torta",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google Logo Replacement",
+          "description": "用百度 Logo 替换 Google Logo",
+          "url": "https://greasyfork.org/scripts/413654-google-logo-replacement",
+          "code_url": "https://update.greasyfork.org/scripts/413654/Google%20Logo%20Replacement.user.js",
+          "code_size": 5802,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google Logo Replacement",
+  "description": "用百度 Logo 替换 Google Logo",
+  "url": "https://greasyfork.org/scripts/413654-google-logo-replacement",
+  "code_url": "https://update.greasyfork.org/scripts/413654/Google%20Logo%20Replacement.user.js",
+  "code_size": 5802,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

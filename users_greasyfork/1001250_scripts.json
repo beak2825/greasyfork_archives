@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457000,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-22T11:21:23.000Z",
+    "code_updated_at": "2024-06-12T06:06:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1001250,
+        "name": "Juan Paolo B.",
+        "created_at": "2022-12-22T11:01:07.000Z",
+        "url": "https://greasyfork.org/users/1001250-juan-paolo-b"
+      }
+    ],
+    "name": "Discipulus+",
+    "description": "Enhances Discipulus",
+    "url": "https://greasyfork.org/scripts/457000-discipulus",
+    "code_url": "https://update.greasyfork.org/scripts/457000/Discipulus%2B.user.js",
+    "code_size": 3081,
+    "license": "GNU GPLv3",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 463923,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-13T15:53:19.000Z",
+  "code_updated_at": "2023-04-13T15:53:19.000Z",
+  "namespace": "https://greasyfork.org/users/949427",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 949427,
+      "name": "sdaq1000",
+      "created_at": "2022-08-22T10:09:39.000Z",
+      "url": "https://greasyfork.org/users/949427-sdaq1000",
+      "scripts": []
+    }
+  ],
+  "name": "流浪商人接口",
+  "description": "自用流浪商人接口",
+  "url": "https://greasyfork.org/scripts/463923-%E6%B5%81%E6%B5%AA%E5%95%86%E4%BA%BA%E6%8E%A5%E5%8F%A3",
+  "code_url": "https://update.greasyfork.org/scripts/463923/%E6%B5%81%E6%B5%AA%E5%95%86%E4%BA%BA%E6%8E%A5%E5%8F%A3.user.js",
+  "code_size": 2126,
+  "license": "LGPLv3",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

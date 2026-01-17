@@ -1,0 +1,33 @@
+{
+  "id": 474903,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-09T14:20:11.000Z",
+  "code_updated_at": "2024-02-02T20:12:37.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 962975,
+      "name": "keitashi",
+      "created_at": "2022-09-24T08:22:34.000Z",
+      "url": "https://greasyfork.org/users/962975-keitashi"
+    }
+  ],
+  "name": "Script for complaints about leaders",
+  "description": "Always remember who you are!",
+  "url": "https://greasyfork.org/scripts/474903-script-for-complaints-about-leaders",
+  "code_url": "https://update.greasyfork.org/scripts/474903/Script%20for%20complaints%20about%20leaders.user.js",
+  "code_size": 20594,
+  "license": "MIT License",
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

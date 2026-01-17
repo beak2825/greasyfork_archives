@@ -63,6 +63,171 @@
     "version": "1.4.2",
     "locale": "da",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478085,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-23T19:23:48.000Z",
+    "code_updated_at": "2024-11-16T13:32:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864921,
+        "name": "Greasyshark",
+        "created_at": "2022-01-14T16:05:38.000Z",
+        "url": "https://greasyfork.org/users/864921-greasyshark"
+      }
+    ],
+    "name": "The Atlantic",
+    "description": "Beyond paywall",
+    "url": "https://greasyfork.org/scripts/478085-the-atlantic",
+    "code_url": "https://update.greasyfork.org/scripts/478085/The%20Atlantic.user.js",
+    "code_size": 1583,
+    "license": null,
+    "version": "0.33",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474526,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-04T15:46:44.000Z",
+    "code_updated_at": "2023-09-04T19:23:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864921,
+        "name": "Greasyshark",
+        "created_at": "2022-01-14T16:05:38.000Z",
+        "url": "https://greasyfork.org/users/864921-greasyshark"
+      }
+    ],
+    "name": "blu-ray.com cover download",
+    "description": "Download cover images from blu-ray.com",
+    "url": "https://greasyfork.org/scripts/474526-blu-ray-com-cover-download",
+    "code_url": "https://update.greasyfork.org/scripts/474526/blu-raycom%20cover%20download.user.js",
+    "code_size": 1068,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473171,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-16T09:27:10.000Z",
+    "code_updated_at": "2023-08-16T09:27:10.000Z",
+    "namespace": "martin@larsen.dk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864921,
+        "name": "Greasyshark",
+        "created_at": "2022-01-14T16:05:38.000Z",
+        "url": "https://greasyfork.org/users/864921-greasyshark"
+      }
+    ],
+    "name": "json global variable for JSON Formatter",
+    "description": "Brings back the json global variable for JSON Formatter, https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa",
+    "url": "https://greasyfork.org/scripts/473171-json-global-variable-for-json-formatter",
+    "code_url": "https://update.greasyfork.org/scripts/473171/json%20global%20variable%20for%20JSON%20Formatter.user.js",
+    "code_size": 603,
+    "license": "GNU GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462402,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-23T12:10:58.000Z",
+    "code_updated_at": "2024-06-10T13:26:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864921,
+        "name": "Greasyshark",
+        "created_at": "2022-01-14T16:05:38.000Z",
+        "url": "https://greasyfork.org/users/864921-greasyshark"
+      }
+    ],
+    "name": "Bedre menu på Lasernet",
+    "description": "Forbedrer brugen af Lasernet",
+    "url": "https://greasyfork.org/scripts/462402-bedre-menu-p%C3%A5-lasernet",
+    "code_url": "https://update.greasyfork.org/scripts/462402/Bedre%20menu%20p%C3%A5%20Lasernet.user.js",
+    "code_size": 1355,
+    "license": "GNU GPLv3",
+    "version": "0.28",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451350,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-14T07:17:49.000Z",
+    "code_updated_at": "2023-09-20T11:54:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864921,
+        "name": "Greasyshark",
+        "created_at": "2022-01-14T16:05:38.000Z",
+        "url": "https://greasyfork.org/users/864921-greasyshark"
+      }
+    ],
+    "name": "Facebook events for orienteringslob.dk",
+    "description": "Udtrækker event-id for Facebook-begivenheder",
+    "url": "https://greasyfork.org/scripts/451350-facebook-events-for-orienteringslob-dk",
+    "code_url": "https://update.greasyfork.org/scripts/451350/Facebook%20events%20for%20orienteringslobdk.user.js",
+    "code_size": 4502,
+    "license": "Creative Commons",
+    "version": "0.27",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

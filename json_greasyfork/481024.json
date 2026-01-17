@@ -1,0 +1,33 @@
+{
+  "id": 481024,
+  "daily_installs": 0,
+  "total_installs": 50,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-29T14:35:43.000Z",
+  "code_updated_at": "2023-11-29T14:35:43.000Z",
+  "namespace": "https://github.com/777Portal",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1124338,
+      "name": "what the duck is this????",
+      "created_at": "2023-07-11T18:37:01.000Z",
+      "url": "https://greasyfork.org/users/1124338-what-the-duck-is-this"
+    }
+  ],
+  "name": "Anon bonk",
+  "description": "Used for systematically deleting cookies and local storage, and auto asigining unique guest name & guest colors on every page reload.",
+  "url": "https://greasyfork.org/scripts/481024-anon-bonk",
+  "code_url": "https://update.greasyfork.org/scripts/481024/Anon%20bonk.user.js",
+  "code_size": 36832,
+  "license": "GPL",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

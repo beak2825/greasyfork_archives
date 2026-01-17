@@ -1,0 +1,101 @@
+[
+  {
+    "id": 465757,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-08T03:53:11.000Z",
+    "code_updated_at": "2023-05-08T03:53:11.000Z",
+    "namespace": "https://rabit.pw/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395568,
+        "name": "ttimasdf",
+        "created_at": "2019-11-07T02:17:58.000Z",
+        "url": "https://greasyfork.org/users/395568-ttimasdf"
+      }
+    ],
+    "name": "wuyou.net Domain Redirect",
+    "description": "Redirects duplicated wuyou.net subdomains for a consistent experience and login status.",
+    "url": "https://greasyfork.org/scripts/465757-wuyou-net-domain-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/465757/wuyounet%20Domain%20Redirect.user.js",
+    "code_size": 782,
+    "license": "Apache License 2.0",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 446172,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-08T04:54:51.000Z",
+    "code_updated_at": "2022-06-08T04:54:51.000Z",
+    "namespace": "https://rabit.pw/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395568,
+        "name": "ttimasdf",
+        "created_at": "2019-11-07T02:17:58.000Z",
+        "url": "https://greasyfork.org/users/395568-ttimasdf"
+      }
+    ],
+    "name": "Emulate Google Analytics on gitignore.io",
+    "description": "Fix gitignore.io not working with ADBlock enabled",
+    "url": "https://greasyfork.org/scripts/446172-emulate-google-analytics-on-gitignore-io",
+    "code_url": "https://update.greasyfork.org/scripts/446172/Emulate%20Google%20Analytics%20on%20gitignoreio.user.js",
+    "code_size": 683,
+    "license": "GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444074,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-27T05:36:41.000Z",
+    "code_updated_at": "2022-04-27T05:53:48.000Z",
+    "namespace": "https://rabit.pw/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395568,
+        "name": "ttimasdf",
+        "created_at": "2019-11-07T02:17:58.000Z",
+        "url": "https://greasyfork.org/users/395568-ttimasdf"
+      }
+    ],
+    "name": "pediy webclipper optimization",
+    "description": "optimization on pediy.com for evernote web clipper",
+    "url": "https://greasyfork.org/scripts/444074-pediy-webclipper-optimization",
+    "code_url": "https://update.greasyfork.org/scripts/444074/pediy%20webclipper%20optimization.user.js",
+    "code_size": 6588,
+    "license": "Apache License 2.0",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

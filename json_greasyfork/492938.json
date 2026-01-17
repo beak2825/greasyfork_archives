@@ -1,0 +1,59 @@
+{
+  "id": 492938,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-19T14:17:51.000Z",
+  "code_updated_at": "2024-04-19T14:17:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1290458,
+      "name": "potato1234x",
+      "created_at": "2024-04-19T14:12:15.000Z",
+      "url": "https://greasyfork.org/users/1290458-potato1234x",
+      "scripts": [
+        {
+          "id": 492938,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-19T14:17:51.000Z",
+          "code_updated_at": "2024-04-19T14:17:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Playback Rate Control",
+          "description": "Change playback rate on YouTube using left and right square brackets",
+          "url": "https://greasyfork.org/scripts/492938-youtube-playback-rate-control",
+          "code_url": "https://update.greasyfork.org/scripts/492938/YouTube%20Playback%20Rate%20Control.user.js",
+          "code_size": 2021,
+          "license": "CC-BY-SA-3.0; http://creativecommons.org/licenses/by-sa/3.0/",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Playback Rate Control",
+  "description": "Change playback rate on YouTube using left and right square brackets",
+  "url": "https://greasyfork.org/scripts/492938-youtube-playback-rate-control",
+  "code_url": "https://update.greasyfork.org/scripts/492938/YouTube%20Playback%20Rate%20Control.user.js",
+  "code_size": 2021,
+  "license": "CC-BY-SA-3.0; http://creativecommons.org/licenses/by-sa/3.0/",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

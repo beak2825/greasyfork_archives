@@ -1,0 +1,33 @@
+{
+  "id": 477777,
+  "daily_installs": 0,
+  "total_installs": 103,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-19T13:06:27.000Z",
+  "code_updated_at": "2024-08-22T16:34:27.000Z",
+  "namespace": "https://github.com/schelmo",
+  "support_url": "https://github.com/schelmo/userscript-disney-plus-plus-plus",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1199629,
+      "name": "schelmo",
+      "created_at": "2023-10-19T13:03:42.000Z",
+      "url": "https://greasyfork.org/users/1199629-schelmo"
+    }
+  ],
+  "name": "Disney plus plus plus",
+  "description": "Overlay for movie/series tiles with some information (title, year, brief description and genres)",
+  "url": "https://greasyfork.org/scripts/477777-disney-plus-plus-plus",
+  "code_url": "https://update.greasyfork.org/scripts/477777/Disney%20plus%20plus%20plus.user.js",
+  "code_size": 5499,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,41 @@
+[
+  {
+    "id": 487867,
+    "daily_installs": 29,
+    "total_installs": 27521,
+    "fan_score": "82.2",
+    "good_ratings": 109,
+    "ok_ratings": 6,
+    "bad_ratings": 11,
+    "created_at": "2024-02-21T00:29:08.000Z",
+    "code_updated_at": "2026-01-09T15:15:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262646,
+        "name": "DevX",
+        "created_at": "2024-02-17T17:22:57.000Z",
+        "url": "https://greasyfork.org/users/1262646-devx"
+      },
+      {
+        "id": 1437702,
+        "name": "AutoDuo Family",
+        "created_at": "2025-02-20T14:18:19.000Z",
+        "url": "https://greasyfork.org/users/1437702-autoduo-family"
+      }
+    ],
+    "name": "Auto-Duolingo",
+    "description": "[LITE] Auto solve lessons, auto farm XP, hack Streaks, Gems and more! Hacking Duolingo is so easy!",
+    "url": "https://greasyfork.org/scripts/487867-auto-duolingo",
+    "code_url": "https://update.greasyfork.org/scripts/487867/Auto-Duolingo.user.js",
+    "code_size": 79044,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

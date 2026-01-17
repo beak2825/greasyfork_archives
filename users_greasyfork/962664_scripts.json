@@ -1,0 +1,101 @@
+[
+  {
+    "id": 462627,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-26T14:09:57.000Z",
+    "code_updated_at": "2023-03-26T14:09:57.000Z",
+    "namespace": "PermissionError",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 962664,
+        "name": "PermissionError",
+        "created_at": "2022-09-23T11:07:44.000Z",
+        "url": "https://greasyfork.org/users/962664-permissionerror"
+      }
+    ],
+    "name": "一页锁隐",
+    "description": "一键为单个帖子里一页所有楼层进行锁隐操作",
+    "url": "https://greasyfork.org/scripts/462627-%E4%B8%80%E9%A1%B5%E9%94%81%E9%9A%90",
+    "code_url": "https://update.greasyfork.org/scripts/462627/%E4%B8%80%E9%A1%B5%E9%94%81%E9%9A%90.user.js",
+    "code_size": 3381,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 452448,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-04T00:58:06.000Z",
+    "code_updated_at": "2022-10-13T22:10:44.000Z",
+    "namespace": "PermissionError",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 962664,
+        "name": "PermissionError",
+        "created_at": "2022-09-23T11:07:44.000Z",
+        "url": "https://greasyfork.org/users/962664-permissionerror"
+      }
+    ],
+    "name": "申精楼处理",
+    "description": "一键单锁定回复并PM“已处理”",
+    "url": "https://greasyfork.org/scripts/452448-%E7%94%B3%E7%B2%BE%E6%A5%BC%E5%A4%84%E7%90%86",
+    "code_url": "https://update.greasyfork.org/scripts/452448/%E7%94%B3%E7%B2%BE%E6%A5%BC%E5%A4%84%E7%90%86.user.js",
+    "code_size": 2529,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451889,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-23T11:10:47.000Z",
+    "code_updated_at": "2022-10-13T22:10:14.000Z",
+    "namespace": "PermissionError",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 962664,
+        "name": "PermissionError",
+        "created_at": "2022-09-23T11:07:44.000Z",
+        "url": "https://greasyfork.org/users/962664-permissionerror"
+      }
+    ],
+    "name": "一键锁隐",
+    "description": "一键为单个帖子里某用户的所有楼层进行锁隐操作",
+    "url": "https://greasyfork.org/scripts/451889-%E4%B8%80%E9%94%AE%E9%94%81%E9%9A%90",
+    "code_url": "https://update.greasyfork.org/scripts/451889/%E4%B8%80%E9%94%AE%E9%94%81%E9%9A%90.user.js",
+    "code_size": 3481,
+    "license": null,
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

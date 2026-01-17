@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415903,
+    "daily_installs": 0,
+    "total_installs": 201,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-10T19:24:07.000Z",
+    "code_updated_at": "2021-06-05T19:56:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 703892,
+        "name": "Leppur",
+        "created_at": "2020-11-10T19:18:33.000Z",
+        "url": "https://greasyfork.org/users/703892-leppur"
+      }
+    ],
+    "name": "CrunchyBR, Crunchyroll banner remover",
+    "description": "Removes banners and notifications from crunchyroll",
+    "url": "https://greasyfork.org/scripts/415903-crunchybr-crunchyroll-banner-remover",
+    "code_url": "https://update.greasyfork.org/scripts/415903/CrunchyBR%2C%20Crunchyroll%20banner%20remover.user.js",
+    "code_size": 1119,
+    "license": null,
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

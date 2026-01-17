@@ -1,0 +1,33 @@
+{
+  "id": 470497,
+  "daily_installs": 0,
+  "total_installs": 201,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-09T15:00:33.000Z",
+  "code_updated_at": "2024-01-21T08:27:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1111635,
+      "name": "Doubt-Fact",
+      "created_at": "2023-06-25T08:15:35.000Z",
+      "url": "https://greasyfork.org/users/1111635-doubt-fact"
+    }
+  ],
+  "name": "山传内网一键达（山传代理打开）",
+  "description": "!!登录山传代理后!!点击按钮将使用山西传媒学院代理打开当前网页",
+  "url": "https://greasyfork.org/scripts/470497-%E5%B1%B1%E4%BC%A0%E5%86%85%E7%BD%91%E4%B8%80%E9%94%AE%E8%BE%BE-%E5%B1%B1%E4%BC%A0%E4%BB%A3%E7%90%86%E6%89%93%E5%BC%80",
+  "code_url": "https://update.greasyfork.org/scripts/470497/%E5%B1%B1%E4%BC%A0%E5%86%85%E7%BD%91%E4%B8%80%E9%94%AE%E8%BE%BE%EF%BC%88%E5%B1%B1%E4%BC%A0%E4%BB%A3%E7%90%86%E6%89%93%E5%BC%80%EF%BC%89.user.js",
+  "code_size": 3058,
+  "license": "MIT License",
+  "version": "0.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 455256,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-22T18:54:20.000Z",
+  "code_updated_at": "2022-11-22T18:54:20.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 51670,
+      "name": "ruaruarua",
+      "created_at": "2016-06-29T13:02:54.000Z",
+      "url": "https://greasyfork.org/users/51670-ruaruarua",
+      "scripts": [
+        {
+          "id": 432150,
+          "daily_installs": 11,
+          "total_installs": 34472,
+          "fan_score": "91.6",
+          "good_ratings": 160,
+          "ok_ratings": 13,
+          "bad_ratings": 1,
+          "created_at": "2021-09-09T15:03:06.000Z",
+          "code_updated_at": "2025-12-18T10:58:39.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/432150",
+          "support_url": "https://github.com/drunkg00se/Pixiv-Downloader/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pixiv Downloader",
+          "description": "一键下载各页面原图。批量下载画师作品，按作品标签下载。转换动图格式：Gif | Apng | Webp | Webm | MP4。自定义图片文件名，保存路径。保留 / 导出下载历史。Pixiv | Danbooru | ATFbooru | Yande.re | Konachan | Sakugabooru | Rule34 | Rule34paheal | Rule34us | Rule34vault | Gelbooru | Safebooru | E621 | E926 | E6ai | Nijie.info | SankakuComplex",
+          "url": "https://greasyfork.org/scripts/432150-pixiv-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/432150/Pixiv%20Downloader.user.js",
+          "code_size": 947486,
+          "license": "MIT License",
+          "version": "1.12.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "toAnimatedWebp",
+  "description": "wasm for pixiv downloader",
+  "url": "https://greasyfork.org/scripts/455256-toanimatedwebp",
+  "code_url": "https://update.greasyfork.org/scripts/455256/1120088/toAnimatedWebp.js",
+  "code_size": 549372,
+  "license": null,
+  "version": "0.0.1.20221122185420",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 490355,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-20T13:03:51.000Z",
+  "code_updated_at": "2024-07-04T13:57:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber"
+    }
+  ],
+  "name": "Req combined Detlef von Seggern",
+  "description": "Aus",
+  "url": "https://greasyfork.org/scripts/490355-req-combined-detlef-von-seggern",
+  "code_url": "https://update.greasyfork.org/scripts/490355/Req%20combined%20Detlef%20von%20Seggern.user.js",
+  "code_size": 1042,
+  "license": null,
+  "version": "0.2",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

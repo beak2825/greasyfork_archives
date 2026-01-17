@@ -1,0 +1,34 @@
+{
+  "id": 457825,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-07T21:53:51.000Z",
+  "code_updated_at": "2023-01-07T21:53:51.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 756394,
+      "name": "Cocobean217",
+      "created_at": "2021-04-08T13:39:35.000Z",
+      "url": "https://greasyfork.org/users/756394-cocobean217",
+      "scripts": []
+    }
+  ],
+  "name": "Util Mod-(Part 3)",
+  "description": "simple Hat Macro",
+  "url": "https://greasyfork.org/scripts/457825-util-mod-part-3",
+  "code_url": "https://update.greasyfork.org/scripts/457825/Util%20Mod-%28Part%203%29.user.js",
+  "code_size": 1810,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

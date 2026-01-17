@@ -1,0 +1,33 @@
+{
+  "id": 420014,
+  "daily_installs": 0,
+  "total_installs": 3984,
+  "fan_score": "39.6",
+  "good_ratings": 3,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-01-11T13:54:25.000Z",
+  "code_updated_at": "2021-10-06T15:03:44.000Z",
+  "namespace": "https://www.chiro.work/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 726232,
+      "name": "chiro2001",
+      "created_at": "2021-01-11T13:40:22.000Z",
+      "url": "https://greasyfork.org/users/726232-chiro2001"
+    }
+  ],
+  "name": "HITSZ安全教育课程学习脚本",
+  "description": "能够通过网络请求的方式直接帮您跳过网课的学习阶段，但是考试答题还是需要自己完成的哦；本脚本仅做交流学习技术使用，请勿将此脚本用于收费或非法用途。",
+  "url": "https://greasyfork.org/scripts/420014-hitsz%E5%AE%89%E5%85%A8%E6%95%99%E8%82%B2%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/420014/HITSZ%E5%AE%89%E5%85%A8%E6%95%99%E8%82%B2%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 6676,
+  "license": null,
+  "version": "0.20",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

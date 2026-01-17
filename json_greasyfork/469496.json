@@ -1,0 +1,34 @@
+{
+  "id": 469496,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-26T13:34:46.000Z",
+  "code_updated_at": "2023-06-26T14:39:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Vertragssignature Armin Willy Treide",
+  "description": "Anforderung an GwG - digitale Signatur",
+  "url": "https://greasyfork.org/scripts/469496-vertragssignature-armin-willy-treide",
+  "code_url": "https://update.greasyfork.org/scripts/469496/Vertragssignature%20Armin%20Willy%20Treide.user.js",
+  "code_size": 13870,
+  "license": null,
+  "version": "4.4",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

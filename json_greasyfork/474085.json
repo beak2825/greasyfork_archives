@@ -1,0 +1,59 @@
+{
+  "id": 474085,
+  "daily_installs": 0,
+  "total_installs": 268,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-28T13:12:48.000Z",
+  "code_updated_at": "2023-08-28T13:12:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1161479,
+      "name": "ddzzkunye",
+      "created_at": "2023-08-28T11:50:04.000Z",
+      "url": "https://greasyfork.org/users/1161479-ddzzkunye",
+      "scripts": [
+        {
+          "id": 474085,
+          "daily_installs": 0,
+          "total_installs": 268,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-28T13:12:48.000Z",
+          "code_updated_at": "2023-08-28T13:12:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "移除 Outlook 侧边广告~dd",
+          "description": "隐藏 Outlook 侧边和底侧广告, \"开通 Premium\" 按钮和 \"开始会议\" 按钮, 以及\"其他\"收件箱中的广告. (2023.8.28)",
+          "url": "https://greasyfork.org/scripts/474085-%E7%A7%BB%E9%99%A4-outlook-%E4%BE%A7%E8%BE%B9%E5%B9%BF%E5%91%8A-dd",
+          "code_url": "https://update.greasyfork.org/scripts/474085/%E7%A7%BB%E9%99%A4%20Outlook%20%E4%BE%A7%E8%BE%B9%E5%B9%BF%E5%91%8A~dd.user.js",
+          "code_size": 1610,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "移除 Outlook 侧边广告~dd",
+  "description": "隐藏 Outlook 侧边和底侧广告, \"开通 Premium\" 按钮和 \"开始会议\" 按钮, 以及\"其他\"收件箱中的广告. (2023.8.28)",
+  "url": "https://greasyfork.org/scripts/474085-%E7%A7%BB%E9%99%A4-outlook-%E4%BE%A7%E8%BE%B9%E5%B9%BF%E5%91%8A-dd",
+  "code_url": "https://update.greasyfork.org/scripts/474085/%E7%A7%BB%E9%99%A4%20Outlook%20%E4%BE%A7%E8%BE%B9%E5%B9%BF%E5%91%8A~dd.user.js",
+  "code_size": 1610,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

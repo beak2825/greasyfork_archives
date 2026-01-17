@@ -1,0 +1,59 @@
+{
+  "id": 485598,
+  "daily_installs": 0,
+  "total_installs": 118,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-24T18:20:53.000Z",
+  "code_updated_at": "2024-01-24T18:51:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 672243,
+      "name": "人海中一簌",
+      "created_at": "2020-08-01T06:51:52.000Z",
+      "url": "https://greasyfork.org/users/672243-%E4%BA%BA%E6%B5%B7%E4%B8%AD%E4%B8%80%E7%B0%8C",
+      "scripts": [
+        {
+          "id": 485598,
+          "daily_installs": 0,
+          "total_installs": 118,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-24T18:20:53.000Z",
+          "code_updated_at": "2024-01-24T18:51:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站列表随机播放 | bilibili | 哔哩哔哩",
+          "description": "个人正在使用的B站音乐随机播放，按钮在视频列表上方，如发现bug，可录视频发邮箱至1914391446@qq.com",
+          "url": "https://greasyfork.org/scripts/485598-b%E7%AB%99%E5%88%97%E8%A1%A8%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE-bilibili-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9",
+          "code_url": "https://update.greasyfork.org/scripts/485598/B%E7%AB%99%E5%88%97%E8%A1%A8%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE%20%7C%20bilibili%20%7C%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9.user.js",
+          "code_size": 4414,
+          "license": "MIT License",
+          "version": "v1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站列表随机播放 | bilibili | 哔哩哔哩",
+  "description": "个人正在使用的B站音乐随机播放，按钮在视频列表上方，如发现bug，可录视频发邮箱至1914391446@qq.com",
+  "url": "https://greasyfork.org/scripts/485598-b%E7%AB%99%E5%88%97%E8%A1%A8%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE-bilibili-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9",
+  "code_url": "https://update.greasyfork.org/scripts/485598/B%E7%AB%99%E5%88%97%E8%A1%A8%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE%20%7C%20bilibili%20%7C%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9.user.js",
+  "code_size": 4414,
+  "license": "MIT License",
+  "version": "v1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

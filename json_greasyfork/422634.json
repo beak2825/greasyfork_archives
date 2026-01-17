@@ -1,0 +1,59 @@
+{
+  "id": 422634,
+  "daily_installs": 0,
+  "total_installs": 117,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-04T11:58:05.000Z",
+  "code_updated_at": "2021-03-23T06:43:04.000Z",
+  "namespace": "https://github.com/dongliangzxc/xyqhelp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 743411,
+      "name": "dongliangzxc",
+      "created_at": "2021-03-04T03:32:56.000Z",
+      "url": "https://greasyfork.org/users/743411-dongliangzxc",
+      "scripts": [
+        {
+          "id": 422634,
+          "daily_installs": 0,
+          "total_installs": 117,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-04T11:58:05.000Z",
+          "code_updated_at": "2021-03-23T06:43:04.000Z",
+          "namespace": "https://github.com/dongliangzxc/xyqhelp",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "梦幻西游装备属性计算工具",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/422634-%E6%A2%A6%E5%B9%BB%E8%A5%BF%E6%B8%B8%E8%A3%85%E5%A4%87%E5%B1%9E%E6%80%A7%E8%AE%A1%E7%AE%97%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/422634/%E6%A2%A6%E5%B9%BB%E8%A5%BF%E6%B8%B8%E8%A3%85%E5%A4%87%E5%B1%9E%E6%80%A7%E8%AE%A1%E7%AE%97%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 11120,
+          "license": null,
+          "version": "0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "梦幻西游装备属性计算工具",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/422634-%E6%A2%A6%E5%B9%BB%E8%A5%BF%E6%B8%B8%E8%A3%85%E5%A4%87%E5%B1%9E%E6%80%A7%E8%AE%A1%E7%AE%97%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/422634/%E6%A2%A6%E5%B9%BB%E8%A5%BF%E6%B8%B8%E8%A3%85%E5%A4%87%E5%B1%9E%E6%80%A7%E8%AE%A1%E7%AE%97%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 11120,
+  "license": null,
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

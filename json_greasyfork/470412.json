@@ -1,0 +1,34 @@
+{
+  "id": 470412,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-08T10:47:10.000Z",
+  "code_updated_at": "2023-07-14T12:12:17.000Z",
+  "namespace": "https://item.taobao.com/item.htm?id=670749376549",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 522027,
+      "name": "gomg007",
+      "created_at": "2020-04-19T03:16:06.000Z",
+      "url": "https://greasyfork.org/users/522027-gomg007",
+      "scripts": []
+    }
+  ],
+  "name": "虎牙自动送礼物-定制版",
+  "description": "将包裹里的礼物自动全部送出【淘宝店铺（因稀有才珍贵）制作】",
+  "url": "https://greasyfork.org/scripts/470412-%E8%99%8E%E7%89%99%E8%87%AA%E5%8A%A8%E9%80%81%E7%A4%BC%E7%89%A9-%E5%AE%9A%E5%88%B6%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/470412/%E8%99%8E%E7%89%99%E8%87%AA%E5%8A%A8%E9%80%81%E7%A4%BC%E7%89%A9-%E5%AE%9A%E5%88%B6%E7%89%88.user.js",
+  "code_size": 4209,
+  "license": "淘宝店铺（因稀有才珍贵）制作",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

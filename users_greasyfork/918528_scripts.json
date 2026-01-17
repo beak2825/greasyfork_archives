@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476554,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-02T10:36:19.000Z",
+    "code_updated_at": "2023-10-02T10:36:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918528,
+        "name": "azh-1415926",
+        "created_at": "2022-05-25T16:32:15.000Z",
+        "url": "https://greasyfork.org/users/918528-azh-1415926"
+      }
+    ],
+    "name": "井冈山大学心理测试自动答题",
+    "description": "用于井冈山大学心理测试自动答题，需自行修改账号密码",
+    "url": "https://greasyfork.org/scripts/476554-%E4%BA%95%E5%86%88%E5%B1%B1%E5%A4%A7%E5%AD%A6%E5%BF%83%E7%90%86%E6%B5%8B%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/476554/%E4%BA%95%E5%86%88%E5%B1%B1%E5%A4%A7%E5%AD%A6%E5%BF%83%E7%90%86%E6%B5%8B%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98.user.js",
+    "code_size": 4676,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

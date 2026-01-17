@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451372,
+    "daily_installs": 0,
+    "total_installs": 315,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-14T14:03:07.000Z",
+    "code_updated_at": "2022-09-14T14:03:06.000Z",
+    "namespace": "Stanergy Gin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 959218,
+        "name": "StanergyGin",
+        "created_at": "2022-09-14T13:45:38.000Z",
+        "url": "https://greasyfork.org/users/959218-stanergygin"
+      }
+    ],
+    "name": "新·三相之力指示器改(标签化 by Stanergy Gin）",
+    "description": "真·打标签（基于新·三相之力指示器的修改）",
+    "url": "https://greasyfork.org/scripts/451372-%E6%96%B0-%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B%E6%8C%87%E7%A4%BA%E5%99%A8%E6%94%B9-%E6%A0%87%E7%AD%BE%E5%8C%96-by-stanergy-gin",
+    "code_url": "https://update.greasyfork.org/scripts/451372/%E6%96%B0%C2%B7%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B%E6%8C%87%E7%A4%BA%E5%99%A8%E6%94%B9%28%E6%A0%87%E7%AD%BE%E5%8C%96%20by%20Stanergy%20Gin%EF%BC%89.user.js",
+    "code_size": 20698,
+    "license": "MIT License",
+    "version": "0.3.4beta",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

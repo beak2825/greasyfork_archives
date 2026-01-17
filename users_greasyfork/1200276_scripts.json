@@ -129,6 +129,72 @@
     "version": "1",
     "locale": "de",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 480956,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-28T15:30:13.000Z",
+    "code_updated_at": "2025-05-15T18:57:43.000Z",
+    "namespace": "https://proxer.me/user/614329/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1200276,
+        "name": "Awesome158",
+        "created_at": "2023-10-20T11:31:29.000Z",
+        "url": "https://greasyfork.org/users/1200276-awesome158"
+      }
+    ],
+    "name": "Auto-Fill Filename Script",
+    "description": "Füllt automatisch den titel in das Textfeld ein und überwacht kontinuierlich das Dateieingabefeld",
+    "url": "https://greasyfork.org/scripts/480956-auto-fill-filename-script",
+    "code_url": "https://update.greasyfork.org/scripts/480956/Auto-Fill%20Filename%20Script.user.js",
+    "code_size": 3698,
+    "license": null,
+    "version": "0.9",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477853,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-20T12:44:05.000Z",
+    "code_updated_at": "2024-12-14T01:30:39.000Z",
+    "namespace": "https://greasyfork.org/en/users/1200276-awesome4",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1200276,
+        "name": "Awesome158",
+        "created_at": "2023-10-20T11:31:29.000Z",
+        "url": "https://greasyfork.org/users/1200276-awesome158"
+      }
+    ],
+    "name": "Webnovel Tag Search Mode Switcher",
+    "description": "This script simplifies tag searches on Webnovel.com, allowing you to switch between novel and fanfic search modes, eliminating the need for manual URL adjustments. Enhance your tag exploration experience with this user-friendly feature.",
+    "url": "https://greasyfork.org/scripts/477853-webnovel-tag-search-mode-switcher",
+    "code_url": "https://update.greasyfork.org/scripts/477853/Webnovel%20Tag%20Search%20Mode%20Switcher.user.js",
+    "code_size": 7588,
+    "license": "GNU GPLv3",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

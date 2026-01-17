@@ -1,0 +1,59 @@
+{
+  "id": 422098,
+  "daily_installs": 1,
+  "total_installs": 103,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-02-21T11:23:13.000Z",
+  "code_updated_at": "2021-02-21T11:23:13.000Z",
+  "namespace": "https://roderickqiu.scris.top/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 739542,
+      "name": "H4wk3ye",
+      "created_at": "2021-02-21T11:18:39.000Z",
+      "url": "https://greasyfork.org/users/739542-h4wk3ye",
+      "scripts": [
+        {
+          "id": 422098,
+          "daily_installs": 1,
+          "total_installs": 103,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2021-02-21T11:23:13.000Z",
+          "code_updated_at": "2021-02-21T11:23:13.000Z",
+          "namespace": "https://roderickqiu.scris.top/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DuckDuckGo Meaningless Things Remover 2",
+          "description": "Fork of DuckDuckGo Meaningless Things Remover (https://greasyfork.org/en/scripts/371791-duckduckgo-meaningless-things-remover) that also removes the social medial menu。",
+          "url": "https://greasyfork.org/scripts/422098-duckduckgo-meaningless-things-remover-2",
+          "code_url": "https://update.greasyfork.org/scripts/422098/DuckDuckGo%20Meaningless%20Things%20Remover%202.user.js",
+          "code_size": 2462,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DuckDuckGo Meaningless Things Remover 2",
+  "description": "Fork of DuckDuckGo Meaningless Things Remover (https://greasyfork.org/en/scripts/371791-duckduckgo-meaningless-things-remover) that also removes the social medial menu。",
+  "url": "https://greasyfork.org/scripts/422098-duckduckgo-meaningless-things-remover-2",
+  "code_url": "https://update.greasyfork.org/scripts/422098/DuckDuckGo%20Meaningless%20Things%20Remover%202.user.js",
+  "code_size": 2462,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

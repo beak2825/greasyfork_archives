@@ -1,0 +1,34 @@
+{
+  "id": 492618,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-16T00:04:01.000Z",
+  "code_updated_at": "2024-07-25T05:48:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 2701,
+      "name": "Yitan",
+      "created_at": "2014-06-10T07:47:53.000Z",
+      "url": "https://greasyfork.org/users/2701-yitan",
+      "scripts": []
+    }
+  ],
+  "name": "V2EX Image Redirector",
+  "description": "Redirects specific image URLs on V2EX to a different URL.",
+  "url": "https://greasyfork.org/scripts/492618-v2ex-image-redirector",
+  "code_url": "https://update.greasyfork.org/scripts/492618/V2EX%20Image%20Redirector.user.js",
+  "code_size": 1535,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

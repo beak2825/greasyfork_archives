@@ -1,0 +1,59 @@
+{
+  "id": 447330,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-02T06:30:30.000Z",
+  "code_updated_at": "2022-07-02T06:34:57.000Z",
+  "namespace": "https://greasyfork.org/users/548282",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 548282,
+      "name": "MikuZZZ",
+      "created_at": "2020-05-02T21:33:32.000Z",
+      "url": "https://greasyfork.org/users/548282-mikuzzz",
+      "scripts": [
+        {
+          "id": 402500,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-05-02T21:38:15.000Z",
+          "code_updated_at": "2020-05-02T21:38:14.000Z",
+          "namespace": "me.mikuzz.userscript.baidu-baike-chinese-font-fix",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Baidu Baike Chinese Font Fix on Edge Chromium",
+          "description": "Fix Chinese font display on Windows Edge Chromium",
+          "url": "https://greasyfork.org/scripts/402500-baidu-baike-chinese-font-fix-on-edge-chromium",
+          "code_url": "https://update.greasyfork.org/scripts/402500/Baidu%20Baike%20Chinese%20Font%20Fix%20on%20Edge%20Chromium.user.js",
+          "code_size": 476,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SNH48海砂积分卡批量兑换",
+  "description": "SNH48海砂积分卡批量兑换脚本",
+  "url": "https://greasyfork.org/scripts/447330-snh48%E6%B5%B7%E7%A0%82%E7%A7%AF%E5%88%86%E5%8D%A1%E6%89%B9%E9%87%8F%E5%85%91%E6%8D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/447330/SNH48%E6%B5%B7%E7%A0%82%E7%A7%AF%E5%88%86%E5%8D%A1%E6%89%B9%E9%87%8F%E5%85%91%E6%8D%A2.user.js",
+  "code_size": 4418,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

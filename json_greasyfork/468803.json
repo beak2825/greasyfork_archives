@@ -1,0 +1,33 @@
+{
+  "id": 468803,
+  "daily_installs": 0,
+  "total_installs": 697,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-16T11:05:10.000Z",
+  "code_updated_at": "2023-06-16T11:05:50.000Z",
+  "namespace": "慢速脚本",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1072479,
+      "name": "Vxx:shuake345",
+      "created_at": "2023-05-03T17:57:24.000Z",
+      "url": "https://greasyfork.org/users/1072479-vxx-shuake345"
+    }
+  ],
+  "name": "教师研修网-信息技术2.0-2023_需配合识图软件",
+  "description": "慢速脚本|每次需点课程一次|全自动代刷VX：shuake345|代写程序",
+  "url": "https://greasyfork.org/scripts/468803-%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E7%BD%91-%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF2-0-2023-%E9%9C%80%E9%85%8D%E5%90%88%E8%AF%86%E5%9B%BE%E8%BD%AF%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/468803/%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E7%BD%91-%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF20-2023_%E9%9C%80%E9%85%8D%E5%90%88%E8%AF%86%E5%9B%BE%E8%BD%AF%E4%BB%B6.user.js",
+  "code_size": 2905,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

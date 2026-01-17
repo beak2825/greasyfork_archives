@@ -31,5 +31,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 483058,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-25T08:56:20.000Z",
+    "code_updated_at": "2023-12-25T08:56:20.000Z",
+    "namespace": "http://www.evelynal.top/Navigation/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1047517,
+        "name": "Evelynall",
+        "created_at": "2023-03-25T00:33:27.000Z",
+        "url": "https://greasyfork.org/users/1047517-evelynall"
+      }
+    ],
+    "name": "Bing搜索增强-By Evelynal",
+    "description": "增加多种bing搜索的命令，快捷搜索pdf、文档等",
+    "url": "https://greasyfork.org/scripts/483058-bing%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA-by-evelynal",
+    "code_url": "https://update.greasyfork.org/scripts/483058/Bing%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA-By%20Evelynal.user.js",
+    "code_size": 10635,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 475010,
+    "daily_installs": 0,
+    "total_installs": 196,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-11T07:45:34.000Z",
+    "code_updated_at": "2024-02-06T15:27:30.000Z",
+    "namespace": "http://www.evelynal.top/Navigation/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1047517,
+        "name": "Evelynall",
+        "created_at": "2023-03-25T00:33:27.000Z",
+        "url": "https://greasyfork.org/users/1047517-evelynall"
+      }
+    ],
+    "name": "包图纯享版-Evelynal",
+    "description": "删除多余功能按钮,送你一个干净的千图",
+    "url": "https://greasyfork.org/scripts/475010-%E5%8C%85%E5%9B%BE%E7%BA%AF%E4%BA%AB%E7%89%88-evelynal",
+    "code_url": "https://update.greasyfork.org/scripts/475010/%E5%8C%85%E5%9B%BE%E7%BA%AF%E4%BA%AB%E7%89%88-Evelynal.user.js",
+    "code_size": 1543,
+    "license": "AGPL-3.0 license",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 475009,
+    "daily_installs": 0,
+    "total_installs": 268,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-11T07:08:52.000Z",
+    "code_updated_at": "2024-02-06T20:33:18.000Z",
+    "namespace": "http://www.evelynal.top/Navigation/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1047517,
+        "name": "Evelynall",
+        "created_at": "2023-03-25T00:33:27.000Z",
+        "url": "https://greasyfork.org/users/1047517-evelynall"
+      }
+    ],
+    "name": "千图纯享版-Evelynal",
+    "description": "删除多余功能按钮,送你一个干净的千图",
+    "url": "https://greasyfork.org/scripts/475009-%E5%8D%83%E5%9B%BE%E7%BA%AF%E4%BA%AB%E7%89%88-evelynal",
+    "code_url": "https://update.greasyfork.org/scripts/475009/%E5%8D%83%E5%9B%BE%E7%BA%AF%E4%BA%AB%E7%89%88-Evelynal.user.js",
+    "code_size": 1868,
+    "license": "AGPL-3.0 license",
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

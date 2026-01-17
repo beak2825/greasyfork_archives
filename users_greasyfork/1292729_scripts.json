@@ -328,5 +328,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493397,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T00:00:29.000Z",
+    "code_updated_at": "2024-04-26T16:30:43.000Z",
+    "namespace": "https://greasyfork.org/users/1292729",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1292729,
+        "name": "Mist Borna",
+        "created_at": "2024-04-24T23:55:38.000Z",
+        "url": "https://greasyfork.org/users/1292729-mist-borna"
+      }
+    ],
+    "name": "Selective Icon Placement - Hide and Seek",
+    "description": "Add icons next to specific members based on their IDs on both faction and profile pages, and dynamically on profile previews",
+    "url": "https://greasyfork.org/scripts/493397-selective-icon-placement-hide-and-seek",
+    "code_url": "https://update.greasyfork.org/scripts/493397/Selective%20Icon%20Placement%20-%20Hide%20and%20Seek.user.js",
+    "code_size": 6144,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

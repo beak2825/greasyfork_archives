@@ -1,0 +1,68 @@
+[
+  {
+    "id": 479061,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-05T03:49:50.000Z",
+    "code_updated_at": "2023-11-05T03:56:20.000Z",
+    "namespace": "http://your.namespace.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1197887,
+        "name": "hubit123",
+        "created_at": "2023-10-17T07:51:09.000Z",
+        "url": "https://greasyfork.org/users/1197887-hubit123"
+      }
+    ],
+    "name": "讯飞配音导出工具",
+    "description": "Capture links starting with \"/synth\" in network requests and control button state.",
+    "url": "https://greasyfork.org/scripts/479061-%E8%AE%AF%E9%A3%9E%E9%85%8D%E9%9F%B3%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/479061/%E8%AE%AF%E9%A3%9E%E9%85%8D%E9%9F%B3%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 7314,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477588,
+    "daily_installs": 0,
+    "total_installs": 212,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-17T08:55:57.000Z",
+    "code_updated_at": "2024-01-29T13:04:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1197887,
+        "name": "hubit123",
+        "created_at": "2023-10-17T07:51:09.000Z",
+        "url": "https://greasyfork.org/users/1197887-hubit123"
+      }
+    ],
+    "name": "FreeOK 网页全屏按钮 播放失败自动刷新",
+    "description": "在freeok.vip网页的添加网页全屏按钮 并且自动刷新播放失败的页面",
+    "url": "https://greasyfork.org/scripts/477588-freeok-%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E6%8C%89%E9%92%AE-%E6%92%AD%E6%94%BE%E5%A4%B1%E8%B4%A5%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/477588/FreeOK%20%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E6%8C%89%E9%92%AE%20%E6%92%AD%E6%94%BE%E5%A4%B1%E8%B4%A5%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0.user.js",
+    "code_size": 4181,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

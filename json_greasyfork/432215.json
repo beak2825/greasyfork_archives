@@ -1,0 +1,34 @@
+{
+  "id": 432215,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-10T17:44:44.000Z",
+  "code_updated_at": "2021-09-10T17:44:42.000Z",
+  "namespace": "https://y2mate.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 8813,
+      "name": "nascent",
+      "created_at": "2015-02-02T09:53:00.000Z",
+      "url": "https://greasyfork.org/users/8813-nascent",
+      "scripts": []
+    }
+  ],
+  "name": "Y2mate Youtube Download Button",
+  "description": "Y2mate Downloader: Download Video and Audio for free",
+  "url": "https://greasyfork.org/scripts/432215-y2mate-youtube-download-button",
+  "code_url": "https://update.greasyfork.org/scripts/432215/Y2mate%20Youtube%20Download%20Button.user.js",
+  "code_size": 4175,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 453527,
+    "daily_installs": 0,
+    "total_installs": 67,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-22T07:28:38.000Z",
+    "code_updated_at": "2023-02-25T04:30:55.000Z",
+    "namespace": "gorse-io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973782,
+        "name": "zhenghaoz",
+        "created_at": "2022-10-22T07:07:43.000Z",
+        "url": "https://greasyfork.org/users/973782-zhenghaoz"
+      }
+    ],
+    "name": "GitRec",
+    "description": "A recommender system for GitHub repositories based on Gorse",
+    "url": "https://greasyfork.org/scripts/453527-gitrec",
+    "code_url": "https://update.greasyfork.org/scripts/453527/GitRec.user.js",
+    "code_size": 70992,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

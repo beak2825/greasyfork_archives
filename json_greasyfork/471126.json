@@ -1,0 +1,33 @@
+{
+  "id": 471126,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-18T13:27:10.000Z",
+  "code_updated_at": "2023-07-18T14:01:41.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1027214,
+      "name": "X-ing-Ci",
+      "created_at": "2023-02-15T04:22:35.000Z",
+      "url": "https://greasyfork.org/users/1027214-x-ing-ci"
+    }
+  ],
+  "name": "学学学储存库",
+  "description": "用于储存“学学学”所需要的HTML、CSS、JS等信息",
+  "url": "https://greasyfork.org/scripts/471126-%E5%AD%A6%E5%AD%A6%E5%AD%A6%E5%82%A8%E5%AD%98%E5%BA%93",
+  "code_url": "https://update.greasyfork.org/scripts/471126/1221842/%E5%AD%A6%E5%AD%A6%E5%AD%A6%E5%82%A8%E5%AD%98%E5%BA%93.js",
+  "code_size": 419903,
+  "license": null,
+  "version": "0.0.1.20230718140141",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

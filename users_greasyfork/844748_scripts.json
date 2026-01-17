@@ -1,0 +1,68 @@
+[
+  {
+    "id": 437742,
+    "daily_installs": 0,
+    "total_installs": 473,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-29T08:31:47.000Z",
+    "code_updated_at": "2022-04-21T14:48:01.000Z",
+    "namespace": "https://v6ym.com/",
+    "support_url": "https://v6ym.com/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 844748,
+        "name": "ZzzYanSong",
+        "created_at": "2021-11-26T13:48:54.000Z",
+        "url": "https://greasyfork.org/users/844748-zzzyansong"
+      }
+    ],
+    "name": "yftech自动答题程序",
+    "description": "作用于www.yftechweb.cn，是一款针对网页端考试，练习作业的一款轻量级自动化答题插件。",
+    "url": "https://greasyfork.org/scripts/437742-yftech%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E7%A8%8B%E5%BA%8F",
+    "code_url": "https://update.greasyfork.org/scripts/437742/yftech%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E7%A8%8B%E5%BA%8F.user.js",
+    "code_size": 33073,
+    "license": "zys",
+    "version": "1.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 436116,
+    "daily_installs": 0,
+    "total_installs": 284,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-26T14:58:34.000Z",
+    "code_updated_at": "2021-12-23T08:46:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://v6ym.com/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 844748,
+        "name": "ZzzYanSong",
+        "created_at": "2021-11-26T13:48:54.000Z",
+        "url": "https://greasyfork.org/users/844748-zzzyansong"
+      }
+    ],
+    "name": "自动答题-朱岩松云题库",
+    "description": "自动答题，干翻老师的网站！！！！",
+    "url": "https://greasyfork.org/scripts/436116-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E6%9C%B1%E5%B2%A9%E6%9D%BE%E4%BA%91%E9%A2%98%E5%BA%93",
+    "code_url": "https://update.greasyfork.org/scripts/436116/%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E6%9C%B1%E5%B2%A9%E6%9D%BE%E4%BA%91%E9%A2%98%E5%BA%93.user.js",
+    "code_size": 19908,
+    "license": "zys",
+    "version": "1.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

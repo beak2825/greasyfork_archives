@@ -1,0 +1,59 @@
+{
+  "id": 427511,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-04T10:25:26.000Z",
+  "code_updated_at": "2021-06-04T10:38:13.000Z",
+  "namespace": "lhhw2021",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 779614,
+      "name": "lhhw2021",
+      "created_at": "2021-06-04T05:33:45.000Z",
+      "url": "https://greasyfork.org/users/779614-lhhw2021",
+      "scripts": [
+        {
+          "id": 427511,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-04T10:25:26.000Z",
+          "code_updated_at": "2021-06-04T10:38:13.000Z",
+          "namespace": "lhhw2021",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "【购物先领券】-淘宝天猫隐藏券查询助手",
+          "description": "在淘宝/天猫商品中查询有没有优惠券，在商品详情页显示优惠券，如果商品有优惠券会在商品详情页价格下方出现优惠券领券按钮，如果没有表示该商品没有优惠券。",
+          "url": "https://greasyfork.org/scripts/427511-%E8%B4%AD%E7%89%A9%E5%85%88%E9%A2%86%E5%88%B8-%E6%B7%98%E5%AE%9D%E5%A4%A9%E7%8C%AB%E9%9A%90%E8%97%8F%E5%88%B8%E6%9F%A5%E8%AF%A2%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/427511/%E3%80%90%E8%B4%AD%E7%89%A9%E5%85%88%E9%A2%86%E5%88%B8%E3%80%91-%E6%B7%98%E5%AE%9D%E5%A4%A9%E7%8C%AB%E9%9A%90%E8%97%8F%E5%88%B8%E6%9F%A5%E8%AF%A2%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 4131,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "【购物先领券】-淘宝天猫隐藏券查询助手",
+  "description": "在淘宝/天猫商品中查询有没有优惠券，在商品详情页显示优惠券，如果商品有优惠券会在商品详情页价格下方出现优惠券领券按钮，如果没有表示该商品没有优惠券。",
+  "url": "https://greasyfork.org/scripts/427511-%E8%B4%AD%E7%89%A9%E5%85%88%E9%A2%86%E5%88%B8-%E6%B7%98%E5%AE%9D%E5%A4%A9%E7%8C%AB%E9%9A%90%E8%97%8F%E5%88%B8%E6%9F%A5%E8%AF%A2%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/427511/%E3%80%90%E8%B4%AD%E7%89%A9%E5%85%88%E9%A2%86%E5%88%B8%E3%80%91-%E6%B7%98%E5%AE%9D%E5%A4%A9%E7%8C%AB%E9%9A%90%E8%97%8F%E5%88%B8%E6%9F%A5%E8%AF%A2%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 4131,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

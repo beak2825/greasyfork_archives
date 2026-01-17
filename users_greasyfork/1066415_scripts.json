@@ -1,0 +1,68 @@
+[
+  {
+    "id": 464705,
+    "daily_installs": 0,
+    "total_installs": 146,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-23T18:11:49.000Z",
+    "code_updated_at": "2023-04-23T18:11:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1066415,
+        "name": "David Johnson",
+        "created_at": "2023-04-23T18:01:15.000Z",
+        "url": "https://greasyfork.org/users/1066415-david-johnson"
+      }
+    ],
+    "name": "Fandom Remove Ads",
+    "description": "Remove ads from fandom.com wiki sites",
+    "url": "https://greasyfork.org/scripts/464705-fandom-remove-ads",
+    "code_url": "https://update.greasyfork.org/scripts/464705/Fandom%20Remove%20Ads.user.js",
+    "code_size": 891,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 464703,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-23T18:05:10.000Z",
+    "code_updated_at": "2023-04-23T18:05:10.000Z",
+    "namespace": "https://greasyfork.org/users/572366",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1066415,
+        "name": "David Johnson",
+        "created_at": "2023-04-23T18:01:15.000Z",
+        "url": "https://greasyfork.org/users/1066415-david-johnson"
+      }
+    ],
+    "name": "hideGoogleSearchAds",
+    "description": "Hide ad results in google search",
+    "url": "https://greasyfork.org/scripts/464703-hidegooglesearchads",
+    "code_url": "https://update.greasyfork.org/scripts/464703/hideGoogleSearchAds.user.js",
+    "code_size": 631,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

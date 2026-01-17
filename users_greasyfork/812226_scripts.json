@@ -1,0 +1,101 @@
+[
+  {
+    "id": 432079,
+    "daily_installs": 0,
+    "total_installs": 121,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-07T22:58:33.000Z",
+    "code_updated_at": "2021-09-08T00:31:24.000Z",
+    "namespace": "https://greasyfork.org/users/812226",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 812226,
+        "name": "William Bulovas",
+        "created_at": "2021-09-04T18:51:05.000Z",
+        "url": "https://greasyfork.org/users/812226-william-bulovas"
+      }
+    ],
+    "name": "ESPN BorisChenTiers",
+    "description": "This script adds a row to the team and player page in ESPN Football Fantasy website with the boris chen tier",
+    "url": "https://greasyfork.org/scripts/432079-espn-borischentiers",
+    "code_url": "https://update.greasyfork.org/scripts/432079/ESPN%20BorisChenTiers.user.js",
+    "code_size": 3817,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431921,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-05T00:47:19.000Z",
+    "code_updated_at": "2021-09-12T23:42:13.000Z",
+    "namespace": "https://greasyfork.org/users/812226",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 812226,
+        "name": "William Bulovas",
+        "created_at": "2021-09-04T18:51:05.000Z",
+        "url": "https://greasyfork.org/users/812226-william-bulovas"
+      }
+    ],
+    "name": "NFL.com BorisChenTiers",
+    "description": "This script adds a row to the team and player page in NFL.com Football Fantasy website with the boris chen tier",
+    "url": "https://greasyfork.org/scripts/431921-nfl-com-borischentiers",
+    "code_url": "https://update.greasyfork.org/scripts/431921/NFLcom%20BorisChenTiers.user.js",
+    "code_size": 2717,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431916,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-04T23:00:50.000Z",
+    "code_updated_at": "2021-09-09T01:37:10.000Z",
+    "namespace": "BorisChenTiers",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 812226,
+        "name": "William Bulovas",
+        "created_at": "2021-09-04T18:51:05.000Z",
+        "url": "https://greasyfork.org/users/812226-william-bulovas"
+      }
+    ],
+    "name": "BorisChenTiers",
+    "description": "Library that generates the BorisChen player name to tier map",
+    "url": "https://greasyfork.org/scripts/431916-borischentiers",
+    "code_url": "https://update.greasyfork.org/scripts/431916/968797/BorisChenTiers.js",
+    "code_size": 3627,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

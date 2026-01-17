@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486798,
+    "daily_installs": 1,
+    "total_installs": 78,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-06T21:00:54.000Z",
+    "code_updated_at": "2025-11-05T15:31:47.000Z",
+    "namespace": "https://codeberg.org/lupomikti",
+    "support_url": "https://github.com/lupomikti/Userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209196,
+        "name": "lupomikti",
+        "created_at": "2023-11-02T09:58:09.000Z",
+        "url": "https://greasyfork.org/users/1209196-lupomikti"
+      }
+    ],
+    "name": "Show Total Lesson Count - WaniKani",
+    "description": "Add the count of total lessons to the Today's Lessons widget",
+    "url": "https://greasyfork.org/scripts/486798-show-total-lesson-count-wanikani",
+    "code_url": "https://update.greasyfork.org/scripts/486798/Show%20Total%20Lesson%20Count%20-%20WaniKani.user.js",
+    "code_size": 25137,
+    "license": "MIT License",
+    "version": "0.6.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

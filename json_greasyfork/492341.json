@@ -1,0 +1,34 @@
+{
+  "id": 492341,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-12T12:02:17.000Z",
+  "code_updated_at": "2024-04-12T12:02:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Req AI Start Sp Lothar Rahn",
+  "description": "Insert",
+  "url": "https://greasyfork.org/scripts/492341-req-ai-start-sp-lothar-rahn",
+  "code_url": "https://update.greasyfork.org/scripts/492341/Req%20AI%20Start%20Sp%20Lothar%20Rahn.user.js",
+  "code_size": 1058,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

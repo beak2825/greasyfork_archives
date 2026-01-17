@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442368,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-03-30T17:46:00.000Z",
+    "code_updated_at": "2022-03-30T17:46:00.000Z",
+    "namespace": "CollectionOnlyFilter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 895545,
+        "name": "RustySpaceToilet",
+        "created_at": "2022-03-30T17:40:44.000Z",
+        "url": "https://greasyfork.org/users/895545-rustyspacetoilet"
+      }
+    ],
+    "name": "Ebay Collection only filter v2 fixed",
+    "description": "Hide collection only listings",
+    "url": "https://greasyfork.org/scripts/442368-ebay-collection-only-filter-v2-fixed",
+    "code_url": "https://update.greasyfork.org/scripts/442368/Ebay%20Collection%20only%20filter%20v2%20fixed.user.js",
+    "code_size": 1034,
+    "license": null,
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

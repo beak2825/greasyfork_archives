@@ -1,0 +1,33 @@
+{
+  "id": 420122,
+  "daily_installs": 0,
+  "total_installs": 278,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-13T08:43:14.000Z",
+  "code_updated_at": "2021-05-14T03:07:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 726889,
+      "name": "Superpengun",
+      "created_at": "2021-01-13T08:35:12.000Z",
+      "url": "https://greasyfork.org/users/726889-superpengun"
+    }
+  ],
+  "name": "owls贴吧顶贴",
+  "description": "全自动百度贴吧顶贴/回帖/引流",
+  "url": "https://greasyfork.org/scripts/420122-owls%E8%B4%B4%E5%90%A7%E9%A1%B6%E8%B4%B4",
+  "code_url": "https://update.greasyfork.org/scripts/420122/owls%E8%B4%B4%E5%90%A7%E9%A1%B6%E8%B4%B4.user.js",
+  "code_size": 1488,
+  "license": null,
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

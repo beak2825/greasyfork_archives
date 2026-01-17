@@ -1,0 +1,33 @@
+{
+  "id": 443994,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-25T19:48:12.000Z",
+  "code_updated_at": "2022-04-25T19:48:11.000Z",
+  "namespace": "club.porcupine.gm_scripts.narrow_hdbits",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 2714,
+      "name": "smammy",
+      "created_at": "2014-06-10T15:53:15.000Z",
+      "url": "https://greasyfork.org/users/2714-smammy"
+    }
+  ],
+  "name": "Narrow HDBits",
+  "description": "Help HDBits fit on narrower screens",
+  "url": "https://greasyfork.org/scripts/443994-narrow-hdbits",
+  "code_url": "https://update.greasyfork.org/scripts/443994/Narrow%20HDBits.user.js",
+  "code_size": 1742,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

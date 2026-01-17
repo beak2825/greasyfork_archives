@@ -1,0 +1,59 @@
+{
+  "id": 412652,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-07T18:35:16.000Z",
+  "code_updated_at": "2020-10-09T08:29:51.000Z",
+  "namespace": "https://warum-llamas.tk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 693182,
+      "name": "Joe-Capewell",
+      "created_at": "2020-10-07T18:03:49.000Z",
+      "url": "https://greasyfork.org/users/693182-joe-capewell",
+      "scripts": [
+        {
+          "id": 412652,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-07T18:35:16.000Z",
+          "code_updated_at": "2020-10-09T08:29:51.000Z",
+          "namespace": "https://warum-llamas.tk",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NDT injector",
+          "description": "For those who don't have dev tools. Hit ctrl + shift + i to open and close it",
+          "url": "https://greasyfork.org/scripts/412652-ndt-injector",
+          "code_url": "https://update.greasyfork.org/scripts/412652/NDT%20injector.user.js",
+          "code_size": 1138,
+          "license": null,
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NDT injector",
+  "description": "For those who don't have dev tools. Hit ctrl + shift + i to open and close it",
+  "url": "https://greasyfork.org/scripts/412652-ndt-injector",
+  "code_url": "https://update.greasyfork.org/scripts/412652/NDT%20injector.user.js",
+  "code_size": 1138,
+  "license": null,
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

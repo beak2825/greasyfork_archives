@@ -1,0 +1,59 @@
+{
+  "id": 439280,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-28T13:42:52.000Z",
+  "code_updated_at": "2022-01-29T03:30:22.000Z",
+  "namespace": "User81",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 870454,
+      "name": "user81",
+      "created_at": "2022-01-28T13:14:13.000Z",
+      "url": "https://greasyfork.org/users/870454-user81",
+      "scripts": [
+        {
+          "id": 439280,
+          "daily_installs": 0,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-28T13:42:52.000Z",
+          "code_updated_at": "2022-01-29T03:30:22.000Z",
+          "namespace": "User81",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Steam Community - All Friends Poster, VAC, add",
+          "description": "Posts a message to all or selected friends, VAC status check, add friends",
+          "url": "https://greasyfork.org/scripts/439280-steam-community-all-friends-poster-vac-add",
+          "code_url": "https://update.greasyfork.org/scripts/439280/Steam%20Community%20-%20All%20Friends%20Poster%2C%20VAC%2C%20add.user.js",
+          "code_size": 10306,
+          "license": "MIT License",
+          "version": "0.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Steam Community - All Friends Poster, VAC, add",
+  "description": "Posts a message to all or selected friends, VAC status check, add friends",
+  "url": "https://greasyfork.org/scripts/439280-steam-community-all-friends-poster-vac-add",
+  "code_url": "https://update.greasyfork.org/scripts/439280/Steam%20Community%20-%20All%20Friends%20Poster%2C%20VAC%2C%20add.user.js",
+  "code_size": 10306,
+  "license": "MIT License",
+  "version": "0.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

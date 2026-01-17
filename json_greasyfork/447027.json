@@ -1,0 +1,59 @@
+{
+  "id": 447027,
+  "daily_installs": 1,
+  "total_installs": 2161,
+  "fan_score": "46.7",
+  "good_ratings": 5,
+  "ok_ratings": 3,
+  "bad_ratings": 0,
+  "created_at": "2022-06-25T15:52:05.000Z",
+  "code_updated_at": "2022-06-25T15:52:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 929208,
+      "name": "boan-anbo",
+      "created_at": "2022-06-25T15:50:36.000Z",
+      "url": "https://greasyfork.org/users/929208-boan-anbo",
+      "scripts": [
+        {
+          "id": 447027,
+          "daily_installs": 1,
+          "total_installs": 2161,
+          "fan_score": "46.7",
+          "good_ratings": 5,
+          "ok_ratings": 3,
+          "bad_ratings": 0,
+          "created_at": "2022-06-25T15:52:05.000Z",
+          "code_updated_at": "2022-06-25T15:52:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Internet Archive Pdf Download Link",
+          "description": "generate a button for borrowed Internet Archive books.",
+          "url": "https://greasyfork.org/scripts/447027-internet-archive-pdf-download-link",
+          "code_url": "https://update.greasyfork.org/scripts/447027/Internet%20Archive%20Pdf%20Download%20Link.user.js",
+          "code_size": 1309,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Internet Archive Pdf Download Link",
+  "description": "generate a button for borrowed Internet Archive books.",
+  "url": "https://greasyfork.org/scripts/447027-internet-archive-pdf-download-link",
+  "code_url": "https://update.greasyfork.org/scripts/447027/Internet%20Archive%20Pdf%20Download%20Link.user.js",
+  "code_size": 1309,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

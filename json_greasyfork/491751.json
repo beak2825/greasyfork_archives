@@ -1,0 +1,59 @@
+{
+  "id": 491751,
+  "daily_installs": 0,
+  "total_installs": 769,
+  "fan_score": "2.7",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 1,
+  "created_at": "2024-04-05T21:13:53.000Z",
+  "code_updated_at": "2024-04-10T14:46:13.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1137794,
+      "name": "OOOHH",
+      "created_at": "2023-07-28T08:47:32.000Z",
+      "url": "https://greasyfork.org/users/1137794-ooohh",
+      "scripts": [
+        {
+          "id": 491751,
+          "daily_installs": 0,
+          "total_installs": 769,
+          "fan_score": "2.7",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 1,
+          "created_at": "2024-04-05T21:13:53.000Z",
+          "code_updated_at": "2024-04-10T14:46:13.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "双卫网省点心吧",
+          "description": "自动听课、考试、答题、交卷，不解释，尽快学习，失效不修复。",
+          "url": "https://greasyfork.org/scripts/491751-%E5%8F%8C%E5%8D%AB%E7%BD%91%E7%9C%81%E7%82%B9%E5%BF%83%E5%90%A7",
+          "code_url": "https://update.greasyfork.org/scripts/491751/%E5%8F%8C%E5%8D%AB%E7%BD%91%E7%9C%81%E7%82%B9%E5%BF%83%E5%90%A7.user.js",
+          "code_size": 957,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "双卫网省点心吧",
+  "description": "自动听课、考试、答题、交卷，不解释，尽快学习，失效不修复。",
+  "url": "https://greasyfork.org/scripts/491751-%E5%8F%8C%E5%8D%AB%E7%BD%91%E7%9C%81%E7%82%B9%E5%BF%83%E5%90%A7",
+  "code_url": "https://update.greasyfork.org/scripts/491751/%E5%8F%8C%E5%8D%AB%E7%BD%91%E7%9C%81%E7%82%B9%E5%BF%83%E5%90%A7.user.js",
+  "code_size": 957,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

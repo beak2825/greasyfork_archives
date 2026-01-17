@@ -1,0 +1,34 @@
+{
+  "id": 436731,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-08T06:36:36.000Z",
+  "code_updated_at": "2021-12-08T06:36:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 850180,
+      "name": "fn ln",
+      "created_at": "2021-12-08T06:32:35.000Z",
+      "url": "https://greasyfork.org/users/850180-fn-ln",
+      "scripts": []
+    }
+  ],
+  "name": "no answer",
+  "description": "hide code editor at leetcode-cn",
+  "url": "https://greasyfork.org/scripts/436731-no-answer",
+  "code_url": "https://update.greasyfork.org/scripts/436731/no%20answer.user.js",
+  "code_size": 666,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

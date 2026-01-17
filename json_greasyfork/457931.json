@@ -1,0 +1,59 @@
+{
+  "id": 457931,
+  "daily_installs": 0,
+  "total_installs": 87,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-09T18:42:59.000Z",
+  "code_updated_at": "2023-01-09T18:42:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 946546,
+      "name": "loadOverload",
+      "created_at": "2022-08-15T06:16:43.000Z",
+      "url": "https://greasyfork.org/users/946546-loadoverload",
+      "scripts": [
+        {
+          "id": 457931,
+          "daily_installs": 0,
+          "total_installs": 87,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-09T18:42:59.000Z",
+          "code_updated_at": "2023-01-09T18:42:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "所有字体改成Papyrus和华文行楷",
+          "description": "将你的网页上的所有文字字体改成华文行楷和Papyrus（纸莎草），没有华文行楷字体的将用其他行楷代替。",
+          "url": "https://greasyfork.org/scripts/457931-%E6%89%80%E6%9C%89%E5%AD%97%E4%BD%93%E6%94%B9%E6%88%90papyrus%E5%92%8C%E5%8D%8E%E6%96%87%E8%A1%8C%E6%A5%B7",
+          "code_url": "https://update.greasyfork.org/scripts/457931/%E6%89%80%E6%9C%89%E5%AD%97%E4%BD%93%E6%94%B9%E6%88%90Papyrus%E5%92%8C%E5%8D%8E%E6%96%87%E8%A1%8C%E6%A5%B7.user.js",
+          "code_size": 899,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "所有字体改成Papyrus和华文行楷",
+  "description": "将你的网页上的所有文字字体改成华文行楷和Papyrus（纸莎草），没有华文行楷字体的将用其他行楷代替。",
+  "url": "https://greasyfork.org/scripts/457931-%E6%89%80%E6%9C%89%E5%AD%97%E4%BD%93%E6%94%B9%E6%88%90papyrus%E5%92%8C%E5%8D%8E%E6%96%87%E8%A1%8C%E6%A5%B7",
+  "code_url": "https://update.greasyfork.org/scripts/457931/%E6%89%80%E6%9C%89%E5%AD%97%E4%BD%93%E6%94%B9%E6%88%90Papyrus%E5%92%8C%E5%8D%8E%E6%96%87%E8%A1%8C%E6%A5%B7.user.js",
+  "code_size": 899,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

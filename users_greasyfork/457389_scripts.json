@@ -1,0 +1,101 @@
+[
+  {
+    "id": 423836,
+    "daily_installs": 1,
+    "total_installs": 25862,
+    "fan_score": "56.5",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-03-23T11:58:32.000Z",
+    "code_updated_at": "2021-03-23T11:58:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 457389,
+        "name": "flaribbit",
+        "created_at": "2020-03-11T07:36:21.000Z",
+        "url": "https://greasyfork.org/users/457389-flaribbit"
+      }
+    ],
+    "name": "4399游戏下载",
+    "description": "flash已死，给4399游戏页面增加下载按钮",
+    "url": "https://greasyfork.org/scripts/423836-4399%E6%B8%B8%E6%88%8F%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/423836/4399%E6%B8%B8%E6%88%8F%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 637,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419486,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-01T08:59:46.000Z",
+    "code_updated_at": "2021-07-02T16:05:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 457389,
+        "name": "flaribbit",
+        "created_at": "2020-03-11T07:36:21.000Z",
+        "url": "https://greasyfork.org/users/457389-flaribbit"
+      }
+    ],
+    "name": "键盘邦邦",
+    "description": "嘤嘤嘤",
+    "url": "https://greasyfork.org/scripts/419486-%E9%94%AE%E7%9B%98%E9%82%A6%E9%82%A6",
+    "code_url": "https://update.greasyfork.org/scripts/419486/%E9%94%AE%E7%9B%98%E9%82%A6%E9%82%A6.user.js",
+    "code_size": 1632,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416855,
+    "daily_installs": 0,
+    "total_installs": 616,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-11-26T12:49:06.000Z",
+    "code_updated_at": "2020-11-26T12:49:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 457389,
+        "name": "flaribbit",
+        "created_at": "2020-03-11T07:36:21.000Z",
+        "url": "https://greasyfork.org/users/457389-flaribbit"
+      }
+    ],
+    "name": "替换百度学术知网链接",
+    "description": "null",
+    "url": "https://greasyfork.org/scripts/416855-%E6%9B%BF%E6%8D%A2%E7%99%BE%E5%BA%A6%E5%AD%A6%E6%9C%AF%E7%9F%A5%E7%BD%91%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/416855/%E6%9B%BF%E6%8D%A2%E7%99%BE%E5%BA%A6%E5%AD%A6%E6%9C%AF%E7%9F%A5%E7%BD%91%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 715,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

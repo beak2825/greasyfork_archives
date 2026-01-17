@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412516,
+    "daily_installs": 0,
+    "total_installs": 114,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-05T19:42:04.000Z",
+    "code_updated_at": "2020-10-05T19:52:27.000Z",
+    "namespace": "/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692667,
+        "name": "F2Ville",
+        "created_at": "2020-10-05T19:40:13.000Z",
+        "url": "https://greasyfork.org/users/692667-f2ville"
+      }
+    ],
+    "name": "AimTrainer Cheat",
+    "description": "Cheat on https://f2ville.space/aimtrainer",
+    "url": "https://greasyfork.org/scripts/412516-aimtrainer-cheat",
+    "code_url": "https://update.greasyfork.org/scripts/412516/AimTrainer%20Cheat.user.js",
+    "code_size": 707,
+    "license": null,
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491150,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-29T06:26:46.000Z",
+    "code_updated_at": "2024-03-29T06:26:45.000Z",
+    "namespace": "npm/vite-plugin-monkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1280970,
+        "name": "taichi",
+        "created_at": "2024-03-29T05:27:27.000Z",
+        "url": "https://greasyfork.org/users/1280970-taichi"
+      }
+    ],
+    "name": "太极助手",
+    "description": "基于用户自定义规则执行指定网页操作任务，可使用第三方规则",
+    "url": "https://greasyfork.org/scripts/491150-%E5%A4%AA%E6%9E%81%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/491150/%E5%A4%AA%E6%9E%81%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 31389,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

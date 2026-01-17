@@ -1,0 +1,34 @@
+{
+  "id": 452739,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-09T13:02:30.000Z",
+  "code_updated_at": "2022-10-09T13:02:30.000Z",
+  "namespace": "*.bloble.io/*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 916932,
+      "name": "Полевик Руслан",
+      "created_at": "2022-05-21T14:48:27.000Z",
+      "url": "https://greasyfork.org/users/916932-%D0%BF%D0%BE%D0%BB%D0%B5%D0%B2%D0%B8%D0%BA-%D1%80%D1%83%D1%81%D0%BB%D0%B0%D0%BD",
+      "scripts": []
+    }
+  ],
+  "name": "y",
+  "description": "script escrito por ࿇‗ᑭᒪᗩYℰℛ乂‗࿇, obg por usar :), meu email: kauan.mghenrique@gmail.com",
+  "url": "https://greasyfork.org/scripts/452739-y",
+  "code_url": "https://update.greasyfork.org/scripts/452739/y.user.js",
+  "code_size": 200787,
+  "license": "MIT License",
+  "version": "1.0000008",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

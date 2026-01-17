@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457064,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-23T18:42:38.000Z",
+    "code_updated_at": "2022-12-23T18:55:52.000Z",
+    "namespace": "https://greasyfork.org/en/users/1001944-faucetpay",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1001944,
+        "name": "Abubackar sithick",
+        "created_at": "2022-12-23T18:17:23.000Z",
+        "url": "https://greasyfork.org/users/1001944-abubackar-sithick"
+      }
+    ],
+    "name": "FreeFaucet AutoRoll Script.FREE CRYPTO EVERY 15min!!!",
+    "description": "AutoRoll Script autoroll and autocloseing",
+    "url": "https://greasyfork.org/scripts/457064-freefaucet-autoroll-script-free-crypto-every-15min",
+    "code_url": "https://update.greasyfork.org/scripts/457064/FreeFaucet%20AutoRoll%20ScriptFREE%20CRYPTO%20EVERY%2015min%21%21%21.user.js",
+    "code_size": 1236,
+    "license": null,
+    "version": "1.01",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

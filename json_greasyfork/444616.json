@@ -1,0 +1,33 @@
+{
+  "id": 444616,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-07T12:54:16.000Z",
+  "code_updated_at": "2022-05-07T12:54:16.000Z",
+  "namespace": "https://bbs.tampermonkey.net.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 888612,
+      "name": "duoluodexiaoxiaoyuan",
+      "created_at": "2022-03-17T12:15:44.000Z",
+      "url": "https://greasyfork.org/users/888612-duoluodexiaoxiaoyuan"
+    }
+  ],
+  "name": "记录账号和密码",
+  "description": "记录账号和密码,ctrl+x让窗口显示，可以把自己经常用的密码和账号写进去。应该只适用于测试或者开发测试系统的时候使用",
+  "url": "https://greasyfork.org/scripts/444616-%E8%AE%B0%E5%BD%95%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/444616/%E8%AE%B0%E5%BD%95%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81.user.js",
+  "code_size": 1441,
+  "license": "MIT License",
+  "version": "0.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 469453,
+  "daily_installs": 0,
+  "total_installs": 331,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-06-26T03:49:38.000Z",
+  "code_updated_at": "2023-06-26T03:49:37.000Z",
+  "namespace": "https://www.luogu.com.cn/blog/Rainwangpupil/copy-markdown-luogu-blog",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1110464,
+      "name": "THE_WANDERING_EARTH",
+      "created_at": "2023-06-24T03:30:24.000Z",
+      "url": "https://greasyfork.org/users/1110464-the-wandering-earth",
+      "scripts": [
+        {
+          "id": 469453,
+          "daily_installs": 0,
+          "total_installs": 331,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-06-26T03:49:38.000Z",
+          "code_updated_at": "2023-06-26T03:49:37.000Z",
+          "namespace": "https://www.luogu.com.cn/blog/Rainwangpupil/copy-markdown-luogu-blog",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "一键获取luogu blog源代码",
+          "description": "在他人洛谷博客页面使用 Ctrl + Alt + C 快捷键，一键复制博客源代码！",
+          "url": "https://greasyfork.org/scripts/469453-%E4%B8%80%E9%94%AE%E8%8E%B7%E5%8F%96luogu-blog%E6%BA%90%E4%BB%A3%E7%A0%81",
+          "code_url": "https://update.greasyfork.org/scripts/469453/%E4%B8%80%E9%94%AE%E8%8E%B7%E5%8F%96luogu%20blog%E6%BA%90%E4%BB%A3%E7%A0%81.user.js",
+          "code_size": 1069,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "一键获取luogu blog源代码",
+  "description": "在他人洛谷博客页面使用 Ctrl + Alt + C 快捷键，一键复制博客源代码！",
+  "url": "https://greasyfork.org/scripts/469453-%E4%B8%80%E9%94%AE%E8%8E%B7%E5%8F%96luogu-blog%E6%BA%90%E4%BB%A3%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/469453/%E4%B8%80%E9%94%AE%E8%8E%B7%E5%8F%96luogu%20blog%E6%BA%90%E4%BB%A3%E7%A0%81.user.js",
+  "code_size": 1069,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

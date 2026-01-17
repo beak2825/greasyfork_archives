@@ -1,0 +1,34 @@
+{
+  "id": 452366,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-02T09:32:54.000Z",
+  "code_updated_at": "2023-01-08T00:12:49.000Z",
+  "namespace": "https://greasyfork.org/users/965677",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 965677,
+      "name": "karol83",
+      "created_at": "2022-10-02T08:32:41.000Z",
+      "url": "https://greasyfork.org/users/965677-karol83",
+      "scripts": []
+    }
+  ],
+  "name": "ga-unpaywall",
+  "description": "Unscramble words of paywalled General-Anzeiger articles",
+  "url": "https://greasyfork.org/scripts/452366-ga-unpaywall",
+  "code_url": "https://update.greasyfork.org/scripts/452366/ga-unpaywall.user.js",
+  "code_size": 2042241,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

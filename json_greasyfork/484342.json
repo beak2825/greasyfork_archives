@@ -1,0 +1,34 @@
+{
+  "id": 484342,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-09T09:34:18.000Z",
+  "code_updated_at": "2024-01-09T09:34:18.000Z",
+  "namespace": "https://hn.ischinese.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1245040,
+      "name": "bin_scarecrow",
+      "created_at": "2024-01-08T11:39:41.000Z",
+      "url": "https://greasyfork.org/users/1245040-bin-scarecrow",
+      "scripts": []
+    }
+  ],
+  "name": "湖南省事业单位工作人员培训网络平台",
+  "description": "学习视频（基于作者Aether代码修改）",
+  "url": "https://greasyfork.org/scripts/484342-%E6%B9%96%E5%8D%97%E7%9C%81%E4%BA%8B%E4%B8%9A%E5%8D%95%E4%BD%8D%E5%B7%A5%E4%BD%9C%E4%BA%BA%E5%91%98%E5%9F%B9%E8%AE%AD%E7%BD%91%E7%BB%9C%E5%B9%B3%E5%8F%B0",
+  "code_url": "https://update.greasyfork.org/scripts/484342/%E6%B9%96%E5%8D%97%E7%9C%81%E4%BA%8B%E4%B8%9A%E5%8D%95%E4%BD%8D%E5%B7%A5%E4%BD%9C%E4%BA%BA%E5%91%98%E5%9F%B9%E8%AE%AD%E7%BD%91%E7%BB%9C%E5%B9%B3%E5%8F%B0.user.js",
+  "code_size": 8640,
+  "license": "MIT License",
+  "version": "1.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

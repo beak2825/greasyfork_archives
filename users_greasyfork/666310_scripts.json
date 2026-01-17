@@ -1,0 +1,134 @@
+[
+  {
+    "id": 441248,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-10T00:55:22.000Z",
+    "code_updated_at": "2022-03-10T00:55:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666310,
+        "name": "Myung Jiwoon",
+        "created_at": "2020-07-13T04:48:51.000Z",
+        "url": "https://greasyfork.org/users/666310-myung-jiwoon"
+      }
+    ],
+    "name": "Krunker.IO AimLock",
+    "description": "Locks aim to the nearest player in krunker.io",
+    "url": "https://greasyfork.org/scripts/441248-krunker-io-aimlock",
+    "code_url": "https://update.greasyfork.org/scripts/441248/KrunkerIO%20AimLock.user.js",
+    "code_size": 4912,
+    "license": null,
+    "version": "304.77",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438611,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-15T23:43:17.000Z",
+    "code_updated_at": "2022-03-26T20:32:50.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666310,
+        "name": "Myung Jiwoon",
+        "created_at": "2020-07-13T04:48:51.000Z",
+        "url": "https://greasyfork.org/users/666310-myung-jiwoon"
+      }
+    ],
+    "name": "Arras.io FOV Script",
+    "description": "Control FOV by mouse wheel",
+    "url": "https://greasyfork.org/scripts/438611-arras-io-fov-script",
+    "code_url": "https://update.greasyfork.org/scripts/438611/Arrasio%20FOV%20Script.user.js",
+    "code_size": 1271,
+    "license": null,
+    "version": "403.77",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 424458,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-04T05:23:08.000Z",
+    "code_updated_at": "2021-04-09T09:23:28.000Z",
+    "namespace": "https://greasyfork.org/users/704479",
+    "support_url": "https://skidlamer.github.io/wp",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666310,
+        "name": "Myung Jiwoon",
+        "created_at": "2020-07-13T04:48:51.000Z",
+        "url": "https://greasyfork.org/users/666310-myung-jiwoon"
+      }
+    ],
+    "name": "Krunker  Dogeware - by The Gaming Gurus",
+    "description": "The most advanced krunker cheat",
+    "url": "https://greasyfork.org/scripts/424458-krunker-dogeware-by-the-gaming-gurus",
+    "code_url": "https://update.greasyfork.org/scripts/424458/Krunker%20%20Dogeware%20-%20by%20The%20Gaming%20Gurus.user.js",
+    "code_size": 77753,
+    "license": null,
+    "version": "3.8.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 424187,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-29T23:53:55.000Z",
+    "code_updated_at": "2022-04-07T23:13:56.000Z",
+    "namespace": "https://greasyfork.org/users/746946",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666310,
+        "name": "Myung Jiwoon",
+        "created_at": "2020-07-13T04:48:51.000Z",
+        "url": "https://greasyfork.org/users/666310-myung-jiwoon"
+      }
+    ],
+    "name": "SOFTWARE MOD",
+    "description": "AUTO BUY HATS AND OP INSTA",
+    "url": "https://greasyfork.org/scripts/424187-software-mod",
+    "code_url": "https://update.greasyfork.org/scripts/424187/SOFTWARE%20MOD.user.js",
+    "code_size": 460467,
+    "license": null,
+    "version": "v493",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

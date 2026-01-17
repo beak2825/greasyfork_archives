@@ -1,0 +1,101 @@
+[
+  {
+    "id": 460194,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-17T14:15:38.000Z",
+    "code_updated_at": "2023-02-24T09:27:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016614,
+        "name": "Yurev",
+        "created_at": "2023-01-25T17:23:50.000Z",
+        "url": "https://greasyfork.org/users/1016614-yurev"
+      }
+    ],
+    "name": "Скрипт для Кураторов Форума || SOCHI ван лав",
+    "description": "Для лучших кураторов форума.",
+    "url": "https://greasyfork.org/scripts/460194-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-sochi-%D0%B2%D0%B0%D0%BD-%D0%BB%D0%B0%D0%B2",
+    "code_url": "https://update.greasyfork.org/scripts/460194/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%7C%7C%20SOCHI%20%D0%B2%D0%B0%D0%BD%20%D0%BB%D0%B0%D0%B2.user.js",
+    "code_size": 143970,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460174,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-17T08:28:36.000Z",
+    "code_updated_at": "2023-02-17T09:32:48.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016614,
+        "name": "Yurev",
+        "created_at": "2023-01-25T17:23:50.000Z",
+        "url": "https://greasyfork.org/users/1016614-yurev"
+      }
+    ],
+    "name": "Sochi || Кураторы Форума",
+    "description": "Не читай.",
+    "url": "https://greasyfork.org/scripts/460174-sochi-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/460174/Sochi%20%7C%7C%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 54288,
+    "license": "MIT License",
+    "version": "20.25",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458912,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-26T17:12:32.000Z",
+    "code_updated_at": "2023-02-04T18:19:53.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016614,
+        "name": "Yurev",
+        "created_at": "2023-01-25T17:23:50.000Z",
+        "url": "https://greasyfork.org/users/1016614-yurev"
+      }
+    ],
+    "name": "Скрипт для жалоб на игроков by A.Yurev",
+    "description": "Comfort moderation",
+    "url": "https://greasyfork.org/scripts/458912-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B6%D0%B0%D0%BB%D0%BE%D0%B1-%D0%BD%D0%B0-%D0%B8%D0%B3%D1%80%D0%BE%D0%BA%D0%BE%D0%B2-by-a-yurev",
+    "code_url": "https://update.greasyfork.org/scripts/458912/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%B6%D0%B0%D0%BB%D0%BE%D0%B1%20%D0%BD%D0%B0%20%D0%B8%D0%B3%D1%80%D0%BE%D0%BA%D0%BE%D0%B2%20by%20AYurev.user.js",
+    "code_size": 42407,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

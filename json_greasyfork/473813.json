@@ -1,0 +1,34 @@
+{
+  "id": 473813,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-24T14:47:37.000Z",
+  "code_updated_at": "2023-08-31T03:58:27.000Z",
+  "namespace": "firefox",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 676705,
+      "name": "lanhaha",
+      "created_at": "2020-08-16T12:58:18.000Z",
+      "url": "https://greasyfork.org/users/676705-lanhaha",
+      "scripts": []
+    }
+  ],
+  "name": "Firefox Relay",
+  "description": "Firefox Relay Tool",
+  "url": "https://greasyfork.org/scripts/473813-firefox-relay",
+  "code_url": "https://update.greasyfork.org/scripts/473813/Firefox%20Relay.user.js",
+  "code_size": 34633,
+  "license": "MIT License",
+  "version": "0.6.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

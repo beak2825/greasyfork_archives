@@ -1,0 +1,68 @@
+[
+  {
+    "id": 488142,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-23T23:38:20.000Z",
+    "code_updated_at": "2024-03-16T15:24:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060176,
+        "name": "Nailv Coronation",
+        "created_at": "2023-04-14T15:23:33.000Z",
+        "url": "https://greasyfork.org/users/1060176-nailv-coronation"
+      }
+    ],
+    "name": "Bilibili live enhanced ban - 增强的哔哩哔哩直播间禁言",
+    "description": "虽然是在纵横交错的宏伟时间跨度里只一刹那的昙花一现，也很庆幸与你跨越光年的相遇。",
+    "url": "https://greasyfork.org/scripts/488142-bilibili-live-enhanced-ban-%E5%A2%9E%E5%BC%BA%E7%9A%84%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%9B%B4%E6%92%AD%E9%97%B4%E7%A6%81%E8%A8%80",
+    "code_url": "https://update.greasyfork.org/scripts/488142/Bilibili%20live%20enhanced%20ban%20-%20%E5%A2%9E%E5%BC%BA%E7%9A%84%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%9B%B4%E6%92%AD%E9%97%B4%E7%A6%81%E8%A8%80.user.js",
+    "code_size": 7042,
+    "license": "MIT License",
+    "version": "2024-03-16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 464018,
+    "daily_installs": 0,
+    "total_installs": 990,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T16:06:05.000Z",
+    "code_updated_at": "2023-08-01T13:42:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060176,
+        "name": "Nailv Coronation",
+        "created_at": "2023-04-14T15:23:33.000Z",
+        "url": "https://greasyfork.org/users/1060176-nailv-coronation"
+      }
+    ],
+    "name": "stats.nailv.live - Bilibili直播数据统计",
+    "description": "In case I don't see ya, good afternoon, good evening and good night.",
+    "url": "https://greasyfork.org/scripts/464018-stats-nailv-live-bilibili%E7%9B%B4%E6%92%AD%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1",
+    "code_url": "https://update.greasyfork.org/scripts/464018/statsnailvlive%20-%20Bilibili%E7%9B%B4%E6%92%AD%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1.user.js",
+    "code_size": 16077,
+    "license": "MIT License",
+    "version": "0.1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

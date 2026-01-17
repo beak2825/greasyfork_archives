@@ -1,0 +1,68 @@
+[
+  {
+    "id": 471589,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-24T12:29:11.000Z",
+    "code_updated_at": "2023-07-24T12:29:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050071,
+        "name": "Ricky Mo",
+        "created_at": "2023-03-29T16:19:54.000Z",
+        "url": "https://greasyfork.org/users/1050071-ricky-mo"
+      }
+    ],
+    "name": "Hide Reaction Button",
+    "description": "Hide the floating reaction button in YouTube livestream chatroom",
+    "url": "https://greasyfork.org/scripts/471589-hide-reaction-button",
+    "code_url": "https://update.greasyfork.org/scripts/471589/Hide%20Reaction%20Button.user.js",
+    "code_size": 566,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462863,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-29T16:22:02.000Z",
+    "code_updated_at": "2023-03-29T16:24:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050071,
+        "name": "Ricky Mo",
+        "created_at": "2023-03-29T16:19:54.000Z",
+        "url": "https://greasyfork.org/users/1050071-ricky-mo"
+      }
+    ],
+    "name": "DMM point expire sum",
+    "description": "Display the sum of your DMM points expiring in 1 month",
+    "url": "https://greasyfork.org/scripts/462863-dmm-point-expire-sum",
+    "code_url": "https://update.greasyfork.org/scripts/462863/DMM%20point%20expire%20sum.user.js",
+    "code_size": 854,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

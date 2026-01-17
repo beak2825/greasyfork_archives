@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444467,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-04T13:57:49.000Z",
+    "code_updated_at": "2022-05-04T13:57:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 910357,
+        "name": "shimshim",
+        "created_at": "2022-05-04T13:54:56.000Z",
+        "url": "https://greasyfork.org/users/910357-shimshim"
+      }
+    ],
+    "name": "Jisho kun/on switch",
+    "description": "Switches the position of the kunyomi and onyomi readings to match that of anki droid.",
+    "url": "https://greasyfork.org/scripts/444467-jisho-kun-on-switch",
+    "code_url": "https://update.greasyfork.org/scripts/444467/Jisho%20kunon%20switch.user.js",
+    "code_size": 788,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

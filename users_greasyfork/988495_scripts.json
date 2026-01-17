@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455479,
+    "daily_installs": 0,
+    "total_installs": 427,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-27T05:49:51.000Z",
+    "code_updated_at": "2023-03-26T09:12:22.000Z",
+    "namespace": "guokwa.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 988495,
+        "name": "qiyan",
+        "created_at": "2022-11-27T03:11:41.000Z",
+        "url": "https://greasyfork.org/users/988495-qiyan"
+      }
+    ],
+    "name": "青书学堂_自动播放",
+    "description": "青书学堂自动后台静音播放，章节跳过。",
+    "url": "https://greasyfork.org/scripts/455479-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/455479/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82_%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE.user.js",
+    "code_size": 4066,
+    "license": "GPL",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

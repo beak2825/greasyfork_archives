@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486123,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-31T08:47:28.000Z",
+    "code_updated_at": "2024-02-08T09:18:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1251713,
+        "name": "domovoy9812",
+        "created_at": "2024-01-22T11:39:06.000Z",
+        "url": "https://greasyfork.org/users/1251713-domovoy9812"
+      }
+    ],
+    "name": "TMS_Library",
+    "description": "util lib for TMS related scripts",
+    "url": "https://greasyfork.org/scripts/486123-tms-library",
+    "code_url": "https://update.greasyfork.org/scripts/486123/1324712/TMS_Library.js",
+    "code_size": 19636,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436426,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-02T04:48:10.000Z",
+    "code_updated_at": "2021-12-03T13:49:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 582596,
+        "name": "slunger",
+        "created_at": "2020-06-08T09:44:04.000Z",
+        "url": "https://greasyfork.org/users/582596-slunger"
+      }
+    ],
+    "name": "河北农业大学教务系统评估填写",
+    "description": "解放双手！再也不用一个个点击了！！",
+    "url": "https://greasyfork.org/scripts/436426-%E6%B2%B3%E5%8C%97%E5%86%9C%E4%B8%9A%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AF%84%E4%BC%B0%E5%A1%AB%E5%86%99",
+    "code_url": "https://update.greasyfork.org/scripts/436426/%E6%B2%B3%E5%8C%97%E5%86%9C%E4%B8%9A%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AF%84%E4%BC%B0%E5%A1%AB%E5%86%99.user.js",
+    "code_size": 1257,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

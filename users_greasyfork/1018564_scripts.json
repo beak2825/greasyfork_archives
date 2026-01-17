@@ -163,5 +163,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 494092,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-04T21:07:20.000Z",
+    "code_updated_at": "2024-05-05T17:57:27.000Z",
+    "namespace": "nikku",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018564,
+        "name": "nikku",
+        "created_at": "2023-01-29T16:36:49.000Z",
+        "url": "https://greasyfork.org/users/1018564-nikku"
+      }
+    ],
+    "name": "LOGAV Source Files",
+    "description": "Генерирует ссылки для скачивания исходных файлов с сайта ГКУ ЛОГАВ",
+    "url": "https://greasyfork.org/scripts/494092-logav-source-files",
+    "code_url": "https://update.greasyfork.org/scripts/494092/LOGAV%20Source%20Files.user.js",
+    "code_size": 1681,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492791,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-17T20:33:26.000Z",
+    "code_updated_at": "2024-05-02T19:40:07.000Z",
+    "namespace": "nikku",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018564,
+        "name": "nikku",
+        "created_at": "2023-01-29T16:36:49.000Z",
+        "url": "https://greasyfork.org/users/1018564-nikku"
+      }
+    ],
+    "name": "AltSoft Links Generator",
+    "description": "Генерирует ссылки для скачивания изображений с сайтов на движке КАИСА-Архив (Альт-Софт)",
+    "url": "https://greasyfork.org/scripts/492791-altsoft-links-generator",
+    "code_url": "https://update.greasyfork.org/scripts/492791/AltSoft%20Links%20Generator.user.js",
+    "code_size": 1798,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 475048,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-11T17:27:56.000Z",
+    "code_updated_at": "2023-09-11T17:27:56.000Z",
+    "namespace": "nikku",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018564,
+        "name": "nikku",
+        "created_at": "2023-01-29T16:36:49.000Z",
+        "url": "https://greasyfork.org/users/1018564-nikku"
+      }
+    ],
+    "name": "AIS Helper",
+    "description": "AIS download helper",
+    "url": "https://greasyfork.org/scripts/475048-ais-helper",
+    "code_url": "https://update.greasyfork.org/scripts/475048/AIS%20Helper.user.js",
+    "code_size": 3222,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 466194,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-13T12:07:28.000Z",
+    "code_updated_at": "2024-05-31T18:30:40.000Z",
+    "namespace": "nikku",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018564,
+        "name": "nikku",
+        "created_at": "2023-01-29T16:36:49.000Z",
+        "url": "https://greasyfork.org/users/1018564-nikku"
+      }
+    ],
+    "name": "VGD Fixes",
+    "description": "На ВГД в разделе \"Закладки - Новое\" делает так, чтобы по клику открывался последний пост",
+    "url": "https://greasyfork.org/scripts/466194-vgd-fixes",
+    "code_url": "https://update.greasyfork.org/scripts/466194/VGD%20Fixes.user.js",
+    "code_size": 744,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 464587,
+    "daily_installs": 1,
+    "total_installs": 2700,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2023-04-21T21:51:27.000Z",
+    "code_updated_at": "2024-10-19T14:34:58.000Z",
+    "namespace": "nikku",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018564,
+        "name": "nikku",
+        "created_at": "2023-01-29T16:36:49.000Z",
+        "url": "https://greasyfork.org/users/1018564-nikku"
+      }
+    ],
+    "name": "MyHeritage Profile Helper",
+    "description": "Открывает возможность переходить на деревья, сайты и профили людей из поиска, а также отсылать личные сообщения без платной подписки",
+    "url": "https://greasyfork.org/scripts/464587-myheritage-profile-helper",
+    "code_url": "https://update.greasyfork.org/scripts/464587/MyHeritage%20Profile%20Helper.user.js",
+    "code_size": 18384,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463787,
+    "daily_installs": 0,
+    "total_installs": 987,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-12T00:04:04.000Z",
+    "code_updated_at": "2024-07-02T08:17:15.000Z",
+    "namespace": "nikku",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018564,
+        "name": "nikku",
+        "created_at": "2023-01-29T16:36:49.000Z",
+        "url": "https://greasyfork.org/users/1018564-nikku"
+      }
+    ],
+    "name": "Geni Profile Helper",
+    "description": "Go to profiles and trees from search results",
+    "url": "https://greasyfork.org/scripts/463787-geni-profile-helper",
+    "code_url": "https://update.greasyfork.org/scripts/463787/Geni%20Profile%20Helper.user.js",
+    "code_size": 2517,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

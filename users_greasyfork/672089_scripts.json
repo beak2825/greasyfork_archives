@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493435,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T06:43:34.000Z",
+    "code_updated_at": "2024-12-08T16:16:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 672089,
+        "name": "lyc0128",
+        "created_at": "2020-07-31T16:13:09.000Z",
+        "url": "https://greasyfork.org/users/672089-lyc0128"
+      }
+    ],
+    "name": "pt站 种子魔力值分析",
+    "description": "Add a td into the Points row in the provided HTML table",
+    "url": "https://greasyfork.org/scripts/493435-pt%E7%AB%99-%E7%A7%8D%E5%AD%90%E9%AD%94%E5%8A%9B%E5%80%BC%E5%88%86%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/493435/pt%E7%AB%99%20%E7%A7%8D%E5%AD%90%E9%AD%94%E5%8A%9B%E5%80%BC%E5%88%86%E6%9E%90.user.js",
+    "code_size": 13444,
+    "license": "MIT License",
+    "version": "2.99.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453949,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-29T18:18:02.000Z",
+    "code_updated_at": "2024-12-18T08:40:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 672089,
+        "name": "lyc0128",
+        "created_at": "2020-07-31T16:13:09.000Z",
+        "url": "https://greasyfork.org/users/672089-lyc0128"
+      }
+    ],
+    "name": "万豪积分价值计算（国内酒店中信92折人民币结算）",
+    "description": "Help to calculate the point value when you searching for Marriott hotels.",
+    "url": "https://greasyfork.org/scripts/453949-%E4%B8%87%E8%B1%AA%E7%A7%AF%E5%88%86%E4%BB%B7%E5%80%BC%E8%AE%A1%E7%AE%97-%E5%9B%BD%E5%86%85%E9%85%92%E5%BA%97%E4%B8%AD%E4%BF%A192%E6%8A%98%E4%BA%BA%E6%B0%91%E5%B8%81%E7%BB%93%E7%AE%97",
+    "code_url": "https://update.greasyfork.org/scripts/453949/%E4%B8%87%E8%B1%AA%E7%A7%AF%E5%88%86%E4%BB%B7%E5%80%BC%E8%AE%A1%E7%AE%97%EF%BC%88%E5%9B%BD%E5%86%85%E9%85%92%E5%BA%97%E4%B8%AD%E4%BF%A192%E6%8A%98%E4%BA%BA%E6%B0%91%E5%B8%81%E7%BB%93%E7%AE%97%EF%BC%89.user.js",
+    "code_size": 27048,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

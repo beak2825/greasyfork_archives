@@ -1,0 +1,35 @@
+[
+  {
+    "id": 430341,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-04T11:18:56.000Z",
+    "code_updated_at": "2021-08-04T11:18:55.000Z",
+    "namespace": "https://gist.github.com/biuuu/gbf-hell",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 800301,
+        "name": "包继炫",
+        "created_at": "2021-08-04T11:14:34.000Z",
+        "url": "https://greasyfork.org/users/800301-%E5%8C%85%E7%BB%A7%E7%82%AB"
+      }
+    ],
+    "name": "碧蓝幻想出HELL了",
+    "description": "无",
+    "url": "https://greasyfork.org/scripts/430341-%E7%A2%A7%E8%93%9D%E5%B9%BB%E6%83%B3%E5%87%BAhell%E4%BA%86",
+    "code_url": "https://update.greasyfork.org/scripts/430341/%E7%A2%A7%E8%93%9D%E5%B9%BB%E6%83%B3%E5%87%BAHELL%E4%BA%86.user.js",
+    "code_size": 1028,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

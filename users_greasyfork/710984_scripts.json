@@ -96,7 +96,7 @@
     "version": "1.0.0",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 510369,
@@ -130,5 +130,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 484327,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-09T07:20:46.000Z",
+    "code_updated_at": "2024-01-29T10:20:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 710984,
+        "name": "fourEggs",
+        "created_at": "2020-12-01T11:40:25.000Z",
+        "url": "https://greasyfork.org/users/710984-foureggs"
+      }
+    ],
+    "name": "GPT4",
+    "description": "fuck gpt4",
+    "url": "https://greasyfork.org/scripts/484327-gpt4",
+    "code_url": "https://update.greasyfork.org/scripts/484327/GPT4.user.js",
+    "code_size": 4240,
+    "license": "MIT License",
+    "version": "0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 417297,
+    "daily_installs": 0,
+    "total_installs": 7701,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-01T12:14:43.000Z",
+    "code_updated_at": "2020-12-02T02:35:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 710984,
+        "name": "fourEggs",
+        "created_at": "2020-12-01T11:40:25.000Z",
+        "url": "https://greasyfork.org/users/710984-foureggs"
+      }
+    ],
+    "name": "中国大学Mooc助手【免费使用】",
+    "description": "中国大学Mooc助手",
+    "url": "https://greasyfork.org/scripts/417297-%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6mooc%E5%8A%A9%E6%89%8B-%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/417297/%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6Mooc%E5%8A%A9%E6%89%8B%E3%80%90%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8%E3%80%91.user.js",
+    "code_size": 14931,
+    "license": "MIT License",
+    "version": "1.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472857,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-10T19:25:13.000Z",
+    "code_updated_at": "2023-08-10T19:25:12.000Z",
+    "namespace": "real agar.io from 2015.",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148618,
+        "name": "Öke Official",
+        "created_at": "2023-08-10T18:55:50.000Z",
+        "url": "https://greasyfork.org/users/1148618-%C3%B6ke-official"
+      }
+    ],
+    "name": "AGARIO Vanilla (harambroa)",
+    "description": "Official Javascript client from 2015/2016 before emsscripten.",
+    "url": "https://greasyfork.org/scripts/472857-agario-vanilla-harambroa",
+    "code_url": "https://update.greasyfork.org/scripts/472857/1233569/AGARIO%20Vanilla%20%28harambroa%29.js",
+    "code_size": 791,
+    "license": null,
+    "version": "v72.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

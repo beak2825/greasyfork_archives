@@ -1,0 +1,59 @@
+{
+  "id": 456165,
+  "daily_installs": 0,
+  "total_installs": 1052,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-12-07T08:09:57.000Z",
+  "code_updated_at": "2022-12-07T08:09:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 993884,
+      "name": "Zbydown",
+      "created_at": "2022-12-07T08:00:48.000Z",
+      "url": "https://greasyfork.org/users/993884-zbydown",
+      "scripts": [
+        {
+          "id": 456165,
+          "daily_installs": 0,
+          "total_installs": 1052,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-12-07T08:09:57.000Z",
+          "code_updated_at": "2022-12-07T08:09:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Xbox Cloud Gaming Persona 5 Royal (P5R) Force Chinese",
+          "description": "使用 https://www.xbox.com/en-US/play?game=p5r 进入主页后，再开 p5r，可以激活繁体中文，脚本主要为方便 iOS 使用，iOS 需要配合 “禁止添加到主屏幕” 脚本。注意确保 url 后包含 ?game=p5r，否则不会激活脚本。本脚本通过整合 TGSAN 脚本实现，感谢 TGSAN。",
+          "url": "https://greasyfork.org/scripts/456165-xbox-cloud-gaming-persona-5-royal-p5r-force-chinese",
+          "code_url": "https://update.greasyfork.org/scripts/456165/Xbox%20Cloud%20Gaming%20Persona%205%20Royal%20%28P5R%29%20Force%20Chinese.user.js",
+          "code_size": 18332,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Xbox Cloud Gaming Persona 5 Royal (P5R) Force Chinese",
+  "description": "使用 https://www.xbox.com/en-US/play?game=p5r 进入主页后，再开 p5r，可以激活繁体中文，脚本主要为方便 iOS 使用，iOS 需要配合 “禁止添加到主屏幕” 脚本。注意确保 url 后包含 ?game=p5r，否则不会激活脚本。本脚本通过整合 TGSAN 脚本实现，感谢 TGSAN。",
+  "url": "https://greasyfork.org/scripts/456165-xbox-cloud-gaming-persona-5-royal-p5r-force-chinese",
+  "code_url": "https://update.greasyfork.org/scripts/456165/Xbox%20Cloud%20Gaming%20Persona%205%20Royal%20%28P5R%29%20Force%20Chinese.user.js",
+  "code_size": 18332,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

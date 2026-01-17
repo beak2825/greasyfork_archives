@@ -1,0 +1,59 @@
+{
+  "id": 454947,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-16T20:16:21.000Z",
+  "code_updated_at": "2022-11-17T00:58:28.000Z",
+  "namespace": "https://greasyfork.org/users/984176",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 984176,
+      "name": "saltyeyes",
+      "created_at": "2022-11-16T20:11:19.000Z",
+      "url": "https://greasyfork.org/users/984176-saltyeyes",
+      "scripts": [
+        {
+          "id": 541830,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-06T14:48:06.000Z",
+          "code_updated_at": "2025-07-06T14:48:06.000Z",
+          "namespace": "MineDefense",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mine Defense stylesheet fix",
+          "description": "Fixes the insecure link to the stylesheet, courtesy of https://redd.it/1gc283b",
+          "url": "https://greasyfork.org/scripts/541830-mine-defense-stylesheet-fix",
+          "code_url": "https://update.greasyfork.org/scripts/541830/Mine%20Defense%20stylesheet%20fix.user.js",
+          "code_size": 572,
+          "license": null,
+          "version": "2024-10-25",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Desert Bus Chat Images",
+  "description": "Auto-embed chat images in the Desert Bus Twitch chat!",
+  "url": "https://greasyfork.org/scripts/454947-desert-bus-chat-images",
+  "code_url": "https://update.greasyfork.org/scripts/454947/Desert%20Bus%20Chat%20Images.user.js",
+  "code_size": 764,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

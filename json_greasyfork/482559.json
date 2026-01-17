@@ -1,0 +1,59 @@
+{
+  "id": 482559,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-18T12:16:43.000Z",
+  "code_updated_at": "2023-12-18T12:17:32.000Z",
+  "namespace": "just.a.guyy",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1235810,
+      "name": "just.a.guyy",
+      "created_at": "2023-12-18T12:13:32.000Z",
+      "url": "https://greasyfork.org/users/1235810-just-a-guyy",
+      "scripts": [
+        {
+          "id": 482559,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-18T12:16:43.000Z",
+          "code_updated_at": "2023-12-18T12:17:32.000Z",
+          "namespace": "just.a.guyy",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Embed Images On reddit-stream",
+          "description": "EmbeddedImages",
+          "url": "https://greasyfork.org/scripts/482559-embed-images-on-reddit-stream",
+          "code_url": "https://update.greasyfork.org/scripts/482559/Embed%20Images%20On%20reddit-stream.user.js",
+          "code_size": 1009,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Embed Images On reddit-stream",
+  "description": "EmbeddedImages",
+  "url": "https://greasyfork.org/scripts/482559-embed-images-on-reddit-stream",
+  "code_url": "https://update.greasyfork.org/scripts/482559/Embed%20Images%20On%20reddit-stream.user.js",
+  "code_size": 1009,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

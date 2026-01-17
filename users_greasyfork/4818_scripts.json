@@ -1,0 +1,68 @@
+[
+  {
+    "id": 471786,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-26T19:10:17.000Z",
+    "code_updated_at": "2025-12-15T16:07:35.000Z",
+    "namespace": "https://greasyfork.org/users/4818",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4818,
+        "name": "Matrix4348",
+        "created_at": "2014-08-28T17:05:24.000Z",
+        "url": "https://greasyfork.org/users/4818-matrix4348"
+      }
+    ],
+    "name": "Kongregate Flash games fixer add-on - default swf player setting",
+    "description": "This script is no longer of any use and should be deleted.",
+    "url": "https://greasyfork.org/scripts/471786-kongregate-flash-games-fixer-add-on-default-swf-player-setting",
+    "code_url": "https://update.greasyfork.org/scripts/471786/Kongregate%20Flash%20games%20fixer%20add-on%20-%20default%20swf%20player%20setting.user.js",
+    "code_size": 664,
+    "license": "MIT License",
+    "version": "7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 450685,
+    "daily_installs": 0,
+    "total_installs": 429,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-03T18:20:15.000Z",
+    "code_updated_at": "2025-07-27T20:57:25.000Z",
+    "namespace": "https://greasyfork.org/users/4818",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4818,
+        "name": "Matrix4348",
+        "created_at": "2014-08-28T17:05:24.000Z",
+        "url": "https://greasyfork.org/users/4818-matrix4348"
+      }
+    ],
+    "name": "Dragons of the Void - Raid Loot Tiers",
+    "description": "Look at raid loot tiers in-game.",
+    "url": "https://greasyfork.org/scripts/450685-dragons-of-the-void-raid-loot-tiers",
+    "code_url": "https://update.greasyfork.org/scripts/450685/Dragons%20of%20the%20Void%20-%20Raid%20Loot%20Tiers.user.js",
+    "code_size": 86673,
+    "license": "MIT License",
+    "version": "9.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

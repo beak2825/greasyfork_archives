@@ -1,0 +1,68 @@
+[
+  {
+    "id": 485409,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-22T03:56:48.000Z",
+    "code_updated_at": "2024-01-22T03:56:48.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034198,
+        "name": "Hou-Rui",
+        "created_at": "2023-02-28T09:20:07.000Z",
+        "url": "https://greasyfork.org/users/1034198-hou-rui"
+      }
+    ],
+    "name": "Masiro Block User",
+    "description": "31/03/2023, 5:40:10 am",
+    "url": "https://greasyfork.org/scripts/485409-masiro-block-user",
+    "code_url": "https://update.greasyfork.org/scripts/485409/Masiro%20Block%20User.user.js",
+    "code_size": 2042,
+    "license": "GPL",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460909,
+    "daily_installs": 0,
+    "total_installs": 204,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-02-28T09:29:19.000Z",
+    "code_updated_at": "2023-02-28T09:29:18.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034198,
+        "name": "Hou-Rui",
+        "created_at": "2023-02-28T09:20:07.000Z",
+        "url": "https://greasyfork.org/users/1034198-hou-rui"
+      }
+    ],
+    "name": "Wide New Reddit (Dynamic)",
+    "description": "Make new reddit layout fill screen width. Obtain class names dynamically to avoid breaks. 28/02/2023, 4:05:40 pm",
+    "url": "https://greasyfork.org/scripts/460909-wide-new-reddit-dynamic",
+    "code_url": "https://update.greasyfork.org/scripts/460909/Wide%20New%20Reddit%20%28Dynamic%29.user.js",
+    "code_size": 1864,
+    "license": "GPL-3.0-or-later; http://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489613,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-12T05:55:33.000Z",
+    "code_updated_at": "2024-03-12T05:55:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1273359,
+        "name": "Sameh",
+        "created_at": "2024-03-12T05:49:00.000Z",
+        "url": "https://greasyfork.org/users/1273359-sameh"
+      }
+    ],
+    "name": "Audioverse Audio Follow Along",
+    "description": "Follows along the verse being read in AudioVerse.org",
+    "url": "https://greasyfork.org/scripts/489613-audioverse-audio-follow-along",
+    "code_url": "https://update.greasyfork.org/scripts/489613/Audioverse%20Audio%20Follow%20Along.user.js",
+    "code_size": 1890,
+    "license": "MIT License",
+    "version": "2024-03-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

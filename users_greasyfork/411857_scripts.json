@@ -1,0 +1,68 @@
+[
+  {
+    "id": 490451,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-21T11:58:35.000Z",
+    "code_updated_at": "2024-12-25T01:51:19.000Z",
+    "namespace": "7kt-uso",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 411857,
+        "name": "7ktTube",
+        "created_at": "2019-12-03T22:49:11.000Z",
+        "url": "https://greasyfork.org/users/411857-7kttube"
+      }
+    ],
+    "name": "uso - openuserjs.org Dark Edition",
+    "description": "A dark style for openuserjs.org",
+    "url": "https://greasyfork.org/scripts/490451-uso-openuserjs-org-dark-edition",
+    "code_url": "https://update.greasyfork.org/scripts/490451/uso%20-%20openuserjsorg%20Dark%20Edition.user.css",
+    "code_size": 8021,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 489020,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-05T00:49:36.000Z",
+    "code_updated_at": "2026-01-06T05:11:49.000Z",
+    "namespace": "7kt-xbvr",
+    "support_url": "https://openuserjs.org/scripts/arvid-demon/XBVR_Dark_Edition/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 411857,
+        "name": "7ktTube",
+        "created_at": "2019-12-03T22:49:11.000Z",
+        "url": "https://greasyfork.org/users/411857-7kttube"
+      }
+    ],
+    "name": "XBVR Dark Edition",
+    "description": "A dark style for XBVR web interface",
+    "url": "https://greasyfork.org/scripts/489020-xbvr-dark-edition",
+    "code_url": "https://update.greasyfork.org/scripts/489020/XBVR%20Dark%20Edition.user.js",
+    "code_size": 17246,
+    "license": "MIT License",
+    "version": "1.1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

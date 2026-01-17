@@ -1,0 +1,59 @@
+{
+  "id": 460018,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-14T14:19:47.000Z",
+  "code_updated_at": "2023-02-14T14:19:47.000Z",
+  "namespace": "https://github.com/sheiun/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1027020,
+      "name": "sheiun",
+      "created_at": "2023-02-14T13:45:40.000Z",
+      "url": "https://greasyfork.org/users/1027020-sheiun",
+      "scripts": [
+        {
+          "id": 460018,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-14T14:19:47.000Z",
+          "code_updated_at": "2023-02-14T14:19:47.000Z",
+          "namespace": "https://github.com/sheiun/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove Plurk css",
+          "description": "刪除自定義的 Plurk CSS",
+          "url": "https://greasyfork.org/scripts/460018-remove-plurk-css",
+          "code_url": "https://update.greasyfork.org/scripts/460018/Remove%20Plurk%20css.user.js",
+          "code_size": 906,
+          "license": "LGPLv3",
+          "version": "1.0.0",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove Plurk css",
+  "description": "刪除自定義的 Plurk CSS",
+  "url": "https://greasyfork.org/scripts/460018-remove-plurk-css",
+  "code_url": "https://update.greasyfork.org/scripts/460018/Remove%20Plurk%20css.user.js",
+  "code_size": 906,
+  "license": "LGPLv3",
+  "version": "1.0.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

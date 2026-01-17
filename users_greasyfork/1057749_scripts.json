@@ -1,0 +1,68 @@
+[
+  {
+    "id": 463785,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-11T23:41:07.000Z",
+    "code_updated_at": "2025-07-29T15:56:31.000Z",
+    "namespace": "https://vox.quartertone.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1057749,
+        "name": "quartertone",
+        "created_at": "2023-04-11T00:28:45.000Z",
+        "url": "https://greasyfork.org/users/1057749-quartertone"
+      }
+    ],
+    "name": "Gutencount",
+    "description": "Accurate word counter for Gutenberg texts",
+    "url": "https://greasyfork.org/scripts/463785-gutencount",
+    "code_url": "https://update.greasyfork.org/scripts/463785/Gutencount.user.js",
+    "code_size": 5230,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.6.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463722,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-11T03:37:41.000Z",
+    "code_updated_at": "2023-04-23T19:21:11.000Z",
+    "namespace": "https://vox.quartertone.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1057749,
+        "name": "quartertone",
+        "created_at": "2023-04-11T00:28:45.000Z",
+        "url": "https://greasyfork.org/users/1057749-quartertone"
+      }
+    ],
+    "name": "LibriVox PlayMaker",
+    "description": "Converts audio link on LibriVox page to an audio element loader.",
+    "url": "https://greasyfork.org/scripts/463722-librivox-playmaker",
+    "code_url": "https://update.greasyfork.org/scripts/463722/LibriVox%20PlayMaker.user.js",
+    "code_size": 3015,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

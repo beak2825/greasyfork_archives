@@ -1,0 +1,33 @@
+{
+  "id": 454591,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-10T23:03:20.000Z",
+  "code_updated_at": "2022-11-10T23:03:19.000Z",
+  "namespace": "https://jxn.lss-manager.de/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 981346,
+      "name": "tylernelson224",
+      "created_at": "2022-11-10T01:17:45.000Z",
+      "url": "https://greasyfork.org/users/981346-tylernelson224"
+    }
+  ],
+  "name": "LSS-Alliance-Distance",
+  "description": "Shows the missing earned credits to the next federation",
+  "url": "https://greasyfork.org/scripts/454591-lss-alliance-distance",
+  "code_url": "https://update.greasyfork.org/scripts/454591/LSS-Alliance-Distance.user.js",
+  "code_size": 8795,
+  "license": null,
+  "version": "1.0.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

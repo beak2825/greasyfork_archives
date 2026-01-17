@@ -1,0 +1,33 @@
+{
+  "id": 439014,
+  "daily_installs": 0,
+  "total_installs": 220,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-23T11:56:31.000Z",
+  "code_updated_at": "2023-06-04T06:29:33.000Z",
+  "namespace": "https://github.com/Alistair1231/my-userscripts/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 12725,
+      "name": "Alistair1231",
+      "created_at": "2015-06-25T13:01:33.000Z",
+      "url": "https://greasyfork.org/users/12725-alistair1231"
+    }
+  ],
+  "name": "real-debrid torrents: textbox with all links",
+  "description": "adds a button which when pressed creates a textbox with all links for you to copy in jDownloader2",
+  "url": "https://greasyfork.org/scripts/439014-real-debrid-torrents-textbox-with-all-links",
+  "code_url": "https://update.greasyfork.org/scripts/439014/real-debrid%20torrents%3A%20textbox%20with%20all%20links.user.js",
+  "code_size": 3495,
+  "license": "MIT License",
+  "version": "0.2.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

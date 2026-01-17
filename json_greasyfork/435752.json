@@ -1,0 +1,34 @@
+{
+  "id": 435752,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-20T02:15:00.000Z",
+  "code_updated_at": "2021-12-31T08:11:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841274,
+      "name": "weiv",
+      "created_at": "2021-11-20T02:01:35.000Z",
+      "url": "https://greasyfork.org/users/841274-weiv",
+      "scripts": []
+    }
+  ],
+  "name": "自动关闭233动漫网的广告。",
+  "description": "主要是想去掉看动漫的时候的广告，自用，方便多设备同步。",
+  "url": "https://greasyfork.org/scripts/435752-%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD233%E5%8A%A8%E6%BC%AB%E7%BD%91%E7%9A%84%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/435752/%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD233%E5%8A%A8%E6%BC%AB%E7%BD%91%E7%9A%84%E5%B9%BF%E5%91%8A%E3%80%82.user.js",
+  "code_size": 5939,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

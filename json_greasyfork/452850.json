@@ -1,0 +1,33 @@
+{
+  "id": 452850,
+  "daily_installs": 0,
+  "total_installs": 99,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-11T02:43:29.000Z",
+  "code_updated_at": "2024-08-27T09:42:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 969000,
+      "name": "s “统一世界” v",
+      "created_at": "2022-10-11T02:41:03.000Z",
+      "url": "https://greasyfork.org/users/969000-s-%E7%BB%9F%E4%B8%80%E4%B8%96%E7%95%8C-v"
+    }
+  ],
+  "name": "替换<code>让谷歌翻译更准确",
+  "description": "谷歌翻译不能正确翻译带<code>的元素,更新修复某些code显示灰底白字看不清",
+  "url": "https://greasyfork.org/scripts/452850-%E6%9B%BF%E6%8D%A2-code-%E8%AE%A9%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E6%9B%B4%E5%87%86%E7%A1%AE",
+  "code_url": "https://update.greasyfork.org/scripts/452850/%E6%9B%BF%E6%8D%A2%3Ccode%3E%E8%AE%A9%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E6%9B%B4%E5%87%86%E7%A1%AE.user.js",
+  "code_size": 2894,
+  "license": "MIT License",
+  "version": "1.01",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

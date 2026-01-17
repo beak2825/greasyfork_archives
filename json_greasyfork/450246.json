@@ -1,0 +1,59 @@
+{
+  "id": 450246,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-26T17:16:27.000Z",
+  "code_updated_at": "2022-08-26T17:27:11.000Z",
+  "namespace": "https://greasyfork.org/users/951153",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 951153,
+      "name": "Amanda Kersbergen",
+      "created_at": "2022-08-26T17:09:03.000Z",
+      "url": "https://greasyfork.org/users/951153-amanda-kersbergen",
+      "scripts": [
+        {
+          "id": 450245,
+          "daily_installs": 0,
+          "total_installs": 123,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-26T17:13:47.000Z",
+          "code_updated_at": "2022-08-26T17:29:00.000Z",
+          "namespace": "https://greasyfork.org/users/951153",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Uni Faboo Avatar Helper",
+          "description": "Automatically highlights items r80+ for the avatar.",
+          "url": "https://greasyfork.org/scripts/450245-uni-faboo-avatar-helper",
+          "code_url": "https://update.greasyfork.org/scripts/450245/Uni%20Faboo%20Avatar%20Helper.user.js",
+          "code_size": 133813,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Faboo restocker",
+  "description": "Automatically highlights items worth buying.",
+  "url": "https://greasyfork.org/scripts/450246-faboo-restocker",
+  "code_url": "https://update.greasyfork.org/scripts/450246/Faboo%20restocker.user.js",
+  "code_size": 11826,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

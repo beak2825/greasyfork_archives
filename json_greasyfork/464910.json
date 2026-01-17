@@ -1,0 +1,59 @@
+{
+  "id": 464910,
+  "daily_installs": 5,
+  "total_installs": 27458,
+  "fan_score": "46.3",
+  "good_ratings": 4,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-04-26T13:38:42.000Z",
+  "code_updated_at": "2024-09-26T03:49:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1068336,
+      "name": "xzerothree",
+      "created_at": "2023-04-26T13:32:52.000Z",
+      "url": "https://greasyfork.org/users/1068336-xzerothree",
+      "scripts": [
+        {
+          "id": 464910,
+          "daily_installs": 5,
+          "total_installs": 27458,
+          "fan_score": "46.3",
+          "good_ratings": 4,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2023-04-26T13:38:42.000Z",
+          "code_updated_at": "2024-09-26T03:49:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Diep.io Mod Menu",
+          "description": "Loop upgrade custom builds, render aim line, render factory guide circle.",
+          "url": "https://greasyfork.org/scripts/464910-diep-io-mod-menu",
+          "code_url": "https://update.greasyfork.org/scripts/464910/Diepio%20Mod%20Menu.user.js",
+          "code_size": 22319,
+          "license": "MIT License",
+          "version": "2.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Diep.io Mod Menu",
+  "description": "Loop upgrade custom builds, render aim line, render factory guide circle.",
+  "url": "https://greasyfork.org/scripts/464910-diep-io-mod-menu",
+  "code_url": "https://update.greasyfork.org/scripts/464910/Diepio%20Mod%20Menu.user.js",
+  "code_size": 22319,
+  "license": "MIT License",
+  "version": "2.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

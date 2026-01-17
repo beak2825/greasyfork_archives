@@ -1,0 +1,59 @@
+{
+  "id": 435592,
+  "daily_installs": 0,
+  "total_installs": 572,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-16T14:17:35.000Z",
+  "code_updated_at": "2021-11-16T14:17:35.000Z",
+  "namespace": "agan",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 839695,
+      "name": "agan",
+      "created_at": "2021-11-16T13:13:19.000Z",
+      "url": "https://greasyfork.org/users/839695-agan",
+      "scripts": [
+        {
+          "id": 435592,
+          "daily_installs": 0,
+          "total_installs": 572,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-16T14:17:35.000Z",
+          "code_updated_at": "2021-11-16T14:17:35.000Z",
+          "namespace": "agan",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "b站大会员1080p弹窗去除",
+          "description": "删除b站大会员1080p弹窗",
+          "url": "https://greasyfork.org/scripts/435592-b%E7%AB%99%E5%A4%A7%E4%BC%9A%E5%91%981080p%E5%BC%B9%E7%AA%97%E5%8E%BB%E9%99%A4",
+          "code_url": "https://update.greasyfork.org/scripts/435592/b%E7%AB%99%E5%A4%A7%E4%BC%9A%E5%91%981080p%E5%BC%B9%E7%AA%97%E5%8E%BB%E9%99%A4.user.js",
+          "code_size": 1011,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "b站大会员1080p弹窗去除",
+  "description": "删除b站大会员1080p弹窗",
+  "url": "https://greasyfork.org/scripts/435592-b%E7%AB%99%E5%A4%A7%E4%BC%9A%E5%91%981080p%E5%BC%B9%E7%AA%97%E5%8E%BB%E9%99%A4",
+  "code_url": "https://update.greasyfork.org/scripts/435592/b%E7%AB%99%E5%A4%A7%E4%BC%9A%E5%91%981080p%E5%BC%B9%E7%AA%97%E5%8E%BB%E9%99%A4.user.js",
+  "code_size": 1011,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

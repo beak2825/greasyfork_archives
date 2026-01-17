@@ -1,0 +1,68 @@
+[
+  {
+    "id": 474817,
+    "daily_installs": 0,
+    "total_installs": 183,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-08T09:15:41.000Z",
+    "code_updated_at": "2024-08-13T08:02:16.000Z",
+    "namespace": "https://github.com/ShererInc/NetDiskHelper",
+    "support_url": "https://github.com/ShererInc/NetDiskHelper",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 935200,
+        "name": "شەرەر",
+        "created_at": "2022-07-13T07:24:22.000Z",
+        "url": "https://greasyfork.org/users/935200-%D8%B4%DB%95%D8%B1%DB%95%D8%B1"
+      }
+    ],
+    "name": "Net Disk Helper",
+    "description": "Easy to get material ids in net disk of Tianyi(189)",
+    "url": "https://greasyfork.org/scripts/474817-net-disk-helper",
+    "code_url": "https://update.greasyfork.org/scripts/474817/Net%20Disk%20Helper.user.js",
+    "code_size": 14890,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469166,
+    "daily_installs": 0,
+    "total_installs": 799,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-21T15:42:34.000Z",
+    "code_updated_at": "2024-12-17T12:10:08.000Z",
+    "namespace": "https://github.com/ShererInc/Wx-OA-Assistant",
+    "support_url": "https://github.com/ShererInc/Wx-OA-Assistant",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 935200,
+        "name": "شەرەر",
+        "created_at": "2022-07-13T07:24:22.000Z",
+        "url": "https://greasyfork.org/users/935200-%D8%B4%DB%95%D8%B1%DB%95%D8%B1"
+      }
+    ],
+    "name": "Weixin Official Account Assistant",
+    "description": "Easy to get video ids(wxv), audio play url and image url in Weixin Official Accounts Platform",
+    "url": "https://greasyfork.org/scripts/469166-weixin-official-account-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/469166/Weixin%20Official%20Account%20Assistant.user.js",
+    "code_size": 20869,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

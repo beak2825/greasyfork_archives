@@ -1,0 +1,34 @@
+{
+  "id": 489036,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-05T06:13:26.000Z",
+  "code_updated_at": "2024-06-15T17:45:48.000Z",
+  "namespace": "https://cartelempire.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1270453,
+      "name": "KPCX",
+      "created_at": "2024-03-05T06:08:41.000Z",
+      "url": "https://greasyfork.org/users/1270453-kpcx",
+      "scripts": []
+    }
+  ],
+  "name": "[KPX] More Menu Buttons",
+  "description": "CartelEmpire menu buttons with configuration",
+  "url": "https://greasyfork.org/scripts/489036-kpx-more-menu-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/489036/%5BKPX%5D%20More%20Menu%20Buttons.user.js",
+  "code_size": 7867,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

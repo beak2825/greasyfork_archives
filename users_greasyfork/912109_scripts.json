@@ -96,6 +96,39 @@
     "version": "1.1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 455907,
+    "daily_installs": 0,
+    "total_installs": 307,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-12-03T06:16:30.000Z",
+    "code_updated_at": "2022-12-03T06:16:30.000Z",
+    "namespace": "https://greasyfork.org/users/912109",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 912109,
+        "name": "MrStealAllYourCodes",
+        "created_at": "2022-05-09T06:05:31.000Z",
+        "url": "https://greasyfork.org/users/912109-mrstealallyourcodes"
+      }
+    ],
+    "name": "Periwinkle by 銀芽",
+    "description": "Costum-skins, Better UI, Hotkeys and more.",
+    "url": "https://greasyfork.org/scripts/455907-periwinkle-by-%E9%8A%80%E8%8A%BD",
+    "code_url": "https://update.greasyfork.org/scripts/455907/Periwinkle%20by%20%E9%8A%80%E8%8A%BD.user.js",
+    "code_size": 71891,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "zh-TW",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

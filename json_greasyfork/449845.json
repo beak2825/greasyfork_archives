@@ -1,0 +1,34 @@
+{
+  "id": 449845,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-19T21:18:42.000Z",
+  "code_updated_at": "2022-08-19T21:18:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 948309,
+      "name": "David Izof",
+      "created_at": "2022-08-19T21:17:30.000Z",
+      "url": "https://greasyfork.org/users/948309-david-izof",
+      "scripts": []
+    }
+  ],
+  "name": "Ikea Script",
+  "description": "Info preview",
+  "url": "https://greasyfork.org/scripts/449845-ikea-script",
+  "code_url": "https://update.greasyfork.org/scripts/449845/Ikea%20Script.user.js",
+  "code_size": 3764,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

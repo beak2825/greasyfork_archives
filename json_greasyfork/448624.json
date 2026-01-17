@@ -1,0 +1,33 @@
+{
+  "id": 448624,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-29T13:45:16.000Z",
+  "code_updated_at": "2022-07-29T15:34:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 940264,
+      "name": "Onedim941",
+      "created_at": "2022-07-27T16:44:30.000Z",
+      "url": "https://greasyfork.org/users/940264-onedim941"
+    }
+  ],
+  "name": "豆瓣小组暗黑主题",
+  "description": "PC端豆瓣小组暗黑主题",
+  "url": "https://greasyfork.org/scripts/448624-%E8%B1%86%E7%93%A3%E5%B0%8F%E7%BB%84%E6%9A%97%E9%BB%91%E4%B8%BB%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/448624/%E8%B1%86%E7%93%A3%E5%B0%8F%E7%BB%84%E6%9A%97%E9%BB%91%E4%B8%BB%E9%A2%98.user.js",
+  "code_size": 10617,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 464357,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-19T04:04:15.000Z",
+  "code_updated_at": "2023-04-19T04:04:14.000Z",
+  "namespace": "http://github.com/tajoy",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1063118,
+      "name": "tajoy",
+      "created_at": "2023-04-19T03:59:23.000Z",
+      "url": "https://greasyfork.org/users/1063118-tajoy",
+      "scripts": [
+        {
+          "id": 464357,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-19T04:04:15.000Z",
+          "code_updated_at": "2023-04-19T04:04:14.000Z",
+          "namespace": "http://github.com/tajoy",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kook 自动跳转",
+          "description": "Kook的外部连接页面自动跳转功能",
+          "url": "https://greasyfork.org/scripts/464357-kook-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+          "code_url": "https://update.greasyfork.org/scripts/464357/Kook%20%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+          "code_size": 635,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kook 自动跳转",
+  "description": "Kook的外部连接页面自动跳转功能",
+  "url": "https://greasyfork.org/scripts/464357-kook-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/464357/Kook%20%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 635,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

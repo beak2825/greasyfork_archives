@@ -1,0 +1,33 @@
+{
+  "id": 473233,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-17T01:52:30.000Z",
+  "code_updated_at": "2023-08-17T01:52:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 866742,
+      "name": "marvin64",
+      "created_at": "2022-01-19T11:54:51.000Z",
+      "url": "https://greasyfork.org/users/866742-marvin64"
+    }
+  ],
+  "name": "somkingpipesMobileDIY",
+  "description": "hello",
+  "url": "https://greasyfork.org/scripts/473233-somkingpipesmobilediy",
+  "code_url": "https://update.greasyfork.org/scripts/473233/somkingpipesMobileDIY.user.js",
+  "code_size": 8657,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

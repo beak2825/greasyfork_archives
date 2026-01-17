@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429862,
+    "daily_installs": 0,
+    "total_installs": 987,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-07-25T17:05:57.000Z",
+    "code_updated_at": "2021-10-27T21:27:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 797056,
+        "name": "kenmingwang",
+        "created_at": "2021-07-25T13:45:19.000Z",
+        "url": "https://greasyfork.org/users/797056-kenmingwang"
+      }
+    ],
+    "name": "BiliBili-RandomPlayParts",
+    "description": "Random play parts within a bilibili video that has > 5 parts.",
+    "url": "https://greasyfork.org/scripts/429862-bilibili-randomplayparts",
+    "code_url": "https://update.greasyfork.org/scripts/429862/BiliBili-RandomPlayParts.user.js",
+    "code_size": 5556,
+    "license": null,
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

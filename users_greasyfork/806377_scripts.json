@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431085,
+    "daily_installs": 0,
+    "total_installs": 3087,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-19T21:31:48.000Z",
+    "code_updated_at": "2021-08-19T21:31:48.000Z",
+    "namespace": "easy adblock",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 806377,
+        "name": "LAZEN",
+        "created_at": "2021-08-19T21:05:13.000Z",
+        "url": "https://greasyfork.org/users/806377-lazen"
+      }
+    ],
+    "name": "Adblock & buffs for sploop.io.",
+    "description": "for syka clan",
+    "url": "https://greasyfork.org/scripts/431085-adblock-buffs-for-sploop-io",
+    "code_url": "https://update.greasyfork.org/scripts/431085/Adblock%20%20buffs%20for%20sploopio.user.js",
+    "code_size": 57689,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

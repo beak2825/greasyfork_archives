@@ -63,6 +63,72 @@
     "version": "0.0.1-3",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489368,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-09T08:00:49.000Z",
+    "code_updated_at": "2024-08-24T07:17:25.000Z",
+    "namespace": "https://greasyfork.org/en/users/1029479-infinitegeek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1029479,
+        "name": "Jeff Johnston",
+        "created_at": "2023-02-18T19:21:38.000Z",
+        "url": "https://greasyfork.org/users/1029479-jeff-johnston"
+      }
+    ],
+    "name": "Kanka Atomic Entity Editor (dev)",
+    "description": "Provides keyboard shortcuts for simple edits from the entity view page on Kanka.",
+    "url": "https://greasyfork.org/scripts/489368-kanka-atomic-entity-editor-dev",
+    "code_url": "https://update.greasyfork.org/scripts/489368/Kanka%20Atomic%20Entity%20Editor%20%28dev%29.user.js",
+    "code_size": 22235,
+    "license": "MIT License",
+    "version": "0.9.7-6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488403,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-27T07:33:01.000Z",
+    "code_updated_at": "2024-09-03T21:36:49.000Z",
+    "namespace": "https://greasyfork.org/en/users/1029479-infinitegeek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1029479,
+        "name": "Jeff Johnston",
+        "created_at": "2023-02-18T19:21:38.000Z",
+        "url": "https://greasyfork.org/users/1029479-jeff-johnston"
+      }
+    ],
+    "name": "Kanka @ Helper (dev)",
+    "description": "Improve the experience of referencing entities.",
+    "url": "https://greasyfork.org/scripts/488403-kanka-helper-dev",
+    "code_url": "https://update.greasyfork.org/scripts/488403/Kanka%20%40%20Helper%20%28dev%29.user.js",
+    "code_size": 4206,
+    "license": "MIT License",
+    "version": "0.3.2-10",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

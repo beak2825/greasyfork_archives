@@ -1,0 +1,200 @@
+[
+  {
+    "id": 492182,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-10T19:59:50.000Z",
+    "code_updated_at": "2024-04-10T19:59:49.000Z",
+    "namespace": "http://your.namespace.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282756,
+        "name": "Andrew Lakkis",
+        "created_at": "2024-04-02T05:13:14.000Z",
+        "url": "https://greasyfork.org/users/1282756-andrew-lakkis"
+      }
+    ],
+    "name": "Numeric Data Operator",
+    "description": "Allows calculation of sum or product on numeric data pasted in a textbox, uses cmd [ to summon text boxes",
+    "url": "https://greasyfork.org/scripts/492182-numeric-data-operator",
+    "code_url": "https://update.greasyfork.org/scripts/492182/Numeric%20Data%20Operator.user.js",
+    "code_size": 4670,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491921,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T18:13:05.000Z",
+    "code_updated_at": "2024-04-07T18:13:05.000Z",
+    "namespace": "Andrew",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282756,
+        "name": "Andrew Lakkis",
+        "created_at": "2024-04-02T05:13:14.000Z",
+        "url": "https://greasyfork.org/users/1282756-andrew-lakkis"
+      }
+    ],
+    "name": "Youtube Watch Page Fix Final",
+    "description": "Modifies the youtube watch page to remove bolded text, make videos smaller, restore old views and dates, and add more space between elements",
+    "url": "https://greasyfork.org/scripts/491921-youtube-watch-page-fix-final",
+    "code_url": "https://update.greasyfork.org/scripts/491921/Youtube%20Watch%20Page%20Fix%20Final.user.js",
+    "code_size": 6748,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491920,
+    "daily_installs": 0,
+    "total_installs": 87,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T18:08:05.000Z",
+    "code_updated_at": "2024-04-07T18:08:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282756,
+        "name": "Andrew Lakkis",
+        "created_at": "2024-04-02T05:13:14.000Z",
+        "url": "https://greasyfork.org/users/1282756-andrew-lakkis"
+      }
+    ],
+    "name": "Search Box Keyboard Shortcut for General Websites",
+    "description": "Adds a keyboard shortcut to jump to the search box on websites when '/' is pressed",
+    "url": "https://greasyfork.org/scripts/491920-search-box-keyboard-shortcut-for-general-websites",
+    "code_url": "https://update.greasyfork.org/scripts/491920/Search%20Box%20Keyboard%20Shortcut%20for%20General%20Websites.user.js",
+    "code_size": 3145,
+    "license": "MIT License",
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491918,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T16:46:48.000Z",
+    "code_updated_at": "2024-04-07T16:46:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282756,
+        "name": "Andrew Lakkis",
+        "created_at": "2024-04-02T05:13:14.000Z",
+        "url": "https://greasyfork.org/users/1282756-andrew-lakkis"
+      }
+    ],
+    "name": "LaTeX Question Itemizer with vspace",
+    "description": "Open a text box with CMD u or CTRL u and paste a HW question you have to automatically get it in \\item format",
+    "url": "https://greasyfork.org/scripts/491918-latex-question-itemizer-with-vspace",
+    "code_url": "https://update.greasyfork.org/scripts/491918/LaTeX%20Question%20Itemizer%20with%20vspace.user.js",
+    "code_size": 6368,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491916,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T16:42:44.000Z",
+    "code_updated_at": "2024-04-07T16:42:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282756,
+        "name": "Andrew Lakkis",
+        "created_at": "2024-04-02T05:13:14.000Z",
+        "url": "https://greasyfork.org/users/1282756-andrew-lakkis"
+      }
+    ],
+    "name": "Add \"Copy\" Button to ChatGPT Questions",
+    "description": "Add copy buttons to your prompts on ChatGPT, in case you need to ask the same question twice",
+    "url": "https://greasyfork.org/scripts/491916-add-copy-button-to-chatgpt-questions",
+    "code_url": "https://update.greasyfork.org/scripts/491916/Add%20%22Copy%22%20Button%20to%20ChatGPT%20Questions.user.js",
+    "code_size": 3818,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491915,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T16:39:37.000Z",
+    "code_updated_at": "2024-04-07T16:39:36.000Z",
+    "namespace": "namespace_amtrak_lowest_fare_dropdown",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282756,
+        "name": "Andrew Lakkis",
+        "created_at": "2024-04-02T05:13:14.000Z",
+        "url": "https://greasyfork.org/users/1282756-andrew-lakkis"
+      }
+    ],
+    "name": "Amtrak Lowest Fare Default with Dropdown",
+    "description": "Automatically opens the 'Sort/Filter' dropdown and selects the 'Lowest Fare' option on Amtrak's ticket search results.",
+    "url": "https://greasyfork.org/scripts/491915-amtrak-lowest-fare-default-with-dropdown",
+    "code_url": "https://update.greasyfork.org/scripts/491915/Amtrak%20Lowest%20Fare%20Default%20with%20Dropdown.user.js",
+    "code_size": 2340,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481724,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-08T18:06:47.000Z",
+    "code_updated_at": "2023-12-08T18:08:44.000Z",
+    "namespace": "种子下载工具",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230644,
+        "name": "killer kiss",
+        "created_at": "2023-12-08T18:04:46.000Z",
+        "url": "https://greasyfork.org/users/1230644-killer-kiss"
+      }
+    ],
+    "name": "种子下载工具抢先体验版",
+    "description": "在种子详情页添加一个下载按钮，点击按钮可以选择【标题|种子名|副标题】添加种子到 qBittorrent Web UI，同时进行文件重命名。",
+    "url": "https://greasyfork.org/scripts/481724-%E7%A7%8D%E5%AD%90%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7%E6%8A%A2%E5%85%88%E4%BD%93%E9%AA%8C%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/481724/%E7%A7%8D%E5%AD%90%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7%E6%8A%A2%E5%85%88%E4%BD%93%E9%AA%8C%E7%89%88.user.js",
+    "code_size": 37047,
+    "license": "GNU General Public License v2.0 only",
+    "version": "3.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

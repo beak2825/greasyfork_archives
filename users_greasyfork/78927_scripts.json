@@ -1,0 +1,68 @@
+[
+  {
+    "id": 416710,
+    "daily_installs": 0,
+    "total_installs": 1889,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-24T13:46:12.000Z",
+    "code_updated_at": "2025-11-04T05:35:24.000Z",
+    "namespace": "knoa.jp",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 78927,
+        "name": "knoa",
+        "created_at": "2016-11-09T15:09:24.000Z",
+        "url": "https://greasyfork.org/users/78927-knoa"
+      }
+    ],
+    "name": "* AutoPagerize LazyLoad Assistant",
+    "description": "It fixes the lazy load image problem of some AutoPagerize scripts, extensions or add-ons, occuring on second or latter pages.",
+    "url": "https://greasyfork.org/scripts/416710-autopagerize-lazyload-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/416710/%2A%20AutoPagerize%20LazyLoad%20Assistant.user.js",
+    "code_size": 8257,
+    "license": null,
+    "version": "2.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415464,
+    "daily_installs": 2,
+    "total_installs": 2910,
+    "fan_score": "66.0",
+    "good_ratings": 13,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2020-11-04T08:53:37.000Z",
+    "code_updated_at": "2020-12-25T05:05:28.000Z",
+    "namespace": "knoa.jp",
+    "support_url": null,
+    "contribution_url": "https://paypal.me/kantankikaku",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 78927,
+        "name": "knoa",
+        "created_at": "2016-11-09T15:09:24.000Z",
+        "url": "https://greasyfork.org/users/78927-knoa"
+      }
+    ],
+    "name": "Amazon CPU Tamer",
+    "description": "It reduces CPU usage on Amazon shopping pages. Enjoy your snappy shopping.",
+    "url": "https://greasyfork.org/scripts/415464-amazon-cpu-tamer",
+    "code_url": "https://update.greasyfork.org/scripts/415464/Amazon%20CPU%20Tamer.user.js",
+    "code_size": 6170,
+    "license": null,
+    "version": "1.4.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

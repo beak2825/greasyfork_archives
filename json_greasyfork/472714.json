@@ -1,0 +1,33 @@
+{
+  "id": 472714,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-08T11:55:39.000Z",
+  "code_updated_at": "2023-08-08T12:11:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 76163,
+      "name": "奥里给大菠萝",
+      "created_at": "2016-10-27T09:23:03.000Z",
+      "url": "https://greasyfork.org/users/76163-%E5%A5%A5%E9%87%8C%E7%BB%99%E5%A4%A7%E8%8F%A0%E8%90%9D"
+    }
+  ],
+  "name": "arXiv论文一键翻译",
+  "description": "arXiv论文一键翻译，很方便，祝你学术步步高升！",
+  "url": "https://greasyfork.org/scripts/472714-arxiv%E8%AE%BA%E6%96%87%E4%B8%80%E9%94%AE%E7%BF%BB%E8%AF%91",
+  "code_url": "https://update.greasyfork.org/scripts/472714/arXiv%E8%AE%BA%E6%96%87%E4%B8%80%E9%94%AE%E7%BF%BB%E8%AF%91.user.js",
+  "code_size": 1977,
+  "license": "MIT License",
+  "version": "0.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

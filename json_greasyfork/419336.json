@@ -1,0 +1,33 @@
+{
+  "id": 419336,
+  "daily_installs": 0,
+  "total_installs": 166,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-29T09:05:14.000Z",
+  "code_updated_at": "2021-01-11T05:51:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 722065,
+      "name": "oumingliang",
+      "created_at": "2020-12-29T08:12:32.000Z",
+      "url": "https://greasyfork.org/users/722065-oumingliang"
+    }
+  ],
+  "name": "广二师自动晨午检 - product",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/419336-%E5%B9%BF%E4%BA%8C%E5%B8%88%E8%87%AA%E5%8A%A8%E6%99%A8%E5%8D%88%E6%A3%80-product",
+  "code_url": "https://update.greasyfork.org/scripts/419336/%E5%B9%BF%E4%BA%8C%E5%B8%88%E8%87%AA%E5%8A%A8%E6%99%A8%E5%8D%88%E6%A3%80%20-%20product.user.js",
+  "code_size": 5329,
+  "license": null,
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

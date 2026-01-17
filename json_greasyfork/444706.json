@@ -1,0 +1,33 @@
+{
+  "id": 444706,
+  "daily_installs": 0,
+  "total_installs": 169,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-08T22:45:47.000Z",
+  "code_updated_at": "2023-11-15T05:39:54.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 910745,
+      "name": "pepoboyii",
+      "created_at": "2022-05-05T14:19:23.000Z",
+      "url": "https://greasyfork.org/users/910745-pepoboyii"
+    }
+  ],
+  "name": "YouTube nuisance remover",
+  "description": "Removes the channel watermark, along with the video thumbnails, homepage ads, and channel links at the end of videos.",
+  "url": "https://greasyfork.org/scripts/444706-youtube-nuisance-remover",
+  "code_url": "https://update.greasyfork.org/scripts/444706/YouTube%20nuisance%20remover.user.js",
+  "code_size": 2920,
+  "license": "MIT License",
+  "version": "1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 460022,
+  "daily_installs": 0,
+  "total_installs": 293,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-14T16:58:12.000Z",
+  "code_updated_at": "2023-02-14T16:58:12.000Z",
+  "namespace": "https://greasyfork.org/users/1027093",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1027093,
+      "name": "BetterInternet",
+      "created_at": "2023-02-14T16:41:45.000Z",
+      "url": "https://greasyfork.org/users/1027093-betterinternet",
+      "scripts": [
+        {
+          "id": 460022,
+          "daily_installs": 0,
+          "total_installs": 293,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-14T16:58:12.000Z",
+          "code_updated_at": "2023-02-14T16:58:12.000Z",
+          "namespace": "https://greasyfork.org/users/1027093",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Omegle Automatically Skip, Watermark Remove",
+          "description": "Auto-skip pervs Indians and removes watermark from stranger's video",
+          "url": "https://greasyfork.org/scripts/460022-omegle-automatically-skip-watermark-remove",
+          "code_url": "https://update.greasyfork.org/scripts/460022/Omegle%20Automatically%20Skip%2C%20Watermark%20Remove.user.js",
+          "code_size": 2062,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Omegle Automatically Skip, Watermark Remove",
+  "description": "Auto-skip pervs Indians and removes watermark from stranger's video",
+  "url": "https://greasyfork.org/scripts/460022-omegle-automatically-skip-watermark-remove",
+  "code_url": "https://update.greasyfork.org/scripts/460022/Omegle%20Automatically%20Skip%2C%20Watermark%20Remove.user.js",
+  "code_size": 2062,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

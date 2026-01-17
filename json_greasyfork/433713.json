@@ -1,0 +1,33 @@
+{
+  "id": 433713,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-11T05:12:16.000Z",
+  "code_updated_at": "2021-10-11T06:32:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 774163,
+      "name": "lpy-179",
+      "created_at": "2021-05-20T08:56:02.000Z",
+      "url": "https://greasyfork.org/users/774163-lpy-179"
+    }
+  ],
+  "name": "sylu教学网密码填充",
+  "description": "auto fill password",
+  "url": "https://greasyfork.org/scripts/433713-sylu%E6%95%99%E5%AD%A6%E7%BD%91%E5%AF%86%E7%A0%81%E5%A1%AB%E5%85%85",
+  "code_url": "https://update.greasyfork.org/scripts/433713/sylu%E6%95%99%E5%AD%A6%E7%BD%91%E5%AF%86%E7%A0%81%E5%A1%AB%E5%85%85.user.js",
+  "code_size": 701,
+  "license": null,
+  "version": "1.33",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

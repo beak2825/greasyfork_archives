@@ -1,0 +1,59 @@
+{
+  "id": 444246,
+  "daily_installs": 1,
+  "total_installs": 79,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-30T10:39:24.000Z",
+  "code_updated_at": "2022-04-30T10:43:20.000Z",
+  "namespace": "https://nbolton.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 908849,
+      "name": "Nick Bolton",
+      "created_at": "2022-04-30T10:30:27.000Z",
+      "url": "https://greasyfork.org/users/908849-nick-bolton",
+      "scripts": [
+        {
+          "id": 444246,
+          "daily_installs": 1,
+          "total_installs": 79,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-30T10:39:24.000Z",
+          "code_updated_at": "2022-04-30T10:43:20.000Z",
+          "namespace": "https://nbolton.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PDF Link Extractor",
+          "description": "Provides a link at the top of the page to the original PDF, e.g. a datasheet (useful on annoying websites that make you view PDFs through a frame surrounded by ads).",
+          "url": "https://greasyfork.org/scripts/444246-pdf-link-extractor",
+          "code_url": "https://update.greasyfork.org/scripts/444246/PDF%20Link%20Extractor.user.js",
+          "code_size": 1739,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PDF Link Extractor",
+  "description": "Provides a link at the top of the page to the original PDF, e.g. a datasheet (useful on annoying websites that make you view PDFs through a frame surrounded by ads).",
+  "url": "https://greasyfork.org/scripts/444246-pdf-link-extractor",
+  "code_url": "https://update.greasyfork.org/scripts/444246/PDF%20Link%20Extractor.user.js",
+  "code_size": 1739,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

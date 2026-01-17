@@ -1,0 +1,33 @@
+{
+  "id": 469326,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-24T01:08:49.000Z",
+  "code_updated_at": "2023-06-24T01:19:01.000Z",
+  "namespace": "NamedSpace",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1110321,
+      "name": "0RB",
+      "created_at": "2023-06-24T00:08:15.000Z",
+      "url": "https://greasyfork.org/users/1110321-0rb"
+    }
+  ],
+  "name": "SubsPlease - Copy All Magnet Links",
+  "description": "A simple Button to Copy 1080p Magnet Links to Clipboard from: https://subsplease.org/",
+  "url": "https://greasyfork.org/scripts/469326-subsplease-copy-all-magnet-links",
+  "code_url": "https://update.greasyfork.org/scripts/469326/SubsPlease%20-%20Copy%20All%20Magnet%20Links.user.js",
+  "code_size": 1860,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 472101,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-31T01:55:04.000Z",
+    "code_updated_at": "2023-07-31T01:55:04.000Z",
+    "namespace": "https://kolektiva.social/@helios97",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1139946,
+        "name": "Helios97",
+        "created_at": "2023-07-30T23:10:39.000Z",
+        "url": "https://greasyfork.org/users/1139946-helios97"
+      }
+    ],
+    "name": "Automatic Quetre Redirect",
+    "description": "Uses Farside to automatically redirect to working instance of Quetre",
+    "url": "https://greasyfork.org/scripts/472101-automatic-quetre-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/472101/Automatic%20Quetre%20Redirect.user.js",
+    "code_size": 1684,
+    "license": "GNU GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472098,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-31T00:01:12.000Z",
+    "code_updated_at": "2023-07-31T00:42:39.000Z",
+    "namespace": "https://kolektiva.social/@helios97",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1139946,
+        "name": "Helios97",
+        "created_at": "2023-07-30T23:10:39.000Z",
+        "url": "https://greasyfork.org/users/1139946-helios97"
+      }
+    ],
+    "name": "Libre Frontend Redirect",
+    "description": "Gives buttom to redirect from a Libre Frontend instance to another instance to counter rate-limiting. (Currently Supported: Reddit, Quora. Planned: Youtube, github, etc)",
+    "url": "https://greasyfork.org/scripts/472098-libre-frontend-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/472098/Libre%20Frontend%20Redirect.user.js",
+    "code_size": 5151,
+    "license": "GNU GPLv3",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

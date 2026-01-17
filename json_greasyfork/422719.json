@@ -1,0 +1,59 @@
+{
+  "id": 422719,
+  "daily_installs": 0,
+  "total_installs": 7723,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-05T09:34:31.000Z",
+  "code_updated_at": "2021-03-24T07:26:44.000Z",
+  "namespace": "shuidas",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 743854,
+      "name": "娇我踢球",
+      "created_at": "2021-03-05T09:25:21.000Z",
+      "url": "https://greasyfork.org/users/743854-%E5%A8%87%E6%88%91%E8%B8%A2%E7%90%83",
+      "scripts": [
+        {
+          "id": 422719,
+          "daily_installs": 0,
+          "total_installs": 7723,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-05T09:34:31.000Z",
+          "code_updated_at": "2021-03-24T07:26:44.000Z",
+          "namespace": "shuidas",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "传智自动刷视频",
+          "description": "只能刷视频，可改默认播放速度，习题可选择是否跳过（跳过的话需要手动点回来做，不跳过就是题库查，不准确的结果会显示在控制台，也有可能查询不到）中间可能有些bug，我这边样本不够没法改，建议先跳过习题刷完视频再刷习题",
+          "url": "https://greasyfork.org/scripts/422719-%E4%BC%A0%E6%99%BA%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91",
+          "code_url": "https://update.greasyfork.org/scripts/422719/%E4%BC%A0%E6%99%BA%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91.user.js",
+          "code_size": 14002,
+          "license": null,
+          "version": "0.9.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "传智自动刷视频",
+  "description": "只能刷视频，可改默认播放速度，习题可选择是否跳过（跳过的话需要手动点回来做，不跳过就是题库查，不准确的结果会显示在控制台，也有可能查询不到）中间可能有些bug，我这边样本不够没法改，建议先跳过习题刷完视频再刷习题",
+  "url": "https://greasyfork.org/scripts/422719-%E4%BC%A0%E6%99%BA%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91",
+  "code_url": "https://update.greasyfork.org/scripts/422719/%E4%BC%A0%E6%99%BA%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91.user.js",
+  "code_size": 14002,
+  "license": null,
+  "version": "0.9.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

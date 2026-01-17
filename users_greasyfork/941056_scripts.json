@@ -1,0 +1,68 @@
+[
+  {
+    "id": 465611,
+    "daily_installs": 0,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-05T19:17:24.000Z",
+    "code_updated_at": "2023-06-06T09:52:25.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 941056,
+        "name": "Ambience Essence",
+        "created_at": "2022-07-29T12:03:57.000Z",
+        "url": "https://greasyfork.org/users/941056-ambience-essence"
+      }
+    ],
+    "name": "Forum Curator Script for BIO | Green",
+    "description": "Данный скрипт создан для помощи в закрытии РП биографий, действует как дополнение к основному скрипту. Предложения по улучшению писать сюда: https://vk.com/id494383766",
+    "url": "https://greasyfork.org/scripts/465611-forum-curator-script-for-bio-green",
+    "code_url": "https://update.greasyfork.org/scripts/465611/Forum%20Curator%20Script%20for%20BIO%20%7C%20Green.user.js",
+    "code_size": 14122,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465607,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-05T17:45:26.000Z",
+    "code_updated_at": "2023-05-26T13:40:43.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 941056,
+        "name": "Ambience Essence",
+        "created_at": "2022-07-29T12:03:57.000Z",
+        "url": "https://greasyfork.org/users/941056-ambience-essence"
+      }
+    ],
+    "name": "Forum Curator Script | Green",
+    "description": "Данный скрипт создан для помощи в закрытии жалоб на форуме. Предложения по улучшению писать сюда: https://vk.com/id494383766",
+    "url": "https://greasyfork.org/scripts/465607-forum-curator-script-green",
+    "code_url": "https://update.greasyfork.org/scripts/465607/Forum%20Curator%20Script%20%7C%20Green.user.js",
+    "code_size": 46415,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

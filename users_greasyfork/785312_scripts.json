@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 465400,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-02T20:41:40.000Z",
+    "code_updated_at": "2023-05-02T20:41:40.000Z",
+    "namespace": "http://tampermonkey-react-videos/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 785312,
+        "name": "Luke-L",
+        "created_at": "2021-06-20T06:10:07.000Z",
+        "url": "https://greasyfork.org/users/785312-luke-l"
+      }
+    ],
+    "name": "Hide YouTube Reaction Videos from Search",
+    "description": "Hides any low-effort reaction YouTube videos with \"react\" in the title or channel name and prints hidden video info to the console.",
+    "url": "https://greasyfork.org/scripts/465400-hide-youtube-reaction-videos-from-search",
+    "code_url": "https://update.greasyfork.org/scripts/465400/Hide%20YouTube%20Reaction%20Videos%20from%20Search.user.js",
+    "code_size": 2089,
+    "license": "CC BY-NC",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461974,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-16T19:39:56.000Z",
+    "code_updated_at": "2023-03-16T20:30:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 785312,
+        "name": "Luke-L",
+        "created_at": "2021-06-20T06:10:07.000Z",
+        "url": "https://greasyfork.org/users/785312-luke-l"
+      }
+    ],
+    "name": "Blizzard Forum Fixer",
+    "description": "Modify and overwrite the style of the Blizzard Forums",
+    "url": "https://greasyfork.org/scripts/461974-blizzard-forum-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/461974/Blizzard%20Forum%20Fixer.user.js",
+    "code_size": 1396,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

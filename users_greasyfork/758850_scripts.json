@@ -1,0 +1,68 @@
+[
+  {
+    "id": 425008,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-14T04:43:48.000Z",
+    "code_updated_at": "2021-04-14T04:43:47.000Z",
+    "namespace": "https://yun.kujiale.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 758850,
+        "name": "shannai",
+        "created_at": "2021-04-14T03:36:04.000Z",
+        "url": "https://greasyfork.org/users/758850-shannai"
+      }
+    ],
+    "name": "房企工具测试工具1",
+    "description": "房企工具线测试工具",
+    "url": "https://greasyfork.org/scripts/425008-%E6%88%BF%E4%BC%81%E5%B7%A5%E5%85%B7%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B71",
+    "code_url": "https://update.greasyfork.org/scripts/425008/%E6%88%BF%E4%BC%81%E5%B7%A5%E5%85%B7%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B71.user.js",
+    "code_size": 47624,
+    "license": null,
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425007,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-14T04:43:22.000Z",
+    "code_updated_at": "2021-04-14T04:43:22.000Z",
+    "namespace": "https://yun.kujiale.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 758850,
+        "name": "shannai",
+        "created_at": "2021-04-14T03:36:04.000Z",
+        "url": "https://greasyfork.org/users/758850-shannai"
+      }
+    ],
+    "name": "房企工具测试工具",
+    "description": "房企工具线测试工具",
+    "url": "https://greasyfork.org/scripts/425007-%E6%88%BF%E4%BC%81%E5%B7%A5%E5%85%B7%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/425007/%E6%88%BF%E4%BC%81%E5%B7%A5%E5%85%B7%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 47623,
+    "license": null,
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

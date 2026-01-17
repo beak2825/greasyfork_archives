@@ -1,0 +1,59 @@
+{
+  "id": 453907,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-29T01:05:52.000Z",
+  "code_updated_at": "2022-10-29T05:39:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 976488,
+      "name": "AnusPropeller",
+      "created_at": "2022-10-29T00:36:03.000Z",
+      "url": "https://greasyfork.org/users/976488-anuspropeller",
+      "scripts": [
+        {
+          "id": 453907,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-29T01:05:52.000Z",
+          "code_updated_at": "2022-10-29T05:39:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove Offensive Warning on Definitions",
+          "description": "Removes the offensive/derogatory warning on google definitions",
+          "url": "https://greasyfork.org/scripts/453907-remove-offensive-warning-on-definitions",
+          "code_url": "https://update.greasyfork.org/scripts/453907/Remove%20Offensive%20Warning%20on%20Definitions.user.js",
+          "code_size": 4126,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove Offensive Warning on Definitions",
+  "description": "Removes the offensive/derogatory warning on google definitions",
+  "url": "https://greasyfork.org/scripts/453907-remove-offensive-warning-on-definitions",
+  "code_url": "https://update.greasyfork.org/scripts/453907/Remove%20Offensive%20Warning%20on%20Definitions.user.js",
+  "code_size": 4126,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

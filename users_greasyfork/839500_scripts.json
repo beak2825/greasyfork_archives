@@ -1,0 +1,68 @@
+[
+  {
+    "id": 436208,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-28T11:47:38.000Z",
+    "code_updated_at": "2021-11-28T11:47:37.000Z",
+    "namespace": "https://www.tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 839500,
+        "name": "oukele",
+        "created_at": "2021-11-16T04:13:42.000Z",
+        "url": "https://greasyfork.org/users/839500-oukele"
+      }
+    ],
+    "name": "全网VIP视频自动解析播放器(已适配手机)",
+    "description": "无需跳转新网址，打开官网直接看，超清 无广告 无水印。支持：腾讯，爱奇艺，优酷，哔哩哔哩，咪咕，乐视，搜狐，芒果，西瓜，PPTV，1905电影网，华数",
+    "url": "https://greasyfork.org/scripts/436208-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E6%92%AD%E6%94%BE%E5%99%A8-%E5%B7%B2%E9%80%82%E9%85%8D%E6%89%8B%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/436208/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E6%92%AD%E6%94%BE%E5%99%A8%28%E5%B7%B2%E9%80%82%E9%85%8D%E6%89%8B%E6%9C%BA%29.user.js",
+    "code_size": 24041,
+    "license": "Tenfond",
+    "version": "0.5.12.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 436192,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-28T01:52:55.000Z",
+    "code_updated_at": "2021-11-28T01:52:54.000Z",
+    "namespace": "lanhaha",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 839500,
+        "name": "oukele",
+        "created_at": "2021-11-16T04:13:42.000Z",
+        "url": "https://greasyfork.org/users/839500-oukele"
+      }
+    ],
+    "name": "视频解析移动版2",
+    "description": "集合了优酷、爱奇艺、腾讯、芒果等全网VIP视频免费破解去广告",
+    "url": "https://greasyfork.org/scripts/436192-%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E7%A7%BB%E5%8A%A8%E7%89%882",
+    "code_url": "https://update.greasyfork.org/scripts/436192/%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E7%A7%BB%E5%8A%A8%E7%89%882.user.js",
+    "code_size": 14235,
+    "license": "AGPL License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

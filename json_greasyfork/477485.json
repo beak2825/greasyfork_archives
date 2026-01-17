@@ -1,0 +1,33 @@
+{
+  "id": 477485,
+  "daily_installs": 1,
+  "total_installs": 141,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-15T16:24:09.000Z",
+  "code_updated_at": "2023-10-21T16:15:04.000Z",
+  "namespace": "cweijan/steam_online_players",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 184659,
+      "name": "Weijan Chen",
+      "created_at": "2018-05-08T03:00:24.000Z",
+      "url": "https://greasyfork.org/users/184659-weijan-chen"
+    }
+  ],
+  "name": "显示Steam游戏在线人数",
+  "description": "在Steam商店页右侧信息面板增加在线人数, 便于观察游戏的实际热度",
+  "url": "https://greasyfork.org/scripts/477485-%E6%98%BE%E7%A4%BAsteam%E6%B8%B8%E6%88%8F%E5%9C%A8%E7%BA%BF%E4%BA%BA%E6%95%B0",
+  "code_url": "https://update.greasyfork.org/scripts/477485/%E6%98%BE%E7%A4%BASteam%E6%B8%B8%E6%88%8F%E5%9C%A8%E7%BA%BF%E4%BA%BA%E6%95%B0.user.js",
+  "code_size": 5300,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 491849,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T02:19:07.000Z",
+    "code_updated_at": "2024-04-07T02:19:07.000Z",
+    "namespace": "https://greasyfork.org/en/users/1284871",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284871,
+        "name": "goldenstranger",
+        "created_at": "2024-04-07T00:47:42.000Z",
+        "url": "https://greasyfork.org/users/1284871-goldenstranger"
+      }
+    ],
+    "name": "Item Highlighter - Neopian Fresh Foods Shop",
+    "description": "Highlight items you specify in this shop.",
+    "url": "https://greasyfork.org/scripts/491849-item-highlighter-neopian-fresh-foods-shop",
+    "code_url": "https://update.greasyfork.org/scripts/491849/Item%20Highlighter%20-%20Neopian%20Fresh%20Foods%20Shop.user.js",
+    "code_size": 4615,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 491844,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T01:27:14.000Z",
+    "code_updated_at": "2024-04-07T01:27:13.000Z",
+    "namespace": "https://greasyfork.org/users/951153",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284871,
+        "name": "goldenstranger",
+        "created_at": "2024-04-07T00:47:42.000Z",
+        "url": "https://greasyfork.org/users/1284871-goldenstranger"
+      }
+    ],
+    "name": "Item Highlighter - Magical Book Shop",
+    "description": "Highlight items you specify in this shop.",
+    "url": "https://greasyfork.org/scripts/491844-item-highlighter-magical-book-shop",
+    "code_url": "https://update.greasyfork.org/scripts/491844/Item%20Highlighter%20-%20Magical%20Book%20Shop.user.js",
+    "code_size": 4402,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 491843,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T01:22:34.000Z",
+    "code_updated_at": "2024-04-07T01:22:34.000Z",
+    "namespace": "https://greasyfork.org/users/951153",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284871,
+        "name": "goldenstranger",
+        "created_at": "2024-04-07T00:47:42.000Z",
+        "url": "https://greasyfork.org/users/1284871-goldenstranger"
+      }
+    ],
+    "name": "Item Highlighter - Tyrannian Weapons",
+    "description": "Highlight items you specify in this shop.",
+    "url": "https://greasyfork.org/scripts/491843-item-highlighter-tyrannian-weapons",
+    "code_url": "https://update.greasyfork.org/scripts/491843/Item%20Highlighter%20-%20Tyrannian%20Weapons.user.js",
+    "code_size": 3963,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 491840,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T01:09:39.000Z",
+    "code_updated_at": "2024-04-07T01:10:42.000Z",
+    "namespace": "https://greasyfork.org/en/users/1284871",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284871,
+        "name": "goldenstranger",
+        "created_at": "2024-04-07T00:47:42.000Z",
+        "url": "https://greasyfork.org/users/1284871-goldenstranger"
+      }
+    ],
+    "name": "Item Highlighter - Ice Crystals",
+    "description": "Finds items you specify in Ice Crystals Shop.",
+    "url": "https://greasyfork.org/scripts/491840-item-highlighter-ice-crystals",
+    "code_url": "https://update.greasyfork.org/scripts/491840/Item%20Highlighter%20-%20Ice%20Crystals.user.js",
+    "code_size": 3996,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

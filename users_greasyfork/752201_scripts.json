@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424079,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-28T05:56:01.000Z",
+    "code_updated_at": "2021-05-02T13:01:01.000Z",
+    "namespace": "https://github.com/yukuse",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 752201,
+        "name": "yukser",
+        "created_at": "2021-03-28T05:07:49.000Z",
+        "url": "https://greasyfork.org/users/752201-yukser"
+      }
+    ],
+    "name": "AtCoder ResultsPage Tweaks",
+    "description": "AtCoderの提出結果一覧画面に自動検索機能などを追加します。",
+    "url": "https://greasyfork.org/scripts/424079-atcoder-resultspage-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/424079/AtCoder%20ResultsPage%20Tweaks.user.js",
+    "code_size": 6219,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

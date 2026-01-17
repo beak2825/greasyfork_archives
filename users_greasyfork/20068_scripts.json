@@ -1,0 +1,200 @@
+[
+  {
+    "id": 463339,
+    "daily_installs": 2,
+    "total_installs": 770,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-04-05T13:57:38.000Z",
+    "code_updated_at": "2025-07-15T19:42:09.000Z",
+    "namespace": "https://greasyfork.org/en/users/20068-cuzi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 20068,
+        "name": "cuzi",
+        "created_at": "2015-11-13T10:09:54.000Z",
+        "url": "https://greasyfork.org/users/20068-cuzi"
+      }
+    ],
+    "name": "Paywall redirect to Archive.today",
+    "description": "Redirect spiegel.de faz.net zeit.de bild.de zerohedge.com Süddeutsche Zeitung SZPlus tagesspiegel paywall pages to archive.today",
+    "url": "https://greasyfork.org/scripts/463339-paywall-redirect-to-archive-today",
+    "code_url": "https://update.greasyfork.org/scripts/463339/Paywall%20redirect%20to%20Archivetoday.user.js",
+    "code_size": 12091,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "2.20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456818,
+    "daily_installs": 0,
+    "total_installs": 365,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-12-19T11:44:06.000Z",
+    "code_updated_at": "2025-06-13T21:37:35.000Z",
+    "namespace": "github.com/cvzi/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 20068,
+        "name": "cuzi",
+        "created_at": "2015-11-13T10:09:54.000Z",
+        "url": "https://greasyfork.org/users/20068-cuzi"
+      }
+    ],
+    "name": "Reverse Image Search",
+    "description": "Search largest image on the page or current image on Google, TinEye, Yandex, SauceNAO and iqdb.org",
+    "url": "https://greasyfork.org/scripts/456818-reverse-image-search",
+    "code_url": "https://update.greasyfork.org/scripts/456818/Reverse%20Image%20Search.user.js",
+    "code_size": 4569,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445713,
+    "daily_installs": 0,
+    "total_installs": 163,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-29T15:07:16.000Z",
+    "code_updated_at": "2025-02-07T10:38:51.000Z",
+    "namespace": "github.com/cvzi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 20068,
+        "name": "cuzi",
+        "created_at": "2015-11-13T10:09:54.000Z",
+        "url": "https://greasyfork.org/users/20068-cuzi"
+      }
+    ],
+    "name": "Bikemap.net Export GPX and KML routes",
+    "description": "Download GPX, KML, TCX and geoJSON files for a route on bikemap.net",
+    "url": "https://greasyfork.org/scripts/445713-bikemap-net-export-gpx-and-kml-routes",
+    "code_url": "https://update.greasyfork.org/scripts/445713/Bikemapnet%20Export%20GPX%20and%20KML%20routes.user.js",
+    "code_size": 4349,
+    "license": "MIT License",
+    "version": "1.3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437338,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-20T10:48:15.000Z",
+    "code_updated_at": "2021-12-20T10:48:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 20068,
+        "name": "cuzi",
+        "created_at": "2015-11-13T10:09:54.000Z",
+        "url": "https://greasyfork.org/users/20068-cuzi"
+      }
+    ],
+    "name": "NRK subtitle download",
+    "description": "Download subtitles from tv.nrk.no",
+    "url": "https://greasyfork.org/scripts/437338-nrk-subtitle-download",
+    "code_url": "https://update.greasyfork.org/scripts/437338/NRK%20subtitle%20download.user.js",
+    "code_size": 4675,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425352,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-21T18:22:32.000Z",
+    "code_updated_at": "2023-08-06T23:30:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 20068,
+        "name": "cuzi",
+        "created_at": "2015-11-13T10:09:54.000Z",
+        "url": "https://greasyfork.org/users/20068-cuzi"
+      }
+    ],
+    "name": "Swiggy & Zomato: Non Veg dishes only",
+    "description": "On Swiggy and Zomato you can select to show vegetarian dishes only, this script does the reverse: it allows you to hide vegetarian dishes. Rate individual dishes and keep a private history of what you like and what you hated",
+    "url": "https://greasyfork.org/scripts/425352-swiggy-zomato-non-veg-dishes-only",
+    "code_url": "https://update.greasyfork.org/scripts/425352/Swiggy%20%20Zomato%3A%20Non%20Veg%20dishes%20only.user.js",
+    "code_size": 34090,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412755,
+    "daily_installs": 0,
+    "total_installs": 79,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-09T14:49:00.000Z",
+    "code_updated_at": "2023-10-30T10:24:06.000Z",
+    "namespace": "https://openuserjs.org/users/cuzi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 20068,
+        "name": "cuzi",
+        "created_at": "2015-11-13T10:09:54.000Z",
+        "url": "https://greasyfork.org/users/20068-cuzi"
+      }
+    ],
+    "name": "Youtube - Hide default playlists",
+    "description": "Hide the default playlists in the navigation on the left side of Youtube",
+    "url": "https://greasyfork.org/scripts/412755-youtube-hide-default-playlists",
+    "code_url": "https://update.greasyfork.org/scripts/412755/Youtube%20-%20Hide%20default%20playlists.user.js",
+    "code_size": 8824,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

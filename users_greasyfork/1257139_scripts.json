@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486562,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-04T10:46:52.000Z",
+    "code_updated_at": "2024-02-09T19:39:33.000Z",
+    "namespace": "https://gist.github.com/Derro8/88ba240acdcb5acd4464a489343cca34",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257139,
+        "name": "chonker",
+        "created_at": "2024-02-04T05:15:16.000Z",
+        "url": "https://greasyfork.org/users/1257139-chonker"
+      }
+    ],
+    "name": "Crunchyroll Profiles",
+    "description": "Uses new multiprofile endpoints to implement profiles before release.",
+    "url": "https://greasyfork.org/scripts/486562-crunchyroll-profiles",
+    "code_url": "https://update.greasyfork.org/scripts/486562/Crunchyroll%20Profiles.user.js",
+    "code_size": 14916,
+    "license": "MIT License",
+    "version": "2024-02-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

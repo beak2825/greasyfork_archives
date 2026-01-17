@@ -1,0 +1,68 @@
+[
+  {
+    "id": 444524,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-06T01:29:03.000Z",
+    "code_updated_at": "2022-05-06T01:29:02.000Z",
+    "namespace": "https://userscripts-mirror.org/scripts/show/110567",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906927,
+        "name": "NickDS97",
+        "created_at": "2022-04-25T22:52:18.000Z",
+        "url": "https://greasyfork.org/users/906927-nickds97"
+      }
+    ],
+    "name": "TW-DB.info Quick Import Button",
+    "description": "A new button next to the minimap, that quickly launches the TW-DB Import script",
+    "url": "https://greasyfork.org/scripts/444524-tw-db-info-quick-import-button",
+    "code_url": "https://update.greasyfork.org/scripts/444524/TW-DBinfo%20Quick%20Import%20Button.user.js",
+    "code_size": 5307,
+    "license": null,
+    "version": "1.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 444223,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-29T22:14:43.000Z",
+    "code_updated_at": "2022-04-29T22:14:42.000Z",
+    "namespace": "https://greasyfork.org/cs/users/153384/",
+    "support_url": "https://github.com/taurascript/TWIR/issues",
+    "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=taurascript_public%40protonmail.com&item_name=TW+script&currency_code=EUR&source=url",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906927,
+        "name": "NickDS97",
+        "created_at": "2022-04-25T22:52:18.000Z",
+        "url": "https://greasyfork.org/users/906927-nickds97"
+      }
+    ],
+    "name": "TW Inventory Reloaded",
+    "description": "Better Inventory and tools for The West!",
+    "url": "https://greasyfork.org/scripts/444223-tw-inventory-reloaded",
+    "code_url": "https://update.greasyfork.org/scripts/444223/TW%20Inventory%20Reloaded.user.js",
+    "code_size": 1237869,
+    "license": "GPL-3.0 http://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "2.203.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

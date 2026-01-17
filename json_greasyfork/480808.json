@@ -1,0 +1,59 @@
+{
+  "id": 480808,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-26T11:15:55.000Z",
+  "code_updated_at": "2025-06-08T11:35:24.000Z",
+  "namespace": "Weverse Enhancements",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1223791,
+      "name": "jho",
+      "created_at": "2023-11-26T11:12:44.000Z",
+      "url": "https://greasyfork.org/users/1223791-jho",
+      "scripts": [
+        {
+          "id": 533514,
+          "daily_installs": 0,
+          "total_installs": 81,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-04-21T10:57:57.000Z",
+          "code_updated_at": "2025-11-19T12:55:00.000Z",
+          "namespace": "https://greasyfork.org/users/1223791",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Quick Actions (Hide, Not Interested, Don’t Recommend, Save to Playlist)",
+          "description": "Adds quick-action buttons like Hide, Save to Playlist, Not Interested, and Don’t Recommend",
+          "url": "https://greasyfork.org/scripts/533514-youtube-quick-actions-hide-not-interested-don-t-recommend-save-to-playlist",
+          "code_url": "https://update.greasyfork.org/scripts/533514/YouTube%20Quick%20Actions%20%28Hide%2C%20Not%20Interested%2C%20Don%E2%80%99t%20Recommend%2C%20Save%20to%20Playlist%29.user.js",
+          "code_size": 34413,
+          "license": "The Unlicense",
+          "version": "2.0.1.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Weverse Extra",
+  "description": "Enable Picture-in-picture, Livestream notifications, Auto Dismiss Notice",
+  "url": "https://greasyfork.org/scripts/480808-weverse-extra",
+  "code_url": "https://update.greasyfork.org/scripts/480808/Weverse%20Extra.user.js",
+  "code_size": 27712,
+  "license": "The Unlicense",
+  "version": "5.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

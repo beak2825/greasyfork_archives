@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463527,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-08T09:08:05.000Z",
+    "code_updated_at": "2024-06-26T16:51:09.000Z",
+    "namespace": "https://github.com/zenonux",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1055816,
+        "name": "zenonux",
+        "created_at": "2023-04-08T05:49:32.000Z",
+        "url": "https://greasyfork.org/users/1055816-zenonux"
+      }
+    ],
+    "name": "apifox-openapi-transformer",
+    "description": "transform apifox openapi format provided by `http://127.0.0.1:4523/export/openapi/` into typescript api flie.",
+    "url": "https://greasyfork.org/scripts/463527-apifox-openapi-transformer",
+    "code_url": "https://update.greasyfork.org/scripts/463527/apifox-openapi-transformer.user.js",
+    "code_size": 12907,
+    "license": "GPL-3.0 License",
+    "version": "1.5.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

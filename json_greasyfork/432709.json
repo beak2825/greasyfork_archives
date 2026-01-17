@@ -1,0 +1,34 @@
+{
+  "id": 432709,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-20T14:33:56.000Z",
+  "code_updated_at": "2021-09-20T14:35:00.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/167084-lin-skywood",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 167084,
+      "name": "lin skywood",
+      "created_at": "2018-01-17T13:41:54.000Z",
+      "url": "https://greasyfork.org/users/167084-lin-skywood",
+      "scripts": []
+    }
+  ],
+  "name": "pushMagLinkTo115Offline",
+  "description": "1. 推送到115离线 2. btdig页面可以添加按钮推送到115离线",
+  "url": "https://greasyfork.org/scripts/432709-pushmaglinkto115offline",
+  "code_url": "https://update.greasyfork.org/scripts/432709/pushMagLinkTo115Offline.user.js",
+  "code_size": 8111,
+  "license": "LGPLv3",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

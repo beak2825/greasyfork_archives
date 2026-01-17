@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472111,
+    "daily_installs": 0,
+    "total_installs": 328,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-31T04:45:23.000Z",
+    "code_updated_at": "2023-07-31T07:48:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1140098,
+        "name": "deximy",
+        "created_at": "2023-07-31T04:39:50.000Z",
+        "url": "https://greasyfork.org/users/1140098-deximy"
+      }
+    ],
+    "name": "EpicGamesDB Price Helper",
+    "description": "Show converted price in EpicGamesDB",
+    "url": "https://greasyfork.org/scripts/472111-epicgamesdb-price-helper",
+    "code_url": "https://update.greasyfork.org/scripts/472111/EpicGamesDB%20Price%20Helper.user.js",
+    "code_size": 8141,
+    "license": "GNU AGPLv3",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

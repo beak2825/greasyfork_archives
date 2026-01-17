@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439044,
+    "daily_installs": 0,
+    "total_installs": 590,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-24T08:10:55.000Z",
+    "code_updated_at": "2022-01-24T08:10:55.000Z",
+    "namespace": "krytro.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 868595,
+        "name": "NitroRCr",
+        "created_at": "2022-01-24T07:43:36.000Z",
+        "url": "https://greasyfork.org/users/868595-nitrorcr"
+      }
+    ],
+    "name": "uyx-pro",
+    "description": "将播放器替换为更强大的DPlayer，以支持弹幕、键盘控制和下载功能",
+    "url": "https://greasyfork.org/scripts/439044-uyx-pro",
+    "code_url": "https://update.greasyfork.org/scripts/439044/uyx-pro.user.js",
+    "code_size": 1550,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

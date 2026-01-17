@@ -1,0 +1,101 @@
+[
+  {
+    "id": 439943,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-13T01:34:55.000Z",
+    "code_updated_at": "2022-02-13T01:34:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 871230,
+        "name": "Pedro Jorge",
+        "created_at": "2022-01-31T01:16:15.000Z",
+        "url": "https://greasyfork.org/users/871230-pedro-jorge"
+      }
+    ],
+    "name": "Auto Click Captcha",
+    "description": "Auto clicks the recaptcha checkbox",
+    "url": "https://greasyfork.org/scripts/439943-auto-click-captcha",
+    "code_url": "https://update.greasyfork.org/scripts/439943/Auto%20Click%20Captcha.user.js",
+    "code_size": 2413,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 439939,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-12T23:36:14.000Z",
+    "code_updated_at": "2022-02-12T23:36:13.000Z",
+    "namespace": "https://greasyfork.org/users/871230-linkzera",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 871230,
+        "name": "Pedro Jorge",
+        "created_at": "2022-01-31T01:16:15.000Z",
+        "url": "https://greasyfork.org/users/871230-pedro-jorge"
+      }
+    ],
+    "name": "Pegaxy Auto Play",
+    "description": "Bot para jogar sozinho",
+    "url": "https://greasyfork.org/scripts/439939-pegaxy-auto-play",
+    "code_url": "https://update.greasyfork.org/scripts/439939/Pegaxy%20Auto%20Play.user.js",
+    "code_size": 1683,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 439938,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-12T23:34:55.000Z",
+    "code_updated_at": "2022-02-12T23:34:55.000Z",
+    "namespace": "https://greasyfork.org/users/871230-linkzera",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 871230,
+        "name": "Pedro Jorge",
+        "created_at": "2022-01-31T01:16:15.000Z",
+        "url": "https://greasyfork.org/users/871230-pedro-jorge"
+      }
+    ],
+    "name": "Pegaxy Rent URL",
+    "description": "Bot para tentar alugar cavalos",
+    "url": "https://greasyfork.org/scripts/439938-pegaxy-rent-url",
+    "code_url": "https://update.greasyfork.org/scripts/439938/Pegaxy%20Rent%20URL.user.js",
+    "code_size": 2174,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

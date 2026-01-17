@@ -394,5 +394,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 489086,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-05T16:46:57.000Z",
+    "code_updated_at": "2026-01-15T02:41:08.000Z",
+    "namespace": "http://lit.link/toracatman",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1172783,
+        "name": "トラネコマン",
+        "created_at": "2023-09-14T08:54:57.000Z",
+        "url": "https://greasyfork.org/users/1172783-%E3%83%88%E3%83%A9%E3%83%8D%E3%82%B3%E3%83%9E%E3%83%B3"
+      }
+    ],
+    "name": "「新しい日本語を作る会」コメントシステムの改良",
+    "description": "「新しい日本語を作る会」の コメントシステムを 改良します。",
+    "url": "https://greasyfork.org/scripts/489086-%E6%96%B0%E3%81%97%E3%81%84%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%92%E4%BD%9C%E3%82%8B%E4%BC%9A-%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%94%B9%E8%89%AF",
+    "code_url": "https://update.greasyfork.org/scripts/489086/%E3%80%8C%E6%96%B0%E3%81%97%E3%81%84%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%92%E4%BD%9C%E3%82%8B%E4%BC%9A%E3%80%8D%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%94%B9%E8%89%AF.user.js",
+    "code_size": 12468,
+    "license": "MIT License",
+    "version": "2026-01-15",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 488763,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-02T04:51:21.000Z",
+    "code_updated_at": "2025-11-23T09:38:14.000Z",
+    "namespace": "http://lit.link/toracatman",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1172783,
+        "name": "トラネコマン",
+        "created_at": "2023-09-14T08:54:57.000Z",
+        "url": "https://greasyfork.org/users/1172783-%E3%83%88%E3%83%A9%E3%83%8D%E3%82%B3%E3%83%9E%E3%83%B3"
+      }
+    ],
+    "name": "【サポート終了】国立アイヌ民族博物館アイヌ語アーカイブの半角を小書きに",
+    "description": "「国立アイヌ民族博物館アイヌ語アーカイブ」という サイトの 半角カタカナを 小書きカタカナに します。",
+    "url": "https://greasyfork.org/scripts/488763-%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E7%B5%82%E4%BA%86-%E5%9B%BD%E7%AB%8B%E3%82%A2%E3%82%A4%E3%83%8C%E6%B0%91%E6%97%8F%E5%8D%9A%E7%89%A9%E9%A4%A8%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%E3%81%AE%E5%8D%8A%E8%A7%92%E3%82%92%E5%B0%8F%E6%9B%B8%E3%81%8D%E3%81%AB",
+    "code_url": "https://update.greasyfork.org/scripts/488763/%E3%80%90%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E7%B5%82%E4%BA%86%E3%80%91%E5%9B%BD%E7%AB%8B%E3%82%A2%E3%82%A4%E3%83%8C%E6%B0%91%E6%97%8F%E5%8D%9A%E7%89%A9%E9%A4%A8%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%E3%81%AE%E5%8D%8A%E8%A7%92%E3%82%92%E5%B0%8F%E6%9B%B8%E3%81%8D%E3%81%AB.user.js",
+    "code_size": 2666,
+    "license": "MIT License",
+    "version": "2025-11-23",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 475271,
+    "daily_installs": 1,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-14T09:11:44.000Z",
+    "code_updated_at": "2026-01-15T04:21:40.000Z",
+    "namespace": "http://lit.link/toracatman",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1172783,
+        "name": "トラネコマン",
+        "created_at": "2023-09-14T08:54:57.000Z",
+        "url": "https://greasyfork.org/users/1172783-%E3%83%88%E3%83%A9%E3%83%8D%E3%82%B3%E3%83%9E%E3%83%B3"
+      }
+    ],
+    "name": "Twitter時計",
+    "description": "Twitterに 時計を 表示します。",
+    "url": "https://greasyfork.org/scripts/475271-twitter%E6%99%82%E8%A8%88",
+    "code_url": "https://update.greasyfork.org/scripts/475271/Twitter%E6%99%82%E8%A8%88.user.js",
+    "code_size": 5480,
+    "license": "MIT License",
+    "version": "2026-01-15",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

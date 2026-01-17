@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431338,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-25T09:56:31.000Z",
+    "code_updated_at": "2021-08-25T09:56:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 218,
+        "name": "segabito",
+        "created_at": "2014-04-14T20:16:44.000Z",
+        "url": "https://greasyfork.org/users/218-segabito"
+      }
+    ],
+    "name": "Screensaver Blocker",
+    "description": "https://www.google.com/ を開いている間、スクリーンセーバーを抑止する",
+    "url": "https://greasyfork.org/scripts/431338-screensaver-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/431338/Screensaver%20Blocker.user.js",
+    "code_size": 1268,
+    "license": "public domain",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

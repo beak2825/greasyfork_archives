@@ -1,0 +1,33 @@
+{
+  "id": 415165,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-31T08:12:34.000Z",
+  "code_updated_at": "2020-10-31T08:12:34.000Z",
+  "namespace": "YoutubeLivechatWipeSpam",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 699961,
+      "name": "海かもめ",
+      "created_at": "2020-10-31T08:09:57.000Z",
+      "url": "https://greasyfork.org/users/699961-%E6%B5%B7%E3%81%8B%E3%82%82%E3%82%81"
+    }
+  ],
+  "name": "Wipe junk chats out from Youtube Livechat",
+  "description": "Wipe junk messages out.",
+  "url": "https://greasyfork.org/scripts/415165-wipe-junk-chats-out-from-youtube-livechat",
+  "code_url": "https://update.greasyfork.org/scripts/415165/Wipe%20junk%20chats%20out%20from%20Youtube%20Livechat.user.js",
+  "code_size": 4238,
+  "license": null,
+  "version": "1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

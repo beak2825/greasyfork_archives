@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431203,
+    "daily_installs": 0,
+    "total_installs": 99,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-08-23T01:26:05.000Z",
+    "code_updated_at": "2021-09-16T08:41:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 687827,
+        "name": "WYFans",
+        "created_at": "2020-09-16T07:23:40.000Z",
+        "url": "https://greasyfork.org/users/687827-wyfans"
+      }
+    ],
+    "name": "粉笔视频去除",
+    "description": "上班时练粉笔题目，视频VIP提示太大太碍眼，容易被人发现，特意去除。又加了修改标签页名称",
+    "url": "https://greasyfork.org/scripts/431203-%E7%B2%89%E7%AC%94%E8%A7%86%E9%A2%91%E5%8E%BB%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/431203/%E7%B2%89%E7%AC%94%E8%A7%86%E9%A2%91%E5%8E%BB%E9%99%A4.user.js",
+    "code_size": 3616,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

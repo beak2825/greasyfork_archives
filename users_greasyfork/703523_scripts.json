@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415858,
+    "daily_installs": 0,
+    "total_installs": 269,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-10T06:53:16.000Z",
+    "code_updated_at": "2020-11-10T06:53:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 703523,
+        "name": "JoshuaKim2203",
+        "created_at": "2020-11-10T06:52:54.000Z",
+        "url": "https://greasyfork.org/users/703523-joshuakim2203"
+      }
+    ],
+    "name": "Swat's krunker cookie icon remover",
+    "description": "hides the cookie icon on krunker.",
+    "url": "https://greasyfork.org/scripts/415858-swat-s-krunker-cookie-icon-remover",
+    "code_url": "https://update.greasyfork.org/scripts/415858/Swat%27s%20krunker%20cookie%20icon%20remover.user.js",
+    "code_size": 379,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

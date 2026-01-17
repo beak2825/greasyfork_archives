@@ -1,0 +1,134 @@
+[
+  {
+    "id": 483538,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-31T15:32:46.000Z",
+    "code_updated_at": "2023-12-31T15:34:17.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 62744,
+        "name": "kizj",
+        "created_at": "2016-08-28T08:30:58.000Z",
+        "url": "https://greasyfork.org/users/62744-kizj"
+      }
+    ],
+    "name": "抖音增强脚本",
+    "description": "功能1：只在当前标签打开新标签",
+    "url": "https://greasyfork.org/scripts/483538-%E6%8A%96%E9%9F%B3%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/483538/%E6%8A%96%E9%9F%B3%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 935,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 439315,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-29T09:27:29.000Z",
+    "code_updated_at": "2022-01-29T09:36:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 62744,
+        "name": "kizj",
+        "created_at": "2016-08-28T08:30:58.000Z",
+        "url": "https://greasyfork.org/users/62744-kizj"
+      }
+    ],
+    "name": "肉漫屋功能强化",
+    "description": "肉漫屋功能强化：键盘左右控制翻页",
+    "url": "https://greasyfork.org/scripts/439315-%E8%82%89%E6%BC%AB%E5%B1%8B%E5%8A%9F%E8%83%BD%E5%BC%BA%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/439315/%E8%82%89%E6%BC%AB%E5%B1%8B%E5%8A%9F%E8%83%BD%E5%BC%BA%E5%8C%96.user.js",
+    "code_size": 1037,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438464,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-13T08:43:36.000Z",
+    "code_updated_at": "2022-04-08T07:28:52.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 62744,
+        "name": "kizj",
+        "created_at": "2016-08-28T08:30:58.000Z",
+        "url": "https://greasyfork.org/users/62744-kizj"
+      }
+    ],
+    "name": "乐清人才网增强脚本",
+    "description": "功能1：只在当前标签打开新页面",
+    "url": "https://greasyfork.org/scripts/438464-%E4%B9%90%E6%B8%85%E4%BA%BA%E6%89%8D%E7%BD%91%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/438464/%E4%B9%90%E6%B8%85%E4%BA%BA%E6%89%8D%E7%BD%91%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 585,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 421515,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-10T09:16:38.000Z",
+    "code_updated_at": "2021-02-10T09:29:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 62744,
+        "name": "kizj",
+        "created_at": "2016-08-28T08:30:58.000Z",
+        "url": "https://greasyfork.org/users/62744-kizj"
+      }
+    ],
+    "name": "软件源",
+    "description": "软件源图标显示不正常修改",
+    "url": "https://greasyfork.org/scripts/421515-%E8%BD%AF%E4%BB%B6%E6%BA%90",
+    "code_url": "https://update.greasyfork.org/scripts/421515/%E8%BD%AF%E4%BB%B6%E6%BA%90.user.js",
+    "code_size": 1392,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

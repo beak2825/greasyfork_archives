@@ -1,0 +1,59 @@
+{
+  "id": 412323,
+  "daily_installs": 0,
+  "total_installs": 82,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-02T06:26:37.000Z",
+  "code_updated_at": "2020-10-02T06:26:37.000Z",
+  "namespace": "https://greasyfork.org/users/691782",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 691782,
+      "name": "nadhifikbarw",
+      "created_at": "2020-10-02T06:12:25.000Z",
+      "url": "https://greasyfork.org/users/691782-nadhifikbarw",
+      "scripts": [
+        {
+          "id": 412323,
+          "daily_installs": 0,
+          "total_installs": 82,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-02T06:26:37.000Z",
+          "code_updated_at": "2020-10-02T06:26:37.000Z",
+          "namespace": "https://greasyfork.org/users/691782",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ITS Classroom Presentations Downloader",
+          "description": "Add download button on top presentation player",
+          "url": "https://greasyfork.org/scripts/412323-its-classroom-presentations-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/412323/ITS%20Classroom%20Presentations%20Downloader.user.js",
+          "code_size": 2672,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ITS Classroom Presentations Downloader",
+  "description": "Add download button on top presentation player",
+  "url": "https://greasyfork.org/scripts/412323-its-classroom-presentations-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/412323/ITS%20Classroom%20Presentations%20Downloader.user.js",
+  "code_size": 2672,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

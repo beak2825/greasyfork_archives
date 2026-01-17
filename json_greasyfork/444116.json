@@ -1,0 +1,33 @@
+{
+  "id": 444116,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-28T02:21:47.000Z",
+  "code_updated_at": "2022-09-20T04:03:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 284861,
+      "name": "谭意程",
+      "created_at": "2019-03-21T07:44:23.000Z",
+      "url": "https://greasyfork.org/users/284861-%E8%B0%AD%E6%84%8F%E7%A8%8B"
+    }
+  ],
+  "name": "GJP",
+  "description": "管家婆系统获取订单信息",
+  "url": "https://greasyfork.org/scripts/444116-gjp",
+  "code_url": "https://update.greasyfork.org/scripts/444116/GJP.user.js",
+  "code_size": 9379,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

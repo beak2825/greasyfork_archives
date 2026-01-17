@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466395,
+    "daily_installs": 0,
+    "total_installs": 2109,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-16T06:51:52.000Z",
+    "code_updated_at": "2023-07-04T04:56:15.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1079875,
+        "name": "朱子熹",
+        "created_at": "2023-05-16T06:30:35.000Z",
+        "url": "https://greasyfork.org/users/1079875-%E6%9C%B1%E5%AD%90%E7%86%B9"
+      }
+    ],
+    "name": "B站UI返回旧版",
+    "description": "bilibili网站UI返回旧版",
+    "url": "https://greasyfork.org/scripts/466395-b%E7%AB%99ui%E8%BF%94%E5%9B%9E%E6%97%A7%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/466395/B%E7%AB%99UI%E8%BF%94%E5%9B%9E%E6%97%A7%E7%89%88.user.js",
+    "code_size": 697,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

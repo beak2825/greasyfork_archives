@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481840,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-10T01:39:42.000Z",
+    "code_updated_at": "2023-12-10T01:39:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1231329,
+        "name": "haiziohhue",
+        "created_at": "2023-12-10T01:28:47.000Z",
+        "url": "https://greasyfork.org/users/1231329-haiziohhue"
+      }
+    ],
+    "name": "屏蔽搜索部分结果",
+    "description": "用于屏蔽某站搜索的部分结果，直接进行移除",
+    "url": "https://greasyfork.org/scripts/481840-%E5%B1%8F%E8%94%BD%E6%90%9C%E7%B4%A2%E9%83%A8%E5%88%86%E7%BB%93%E6%9E%9C",
+    "code_url": "https://update.greasyfork.org/scripts/481840/%E5%B1%8F%E8%94%BD%E6%90%9C%E7%B4%A2%E9%83%A8%E5%88%86%E7%BB%93%E6%9E%9C.user.js",
+    "code_size": 1621,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

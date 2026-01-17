@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436684,
+    "daily_installs": 0,
+    "total_installs": 242,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-07T15:48:43.000Z",
+    "code_updated_at": "2021-12-13T07:55:41.000Z",
+    "namespace": "https://github.com/zitup",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 839205,
+        "name": "zitup",
+        "created_at": "2021-11-15T10:31:38.000Z",
+        "url": "https://greasyfork.org/users/839205-zitup"
+      }
+    ],
+    "name": "QuickSearch",
+    "description": "Use '/' to quickly focus on the search input",
+    "url": "https://greasyfork.org/scripts/436684-quicksearch",
+    "code_url": "https://update.greasyfork.org/scripts/436684/QuickSearch.user.js",
+    "code_size": 3407,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

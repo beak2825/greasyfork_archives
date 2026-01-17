@@ -1,0 +1,35 @@
+[
+  {
+    "id": 470879,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-15T07:06:36.000Z",
+    "code_updated_at": "2023-07-15T07:06:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1127283,
+        "name": "Alex Strong",
+        "created_at": "2023-07-15T06:58:55.000Z",
+        "url": "https://greasyfork.org/users/1127283-alex-strong"
+      }
+    ],
+    "name": "Google Search to YouTube Button",
+    "description": "Adds a YouTube button to Google search results with a modified search query URL",
+    "url": "https://greasyfork.org/scripts/470879-google-search-to-youtube-button",
+    "code_url": "https://update.greasyfork.org/scripts/470879/Google%20Search%20to%20YouTube%20Button.user.js",
+    "code_size": 2854,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

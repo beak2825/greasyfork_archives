@@ -1,0 +1,59 @@
+{
+  "id": 455685,
+  "daily_installs": 0,
+  "total_installs": 74,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-30T12:50:30.000Z",
+  "code_updated_at": "2022-11-30T12:50:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 307275,
+      "name": "miao9999",
+      "created_at": "2019-06-05T09:17:56.000Z",
+      "url": "https://greasyfork.org/users/307275-miao9999",
+      "scripts": [
+        {
+          "id": 455685,
+          "daily_installs": 0,
+          "total_installs": 74,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-30T12:50:30.000Z",
+          "code_updated_at": "2022-11-30T12:50:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动阅读器",
+          "description": "pc 端自动阅读器，实现不同速度，在阅读中解放双手，页面自动滚动",
+          "url": "https://greasyfork.org/scripts/455685-%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/455685/%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB%E5%99%A8.user.js",
+          "code_size": 8129,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动阅读器",
+  "description": "pc 端自动阅读器，实现不同速度，在阅读中解放双手，页面自动滚动",
+  "url": "https://greasyfork.org/scripts/455685-%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/455685/%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB%E5%99%A8.user.js",
+  "code_size": 8129,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

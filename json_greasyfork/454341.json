@@ -1,0 +1,59 @@
+{
+  "id": 454341,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-06T08:24:43.000Z",
+  "code_updated_at": "2022-11-06T08:24:43.000Z",
+  "namespace": "https://greasyfork.org/users/943685",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 943685,
+      "name": "Quisette",
+      "created_at": "2022-08-06T14:05:20.000Z",
+      "url": "https://greasyfork.org/users/943685-quisette",
+      "scripts": [
+        {
+          "id": 449051,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-06T14:07:14.000Z",
+          "code_updated_at": "2022-09-02T15:34:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Prettier-81Dojo",
+          "description": "A CSS and shortcuts on 81 Dojo.",
+          "url": "https://greasyfork.org/scripts/449051-prettier-81dojo",
+          "code_url": "https://update.greasyfork.org/scripts/449051/Prettier-81Dojo.user.js",
+          "code_size": 45586,
+          "license": "private",
+          "version": "0.1.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Shogiwars Account Switcher",
+  "description": "A simple login prompt for Shogi Wars multi account",
+  "url": "https://greasyfork.org/scripts/454341-shogiwars-account-switcher",
+  "code_url": "https://update.greasyfork.org/scripts/454341/Shogiwars%20Account%20Switcher.user.js",
+  "code_size": 2120,
+  "license": "private",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

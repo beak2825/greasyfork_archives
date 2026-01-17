@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494557,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-10T05:48:51.000Z",
+    "code_updated_at": "2024-05-10T06:18:57.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/494557",
+    "support_url": "https://github.com/JunHao2021/SourceForge-hasten",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1299273,
+        "name": "木槿之",
+        "created_at": "2024-05-10T05:34:17.000Z",
+        "url": "https://greasyfork.org/users/1299273-%E6%9C%A8%E6%A7%BF%E4%B9%8B"
+      }
+    ],
+    "name": "SourceForge加速",
+    "description": "在sourceforge.net替换为国内镜像进行加速",
+    "url": "https://greasyfork.org/scripts/494557-sourceforge%E5%8A%A0%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/494557/SourceForge%E5%8A%A0%E9%80%9F.user.js",
+    "code_size": 1056,
+    "license": "GPL License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

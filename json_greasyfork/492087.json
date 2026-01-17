@@ -1,0 +1,59 @@
+{
+  "id": 492087,
+  "daily_installs": 0,
+  "total_installs": 98,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-09T16:56:19.000Z",
+  "code_updated_at": "2024-04-09T16:56:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1055036,
+      "name": "lh-java",
+      "created_at": "2023-04-07T06:28:59.000Z",
+      "url": "https://greasyfork.org/users/1055036-lh-java",
+      "scripts": [
+        {
+          "id": 492087,
+          "daily_installs": 0,
+          "total_installs": 98,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-09T16:56:19.000Z",
+          "code_updated_at": "2024-04-09T16:56:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "基于[Bilibili Evolved] 稍后再看页面去除广告区域",
+          "description": "基于[Bilibili Evolved]对稍后再看中广告区域进行移除",
+          "url": "https://greasyfork.org/scripts/492087-%E5%9F%BA%E4%BA%8E-bilibili-evolved-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%A1%B5%E9%9D%A2%E5%8E%BB%E9%99%A4%E5%B9%BF%E5%91%8A%E5%8C%BA%E5%9F%9F",
+          "code_url": "https://update.greasyfork.org/scripts/492087/%E5%9F%BA%E4%BA%8E%5BBilibili%20Evolved%5D%20%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%A1%B5%E9%9D%A2%E5%8E%BB%E9%99%A4%E5%B9%BF%E5%91%8A%E5%8C%BA%E5%9F%9F.user.js",
+          "code_size": 812,
+          "license": "GPL-3.0 License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "基于[Bilibili Evolved] 稍后再看页面去除广告区域",
+  "description": "基于[Bilibili Evolved]对稍后再看中广告区域进行移除",
+  "url": "https://greasyfork.org/scripts/492087-%E5%9F%BA%E4%BA%8E-bilibili-evolved-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%A1%B5%E9%9D%A2%E5%8E%BB%E9%99%A4%E5%B9%BF%E5%91%8A%E5%8C%BA%E5%9F%9F",
+  "code_url": "https://update.greasyfork.org/scripts/492087/%E5%9F%BA%E4%BA%8E%5BBilibili%20Evolved%5D%20%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%A1%B5%E9%9D%A2%E5%8E%BB%E9%99%A4%E5%B9%BF%E5%91%8A%E5%8C%BA%E5%9F%9F.user.js",
+  "code_size": 812,
+  "license": "GPL-3.0 License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -96,7 +96,7 @@
     "version": "2.5.4",
     "locale": "pt",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 499351,
@@ -130,5 +130,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 475721,
+    "daily_installs": 0,
+    "total_installs": 2683,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-20T04:22:23.000Z",
+    "code_updated_at": "2024-03-16T02:27:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": "http://m.weibo.cn/status/4899535849525350?",
+    "contribution_amount": "一瓶冰阔落",
+    "users": [
+      {
+        "id": 1176811,
+        "name": "黄焖鸡米饭",
+        "created_at": "2023-09-20T04:15:04.000Z",
+        "url": "https://greasyfork.org/users/1176811-%E9%BB%84%E7%84%96%E9%B8%A1%E7%B1%B3%E9%A5%AD"
+      }
+    ],
+    "name": "张浩挂视频专版PLUS——超星学习通学银在线  继续教育 各地人社培训网，后台挂视频，全网最好用的脚本，可边打游戏边刷课。自动跳转章节，真正的挂机刷视频",
+    "description": "超星学习通视频后台挂机，文档自动完成，不得不说张浩真的是泰酷辣，如有问题联系QQ:1472683669。最终解释权归张浩所有。emm……………………………………………………………………………………………………但我还是希望你们能赞助我一瓶冰阔落，点击http://m.weibo.cn/status/4899535849525350?   这个链接就可以扫码给我了，我相信使用这个脚本的都是我的朋友❤️❤️❤️请看下方使用说明❤️❤️❤️",
+    "url": "https://greasyfork.org/scripts/475721-%E5%BC%A0%E6%B5%A9%E6%8C%82%E8%A7%86%E9%A2%91%E4%B8%93%E7%89%88plus-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%AD%A6%E9%93%B6%E5%9C%A8%E7%BA%BF-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E5%90%84%E5%9C%B0%E4%BA%BA%E7%A4%BE%E5%9F%B9%E8%AE%AD%E7%BD%91-%E5%90%8E%E5%8F%B0%E6%8C%82%E8%A7%86%E9%A2%91-%E5%85%A8%E7%BD%91%E6%9C%80%E5%A5%BD%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC-%E5%8F%AF%E8%BE%B9%E6%89%93%E6%B8%B8%E6%88%8F%E8%BE%B9%E5%88%B7%E8%AF%BE-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E7%AB%A0%E8%8A%82-%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%8C%82%E6%9C%BA%E5%88%B7%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/475721/%E5%BC%A0%E6%B5%A9%E6%8C%82%E8%A7%86%E9%A2%91%E4%B8%93%E7%89%88PLUS%E2%80%94%E2%80%94%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%AD%A6%E9%93%B6%E5%9C%A8%E7%BA%BF%20%20%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%20%E5%90%84%E5%9C%B0%E4%BA%BA%E7%A4%BE%E5%9F%B9%E8%AE%AD%E7%BD%91%EF%BC%8C%E5%90%8E%E5%8F%B0%E6%8C%82%E8%A7%86%E9%A2%91%EF%BC%8C%E5%85%A8%E7%BD%91%E6%9C%80%E5%A5%BD%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%EF%BC%8C%E5%8F%AF%E8%BE%B9%E6%89%93%E6%B8%B8%E6%88%8F%E8%BE%B9%E5%88%B7%E8%AF%BE%E3%80%82%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E7%AB%A0%E8%8A%82%EF%BC%8C%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%8C%82%E6%9C%BA%E5%88%B7%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 109083,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.2.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

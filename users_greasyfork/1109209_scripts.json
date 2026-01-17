@@ -1,0 +1,68 @@
+[
+  {
+    "id": 469254,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-22T18:52:34.000Z",
+    "code_updated_at": "2023-06-22T18:52:33.000Z",
+    "namespace": "https://www.example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1109209,
+        "name": "For Tnite",
+        "created_at": "2023-06-22T18:39:52.000Z",
+        "url": "https://greasyfork.org/users/1109209-for-tnite"
+      }
+    ],
+    "name": "Anti-Hack Detection",
+    "description": "Detects flying and aimbot hacks in the game.",
+    "url": "https://greasyfork.org/scripts/469254-anti-hack-detection",
+    "code_url": "https://update.greasyfork.org/scripts/469254/Anti-Hack%20Detection.user.js",
+    "code_size": 2640,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469252,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-22T18:46:31.000Z",
+    "code_updated_at": "2023-06-22T18:46:31.000Z",
+    "namespace": "https://www.example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1109209,
+        "name": "For Tnite",
+        "created_at": "2023-06-22T18:39:52.000Z",
+        "url": "https://greasyfork.org/users/1109209-for-tnite"
+      }
+    ],
+    "name": "Anti-Hack Detector",
+    "description": "Detects and reports hackers in the game.",
+    "url": "https://greasyfork.org/scripts/469252-anti-hack-detector",
+    "code_url": "https://update.greasyfork.org/scripts/469252/Anti-Hack%20Detector.user.js",
+    "code_size": 2348,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

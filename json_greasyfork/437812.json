@@ -1,0 +1,59 @@
+{
+  "id": 437812,
+  "daily_installs": 1,
+  "total_installs": 2041,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-30T19:23:29.000Z",
+  "code_updated_at": "2022-03-26T12:06:42.000Z",
+  "namespace": "https://github.com/kklkkj/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 845294,
+      "name": "kklkkj",
+      "created_at": "2021-11-27T17:04:50.000Z",
+      "url": "https://greasyfork.org/users/845294-kklkkj",
+      "scripts": [
+        {
+          "id": 437812,
+          "daily_installs": 1,
+          "total_installs": 2041,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-30T19:23:29.000Z",
+          "code_updated_at": "2022-03-26T12:06:42.000Z",
+          "namespace": "https://github.com/kklkkj/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bonk.io - Disable P2P",
+          "description": "Disables peer-to-peer connections on bonk.io and supercarstadium.com to hide your IP address",
+          "url": "https://greasyfork.org/scripts/437812-bonk-io-disable-p2p",
+          "code_url": "https://update.greasyfork.org/scripts/437812/Bonkio%20-%20Disable%20P2P.user.js",
+          "code_size": 3955,
+          "license": "MIT License",
+          "version": "0.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bonk.io - Disable P2P",
+  "description": "Disables peer-to-peer connections on bonk.io and supercarstadium.com to hide your IP address",
+  "url": "https://greasyfork.org/scripts/437812-bonk-io-disable-p2p",
+  "code_url": "https://update.greasyfork.org/scripts/437812/Bonkio%20-%20Disable%20P2P.user.js",
+  "code_size": 3955,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

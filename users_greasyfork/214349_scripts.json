@@ -1,0 +1,35 @@
+[
+  {
+    "id": 417820,
+    "daily_installs": 0,
+    "total_installs": 646,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-04T02:26:30.000Z",
+    "code_updated_at": "2020-12-04T02:26:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 214349,
+        "name": "gu0o00",
+        "created_at": "2018-09-21T03:05:33.000Z",
+        "url": "https://greasyfork.org/users/214349-gu0o00"
+      }
+    ],
+    "name": "Douyin_Kuaishou_Downloader",
+    "description": "Download douyin and kuaishou video without watermark",
+    "url": "https://greasyfork.org/scripts/417820-douyin-kuaishou-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/417820/Douyin_Kuaishou_Downloader.user.js",
+    "code_size": 3265,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

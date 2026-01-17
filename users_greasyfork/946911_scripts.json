@@ -1,0 +1,68 @@
+[
+  {
+    "id": 450188,
+    "daily_installs": 0,
+    "total_installs": 814,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-08-25T23:12:11.000Z",
+    "code_updated_at": "2022-08-31T02:28:44.000Z",
+    "namespace": "https://zeusmod.glitch.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 946911,
+        "name": "ZeusMod",
+        "created_at": "2022-08-16T03:54:30.000Z",
+        "url": "https://greasyfork.org/users/946911-zeusmod"
+      }
+    ],
+    "name": "Florr.io Low Graphics Mode",
+    "description": "For less lag",
+    "url": "https://greasyfork.org/scripts/450188-florr-io-low-graphics-mode",
+    "code_url": "https://update.greasyfork.org/scripts/450188/Florrio%20Low%20Graphics%20Mode.user.js",
+    "code_size": 295,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449751,
+    "daily_installs": 0,
+    "total_installs": 242,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-18T05:29:44.000Z",
+    "code_updated_at": "2022-08-31T02:29:43.000Z",
+    "namespace": "https://zeusmod.glitch.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 946911,
+        "name": "ZeusMod",
+        "created_at": "2022-08-16T03:54:30.000Z",
+        "url": "https://greasyfork.org/users/946911-zeusmod"
+      }
+    ],
+    "name": "Florr.io leave the current game by pressing Escape",
+    "description": "You lazy? Good! This script allows you to quit the current party you are in by pressing escape instead of going all the way to the top left corner in order to do so.",
+    "url": "https://greasyfork.org/scripts/449751-florr-io-leave-the-current-game-by-pressing-escape",
+    "code_url": "https://update.greasyfork.org/scripts/449751/Florrio%20leave%20the%20current%20game%20by%20pressing%20Escape.user.js",
+    "code_size": 552,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

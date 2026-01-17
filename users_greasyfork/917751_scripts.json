@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447190,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-28T20:18:40.000Z",
+    "code_updated_at": "2022-06-28T20:25:29.000Z",
+    "namespace": ".",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 917751,
+        "name": "le Pro",
+        "created_at": "2022-05-23T16:44:18.000Z",
+        "url": "https://greasyfork.org/users/917751-le-pro"
+      }
+    ],
+    "name": "Death mod. (Anti invisible buildings, shows ping in game, changes gamename etc...)",
+    "description": "Anti invisible buildings, shows ping in game, changing gamename etc..",
+    "url": "https://greasyfork.org/scripts/447190-death-mod-anti-invisible-buildings-shows-ping-in-game-changes-gamename-etc",
+    "code_url": "https://update.greasyfork.org/scripts/447190/Death%20mod%20%28Anti%20invisible%20buildings%2C%20shows%20ping%20in%20game%2C%20changes%20gamename%20etc%29.user.js",
+    "code_size": 3443,
+    "license": "No modify",
+    "version": "v1.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

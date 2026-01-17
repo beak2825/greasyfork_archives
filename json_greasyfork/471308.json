@@ -1,0 +1,34 @@
+{
+  "id": 471308,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-21T03:04:40.000Z",
+  "code_updated_at": "2023-08-25T04:49:31.000Z",
+  "namespace": "null",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 938291,
+      "name": "555me",
+      "created_at": "2022-07-22T14:20:27.000Z",
+      "url": "https://greasyfork.org/users/938291-555me",
+      "scripts": []
+    }
+  ],
+  "name": "nga粥版表情",
+  "description": "将 降夜飞霜@NGA 制作的明日方舟AC娘表情及部分常用表情包加入到NGA的表情列表中",
+  "url": "https://greasyfork.org/scripts/471308-nga%E7%B2%A5%E7%89%88%E8%A1%A8%E6%83%85",
+  "code_url": "https://update.greasyfork.org/scripts/471308/nga%E7%B2%A5%E7%89%88%E8%A1%A8%E6%83%85.user.js",
+  "code_size": 8961,
+  "license": "none",
+  "version": "0.1.1.beta",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 461461,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-08T15:03:13.000Z",
+    "code_updated_at": "2023-06-30T14:14:29.000Z",
+    "namespace": "Huang",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 244912,
+        "name": "LInkerH",
+        "created_at": "2019-02-07T06:13:45.000Z",
+        "url": "https://greasyfork.org/users/244912-linkerh"
+      }
+    ],
+    "name": "UU",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/461461-uu",
+    "code_url": "https://update.greasyfork.org/scripts/461461/UU.user.js",
+    "code_size": 9278,
+    "license": null,
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412651,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-07T16:44:57.000Z",
+    "code_updated_at": "2022-11-22T06:10:39.000Z",
+    "namespace": "hlw",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 244912,
+        "name": "LInkerH",
+        "created_at": "2019-02-07T06:13:45.000Z",
+        "url": "https://greasyfork.org/users/244912-linkerh"
+      }
+    ],
+    "name": "CSM比例脚本",
+    "description": "买",
+    "url": "https://greasyfork.org/scripts/412651-csm%E6%AF%94%E4%BE%8B%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/412651/CSM%E6%AF%94%E4%BE%8B%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 28419,
+    "license": null,
+    "version": "2.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

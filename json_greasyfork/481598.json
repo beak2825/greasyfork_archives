@@ -1,0 +1,59 @@
+{
+  "id": 481598,
+  "daily_installs": 0,
+  "total_installs": 127,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-07T10:40:19.000Z",
+  "code_updated_at": "2023-12-07T10:49:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 720191,
+      "name": "liu theo",
+      "created_at": "2020-12-23T13:42:51.000Z",
+      "url": "https://greasyfork.org/users/720191-liu-theo",
+      "scripts": [
+        {
+          "id": 481598,
+          "daily_installs": 0,
+          "total_installs": 127,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-07T10:40:19.000Z",
+          "code_updated_at": "2023-12-07T10:49:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "免费一键录屏",
+          "description": "在网页添加一个“回到录制”的按钮，可以快速回到页面录制。",
+          "url": "https://greasyfork.org/scripts/481598-%E5%85%8D%E8%B4%B9%E4%B8%80%E9%94%AE%E5%BD%95%E5%B1%8F",
+          "code_url": "https://update.greasyfork.org/scripts/481598/%E5%85%8D%E8%B4%B9%E4%B8%80%E9%94%AE%E5%BD%95%E5%B1%8F.user.js",
+          "code_size": 3680,
+          "license": "MIT License",
+          "version": "2.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "免费一键录屏",
+  "description": "在网页添加一个“回到录制”的按钮，可以快速回到页面录制。",
+  "url": "https://greasyfork.org/scripts/481598-%E5%85%8D%E8%B4%B9%E4%B8%80%E9%94%AE%E5%BD%95%E5%B1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/481598/%E5%85%8D%E8%B4%B9%E4%B8%80%E9%94%AE%E5%BD%95%E5%B1%8F.user.js",
+  "code_size": 3680,
+  "license": "MIT License",
+  "version": "2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

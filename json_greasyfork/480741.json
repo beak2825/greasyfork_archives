@@ -1,0 +1,59 @@
+{
+  "id": 480741,
+  "daily_installs": 0,
+  "total_installs": 5489,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-25T09:39:56.000Z",
+  "code_updated_at": "2023-11-25T10:03:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1223225,
+      "name": "ConRain7",
+      "created_at": "2023-11-25T09:13:38.000Z",
+      "url": "https://greasyfork.org/users/1223225-conrain7",
+      "scripts": [
+        {
+          "id": 480741,
+          "daily_installs": 0,
+          "total_installs": 5489,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-25T09:39:56.000Z",
+          "code_updated_at": "2023-11-25T10:03:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "💯【U校园】挂必修学习时长防检测",
+          "description": "🚀针对U校园，实现在必修章节保持挂机积累学习时长",
+          "url": "https://greasyfork.org/scripts/480741-u%E6%A0%A1%E5%9B%AD-%E6%8C%82%E5%BF%85%E4%BF%AE%E5%AD%A6%E4%B9%A0%E6%97%B6%E9%95%BF%E9%98%B2%E6%A3%80%E6%B5%8B",
+          "code_url": "https://update.greasyfork.org/scripts/480741/%F0%9F%92%AF%E3%80%90U%E6%A0%A1%E5%9B%AD%E3%80%91%E6%8C%82%E5%BF%85%E4%BF%AE%E5%AD%A6%E4%B9%A0%E6%97%B6%E9%95%BF%E9%98%B2%E6%A3%80%E6%B5%8B.user.js",
+          "code_size": 4801,
+          "license": "MIT License",
+          "version": "1.21",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "💯【U校园】挂必修学习时长防检测",
+  "description": "🚀针对U校园，实现在必修章节保持挂机积累学习时长",
+  "url": "https://greasyfork.org/scripts/480741-u%E6%A0%A1%E5%9B%AD-%E6%8C%82%E5%BF%85%E4%BF%AE%E5%AD%A6%E4%B9%A0%E6%97%B6%E9%95%BF%E9%98%B2%E6%A3%80%E6%B5%8B",
+  "code_url": "https://update.greasyfork.org/scripts/480741/%F0%9F%92%AF%E3%80%90U%E6%A0%A1%E5%9B%AD%E3%80%91%E6%8C%82%E5%BF%85%E4%BF%AE%E5%AD%A6%E4%B9%A0%E6%97%B6%E9%95%BF%E9%98%B2%E6%A3%80%E6%B5%8B.user.js",
+  "code_size": 4801,
+  "license": "MIT License",
+  "version": "1.21",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

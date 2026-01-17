@@ -1,0 +1,59 @@
+{
+  "id": 443532,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-17T16:00:04.000Z",
+  "code_updated_at": "2022-04-17T16:00:04.000Z",
+  "namespace": "http://news.ycombinator.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 903569,
+      "name": "nzh2n",
+      "created_at": "2022-04-17T15:58:04.000Z",
+      "url": "https://greasyfork.org/users/903569-nzh2n",
+      "scripts": [
+        {
+          "id": 443532,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-17T16:00:04.000Z",
+          "code_updated_at": "2022-04-17T16:00:04.000Z",
+          "namespace": "http://news.ycombinator.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HN Blocker",
+          "description": "Block users on the orange website",
+          "url": "https://greasyfork.org/scripts/443532-hn-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/443532/HN%20Blocker.user.js",
+          "code_size": 2452,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HN Blocker",
+  "description": "Block users on the orange website",
+  "url": "https://greasyfork.org/scripts/443532-hn-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/443532/HN%20Blocker.user.js",
+  "code_size": 2452,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

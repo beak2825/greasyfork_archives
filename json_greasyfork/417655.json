@@ -1,0 +1,33 @@
+{
+  "id": 417655,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-03T04:42:28.000Z",
+  "code_updated_at": "2020-12-03T04:51:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 324763,
+      "name": "sertraline echo",
+      "created_at": "2019-08-09T09:42:32.000Z",
+      "url": "https://greasyfork.org/users/324763-sertraline-echo"
+    }
+  ],
+  "name": "UI中国原图下载",
+  "description": "UI中国,UI中国原图下载（ui.cn）",
+  "url": "https://greasyfork.org/scripts/417655-ui%E4%B8%AD%E5%9B%BD%E5%8E%9F%E5%9B%BE%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/417655/UI%E4%B8%AD%E5%9B%BD%E5%8E%9F%E5%9B%BE%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 4601,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "sk",
+  "deleted": false,
+  "visibility": "public"
+}

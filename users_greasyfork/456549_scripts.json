@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439802,
+    "daily_installs": 0,
+    "total_installs": 106,
+    "fan_score": "30.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-02-10T03:00:24.000Z",
+    "code_updated_at": "2022-02-10T03:00:24.000Z",
+    "namespace": "https://violentmonkey.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 456549,
+        "name": "AndreAugustoDev",
+        "created_at": "2020-03-09T16:20:21.000Z",
+        "url": "https://greasyfork.org/users/456549-andreaugustodev"
+      }
+    ],
+    "name": "YouTube Playlist Time Length",
+    "description": "Adds the overall playlist length.",
+    "url": "https://greasyfork.org/scripts/439802-youtube-playlist-time-length",
+    "code_url": "https://update.greasyfork.org/scripts/439802/YouTube%20Playlist%20Time%20Length.user.js",
+    "code_size": 2005,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

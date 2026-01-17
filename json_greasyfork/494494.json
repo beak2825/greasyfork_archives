@@ -1,0 +1,33 @@
+{
+  "id": 494494,
+  "daily_installs": 0,
+  "total_installs": 120,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-09T13:03:22.000Z",
+  "code_updated_at": "2024-07-10T10:36:54.000Z",
+  "namespace": "wwbnq",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1298146,
+      "name": "C小",
+      "created_at": "2024-05-07T15:33:25.000Z",
+      "url": "https://greasyfork.org/users/1298146-c%E5%B0%8F"
+    }
+  ],
+  "name": "自动消息",
+  "description": "叔叔不约自动消息",
+  "url": "https://greasyfork.org/scripts/494494-%E8%87%AA%E5%8A%A8%E6%B6%88%E6%81%AF",
+  "code_url": "https://update.greasyfork.org/scripts/494494/%E8%87%AA%E5%8A%A8%E6%B6%88%E6%81%AF.user.js",
+  "code_size": 3798,
+  "license": "MIT License",
+  "version": "0.98.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

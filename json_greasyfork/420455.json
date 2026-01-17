@@ -1,0 +1,59 @@
+{
+  "id": 420455,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-20T12:11:52.000Z",
+  "code_updated_at": "2021-01-20T12:11:51.000Z",
+  "namespace": "http://goodblox.xyz/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 729397,
+      "name": "pizzaboxer",
+      "created_at": "2021-01-20T12:08:15.000Z",
+      "url": "https://greasyfork.org/users/729397-pizzaboxer",
+      "scripts": [
+        {
+          "id": 420455,
+          "daily_installs": 0,
+          "total_installs": 28,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-20T12:11:52.000Z",
+          "code_updated_at": "2021-01-20T12:11:51.000Z",
+          "namespace": "http://goodblox.xyz/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GoodBlox 2010-2013 Forum Style",
+          "description": "replaces the current older forum style with the newer 2010 - 2013 style on goodblox",
+          "url": "https://greasyfork.org/scripts/420455-goodblox-2010-2013-forum-style",
+          "code_url": "https://update.greasyfork.org/scripts/420455/GoodBlox%202010-2013%20Forum%20Style.user.js",
+          "code_size": 488,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GoodBlox 2010-2013 Forum Style",
+  "description": "replaces the current older forum style with the newer 2010 - 2013 style on goodblox",
+  "url": "https://greasyfork.org/scripts/420455-goodblox-2010-2013-forum-style",
+  "code_url": "https://update.greasyfork.org/scripts/420455/GoodBlox%202010-2013%20Forum%20Style.user.js",
+  "code_size": 488,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

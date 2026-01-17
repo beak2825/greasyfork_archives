@@ -1,0 +1,35 @@
+[
+  {
+    "id": 446442,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-14T01:11:02.000Z",
+    "code_updated_at": "2025-12-04T02:51:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 925357,
+        "name": "YJ Hsieh",
+        "created_at": "2022-06-14T01:05:09.000Z",
+        "url": "https://greasyfork.org/users/925357-yj-hsieh"
+      }
+    ],
+    "name": "Youtube 影音轉換工具 | MP3,MP4",
+    "description": "跳轉至轉換網站。",
+    "url": "https://greasyfork.org/scripts/446442-youtube-%E5%BD%B1%E9%9F%B3%E8%BD%89%E6%8F%9B%E5%B7%A5%E5%85%B7-mp3-mp4",
+    "code_url": "https://update.greasyfork.org/scripts/446442/Youtube%20%E5%BD%B1%E9%9F%B3%E8%BD%89%E6%8F%9B%E5%B7%A5%E5%85%B7%20%7C%20MP3%2CMP4.user.js",
+    "code_size": 3200,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

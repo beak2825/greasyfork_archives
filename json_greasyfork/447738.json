@@ -1,0 +1,59 @@
+{
+  "id": 447738,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-12T02:17:21.000Z",
+  "code_updated_at": "2022-07-12T02:17:21.000Z",
+  "namespace": "all",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 933559,
+      "name": "KomAuras",
+      "created_at": "2022-07-08T04:59:18.000Z",
+      "url": "https://greasyfork.org/users/933559-komauras",
+      "scripts": [
+        {
+          "id": 447738,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-12T02:17:21.000Z",
+          "code_updated_at": "2022-07-12T02:17:21.000Z",
+          "namespace": "all",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "doramy.club",
+          "description": "show movie in bookmarks",
+          "url": "https://greasyfork.org/scripts/447738-doramy-club",
+          "code_url": "https://update.greasyfork.org/scripts/447738/doramyclub.user.js",
+          "code_size": 5326,
+          "license": "MIT License",
+          "version": "1.0.6",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "doramy.club",
+  "description": "show movie in bookmarks",
+  "url": "https://greasyfork.org/scripts/447738-doramy-club",
+  "code_url": "https://update.greasyfork.org/scripts/447738/doramyclub.user.js",
+  "code_size": 5326,
+  "license": "MIT License",
+  "version": "1.0.6",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

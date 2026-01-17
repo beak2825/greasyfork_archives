@@ -1,0 +1,68 @@
+[
+  {
+    "id": 488504,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-28T05:09:34.000Z",
+    "code_updated_at": "2024-02-28T05:09:34.000Z",
+    "namespace": "KHOA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1256943,
+        "name": "AsChar",
+        "created_at": "2024-02-03T15:52:46.000Z",
+        "url": "https://greasyfork.org/users/1256943-aschar"
+      }
+    ],
+    "name": "OA报销-顶栏/下载",
+    "description": "extension for self system",
+    "url": "https://greasyfork.org/scripts/488504-oa%E6%8A%A5%E9%94%80-%E9%A1%B6%E6%A0%8F-%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/488504/OA%E6%8A%A5%E9%94%80-%E9%A1%B6%E6%A0%8F%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 13632,
+    "license": "MIT License",
+    "version": "0.7.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 486622,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-05T00:32:38.000Z",
+    "code_updated_at": "2024-02-20T03:05:56.000Z",
+    "namespace": "KHOA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1256943,
+        "name": "AsChar",
+        "created_at": "2024-02-03T15:52:46.000Z",
+        "url": "https://greasyfork.org/users/1256943-aschar"
+      }
+    ],
+    "name": "OA报销-顶栏",
+    "description": "extension for self system",
+    "url": "https://greasyfork.org/scripts/486622-oa%E6%8A%A5%E9%94%80-%E9%A1%B6%E6%A0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/486622/OA%E6%8A%A5%E9%94%80-%E9%A1%B6%E6%A0%8F.user.js",
+    "code_size": 12271,
+    "license": "MIT License",
+    "version": "0.7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

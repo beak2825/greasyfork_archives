@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436369,
+    "daily_installs": 0,
+    "total_installs": 712,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-12-01T02:25:03.000Z",
+    "code_updated_at": "2023-11-27T00:38:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846933,
+        "name": "YYMSWY",
+        "created_at": "2021-12-01T00:54:46.000Z",
+        "url": "https://greasyfork.org/users/846933-yymswy"
+      }
+    ],
+    "name": "顺德区教师在线研修",
+    "description": "登录，打开学习页面，将自动学习，每章节学习完后自动跳到下一个。",
+    "url": "https://greasyfork.org/scripts/436369-%E9%A1%BA%E5%BE%B7%E5%8C%BA%E6%95%99%E5%B8%88%E5%9C%A8%E7%BA%BF%E7%A0%94%E4%BF%AE",
+    "code_url": "https://update.greasyfork.org/scripts/436369/%E9%A1%BA%E5%BE%B7%E5%8C%BA%E6%95%99%E5%B8%88%E5%9C%A8%E7%BA%BF%E7%A0%94%E4%BF%AE.user.js",
+    "code_size": 1693,
+    "license": null,
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

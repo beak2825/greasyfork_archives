@@ -1,0 +1,34 @@
+{
+  "id": 471147,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-18T20:19:47.000Z",
+  "code_updated_at": "2023-07-18T20:19:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1125102,
+      "name": "chenxxsust",
+      "created_at": "2023-07-12T19:36:01.000Z",
+      "url": "https://greasyfork.org/users/1125102-chenxxsust",
+      "scripts": []
+    }
+  ],
+  "name": "新罗PC购物车",
+  "description": "帮助你查询新罗的item价格",
+  "url": "https://greasyfork.org/scripts/471147-%E6%96%B0%E7%BD%97pc%E8%B4%AD%E7%89%A9%E8%BD%A6",
+  "code_url": "https://update.greasyfork.org/scripts/471147/%E6%96%B0%E7%BD%97PC%E8%B4%AD%E7%89%A9%E8%BD%A6.user.js",
+  "code_size": 29165,
+  "license": "chenxx",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

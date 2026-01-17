@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480932,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-28T09:08:04.000Z",
+    "code_updated_at": "2023-12-29T04:50:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1224661,
+        "name": "TZXinTai",
+        "created_at": "2023-11-28T08:08:38.000Z",
+        "url": "https://greasyfork.org/users/1224661-tzxintai"
+      }
+    ],
+    "name": "起点投推荐票",
+    "description": "起点自动投推荐票",
+    "url": "https://greasyfork.org/scripts/480932-%E8%B5%B7%E7%82%B9%E6%8A%95%E6%8E%A8%E8%8D%90%E7%A5%A8",
+    "code_url": "https://update.greasyfork.org/scripts/480932/%E8%B5%B7%E7%82%B9%E6%8A%95%E6%8E%A8%E8%8D%90%E7%A5%A8.user.js",
+    "code_size": 1112,
+    "license": null,
+    "version": "0.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

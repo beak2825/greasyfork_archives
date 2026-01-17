@@ -1,0 +1,68 @@
+[
+  {
+    "id": 427977,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-15T04:47:27.000Z",
+    "code_updated_at": "2021-08-11T12:19:27.000Z",
+    "namespace": "https://github.com/gefangshuai/tampermokey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 776029,
+        "name": "gefangshuai",
+        "created_at": "2021-05-25T10:37:05.000Z",
+        "url": "https://greasyfork.org/users/776029-gefangshuai"
+      }
+    ],
+    "name": "Notion Style Plus | 重定义Notion样式：Quota",
+    "description": "。",
+    "url": "https://greasyfork.org/scripts/427977-notion-style-plus-%E9%87%8D%E5%AE%9A%E4%B9%89notion%E6%A0%B7%E5%BC%8F-quota",
+    "code_url": "https://update.greasyfork.org/scripts/427977/Notion%20Style%20Plus%20%7C%20%E9%87%8D%E5%AE%9A%E4%B9%89Notion%E6%A0%B7%E5%BC%8F%EF%BC%9AQuota.user.js",
+    "code_size": 754,
+    "license": null,
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427001,
+    "daily_installs": 0,
+    "total_installs": 718,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-25T10:39:13.000Z",
+    "code_updated_at": "2021-08-11T10:42:41.000Z",
+    "namespace": "https://github.com/gefangshuai/tampermokey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 776029,
+        "name": "gefangshuai",
+        "created_at": "2021-05-25T10:37:05.000Z",
+        "url": "https://greasyfork.org/users/776029-gefangshuai"
+      }
+    ],
+    "name": "Notion TOC Floating | 悬浮目录 | 悬浮Heading",
+    "description": "默认取第一个table of contents，请知晓。支持悬浮目录和悬浮Heading！",
+    "url": "https://greasyfork.org/scripts/427001-notion-toc-floating-%E6%82%AC%E6%B5%AE%E7%9B%AE%E5%BD%95-%E6%82%AC%E6%B5%AEheading",
+    "code_url": "https://update.greasyfork.org/scripts/427001/Notion%20TOC%20Floating%20%7C%20%E6%82%AC%E6%B5%AE%E7%9B%AE%E5%BD%95%20%7C%20%E6%82%AC%E6%B5%AEHeading.user.js",
+    "code_size": 5739,
+    "license": null,
+    "version": "0.1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457014,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-22T23:16:43.000Z",
+    "code_updated_at": "2022-12-22T23:21:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1001467,
+        "name": "Zelanious",
+        "created_at": "2022-12-22T23:14:39.000Z",
+        "url": "https://greasyfork.org/users/1001467-zelanious"
+      }
+    ],
+    "name": "Arrow Key Navigation Manga Hub",
+    "description": "Made for manga hub, use the left and right arrow keys to navitage between chapters",
+    "url": "https://greasyfork.org/scripts/457014-arrow-key-navigation-manga-hub",
+    "code_url": "https://update.greasyfork.org/scripts/457014/Arrow%20Key%20Navigation%20Manga%20Hub.user.js",
+    "code_size": 774,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

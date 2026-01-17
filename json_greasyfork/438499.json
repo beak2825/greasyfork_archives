@@ -1,0 +1,33 @@
+{
+  "id": 438499,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-14T00:21:41.000Z",
+  "code_updated_at": "2022-11-04T22:18:58.000Z",
+  "namespace": "https://greasyfork.org/users/669237",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 669237,
+      "name": "Werve",
+      "created_at": "2020-07-22T12:44:59.000Z",
+      "url": "https://greasyfork.org/users/669237-werve"
+    }
+  ],
+  "name": "Ebay for \"according to description\"",
+  "description": "Tries to view the item description valid at the date of purchase",
+  "url": "https://greasyfork.org/scripts/438499-ebay-for-according-to-description",
+  "code_url": "https://update.greasyfork.org/scripts/438499/Ebay%20for%20%22according%20to%20description%22.user.js",
+  "code_size": 1301,
+  "license": "CC BY 4.0",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

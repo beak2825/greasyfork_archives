@@ -1,0 +1,33 @@
+{
+  "id": 433051,
+  "daily_installs": 1,
+  "total_installs": 1634,
+  "fan_score": "67.9",
+  "good_ratings": 10,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-09-27T16:14:54.000Z",
+  "code_updated_at": "2024-08-27T16:33:38.000Z",
+  "namespace": "bp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 102872,
+      "name": "Benjamin Philipp",
+      "created_at": "2017-02-15T17:22:00.000Z",
+      "url": "https://greasyfork.org/users/102872-benjamin-philipp"
+    }
+  ],
+  "name": "Trusted-Types Helper",
+  "description": "I mainly wrote this in 2021 to enable TamperMonkey to continue using scripts that have `@require` dependencies on sites with a restrictive `Trusted-Types` policy, until TM v4.14 came out (milestone: https://github.com/Tampermonkey/tampermonkey/issues/1334#event-5361683856). Now it seems like some cases make it relevant again? I think that should be only temporary until the TM team get on top of what ever changed. Make sure this script is executed before the `@require`ing of any dependencies",
+  "url": "https://greasyfork.org/scripts/433051-trusted-types-helper",
+  "code_url": "https://update.greasyfork.org/scripts/433051/Trusted-Types%20Helper.user.js",
+  "code_size": 4198,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

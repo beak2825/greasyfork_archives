@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 425996,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-05T16:36:40.000Z",
+    "code_updated_at": "2025-07-14T19:41:57.000Z",
+    "namespace": "Script closing and restoring video in CyTube (emerging text box)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 768814,
+        "name": "Arg Anon",
+        "created_at": "2021-05-05T16:21:47.000Z",
+        "url": "https://greasyfork.org/users/768814-arg-anon"
+      }
+    ],
+    "name": "Cytube Xaekai's Module Utility",
+    "description": "Script closing and restoring video in CyTube (emerging text box)",
+    "url": "https://greasyfork.org/scripts/425996-cytube-xaekai-s-module-utility",
+    "code_url": "https://update.greasyfork.org/scripts/425996/Cytube%20Xaekai%27s%20Module%20Utility.user.js",
+    "code_size": 2992,
+    "license": null,
+    "version": "1.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

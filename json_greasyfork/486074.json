@@ -1,0 +1,59 @@
+{
+  "id": 486074,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-30T16:21:34.000Z",
+  "code_updated_at": "2025-06-02T15:40:55.000Z",
+  "namespace": "http://neoque.to",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1255179,
+      "name": "neoqueto",
+      "created_at": "2024-01-30T13:42:40.000Z",
+      "url": "https://greasyfork.org/users/1255179-neoqueto",
+      "scripts": [
+        {
+          "id": 486074,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-30T16:21:34.000Z",
+          "code_updated_at": "2025-06-02T15:40:55.000Z",
+          "namespace": "http://neoque.to",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Trotec Ruby® - Move to Center",
+          "description": "Enhances Trotec Ruby® interface with additional buttons for capturing positions and calculating center. This userscript is in no way, shape or form associated, supported or approved by Trotec Laser GmbH. By using it you understand that it may void your warranty or invalidate your Trotec Ruby® license. You are using it at your own risk.",
+          "url": "https://greasyfork.org/scripts/486074-trotec-ruby-move-to-center",
+          "code_url": "https://update.greasyfork.org/scripts/486074/Trotec%20Ruby%C2%AE%20-%20Move%20to%20Center.user.js",
+          "code_size": 12493,
+          "license": "MIT License",
+          "version": "0.91",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Trotec Ruby® - Move to Center",
+  "description": "Enhances Trotec Ruby® interface with additional buttons for capturing positions and calculating center. This userscript is in no way, shape or form associated, supported or approved by Trotec Laser GmbH. By using it you understand that it may void your warranty or invalidate your Trotec Ruby® license. You are using it at your own risk.",
+  "url": "https://greasyfork.org/scripts/486074-trotec-ruby-move-to-center",
+  "code_url": "https://update.greasyfork.org/scripts/486074/Trotec%20Ruby%C2%AE%20-%20Move%20to%20Center.user.js",
+  "code_size": 12493,
+  "license": "MIT License",
+  "version": "0.91",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

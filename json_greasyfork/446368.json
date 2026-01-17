@@ -1,0 +1,34 @@
+{
+  "id": 446368,
+  "daily_installs": 0,
+  "total_installs": 66,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-06-12T00:17:46.000Z",
+  "code_updated_at": "2022-06-16T10:07:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://discord.gg/sHj5UauJZ4",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 694863,
+      "name": "doctor8296",
+      "created_at": "2020-10-14T06:17:17.000Z",
+      "url": "https://greasyfork.org/users/694863-doctor8296",
+      "scripts": []
+    }
+  ],
+  "name": "Discord Context Menu Extender",
+  "description": "Adding Discord desktop action buttons in context menu in discord web version",
+  "url": "https://greasyfork.org/scripts/446368-discord-context-menu-extender",
+  "code_url": "https://update.greasyfork.org/scripts/446368/Discord%20Context%20Menu%20Extender.user.js",
+  "code_size": 10506,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

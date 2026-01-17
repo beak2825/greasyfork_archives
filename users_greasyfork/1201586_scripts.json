@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477978,
+    "daily_installs": 0,
+    "total_installs": 257,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-22T02:27:52.000Z",
+    "code_updated_at": "2023-10-22T02:27:51.000Z",
+    "namespace": "https://github.com/supernovaZhangJiaXing/Tampermonkey/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201586,
+        "name": "Howie Cheung",
+        "created_at": "2023-10-22T02:15:57.000Z",
+        "url": "https://greasyfork.org/users/1201586-howie-cheung"
+      }
+    ],
+    "name": "知网PDF下载助手",
+    "description": "提供知网搜索页面的直接PDF下载",
+    "url": "https://greasyfork.org/scripts/477978-%E7%9F%A5%E7%BD%91pdf%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/477978/%E7%9F%A5%E7%BD%91PDF%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 6159,
+    "license": "MIT License",
+    "version": "3.8.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

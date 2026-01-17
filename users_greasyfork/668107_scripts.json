@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412895,
+    "daily_installs": 1,
+    "total_installs": 323,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-10-11T09:06:01.000Z",
+    "code_updated_at": "2021-01-25T08:36:02.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668107,
+        "name": "shiroikoi",
+        "created_at": "2020-07-19T03:35:37.000Z",
+        "url": "https://greasyfork.org/users/668107-shiroikoi"
+      }
+    ],
+    "name": "YTdl",
+    "description": "download YouTube video",
+    "url": "https://greasyfork.org/scripts/412895-ytdl",
+    "code_url": "https://update.greasyfork.org/scripts/412895/YTdl.user.js",
+    "code_size": 10692,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

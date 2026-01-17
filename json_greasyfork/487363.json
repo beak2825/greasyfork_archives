@@ -1,0 +1,34 @@
+{
+  "id": 487363,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-15T10:55:34.000Z",
+  "code_updated_at": "2024-02-15T10:55:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1227923,
+      "name": "peonii",
+      "created_at": "2023-12-04T09:14:00.000Z",
+      "url": "https://greasyfork.org/users/1227923-peonii",
+      "scripts": []
+    }
+  ],
+  "name": "Gdynianka Gamesense",
+  "description": "Gdynianka Gamesense Gaming",
+  "url": "https://greasyfork.org/scripts/487363-gdynianka-gamesense",
+  "code_url": "https://update.greasyfork.org/scripts/487363/Gdynianka%20Gamesense.user.js",
+  "code_size": 2554,
+  "license": "MIT License",
+  "version": "2023-12-04",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

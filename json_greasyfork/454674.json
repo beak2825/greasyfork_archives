@@ -1,0 +1,34 @@
+{
+  "id": 454674,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-12T03:22:58.000Z",
+  "code_updated_at": "2022-11-16T08:40:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 982192,
+      "name": "Anzhilia",
+      "created_at": "2022-11-12T02:43:50.000Z",
+      "url": "https://greasyfork.org/users/982192-anzhilia",
+      "scripts": []
+    }
+  ],
+  "name": "xjtu-ydc-sr",
+  "description": "xitu-ydc-sr",
+  "url": "https://greasyfork.org/scripts/454674-xjtu-ydc-sr",
+  "code_url": "https://update.greasyfork.org/scripts/454674/xjtu-ydc-sr.user.js",
+  "code_size": 5217,
+  "license": "AnZhili",
+  "version": "0.4.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

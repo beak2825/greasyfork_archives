@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494282,
+    "daily_installs": 0,
+    "total_installs": 551,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-07T05:41:35.000Z",
+    "code_updated_at": "2024-05-16T02:36:25.000Z",
+    "namespace": "保密教育线上培训学分速刷与考试自动答题",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297899,
+        "name": "0a52730597fb4ffa01fc117d9e71e3a9",
+        "created_at": "2024-05-07T05:15:00.000Z",
+        "url": "https://greasyfork.org/users/1297899-0a52730597fb4ffa01fc117d9e71e3a9"
+      }
+    ],
+    "name": "2024年保密培训学习&考试(baomi.org.cn)",
+    "description": "保密教育线上培训学分速刷与考试自动答题",
+    "url": "https://greasyfork.org/scripts/494282-2024%E5%B9%B4%E4%BF%9D%E5%AF%86%E5%9F%B9%E8%AE%AD%E5%AD%A6%E4%B9%A0-%E8%80%83%E8%AF%95-baomi-org-cn",
+    "code_url": "https://update.greasyfork.org/scripts/494282/2024%E5%B9%B4%E4%BF%9D%E5%AF%86%E5%9F%B9%E8%AE%AD%E5%AD%A6%E4%B9%A0%E8%80%83%E8%AF%95%28baomiorgcn%29.user.js",
+    "code_size": 3677,
+    "license": "GPL",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

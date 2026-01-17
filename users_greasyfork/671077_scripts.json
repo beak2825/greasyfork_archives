@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438912,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-21T08:20:32.000Z",
+    "code_updated_at": "2023-10-08T10:15:29.000Z",
+    "namespace": "https://github.com/fyy99/nga_wd_helper2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 671077,
+        "name": "fyy99",
+        "created_at": "2020-07-28T15:29:08.000Z",
+        "url": "https://greasyfork.org/users/671077-fyy99"
+      }
+    ],
+    "name": "nga_wd_helper2",
+    "description": "https://shimo.im/docs/QhJd3dKVvWh9Cx9W",
+    "url": "https://greasyfork.org/scripts/438912-nga-wd-helper2",
+    "code_url": "https://update.greasyfork.org/scripts/438912/nga_wd_helper2.user.js",
+    "code_size": 54919,
+    "license": "Mozilla Public License 2.0",
+    "version": "1.03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

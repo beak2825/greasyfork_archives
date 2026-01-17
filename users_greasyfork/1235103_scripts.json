@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 489194,
+    "daily_installs": 1,
+    "total_installs": 1679,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-03-06T23:50:26.000Z",
+    "code_updated_at": "2024-08-25T16:48:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1235103,
+        "name": "MrBlankCoding",
+        "created_at": "2023-12-17T02:36:22.000Z",
+        "url": "https://greasyfork.org/users/1235103-mrblankcoding"
+      }
+    ],
+    "name": "Key press visual representation",
+    "description": "Shows what keys you are hitting, **press escape to open the menu** Can be useful for .io game streaming, tutorials, etc.",
+    "url": "https://greasyfork.org/scripts/489194-key-press-visual-representation",
+    "code_url": "https://update.greasyfork.org/scripts/489194/Key%20press%20visual%20representation.user.js",
+    "code_size": 10448,
+    "license": null,
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

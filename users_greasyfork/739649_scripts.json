@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422109,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-21T18:36:31.000Z",
+    "code_updated_at": "2021-02-21T18:36:31.000Z",
+    "namespace": "2uBetter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739649,
+        "name": "jmbeach",
+        "created_at": "2021-02-21T18:33:57.000Z",
+        "url": "https://greasyfork.org/users/739649-jmbeach"
+      }
+    ],
+    "name": "2U Better",
+    "description": "Adds enhancements to the LMS 2U",
+    "url": "https://greasyfork.org/scripts/422109-2u-better",
+    "code_url": "https://update.greasyfork.org/scripts/422109/2U%20Better.user.js",
+    "code_size": 9029,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 468861,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-17T10:28:30.000Z",
+  "code_updated_at": "2023-06-17T10:50:45.000Z",
+  "namespace": "https://gitlab.com/An0/SimpleDiscordCrypt",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1101906,
+      "name": "aIIeJIbCuHyC",
+      "created_at": "2023-06-16T16:37:06.000Z",
+      "url": "https://greasyfork.org/users/1101906-aiiejibcuhyc"
+    }
+  ],
+  "name": "SimpleDiscordCrypt",
+  "description": "I hope the og dev of deez script won't punch me to death ^_^",
+  "url": "https://greasyfork.org/scripts/468861-simplediscordcrypt",
+  "code_url": "https://update.greasyfork.org/scripts/468861/SimpleDiscordCrypt.user.js",
+  "code_size": 178768,
+  "license": "LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt",
+  "version": "1.4.8.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

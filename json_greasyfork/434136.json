@@ -1,0 +1,59 @@
+{
+  "id": 434136,
+  "daily_installs": 0,
+  "total_installs": 1144,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-19T14:09:02.000Z",
+  "code_updated_at": "2021-10-19T14:09:02.000Z",
+  "namespace": "ouchn.cn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 819486,
+      "name": "araya",
+      "created_at": "2021-09-27T08:17:10.000Z",
+      "url": "https://greasyfork.org/users/819486-araya",
+      "scripts": [
+        {
+          "id": 434136,
+          "daily_installs": 0,
+          "total_installs": 1144,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-19T14:09:02.000Z",
+          "code_updated_at": "2021-10-19T14:09:02.000Z",
+          "namespace": "ouchn.cn",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "国家开放大学自动发帖",
+          "description": "国家开放大学自动发帖能够设置帖子，帖子见自定义",
+          "url": "https://greasyfork.org/scripts/434136-%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%96",
+          "code_url": "https://update.greasyfork.org/scripts/434136/%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%96.user.js",
+          "code_size": 1708,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "国家开放大学自动发帖",
+  "description": "国家开放大学自动发帖能够设置帖子，帖子见自定义",
+  "url": "https://greasyfork.org/scripts/434136-%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%96",
+  "code_url": "https://update.greasyfork.org/scripts/434136/%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%96.user.js",
+  "code_size": 1708,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

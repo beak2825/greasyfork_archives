@@ -1,0 +1,101 @@
+[
+  {
+    "id": 470758,
+    "daily_installs": 0,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-13T19:35:45.000Z",
+    "code_updated_at": "2023-07-13T19:35:45.000Z",
+    "namespace": "io.github.ni554n",
+    "support_url": "https://github.com/ni554n/userscripts/issues",
+    "contribution_url": "https://paypal.me/ni554n",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413267,
+        "name": "Nissan Ahmed",
+        "created_at": "2019-12-07T22:42:42.000Z",
+        "url": "https://greasyfork.org/users/413267-nissan-ahmed"
+      }
+    ],
+    "name": "PSARips - Add IMDb & TorrentGalaxy link in Post Titles",
+    "description": "Enhance post titles by adding links to IMDb and TorrentGalaxy",
+    "url": "https://greasyfork.org/scripts/470758-psarips-add-imdb-torrentgalaxy-link-in-post-titles",
+    "code_url": "https://update.greasyfork.org/scripts/470758/PSARips%20-%20Add%20IMDb%20%20TorrentGalaxy%20link%20in%20Post%20Titles.user.js",
+    "code_size": 2099,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433505,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-06T15:32:01.000Z",
+    "code_updated_at": "2021-10-06T22:52:58.000Z",
+    "namespace": "io.github.ni554n",
+    "support_url": "https://github.com/ni554n/userscripts/issues",
+    "contribution_url": "https://paypal.me/ni554n",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413267,
+        "name": "Nissan Ahmed",
+        "created_at": "2019-12-07T22:42:42.000Z",
+        "url": "https://greasyfork.org/users/413267-nissan-ahmed"
+      }
+    ],
+    "name": "Facebook - Fix Double Scrollbar on Messenger",
+    "description": "Removes the useless additional scrollbar that apprears on the fullscreen Facebook Chats / Messenger.",
+    "url": "https://greasyfork.org/scripts/433505-facebook-fix-double-scrollbar-on-messenger",
+    "code_url": "https://update.greasyfork.org/scripts/433505/Facebook%20-%20Fix%20Double%20Scrollbar%20on%20Messenger.user.js",
+    "code_size": 736,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433481,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-06T08:33:35.000Z",
+    "code_updated_at": "2021-10-24T00:18:02.000Z",
+    "namespace": "io.github.ni554n",
+    "support_url": "https://github.com/ni554n/userscripts/issues",
+    "contribution_url": "https://paypal.me/ni554n",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413267,
+        "name": "Nissan Ahmed",
+        "created_at": "2019-12-07T22:42:42.000Z",
+        "url": "https://greasyfork.org/users/413267-nissan-ahmed"
+      }
+    ],
+    "name": "Google Drive - Default Text in Search Field",
+    "description": "Pre-populate Google Drive search field with some custom text (default: \"* type:folder\") for easier searching.",
+    "url": "https://greasyfork.org/scripts/433481-google-drive-default-text-in-search-field",
+    "code_url": "https://update.greasyfork.org/scripts/433481/Google%20Drive%20-%20Default%20Text%20in%20Search%20Field.user.js",
+    "code_size": 1668,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

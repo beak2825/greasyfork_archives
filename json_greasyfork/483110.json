@@ -1,0 +1,33 @@
+{
+  "id": 483110,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-26T03:22:13.000Z",
+  "code_updated_at": "2023-12-26T03:22:13.000Z",
+  "namespace": "zaqai",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1074474,
+      "name": "zaqai",
+      "created_at": "2023-05-06T15:39:11.000Z",
+      "url": "https://greasyfork.org/users/1074474-zaqai"
+    }
+  ],
+  "name": "XJTU思源学习空间课程回放体验优化",
+  "description": "原回放网址http://ispace.xjtu.edu.cn/course/16777/learning-activity太坑了, 用了iframe嵌入*://v.ispace.xjtu.edu.cn/replay-frame/*, 导致获取不到元素, 解决方法就是将脚本作用于*://v.ispace.xjtu.edu.cn/replay-frame/*, 油猴检测到iframe, 也会起作用",
+  "url": "https://greasyfork.org/scripts/483110-xjtu%E6%80%9D%E6%BA%90%E5%AD%A6%E4%B9%A0%E7%A9%BA%E9%97%B4%E8%AF%BE%E7%A8%8B%E5%9B%9E%E6%94%BE%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/483110/XJTU%E6%80%9D%E6%BA%90%E5%AD%A6%E4%B9%A0%E7%A9%BA%E9%97%B4%E8%AF%BE%E7%A8%8B%E5%9B%9E%E6%94%BE%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 1834,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

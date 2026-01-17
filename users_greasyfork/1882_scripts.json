@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437263,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-19T01:35:13.000Z",
+    "code_updated_at": "2024-02-03T16:36:56.000Z",
+    "namespace": "PBPJ",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1882,
+        "name": "CreamCheese",
+        "created_at": "2014-05-21T20:50:32.000Z",
+        "url": "https://greasyfork.org/users/1882-creamcheese"
+      }
+    ],
+    "name": "KoC Power Bot Plus Joe",
+    "description": "Script to play KoC",
+    "url": "https://greasyfork.org/scripts/437263-koc-power-bot-plus-joe",
+    "code_url": "https://update.greasyfork.org/scripts/437263/KoC%20Power%20Bot%20Plus%20Joe.user.js",
+    "code_size": 2006949,
+    "license": "Creative Commons Attribution 4.0 International",
+    "version": "3.65.03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 461900,
+  "daily_installs": 0,
+  "total_installs": 1261,
+  "fan_score": "59.6",
+  "good_ratings": 9,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-03-15T16:11:54.000Z",
+  "code_updated_at": "2024-02-04T06:30:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1042623,
+      "name": "TimiT",
+      "created_at": "2023-03-15T14:14:01.000Z",
+      "url": "https://greasyfork.org/users/1042623-timit",
+      "scripts": [
+        {
+          "id": 461900,
+          "daily_installs": 0,
+          "total_installs": 1261,
+          "fan_score": "59.6",
+          "good_ratings": 9,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-03-15T16:11:54.000Z",
+          "code_updated_at": "2024-02-04T06:30:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Evades Helper (E-Helper)",
+          "description": "Nothing interesting. Just helper for evades.io.",
+          "url": "https://greasyfork.org/scripts/461900-evades-helper-e-helper",
+          "code_url": "https://update.greasyfork.org/scripts/461900/Evades%20Helper%20%28E-Helper%29.user.js",
+          "code_size": 57395,
+          "license": null,
+          "version": "0.4.8.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Evades Helper (E-Helper)",
+  "description": "Nothing interesting. Just helper for evades.io.",
+  "url": "https://greasyfork.org/scripts/461900-evades-helper-e-helper",
+  "code_url": "https://update.greasyfork.org/scripts/461900/Evades%20Helper%20%28E-Helper%29.user.js",
+  "code_size": 57395,
+  "license": null,
+  "version": "0.4.8.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

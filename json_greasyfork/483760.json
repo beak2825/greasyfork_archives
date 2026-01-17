@@ -1,0 +1,59 @@
+{
+  "id": 483760,
+  "daily_installs": 0,
+  "total_installs": 175,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-03T09:40:06.000Z",
+  "code_updated_at": "2024-01-03T10:11:16.000Z",
+  "namespace": "https://www.liveworksheets.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1242653,
+      "name": "maceco9258@watrf.com",
+      "created_at": "2024-01-03T09:36:58.000Z",
+      "url": "https://greasyfork.org/users/1242653-maceco9258-watrf-com",
+      "scripts": [
+        {
+          "id": 483760,
+          "daily_installs": 0,
+          "total_installs": 175,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-03T09:40:06.000Z",
+          "code_updated_at": "2024-01-03T10:11:16.000Z",
+          "namespace": "https://www.liveworksheets.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NEW LiveWorksheets Solver",
+          "description": "Since the Liveworksheets website was updated, we have changed the way to get answers. LiveWorksheets Solver by TobyAdd",
+          "url": "https://greasyfork.org/scripts/483760-new-liveworksheets-solver",
+          "code_url": "https://update.greasyfork.org/scripts/483760/NEW%20LiveWorksheets%20Solver.user.js",
+          "code_size": 1456,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NEW LiveWorksheets Solver",
+  "description": "Since the Liveworksheets website was updated, we have changed the way to get answers. LiveWorksheets Solver by TobyAdd",
+  "url": "https://greasyfork.org/scripts/483760-new-liveworksheets-solver",
+  "code_url": "https://update.greasyfork.org/scripts/483760/NEW%20LiveWorksheets%20Solver.user.js",
+  "code_size": 1456,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

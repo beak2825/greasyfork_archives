@@ -1,0 +1,33 @@
+{
+  "id": 413695,
+  "daily_installs": 0,
+  "total_installs": 383,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-18T05:15:36.000Z",
+  "code_updated_at": "2021-02-12T11:00:55.000Z",
+  "namespace": "q2p",
+  "support_url": "https://github.com/q2p/PSSTAudio-Link-Exporter",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 241774,
+      "name": "q2p",
+      "created_at": "2019-01-24T12:10:35.000Z",
+      "url": "https://greasyfork.org/users/241774-q2p"
+    }
+  ],
+  "name": "PSSTAudio.com Downloader",
+  "description": "This is a simple script that shows you a direct link to audio file that you want to download.",
+  "url": "https://greasyfork.org/scripts/413695-psstaudio-com-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/413695/PSSTAudiocom%20Downloader.user.js",
+  "code_size": 1240,
+  "license": "Creative Commons Zero v1.0 Universal",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

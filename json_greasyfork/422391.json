@@ -1,0 +1,59 @@
+{
+  "id": 422391,
+  "daily_installs": 0,
+  "total_installs": 4456,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-27T20:43:05.000Z",
+  "code_updated_at": "2022-07-07T15:02:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 741878,
+      "name": "Flopexe",
+      "created_at": "2021-02-27T20:42:07.000Z",
+      "url": "https://greasyfork.org/users/741878-flopexe",
+      "scripts": [
+        {
+          "id": 422391,
+          "daily_installs": 0,
+          "total_installs": 4456,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-27T20:43:05.000Z",
+          "code_updated_at": "2022-07-07T15:02:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "lucid's gota no lag extension",
+          "description": "Official Lucid Gota.io Extension",
+          "url": "https://greasyfork.org/scripts/422391-lucid-s-gota-no-lag-extension",
+          "code_url": "https://update.greasyfork.org/scripts/422391/lucid%27s%20gota%20no%20lag%20extension.user.js",
+          "code_size": 5166,
+          "license": null,
+          "version": "0.4.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "lucid's gota no lag extension",
+  "description": "Official Lucid Gota.io Extension",
+  "url": "https://greasyfork.org/scripts/422391-lucid-s-gota-no-lag-extension",
+  "code_url": "https://update.greasyfork.org/scripts/422391/lucid%27s%20gota%20no%20lag%20extension.user.js",
+  "code_size": 5166,
+  "license": null,
+  "version": "0.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

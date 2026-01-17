@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415449,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-04T06:21:59.000Z",
+    "code_updated_at": "2020-11-04T06:21:59.000Z",
+    "namespace": "https://greasyfork.org/ru/users/701306",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 701306,
+        "name": "Pocket Deer",
+        "created_at": "2020-11-04T06:12:09.000Z",
+        "url": "https://greasyfork.org/users/701306-pocket-deer"
+      }
+    ],
+    "name": "Backpack TF2 Spell Display",
+    "description": "Makes TF2 spelled items more visible on backpack.tf, when page loads",
+    "url": "https://greasyfork.org/scripts/415449-backpack-tf2-spell-display",
+    "code_url": "https://update.greasyfork.org/scripts/415449/Backpack%20TF2%20Spell%20Display.user.js",
+    "code_size": 4082,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 432193,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-10T08:52:10.000Z",
+  "code_updated_at": "2021-09-10T08:52:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 814039,
+      "name": "zwd",
+      "created_at": "2021-09-10T08:42:58.000Z",
+      "url": "https://greasyfork.org/users/814039-zwd",
+      "scripts": [
+        {
+          "id": 432193,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-10T08:52:10.000Z",
+          "code_updated_at": "2021-09-10T08:52:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "一键点赞",
+          "description": "一键点赞10条帖子，目前只支持当前账号的点赞，多账号正在开发中……（帖子列表页会显示一键点赞的按钮，点击即可）",
+          "url": "https://greasyfork.org/scripts/432193-%E4%B8%80%E9%94%AE%E7%82%B9%E8%B5%9E",
+          "code_url": "https://update.greasyfork.org/scripts/432193/%E4%B8%80%E9%94%AE%E7%82%B9%E8%B5%9E.user.js",
+          "code_size": 7314,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "一键点赞",
+  "description": "一键点赞10条帖子，目前只支持当前账号的点赞，多账号正在开发中……（帖子列表页会显示一键点赞的按钮，点击即可）",
+  "url": "https://greasyfork.org/scripts/432193-%E4%B8%80%E9%94%AE%E7%82%B9%E8%B5%9E",
+  "code_url": "https://update.greasyfork.org/scripts/432193/%E4%B8%80%E9%94%AE%E7%82%B9%E8%B5%9E.user.js",
+  "code_size": 7314,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

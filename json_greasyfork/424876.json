@@ -1,0 +1,34 @@
+{
+  "id": 424876,
+  "daily_installs": 0,
+  "total_installs": 3684,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-11T21:18:55.000Z",
+  "code_updated_at": "2025-11-02T23:22:20.000Z",
+  "namespace": "https://greasyfork.org/de/users/577453",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 577453,
+      "name": "KnutEdelbert",
+      "created_at": "2020-06-02T15:03:35.000Z",
+      "url": "https://greasyfork.org/users/577453-knutedelbert",
+      "scripts": []
+    }
+  ],
+  "name": "Onlineliga Toolbox",
+  "description": "Sammlung von Tools for www.onlineliga.de (OFA)",
+  "url": "https://greasyfork.org/scripts/424876-onlineliga-toolbox",
+  "code_url": "https://update.greasyfork.org/scripts/424876/Onlineliga%20Toolbox.user.js",
+  "code_size": 4982,
+  "license": "LGPLv3",
+  "version": "0.12.7",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

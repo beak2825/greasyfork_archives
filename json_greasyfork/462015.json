@@ -1,0 +1,34 @@
+{
+  "id": 462015,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-17T08:55:43.000Z",
+  "code_updated_at": "2023-03-17T08:55:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Vertragssignature Goebel nicht fertig",
+  "description": "Anforderung an GwG - digitale Signatur",
+  "url": "https://greasyfork.org/scripts/462015-vertragssignature-goebel-nicht-fertig",
+  "code_url": "https://update.greasyfork.org/scripts/462015/Vertragssignature%20Goebel%20nicht%20fertig.user.js",
+  "code_size": 7826,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

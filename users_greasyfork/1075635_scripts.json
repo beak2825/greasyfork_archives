@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465804,
+    "daily_installs": 0,
+    "total_installs": 131,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-08T15:57:17.000Z",
+    "code_updated_at": "2023-05-08T15:57:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1075635,
+        "name": "阳炎级的八番舰",
+        "created_at": "2023-05-08T15:12:17.000Z",
+        "url": "https://greasyfork.org/users/1075635-%E9%98%B3%E7%82%8E%E7%BA%A7%E7%9A%84%E5%85%AB%E7%95%AA%E8%88%B0"
+      }
+    ],
+    "name": "武汉理工大学中国语文网课刷时长",
+    "description": "武汉理工大学中国语文，设定时长一分钟自动刷中国语文网课，同时点开中国语文和学习资料界面任意诗歌，开启自动刷新模式。什么年代了还在用传统方式刷网课。",
+    "url": "https://greasyfork.org/scripts/465804-%E6%AD%A6%E6%B1%89%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6%E4%B8%AD%E5%9B%BD%E8%AF%AD%E6%96%87%E7%BD%91%E8%AF%BE%E5%88%B7%E6%97%B6%E9%95%BF",
+    "code_url": "https://update.greasyfork.org/scripts/465804/%E6%AD%A6%E6%B1%89%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6%E4%B8%AD%E5%9B%BD%E8%AF%AD%E6%96%87%E7%BD%91%E8%AF%BE%E5%88%B7%E6%97%B6%E9%95%BF.user.js",
+    "code_size": 1814,
+    "license": "none",
+    "version": "1.14514",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

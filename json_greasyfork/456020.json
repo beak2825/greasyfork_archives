@@ -1,0 +1,34 @@
+{
+  "id": 456020,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-04T22:26:23.000Z",
+  "code_updated_at": "2023-11-15T23:59:56.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 992526,
+      "name": "dain.hafdan",
+      "created_at": "2022-12-04T22:23:12.000Z",
+      "url": "https://greasyfork.org/users/992526-dain-hafdan",
+      "scripts": []
+    }
+  ],
+  "name": "ZoomControl",
+  "description": "Use mouse wheel to adjust the viewport zoom",
+  "url": "https://greasyfork.org/scripts/456020-zoomcontrol",
+  "code_url": "https://update.greasyfork.org/scripts/456020/ZoomControl.user.js",
+  "code_size": 13302,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

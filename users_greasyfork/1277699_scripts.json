@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490505,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-22T01:08:10.000Z",
+    "code_updated_at": "2024-03-22T01:12:19.000Z",
+    "namespace": "https://greasyfork.org/users/1277699",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1277699,
+        "name": "asdsdad dasdsadasd",
+        "created_at": "2024-03-22T01:00:49.000Z",
+        "url": "https://greasyfork.org/users/1277699-asdsdad-dasdsadasd"
+      }
+    ],
+    "name": "boce 自動排序asd",
+    "description": "Open specific spans on www.boce.com and click on status code anomaly link in PopupMsg",
+    "url": "https://greasyfork.org/scripts/490505-boce-%E8%87%AA%E5%8B%95%E6%8E%92%E5%BA%8Fasd",
+    "code_url": "https://update.greasyfork.org/scripts/490505/boce%20%E8%87%AA%E5%8B%95%E6%8E%92%E5%BA%8Fasd.user.js",
+    "code_size": 1257,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

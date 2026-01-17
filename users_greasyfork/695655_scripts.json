@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 472002,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-29T17:05:22.000Z",
+    "code_updated_at": "2024-05-07T21:32:13.000Z",
+    "namespace": "https://github.com/noccu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695655,
+        "name": "noccu",
+        "created_at": "2020-10-16T14:19:23.000Z",
+        "url": "https://greasyfork.org/users/695655-noccu"
+      }
+    ],
+    "name": "Fediverse@Home",
+    "description": "Open Fediverse remote profiles on your local instance. Currently supports Misskey & Mastodon.",
+    "url": "https://greasyfork.org/scripts/472002-fediverse-home",
+    "code_url": "https://update.greasyfork.org/scripts/472002/Fediverse%40Home.user.js",
+    "code_size": 1577,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415755,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-08T17:28:25.000Z",
+    "code_updated_at": "2020-11-08T17:28:24.000Z",
+    "namespace": "nImgur",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695655,
+        "name": "noccu",
+        "created_at": "2020-10-16T14:19:23.000Z",
+        "url": "https://greasyfork.org/users/695655-noccu"
+      }
+    ],
+    "name": "Imgur Album Ops",
+    "description": "Adds a few questionably useful management functions to imgur albums.",
+    "url": "https://greasyfork.org/scripts/415755-imgur-album-ops",
+    "code_url": "https://update.greasyfork.org/scripts/415755/Imgur%20Album%20Ops.user.js",
+    "code_size": 16853,
+    "license": null,
+    "version": "1.4.1",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 413523,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-16T14:20:27.000Z",
+    "code_updated_at": "2021-06-26T01:17:45.000Z",
+    "namespace": "https://github.com/noccu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695655,
+        "name": "noccu",
+        "created_at": "2020-10-16T14:19:23.000Z",
+        "url": "https://greasyfork.org/users/695655-noccu"
+      }
+    ],
+    "name": "Pixiv Extra Stats",
+    "description": "Add extra stats to the Pixiv dashboard (old and new).",
+    "url": "https://greasyfork.org/scripts/413523-pixiv-extra-stats",
+    "code_url": "https://update.greasyfork.org/scripts/413523/Pixiv%20Extra%20Stats.user.js",
+    "code_size": 10951,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

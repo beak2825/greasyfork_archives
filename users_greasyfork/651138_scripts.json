@@ -1,0 +1,35 @@
+[
+  {
+    "id": 453803,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-27T00:52:05.000Z",
+    "code_updated_at": "2022-10-27T00:52:03.000Z",
+    "namespace": "https://www.npmjs.com/package/hotkeys-js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 651138,
+        "name": "K Means",
+        "created_at": "2020-06-25T15:44:51.000Z",
+        "url": "https://greasyfork.org/users/651138-k-means"
+      }
+    ],
+    "name": "hotkeys-js",
+    "description": "npm hotkeys-js",
+    "url": "https://greasyfork.org/scripts/453803-hotkeys-js",
+    "code_url": "https://update.greasyfork.org/scripts/453803/1109849/hotkeys-js.js",
+    "code_size": 16757,
+    "license": null,
+    "version": "3.8.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

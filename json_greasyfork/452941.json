@@ -1,0 +1,59 @@
+{
+  "id": 452941,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-12T21:35:19.000Z",
+  "code_updated_at": "2022-10-12T21:35:19.000Z",
+  "namespace": "https://greasyfork.org/users/969872",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 969872,
+      "name": "GrundosCafe",
+      "created_at": "2022-10-12T21:08:02.000Z",
+      "url": "https://greasyfork.org/users/969872-grundoscafe",
+      "scripts": [
+        {
+          "id": 452941,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-12T21:35:19.000Z",
+          "code_updated_at": "2022-10-12T21:35:19.000Z",
+          "namespace": "https://greasyfork.org/users/969872",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Grundo's Cafe Art Restoration Project",
+          "description": "Restores original Neopets art to Grundo's Cafe.",
+          "url": "https://greasyfork.org/scripts/452941-grundo-s-cafe-art-restoration-project",
+          "code_url": "https://update.greasyfork.org/scripts/452941/Grundo%27s%20Cafe%20Art%20Restoration%20Project.user.js",
+          "code_size": 2758,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Grundo's Cafe Art Restoration Project",
+  "description": "Restores original Neopets art to Grundo's Cafe.",
+  "url": "https://greasyfork.org/scripts/452941-grundo-s-cafe-art-restoration-project",
+  "code_url": "https://update.greasyfork.org/scripts/452941/Grundo%27s%20Cafe%20Art%20Restoration%20Project.user.js",
+  "code_size": 2758,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

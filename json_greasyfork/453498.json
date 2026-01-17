@@ -1,0 +1,59 @@
+{
+  "id": 453498,
+  "daily_installs": 0,
+  "total_installs": 61,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-21T17:20:15.000Z",
+  "code_updated_at": "2022-10-21T17:20:15.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 973599,
+      "name": "RipRyness",
+      "created_at": "2022-10-21T17:15:17.000Z",
+      "url": "https://greasyfork.org/users/973599-ripryness",
+      "scripts": [
+        {
+          "id": 453498,
+          "daily_installs": 0,
+          "total_installs": 61,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-21T17:20:15.000Z",
+          "code_updated_at": "2022-10-21T17:20:15.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove YouTube Propaganda",
+          "description": "Removes YouTube's propaganda box added to videos they find disagreeable.",
+          "url": "https://greasyfork.org/scripts/453498-remove-youtube-propaganda",
+          "code_url": "https://update.greasyfork.org/scripts/453498/Remove%20YouTube%20Propaganda.user.js",
+          "code_size": 647,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove YouTube Propaganda",
+  "description": "Removes YouTube's propaganda box added to videos they find disagreeable.",
+  "url": "https://greasyfork.org/scripts/453498-remove-youtube-propaganda",
+  "code_url": "https://update.greasyfork.org/scripts/453498/Remove%20YouTube%20Propaganda.user.js",
+  "code_size": 647,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 447609,
+  "daily_installs": 0,
+  "total_installs": 113,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-08T14:54:40.000Z",
+  "code_updated_at": "2023-04-01T15:32:02.000Z",
+  "namespace": "https://github.com/iMortRex",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 887919,
+      "name": "MortRex",
+      "created_at": "2022-03-15T22:44:13.000Z",
+      "url": "https://greasyfork.org/users/887919-mortrex"
+    }
+  ],
+  "name": "必应搜索手机网页端主题-iOS16",
+  "description": "美化必应搜索在iOS16手机网页端的样式，使其样式更符合iOS16，适配必应搜索自带浅色&深色模式，iOS系统请把必应主题调成浅色，在网页深色模式插件中禁用必应",
+  "url": "https://greasyfork.org/scripts/447609-%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2%E6%89%8B%E6%9C%BA%E7%BD%91%E9%A1%B5%E7%AB%AF%E4%B8%BB%E9%A2%98-ios16",
+  "code_url": "https://update.greasyfork.org/scripts/447609/%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2%E6%89%8B%E6%9C%BA%E7%BD%91%E9%A1%B5%E7%AB%AF%E4%B8%BB%E9%A2%98-iOS16.user.js",
+  "code_size": 19812,
+  "license": "MIT License",
+  "version": "0.1.26",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

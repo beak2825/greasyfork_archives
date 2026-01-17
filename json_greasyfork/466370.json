@@ -1,0 +1,33 @@
+{
+  "id": 466370,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-15T20:54:28.000Z",
+  "code_updated_at": "2023-05-15T20:54:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1079699,
+      "name": "Alex Naiad",
+      "created_at": "2023-05-15T20:43:39.000Z",
+      "url": "https://greasyfork.org/users/1079699-alex-naiad"
+    }
+  ],
+  "name": "HWM_Resources_customupdate1505",
+  "description": "Библиотека HWM_Resources с апдейтом по артам",
+  "url": "https://greasyfork.org/scripts/466370-hwm-resources-customupdate1505",
+  "code_url": "https://update.greasyfork.org/scripts/466370/1191039/HWM_Resources_customupdate1505.js",
+  "code_size": 20177,
+  "license": "CC BY-NC-SA 4.0",
+  "version": "1.3",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

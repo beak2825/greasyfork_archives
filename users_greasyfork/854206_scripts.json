@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437157,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-12-16T18:10:41.000Z",
+    "code_updated_at": "2021-12-29T13:38:34.000Z",
+    "namespace": "https://greasyfork.org/fr/scripts/437157-tmdb-video-player",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 854206,
+        "name": "Guillaume Marteau",
+        "created_at": "2021-12-16T17:49:58.000Z",
+        "url": "https://greasyfork.org/users/854206-guillaume-marteau"
+      }
+    ],
+    "name": "TMDB Video Player",
+    "description": "Add video player from 2embed.ru directly into TheMovieDB movie/serie webpage.",
+    "url": "https://greasyfork.org/scripts/437157-tmdb-video-player",
+    "code_url": "https://update.greasyfork.org/scripts/437157/TMDB%20Video%20Player.user.js",
+    "code_size": 2050,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

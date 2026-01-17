@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477804,
+    "daily_installs": 0,
+    "total_installs": 90,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-19T21:48:51.000Z",
+    "code_updated_at": "2023-10-19T21:57:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199882,
+        "name": "TrapstarKSSKSKSKKS",
+        "created_at": "2023-10-19T21:46:59.000Z",
+        "url": "https://greasyfork.org/users/1199882-trapstarksskskskks"
+      }
+    ],
+    "name": "Crunchyroll More Filters",
+    "description": "Adds more filters to Crunchyroll's anime list page",
+    "url": "https://greasyfork.org/scripts/477804-crunchyroll-more-filters",
+    "code_url": "https://update.greasyfork.org/scripts/477804/Crunchyroll%20More%20Filters.user.js",
+    "code_size": 6579,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

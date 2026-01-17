@@ -1,0 +1,59 @@
+{
+  "id": 439401,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-31T04:10:00.000Z",
+  "code_updated_at": "2022-01-31T04:49:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 871261,
+      "name": "0x_bear",
+      "created_at": "2022-01-31T04:06:14.000Z",
+      "url": "https://greasyfork.org/users/871261-0x-bear",
+      "scripts": [
+        {
+          "id": 439401,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-31T04:10:00.000Z",
+          "code_updated_at": "2022-01-31T04:49:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitter show followers per day",
+          "description": "show followers per day on each user's page right after number of followers",
+          "url": "https://greasyfork.org/scripts/439401-twitter-show-followers-per-day",
+          "code_url": "https://update.greasyfork.org/scripts/439401/Twitter%20show%20followers%20per%20day.user.js",
+          "code_size": 2504,
+          "license": "MIT License",
+          "version": "0.1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitter show followers per day",
+  "description": "show followers per day on each user's page right after number of followers",
+  "url": "https://greasyfork.org/scripts/439401-twitter-show-followers-per-day",
+  "code_url": "https://update.greasyfork.org/scripts/439401/Twitter%20show%20followers%20per%20day.user.js",
+  "code_size": 2504,
+  "license": "MIT License",
+  "version": "0.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 467482,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-30T09:56:05.000Z",
+  "code_updated_at": "2024-01-10T16:12:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1087214,
+      "name": "Antoine Belot",
+      "created_at": "2023-05-30T09:53:00.000Z",
+      "url": "https://greasyfork.org/users/1087214-antoine-belot",
+      "scripts": []
+    }
+  ],
+  "name": "SIM Magall Labelling",
+  "description": "This script adds a button the add RC labels automatically to Mag tickets",
+  "url": "https://greasyfork.org/scripts/467482-sim-magall-labelling",
+  "code_url": "https://update.greasyfork.org/scripts/467482/SIM%20Magall%20Labelling.user.js",
+  "code_size": 16680,
+  "license": "KIO",
+  "version": "4.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

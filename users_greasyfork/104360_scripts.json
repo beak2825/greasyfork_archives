@@ -31,5 +31,38 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 433604,
+    "daily_installs": 0,
+    "total_installs": 248,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-08T20:14:21.000Z",
+    "code_updated_at": "2023-03-26T23:28:08.000Z",
+    "namespace": "https://greasyfork.org/users/104360",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104360,
+        "name": "Кирилл Дыкоменко",
+        "created_at": "2017-02-20T17:52:55.000Z",
+        "url": "https://greasyfork.org/users/104360-%D0%BA%D0%B8%D1%80%D0%B8%D0%BB%D0%BB-%D0%B4%D1%8B%D0%BA%D0%BE%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE"
+      }
+    ],
+    "name": "My Twitch Drop Claimer - inventory ()",
+    "description": "automatically clicks the \"Claim\" button",
+    "url": "https://greasyfork.org/scripts/433604-my-twitch-drop-claimer-inventory",
+    "code_url": "https://update.greasyfork.org/scripts/433604/My%20Twitch%20Drop%20Claimer%20-%20inventory%20%28%29.user.js",
+    "code_size": 3224,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

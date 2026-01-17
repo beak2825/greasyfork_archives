@@ -1,0 +1,33 @@
+{
+  "id": 468975,
+  "daily_installs": 0,
+  "total_installs": 3045,
+  "fan_score": "51.0",
+  "good_ratings": 4,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-19T07:01:59.000Z",
+  "code_updated_at": "2023-06-19T07:01:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 214769,
+      "name": "Louis Shi",
+      "created_at": "2018-09-23T04:25:00.000Z",
+      "url": "https://greasyfork.org/users/214769-louis-shi"
+    }
+  ],
+  "name": "【增强版】CSDN/知乎/哔哩哔哩/简书免登录去除弹窗广告 🛡",
+  "description": "登录个锤子  🌭 +适配移动端📱 | 去除所有广告🥽 | 任意文本复制🖱︎ | 界面优化让阅读更轻松📄",
+  "url": "https://greasyfork.org/scripts/468975-%E5%A2%9E%E5%BC%BA%E7%89%88-csdn-%E7%9F%A5%E4%B9%8E-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-%E7%AE%80%E4%B9%A6%E5%85%8D%E7%99%BB%E5%BD%95%E5%8E%BB%E9%99%A4%E5%BC%B9%E7%AA%97%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/468975/%E3%80%90%E5%A2%9E%E5%BC%BA%E7%89%88%E3%80%91CSDN%E7%9F%A5%E4%B9%8E%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%AE%80%E4%B9%A6%E5%85%8D%E7%99%BB%E5%BD%95%E5%8E%BB%E9%99%A4%E5%BC%B9%E7%AA%97%E5%B9%BF%E5%91%8A%20%F0%9F%9B%A1.user.js",
+  "code_size": 72812,
+  "license": "GPL-3.0 License",
+  "version": "0.2.9.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418518,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-11T21:43:03.000Z",
+    "code_updated_at": "2020-12-27T04:50:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3017,
+        "name": "YFdyh000",
+        "created_at": "2014-06-24T22:11:23.000Z",
+        "url": "https://greasyfork.org/users/3017-yfdyh000"
+      }
+    ],
+    "name": "我知道百度知道",
+    "description": "方便从百度知道摘录内容",
+    "url": "https://greasyfork.org/scripts/418518-%E6%88%91%E7%9F%A5%E9%81%93%E7%99%BE%E5%BA%A6%E7%9F%A5%E9%81%93",
+    "code_url": "https://update.greasyfork.org/scripts/418518/%E6%88%91%E7%9F%A5%E9%81%93%E7%99%BE%E5%BA%A6%E7%9F%A5%E9%81%93.user.js",
+    "code_size": 505,
+    "license": null,
+    "version": "0.11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 481322,
+  "daily_installs": 0,
+  "total_installs": 64,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-12-03T15:55:06.000Z",
+  "code_updated_at": "2023-12-03T16:23:11.000Z",
+  "namespace": "https://www.oba.gov.tr/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1227584,
+      "name": "Berkay Tüblek",
+      "created_at": "2023-12-03T15:46:50.000Z",
+      "url": "https://greasyfork.org/users/1227584-berkay-t%C3%BCblek",
+      "scripts": [
+        {
+          "id": 481322,
+          "daily_installs": 0,
+          "total_installs": 64,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-12-03T15:55:06.000Z",
+          "code_updated_at": "2023-12-03T16:23:11.000Z",
+          "namespace": "https://www.oba.gov.tr/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "hmm",
+          "description": "OBA derslerini durmadan izler",
+          "url": "https://greasyfork.org/scripts/481322-hmm",
+          "code_url": "https://update.greasyfork.org/scripts/481322/hmm.user.js",
+          "code_size": 1619,
+          "license": null,
+          "version": "0.26",
+          "locale": "tr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "hmm",
+  "description": "OBA derslerini durmadan izler",
+  "url": "https://greasyfork.org/scripts/481322-hmm",
+  "code_url": "https://update.greasyfork.org/scripts/481322/hmm.user.js",
+  "code_size": 1619,
+  "license": null,
+  "version": "0.26",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

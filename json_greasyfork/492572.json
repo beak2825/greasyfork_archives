@@ -1,0 +1,59 @@
+{
+  "id": 492572,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-15T09:19:00.000Z",
+  "code_updated_at": "2024-04-15T09:20:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1288545,
+      "name": "汪牧之",
+      "created_at": "2024-04-15T09:16:54.000Z",
+      "url": "https://greasyfork.org/users/1288545-%E6%B1%AA%E7%89%A7%E4%B9%8B",
+      "scripts": [
+        {
+          "id": 492572,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-15T09:19:00.000Z",
+          "code_updated_at": "2024-04-15T09:20:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PassWall2 批量URL测试",
+          "description": "针对PassWall2 v1.28以上版本，添加批量URL测试的按钮，需要先选择测试的节点，然后点击\"批量URL测试\"的按钮",
+          "url": "https://greasyfork.org/scripts/492572-passwall2-%E6%89%B9%E9%87%8Furl%E6%B5%8B%E8%AF%95",
+          "code_url": "https://update.greasyfork.org/scripts/492572/PassWall2%20%E6%89%B9%E9%87%8FURL%E6%B5%8B%E8%AF%95.user.js",
+          "code_size": 1740,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PassWall2 批量URL测试",
+  "description": "针对PassWall2 v1.28以上版本，添加批量URL测试的按钮，需要先选择测试的节点，然后点击\"批量URL测试\"的按钮",
+  "url": "https://greasyfork.org/scripts/492572-passwall2-%E6%89%B9%E9%87%8Furl%E6%B5%8B%E8%AF%95",
+  "code_url": "https://update.greasyfork.org/scripts/492572/PassWall2%20%E6%89%B9%E9%87%8FURL%E6%B5%8B%E8%AF%95.user.js",
+  "code_size": 1740,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

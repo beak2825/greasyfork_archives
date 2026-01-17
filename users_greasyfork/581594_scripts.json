@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433617,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-09T09:43:08.000Z",
+    "code_updated_at": "2021-10-09T09:44:49.000Z",
+    "namespace": "giwifi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 581594,
+        "name": "ifnor",
+        "created_at": "2020-06-06T10:12:20.000Z",
+        "url": "https://greasyfork.org/users/581594-ifnor"
+      }
+    ],
+    "name": "GiWiFi Login gra.",
+    "description": "Auto to connect Internet for GiWiFi",
+    "url": "https://greasyfork.org/scripts/433617-giwifi-login-gra",
+    "code_url": "https://update.greasyfork.org/scripts/433617/GiWiFi%20Login%20gra.user.js",
+    "code_size": 779,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

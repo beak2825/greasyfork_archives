@@ -1,0 +1,34 @@
+{
+  "id": 487234,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-13T12:11:23.000Z",
+  "code_updated_at": "2024-08-15T09:26:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1260743,
+      "name": "richgps",
+      "created_at": "2024-02-13T12:08:35.000Z",
+      "url": "https://greasyfork.org/users/1260743-richgps",
+      "scripts": []
+    }
+  ],
+  "name": "Active Control Games",
+  "description": "Removes old games from location select",
+  "url": "https://greasyfork.org/scripts/487234-active-control-games",
+  "code_url": "https://update.greasyfork.org/scripts/487234/Active%20Control%20Games.user.js",
+  "code_size": 657,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

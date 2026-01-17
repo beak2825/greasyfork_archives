@@ -1,0 +1,59 @@
+{
+  "id": 448683,
+  "daily_installs": 0,
+  "total_installs": 194,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-30T17:37:37.000Z",
+  "code_updated_at": "2022-07-30T17:37:37.000Z",
+  "namespace": "https://github.com/DwifteJB/simplebits-autom1ner",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 699471,
+      "name": "DwifteJB",
+      "created_at": "2020-10-29T15:26:20.000Z",
+      "url": "https://greasyfork.org/users/699471-dwiftejb",
+      "scripts": [
+        {
+          "id": 448683,
+          "daily_installs": 0,
+          "total_installs": 194,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-30T17:37:37.000Z",
+          "code_updated_at": "2022-07-30T17:37:37.000Z",
+          "namespace": "https://github.com/DwifteJB/simplebits-autom1ner",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Simplebits Auto Miner",
+          "description": "Auto mine a simplebits mine.",
+          "url": "https://greasyfork.org/scripts/448683-simplebits-auto-miner",
+          "code_url": "https://update.greasyfork.org/scripts/448683/Simplebits%20Auto%20Miner.user.js",
+          "code_size": 10237,
+          "license": "GPL2",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Simplebits Auto Miner",
+  "description": "Auto mine a simplebits mine.",
+  "url": "https://greasyfork.org/scripts/448683-simplebits-auto-miner",
+  "code_url": "https://update.greasyfork.org/scripts/448683/Simplebits%20Auto%20Miner.user.js",
+  "code_size": 10237,
+  "license": "GPL2",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

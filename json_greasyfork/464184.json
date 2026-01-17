@@ -1,0 +1,33 @@
+{
+  "id": 464184,
+  "daily_installs": 0,
+  "total_installs": 498,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-16T22:56:34.000Z",
+  "code_updated_at": "2023-04-18T01:41:30.000Z",
+  "namespace": "https://github.com/Discord-Oxygen/Discord-Console-hacks",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1061583,
+      "name": "Con-Quest",
+      "created_at": "2023-04-16T22:44:24.000Z",
+      "url": "https://greasyfork.org/users/1061583-con-quest"
+    }
+  ],
+  "name": "Discord Tools",
+  "description": "Discord tools for moderation and customization.",
+  "url": "https://greasyfork.org/scripts/464184-discord-tools",
+  "code_url": "https://update.greasyfork.org/scripts/464184/Discord%20Tools.user.js",
+  "code_size": 3093,
+  "license": null,
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

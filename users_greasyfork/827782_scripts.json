@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434323,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-10-22T20:23:11.000Z",
+    "code_updated_at": "2021-10-22T20:28:54.000Z",
+    "namespace": "https://greasyfork.org/users/827782",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 827782,
+        "name": "emil4K",
+        "created_at": "2021-10-22T20:18:59.000Z",
+        "url": "https://greasyfork.org/users/827782-emil4k"
+      }
+    ],
+    "name": "Smartschool Agenda Button",
+    "description": "Een userscript dat de \"Agenda\" knop in Smartschool zijn navigatiebalktoevoegt! Discord: emil_4K#2264",
+    "url": "https://greasyfork.org/scripts/434323-smartschool-agenda-button",
+    "code_url": "https://update.greasyfork.org/scripts/434323/Smartschool%20Agenda%20Button.user.js",
+    "code_size": 852,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

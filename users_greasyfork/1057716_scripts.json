@@ -96,6 +96,39 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488828,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-02T20:21:53.000Z",
+    "code_updated_at": "2024-03-02T20:21:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1057716,
+        "name": "M3th4d0n",
+        "created_at": "2023-04-10T21:29:19.000Z",
+        "url": "https://greasyfork.org/users/1057716-m3th4d0n"
+      }
+    ],
+    "name": "PayGame Enhancer",
+    "description": "try to take over the world",
+    "url": "https://greasyfork.org/scripts/488828-paygame-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/488828/PayGame%20Enhancer.user.js",
+    "code_size": 10436,
+    "license": "MIT License",
+    "version": "2024-03-02",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

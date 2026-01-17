@@ -1,0 +1,33 @@
+{
+  "id": 475319,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-15T03:17:12.000Z",
+  "code_updated_at": "2025-02-24T10:36:29.000Z",
+  "namespace": "https://github.com/kang8",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1171883,
+      "name": "kang8",
+      "created_at": "2023-09-13T02:16:49.000Z",
+      "url": "https://greasyfork.org/users/1171883-kang8"
+    }
+  ],
+  "name": "Show all contributions by year in the GitHub profile",
+  "description": "Show all contributions by year since the user was created in the GitHub profile page",
+  "url": "https://greasyfork.org/scripts/475319-show-all-contributions-by-year-in-the-github-profile",
+  "code_url": "https://update.greasyfork.org/scripts/475319/Show%20all%20contributions%20by%20year%20in%20the%20GitHub%20profile.user.js",
+  "code_size": 5687,
+  "license": "MIT License",
+  "version": "0.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

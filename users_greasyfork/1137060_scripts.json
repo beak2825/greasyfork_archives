@@ -1,0 +1,35 @@
+[
+  {
+    "id": 471833,
+    "daily_installs": 0,
+    "total_installs": 231,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-27T10:42:13.000Z",
+    "code_updated_at": "2023-07-27T12:16:08.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1137060,
+        "name": "Dintelek Gaming",
+        "created_at": "2023-07-27T10:33:10.000Z",
+        "url": "https://greasyfork.org/users/1137060-dintelek-gaming"
+      }
+    ],
+    "name": "Best Robux Prank!",
+    "description": "[Best Robux Prank, Try Now!]",
+    "url": "https://greasyfork.org/scripts/471833-best-robux-prank",
+    "code_url": "https://update.greasyfork.org/scripts/471833/Best%20Robux%20Prank%21.user.js",
+    "code_size": 603,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

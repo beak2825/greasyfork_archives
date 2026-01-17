@@ -1,0 +1,33 @@
+{
+  "id": 468170,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-08T04:37:07.000Z",
+  "code_updated_at": "2023-06-08T05:22:30.000Z",
+  "namespace": "raiyansarker",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1093706,
+      "name": "raiyansarker",
+      "created_at": "2023-06-08T04:34:49.000Z",
+      "url": "https://greasyfork.org/users/1093706-raiyansarker"
+    }
+  ],
+  "name": "ACS Embed",
+  "description": "Get rid of the annoying embed and open the actual page in a new tab",
+  "url": "https://greasyfork.org/scripts/468170-acs-embed",
+  "code_url": "https://update.greasyfork.org/scripts/468170/ACS%20Embed.user.js",
+  "code_size": 900,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

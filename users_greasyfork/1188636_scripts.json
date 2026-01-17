@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476751,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-05T11:05:45.000Z",
+    "code_updated_at": "2023-10-05T11:09:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1188636,
+        "name": "Andronikos Koutroumpelis",
+        "created_at": "2023-10-05T11:04:31.000Z",
+        "url": "https://greasyfork.org/users/1188636-andronikos-koutroumpelis"
+      }
+    ],
+    "name": "Twitter Article Preview Revert",
+    "description": "Reverts the title concealment of articles made to Twitter/X on 5 Oct 2023.",
+    "url": "https://greasyfork.org/scripts/476751-twitter-article-preview-revert",
+    "code_url": "https://update.greasyfork.org/scripts/476751/Twitter%20Article%20Preview%20Revert.user.js",
+    "code_size": 4315,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

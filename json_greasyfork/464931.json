@@ -1,0 +1,59 @@
+{
+  "id": 464931,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-26T18:58:16.000Z",
+  "code_updated_at": "2023-04-26T18:58:16.000Z",
+  "namespace": "guipinto.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1068491,
+      "name": "Guilherme “Gui” Pinto",
+      "created_at": "2023-04-26T18:56:34.000Z",
+      "url": "https://greasyfork.org/users/1068491-guilherme-gui-pinto",
+      "scripts": [
+        {
+          "id": 464931,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-26T18:58:16.000Z",
+          "code_updated_at": "2023-04-26T18:58:16.000Z",
+          "namespace": "guipinto.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SiriusXM.com Auto Play 2023",
+          "description": "Autoplays music on-load, and handles any other interruptions for you.",
+          "url": "https://greasyfork.org/scripts/464931-siriusxm-com-auto-play-2023",
+          "code_url": "https://update.greasyfork.org/scripts/464931/SiriusXMcom%20Auto%20Play%202023.user.js",
+          "code_size": 2433,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SiriusXM.com Auto Play 2023",
+  "description": "Autoplays music on-load, and handles any other interruptions for you.",
+  "url": "https://greasyfork.org/scripts/464931-siriusxm-com-auto-play-2023",
+  "code_url": "https://update.greasyfork.org/scripts/464931/SiriusXMcom%20Auto%20Play%202023.user.js",
+  "code_size": 2433,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

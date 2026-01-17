@@ -1,0 +1,33 @@
+{
+  "id": 453168,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-16T11:30:16.000Z",
+  "code_updated_at": "2022-10-16T11:30:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 971553,
+      "name": "saltbox1211",
+      "created_at": "2022-10-16T11:01:00.000Z",
+      "url": "https://greasyfork.org/users/971553-saltbox1211"
+    }
+  ],
+  "name": "魔戒Lcg汉化插件",
+  "description": "Ringsdb和dragncards的汉化插件",
+  "url": "https://greasyfork.org/scripts/453168-%E9%AD%94%E6%88%92lcg%E6%B1%89%E5%8C%96%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/453168/%E9%AD%94%E6%88%92Lcg%E6%B1%89%E5%8C%96%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 8402,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

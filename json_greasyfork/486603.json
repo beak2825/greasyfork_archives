@@ -1,0 +1,33 @@
+{
+  "id": 486603,
+  "daily_installs": 0,
+  "total_installs": 110,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-04T18:55:06.000Z",
+  "code_updated_at": "2024-02-04T18:55:06.000Z",
+  "namespace": "https://greasyfork.org/users/980489",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 980489,
+      "name": "Rust1667",
+      "created_at": "2022-11-07T21:45:09.000Z",
+      "url": "https://greasyfork.org/users/980489-rust1667"
+    }
+  ],
+  "name": "shareus.io auto-skip",
+  "description": "Automatically click the buttons to skip to the target link",
+  "url": "https://greasyfork.org/scripts/486603-shareus-io-auto-skip",
+  "code_url": "https://update.greasyfork.org/scripts/486603/shareusio%20auto-skip.user.js",
+  "code_size": 1076,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

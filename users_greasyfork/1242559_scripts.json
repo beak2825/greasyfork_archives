@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483746,
+    "daily_installs": 0,
+    "total_installs": 336,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-03T06:07:04.000Z",
+    "code_updated_at": "2024-01-03T06:07:04.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242559,
+        "name": "그레이스호퍼",
+        "created_at": "2024-01-03T05:56:22.000Z",
+        "url": "https://greasyfork.org/users/1242559-%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%8A%A4%ED%98%B8%ED%8D%BC"
+      }
+    ],
+    "name": "Asil Graph Size Change 2.0",
+    "description": "아실 그래프 사이즈 조절 플러그인 1.1버전에서 버그발생 부분 해결한 코드입니다.",
+    "url": "https://greasyfork.org/scripts/483746-asil-graph-size-change-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/483746/Asil%20Graph%20Size%20Change%2020.user.js",
+    "code_size": 2227,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

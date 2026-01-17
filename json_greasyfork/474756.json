@@ -1,0 +1,59 @@
+{
+  "id": 474756,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-07T12:51:58.000Z",
+  "code_updated_at": "2023-09-09T12:13:02.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1168122,
+      "name": "9point6",
+      "created_at": "2023-09-07T12:47:08.000Z",
+      "url": "https://greasyfork.org/users/1168122-9point6",
+      "scripts": [
+        {
+          "id": 474756,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-07T12:51:58.000Z",
+          "code_updated_at": "2023-09-09T12:13:02.000Z",
+          "namespace": "https://greasyfork.org/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Lemmy mlmym community bar customisation",
+          "description": "Allows customisation of the lemmy community bar",
+          "url": "https://greasyfork.org/scripts/474756-lemmy-mlmym-community-bar-customisation",
+          "code_url": "https://update.greasyfork.org/scripts/474756/Lemmy%20mlmym%20community%20bar%20customisation.user.js",
+          "code_size": 11163,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Lemmy mlmym community bar customisation",
+  "description": "Allows customisation of the lemmy community bar",
+  "url": "https://greasyfork.org/scripts/474756-lemmy-mlmym-community-bar-customisation",
+  "code_url": "https://update.greasyfork.org/scripts/474756/Lemmy%20mlmym%20community%20bar%20customisation.user.js",
+  "code_size": 11163,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441134,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-03-08T11:18:16.000Z",
+    "code_updated_at": "2022-03-08T14:54:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884259,
+        "name": "皖西靓仔",
+        "created_at": "2022-03-08T02:57:28.000Z",
+        "url": "https://greasyfork.org/users/884259-%E7%9A%96%E8%A5%BF%E9%9D%93%E4%BB%94"
+      }
+    ],
+    "name": "wxxy学工一体化平台打卡",
+    "description": "自动完成wxxy学工一体化平台打卡",
+    "url": "https://greasyfork.org/scripts/441134-wxxy%E5%AD%A6%E5%B7%A5%E4%B8%80%E4%BD%93%E5%8C%96%E5%B9%B3%E5%8F%B0%E6%89%93%E5%8D%A1",
+    "code_url": "https://update.greasyfork.org/scripts/441134/wxxy%E5%AD%A6%E5%B7%A5%E4%B8%80%E4%BD%93%E5%8C%96%E5%B9%B3%E5%8F%B0%E6%89%93%E5%8D%A1.user.js",
+    "code_size": 3719,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

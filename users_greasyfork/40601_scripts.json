@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451423,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-15T13:23:47.000Z",
+    "code_updated_at": "2023-06-28T23:49:09.000Z",
+    "namespace": "https://greasyfork.org/users/40601",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 40601,
+        "name": "akaleeroy",
+        "created_at": "2016-04-26T15:44:03.000Z",
+        "url": "https://greasyfork.org/users/40601-akaleeroy"
+      }
+    ],
+    "name": "OLX.ro Filter out crap bikes",
+    "description": "Hide bikes you don't want to see on OLX.ro, because it lacks -keyword filtering",
+    "url": "https://greasyfork.org/scripts/451423-olx-ro-filter-out-crap-bikes",
+    "code_url": "https://update.greasyfork.org/scripts/451423/OLXro%20Filter%20out%20crap%20bikes.user.js",
+    "code_size": 3425,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.5.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

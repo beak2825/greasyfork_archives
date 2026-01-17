@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479149,
+    "daily_installs": 0,
+    "total_installs": 22483,
+    "fan_score": "80.6",
+    "good_ratings": 16,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-06T05:21:53.000Z",
+    "code_updated_at": "2023-11-17T14:36:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1211740,
+        "name": "My Dream",
+        "created_at": "2023-11-06T03:08:27.000Z",
+        "url": "https://greasyfork.org/users/1211740-my-dream"
+      }
+    ],
+    "name": "豆瓣阅读小工具 (聚力新生版)",
+    "description": "优化豆瓣网页版弹窗广告，自动展开手机原文，自动帮助回答薅羊毛的小组问题，修复默认豆瓣手机端无法查看小组问答",
+    "url": "https://greasyfork.org/scripts/479149-%E8%B1%86%E7%93%A3%E9%98%85%E8%AF%BB%E5%B0%8F%E5%B7%A5%E5%85%B7-%E8%81%9A%E5%8A%9B%E6%96%B0%E7%94%9F%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/479149/%E8%B1%86%E7%93%A3%E9%98%85%E8%AF%BB%E5%B0%8F%E5%B7%A5%E5%85%B7%20%28%E8%81%9A%E5%8A%9B%E6%96%B0%E7%94%9F%E7%89%88%29.user.js",
+    "code_size": 14733,
+    "license": "AGPL License",
+    "version": "0.44",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

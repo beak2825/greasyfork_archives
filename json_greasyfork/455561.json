@@ -1,0 +1,33 @@
+{
+  "id": 455561,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-29T02:13:17.000Z",
+  "code_updated_at": "2022-11-29T02:26:23.000Z",
+  "namespace": "crypto mining game",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 956797,
+      "name": "sa gaa",
+      "created_at": "2022-09-10T05:06:15.000Z",
+      "url": "https://greasyfork.org/users/956797-sa-gaa"
+    }
+  ],
+  "name": "cryptomininggame",
+  "description": "crypto mining game",
+  "url": "https://greasyfork.org/scripts/455561-cryptomininggame",
+  "code_url": "https://update.greasyfork.org/scripts/455561/cryptomininggame.user.js",
+  "code_size": 2998,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

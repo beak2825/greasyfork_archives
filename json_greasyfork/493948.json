@@ -1,0 +1,59 @@
+{
+  "id": 493948,
+  "daily_installs": 0,
+  "total_installs": 163,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-02T08:31:53.000Z",
+  "code_updated_at": "2025-09-28T13:16:13.000Z",
+  "namespace": "https://github.com/akashiwest/AML-Enhancer",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1295589,
+      "name": "akashiwest",
+      "created_at": "2024-05-01T12:15:27.000Z",
+      "url": "https://greasyfork.org/users/1295589-akashiwest",
+      "scripts": [
+        {
+          "id": 493948,
+          "daily_installs": 0,
+          "total_installs": 163,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-02T08:31:53.000Z",
+          "code_updated_at": "2025-09-28T13:16:13.000Z",
+          "namespace": "https://github.com/akashiwest/AML-Enhancer",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Apple Music 歌词增强",
+          "description": "为网页版 Apple Music 提供翻译歌词，数据来源为网易云音乐",
+          "url": "https://greasyfork.org/scripts/493948-apple-music-%E6%AD%8C%E8%AF%8D%E5%A2%9E%E5%BC%BA",
+          "code_url": "https://update.greasyfork.org/scripts/493948/Apple%20Music%20%E6%AD%8C%E8%AF%8D%E5%A2%9E%E5%BC%BA.user.js",
+          "code_size": 23049,
+          "license": "GNU GPL 3.0",
+          "version": "1.200",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Apple Music 歌词增强",
+  "description": "为网页版 Apple Music 提供翻译歌词，数据来源为网易云音乐",
+  "url": "https://greasyfork.org/scripts/493948-apple-music-%E6%AD%8C%E8%AF%8D%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/493948/Apple%20Music%20%E6%AD%8C%E8%AF%8D%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 23049,
+  "license": "GNU GPL 3.0",
+  "version": "1.200",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

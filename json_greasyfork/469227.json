@@ -1,0 +1,34 @@
+{
+  "id": 469227,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-22T12:13:46.000Z",
+  "code_updated_at": "2023-06-23T15:47:59.000Z",
+  "namespace": "https://greasyfork.org/users/1108896",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1108896,
+      "name": "quochung-cyou",
+      "created_at": "2023-06-22T12:13:06.000Z",
+      "url": "https://greasyfork.org/users/1108896-quochung-cyou",
+      "scripts": []
+    }
+  ],
+  "name": "QLDT Enhance by quochungcyou",
+  "description": "Some enhance for QLDT PTIT by quochungcyou",
+  "url": "https://greasyfork.org/scripts/469227-qldt-enhance-by-quochungcyou",
+  "code_url": "https://update.greasyfork.org/scripts/469227/QLDT%20Enhance%20by%20quochungcyou.user.js",
+  "code_size": 26209,
+  "license": "MIT License",
+  "version": "BCVT.1.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

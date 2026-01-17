@@ -1,0 +1,34 @@
+{
+  "id": 463337,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-05T13:50:58.000Z",
+  "code_updated_at": "2023-04-05T13:50:58.000Z",
+  "namespace": "ooooooooo.io",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 473672,
+      "name": "hello w",
+      "created_at": "2020-04-02T11:45:27.000Z",
+      "url": "https://greasyfork.org/users/473672-hello-w",
+      "scripts": []
+    }
+  ],
+  "name": "Unlimited_downloader",
+  "description": "Get video and audio binary streams directly, breaking all download limitations. (As long as you can play, then you can download!)",
+  "url": "https://greasyfork.org/scripts/463337-unlimited-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/463337/Unlimited_downloader.user.js",
+  "code_size": 5506,
+  "license": null,
+  "version": "0.1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

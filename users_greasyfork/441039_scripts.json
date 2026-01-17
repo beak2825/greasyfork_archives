@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428116,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-18T03:01:32.000Z",
+    "code_updated_at": "2024-02-08T21:52:37.000Z",
+    "namespace": "flammrock",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 441039,
+        "name": "Flammrock",
+        "created_at": "2020-02-03T22:45:43.000Z",
+        "url": "https://greasyfork.org/users/441039-flammrock"
+      }
+    ],
+    "name": "Minion Gota.io",
+    "description": "Allow to connect minion in your main session",
+    "url": "https://greasyfork.org/scripts/428116-minion-gota-io",
+    "code_url": "https://update.greasyfork.org/scripts/428116/Minion%20Gotaio.user.js",
+    "code_size": 156089,
+    "license": "MIT License",
+    "version": "3.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

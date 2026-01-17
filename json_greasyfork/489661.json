@@ -1,0 +1,34 @@
+{
+  "id": 489661,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-12T15:24:37.000Z",
+  "code_updated_at": "2024-03-12T15:24:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1203270,
+      "name": "Michal Hornok",
+      "created_at": "2023-10-24T12:47:32.000Z",
+      "url": "https://greasyfork.org/users/1203270-michal-hornok",
+      "scripts": []
+    }
+  ],
+  "name": "Sportradar FetchingScript - S kriketem",
+  "description": "Volá JSON soubor s daty.",
+  "url": "https://greasyfork.org/scripts/489661-sportradar-fetchingscript-s-kriketem",
+  "code_url": "https://update.greasyfork.org/scripts/489661/Sportradar%20FetchingScript%20-%20S%20kriketem.user.js",
+  "code_size": 14036,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

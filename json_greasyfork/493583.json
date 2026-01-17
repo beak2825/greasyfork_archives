@@ -1,0 +1,33 @@
+{
+  "id": 493583,
+  "daily_installs": 1,
+  "total_installs": 36277,
+  "fan_score": "37.6",
+  "good_ratings": 3,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2024-04-27T06:28:39.000Z",
+  "code_updated_at": "2025-03-20T08:09:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1293626,
+      "name": "sweek",
+      "created_at": "2024-04-27T00:33:27.000Z",
+      "url": "https://greasyfork.org/users/1293626-sweek"
+    }
+  ],
+  "name": "【学习通刷课助手】||防止鼠标移出暂停|章节结束自动跳转|章节测试[调用AI接口答题，正确率待验证]",
+  "description": "学习通课程自动挂机，当前脚本支持课程视频播放完成，自动跳转下一小节，章节测试自动跳过，后台播放防止视频暂停，章节测试刷题。",
+  "url": "https://greasyfork.org/scripts/493583-%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%88%B7%E8%AF%BE%E5%8A%A9%E6%89%8B-%E9%98%B2%E6%AD%A2%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%87%BA%E6%9A%82%E5%81%9C-%E7%AB%A0%E8%8A%82%E7%BB%93%E6%9D%9F%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC-%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95-%E8%B0%83%E7%94%A8ai%E6%8E%A5%E5%8F%A3%E7%AD%94%E9%A2%98-%E6%AD%A3%E7%A1%AE%E7%8E%87%E5%BE%85%E9%AA%8C%E8%AF%81",
+  "code_url": "https://update.greasyfork.org/scripts/493583/%E3%80%90%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%88%B7%E8%AF%BE%E5%8A%A9%E6%89%8B%E3%80%91%7C%7C%E9%98%B2%E6%AD%A2%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%87%BA%E6%9A%82%E5%81%9C%7C%E7%AB%A0%E8%8A%82%E7%BB%93%E6%9D%9F%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%7C%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95%5B%E8%B0%83%E7%94%A8AI%E6%8E%A5%E5%8F%A3%E7%AD%94%E9%A2%98%EF%BC%8C%E6%AD%A3%E7%A1%AE%E7%8E%87%E5%BE%85%E9%AA%8C%E8%AF%81%5D.user.js",
+  "code_size": 72304,
+  "license": "GPLv3",
+  "version": "3.0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

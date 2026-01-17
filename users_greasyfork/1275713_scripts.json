@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493455,
+    "daily_installs": 0,
+    "total_installs": 2773,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T10:51:37.000Z",
+    "code_updated_at": "2024-07-21T14:14:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1275713,
+        "name": "remramEMT",
+        "created_at": "2024-03-17T10:59:38.000Z",
+        "url": "https://greasyfork.org/users/1275713-remramemt"
+      }
+    ],
+    "name": "网易云音乐免费下载",
+    "description": "可以免费下载网易云音乐上的歌曲",
+    "url": "https://greasyfork.org/scripts/493455-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/493455/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 12853,
+    "license": "none",
+    "version": "1.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 490144,
+    "daily_installs": 0,
+    "total_installs": 347,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-18T03:16:49.000Z",
+    "code_updated_at": "2024-04-24T08:03:31.000Z",
+    "namespace": "https://greasyfork.org/users/1275713",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1275713,
+        "name": "remramEMT",
+        "created_at": "2024-03-17T10:59:38.000Z",
+        "url": "https://greasyfork.org/users/1275713-remramemt"
+      }
+    ],
+    "name": "zyk.icve.com.cn 职业教育专业教学资源库刷课",
+    "description": "适用于zyk.icve.com.cn的全自动快速刷视频、ppt脚本",
+    "url": "https://greasyfork.org/scripts/490144-zyk-icve-com-cn-%E8%81%8C%E4%B8%9A%E6%95%99%E8%82%B2%E4%B8%93%E4%B8%9A%E6%95%99%E5%AD%A6%E8%B5%84%E6%BA%90%E5%BA%93%E5%88%B7%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/490144/zykicvecomcn%20%E8%81%8C%E4%B8%9A%E6%95%99%E8%82%B2%E4%B8%93%E4%B8%9A%E6%95%99%E5%AD%A6%E8%B5%84%E6%BA%90%E5%BA%93%E5%88%B7%E8%AF%BE.user.js",
+    "code_size": 30396,
+    "license": "none",
+    "version": "1.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

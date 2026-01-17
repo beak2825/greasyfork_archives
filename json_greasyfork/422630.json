@@ -1,0 +1,33 @@
+{
+  "id": 422630,
+  "daily_installs": 1,
+  "total_installs": 1776,
+  "fan_score": "56.6",
+  "good_ratings": 5,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-04T10:09:33.000Z",
+  "code_updated_at": "2021-03-08T10:12:25.000Z",
+  "namespace": "https://github.com/yujinpan/tampermonkey-extension",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 226081,
+      "name": "yujinpan",
+      "created_at": "2018-11-15T15:34:08.000Z",
+      "url": "https://greasyfork.org/users/226081-yujinpan"
+    }
+  ],
+  "name": "恢复右键功能",
+  "description": "解除右键菜单的禁用。",
+  "url": "https://greasyfork.org/scripts/422630-%E6%81%A2%E5%A4%8D%E5%8F%B3%E9%94%AE%E5%8A%9F%E8%83%BD",
+  "code_url": "https://update.greasyfork.org/scripts/422630/%E6%81%A2%E5%A4%8D%E5%8F%B3%E9%94%AE%E5%8A%9F%E8%83%BD.user.js",
+  "code_size": 699,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

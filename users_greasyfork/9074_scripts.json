@@ -1,0 +1,35 @@
+[
+  {
+    "id": 413001,
+    "daily_installs": 0,
+    "total_installs": 289,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-13T00:20:04.000Z",
+    "code_updated_at": "2020-10-13T12:08:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 9074,
+        "name": "zv_odd",
+        "created_at": "2015-02-12T11:21:04.000Z",
+        "url": "https://greasyfork.org/users/9074-zv-odd"
+      }
+    ],
+    "name": "AliExpress Price Inc Shipping",
+    "description": "Sums price AND shipping on Aliexpress",
+    "url": "https://greasyfork.org/scripts/413001-aliexpress-price-inc-shipping",
+    "code_url": "https://update.greasyfork.org/scripts/413001/AliExpress%20Price%20Inc%20Shipping.user.js",
+    "code_size": 4280,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

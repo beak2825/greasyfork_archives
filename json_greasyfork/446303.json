@@ -1,0 +1,34 @@
+{
+  "id": 446303,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-10T09:12:35.000Z",
+  "code_updated_at": "2022-06-10T10:46:13.000Z",
+  "namespace": "XII",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 924093,
+      "name": "sebastienroux",
+      "created_at": "2022-06-10T08:48:06.000Z",
+      "url": "https://greasyfork.org/users/924093-sebastienroux",
+      "scripts": []
+    }
+  ],
+  "name": "Deelerz",
+  "description": "Add ranks ansd sort elements by rank",
+  "url": "https://greasyfork.org/scripts/446303-deelerz",
+  "code_url": "https://update.greasyfork.org/scripts/446303/Deelerz.user.js",
+  "code_size": 477524,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

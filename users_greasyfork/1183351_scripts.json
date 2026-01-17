@@ -31,5 +31,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 487643,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-18T16:46:46.000Z",
+    "code_updated_at": "2024-02-18T16:46:46.000Z",
+    "namespace": "microbes.torn.jobdisabler",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183351,
+        "name": "Microbes",
+        "created_at": "2023-09-29T04:57:56.000Z",
+        "url": "https://greasyfork.org/users/1183351-microbes"
+      }
+    ],
+    "name": "Disable Job Perks",
+    "description": "Disable job perks to not mindlessly waste job points",
+    "url": "https://greasyfork.org/scripts/487643-disable-job-perks",
+    "code_url": "https://update.greasyfork.org/scripts/487643/Disable%20Job%20Perks.user.js",
+    "code_size": 2844,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 487490,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-17T04:37:54.000Z",
+    "code_updated_at": "2024-02-17T04:37:54.000Z",
+    "namespace": "microbes.torn.removepdf",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183351,
+        "name": "Microbes",
+        "created_at": "2023-09-29T04:57:56.000Z",
+        "url": "https://greasyfork.org/users/1183351-microbes"
+      }
+    ],
+    "name": "Remove Faction PDF on Advanced Search",
+    "description": "Remove faction PDF on search feature.",
+    "url": "https://greasyfork.org/scripts/487490-remove-faction-pdf-on-advanced-search",
+    "code_url": "https://update.greasyfork.org/scripts/487490/Remove%20Faction%20PDF%20on%20Advanced%20Search.user.js",
+    "code_size": 1154,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486948,
+    "daily_installs": 0,
+    "total_installs": 244,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-09T10:14:08.000Z",
+    "code_updated_at": "2024-06-23T09:19:52.000Z",
+    "namespace": "microbes.torn.highlight",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183351,
+        "name": "Microbes",
+        "created_at": "2023-09-29T04:57:56.000Z",
+        "url": "https://greasyfork.org/users/1183351-microbes"
+      }
+    ],
+    "name": "Highlight Myself in Faction",
+    "description": "Highlight myself in faction rows",
+    "url": "https://greasyfork.org/scripts/486948-highlight-myself-in-faction",
+    "code_url": "https://update.greasyfork.org/scripts/486948/Highlight%20Myself%20in%20Faction.user.js",
+    "code_size": 2592,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486077,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-30T16:49:02.000Z",
+    "code_updated_at": "2024-02-09T09:48:09.000Z",
+    "namespace": "microbes.torn.loadout",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183351,
+        "name": "Microbes",
+        "created_at": "2023-09-29T04:57:56.000Z",
+        "url": "https://greasyfork.org/users/1183351-microbes"
+      }
+    ],
+    "name": "Torn Loadout Spy",
+    "description": "Awesome Loadout Cache Script",
+    "url": "https://greasyfork.org/scripts/486077-torn-loadout-spy",
+    "code_url": "https://update.greasyfork.org/scripts/486077/Torn%20Loadout%20Spy.user.js",
+    "code_size": 29841,
+    "license": "MIT License",
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 476307,
+    "daily_installs": 0,
+    "total_installs": 428,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-29T05:00:47.000Z",
+    "code_updated_at": "2023-09-29T05:00:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183351,
+        "name": "Microbes",
+        "created_at": "2023-09-29T04:57:56.000Z",
+        "url": "https://greasyfork.org/users/1183351-microbes"
+      }
+    ],
+    "name": "Torn Xanax Usage Viewer",
+    "description": "View individual Xanax usage on Faction page.",
+    "url": "https://greasyfork.org/scripts/476307-torn-xanax-usage-viewer",
+    "code_url": "https://update.greasyfork.org/scripts/476307/Torn%20Xanax%20Usage%20Viewer.user.js",
+    "code_size": 10742,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

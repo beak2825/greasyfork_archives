@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490540,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-22T08:51:34.000Z",
+    "code_updated_at": "2024-03-22T08:51:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1277862,
+        "name": "LynxÉclair",
+        "created_at": "2024-03-22T08:42:50.000Z",
+        "url": "https://greasyfork.org/users/1277862-lynx%C3%A9clair"
+      }
+    ],
+    "name": "[Eternal-games] Affiche la clé",
+    "description": "Affiche la clé sur le site",
+    "url": "https://greasyfork.org/scripts/490540-eternal-games-affiche-la-cl%C3%A9",
+    "code_url": "https://update.greasyfork.org/scripts/490540/%5BEternal-games%5D%20Affiche%20la%20cl%C3%A9.user.js",
+    "code_size": 6090,
+    "license": null,
+    "version": "1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

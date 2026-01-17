@@ -1,0 +1,33 @@
+{
+  "id": 469727,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-29T09:54:17.000Z",
+  "code_updated_at": "2025-06-19T11:45:16.000Z",
+  "namespace": "https://github.com/Timesient/manga-download-scripts",
+  "support_url": "https://github.com/Timesient/manga-download-scripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 668707,
+      "name": "lasthm",
+      "created_at": "2020-07-20T21:51:24.000Z",
+      "url": "https://greasyfork.org/users/668707-lasthm"
+    }
+  ],
+  "name": "FirecrossDownloader",
+  "description": "Manga downloader for firecross.jp",
+  "url": "https://greasyfork.org/scripts/469727-firecrossdownloader",
+  "code_url": "https://update.greasyfork.org/scripts/469727/FirecrossDownloader.user.js",
+  "code_size": 4874,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

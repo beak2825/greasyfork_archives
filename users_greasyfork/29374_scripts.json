@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 430752,
+    "daily_installs": 0,
+    "total_installs": 532,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-13T13:10:13.000Z",
+    "code_updated_at": "2021-10-23T02:29:19.000Z",
+    "namespace": "moe.moekai.aya.videorecorder",
+    "support_url": "https://github.com/usaginya/mkAppUpInfo/tree/master/monkeyjs",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 29374,
+        "name": "usaginya",
+        "created_at": "2016-02-04T14:48:52.000Z",
+        "url": "https://greasyfork.org/users/29374-usaginya"
+      }
+    ],
+    "name": "文文錄影机",
+    "description": "支持大部分网页视频、直播錄影 / 视频录制 / 录制视频",
+    "url": "https://greasyfork.org/scripts/430752-%E6%96%87%E6%96%87%E9%8C%84%E5%BD%B1%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/430752/%E6%96%87%E6%96%87%E9%8C%84%E5%BD%B1%E6%9C%BA.user.js",
+    "code_size": 34930,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

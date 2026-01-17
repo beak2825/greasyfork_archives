@@ -1,0 +1,34 @@
+{
+  "id": 443009,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-08T19:34:47.000Z",
+  "code_updated_at": "2022-04-08T19:54:46.000Z",
+  "namespace": "super_video_helper_cat",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 899552,
+      "name": "海叔影视",
+      "created_at": "2022-04-08T19:10:10.000Z",
+      "url": "https://greasyfork.org/users/899552-%E6%B5%B7%E5%8F%94%E5%BD%B1%E8%A7%86",
+      "scripts": []
+    }
+  ],
+  "name": "海爷影视VIP,一次购买永久享用，包更新",
+  "description": "【❤️ 视频自动解析，体会拥有VIP的感觉❤️，适配PC+移动 】功能有：1、解锁B站大会员番剧、B站视频解析下载；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费破解去广告(免跳出观影特方便)；3、网易云音乐、QQ音乐、酷狗、蜻蜓FM、荔枝FM、喜马拉雅等音乐和有声书音频免客户端下载；4、油管、Facebook等国外视频解析下载；5、网盘搜索引擎(来搜一下:laisoyixia.com, 小猪快盘:xiaozhukuaipan.com)破解无限下载；6、优惠券查询等；7、搜索引擎导航【脚本长期维护更新，完全免费，无广告】",
+  "url": "https://greasyfork.org/scripts/443009-%E6%B5%B7%E7%88%B7%E5%BD%B1%E8%A7%86vip-%E4%B8%80%E6%AC%A1%E8%B4%AD%E4%B9%B0%E6%B0%B8%E4%B9%85%E4%BA%AB%E7%94%A8-%E5%8C%85%E6%9B%B4%E6%96%B0",
+  "code_url": "https://update.greasyfork.org/scripts/443009/%E6%B5%B7%E7%88%B7%E5%BD%B1%E8%A7%86VIP%2C%E4%B8%80%E6%AC%A1%E8%B4%AD%E4%B9%B0%E6%B0%B8%E4%B9%85%E4%BA%AB%E7%94%A8%EF%BC%8C%E5%8C%85%E6%9B%B4%E6%96%B0.user.js",
+  "code_size": 80854,
+  "license": "AGPL License",
+  "version": "7.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

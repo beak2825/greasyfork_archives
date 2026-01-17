@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442155,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-26T15:50:47.000Z",
+    "code_updated_at": "2022-03-26T16:02:48.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 162663,
+        "name": "Frog Below",
+        "created_at": "2017-12-11T14:04:26.000Z",
+        "url": "https://greasyfork.org/users/162663-frog-below"
+      }
+    ],
+    "name": "推荐视频翻页 - bilibili.com",
+    "description": "2022/2/22 21:56:43",
+    "url": "https://greasyfork.org/scripts/442155-%E6%8E%A8%E8%8D%90%E8%A7%86%E9%A2%91%E7%BF%BB%E9%A1%B5-bilibili-com",
+    "code_url": "https://update.greasyfork.org/scripts/442155/%E6%8E%A8%E8%8D%90%E8%A7%86%E9%A2%91%E7%BF%BB%E9%A1%B5%20-%20bilibilicom.user.js",
+    "code_size": 3398,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

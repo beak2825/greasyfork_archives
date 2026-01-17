@@ -1,0 +1,34 @@
+{
+  "id": 439939,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-12T23:36:14.000Z",
+  "code_updated_at": "2022-02-12T23:36:13.000Z",
+  "namespace": "https://greasyfork.org/users/871230-linkzera",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 871230,
+      "name": "Pedro Jorge",
+      "created_at": "2022-01-31T01:16:15.000Z",
+      "url": "https://greasyfork.org/users/871230-pedro-jorge",
+      "scripts": []
+    }
+  ],
+  "name": "Pegaxy Auto Play",
+  "description": "Bot para jogar sozinho",
+  "url": "https://greasyfork.org/scripts/439939-pegaxy-auto-play",
+  "code_url": "https://update.greasyfork.org/scripts/439939/Pegaxy%20Auto%20Play.user.js",
+  "code_size": 1683,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

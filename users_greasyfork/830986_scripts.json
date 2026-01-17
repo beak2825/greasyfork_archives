@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435023,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-05T09:12:01.000Z",
+    "code_updated_at": "2021-11-05T09:12:01.000Z",
+    "namespace": "TieBaHDAvatar-youyifentian",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 830986,
+        "name": "setbetb",
+        "created_at": "2021-11-01T13:04:16.000Z",
+        "url": "https://greasyfork.org/users/830986-setbetb"
+      }
+    ],
+    "name": "能看查看到贴吧用户的高清图像",
+    "description": "该插件脚本能够看到贴吧用户上传的清楚图像",
+    "url": "https://greasyfork.org/scripts/435023-%E8%83%BD%E7%9C%8B%E6%9F%A5%E7%9C%8B%E5%88%B0%E8%B4%B4%E5%90%A7%E7%94%A8%E6%88%B7%E7%9A%84%E9%AB%98%E6%B8%85%E5%9B%BE%E5%83%8F",
+    "code_url": "https://update.greasyfork.org/scripts/435023/%E8%83%BD%E7%9C%8B%E6%9F%A5%E7%9C%8B%E5%88%B0%E8%B4%B4%E5%90%A7%E7%94%A8%E6%88%B7%E7%9A%84%E9%AB%98%E6%B8%85%E5%9B%BE%E5%83%8F.user.js",
+    "code_size": 4771,
+    "license": "GPL version 3",
+    "version": "1.0.8",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 466721,
+    "daily_installs": 0,
+    "total_installs": 117,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-20T15:09:09.000Z",
+    "code_updated_at": "2023-05-20T15:09:09.000Z",
+    "namespace": "Tampermonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 218255,
+        "name": "Marcin Wieczorek",
+        "created_at": "2018-10-09T06:09:22.000Z",
+        "url": "https://greasyfork.org/users/218255-marcin-wieczorek"
+      }
+    ],
+    "name": "YouTube Channels 'Latest' instead of 'For You'",
+    "description": "Script makes default channels video sorting to 'Latest' instead of 'For You'.",
+    "url": "https://greasyfork.org/scripts/466721-youtube-channels-latest-instead-of-for-you",
+    "code_url": "https://update.greasyfork.org/scripts/466721/YouTube%20Channels%20%27Latest%27%20instead%20of%20%27For%20You%27.user.js",
+    "code_size": 1318,
+    "license": "MIT License",
+    "version": "0.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

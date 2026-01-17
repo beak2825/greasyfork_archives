@@ -1,0 +1,59 @@
+{
+  "id": 448494,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-26T13:40:03.000Z",
+  "code_updated_at": "2023-07-28T09:10:35.000Z",
+  "namespace": "https://jiraskuvhronov.bzuco.cloud/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 4128,
+      "name": "Endif",
+      "created_at": "2014-08-02T09:06:05.000Z",
+      "url": "https://greasyfork.org/users/4128-endif",
+      "scripts": [
+        {
+          "id": 3821,
+          "daily_installs": 0,
+          "total_installs": 284,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2014-08-02T09:38:43.000Z",
+          "code_updated_at": "2023-01-10T16:35:42.000Z",
+          "namespace": "http://csfd.cz",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CSFD Movie Preview",
+          "description": "Při najetí myší na odkaz na film se zobrazí náhled jeho profilu.",
+          "url": "https://greasyfork.org/scripts/3821-csfd-movie-preview",
+          "code_url": "https://update.greasyfork.org/scripts/3821/CSFD%20Movie%20Preview.user.js",
+          "code_size": 9477,
+          "license": null,
+          "version": "2.5",
+          "locale": "cs",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BZUCO Customers NFC",
+  "description": "Neoficiální podpora exportu vstupenek na NFC čipy",
+  "url": "https://greasyfork.org/scripts/448494-bzuco-customers-nfc",
+  "code_url": "https://update.greasyfork.org/scripts/448494/BZUCO%20Customers%20NFC.user.js",
+  "code_size": 11419,
+  "license": "MIT; https://opensource.org/licenses/MIT",
+  "version": "0.4",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 412839,
+  "daily_installs": 0,
+  "total_installs": 179,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-10T13:25:18.000Z",
+  "code_updated_at": "2022-12-09T13:21:04.000Z",
+  "namespace": "dcmk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 29908,
+      "name": "dcmk",
+      "created_at": "2016-02-10T13:38:44.000Z",
+      "url": "https://greasyfork.org/users/29908-dcmk",
+      "scripts": []
+    }
+  ],
+  "name": "Steam好友动态页优化",
+  "description": "特别关注，只看新增愿望单/第一次玩/已购，游戏名竖排，浮窗显示详情",
+  "url": "https://greasyfork.org/scripts/412839-steam%E5%A5%BD%E5%8F%8B%E5%8A%A8%E6%80%81%E9%A1%B5%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/412839/Steam%E5%A5%BD%E5%8F%8B%E5%8A%A8%E6%80%81%E9%A1%B5%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 9712,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

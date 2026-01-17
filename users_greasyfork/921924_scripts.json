@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449646,
+    "daily_installs": 0,
+    "total_installs": 370,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-16T08:22:28.000Z",
+    "code_updated_at": "2022-08-16T08:41:54.000Z",
+    "namespace": "http://bkt.moe/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921924,
+        "name": "ShadowPower",
+        "created_at": "2022-06-04T09:47:29.000Z",
+        "url": "https://greasyfork.org/users/921924-shadowpower"
+      }
+    ],
+    "name": "腾讯文档、QQ、TIM链接自动跳转",
+    "description": "忽略“当前网页非官方页面”和“即将离开腾讯文档”的手动复制链接提示，直接自动打开。",
+    "url": "https://greasyfork.org/scripts/449646-%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3-qq-tim%E9%93%BE%E6%8E%A5%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/449646/%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E3%80%81QQ%E3%80%81TIM%E9%93%BE%E6%8E%A5%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 1071,
+    "license": "AGPL",
+    "version": "0.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

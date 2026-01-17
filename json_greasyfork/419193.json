@@ -1,0 +1,33 @@
+{
+  "id": 419193,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-26T14:41:13.000Z",
+  "code_updated_at": "2020-12-26T14:41:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 230608,
+      "name": "xingis",
+      "created_at": "2018-12-05T12:26:22.000Z",
+      "url": "https://greasyfork.org/users/230608-xingis"
+    }
+  ],
+  "name": "V2ex User Experience Enhance",
+  "description": "v2ex体验增强2020版",
+  "url": "https://greasyfork.org/scripts/419193-v2ex-user-experience-enhance",
+  "code_url": "https://update.greasyfork.org/scripts/419193/V2ex%20User%20Experience%20Enhance.user.js",
+  "code_size": 7041,
+  "license": null,
+  "version": "0.53",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

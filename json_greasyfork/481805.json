@@ -1,0 +1,34 @@
+{
+  "id": 481805,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-09T18:31:34.000Z",
+  "code_updated_at": "2023-12-09T18:31:33.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1231251,
+      "name": "ktoto7700",
+      "created_at": "2023-12-09T18:28:13.000Z",
+      "url": "https://greasyfork.org/users/1231251-ktoto7700",
+      "scripts": []
+    }
+  ],
+  "name": "жб / обж",
+  "description": "by chip opperskiy",
+  "url": "https://greasyfork.org/scripts/481805-%D0%B6%D0%B1-%D0%BE%D0%B1%D0%B6",
+  "code_url": "https://update.greasyfork.org/scripts/481805/%D0%B6%D0%B1%20%20%D0%BE%D0%B1%D0%B6.user.js",
+  "code_size": 29537,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

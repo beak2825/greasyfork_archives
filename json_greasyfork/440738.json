@@ -1,0 +1,59 @@
+{
+  "id": 440738,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-01T01:26:55.000Z",
+  "code_updated_at": "2022-03-01T01:30:27.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/440738-rs-playlist-enhancer-and-simplifier",
+  "support_url": "https://github.com/kozaka-tv/Rocksmith-Servant/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 562642,
+      "name": "kozaka",
+      "created_at": "2020-05-14T11:11:52.000Z",
+      "url": "https://greasyfork.org/users/562642-kozaka",
+      "scripts": [
+        {
+          "id": 440738,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-01T01:26:55.000Z",
+          "code_updated_at": "2022-03-01T01:30:27.000Z",
+          "namespace": "https://greasyfork.org/en/scripts/440738-rs-playlist-enhancer-and-simplifier",
+          "support_url": "https://github.com/kozaka-tv/Rocksmith-Servant/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RS Playlist enhancer and simplifier",
+          "description": "This scripts is designed to enhance and simplify the RS Playlist page from https://rsplaylist.com/",
+          "url": "https://greasyfork.org/scripts/440738-rs-playlist-enhancer-and-simplifier",
+          "code_url": "https://update.greasyfork.org/scripts/440738/RS%20Playlist%20enhancer%20and%20simplifier.user.js",
+          "code_size": 2494,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RS Playlist enhancer and simplifier",
+  "description": "This scripts is designed to enhance and simplify the RS Playlist page from https://rsplaylist.com/",
+  "url": "https://greasyfork.org/scripts/440738-rs-playlist-enhancer-and-simplifier",
+  "code_url": "https://update.greasyfork.org/scripts/440738/RS%20Playlist%20enhancer%20and%20simplifier.user.js",
+  "code_size": 2494,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

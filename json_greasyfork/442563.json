@@ -1,0 +1,33 @@
+{
+  "id": 442563,
+  "daily_installs": 0,
+  "total_installs": 97,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-02T17:48:25.000Z",
+  "code_updated_at": "2022-04-02T17:48:25.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 475046,
+      "name": "shasabbir",
+      "created_at": "2020-04-04T15:38:12.000Z",
+      "url": "https://greasyfork.org/users/475046-shasabbir"
+    }
+  ],
+  "name": "Youtube Shorts button control",
+  "description": "seek videos with keyboard in shorts",
+  "url": "https://greasyfork.org/scripts/442563-youtube-shorts-button-control",
+  "code_url": "https://update.greasyfork.org/scripts/442563/Youtube%20Shorts%20button%20control.user.js",
+  "code_size": 1098,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

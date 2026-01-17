@@ -1,0 +1,59 @@
+{
+  "id": 414527,
+  "daily_installs": 0,
+  "total_installs": 324,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-24T09:06:46.000Z",
+  "code_updated_at": "2020-10-24T09:06:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 436100,
+      "name": "Yasin Yan",
+      "created_at": "2020-01-17T09:15:56.000Z",
+      "url": "https://greasyfork.org/users/436100-yasin-yan",
+      "scripts": [
+        {
+          "id": 414527,
+          "daily_installs": 0,
+          "total_installs": 324,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-24T09:06:46.000Z",
+          "code_updated_at": "2020-10-24T09:06:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "贪吃蛇小游戏",
+          "description": "贪吃蛇小游戏脚本版",
+          "url": "https://greasyfork.org/scripts/414527-%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F",
+          "code_url": "https://update.greasyfork.org/scripts/414527/%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F.user.js",
+          "code_size": 1040,
+          "license": "GPLv3",
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "贪吃蛇小游戏",
+  "description": "贪吃蛇小游戏脚本版",
+  "url": "https://greasyfork.org/scripts/414527-%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F",
+  "code_url": "https://update.greasyfork.org/scripts/414527/%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F.user.js",
+  "code_size": 1040,
+  "license": "GPLv3",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

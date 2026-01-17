@@ -1,0 +1,59 @@
+{
+  "id": 450776,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-05T05:35:27.000Z",
+  "code_updated_at": "2025-01-24T03:26:19.000Z",
+  "namespace": "eip.teamshub.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 953541,
+      "name": "灵活奋斗",
+      "created_at": "2022-09-02T03:37:14.000Z",
+      "url": "https://greasyfork.org/users/953541-%E7%81%B5%E6%B4%BB%E5%A5%8B%E6%96%97",
+      "scripts": [
+        {
+          "id": 450776,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-05T05:35:27.000Z",
+          "code_updated_at": "2025-01-24T03:26:19.000Z",
+          "namespace": "eip.teamshub.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "shitech门户",
+          "description": "shitech高效办公：1、门户首页显示考勤，2、op评审自动填写意见和分数，3、大学课程一键进度100%，4、考试增加默认选中，5、查看已完成考试答案",
+          "url": "https://greasyfork.org/scripts/450776-ech%E9%97%A8%E6%88%B7",
+          "code_url": "https://update.greasyfork.org/scripts/450776/shitech%E9%97%A8%E6%88%B7.user.js",
+          "code_size": 27328,
+          "license": "MIT License",
+          "version": "1.8.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "shitech门户",
+  "description": "shitech高效办公：1、门户首页显示考勤，2、op评审自动填写意见和分数，3、大学课程一键进度100%，4、考试增加默认选中，5、查看已完成考试答案",
+  "url": "https://greasyfork.org/scripts/450776-ech%E9%97%A8%E6%88%B7",
+  "code_url": "https://update.greasyfork.org/scripts/450776/shitech%E9%97%A8%E6%88%B7.user.js",
+  "code_size": 27328,
+  "license": "MIT License",
+  "version": "1.8.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

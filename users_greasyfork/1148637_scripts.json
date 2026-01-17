@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472861,
+    "daily_installs": 0,
+    "total_installs": 128,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-10T20:39:53.000Z",
+    "code_updated_at": "2025-06-26T02:32:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148637,
+        "name": "hurhurburps",
+        "created_at": "2023-08-10T20:16:03.000Z",
+        "url": "https://greasyfork.org/users/1148637-hurhurburps"
+      }
+    ],
+    "name": "Bing Copilot Image auto-downloader",
+    "description": "Automatic image downloader for Bing Copilot Image Creator.",
+    "url": "https://greasyfork.org/scripts/472861-bing-copilot-image-auto-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/472861/Bing%20Copilot%20Image%20auto-downloader.user.js",
+    "code_size": 18678,
+    "license": "MIT License",
+    "version": "0.30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

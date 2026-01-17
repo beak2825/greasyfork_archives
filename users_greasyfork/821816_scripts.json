@@ -1,0 +1,101 @@
+[
+  {
+    "id": 437165,
+    "daily_installs": 0,
+    "total_installs": 130,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-12-16T22:47:47.000Z",
+    "code_updated_at": "2021-12-18T11:52:16.000Z",
+    "namespace": "https://gist.github.com/NO-ob/ed240ac8ccdb4a2775eb0857968c50e4/raw/5chImageInserter.user.js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 821816,
+        "name": "NO-ob",
+        "created_at": "2021-10-04T10:02:14.000Z",
+        "url": "https://greasyfork.org/users/821816-no-ob"
+      }
+    ],
+    "name": "2ch/5ch Image Inserter",
+    "description": "Embeds images on 2/5chan reader sites",
+    "url": "https://greasyfork.org/scripts/437165-2ch-5ch-image-inserter",
+    "code_url": "https://update.greasyfork.org/scripts/437165/2ch5ch%20Image%20Inserter.user.js",
+    "code_size": 5216,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 436547,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-04T11:13:43.000Z",
+    "code_updated_at": "2021-12-04T11:13:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 821816,
+        "name": "NO-ob",
+        "created_at": "2021-10-04T10:02:14.000Z",
+        "url": "https://greasyfork.org/users/821816-no-ob"
+      }
+    ],
+    "name": "Buyee Package Information Image Inserter",
+    "description": "Adds product images to the package information shipping tab for mercari and yahoo auctions",
+    "url": "https://greasyfork.org/scripts/436547-buyee-package-information-image-inserter",
+    "code_url": "https://update.greasyfork.org/scripts/436547/Buyee%20Package%20Information%20Image%20Inserter.user.js",
+    "code_size": 2328,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433394,
+    "daily_installs": 2,
+    "total_installs": 666,
+    "fan_score": "23.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2021-10-04T10:04:14.000Z",
+    "code_updated_at": "2024-02-20T20:08:44.000Z",
+    "namespace": "https://greasyfork.org/users/821816",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 821816,
+        "name": "NO-ob",
+        "created_at": "2021-10-04T10:02:14.000Z",
+        "url": "https://greasyfork.org/users/821816-no-ob"
+      }
+    ],
+    "name": "MangaDex Downloader",
+    "description": "A userscript to add download-buttons to mangadex",
+    "url": "https://greasyfork.org/scripts/433394-mangadex-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/433394/MangaDex%20Downloader.user.js",
+    "code_size": 25474,
+    "license": null,
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

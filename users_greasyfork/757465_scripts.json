@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494214,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-06T05:14:27.000Z",
+    "code_updated_at": "2024-08-21T13:45:14.000Z",
+    "namespace": "https://github.com/RANSAA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 757465,
+        "name": "sayaDev",
+        "created_at": "2021-04-11T09:50:36.000Z",
+        "url": "https://greasyfork.org/users/757465-sayadev"
+      }
+    ],
+    "name": "TKBaseSDK",
+    "description": "一些通用方法基础组件库",
+    "url": "https://greasyfork.org/scripts/494214-tkbasesdk",
+    "code_url": "https://update.greasyfork.org/scripts/494214/1432041/TKBaseSDK.js",
+    "code_size": 11194,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

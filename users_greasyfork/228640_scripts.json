@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452775,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-10-09T19:38:17.000Z",
+    "code_updated_at": "2022-10-16T22:05:05.000Z",
+    "namespace": "https://github.com/leodoi3/tubi-imdb-ratings",
+    "support_url": "https://github.com/leodoi3/tubi-imdb-ratings/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 228640,
+        "name": "Keoid9",
+        "created_at": "2018-11-26T19:43:32.000Z",
+        "url": "https://greasyfork.org/users/228640-keoid9"
+      }
+    ],
+    "name": "IMDB Ratings on Tubi",
+    "description": "Shows IMDB ratings on Tubi",
+    "url": "https://greasyfork.org/scripts/452775-imdb-ratings-on-tubi",
+    "code_url": "https://update.greasyfork.org/scripts/452775/IMDB%20Ratings%20on%20Tubi.user.js",
+    "code_size": 8891,
+    "license": "MIT License",
+    "version": "0.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 442680,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-03T23:28:07.000Z",
+  "code_updated_at": "2022-04-03T23:28:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 897262,
+      "name": "MugaSofer",
+      "created_at": "2022-04-03T22:53:43.000Z",
+      "url": "https://greasyfork.org/users/897262-mugasofer",
+      "scripts": [
+        {
+          "id": 442680,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-03T23:28:07.000Z",
+          "code_updated_at": "2022-04-03T23:28:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Parahumans /r/Place Overlay",
+          "description": "try to take over the canvas!",
+          "url": "https://greasyfork.org/scripts/442680-parahumans-r-place-overlay",
+          "code_url": "https://update.greasyfork.org/scripts/442680/Parahumans%20rPlace%20Overlay.user.js",
+          "code_size": 1952,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Parahumans /r/Place Overlay",
+  "description": "try to take over the canvas!",
+  "url": "https://greasyfork.org/scripts/442680-parahumans-r-place-overlay",
+  "code_url": "https://update.greasyfork.org/scripts/442680/Parahumans%20rPlace%20Overlay.user.js",
+  "code_size": 1952,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 481131,
+  "daily_installs": 0,
+  "total_installs": 64,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-12-01T00:09:49.000Z",
+  "code_updated_at": "2023-12-15T20:55:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1225976,
+      "name": "dmitri Shevchenko",
+      "created_at": "2023-11-30T23:53:05.000Z",
+      "url": "https://greasyfork.org/users/1225976-dmitri-shevchenko",
+      "scripts": [
+        {
+          "id": 481131,
+          "daily_installs": 0,
+          "total_installs": 64,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2023-12-01T00:09:49.000Z",
+          "code_updated_at": "2023-12-15T20:55:55.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Youtube Comment Sponsor Blocker",
+          "description": "Remove annoying sponsored messages within youtube comments & descriptions",
+          "url": "https://greasyfork.org/scripts/481131-youtube-comment-sponsor-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/481131/Youtube%20Comment%20Sponsor%20Blocker.user.js",
+          "code_size": 3516,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Youtube Comment Sponsor Blocker",
+  "description": "Remove annoying sponsored messages within youtube comments & descriptions",
+  "url": "https://greasyfork.org/scripts/481131-youtube-comment-sponsor-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/481131/Youtube%20Comment%20Sponsor%20Blocker.user.js",
+  "code_size": 3516,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490854,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-25T18:27:55.000Z",
+    "code_updated_at": "2024-03-25T18:47:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279369,
+        "name": "pbmc",
+        "created_at": "2024-03-25T18:25:25.000Z",
+        "url": "https://greasyfork.org/users/1279369-pbmc"
+      }
+    ],
+    "name": "Zigs Marathon Counter",
+    "description": "Silly script for zigs",
+    "url": "https://greasyfork.org/scripts/490854-zigs-marathon-counter",
+    "code_url": "https://update.greasyfork.org/scripts/490854/Zigs%20Marathon%20Counter.user.js",
+    "code_size": 1584,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436666,
+    "daily_installs": 0,
+    "total_installs": 5758,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-07T09:50:44.000Z",
+    "code_updated_at": "2021-12-07T09:50:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 849776,
+        "name": "xiaoyanya",
+        "created_at": "2021-12-07T09:29:25.000Z",
+        "url": "https://greasyfork.org/users/849776-xiaoyanya"
+      }
+    ],
+    "name": "itest",
+    "description": "刷itest自助学习的填空和选择题。",
+    "url": "https://greasyfork.org/scripts/436666-itest",
+    "code_url": "https://update.greasyfork.org/scripts/436666/itest.user.js",
+    "code_size": 6398,
+    "license": "可以修改刷题速度speed，单位是ms",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

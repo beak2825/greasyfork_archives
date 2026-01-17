@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464480,
+    "daily_installs": 0,
+    "total_installs": 2072,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-04-20T14:55:41.000Z",
+    "code_updated_at": "2025-01-08T01:36:29.000Z",
+    "namespace": "https://github.com/ZinYY/chatgpt-academic-prompt-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1064282,
+        "name": "ZinYY",
+        "created_at": "2023-04-20T14:54:48.000Z",
+        "url": "https://greasyfork.org/users/1064282-zinyy"
+      }
+    ],
+    "name": "ChatGPT-academic-prompt-helper",
+    "description": "项目主页：https://github.com/ZinYY/chatgpt-academic-prompt-helper。  【ChatGPT 学术小助手】可以为你带来更好的网页版chatgpt使用体验：快速地添加快捷指令prompts。  本项目是一个油猴脚本 (Tampermonkey)，旨在便于网页版 Chatgpt 的 prompt 输入，并内置了一些常用的学术 prompt 模板。  【Usage】【打开 prompt 面板】:单击侧边栏的 “快捷指令” 按钮，或者用快捷键 `command+shift+F` (Windows 用户使用 `ctrl+shift+F`)。  【输入 prompt】: 单击想要输入的 prompt 即可。prompt 会添加在输入框之前。  【关闭 prompt 面板】: 使用快捷键 `command+shift+F`, 或是按下 `ESC` 按键即可。  【自定义 prompt】: 自行修改 `chatgpt_academic_helper.js` 文件中的内容即可。",
+    "url": "https://greasyfork.org/scripts/464480-chatgpt-academic-prompt-helper",
+    "code_url": "https://update.greasyfork.org/scripts/464480/ChatGPT-academic-prompt-helper.user.js",
+    "code_size": 20225,
+    "license": "MIT License",
+    "version": "0.1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

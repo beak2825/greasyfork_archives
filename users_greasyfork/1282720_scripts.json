@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491463,
+    "daily_installs": 0,
+    "total_installs": 510,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-02T06:08:41.000Z",
+    "code_updated_at": "2024-04-02T06:22:12.000Z",
+    "namespace": "http://gpicy.com",
+    "support_url": "https://gpicy.com?utm_source=greasyfork",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282720,
+        "name": "Rory Hill",
+        "created_at": "2024-04-02T03:24:28.000Z",
+        "url": "https://greasyfork.org/users/1282720-rory-hill"
+      }
+    ],
+    "name": "AI OCR, Photo Edit/Restore Suite: Multilingual, HD Upscale, Cutout & Object Erase",
+    "description": "Feature-packed suite for instant image-to-text conversion, photo enhancement/restoration, HD upscaling, clear background cutout, and swift object erasure, supporting 180+ languages, including rare dialects.",
+    "url": "https://greasyfork.org/scripts/491463-ai-ocr-photo-edit-restore-suite-multilingual-hd-upscale-cutout-object-erase",
+    "code_url": "https://update.greasyfork.org/scripts/491463/AI%20OCR%2C%20Photo%20EditRestore%20Suite%3A%20Multilingual%2C%20HD%20Upscale%2C%20Cutout%20%20Object%20Erase.user.js",
+    "code_size": 33739,
+    "license": "Apache License 2.0",
+    "version": "1.1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

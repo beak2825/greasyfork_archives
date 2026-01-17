@@ -1,0 +1,59 @@
+{
+  "id": 466222,
+  "daily_installs": 0,
+  "total_installs": 61,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-13T20:31:43.000Z",
+  "code_updated_at": "2023-05-18T16:04:05.000Z",
+  "namespace": "Anti_anti_Robot",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 960801,
+      "name": "niksdev09",
+      "created_at": "2022-09-18T13:26:24.000Z",
+      "url": "https://greasyfork.org/users/960801-niksdev09",
+      "scripts": [
+        {
+          "id": 455625,
+          "daily_installs": 0,
+          "total_installs": 75,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-29T20:00:20.000Z",
+          "code_updated_at": "2022-11-29T20:00:20.000Z",
+          "namespace": "snow_lzt",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Snow Lolzteam",
+          "description": "Снежный фон для форума Lolzteam",
+          "url": "https://greasyfork.org/scripts/455625-snow-lolzteam",
+          "code_url": "https://update.greasyfork.org/scripts/455625/Snow%20Lolzteam.user.js",
+          "code_size": 2636,
+          "license": null,
+          "version": "1.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Anti_anti_Robot",
+  "description": "AutoClick \"I'm not a robot\"",
+  "url": "https://greasyfork.org/scripts/466222-anti-anti-robot",
+  "code_url": "https://update.greasyfork.org/scripts/466222/Anti_anti_Robot.user.js",
+  "code_size": 487,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

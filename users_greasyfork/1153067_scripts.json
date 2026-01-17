@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483116,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-26T05:42:52.000Z",
+    "code_updated_at": "2025-06-16T03:09:21.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1153067,
+        "name": "wanniwa",
+        "created_at": "2023-08-17T01:54:56.000Z",
+        "url": "https://greasyfork.org/users/1153067-wanniwa"
+      }
+    ],
+    "name": "Boss助手",
+    "description": "Boss助手方便操作",
+    "url": "https://greasyfork.org/scripts/483116-boss%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/483116/Boss%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 63064,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

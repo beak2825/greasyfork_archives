@@ -1,0 +1,33 @@
+{
+  "id": 471561,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-24T06:05:03.000Z",
+  "code_updated_at": "2023-09-28T05:47:38.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1131946,
+      "name": "ruesin",
+      "created_at": "2023-07-21T03:22:23.000Z",
+      "url": "https://greasyfork.org/users/1131946-ruesin"
+    }
+  ],
+  "name": "SinHelper",
+  "description": "Sin Helper",
+  "url": "https://greasyfork.org/scripts/471561-sinhelper",
+  "code_url": "https://update.greasyfork.org/scripts/471561/1260860/SinHelper.js",
+  "code_size": 7937,
+  "license": null,
+  "version": "0.0.1.20230928054738",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

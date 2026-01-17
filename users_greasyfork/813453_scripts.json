@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438092,
+    "daily_installs": 1,
+    "total_installs": 4422,
+    "fan_score": "37.6",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-01-05T14:49:56.000Z",
+    "code_updated_at": "2024-07-27T12:59:27.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/424086",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813453,
+        "name": "maplets",
+        "created_at": "2021-09-08T15:21:16.000Z",
+        "url": "https://greasyfork.org/users/813453-maplets"
+      }
+    ],
+    "name": "个人视频解析",
+    "description": "支持B站、腾讯视频、爱奇艺、优酷、土豆、芒果TV，支持多个解析接口切换，界面简洁，脚本仅限学习，请大家支持正版。",
+    "url": "https://greasyfork.org/scripts/438092-%E4%B8%AA%E4%BA%BA%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/438092/%E4%B8%AA%E4%BA%BA%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 7993,
+    "license": "GPL License",
+    "version": "2.15-2024.7.27",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

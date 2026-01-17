@@ -1,0 +1,59 @@
+{
+  "id": 428193,
+  "daily_installs": 0,
+  "total_installs": 282,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-19T15:18:34.000Z",
+  "code_updated_at": "2022-01-20T10:03:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 784286,
+      "name": "zyrate",
+      "created_at": "2021-06-17T05:24:41.000Z",
+      "url": "https://greasyfork.org/users/784286-zyrate",
+      "scripts": [
+        {
+          "id": 428193,
+          "daily_installs": 0,
+          "total_installs": 282,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-19T15:18:34.000Z",
+          "code_updated_at": "2022-01-20T10:03:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "985/211/双一流提示",
+          "description": "可用于研招网和学科评估网的985/211、双一流院校提示，学科评估网每次列表变动需点击页面空白处刷新提示。绿色背景为985学校，黄色背景为211学校，红色字体为双一流学校，学校数据截止2021-6-17",
+          "url": "https://greasyfork.org/scripts/428193-985-211-%E5%8F%8C%E4%B8%80%E6%B5%81%E6%8F%90%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/428193/985211%E5%8F%8C%E4%B8%80%E6%B5%81%E6%8F%90%E7%A4%BA.user.js",
+          "code_size": 8057,
+          "license": null,
+          "version": "1.2.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "985/211/双一流提示",
+  "description": "可用于研招网和学科评估网的985/211、双一流院校提示，学科评估网每次列表变动需点击页面空白处刷新提示。绿色背景为985学校，黄色背景为211学校，红色字体为双一流学校，学校数据截止2021-6-17",
+  "url": "https://greasyfork.org/scripts/428193-985-211-%E5%8F%8C%E4%B8%80%E6%B5%81%E6%8F%90%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/428193/985211%E5%8F%8C%E4%B8%80%E6%B5%81%E6%8F%90%E7%A4%BA.user.js",
+  "code_size": 8057,
+  "license": null,
+  "version": "1.2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

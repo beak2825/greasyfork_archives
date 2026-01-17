@@ -1,0 +1,233 @@
+[
+  {
+    "id": 494556,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-10T05:48:19.000Z",
+    "code_updated_at": "2024-07-17T10:35:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583660,
+        "name": "HolmesZhao",
+        "created_at": "2020-06-10T09:05:07.000Z",
+        "url": "https://greasyfork.org/users/583660-holmeszhao"
+      }
+    ],
+    "name": "iWhaleCloudGit",
+    "description": "git 批量操作",
+    "url": "https://greasyfork.org/scripts/494556-iwhalecloudgit",
+    "code_url": "https://update.greasyfork.org/scripts/494556/iWhaleCloudGit.user.js",
+    "code_size": 18454,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 493465,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T12:52:43.000Z",
+    "code_updated_at": "2025-12-24T09:59:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583660,
+        "name": "HolmesZhao",
+        "created_at": "2020-06-10T09:05:07.000Z",
+        "url": "https://greasyfork.org/users/583660-holmeszhao"
+      }
+    ],
+    "name": "iWhaleCloud-UI-Figma",
+    "description": "这是一个 Figma 提取字号颜色脚本",
+    "url": "https://greasyfork.org/scripts/493465-iwhalecloud-ui-figma",
+    "code_url": "https://update.greasyfork.org/scripts/493465/iWhaleCloud-UI-Figma.user.js",
+    "code_size": 6573,
+    "license": "MIT License",
+    "version": "0.1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 459983,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-14T03:14:50.000Z",
+    "code_updated_at": "2023-08-26T04:38:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583660,
+        "name": "HolmesZhao",
+        "created_at": "2020-06-10T09:05:07.000Z",
+        "url": "https://greasyfork.org/users/583660-holmeszhao"
+      }
+    ],
+    "name": "个人排期",
+    "description": "查看个人的排期",
+    "url": "https://greasyfork.org/scripts/459983-%E4%B8%AA%E4%BA%BA%E6%8E%92%E6%9C%9F",
+    "code_url": "https://update.greasyfork.org/scripts/459983/%E4%B8%AA%E4%BA%BA%E6%8E%92%E6%9C%9F.user.js",
+    "code_size": 7271,
+    "license": "MIT License",
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 452092,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-27T07:55:32.000Z",
+    "code_updated_at": "2023-04-23T13:17:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583660,
+        "name": "HolmesZhao",
+        "created_at": "2020-06-10T09:05:07.000Z",
+        "url": "https://greasyfork.org/users/583660-holmeszhao"
+      }
+    ],
+    "name": "作业帮打包机",
+    "description": "打包机选择app",
+    "url": "https://greasyfork.org/scripts/452092-%E4%BD%9C%E4%B8%9A%E5%B8%AE%E6%89%93%E5%8C%85%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/452092/%E4%BD%9C%E4%B8%9A%E5%B8%AE%E6%89%93%E5%8C%85%E6%9C%BA.user.js",
+    "code_size": 6595,
+    "license": null,
+    "version": "0.1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445149,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-18T02:47:40.000Z",
+    "code_updated_at": "2022-05-18T04:25:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583660,
+        "name": "HolmesZhao",
+        "created_at": "2020-06-10T09:05:07.000Z",
+        "url": "https://greasyfork.org/users/583660-holmeszhao"
+      }
+    ],
+    "name": "Hardware Protocol Index",
+    "description": "index extract",
+    "url": "https://greasyfork.org/scripts/445149-hardware-protocol-index",
+    "code_url": "https://update.greasyfork.org/scripts/445149/Hardware%20Protocol%20Index.user.js",
+    "code_size": 3016,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 430323,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-04T05:59:00.000Z",
+    "code_updated_at": "2022-01-20T03:37:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583660,
+        "name": "HolmesZhao",
+        "created_at": "2020-06-10T09:05:07.000Z",
+        "url": "https://greasyfork.org/users/583660-holmeszhao"
+      }
+    ],
+    "name": "gitAddProject",
+    "description": "git add project for pms",
+    "url": "https://greasyfork.org/scripts/430323-gitaddproject",
+    "code_url": "https://update.greasyfork.org/scripts/430323/gitAddProject.user.js",
+    "code_size": 4732,
+    "license": null,
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419990,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-11T01:54:46.000Z",
+    "code_updated_at": "2021-12-06T04:36:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583660,
+        "name": "HolmesZhao",
+        "created_at": "2020-06-10T09:05:07.000Z",
+        "url": "https://greasyfork.org/users/583660-holmeszhao"
+      }
+    ],
+    "name": "获取本周周报时间",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/419990-%E8%8E%B7%E5%8F%96%E6%9C%AC%E5%91%A8%E5%91%A8%E6%8A%A5%E6%97%B6%E9%97%B4",
+    "code_url": "https://update.greasyfork.org/scripts/419990/%E8%8E%B7%E5%8F%96%E6%9C%AC%E5%91%A8%E5%91%A8%E6%8A%A5%E6%97%B6%E9%97%B4.user.js",
+    "code_size": 2229,
+    "license": null,
+    "version": "0.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 471946,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T18:15:36.000Z",
+    "code_updated_at": "2024-03-23T11:43:47.000Z",
+    "namespace": "noob-club",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 6577,
+        "name": "dartraiden",
+        "created_at": "2014-11-03T23:23:33.000Z",
+        "url": "https://greasyfork.org/users/6577-dartraiden"
+      }
+    ],
+    "name": "Remove background highlighting of Noob-club backer comments",
+    "description": "Disables the highlighting of backer comments on the Noob-club forum",
+    "url": "https://greasyfork.org/scripts/471946-remove-background-highlighting-of-noob-club-backer-comments",
+    "code_url": "https://update.greasyfork.org/scripts/471946/Remove%20background%20highlighting%20of%20Noob-club%20backer%20comments.user.js",
+    "code_size": 453,
+    "license": "MIT License",
+    "version": "20240323.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

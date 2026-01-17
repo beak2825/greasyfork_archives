@@ -1,0 +1,68 @@
+[
+  {
+    "id": 449702,
+    "daily_installs": 0,
+    "total_installs": 22294,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-08-17T09:23:07.000Z",
+    "code_updated_at": "2022-08-17T09:23:06.000Z",
+    "namespace": "https://greasyfork.org/users/718868",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 947376,
+        "name": "jerryking",
+        "created_at": "2022-08-17T08:41:31.000Z",
+        "url": "https://greasyfork.org/users/947376-jerryking"
+      }
+    ],
+    "name": "百度文库净化·解禁继续阅读·开启 VIP",
+    "description": "解除继续阅读限制，净化弹窗、广告，开启百度文库本地 VIP，完全适配移动端如 Kiwi 等浏览器",
+    "url": "https://greasyfork.org/scripts/449702-%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93%E5%87%80%E5%8C%96-%E8%A7%A3%E7%A6%81%E7%BB%A7%E7%BB%AD%E9%98%85%E8%AF%BB-%E5%BC%80%E5%90%AF-vip",
+    "code_url": "https://update.greasyfork.org/scripts/449702/%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93%E5%87%80%E5%8C%96%C2%B7%E8%A7%A3%E7%A6%81%E7%BB%A7%E7%BB%AD%E9%98%85%E8%AF%BB%C2%B7%E5%BC%80%E5%90%AF%20VIP.user.js",
+    "code_size": 2942,
+    "license": "MIT License",
+    "version": "0.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449699,
+    "daily_installs": 0,
+    "total_installs": 1755,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-08-17T08:52:40.000Z",
+    "code_updated_at": "2022-08-17T08:52:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 947376,
+        "name": "jerryking",
+        "created_at": "2022-08-17T08:41:31.000Z",
+        "url": "https://greasyfork.org/users/947376-jerryking"
+      }
+    ],
+    "name": "jerryking",
+    "description": "考试资料网(ppkao)，上学吧，问答库等多平台答案免费查看。",
+    "url": "https://greasyfork.org/scripts/449699-jerryking",
+    "code_url": "https://update.greasyfork.org/scripts/449699/jerryking.user.js",
+    "code_size": 9294,
+    "license": null,
+    "version": "1.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 436196,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-28T05:34:17.000Z",
+  "code_updated_at": "2021-12-28T03:12:12.000Z",
+  "namespace": "https://baidu.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 736524,
+      "name": "2247584569@qq.com",
+      "created_at": "2021-02-11T07:19:17.000Z",
+      "url": "https://greasyfork.org/users/736524-2247584569-qq-com",
+      "scripts": []
+    }
+  ],
+  "name": "绝世神功跳转",
+  "description": "绝世神功",
+  "url": "https://greasyfork.org/scripts/436196-%E7%BB%9D%E4%B8%96%E7%A5%9E%E5%8A%9F%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/436196/%E7%BB%9D%E4%B8%96%E7%A5%9E%E5%8A%9F%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 775,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

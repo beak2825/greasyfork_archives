@@ -1,0 +1,59 @@
+{
+  "id": 484106,
+  "daily_installs": 0,
+  "total_installs": 95,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-07T05:54:37.000Z",
+  "code_updated_at": "2025-05-25T04:05:51.000Z",
+  "namespace": "tencurse",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1244391,
+      "name": "tencurse",
+      "created_at": "2024-01-07T05:26:46.000Z",
+      "url": "https://greasyfork.org/users/1244391-tencurse",
+      "scripts": [
+        {
+          "id": 484106,
+          "daily_installs": 0,
+          "total_installs": 95,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-07T05:54:37.000Z",
+          "code_updated_at": "2025-05-25T04:05:51.000Z",
+          "namespace": "tencurse",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ao3 Only Show Primary Pairing (Auto)",
+          "description": "Hides works where specified pairing isn't the first listed",
+          "url": "https://greasyfork.org/scripts/484106-ao3-only-show-primary-pairing-auto",
+          "code_url": "https://update.greasyfork.org/scripts/484106/Ao3%20Only%20Show%20Primary%20Pairing%20%28Auto%29.user.js",
+          "code_size": 6642,
+          "license": "MIT License",
+          "version": "1.28",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ao3 Only Show Primary Pairing (Auto)",
+  "description": "Hides works where specified pairing isn't the first listed",
+  "url": "https://greasyfork.org/scripts/484106-ao3-only-show-primary-pairing-auto",
+  "code_url": "https://update.greasyfork.org/scripts/484106/Ao3%20Only%20Show%20Primary%20Pairing%20%28Auto%29.user.js",
+  "code_size": 6642,
+  "license": "MIT License",
+  "version": "1.28",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

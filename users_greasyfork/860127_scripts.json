@@ -1,0 +1,200 @@
+[
+  {
+    "id": 476967,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-08T14:35:49.000Z",
+    "code_updated_at": "2023-10-08T14:35:49.000Z",
+    "namespace": "mzblueAT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860127,
+        "name": "bluemz",
+        "created_at": "2022-01-02T02:02:17.000Z",
+        "url": "https://greasyfork.org/users/860127-bluemz"
+      }
+    ],
+    "name": "国家队挑战赛统计",
+    "description": "Extract MID numbers and corresponding date from HTML using Tampermonkey and auto-refresh every 30 minutes",
+    "url": "https://greasyfork.org/scripts/476967-%E5%9B%BD%E5%AE%B6%E9%98%9F%E6%8C%91%E6%88%98%E8%B5%9B%E7%BB%9F%E8%AE%A1",
+    "code_url": "https://update.greasyfork.org/scripts/476967/%E5%9B%BD%E5%AE%B6%E9%98%9F%E6%8C%91%E6%88%98%E8%B5%9B%E7%BB%9F%E8%AE%A1.user.js",
+    "code_size": 3196,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 476807,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-06T05:00:15.000Z",
+    "code_updated_at": "2023-10-06T05:00:15.000Z",
+    "namespace": "mzblueAT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860127,
+        "name": "bluemz",
+        "created_at": "2022-01-02T02:02:17.000Z",
+        "url": "https://greasyfork.org/users/860127-bluemz"
+      }
+    ],
+    "name": "AutoBid",
+    "description": "mz plugin",
+    "url": "https://greasyfork.org/scripts/476807-autobid",
+    "code_url": "https://update.greasyfork.org/scripts/476807/AutoBid.user.js",
+    "code_size": 14828,
+    "license": null,
+    "version": "0.2",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470883,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-15T07:31:54.000Z",
+    "code_updated_at": "2023-07-23T08:47:44.000Z",
+    "namespace": "mzblueAT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860127,
+        "name": "bluemz",
+        "created_at": "2022-01-02T02:02:17.000Z",
+        "url": "https://greasyfork.org/users/860127-bluemz"
+      }
+    ],
+    "name": "国家队球员库",
+    "description": "mz plugin 国家队球员导入插件",
+    "url": "https://greasyfork.org/scripts/470883-%E5%9B%BD%E5%AE%B6%E9%98%9F%E7%90%83%E5%91%98%E5%BA%93",
+    "code_url": "https://update.greasyfork.org/scripts/470883/%E5%9B%BD%E5%AE%B6%E9%98%9F%E7%90%83%E5%91%98%E5%BA%93.user.js",
+    "code_size": 7802,
+    "license": null,
+    "version": "0.5.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469349,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-24T09:08:30.000Z",
+    "code_updated_at": "2023-06-24T09:08:29.000Z",
+    "namespace": "mzblueAD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860127,
+        "name": "bluemz",
+        "created_at": "2022-01-02T02:02:17.000Z",
+        "url": "https://greasyfork.org/users/860127-bluemz"
+      }
+    ],
+    "name": "PredictValue",
+    "description": "mz plugin mz增强插件",
+    "url": "https://greasyfork.org/scripts/469349-predictvalue",
+    "code_url": "https://update.greasyfork.org/scripts/469349/PredictValue.user.js",
+    "code_size": 7940,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463118,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-02T14:42:54.000Z",
+    "code_updated_at": "2023-06-29T06:02:39.000Z",
+    "namespace": "mzblueAD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860127,
+        "name": "bluemz",
+        "created_at": "2022-01-02T02:02:17.000Z",
+        "url": "https://greasyfork.org/users/860127-bluemz"
+      }
+    ],
+    "name": "TransferData",
+    "description": "mz plugin mz增强插件",
+    "url": "https://greasyfork.org/scripts/463118-transferdata",
+    "code_url": "https://update.greasyfork.org/scripts/463118/TransferData.user.js",
+    "code_size": 14992,
+    "license": null,
+    "version": "0.5",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 437970,
+    "daily_installs": 0,
+    "total_installs": 154,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-03T03:19:53.000Z",
+    "code_updated_at": "2023-09-16T11:49:48.000Z",
+    "namespace": "mzblue",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860127,
+        "name": "bluemz",
+        "created_at": "2022-01-02T02:02:17.000Z",
+        "url": "https://greasyfork.org/users/860127-bluemz"
+      }
+    ],
+    "name": "mzblue.plugin",
+    "description": "mz plugin mz增强插件",
+    "url": "https://greasyfork.org/scripts/437970-mzblue-plugin",
+    "code_url": "https://update.greasyfork.org/scripts/437970/mzblueplugin.user.js",
+    "code_size": 153806,
+    "license": null,
+    "version": "1.7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

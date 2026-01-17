@@ -1,0 +1,34 @@
+{
+  "id": 485746,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-26T17:37:44.000Z",
+  "code_updated_at": "2024-03-28T16:14:32.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1165643,
+      "name": "datafanclub",
+      "created_at": "2023-09-03T16:15:54.000Z",
+      "url": "https://greasyfork.org/users/1165643-datafanclub",
+      "scripts": []
+    }
+  ],
+  "name": "MARKET RADAR",
+  "description": "2024/2/8 12:50:00",
+  "url": "https://greasyfork.org/scripts/485746-market-radar",
+  "code_url": "https://update.greasyfork.org/scripts/485746/MARKET%20RADAR.user.js",
+  "code_size": 10495,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

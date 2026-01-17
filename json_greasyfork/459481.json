@@ -1,0 +1,34 @@
+{
+  "id": 459481,
+  "daily_installs": 0,
+  "total_installs": 89,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-05T16:42:02.000Z",
+  "code_updated_at": "2024-05-31T13:42:14.000Z",
+  "namespace": "1721384107@qq.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1021273,
+      "name": "winegd",
+      "created_at": "2023-02-03T18:46:41.000Z",
+      "url": "https://greasyfork.org/users/1021273-winegd",
+      "scripts": []
+    }
+  ],
+  "name": "山东执业药师继续教育-online",
+  "description": "执业药师继续教育--屏蔽视频页弹窗，自动刷课",
+  "url": "https://greasyfork.org/scripts/459481-%E5%B1%B1%E4%B8%9C%E6%89%A7%E4%B8%9A%E8%8D%AF%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-online",
+  "code_url": "https://update.greasyfork.org/scripts/459481/%E5%B1%B1%E4%B8%9C%E6%89%A7%E4%B8%9A%E8%8D%AF%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-online.user.js",
+  "code_size": 7002,
+  "license": null,
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

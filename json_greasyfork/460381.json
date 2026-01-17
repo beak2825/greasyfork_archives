@@ -1,0 +1,59 @@
+{
+  "id": 460381,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-20T13:04:40.000Z",
+  "code_updated_at": "2023-02-20T16:59:19.000Z",
+  "namespace": "http://erp.caccpallp.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 564999,
+      "name": "amu2009",
+      "created_at": "2020-05-19T03:45:06.000Z",
+      "url": "https://greasyfork.org/users/564999-amu2009",
+      "scripts": [
+        {
+          "id": 460374,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-20T10:56:21.000Z",
+          "code_updated_at": "2023-02-20T10:56:21.000Z",
+          "namespace": "阿牧",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "财政部报告备案测试版",
+          "description": "测试",
+          "url": "https://greasyfork.org/scripts/460374-%E8%B4%A2%E6%94%BF%E9%83%A8%E6%8A%A5%E5%91%8A%E5%A4%87%E6%A1%88%E6%B5%8B%E8%AF%95%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/460374/%E8%B4%A2%E6%94%BF%E9%83%A8%E6%8A%A5%E5%91%8A%E5%A4%87%E6%A1%88%E6%B5%8B%E8%AF%95%E7%89%88.user.js",
+          "code_size": 1658,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CacErp助手",
+  "description": "CAC助手!",
+  "url": "https://greasyfork.org/scripts/460381-cacerp%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/460381/CacErp%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 3458,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

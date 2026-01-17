@@ -1,0 +1,68 @@
+[
+  {
+    "id": 435625,
+    "daily_installs": 0,
+    "total_installs": 683,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-17T06:18:49.000Z",
+    "code_updated_at": "2021-11-17T06:18:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 238370,
+        "name": "Ayouuuu",
+        "created_at": "2019-01-09T12:26:13.000Z",
+        "url": "https://greasyfork.org/users/238370-ayouuuu"
+      }
+    ],
+    "name": "超星慕课讨论自动回复工具",
+    "description": "自动回复讨论哦~",
+    "url": "https://greasyfork.org/scripts/435625-%E8%B6%85%E6%98%9F%E6%85%95%E8%AF%BE%E8%AE%A8%E8%AE%BA%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/435625/%E8%B6%85%E6%98%9F%E6%85%95%E8%AF%BE%E8%AE%A8%E8%AE%BA%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 882,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435014,
+    "daily_installs": 0,
+    "total_installs": 288,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-05T05:44:59.000Z",
+    "code_updated_at": "2021-11-05T05:44:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 238370,
+        "name": "Ayouuuu",
+        "created_at": "2019-01-09T12:26:13.000Z",
+        "url": "https://greasyfork.org/users/238370-ayouuuu"
+      }
+    ],
+    "name": "超星慕课骗自己小工具",
+    "description": "把超星慕课所有的进度变成绿色",
+    "url": "https://greasyfork.org/scripts/435014-%E8%B6%85%E6%98%9F%E6%85%95%E8%AF%BE%E9%AA%97%E8%87%AA%E5%B7%B1%E5%B0%8F%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/435014/%E8%B6%85%E6%98%9F%E6%85%95%E8%AF%BE%E9%AA%97%E8%87%AA%E5%B7%B1%E5%B0%8F%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 732,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

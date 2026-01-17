@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426327,
+    "daily_installs": 0,
+    "total_installs": 53,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-12T03:49:46.000Z",
+    "code_updated_at": "2021-05-12T03:52:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 771140,
+        "name": "way nicholas",
+        "created_at": "2021-05-12T03:47:53.000Z",
+        "url": "https://greasyfork.org/users/771140-way-nicholas"
+      }
+    ],
+    "name": "全屏隐藏掘金头部",
+    "description": "全屏隐藏掘金头部，方便文章阅读",
+    "url": "https://greasyfork.org/scripts/426327-%E5%85%A8%E5%B1%8F%E9%9A%90%E8%97%8F%E6%8E%98%E9%87%91%E5%A4%B4%E9%83%A8",
+    "code_url": "https://update.greasyfork.org/scripts/426327/%E5%85%A8%E5%B1%8F%E9%9A%90%E8%97%8F%E6%8E%98%E9%87%91%E5%A4%B4%E9%83%A8.user.js",
+    "code_size": 791,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

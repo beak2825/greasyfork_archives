@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468119,
+    "daily_installs": 0,
+    "total_installs": 622,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-07T09:17:39.000Z",
+    "code_updated_at": "2025-10-10T13:48:18.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093088,
+        "name": "Иван Империалов",
+        "created_at": "2023-06-07T08:23:26.000Z",
+        "url": "https://greasyfork.org/users/1093088-%D0%B8%D0%B2%D0%B0%D0%BD-%D0%B8%D0%BC%D0%BF%D0%B5%D1%80%D0%B8%D0%B0%D0%BB%D0%BE%D0%B2"
+      }
+    ],
+    "name": "Black Russia | Скрипт для КФ | Upd 10.25",
+    "description": "Скрипт для Кураторов Форума.",
+    "url": "https://greasyfork.org/scripts/468119-black-russia-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%84-upd-10-25",
+    "code_url": "https://update.greasyfork.org/scripts/468119/Black%20Russia%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D0%A4%20%7C%20Upd%201025.user.js",
+    "code_size": 155327,
+    "license": "none",
+    "version": "2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

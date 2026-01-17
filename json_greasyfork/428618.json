@@ -1,0 +1,34 @@
+{
+  "id": 428618,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-29T04:04:43.000Z",
+  "code_updated_at": "2021-06-29T04:04:43.000Z",
+  "namespace": "moomoo all servers crash bots for free commands: >crashsandbox >crashnormal >crashdev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 788449,
+      "name": "ХасбулатС ХазбулатовС",
+      "created_at": "2021-06-29T04:00:45.000Z",
+      "url": "https://greasyfork.org/users/788449-%D1%85%D0%B0%D1%81%D0%B1%D1%83%D0%BB%D0%B0%D1%82%D1%81-%D1%85%D0%B0%D0%B7%D0%B1%D1%83%D0%BB%D0%B0%D1%82%D0%BE%D0%B2%D1%81",
+      "scripts": []
+    }
+  ],
+  "name": "Crash Bots",
+  "description": "moomoo all servers crash bots for free commands: >crashsandbox >crashnormal >crashdev",
+  "url": "https://greasyfork.org/scripts/428618-crash-bots",
+  "code_url": "https://update.greasyfork.org/scripts/428618/Crash%20Bots.user.js",
+  "code_size": 94581,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

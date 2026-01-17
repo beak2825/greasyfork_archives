@@ -1,0 +1,34 @@
+{
+  "id": 424012,
+  "daily_installs": 0,
+  "total_installs": 348,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-26T12:06:49.000Z",
+  "code_updated_at": "2021-09-26T17:24:06.000Z",
+  "namespace": "keyroesTools",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 724397,
+      "name": "keyroes",
+      "created_at": "2021-01-06T03:32:23.000Z",
+      "url": "https://greasyfork.org/users/724397-keyroes",
+      "scripts": []
+    }
+  ],
+  "name": "英语四级爷来了",
+  "description": "个人使用",
+  "url": "https://greasyfork.org/scripts/424012-%E8%8B%B1%E8%AF%AD%E5%9B%9B%E7%BA%A7%E7%88%B7%E6%9D%A5%E4%BA%86",
+  "code_url": "https://update.greasyfork.org/scripts/424012/%E8%8B%B1%E8%AF%AD%E5%9B%9B%E7%BA%A7%E7%88%B7%E6%9D%A5%E4%BA%86.user.js",
+  "code_size": 13264,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

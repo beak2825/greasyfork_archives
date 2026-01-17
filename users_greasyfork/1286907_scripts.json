@@ -30,6 +30,72 @@
     "version": "20240911.09.03",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492588,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-15T12:53:29.000Z",
+    "code_updated_at": "2024-07-08T15:20:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286907,
+        "name": "Leon Flame",
+        "created_at": "2024-04-11T13:06:00.000Z",
+        "url": "https://greasyfork.org/users/1286907-leon-flame"
+      }
+    ],
+    "name": "CK Dashboard",
+    "description": "Custom Dashboard Panel for Teletype",
+    "url": "https://greasyfork.org/scripts/492588-ck-dashboard",
+    "code_url": "https://update.greasyfork.org/scripts/492588/CK%20Dashboard.user.js",
+    "code_size": 21504,
+    "license": "MIT License",
+    "version": "25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492240,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-11T13:07:19.000Z",
+    "code_updated_at": "2024-10-10T11:42:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286907,
+        "name": "Leon Flame",
+        "created_at": "2024-04-11T13:06:00.000Z",
+        "url": "https://greasyfork.org/users/1286907-leon-flame"
+      }
+    ],
+    "name": "Shop Toolbar",
+    "description": "Toolbar for CMS.S3 | centrclimat.ru",
+    "url": "https://greasyfork.org/scripts/492240-shop-toolbar",
+    "code_url": "https://update.greasyfork.org/scripts/492240/Shop%20Toolbar.user.js",
+    "code_size": 34097,
+    "license": "MIT License",
+    "version": "1.12",
+    "locale": "ru",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

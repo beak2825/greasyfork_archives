@@ -1,0 +1,34 @@
+{
+  "id": 471626,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-24T19:52:27.000Z",
+  "code_updated_at": "2023-07-24T19:52:26.000Z",
+  "namespace": "https://greasyfork.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1050491,
+      "name": "Moses Maloney",
+      "created_at": "2023-03-30T13:51:16.000Z",
+      "url": "https://greasyfork.org/users/1050491-moses-maloney",
+      "scripts": []
+    }
+  ],
+  "name": "GGn Infinite Scroll",
+  "description": "Infinitely scroll on paginated GGn pages",
+  "url": "https://greasyfork.org/scripts/471626-ggn-infinite-scroll",
+  "code_url": "https://update.greasyfork.org/scripts/471626/GGn%20Infinite%20Scroll.user.js",
+  "code_size": 10371,
+  "license": "MIT License",
+  "version": "1.4.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

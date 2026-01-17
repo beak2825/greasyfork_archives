@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462873,
+    "daily_installs": 0,
+    "total_installs": 2330,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-29T19:27:36.000Z",
+    "code_updated_at": "2023-03-29T19:27:35.000Z",
+    "namespace": "https://github.com/DarkSnakeGang",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050127,
+        "name": "76437634287342",
+        "created_at": "2023-03-29T19:24:56.000Z",
+        "url": "https://greasyfork.org/users/1050127-76437634287342"
+      }
+    ],
+    "name": "Google Snake Mod Loader (Standard)",
+    "description": "Allows you to run multiple different google snake mods",
+    "url": "https://greasyfork.org/scripts/462873-google-snake-mod-loader-standard",
+    "code_url": "https://update.greasyfork.org/scripts/462873/Google%20Snake%20Mod%20Loader%20%28Standard%29.user.js",
+    "code_size": 52944,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

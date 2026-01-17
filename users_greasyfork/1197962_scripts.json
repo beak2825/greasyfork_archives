@@ -1,0 +1,68 @@
+[
+  {
+    "id": 491815,
+    "daily_installs": 0,
+    "total_installs": 200,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-06T16:42:56.000Z",
+    "code_updated_at": "2024-04-06T16:42:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1197962,
+        "name": "dkxpoc",
+        "created_at": "2023-10-17T09:17:40.000Z",
+        "url": "https://greasyfork.org/users/1197962-dkxpoc"
+      }
+    ],
+    "name": "学习通刷课防检测愚蠢手段",
+    "description": "自动刷新网页功能",
+    "url": "https://greasyfork.org/scripts/491815-%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%88%B7%E8%AF%BE%E9%98%B2%E6%A3%80%E6%B5%8B%E6%84%9A%E8%A0%A2%E6%89%8B%E6%AE%B5",
+    "code_url": "https://update.greasyfork.org/scripts/491815/%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%88%B7%E8%AF%BE%E9%98%B2%E6%A3%80%E6%B5%8B%E6%84%9A%E8%A0%A2%E6%89%8B%E6%AE%B5.user.js",
+    "code_size": 612,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477590,
+    "daily_installs": 0,
+    "total_installs": 517,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-17T09:21:07.000Z",
+    "code_updated_at": "2023-10-17T09:21:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1197962,
+        "name": "dkxpoc",
+        "created_at": "2023-10-17T09:17:40.000Z",
+        "url": "https://greasyfork.org/users/1197962-dkxpoc"
+      }
+    ],
+    "name": "u校园愚蠢的刷新网页功能",
+    "description": "自动刷新网页功能",
+    "url": "https://greasyfork.org/scripts/477590-u%E6%A0%A1%E5%9B%AD%E6%84%9A%E8%A0%A2%E7%9A%84%E5%88%B7%E6%96%B0%E7%BD%91%E9%A1%B5%E5%8A%9F%E8%83%BD",
+    "code_url": "https://update.greasyfork.org/scripts/477590/u%E6%A0%A1%E5%9B%AD%E6%84%9A%E8%A0%A2%E7%9A%84%E5%88%B7%E6%96%B0%E7%BD%91%E9%A1%B5%E5%8A%9F%E8%83%BD.user.js",
+    "code_size": 506,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

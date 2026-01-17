@@ -1,0 +1,33 @@
+{
+  "id": 445561,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-26T02:34:04.000Z",
+  "code_updated_at": "2022-05-26T02:34:04.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/917529-hkai1221",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 917529,
+      "name": "hkai1221",
+      "created_at": "2022-05-23T06:34:37.000Z",
+      "url": "https://greasyfork.org/users/917529-hkai1221"
+    }
+  ],
+  "name": "Steam Warning",
+  "description": "Fake Steam Warning For Funny🤪",
+  "url": "https://greasyfork.org/scripts/445561-steam-warning",
+  "code_url": "https://update.greasyfork.org/scripts/445561/Steam%20Warning.user.js",
+  "code_size": 1253,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

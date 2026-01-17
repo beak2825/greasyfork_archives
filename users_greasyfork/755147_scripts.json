@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461812,
+    "daily_installs": 0,
+    "total_installs": 157,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-03-14T15:11:42.000Z",
+    "code_updated_at": "2023-03-14T15:11:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 755147,
+        "name": "打字猴",
+        "created_at": "2021-04-05T10:37:56.000Z",
+        "url": "https://greasyfork.org/users/755147-%E6%89%93%E5%AD%97%E7%8C%B4"
+      }
+    ],
+    "name": "Scroll To Top/Bottom Button",
+    "description": "Add buttons to scroll to top and bottom of page in the bottom right corner of the screen",
+    "url": "https://greasyfork.org/scripts/461812-scroll-to-top-bottom-button",
+    "code_url": "https://update.greasyfork.org/scripts/461812/Scroll%20To%20TopBottom%20Button.user.js",
+    "code_size": 2261,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

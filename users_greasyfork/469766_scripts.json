@@ -1,0 +1,233 @@
+[
+  {
+    "id": 477434,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-14T20:16:16.000Z",
+    "code_updated_at": "2023-10-20T00:31:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469766,
+        "name": "WhiteTapeti",
+        "created_at": "2020-03-27T03:01:36.000Z",
+        "url": "https://greasyfork.org/users/469766-whitetapeti"
+      }
+    ],
+    "name": "All the anime top buttons TEST VERS",
+    "description": "(THIS IS A TEST BUILD AND MAY BE BROKEN) All the anime top buttons (has MAL-Sync support)",
+    "url": "https://greasyfork.org/scripts/477434-all-the-anime-top-buttons-test-vers",
+    "code_url": "https://update.greasyfork.org/scripts/477434/All%20the%20anime%20top%20buttons%20TEST%20VERS.user.js",
+    "code_size": 49255,
+    "license": "MIT License",
+    "version": "2.4 Added Kuroiru support",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 475226,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-13T16:47:37.000Z",
+    "code_updated_at": "2023-09-13T16:47:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469766,
+        "name": "WhiteTapeti",
+        "created_at": "2020-03-27T03:01:36.000Z",
+        "url": "https://greasyfork.org/users/469766-whitetapeti"
+      }
+    ],
+    "name": "Hide Youtube seek bar",
+    "description": "Hide Youtube's seek bar with your context menu",
+    "url": "https://greasyfork.org/scripts/475226-hide-youtube-seek-bar",
+    "code_url": "https://update.greasyfork.org/scripts/475226/Hide%20Youtube%20seek%20bar.user.js",
+    "code_size": 1563,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473893,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-25T19:53:05.000Z",
+    "code_updated_at": "2023-11-13T20:39:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469766,
+        "name": "WhiteTapeti",
+        "created_at": "2020-03-27T03:01:36.000Z",
+        "url": "https://greasyfork.org/users/469766-whitetapeti"
+      }
+    ],
+    "name": "Fix ZZZ Opera Music",
+    "description": "Fixes the music not playing in the Opera Browser on the Zenless Zone Zero website.",
+    "url": "https://greasyfork.org/scripts/473893-fix-zzz-opera-music",
+    "code_url": "https://update.greasyfork.org/scripts/473893/Fix%20ZZZ%20Opera%20Music.user.js",
+    "code_size": 4979,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472810,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-08-09T21:59:17.000Z",
+    "code_updated_at": "2024-05-13T03:45:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469766,
+        "name": "WhiteTapeti",
+        "created_at": "2020-03-27T03:01:36.000Z",
+        "url": "https://greasyfork.org/users/469766-whitetapeti"
+      }
+    ],
+    "name": "Open in Miru",
+    "description": "Adds a link to open an anime in Miru, if you have MAL-Sync installed then it will be at the bottom of the Quicklinks.",
+    "url": "https://greasyfork.org/scripts/472810-open-in-miru",
+    "code_url": "https://update.greasyfork.org/scripts/472810/Open%20in%20Miru.user.js",
+    "code_size": 23779,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467839,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-03T23:29:02.000Z",
+    "code_updated_at": "2023-11-02T01:21:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469766,
+        "name": "WhiteTapeti",
+        "created_at": "2020-03-27T03:01:36.000Z",
+        "url": "https://greasyfork.org/users/469766-whitetapeti"
+      }
+    ],
+    "name": "Inkapedia DarkMode fix",
+    "description": "Userscript/Userstyle that aims to fix problems with the Inkapedia's darkmode (not fully complete)",
+    "url": "https://greasyfork.org/scripts/467839-inkapedia-darkmode-fix",
+    "code_url": "https://update.greasyfork.org/scripts/467839/Inkapedia%20DarkMode%20fix.user.js",
+    "code_size": 11327,
+    "license": null,
+    "version": "0.1.5.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467838,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-03T23:28:17.000Z",
+    "code_updated_at": "2023-06-03T23:38:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469766,
+        "name": "WhiteTapeti",
+        "created_at": "2020-03-27T03:01:36.000Z",
+        "url": "https://greasyfork.org/users/469766-whitetapeti"
+      }
+    ],
+    "name": "Inkapedia DarkMode fix",
+    "description": "This file exists so that when you try to edit the main js file in the tampermonkey edit script ui the browser doesn't shit itself",
+    "url": "https://greasyfork.org/scripts/467838-inkapedia-darkmode-fix",
+    "code_url": "https://update.greasyfork.org/scripts/467838/Inkapedia%20DarkMode%20fix.user.js",
+    "code_size": 144840,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 456970,
+    "daily_installs": 0,
+    "total_installs": 133,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-21T17:12:16.000Z",
+    "code_updated_at": "2022-12-21T17:12:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469766,
+        "name": "WhiteTapeti",
+        "created_at": "2020-03-27T03:01:36.000Z",
+        "url": "https://greasyfork.org/users/469766-whitetapeti"
+      }
+    ],
+    "name": "ANLogoS (AniList Dynamic Colored Logos)",
+    "description": "Changes the color of the AniList logo to match profile themes",
+    "url": "https://greasyfork.org/scripts/456970-anlogos-anilist-dynamic-colored-logos",
+    "code_url": "https://update.greasyfork.org/scripts/456970/ANLogoS%20%28AniList%20Dynamic%20Colored%20Logos%29.user.js",
+    "code_size": 7180,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

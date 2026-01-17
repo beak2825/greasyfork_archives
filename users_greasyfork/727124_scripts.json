@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438692,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-17T16:41:53.000Z",
+    "code_updated_at": "2022-01-17T17:20:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 727124,
+        "name": "MaslovKK",
+        "created_at": "2021-01-13T19:31:44.000Z",
+        "url": "https://greasyfork.org/users/727124-maslovkk"
+      }
+    ],
+    "name": "FaceIT Inventory",
+    "description": "Shows inventory value",
+    "url": "https://greasyfork.org/scripts/438692-faceit-inventory",
+    "code_url": "https://update.greasyfork.org/scripts/438692/FaceIT%20Inventory.user.js",
+    "code_size": 1602,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

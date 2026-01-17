@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480922,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-28T04:25:34.000Z",
+    "code_updated_at": "2023-11-28T06:32:40.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/208142-iswfe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 181073,
+        "name": "spiritwindy",
+        "created_at": "2018-04-20T12:23:20.000Z",
+        "url": "https://greasyfork.org/users/181073-spiritwindy"
+      }
+    ],
+    "name": "禁用动态脚本,专业人员使用",
+    "description": "禁用动态脚本，监控xhr",
+    "url": "https://greasyfork.org/scripts/480922-%E7%A6%81%E7%94%A8%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC-%E4%B8%93%E4%B8%9A%E4%BA%BA%E5%91%98%E4%BD%BF%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/480922/%E7%A6%81%E7%94%A8%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%2C%E4%B8%93%E4%B8%9A%E4%BA%BA%E5%91%98%E4%BD%BF%E7%94%A8.user.js",
+    "code_size": 1865,
+    "license": "MIT License",
+    "version": "1.0.19",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

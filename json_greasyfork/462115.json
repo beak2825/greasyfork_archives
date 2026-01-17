@@ -1,0 +1,59 @@
+{
+  "id": 462115,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-19T11:12:50.000Z",
+  "code_updated_at": "2023-03-22T09:57:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 880566,
+      "name": "froukh113",
+      "created_at": "2022-02-25T18:34:40.000Z",
+      "url": "https://greasyfork.org/users/880566-froukh113",
+      "scripts": [
+        {
+          "id": 462115,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-19T11:12:50.000Z",
+          "code_updated_at": "2023-03-22T09:57:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wykop przegryw gejowo",
+          "description": "Zamienia teksty postów inceli z tagów #przegryw i #blackpill na losowe anonse gejowo",
+          "url": "https://greasyfork.org/scripts/462115-wykop-przegryw-gejowo",
+          "code_url": "https://update.greasyfork.org/scripts/462115/Wykop%20przegryw%20gejowo.user.js",
+          "code_size": 14827,
+          "license": "MIT License",
+          "version": "1.4",
+          "locale": "pl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wykop przegryw gejowo",
+  "description": "Zamienia teksty postów inceli z tagów #przegryw i #blackpill na losowe anonse gejowo",
+  "url": "https://greasyfork.org/scripts/462115-wykop-przegryw-gejowo",
+  "code_url": "https://update.greasyfork.org/scripts/462115/Wykop%20przegryw%20gejowo.user.js",
+  "code_size": 14827,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

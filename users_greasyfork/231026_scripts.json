@@ -1,0 +1,134 @@
+[
+  {
+    "id": 456662,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-16T05:52:50.000Z",
+    "code_updated_at": "2022-12-16T05:52:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 231026,
+        "name": "yuis-ice",
+        "created_at": "2018-12-07T08:14:38.000Z",
+        "url": "https://greasyfork.org/users/231026-yuis-ice"
+      }
+    ],
+    "name": "Google URL formatter",
+    "description": "Removes the lengthy Google.com URL parameters and get a clean Google URL.",
+    "url": "https://greasyfork.org/scripts/456662-google-url-formatter",
+    "code_url": "https://update.greasyfork.org/scripts/456662/Google%20URL%20formatter.user.js",
+    "code_size": 1472,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456658,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-16T05:31:53.000Z",
+    "code_updated_at": "2022-12-16T05:31:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 231026,
+        "name": "yuis-ice",
+        "created_at": "2018-12-07T08:14:38.000Z",
+        "url": "https://greasyfork.org/users/231026-yuis-ice"
+      }
+    ],
+    "name": "楽天: 必須の項目選択肢の自動選択",
+    "description": "楽天市場にて、必須の項目選択肢・オプション選択肢の自動選択を行うプログラム・スクリプト。",
+    "url": "https://greasyfork.org/scripts/456658-%E6%A5%BD%E5%A4%A9-%E5%BF%85%E9%A0%88%E3%81%AE%E9%A0%85%E7%9B%AE%E9%81%B8%E6%8A%9E%E8%82%A2%E3%81%AE%E8%87%AA%E5%8B%95%E9%81%B8%E6%8A%9E",
+    "code_url": "https://update.greasyfork.org/scripts/456658/%E6%A5%BD%E5%A4%A9%3A%20%E5%BF%85%E9%A0%88%E3%81%AE%E9%A0%85%E7%9B%AE%E9%81%B8%E6%8A%9E%E8%82%A2%E3%81%AE%E8%87%AA%E5%8B%95%E9%81%B8%E6%8A%9E.user.js",
+    "code_size": 659,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456657,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-16T05:07:18.000Z",
+    "code_updated_at": "2022-12-16T05:07:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 231026,
+        "name": "yuis-ice",
+        "created_at": "2018-12-07T08:14:38.000Z",
+        "url": "https://greasyfork.org/users/231026-yuis-ice"
+      }
+    ],
+    "name": "TradingView title fixer",
+    "description": "Stops the title changes on the Chrome browser tab on TradingView.",
+    "url": "https://greasyfork.org/scripts/456657-tradingview-title-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/456657/TradingView%20title%20fixer.user.js",
+    "code_size": 675,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448301,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-22T12:39:26.000Z",
+    "code_updated_at": "2022-07-22T12:39:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 231026,
+        "name": "yuis-ice",
+        "created_at": "2018-12-07T08:14:38.000Z",
+        "url": "https://greasyfork.org/users/231026-yuis-ice"
+      }
+    ],
+    "name": "Bilibili selectable danmu comments",
+    "description": "Learning Chinese blazing fastly.",
+    "url": "https://greasyfork.org/scripts/448301-bilibili-selectable-danmu-comments",
+    "code_url": "https://update.greasyfork.org/scripts/448301/Bilibili%20selectable%20danmu%20comments.user.js",
+    "code_size": 1011,
+    "license": "BSD 3-Clause License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

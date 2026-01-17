@@ -1,0 +1,59 @@
+{
+  "id": 473186,
+  "daily_installs": 0,
+  "total_installs": 97,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-16T12:24:27.000Z",
+  "code_updated_at": "2023-09-14T05:55:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1152683,
+      "name": "w chb",
+      "created_at": "2023-08-16T12:21:56.000Z",
+      "url": "https://greasyfork.org/users/1152683-w-chb",
+      "scripts": [
+        {
+          "id": 473186,
+          "daily_installs": 0,
+          "total_installs": 97,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-16T12:24:27.000Z",
+          "code_updated_at": "2023-09-14T05:55:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT提示词加载器，本插件由ChatGPT生成 点击右上角圆圈",
+          "description": "Advanced features for chat.openai.com",
+          "url": "https://greasyfork.org/scripts/473186-chatgpt%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%8A%A0%E8%BD%BD%E5%99%A8-%E6%9C%AC%E6%8F%92%E4%BB%B6%E7%94%B1chatgpt%E7%94%9F%E6%88%90-%E7%82%B9%E5%87%BB%E5%8F%B3%E4%B8%8A%E8%A7%92%E5%9C%86%E5%9C%88",
+          "code_url": "https://update.greasyfork.org/scripts/473186/ChatGPT%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%8A%A0%E8%BD%BD%E5%99%A8%EF%BC%8C%E6%9C%AC%E6%8F%92%E4%BB%B6%E7%94%B1ChatGPT%E7%94%9F%E6%88%90%20%E7%82%B9%E5%87%BB%E5%8F%B3%E4%B8%8A%E8%A7%92%E5%9C%86%E5%9C%88.user.js",
+          "code_size": 6985,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT提示词加载器，本插件由ChatGPT生成 点击右上角圆圈",
+  "description": "Advanced features for chat.openai.com",
+  "url": "https://greasyfork.org/scripts/473186-chatgpt%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%8A%A0%E8%BD%BD%E5%99%A8-%E6%9C%AC%E6%8F%92%E4%BB%B6%E7%94%B1chatgpt%E7%94%9F%E6%88%90-%E7%82%B9%E5%87%BB%E5%8F%B3%E4%B8%8A%E8%A7%92%E5%9C%86%E5%9C%88",
+  "code_url": "https://update.greasyfork.org/scripts/473186/ChatGPT%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%8A%A0%E8%BD%BD%E5%99%A8%EF%BC%8C%E6%9C%AC%E6%8F%92%E4%BB%B6%E7%94%B1ChatGPT%E7%94%9F%E6%88%90%20%E7%82%B9%E5%87%BB%E5%8F%B3%E4%B8%8A%E8%A7%92%E5%9C%86%E5%9C%88.user.js",
+  "code_size": 6985,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

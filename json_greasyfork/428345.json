@@ -1,0 +1,33 @@
+{
+  "id": 428345,
+  "daily_installs": 0,
+  "total_installs": 841,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-23T09:15:12.000Z",
+  "code_updated_at": "2021-06-24T12:32:37.000Z",
+  "namespace": "https://github.com/lalasou/onstudy",
+  "support_url": "https://github.com/lalasou/onstudy/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 786007,
+      "name": "lalasou",
+      "created_at": "2021-06-22T04:40:00.000Z",
+      "url": "https://greasyfork.org/users/786007-lalasou"
+    }
+  ],
+  "name": "永城市专业技术学习在线辅助",
+  "description": "继续教育公需科目专业科目辅助|自动静音播放|手动暂停播放时，课程进度仍继续增加|自动播放下一个视频|自动答题(去掉答题弹窗)",
+  "url": "https://greasyfork.org/scripts/428345-%E6%B0%B8%E5%9F%8E%E5%B8%82%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%E5%9C%A8%E7%BA%BF%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/428345/%E6%B0%B8%E5%9F%8E%E5%B8%82%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%E5%9C%A8%E7%BA%BF%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 9964,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

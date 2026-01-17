@@ -1,0 +1,59 @@
+{
+  "id": 475922,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-23T04:08:14.000Z",
+  "code_updated_at": "2026-01-15T06:19:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 71799,
+      "name": "Lin Neo",
+      "created_at": "2016-10-07T13:37:21.000Z",
+      "url": "https://greasyfork.org/users/71799-lin-neo",
+      "scripts": [
+        {
+          "id": 513833,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-24T11:32:53.000Z",
+          "code_updated_at": "2024-10-24T11:46:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili Pc网页取消自动连播",
+          "description": "取消哔哩哔哩前置自动连播.",
+          "url": "https://greasyfork.org/scripts/513833-bilibili-pc%E7%BD%91%E9%A1%B5%E5%8F%96%E6%B6%88%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD",
+          "code_url": "https://update.greasyfork.org/scripts/513833/Bilibili%20Pc%E7%BD%91%E9%A1%B5%E5%8F%96%E6%B6%88%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD.user.js",
+          "code_size": 2365,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Otoy 自动操作脚本",
+  "description": "自动填充账号和密码并登录，检查订阅状态，显示状态信息及欧元汇率(每日10点后更新)",
+  "url": "https://greasyfork.org/scripts/475922-otoy-%E8%87%AA%E5%8A%A8%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/475922/Otoy%20%E8%87%AA%E5%8A%A8%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 293419,
+  "license": null,
+  "version": "3.7.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460613,
+    "daily_installs": 0,
+    "total_installs": 165,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-23T17:57:13.000Z",
+    "code_updated_at": "2023-02-23T17:57:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/JDipi/Smugmug-Album-Downloader/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1031963,
+        "name": "Lord Bills",
+        "created_at": "2023-02-23T17:51:04.000Z",
+        "url": "https://greasyfork.org/users/1031963-lord-bills"
+      }
+    ],
+    "name": "Smugmug Album Downloader",
+    "description": "Smugmug Album DownloaD",
+    "url": "https://greasyfork.org/scripts/460613-smugmug-album-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/460613/Smugmug%20Album%20Downloader.user.js",
+    "code_size": 6593,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

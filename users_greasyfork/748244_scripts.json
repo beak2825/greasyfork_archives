@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423406,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-17T09:39:58.000Z",
+    "code_updated_at": "2021-03-17T09:39:57.000Z",
+    "namespace": "https://www.github.com/Cat7373/remove-web-limits/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 748244,
+        "name": "Fate Sid",
+        "created_at": "2021-03-17T09:38:48.000Z",
+        "url": "https://greasyfork.org/users/748244-fate-sid"
+      }
+    ],
+    "name": "网页限制解除（精简优化版）",
+    "description": "解除大部分网站禁止复制、剪切、选择文本、右键菜单的限制。",
+    "url": "https://greasyfork.org/scripts/423406-%E7%BD%91%E9%A1%B5%E9%99%90%E5%88%B6%E8%A7%A3%E9%99%A4-%E7%B2%BE%E7%AE%80%E4%BC%98%E5%8C%96%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/423406/%E7%BD%91%E9%A1%B5%E9%99%90%E5%88%B6%E8%A7%A3%E9%99%A4%EF%BC%88%E7%B2%BE%E7%AE%80%E4%BC%98%E5%8C%96%E7%89%88%EF%BC%89.user.js",
+    "code_size": 4984,
+    "license": "LGPLv3",
+    "version": "1.5.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 446315,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-10T16:02:10.000Z",
+  "code_updated_at": "2022-06-11T02:33:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 459175,
+      "name": "kakasearch",
+      "created_at": "2020-03-14T15:18:20.000Z",
+      "url": "https://greasyfork.org/users/459175-kakasearch"
+    }
+  ],
+  "name": "Bili直播数据爬虫",
+  "description": "获取多少人看过、弹幕信息，发送给后台",
+  "url": "https://greasyfork.org/scripts/446315-bili%E7%9B%B4%E6%92%AD%E6%95%B0%E6%8D%AE%E7%88%AC%E8%99%AB",
+  "code_url": "https://update.greasyfork.org/scripts/446315/Bili%E7%9B%B4%E6%92%AD%E6%95%B0%E6%8D%AE%E7%88%AC%E8%99%AB.user.js",
+  "code_size": 2513,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

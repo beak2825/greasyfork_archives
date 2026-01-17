@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436927,
+    "daily_installs": 0,
+    "total_installs": 681,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-12T03:58:17.000Z",
+    "code_updated_at": "2021-12-12T03:58:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 837247,
+        "name": "ThePandaHacker",
+        "created_at": "2021-11-11T08:22:25.000Z",
+        "url": "https://greasyfork.org/users/837247-thepandahacker"
+      }
+    ],
+    "name": "Personal Mod for my Friend",
+    "description": "Hat Hotkey (G=SoldierHelmet).(T=Tankgear).(Y=BoosterHat).(H=EMPHelmet)",
+    "url": "https://greasyfork.org/scripts/436927-personal-mod-for-my-friend",
+    "code_url": "https://update.greasyfork.org/scripts/436927/Personal%20Mod%20for%20my%20Friend.user.js",
+    "code_size": 3801,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

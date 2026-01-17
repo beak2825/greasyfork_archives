@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442001,
+    "daily_installs": 1,
+    "total_installs": 6193,
+    "fan_score": "9.2",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 2,
+    "created_at": "2022-03-24T07:16:53.000Z",
+    "code_updated_at": "2022-03-24T07:16:53.000Z",
+    "namespace": "https://greasyfork.org/users/858307",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858307,
+        "name": "ddd ddd",
+        "created_at": "2021-12-27T23:45:47.000Z",
+        "url": "https://greasyfork.org/users/858307-ddd-ddd"
+      }
+    ],
+    "name": "Kirka Css Injector",
+    "description": "custom css injector for kirka.io",
+    "url": "https://greasyfork.org/scripts/442001-kirka-css-injector",
+    "code_url": "https://update.greasyfork.org/scripts/442001/Kirka%20Css%20Injector.user.js",
+    "code_size": 717,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

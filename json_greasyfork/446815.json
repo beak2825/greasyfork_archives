@@ -1,0 +1,34 @@
+{
+  "id": 446815,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-21T10:05:04.000Z",
+  "code_updated_at": "2022-06-29T07:33:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906534,
+      "name": "rusania",
+      "created_at": "2022-04-25T01:13:31.000Z",
+      "url": "https://greasyfork.org/users/906534-rusania",
+      "scripts": []
+    }
+  ],
+  "name": "overwolf",
+  "description": "overwolf easy game",
+  "url": "https://greasyfork.org/scripts/446815-overwolf",
+  "code_url": "https://update.greasyfork.org/scripts/446815/overwolf.user.js",
+  "code_size": 434163,
+  "license": null,
+  "version": "2022.06.28.1",
+  "locale": "cy",
+  "deleted": false,
+  "visibility": "public"
+}

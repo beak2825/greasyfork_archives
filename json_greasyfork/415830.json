@@ -1,0 +1,59 @@
+{
+  "id": 415830,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-09T20:53:48.000Z",
+  "code_updated_at": "2020-11-09T20:53:48.000Z",
+  "namespace": "https://greasyfork.org/users/13449",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 13449,
+      "name": "stormi",
+      "created_at": "2015-07-20T02:24:53.000Z",
+      "url": "https://greasyfork.org/users/13449-stormi",
+      "scripts": [
+        {
+          "id": 415830,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-09T20:53:48.000Z",
+          "code_updated_at": "2020-11-09T20:53:48.000Z",
+          "namespace": "https://greasyfork.org/users/13449",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Soundcloud Pitch Black",
+          "description": "Dark userstyle / nightmode for Soundcloud.",
+          "url": "https://greasyfork.org/scripts/415830-soundcloud-pitch-black",
+          "code_url": "https://update.greasyfork.org/scripts/415830/Soundcloud%20Pitch%20Black.user.css",
+          "code_size": 38489,
+          "license": "CC BY-NC-SA",
+          "version": "1.5.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Soundcloud Pitch Black",
+  "description": "Dark userstyle / nightmode for Soundcloud.",
+  "url": "https://greasyfork.org/scripts/415830-soundcloud-pitch-black",
+  "code_url": "https://update.greasyfork.org/scripts/415830/Soundcloud%20Pitch%20Black.user.css",
+  "code_size": 38489,
+  "license": "CC BY-NC-SA",
+  "version": "1.5.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

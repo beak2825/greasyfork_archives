@@ -1,0 +1,59 @@
+{
+  "id": 474586,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-05T08:30:04.000Z",
+  "code_updated_at": "2023-09-05T08:30:04.000Z",
+  "namespace": "https://greasyfork.org/users/1166578",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1166578,
+      "name": "mnsn",
+      "created_at": "2023-09-05T08:26:01.000Z",
+      "url": "https://greasyfork.org/users/1166578-mnsn",
+      "scripts": [
+        {
+          "id": 474586,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-05T08:30:04.000Z",
+          "code_updated_at": "2023-09-05T08:30:04.000Z",
+          "namespace": "https://greasyfork.org/users/1166578",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TchaoElon",
+          "description": "Tu passes trop de temps sur twitter",
+          "url": "https://greasyfork.org/scripts/474586-tchaoelon",
+          "code_url": "https://update.greasyfork.org/scripts/474586/TchaoElon.user.js",
+          "code_size": 437,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TchaoElon",
+  "description": "Tu passes trop de temps sur twitter",
+  "url": "https://greasyfork.org/scripts/474586-tchaoelon",
+  "code_url": "https://update.greasyfork.org/scripts/474586/TchaoElon.user.js",
+  "code_size": 437,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

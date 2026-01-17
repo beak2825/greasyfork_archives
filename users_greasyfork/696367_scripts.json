@@ -1,0 +1,35 @@
+[
+  {
+    "id": 413789,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-19T08:48:37.000Z",
+    "code_updated_at": "2020-10-19T08:48:36.000Z",
+    "namespace": "https://rubyclarity.com",
+    "support_url": "https://github.com/ledestin/twitch-chat-sound-enchantment/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 696367,
+        "name": "ledestin",
+        "created_at": "2020-10-19T08:42:40.000Z",
+        "url": "https://greasyfork.org/users/696367-ledestin"
+      }
+    ],
+    "name": "Twitch Chat Sound Enchantment",
+    "description": "Play sound, when there are new messages on your Twitch channel",
+    "url": "https://greasyfork.org/scripts/413789-twitch-chat-sound-enchantment",
+    "code_url": "https://update.greasyfork.org/scripts/413789/Twitch%20Chat%20Sound%20Enchantment.user.js",
+    "code_size": 3142,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

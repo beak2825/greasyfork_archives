@@ -1,0 +1,68 @@
+[
+  {
+    "id": 461223,
+    "daily_installs": 0,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-05T10:44:05.000Z",
+    "code_updated_at": "2023-03-05T10:44:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 114117,
+        "name": "Pavel Sapehin",
+        "created_at": "2017-04-01T08:18:08.000Z",
+        "url": "https://greasyfork.org/users/114117-pavel-sapehin"
+      }
+    ],
+    "name": "Remove ChatGPT Bottom Bar",
+    "description": "Adds a button to Tampermonkey to remove ChatGPT's bottom bar for easy clipping or making full-page screenshots. To use it, open any chat in ChatGPT, press on Tampermonkey Icon and then click \"Remove Bottom Input Bar\".",
+    "url": "https://greasyfork.org/scripts/461223-remove-chatgpt-bottom-bar",
+    "code_url": "https://update.greasyfork.org/scripts/461223/Remove%20ChatGPT%20Bottom%20Bar.user.js",
+    "code_size": 775,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441442,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-13T06:43:35.000Z",
+    "code_updated_at": "2022-03-13T06:43:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 114117,
+        "name": "Pavel Sapehin",
+        "created_at": "2017-04-01T08:18:08.000Z",
+        "url": "https://greasyfork.org/users/114117-pavel-sapehin"
+      }
+    ],
+    "name": "xistore.by Privacy Window and Ad Removal",
+    "description": "Removes the privacy window and the header's top ad row",
+    "url": "https://greasyfork.org/scripts/441442-xistore-by-privacy-window-and-ad-removal",
+    "code_url": "https://update.greasyfork.org/scripts/441442/xistoreby%20Privacy%20Window%20and%20Ad%20Removal.user.js",
+    "code_size": 2728,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

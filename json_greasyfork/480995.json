@@ -1,0 +1,59 @@
+{
+  "id": 480995,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-29T06:18:05.000Z",
+  "code_updated_at": "2023-12-13T11:05:01.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/480995-civitai%E8%89%BA%E5%A7%AC",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 779208,
+      "name": "小白哒哒哒",
+      "created_at": "2021-06-03T06:41:40.000Z",
+      "url": "https://greasyfork.org/users/779208-%E5%B0%8F%E7%99%BD%E5%93%92%E5%93%92%E5%93%92",
+      "scripts": [
+        {
+          "id": 427447,
+          "daily_installs": 0,
+          "total_installs": 593,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-03T06:48:52.000Z",
+          "code_updated_at": "2021-06-03T06:48:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "阿里巴巴国际站商品视频下载",
+          "description": "用于下载阿里巴巴国际站商品的视频",
+          "url": "https://greasyfork.org/scripts/427447-%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%9B%BD%E9%99%85%E7%AB%99%E5%95%86%E5%93%81%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+          "code_url": "https://update.greasyfork.org/scripts/427447/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%9B%BD%E9%99%85%E7%AB%99%E5%95%86%E5%93%81%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+          "code_size": 968,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Civitai艺姬",
+  "description": "将c站模型下载到诗悦艺姬",
+  "url": "https://greasyfork.org/scripts/480995-civitai%E8%89%BA%E5%A7%AC",
+  "code_url": "https://update.greasyfork.org/scripts/480995/Civitai%E8%89%BA%E5%A7%AC.user.js",
+  "code_size": 23695,
+  "license": null,
+  "version": "1.6.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

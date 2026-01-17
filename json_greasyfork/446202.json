@@ -1,0 +1,33 @@
+{
+  "id": 446202,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-08T14:28:37.000Z",
+  "code_updated_at": "2022-06-08T14:29:37.000Z",
+  "namespace": "https://cip.corp.amazon.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 770722,
+      "name": "SzybkiLopez666",
+      "created_at": "2021-05-10T23:55:57.000Z",
+      "url": "https://greasyfork.org/users/770722-szybkilopez666"
+    }
+  ],
+  "name": "TSO_TWApp_Auto_Refresh&Sort",
+  "description": "Refresh TruckWasteApp data & Sort table",
+  "url": "https://greasyfork.org/scripts/446202-tso-twapp-auto-refresh-sort",
+  "code_url": "https://update.greasyfork.org/scripts/446202/TSO_TWApp_Auto_RefreshSort.user.js",
+  "code_size": 1939,
+  "license": "MIT License",
+  "version": "0.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

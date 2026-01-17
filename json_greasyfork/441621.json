@@ -1,0 +1,33 @@
+{
+  "id": 441621,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-17T02:32:08.000Z",
+  "code_updated_at": "2022-03-17T02:32:08.000Z",
+  "namespace": "ckylin-script-lib-timer",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 100678,
+      "name": "俞方（Huatutor）",
+      "created_at": "2017-02-07T11:57:18.000Z",
+      "url": "https://greasyfork.org/users/100678-%E4%BF%9E%E6%96%B9-huatutor"
+    }
+  ],
+  "name": "Jquery.timer",
+  "description": "A jquery timer",
+  "url": "https://greasyfork.org/scripts/441621-jquery-timer",
+  "code_url": "https://update.greasyfork.org/scripts/441621/1029050/Jquerytimer.js",
+  "code_size": 2479,
+  "license": "GPLv3 License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

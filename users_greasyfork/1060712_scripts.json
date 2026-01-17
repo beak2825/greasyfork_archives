@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464113,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-15T23:35:09.000Z",
+    "code_updated_at": "2023-05-15T23:57:47.000Z",
+    "namespace": "https://chat.openai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060712,
+        "name": "amitai salmon",
+        "created_at": "2023-04-15T12:32:54.000Z",
+        "url": "https://greasyfork.org/users/1060712-amitai-salmon"
+      }
+    ],
+    "name": "ChatGPT Font Size Changer with Side Pane Width Draggable",
+    "description": "The \"Font Size Changer with Side Pane Width Draggable\" script is a Tampermonkey user script that modifies the font size and other styles of web elements with the class \".text-base\". It sets the font size, line height, font family, and font weight to predefined values for improved readability. Additionally, the script adjusts the max width of elements with the class \".xl:max-w-3xl\" to a specific value. Furthermore, it deactivates the \"font-size\" property for elements with the class \".prose\" by se",
+    "url": "https://greasyfork.org/scripts/464113-chatgpt-font-size-changer-with-side-pane-width-draggable",
+    "code_url": "https://update.greasyfork.org/scripts/464113/ChatGPT%20Font%20Size%20Changer%20with%20Side%20Pane%20Width%20Draggable.user.js",
+    "code_size": 6659,
+    "license": null,
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

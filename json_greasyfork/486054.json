@@ -1,0 +1,59 @@
+{
+  "id": 486054,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-30T09:48:01.000Z",
+  "code_updated_at": "2024-12-27T04:25:03.000Z",
+  "namespace": "http://baidu.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1124523,
+      "name": "Djelouah Lakhdar",
+      "created_at": "2023-07-12T05:02:41.000Z",
+      "url": "https://greasyfork.org/users/1124523-djelouah-lakhdar",
+      "scripts": [
+        {
+          "id": 470643,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-12T05:05:08.000Z",
+          "code_updated_at": "2024-07-05T04:58:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "code-server",
+          "description": "add coder-server url on job detail",
+          "url": "https://greasyfork.org/scripts/470643-code-server",
+          "code_url": "https://update.greasyfork.org/scripts/470643/code-server.user.js",
+          "code_size": 1850,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JRPredecision Label",
+  "description": "Decision label. Try to take over the world!",
+  "url": "https://greasyfork.org/scripts/486054-jrpredecision-label",
+  "code_url": "https://update.greasyfork.org/scripts/486054/JRPredecision%20Label.user.js",
+  "code_size": 17652,
+  "license": "MIT License",
+  "version": "0.5.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

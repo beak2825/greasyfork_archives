@@ -1,0 +1,35 @@
+[
+  {
+    "id": 470043,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-03T12:51:14.000Z",
+    "code_updated_at": "2024-08-18T19:10:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1118016,
+        "name": "BKH",
+        "created_at": "2023-07-03T12:41:22.000Z",
+        "url": "https://greasyfork.org/users/1118016-bkh"
+      }
+    ],
+    "name": "BKH Udemy Get ID, Creation Date, Image",
+    "description": "trying to make the world a better place!",
+    "url": "https://greasyfork.org/scripts/470043-bkh-udemy-get-id-creation-date-image",
+    "code_url": "https://update.greasyfork.org/scripts/470043/BKH%20Udemy%20Get%20ID%2C%20Creation%20Date%2C%20Image.user.js",
+    "code_size": 2076,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

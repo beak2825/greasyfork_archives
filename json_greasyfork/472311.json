@@ -1,0 +1,34 @@
+{
+  "id": 472311,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-03T06:17:25.000Z",
+  "code_updated_at": "2025-01-13T07:15:46.000Z",
+  "namespace": "https://www.1024net.tech/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 470915,
+      "name": "songkaik",
+      "created_at": "2020-03-29T02:23:52.000Z",
+      "url": "https://greasyfork.org/users/470915-songkaik",
+      "scripts": []
+    }
+  ],
+  "name": "Check JS",
+  "description": "I try to take over the world!",
+  "url": "https://greasyfork.org/scripts/472311-check-js",
+  "code_url": "https://update.greasyfork.org/scripts/472311/Check%20JS.user.js",
+  "code_size": 11020,
+  "license": null,
+  "version": "2025.01.13.080000",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

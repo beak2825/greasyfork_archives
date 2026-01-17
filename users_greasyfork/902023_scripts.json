@@ -1,0 +1,101 @@
+[
+  {
+    "id": 464043,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-15T02:26:52.000Z",
+    "code_updated_at": "2023-04-15T02:26:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 902023,
+        "name": "yehuda lee",
+        "created_at": "2022-04-14T07:23:23.000Z",
+        "url": "https://greasyfork.org/users/902023-yehuda-lee"
+      }
+    ],
+    "name": "钢琴吧当前页面打开",
+    "description": "将钢琴吧下的所有页面的链接设置为当前页面打开，而不是新增一个标签页",
+    "url": "https://greasyfork.org/scripts/464043-%E9%92%A2%E7%90%B4%E5%90%A7%E5%BD%93%E5%89%8D%E9%A1%B5%E9%9D%A2%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/464043/%E9%92%A2%E7%90%B4%E5%90%A7%E5%BD%93%E5%89%8D%E9%A1%B5%E9%9D%A2%E6%89%93%E5%BC%80.user.js",
+    "code_size": 952,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458095,
+    "daily_installs": 0,
+    "total_installs": 442,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-12T11:58:12.000Z",
+    "code_updated_at": "2023-09-04T08:48:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 902023,
+        "name": "yehuda lee",
+        "created_at": "2022-04-14T07:23:23.000Z",
+        "url": "https://greasyfork.org/users/902023-yehuda-lee"
+      }
+    ],
+    "name": "微信读书加宽可视范围和几个白色主题的护眼模式",
+    "description": "将宽度改的更宽，看起来舒服一些,在url地址栏加参数，自定义程度高一些，也添加了几个白色主题下的背景颜色，对眼睛更友好写吧",
+    "url": "https://greasyfork.org/scripts/458095-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%8A%A0%E5%AE%BD%E5%8F%AF%E8%A7%86%E8%8C%83%E5%9B%B4%E5%92%8C%E5%87%A0%E4%B8%AA%E7%99%BD%E8%89%B2%E4%B8%BB%E9%A2%98%E7%9A%84%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/458095/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%8A%A0%E5%AE%BD%E5%8F%AF%E8%A7%86%E8%8C%83%E5%9B%B4%E5%92%8C%E5%87%A0%E4%B8%AA%E7%99%BD%E8%89%B2%E4%B8%BB%E9%A2%98%E7%9A%84%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F.user.js",
+    "code_size": 8097,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 443364,
+    "daily_installs": 0,
+    "total_installs": 194,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-14T07:28:16.000Z",
+    "code_updated_at": "2022-04-15T02:32:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 902023,
+        "name": "yehuda lee",
+        "created_at": "2022-04-14T07:23:23.000Z",
+        "url": "https://greasyfork.org/users/902023-yehuda-lee"
+      }
+    ],
+    "name": "跳过B站充电提示",
+    "description": "可以在视频结尾跳过冗长的5秒B站充电提示(只是方便视频流利播放，如损害开发商利益请联系，确认官方号马上删除)",
+    "url": "https://greasyfork.org/scripts/443364-%E8%B7%B3%E8%BF%87b%E7%AB%99%E5%85%85%E7%94%B5%E6%8F%90%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/443364/%E8%B7%B3%E8%BF%87B%E7%AB%99%E5%85%85%E7%94%B5%E6%8F%90%E7%A4%BA.user.js",
+    "code_size": 1039,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

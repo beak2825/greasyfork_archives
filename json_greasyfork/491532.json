@@ -1,0 +1,59 @@
+{
+  "id": 491532,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-03T08:32:54.000Z",
+  "code_updated_at": "2024-04-03T08:32:54.000Z",
+  "namespace": "3hex",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 37454,
+      "name": "强华东",
+      "created_at": "2016-04-07T01:53:57.000Z",
+      "url": "https://greasyfork.org/users/37454-%E5%BC%BA%E5%8D%8E%E4%B8%9C",
+      "scripts": [
+        {
+          "id": 491532,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-03T08:32:54.000Z",
+          "code_updated_at": "2024-04-03T08:32:54.000Z",
+          "namespace": "3hex",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MicrosoftScript",
+          "description": "自动",
+          "url": "https://greasyfork.org/scripts/491532-microsoftscript",
+          "code_url": "https://update.greasyfork.org/scripts/491532/MicrosoftScript.user.js",
+          "code_size": 5290,
+          "license": "MIT License",
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MicrosoftScript",
+  "description": "自动",
+  "url": "https://greasyfork.org/scripts/491532-microsoftscript",
+  "code_url": "https://update.greasyfork.org/scripts/491532/MicrosoftScript.user.js",
+  "code_size": 5290,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

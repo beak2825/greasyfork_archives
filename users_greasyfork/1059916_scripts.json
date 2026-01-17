@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463975,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T09:40:17.000Z",
+    "code_updated_at": "2023-08-09T02:29:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1059916,
+        "name": "JCLee777",
+        "created_at": "2023-04-14T06:53:01.000Z",
+        "url": "https://greasyfork.org/users/1059916-jclee777"
+      }
+    ],
+    "name": "模拟LODOP环境",
+    "description": "模拟LODOP虚拟打印机",
+    "url": "https://greasyfork.org/scripts/463975-%E6%A8%A1%E6%8B%9Flodop%E7%8E%AF%E5%A2%83",
+    "code_url": "https://update.greasyfork.org/scripts/463975/%E6%A8%A1%E6%8B%9FLODOP%E7%8E%AF%E5%A2%83.user.js",
+    "code_size": 143532,
+    "license": null,
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

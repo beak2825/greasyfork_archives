@@ -163,5 +163,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 494740,
+    "daily_installs": 0,
+    "total_installs": 93,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-12T11:22:32.000Z",
+    "code_updated_at": "2024-05-12T11:22:30.000Z",
+    "namespace": "https://greasyfork.org/users/572366",
+    "support_url": "https://bit.ly/2JsP12I",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 699231,
+        "name": "yzaris scott",
+        "created_at": "2020-10-28T23:58:04.000Z",
+        "url": "https://greasyfork.org/users/699231-yzaris-scott"
+      }
+    ],
+    "name": "dogefree.in [2023] - Auto Roll - New Bonuses - Multiply - Lottery - Status Console",
+    "description": "AUTOROLL SCRIPT [DEC 2023] --Auto Roll --Status Console --4+ Betting Strategies --Special graphs --Extinction bet --Balance protection --Odds -- Increase Rate --AutoRoll Low Balance paying RP --Human Simulation --NO captcha solving --Lottery tickets --1000% & WOF Bonus --Close ADS --Slower night mode --Advanced human random times .",
+    "url": "https://greasyfork.org/scripts/494740-dogefree-in-2023-auto-roll-new-bonuses-multiply-lottery-status-console",
+    "code_url": "https://update.greasyfork.org/scripts/494740/dogefreein%20%5B2023%5D%20-%20Auto%20Roll%20-%20New%20Bonuses%20-%20Multiply%20-%20Lottery%20-%20Status%20Console.user.js",
+    "code_size": 97954,
+    "license": "GPL",
+    "version": "4.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472838,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-10T11:55:12.000Z",
+    "code_updated_at": "2023-11-07T13:30:04.000Z",
+    "namespace": "com.avius.idlepixel.aviusuitweaks",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148240,
+        "name": "Avius Exquisitus",
+        "created_at": "2023-08-10T08:57:37.000Z",
+        "url": "https://greasyfork.org/users/1148240-avius-exquisitus"
+      }
+    ],
+    "name": "IdlePixel AviusUiTweaks",
+    "description": "IdlePixel Ui tweaks",
+    "url": "https://greasyfork.org/scripts/472838-idlepixel-aviusuitweaks",
+    "code_url": "https://update.greasyfork.org/scripts/472838/IdlePixel%20AviusUiTweaks.user.js",
+    "code_size": 7417,
+    "license": "MIT License",
+    "version": "0.0.20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

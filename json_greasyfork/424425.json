@@ -1,0 +1,34 @@
+{
+  "id": 424425,
+  "daily_installs": 0,
+  "total_installs": 383,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-03T10:33:43.000Z",
+  "code_updated_at": "2024-06-15T17:49:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 206502,
+      "name": "TomaszFromasz",
+      "created_at": "2018-08-21T06:06:43.000Z",
+      "url": "https://greasyfork.org/users/206502-tomaszfromasz",
+      "scripts": []
+    }
+  ],
+  "name": "FCLM Intradays",
+  "description": "Add intraday(s) buttons",
+  "url": "https://greasyfork.org/scripts/424425-fclm-intradays",
+  "code_url": "https://update.greasyfork.org/scripts/424425/FCLM%20Intradays.user.js",
+  "code_size": 62060,
+  "license": null,
+  "version": "4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

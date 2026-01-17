@@ -1,0 +1,68 @@
+[
+  {
+    "id": 438097,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-05T19:26:10.000Z",
+    "code_updated_at": "2022-01-05T19:27:04.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 861188,
+        "name": "r73uedu",
+        "created_at": "2022-01-04T22:57:09.000Z",
+        "url": "https://greasyfork.org/users/861188-r73uedu"
+      }
+    ],
+    "name": "BR | Script for ZGA",
+    "description": "Для наказания администрации 👄",
+    "url": "https://greasyfork.org/scripts/438097-br-script-for-zga",
+    "code_url": "https://update.greasyfork.org/scripts/438097/BR%20%7C%20Script%20for%20ZGA.user.js",
+    "code_size": 10965,
+    "license": "MIT License",
+    "version": "1.2.1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438057,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-04T23:04:05.000Z",
+    "code_updated_at": "2022-01-04T23:12:29.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 861188,
+        "name": "r73uedu",
+        "created_at": "2022-01-04T22:57:09.000Z",
+        "url": "https://greasyfork.org/users/861188-r73uedu"
+      }
+    ],
+    "name": "BLACK RUSSIA: скрипт для технических специалистов",
+    "description": "Для борьбы с техническими шоколадками",
+    "url": "https://greasyfork.org/scripts/438057-black-russia-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D1%85-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D1%81%D1%82%D0%BE%D0%B2",
+    "code_url": "https://update.greasyfork.org/scripts/438057/BLACK%20RUSSIA%3A%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D1%85%20%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D1%81%D1%82%D0%BE%D0%B2.user.js",
+    "code_size": 23384,
+    "license": "MIT License",
+    "version": "1.2.1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

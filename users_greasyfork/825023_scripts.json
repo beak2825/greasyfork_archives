@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452051,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-26T12:29:24.000Z",
+    "code_updated_at": "2022-09-26T12:29:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 825023,
+        "name": "xilili0619",
+        "created_at": "2021-10-14T09:47:51.000Z",
+        "url": "https://greasyfork.org/users/825023-xilili0619"
+      }
+    ],
+    "name": "检测斗鱼平台直播间是否直播",
+    "description": "检测斗鱼平台直播间是否直播，未直播则刷新页面（默认检测间隔为 1 分钟）",
+    "url": "https://greasyfork.org/scripts/452051-%E6%A3%80%E6%B5%8B%E6%96%97%E9%B1%BC%E5%B9%B3%E5%8F%B0%E7%9B%B4%E6%92%AD%E9%97%B4%E6%98%AF%E5%90%A6%E7%9B%B4%E6%92%AD",
+    "code_url": "https://update.greasyfork.org/scripts/452051/%E6%A3%80%E6%B5%8B%E6%96%97%E9%B1%BC%E5%B9%B3%E5%8F%B0%E7%9B%B4%E6%92%AD%E9%97%B4%E6%98%AF%E5%90%A6%E7%9B%B4%E6%92%AD.user.js",
+    "code_size": 890,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

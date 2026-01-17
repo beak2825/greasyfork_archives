@@ -1,0 +1,33 @@
+{
+  "id": 454494,
+  "daily_installs": 0,
+  "total_installs": 89,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-09T03:32:51.000Z",
+  "code_updated_at": "2022-11-09T03:34:37.000Z",
+  "namespace": "https://whalien.space",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 980517,
+      "name": "Hwa He",
+      "created_at": "2022-11-08T01:53:03.000Z",
+      "url": "https://greasyfork.org/users/980517-hwa-he"
+    }
+  ],
+  "name": "ACWing One Theme",
+  "description": "make acwing coding UI look more like leetcode",
+  "url": "https://greasyfork.org/scripts/454494-acwing-one-theme",
+  "code_url": "https://update.greasyfork.org/scripts/454494/ACWing%20One%20Theme.user.js",
+  "code_size": 7109,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

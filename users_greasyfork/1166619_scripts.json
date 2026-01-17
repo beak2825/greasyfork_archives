@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474590,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-05T09:38:50.000Z",
+    "code_updated_at": "2023-09-05T09:38:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166619,
+        "name": "Rich Stone",
+        "created_at": "2023-09-05T09:20:11.000Z",
+        "url": "https://greasyfork.org/users/1166619-rich-stone"
+      }
+    ],
+    "name": "Fantasy League Mobile css tweaks",
+    "description": "Attempt to make the new Fantasy League site more usable on mobile",
+    "url": "https://greasyfork.org/scripts/474590-fantasy-league-mobile-css-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/474590/Fantasy%20League%20Mobile%20css%20tweaks.user.js",
+    "code_size": 1104,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 412170,
+  "daily_installs": 0,
+  "total_installs": 747,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-28T15:00:26.000Z",
+  "code_updated_at": "2020-09-28T15:00:25.000Z",
+  "namespace": "https://andrealazzarotto.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 2482,
+      "name": "Lazza",
+      "created_at": "2014-06-05T10:25:51.000Z",
+      "url": "https://greasyfork.org/users/2482-lazza"
+    }
+  ],
+  "name": "Domani - Full Text Articles",
+  "description": "Keep the full text for articles on EditorialeDomani.it",
+  "url": "https://greasyfork.org/scripts/412170-domani-full-text-articles",
+  "code_url": "https://update.greasyfork.org/scripts/412170/Domani%20-%20Full%20Text%20Articles.user.js",
+  "code_size": 663,
+  "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

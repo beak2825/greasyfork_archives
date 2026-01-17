@@ -1,0 +1,34 @@
+{
+  "id": 424600,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-06T22:47:33.000Z",
+  "code_updated_at": "2021-04-06T22:47:33.000Z",
+  "namespace": "https://gitlab.com/An0/SimpleDiscordCrypt",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 8038,
+      "name": "Krulvis",
+      "created_at": "2014-12-31T12:25:23.000Z",
+      "url": "https://greasyfork.org/users/8038-krulvis",
+      "scripts": []
+    }
+  ],
+  "name": "SimpleDiscordCrypt",
+  "description": "I hope people won't start calling this SDC ^_^",
+  "url": "https://greasyfork.org/scripts/424600-simplediscordcrypt",
+  "code_url": "https://update.greasyfork.org/scripts/424600/SimpleDiscordCrypt.user.js",
+  "code_size": 171187,
+  "license": "LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt",
+  "version": "1.4.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

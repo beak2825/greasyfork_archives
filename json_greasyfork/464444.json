@@ -1,0 +1,59 @@
+{
+  "id": 464444,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-20T02:47:31.000Z",
+  "code_updated_at": "2023-04-26T02:13:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1063803,
+      "name": "lenq Wang",
+      "created_at": "2023-04-20T01:38:31.000Z",
+      "url": "https://greasyfork.org/users/1063803-lenq-wang",
+      "scripts": [
+        {
+          "id": 464444,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-20T02:47:31.000Z",
+          "code_updated_at": "2023-04-26T02:13:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Use shortcut to open your github",
+          "description": "Use shortcut open your github",
+          "url": "https://greasyfork.org/scripts/464444-use-shortcut-to-open-your-github",
+          "code_url": "https://update.greasyfork.org/scripts/464444/Use%20shortcut%20to%20open%20your%20github.user.js",
+          "code_size": 1408,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Use shortcut to open your github",
+  "description": "Use shortcut open your github",
+  "url": "https://greasyfork.org/scripts/464444-use-shortcut-to-open-your-github",
+  "code_url": "https://update.greasyfork.org/scripts/464444/Use%20shortcut%20to%20open%20your%20github.user.js",
+  "code_size": 1408,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

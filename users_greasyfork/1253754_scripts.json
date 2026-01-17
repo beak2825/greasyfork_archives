@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485786,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-27T05:09:46.000Z",
+    "code_updated_at": "2024-02-05T01:02:13.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/485786-dokemon-hide-unhide-button",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1253754,
+        "name": "D3F0NC3UR",
+        "created_at": "2024-01-27T04:57:04.000Z",
+        "url": "https://greasyfork.org/users/1253754-d3f0nc3ur"
+      }
+    ],
+    "name": "Dokemon Hide/Unhide Button",
+    "description": "Adds a button to hide and unhide a specific div",
+    "url": "https://greasyfork.org/scripts/485786-dokemon-hide-unhide-button",
+    "code_url": "https://update.greasyfork.org/scripts/485786/Dokemon%20HideUnhide%20Button.user.js",
+    "code_size": 1196,
+    "license": null,
+    "version": "0.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

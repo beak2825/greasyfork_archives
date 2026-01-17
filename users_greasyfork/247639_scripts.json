@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483256,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-27T22:42:21.000Z",
+    "code_updated_at": "2023-12-27T22:42:21.000Z",
+    "namespace": "https://github.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 247639,
+        "name": "此处填写作者名",
+        "created_at": "2019-02-15T13:40:01.000Z",
+        "url": "https://greasyfork.org/users/247639-%E6%AD%A4%E5%A4%84%E5%A1%AB%E5%86%99%E4%BD%9C%E8%80%85%E5%90%8D"
+      }
+    ],
+    "name": "消除哔哩哔哩暂停按钮",
+    "description": "消除哔哩哔哩暂停按钮,方便截图",
+    "url": "https://greasyfork.org/scripts/483256-%E6%B6%88%E9%99%A4%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%9A%82%E5%81%9C%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/483256/%E6%B6%88%E9%99%A4%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%9A%82%E5%81%9C%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 747,
+    "license": null,
+    "version": "2023.12.28",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

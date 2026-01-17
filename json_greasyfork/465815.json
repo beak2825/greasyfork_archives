@@ -1,0 +1,34 @@
+{
+  "id": 465815,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-08T21:09:49.000Z",
+  "code_updated_at": "2023-05-08T21:09:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 303485,
+      "name": "SilverBeam",
+      "created_at": "2019-05-20T22:17:07.000Z",
+      "url": "https://greasyfork.org/users/303485-silverbeam",
+      "scripts": []
+    }
+  ],
+  "name": "DF Storage Recorder",
+  "description": "Download the contents of your DF Storage as a CSV file",
+  "url": "https://greasyfork.org/scripts/465815-df-storage-recorder",
+  "code_url": "https://update.greasyfork.org/scripts/465815/DF%20Storage%20Recorder.user.js",
+  "code_size": 2813,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

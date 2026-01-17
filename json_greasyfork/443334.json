@@ -1,0 +1,33 @@
+{
+  "id": 443334,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-13T17:05:38.000Z",
+  "code_updated_at": "2022-04-13T17:14:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 690319,
+      "name": "lexxter32",
+      "created_at": "2020-09-25T09:36:50.000Z",
+      "url": "https://greasyfork.org/users/690319-lexxter32"
+    }
+  ],
+  "name": "YaMusic media buttons",
+  "description": "add prev and next media buttons",
+  "url": "https://greasyfork.org/scripts/443334-yamusic-media-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/443334/YaMusic%20media%20buttons.user.js",
+  "code_size": 1783,
+  "license": "GNU GPLv3",
+  "version": "0.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

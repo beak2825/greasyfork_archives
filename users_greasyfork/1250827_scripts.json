@@ -97,5 +97,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 486830,
+    "daily_installs": 0,
+    "total_installs": 299,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-07T10:35:40.000Z",
+    "code_updated_at": "2025-11-12T04:05:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1250827,
+        "name": "Martin______X",
+        "created_at": "2024-01-20T11:16:55.000Z",
+        "url": "https://greasyfork.org/users/1250827-martin-x"
+      }
+    ],
+    "name": "X.com (Twitter) - Auto Show More",
+    "description": "X.com (Twitter) Auto Show More Replies(Included Probable Spam), Show Entire Long Tweets/Replies. 推特自动显示所有回复(包括可能的垃圾信息)，并且展开完整的长推文和长回复。",
+    "url": "https://greasyfork.org/scripts/486830-x-com-twitter-auto-show-more",
+    "code_url": "https://update.greasyfork.org/scripts/486830/Xcom%20%28Twitter%29%20-%20Auto%20Show%20More.user.js",
+    "code_size": 3179,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485311,
+    "daily_installs": 6,
+    "total_installs": 2990,
+    "fan_score": "54.1",
+    "good_ratings": 8,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2024-01-20T11:38:51.000Z",
+    "code_updated_at": "2025-12-17T12:39:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1250827,
+        "name": "Martin______X",
+        "created_at": "2024-01-20T11:16:55.000Z",
+        "url": "https://greasyfork.org/users/1250827-martin-x"
+      }
+    ],
+    "name": "X.com (Twitter) - Auto Show Sensitive Content",
+    "description": "X.com (Twitter) Auto Show Sensitive Content. You Don't Have To Click \"Show\" Button Anymore When Reading NSFW Tweets With Blur Alert. 推特自动显示色情暴力内容，不再被模糊化。",
+    "url": "https://greasyfork.org/scripts/485311-x-com-twitter-auto-show-sensitive-content",
+    "code_url": "https://update.greasyfork.org/scripts/485311/Xcom%20%28Twitter%29%20-%20Auto%20Show%20Sensitive%20Content.user.js",
+    "code_size": 3567,
+    "license": "MIT License",
+    "version": "2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485309,
+    "daily_installs": 0,
+    "total_installs": 140,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-20T11:30:21.000Z",
+    "code_updated_at": "2025-11-07T18:47:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1250827,
+        "name": "Martin______X",
+        "created_at": "2024-01-20T11:16:55.000Z",
+        "url": "https://greasyfork.org/users/1250827-martin-x"
+      }
+    ],
+    "name": "Youtube - Auto Expand Video Description",
+    "description": "Youtube Auto Expand Video Description! YT自动展开视频描述详细！",
+    "url": "https://greasyfork.org/scripts/485309-youtube-auto-expand-video-description",
+    "code_url": "https://update.greasyfork.org/scripts/485309/Youtube%20-%20Auto%20Expand%20Video%20Description.user.js",
+    "code_size": 1302,
+    "license": "MIT License",
+    "version": "2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485308,
+    "daily_installs": 0,
+    "total_installs": 70,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-20T11:22:00.000Z",
+    "code_updated_at": "2025-11-07T18:47:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1250827,
+        "name": "Martin______X",
+        "created_at": "2024-01-20T11:16:55.000Z",
+        "url": "https://greasyfork.org/users/1250827-martin-x"
+      }
+    ],
+    "name": "Youtube - Auto Show Live Chat Replay",
+    "description": "Youtube Auto Show Live Chat Replay, YT自动展开直播聊天回放",
+    "url": "https://greasyfork.org/scripts/485308-youtube-auto-show-live-chat-replay",
+    "code_url": "https://update.greasyfork.org/scripts/485308/Youtube%20-%20Auto%20Show%20Live%20Chat%20Replay.user.js",
+    "code_size": 1245,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

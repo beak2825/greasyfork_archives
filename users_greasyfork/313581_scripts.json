@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423260,
+    "daily_installs": 0,
+    "total_installs": 5601,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-15T15:29:40.000Z",
+    "code_updated_at": "2021-03-15T15:29:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 313581,
+        "name": "zombie110year",
+        "created_at": "2019-06-26T13:17:50.000Z",
+        "url": "https://greasyfork.org/users/313581-zombie110year"
+      }
+    ],
+    "name": "CNKI PDF Download Button",
+    "description": "给知网文献页面添加 PDF 下载按钮。如果知网原本就提供 PDF 下载，那么会创造重复的按钮。",
+    "url": "https://greasyfork.org/scripts/423260-cnki-pdf-download-button",
+    "code_url": "https://update.greasyfork.org/scripts/423260/CNKI%20PDF%20Download%20Button.user.js",
+    "code_size": 1144,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

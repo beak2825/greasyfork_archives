@@ -63,6 +63,138 @@
     "version": "0.01",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470255,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-06T01:53:06.000Z",
+    "code_updated_at": "2023-07-06T01:57:26.000Z",
+    "namespace": "https://www.bilibili.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 359306,
+        "name": "hao_jiu",
+        "created_at": "2019-09-02T03:21:41.000Z",
+        "url": "https://greasyfork.org/users/359306-hao-jiu"
+      }
+    ],
+    "name": "b站快速入脑学习工具(加速播放)",
+    "description": "其实就是视频的加速播放根据",
+    "url": "https://greasyfork.org/scripts/470255-b%E7%AB%99%E5%BF%AB%E9%80%9F%E5%85%A5%E8%84%91%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7-%E5%8A%A0%E9%80%9F%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/470255/b%E7%AB%99%E5%BF%AB%E9%80%9F%E5%85%A5%E8%84%91%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7%28%E5%8A%A0%E9%80%9F%E6%92%AD%E6%94%BE%29.user.js",
+    "code_size": 883,
+    "license": "none",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461952,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-16T12:44:32.000Z",
+    "code_updated_at": "2023-03-17T14:18:05.000Z",
+    "namespace": "http://zy.pmcn.net/index.php",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 359306,
+        "name": "hao_jiu",
+        "created_at": "2019-09-02T03:21:41.000Z",
+        "url": "https://greasyfork.org/users/359306-hao-jiu"
+      }
+    ],
+    "name": "作业系统优化助手",
+    "description": "-- 略",
+    "url": "https://greasyfork.org/scripts/461952-%E4%BD%9C%E4%B8%9A%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/461952/%E4%BD%9C%E4%B8%9A%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 983,
+    "license": "none",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453333,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-19T06:47:12.000Z",
+    "code_updated_at": "2022-10-20T12:21:43.000Z",
+    "namespace": "https://",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 359306,
+        "name": "hao_jiu",
+        "created_at": "2019-09-02T03:21:41.000Z",
+        "url": "https://greasyfork.org/users/359306-hao-jiu"
+      }
+    ],
+    "name": "mtnb 交易助手",
+    "description": "-- 略",
+    "url": "https://greasyfork.org/scripts/453333-mtnb-%E4%BA%A4%E6%98%93%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/453333/mtnb%20%E4%BA%A4%E6%98%93%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 4785,
+    "license": "none",
+    "version": "1.8",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 445470,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-24T08:36:01.000Z",
+    "code_updated_at": "2022-05-24T10:00:53.000Z",
+    "namespace": "https://xiaoeknow.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 359306,
+        "name": "hao_jiu",
+        "created_at": "2019-09-02T03:21:41.000Z",
+        "url": "https://greasyfork.org/users/359306-hao-jiu"
+      }
+    ],
+    "name": "巨龙pmp直播回放助手",
+    "description": "巨龙pmp直播回放助手.",
+    "url": "https://greasyfork.org/scripts/445470-%E5%B7%A8%E9%BE%99pmp%E7%9B%B4%E6%92%AD%E5%9B%9E%E6%94%BE%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/445470/%E5%B7%A8%E9%BE%99pmp%E7%9B%B4%E6%92%AD%E5%9B%9E%E6%94%BE%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 1671,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

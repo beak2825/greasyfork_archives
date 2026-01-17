@@ -1,0 +1,33 @@
+{
+  "id": 466165,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-12T21:56:34.000Z",
+  "code_updated_at": "2023-05-14T19:38:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1062199,
+      "name": "RedMed",
+      "created_at": "2023-04-17T17:30:53.000Z",
+      "url": "https://greasyfork.org/users/1062199-redmed"
+    }
+  ],
+  "name": "Youtube hide spoilers",
+  "description": "Blurs videos on YT which titles match a filter",
+  "url": "https://greasyfork.org/scripts/466165-youtube-hide-spoilers",
+  "code_url": "https://update.greasyfork.org/scripts/466165/Youtube%20hide%20spoilers.user.js",
+  "code_size": 4788,
+  "license": "GNU GPLv3",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

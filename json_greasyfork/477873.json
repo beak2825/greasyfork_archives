@@ -1,0 +1,33 @@
+{
+  "id": 477873,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-20T16:08:46.000Z",
+  "code_updated_at": "2023-10-20T16:08:46.000Z",
+  "namespace": "matheboard",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1200478,
+      "name": "MattPawel",
+      "created_at": "2023-10-20T16:05:16.000Z",
+      "url": "https://greasyfork.org/users/1200478-mattpawel"
+    }
+  ],
+  "name": "matheboard",
+  "description": "Updates raw Unicode HTML entities by their interpreted counterparts",
+  "url": "https://greasyfork.org/scripts/477873-matheboard",
+  "code_url": "https://update.greasyfork.org/scripts/477873/matheboard.user.js",
+  "code_size": 669,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

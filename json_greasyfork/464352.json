@@ -1,0 +1,59 @@
+{
+  "id": 464352,
+  "daily_installs": 1,
+  "total_installs": 190,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-19T03:19:50.000Z",
+  "code_updated_at": "2023-04-19T03:27:23.000Z",
+  "namespace": "bryan",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1063086,
+      "name": "bryanyan",
+      "created_at": "2023-04-19T03:07:57.000Z",
+      "url": "https://greasyfork.org/users/1063086-bryanyan",
+      "scripts": [
+        {
+          "id": 464352,
+          "daily_installs": 1,
+          "total_installs": 190,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-19T03:19:50.000Z",
+          "code_updated_at": "2023-04-19T03:27:23.000Z",
+          "namespace": "bryan",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "字幕库 Zimuku 自动输入验证码",
+          "description": "获取并自动输入zimuku搜索页面验证码，首次打开搜索页面请等待数秒来加载第三方库",
+          "url": "https://greasyfork.org/scripts/464352-%E5%AD%97%E5%B9%95%E5%BA%93-zimuku-%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5%E9%AA%8C%E8%AF%81%E7%A0%81",
+          "code_url": "https://update.greasyfork.org/scripts/464352/%E5%AD%97%E5%B9%95%E5%BA%93%20Zimuku%20%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5%E9%AA%8C%E8%AF%81%E7%A0%81.user.js",
+          "code_size": 1613,
+          "license": "AGPL License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "字幕库 Zimuku 自动输入验证码",
+  "description": "获取并自动输入zimuku搜索页面验证码，首次打开搜索页面请等待数秒来加载第三方库",
+  "url": "https://greasyfork.org/scripts/464352-%E5%AD%97%E5%B9%95%E5%BA%93-zimuku-%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5%E9%AA%8C%E8%AF%81%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/464352/%E5%AD%97%E5%B9%95%E5%BA%93%20Zimuku%20%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5%E9%AA%8C%E8%AF%81%E7%A0%81.user.js",
+  "code_size": 1613,
+  "license": "AGPL License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

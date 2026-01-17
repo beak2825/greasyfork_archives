@@ -1,0 +1,59 @@
+{
+  "id": 472719,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-08T12:33:55.000Z",
+  "code_updated_at": "2023-08-15T16:30:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1146892,
+      "name": "Huminax",
+      "created_at": "2023-08-08T12:10:30.000Z",
+      "url": "https://greasyfork.org/users/1146892-huminax",
+      "scripts": [
+        {
+          "id": 472719,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-08T12:33:55.000Z",
+          "code_updated_at": "2023-08-15T16:30:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bunpro Study Streak 2 Dragon",
+          "description": "Study streaks can be stressful or demoralizing, so we'll replace them with dragons instead 🐉 ...Or whatever you prefer.",
+          "url": "https://greasyfork.org/scripts/472719-bunpro-study-streak-2-dragon",
+          "code_url": "https://update.greasyfork.org/scripts/472719/Bunpro%20Study%20Streak%202%20Dragon.user.js",
+          "code_size": 2500,
+          "license": "MIT License",
+          "version": "1c",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bunpro Study Streak 2 Dragon",
+  "description": "Study streaks can be stressful or demoralizing, so we'll replace them with dragons instead 🐉 ...Or whatever you prefer.",
+  "url": "https://greasyfork.org/scripts/472719-bunpro-study-streak-2-dragon",
+  "code_url": "https://update.greasyfork.org/scripts/472719/Bunpro%20Study%20Streak%202%20Dragon.user.js",
+  "code_size": 2500,
+  "license": "MIT License",
+  "version": "1c",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

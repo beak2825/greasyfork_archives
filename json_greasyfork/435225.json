@@ -1,0 +1,59 @@
+{
+  "id": 435225,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-08T22:52:10.000Z",
+  "code_updated_at": "2021-11-08T22:52:10.000Z",
+  "namespace": "https://www.simcompanies.com/company/Andrew%20Corp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 833736,
+      "name": "Sperlingsfedern",
+      "created_at": "2021-11-08T22:41:32.000Z",
+      "url": "https://greasyfork.org/users/833736-sperlingsfedern",
+      "scripts": [
+        {
+          "id": 435225,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-08T22:52:10.000Z",
+          "code_updated_at": "2021-11-08T22:52:10.000Z",
+          "namespace": "https://www.simcompanies.com/company/Andrew%20Corp/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Sim Companies Visual Improvements",
+          "description": "Visual Improvements to the desktop version of Sim Companies",
+          "url": "https://greasyfork.org/scripts/435225-sim-companies-visual-improvements",
+          "code_url": "https://update.greasyfork.org/scripts/435225/Sim%20Companies%20Visual%20Improvements.user.js",
+          "code_size": 11411,
+          "license": null,
+          "version": "0.2.1.1",
+          "locale": "de",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Sim Companies Visual Improvements",
+  "description": "Visual Improvements to the desktop version of Sim Companies",
+  "url": "https://greasyfork.org/scripts/435225-sim-companies-visual-improvements",
+  "code_url": "https://update.greasyfork.org/scripts/435225/Sim%20Companies%20Visual%20Improvements.user.js",
+  "code_size": 11411,
+  "license": null,
+  "version": "0.2.1.1",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

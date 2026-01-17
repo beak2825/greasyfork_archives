@@ -1,0 +1,35 @@
+[
+  {
+    "id": 430147,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-31T06:20:55.000Z",
+    "code_updated_at": "2021-07-31T06:20:55.000Z",
+    "namespace": "https://蘿莉.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 798887,
+        "name": "edisonlee55",
+        "created_at": "2021-07-31T05:58:07.000Z",
+        "url": "https://greasyfork.org/users/798887-edisonlee55"
+      }
+    ],
+    "name": "Gather OwO~",
+    "description": "Gather User Script",
+    "url": "https://greasyfork.org/scripts/430147-gather-owo",
+    "code_url": "https://update.greasyfork.org/scripts/430147/Gather%20OwO~.user.js",
+    "code_size": 3265,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

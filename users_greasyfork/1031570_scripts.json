@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460545,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-23T04:00:41.000Z",
+    "code_updated_at": "2023-02-23T04:27:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1031570,
+        "name": "HuyHwe",
+        "created_at": "2023-02-23T03:53:19.000Z",
+        "url": "https://greasyfork.org/users/1031570-huyhwe"
+      }
+    ],
+    "name": "preview tkb",
+    "description": "a small preview for tkb",
+    "url": "https://greasyfork.org/scripts/460545-preview-tkb",
+    "code_url": "https://update.greasyfork.org/scripts/460545/preview%20tkb.user.js",
+    "code_size": 4735,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

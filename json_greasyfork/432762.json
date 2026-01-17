@@ -1,0 +1,34 @@
+{
+  "id": 432762,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-21T14:22:58.000Z",
+  "code_updated_at": "2021-09-21T14:22:58.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/675587",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 675587,
+      "name": "你瞅啥",
+      "created_at": "2020-08-12T11:17:38.000Z",
+      "url": "https://greasyfork.org/users/675587-%E4%BD%A0%E7%9E%85%E5%95%A5",
+      "scripts": []
+    }
+  ],
+  "name": "白云味の棉花糖解析辅助脚本",
+  "description": "脚本功能目前有：给“解析脚本”添加自定义接口（需要配合白云味の棉花糖解析脚本才有效果）。",
+  "url": "https://greasyfork.org/scripts/432762-%E7%99%BD%E4%BA%91%E5%91%B3%E3%81%AE%E6%A3%89%E8%8A%B1%E7%B3%96%E8%A7%A3%E6%9E%90%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/432762/%E7%99%BD%E4%BA%91%E5%91%B3%E3%81%AE%E6%A3%89%E8%8A%B1%E7%B3%96%E8%A7%A3%E6%9E%90%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 16764,
+  "license": null,
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

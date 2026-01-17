@@ -1,0 +1,134 @@
+[
+  {
+    "id": 472753,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-09T04:01:21.000Z",
+    "code_updated_at": "2023-11-24T03:48:57.000Z",
+    "namespace": "npm/vite-plugin-monkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 775580,
+        "name": "leesher",
+        "created_at": "2021-05-24T07:01:14.000Z",
+        "url": "https://greasyfork.org/users/775580-leesher"
+      }
+    ],
+    "name": "lanhu-codeto-cssmodule",
+    "description": "油猴插件，旨在在蓝湖设计稿页面中拦截用户复制的代码，并将其重新组装成适用于 CSS Module 格式。借助该插件，您可以将蓝湖设计稿中的样式代码转换为更适用于前端项目的模块化样式，从而加速样式的应用过程",
+    "url": "https://greasyfork.org/scripts/472753-lanhu-codeto-cssmodule",
+    "code_url": "https://update.greasyfork.org/scripts/472753/lanhu-codeto-cssmodule.user.js",
+    "code_size": 44980,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465481,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T06:15:23.000Z",
+    "code_updated_at": "2023-07-17T07:12:50.000Z",
+    "namespace": "https://github.com/siefkenj/crowdmark-addons",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 775580,
+        "name": "leesher",
+        "created_at": "2021-05-24T07:01:14.000Z",
+        "url": "https://greasyfork.org/users/775580-leesher"
+      }
+    ],
+    "name": "ytt-api-copy",
+    "description": "将请求类型名称、返回值类型名称、函数名称、请求react hook 名称复制到剪贴板中",
+    "url": "https://greasyfork.org/scripts/465481-ytt-api-copy",
+    "code_url": "https://update.greasyfork.org/scripts/465481/ytt-api-copy.user.js",
+    "code_size": 379888,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435022,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-05T09:08:12.000Z",
+    "code_updated_at": "2021-12-14T03:01:46.000Z",
+    "namespace": "lee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 775580,
+        "name": "leesher",
+        "created_at": "2021-05-24T07:01:14.000Z",
+        "url": "https://greasyfork.org/users/775580-leesher"
+      }
+    ],
+    "name": "copy-method-swagger-to-service-js",
+    "description": "搭配swagger-to-service-js用于复制函数名",
+    "url": "https://greasyfork.org/scripts/435022-copy-method-swagger-to-service-js",
+    "code_url": "https://update.greasyfork.org/scripts/435022/copy-method-swagger-to-service-js.user.js",
+    "code_size": 5530,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 426942,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-24T07:03:35.000Z",
+    "code_updated_at": "2021-06-04T08:43:47.000Z",
+    "namespace": "lee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 775580,
+        "name": "leesher",
+        "created_at": "2021-05-24T07:01:14.000Z",
+        "url": "https://greasyfork.org/users/775580-leesher"
+      }
+    ],
+    "name": "swagger-umi-request-generate",
+    "description": "根据swagger生成umi request请求模板代码",
+    "url": "https://greasyfork.org/scripts/426942-swagger-umi-request-generate",
+    "code_url": "https://update.greasyfork.org/scripts/426942/swagger-umi-request-generate.user.js",
+    "code_size": 5490,
+    "license": null,
+    "version": "4.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

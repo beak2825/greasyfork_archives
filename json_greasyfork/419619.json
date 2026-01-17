@@ -1,0 +1,34 @@
+{
+  "id": 419619,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-04T09:07:24.000Z",
+  "code_updated_at": "2021-01-04T09:07:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 723807,
+      "name": "Chang4Tech",
+      "created_at": "2021-01-04T08:54:48.000Z",
+      "url": "https://greasyfork.org/users/723807-chang4tech",
+      "scripts": []
+    }
+  ],
+  "name": "TTS for Selected Text",
+  "description": "Reading selected text - Google TTS / HTML5 Speech Synthesis",
+  "url": "https://greasyfork.org/scripts/419619-tts-for-selected-text",
+  "code_url": "https://update.greasyfork.org/scripts/419619/TTS%20for%20Selected%20Text.user.js",
+  "code_size": 4588,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

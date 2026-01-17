@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434418,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-24T22:47:16.000Z",
+    "code_updated_at": "2021-10-24T22:48:53.000Z",
+    "namespace": "https://greasyfork.org/users/828421",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 828421,
+        "name": "digzol",
+        "created_at": "2021-10-24T22:44:09.000Z",
+        "url": "https://greasyfork.org/users/828421-digzol"
+      }
+    ],
+    "name": "Animepahe custom bookmark URL",
+    "description": "Custom Animepahe bookmark URLs using henrik9999's Animepahe id tracker. (See github.com/henrik9999/animepahe-ids)",
+    "url": "https://greasyfork.org/scripts/434418-animepahe-custom-bookmark-url",
+    "code_url": "https://update.greasyfork.org/scripts/434418/Animepahe%20custom%20bookmark%20URL.user.js",
+    "code_size": 2310,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

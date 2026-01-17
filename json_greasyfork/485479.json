@@ -1,0 +1,34 @@
+{
+  "id": 485479,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-23T04:38:26.000Z",
+  "code_updated_at": "2024-01-23T16:40:27.000Z",
+  "namespace": "https://github.com/W-Dragoner/tiktokdemo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1251260,
+      "name": "W-Dragoner",
+      "created_at": "2024-01-21T09:27:34.000Z",
+      "url": "https://greasyfork.org/users/1251260-w-dragoner",
+      "scripts": []
+    }
+  ],
+  "name": "Button click event",
+  "description": "Click the button to display text",
+  "url": "https://greasyfork.org/scripts/485479-button-click-event",
+  "code_url": "https://update.greasyfork.org/scripts/485479/Button%20click%20event.user.js",
+  "code_size": 1072,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "2024-01-23",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 474913,
+  "daily_installs": 0,
+  "total_installs": 68,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-09T17:14:50.000Z",
+  "code_updated_at": "2023-12-15T02:51:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1169694,
+      "name": "404 man",
+      "created_at": "2023-09-09T17:10:50.000Z",
+      "url": "https://greasyfork.org/users/1169694-404-man",
+      "scripts": [
+        {
+          "id": 474913,
+          "daily_installs": 0,
+          "total_installs": 68,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-09T17:14:50.000Z",
+          "code_updated_at": "2023-12-15T02:51:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili b站动态页右侧不展示公告与话题",
+          "description": "小孩子不懂事写着玩的，这么基础的功能居然一直没其他人做过，，，",
+          "url": "https://greasyfork.org/scripts/474913-bilibili-b%E7%AB%99%E5%8A%A8%E6%80%81%E9%A1%B5%E5%8F%B3%E4%BE%A7%E4%B8%8D%E5%B1%95%E7%A4%BA%E5%85%AC%E5%91%8A%E4%B8%8E%E8%AF%9D%E9%A2%98",
+          "code_url": "https://update.greasyfork.org/scripts/474913/bilibili%20b%E7%AB%99%E5%8A%A8%E6%80%81%E9%A1%B5%E5%8F%B3%E4%BE%A7%E4%B8%8D%E5%B1%95%E7%A4%BA%E5%85%AC%E5%91%8A%E4%B8%8E%E8%AF%9D%E9%A2%98.user.js",
+          "code_size": 725,
+          "license": "MIT License",
+          "version": "1.01",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili b站动态页右侧不展示公告与话题",
+  "description": "小孩子不懂事写着玩的，这么基础的功能居然一直没其他人做过，，，",
+  "url": "https://greasyfork.org/scripts/474913-bilibili-b%E7%AB%99%E5%8A%A8%E6%80%81%E9%A1%B5%E5%8F%B3%E4%BE%A7%E4%B8%8D%E5%B1%95%E7%A4%BA%E5%85%AC%E5%91%8A%E4%B8%8E%E8%AF%9D%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/474913/bilibili%20b%E7%AB%99%E5%8A%A8%E6%80%81%E9%A1%B5%E5%8F%B3%E4%BE%A7%E4%B8%8D%E5%B1%95%E7%A4%BA%E5%85%AC%E5%91%8A%E4%B8%8E%E8%AF%9D%E9%A2%98.user.js",
+  "code_size": 725,
+  "license": "MIT License",
+  "version": "1.01",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

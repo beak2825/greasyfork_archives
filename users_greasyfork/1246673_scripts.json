@@ -64,5 +64,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 489499,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-10T16:02:50.000Z",
+    "code_updated_at": "2024-03-12T23:08:41.000Z",
+    "namespace": "https://greasyfork.org/users/1246673",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1246673,
+        "name": "Matteo Lecca",
+        "created_at": "2024-01-11T22:20:40.000Z",
+        "url": "https://greasyfork.org/users/1246673-matteo-lecca"
+      }
+    ],
+    "name": "ServiceNow - WF - Context add info",
+    "description": "Additional information in workflow context",
+    "url": "https://greasyfork.org/scripts/489499-servicenow-wf-context-add-info",
+    "code_url": "https://update.greasyfork.org/scripts/489499/ServiceNow%20-%20WF%20-%20Context%20add%20info.user.js",
+    "code_size": 2364,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486334,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-02T21:50:57.000Z",
+    "code_updated_at": "2024-02-02T21:50:57.000Z",
+    "namespace": "https://greasyfork.org/users/1246673",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1246673,
+        "name": "Matteo Lecca",
+        "created_at": "2024-01-11T22:20:40.000Z",
+        "url": "https://greasyfork.org/users/1246673-matteo-lecca"
+      }
+    ],
+    "name": "ServiceNow - Go to Related Lists",
+    "description": "Button to go directly to related lists",
+    "url": "https://greasyfork.org/scripts/486334-servicenow-go-to-related-lists",
+    "code_url": "https://update.greasyfork.org/scripts/486334/ServiceNow%20-%20Go%20to%20Related%20Lists.user.js",
+    "code_size": 1146,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486333,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-02T21:49:08.000Z",
+    "code_updated_at": "2025-09-14T12:37:07.000Z",
+    "namespace": "https://greasyfork.org/users/1246673",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1246673,
+        "name": "Matteo Lecca",
+        "created_at": "2024-01-11T22:20:40.000Z",
+        "url": "https://greasyfork.org/users/1246673-matteo-lecca"
+      }
+    ],
+    "name": "ServiceNow - Nav Header additional functions",
+    "description": "Add functions to Nav Header",
+    "url": "https://greasyfork.org/scripts/486333-servicenow-nav-header-additional-functions",
+    "code_url": "https://update.greasyfork.org/scripts/486333/ServiceNow%20-%20Nav%20Header%20additional%20functions.user.js",
+    "code_size": 2321,
+    "license": "MIT License",
+    "version": "0.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484647,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-12T08:13:19.000Z",
+    "code_updated_at": "2024-09-30T18:01:42.000Z",
+    "namespace": "https://greasyfork.org/users/1246673",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1246673,
+        "name": "Matteo Lecca",
+        "created_at": "2024-01-11T22:20:40.000Z",
+        "url": "https://greasyfork.org/users/1246673-matteo-lecca"
+      }
+    ],
+    "name": "ServiceNow - Reference direct link to record",
+    "description": "Add a direct link button to reference fields in forms",
+    "url": "https://greasyfork.org/scripts/484647-servicenow-reference-direct-link-to-record",
+    "code_url": "https://update.greasyfork.org/scripts/484647/ServiceNow%20-%20Reference%20direct%20link%20to%20record.user.js",
+    "code_size": 2830,
+    "license": "MIT License",
+    "version": "0.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484615,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-11T22:27:32.000Z",
+    "code_updated_at": "2025-09-14T12:15:12.000Z",
+    "namespace": "https://greasyfork.org/users/1246673",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1246673,
+        "name": "Matteo Lecca",
+        "created_at": "2024-01-11T22:20:40.000Z",
+        "url": "https://greasyfork.org/users/1246673-matteo-lecca"
+      }
+    ],
+    "name": "ServiceNow - Update Ticket Number",
+    "description": "Replace the number input field with a link to the current ticket",
+    "url": "https://greasyfork.org/scripts/484615-servicenow-update-ticket-number",
+    "code_url": "https://update.greasyfork.org/scripts/484615/ServiceNow%20-%20Update%20Ticket%20Number.user.js",
+    "code_size": 1921,
+    "license": "MIT License",
+    "version": "0.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

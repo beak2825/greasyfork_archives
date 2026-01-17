@@ -1,0 +1,59 @@
+{
+  "id": 487229,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-13T11:23:04.000Z",
+  "code_updated_at": "2024-02-14T12:11:26.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 420793,
+      "name": "icqt",
+      "created_at": "2019-12-15T19:44:00.000Z",
+      "url": "https://greasyfork.org/users/420793-icqt",
+      "scripts": [
+        {
+          "id": 414535,
+          "daily_installs": 0,
+          "total_installs": 170,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-24T10:42:44.000Z",
+          "code_updated_at": "2024-11-09T02:32:07.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DOLLARS聊天室助手",
+          "description": "Dollars聊天室辅助脚本",
+          "url": "https://greasyfork.org/scripts/414535-dollars%E8%81%8A%E5%A4%A9%E5%AE%A4%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/414535/DOLLARS%E8%81%8A%E5%A4%A9%E5%AE%A4%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 281937,
+          "license": null,
+          "version": "10.0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DRRR HELPER",
+  "description": "为Dollars聊天室创建可以全局调用的事件, 并添加一些辅助功能",
+  "url": "https://greasyfork.org/scripts/487229-drrr-helper",
+  "code_url": "https://update.greasyfork.org/scripts/487229/DRRR%20HELPER.user.js",
+  "code_size": 23488,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

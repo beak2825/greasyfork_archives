@@ -1,0 +1,59 @@
+{
+  "id": 429731,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-22T15:29:42.000Z",
+  "code_updated_at": "2021-07-22T15:29:42.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 796249,
+      "name": "chenchao19934",
+      "created_at": "2021-07-22T15:23:16.000Z",
+      "url": "https://greasyfork.org/users/796249-chenchao19934",
+      "scripts": [
+        {
+          "id": 429731,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-07-22T15:29:42.000Z",
+          "code_updated_at": "2021-07-22T15:29:42.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "xiaobentong.com",
+          "description": "2021/7/22下午11:04:19",
+          "url": "https://greasyfork.org/scripts/429731-xiaobentong-com",
+          "code_url": "https://update.greasyfork.org/scripts/429731/xiaobentongcom.user.js",
+          "code_size": 1506,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "xiaobentong.com",
+  "description": "2021/7/22下午11:04:19",
+  "url": "https://greasyfork.org/scripts/429731-xiaobentong-com",
+  "code_url": "https://update.greasyfork.org/scripts/429731/xiaobentongcom.user.js",
+  "code_size": 1506,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

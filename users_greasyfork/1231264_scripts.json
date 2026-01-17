@@ -1,0 +1,101 @@
+[
+  {
+    "id": 482518,
+    "daily_installs": 0,
+    "total_installs": 538,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-18T02:47:38.000Z",
+    "code_updated_at": "2023-12-18T02:47:37.000Z",
+    "namespace": "https://greasyfork.org/users/1231264",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1231264,
+        "name": "Gamby-1791",
+        "created_at": "2023-12-09T19:05:57.000Z",
+        "url": "https://greasyfork.org/users/1231264-gamby-1791"
+      }
+    ],
+    "name": "Auto Open CAPTCHA",
+    "description": "Streamlines the process of engaging with CAPTCHA by automatically activating the verification checkbox.",
+    "url": "https://greasyfork.org/scripts/482518-auto-open-captcha",
+    "code_url": "https://update.greasyfork.org/scripts/482518/Auto%20Open%20CAPTCHA.user.js",
+    "code_size": 3095,
+    "license": "GNU General Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482225,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-12-14T18:03:35.000Z",
+    "code_updated_at": "2023-12-14T18:03:35.000Z",
+    "namespace": "https://greasyfork.org/users/1231264",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1231264,
+        "name": "Gamby-1791",
+        "created_at": "2023-12-09T19:05:57.000Z",
+        "url": "https://greasyfork.org/users/1231264-gamby-1791"
+      }
+    ],
+    "name": "Google Searchlight",
+    "description": "Uncovers and displays hidden search results that Google has obscured in response to complaints.",
+    "url": "https://greasyfork.org/scripts/482225-google-searchlight",
+    "code_url": "https://update.greasyfork.org/scripts/482225/Google%20Searchlight.user.js",
+    "code_size": 5184,
+    "license": "GNU General Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 481810,
+    "daily_installs": 0,
+    "total_installs": 325,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-12-09T19:12:38.000Z",
+    "code_updated_at": "2023-12-09T19:12:37.000Z",
+    "namespace": "https://greasyfork.org/users/1231264",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1231264,
+        "name": "Gamby-1791",
+        "created_at": "2023-12-09T19:05:57.000Z",
+        "url": "https://greasyfork.org/users/1231264-gamby-1791"
+      }
+    ],
+    "name": "SpeedCAPTCHA",
+    "description": "Enhances the efficiency of resolving Google reCAPTCHA challenges by reducing the duration of transition effects and enabling uninterrupted selection capability.",
+    "url": "https://greasyfork.org/scripts/481810-speedcaptcha",
+    "code_url": "https://update.greasyfork.org/scripts/481810/SpeedCAPTCHA.user.js",
+    "code_size": 2656,
+    "license": "GNU General Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

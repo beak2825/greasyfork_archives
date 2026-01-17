@@ -1,0 +1,34 @@
+{
+  "id": 430319,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-04T05:04:41.000Z",
+  "code_updated_at": "2021-08-10T00:42:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 800166,
+      "name": "ronglei",
+      "created_at": "2021-08-04T04:56:02.000Z",
+      "url": "https://greasyfork.org/users/800166-ronglei",
+      "scripts": []
+    }
+  ],
+  "name": "zgjiaoyan",
+  "description": "中国教研网播放助手，可以帮助点击继续播放，点击播放下一节，不对老师进行评价等",
+  "url": "https://greasyfork.org/scripts/430319-zgjiaoyan",
+  "code_url": "https://update.greasyfork.org/scripts/430319/zgjiaoyan.user.js",
+  "code_size": 2965,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

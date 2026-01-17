@@ -1,0 +1,33 @@
+{
+  "id": 443392,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-14T23:30:52.000Z",
+  "code_updated_at": "2022-04-14T23:30:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 473672,
+      "name": "hello w",
+      "created_at": "2020-04-02T11:45:27.000Z",
+      "url": "https://greasyfork.org/users/473672-hello-w"
+    }
+  ],
+  "name": "2022年公需课：继续教育测试【自动播放】",
+  "description": "打开视频播放页面课程",
+  "url": "https://greasyfork.org/scripts/443392-2022%E5%B9%B4%E5%85%AC%E9%9C%80%E8%AF%BE-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E6%B5%8B%E8%AF%95-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE",
+  "code_url": "https://update.greasyfork.org/scripts/443392/2022%E5%B9%B4%E5%85%AC%E9%9C%80%E8%AF%BE%EF%BC%9A%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E6%B5%8B%E8%AF%95%E3%80%90%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E3%80%91.user.js",
+  "code_size": 15636,
+  "license": "none",
+  "version": "0.86",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

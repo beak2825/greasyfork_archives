@@ -1,0 +1,59 @@
+{
+  "id": 477064,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-09T18:00:47.000Z",
+  "code_updated_at": "2023-10-09T18:00:47.000Z",
+  "namespace": "https://greasyfork.org/users/829453",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 829453,
+      "name": "sharpwang",
+      "created_at": "2021-10-28T03:12:16.000Z",
+      "url": "https://greasyfork.org/users/829453-sharpwang",
+      "scripts": [
+        {
+          "id": 457882,
+          "daily_installs": 0,
+          "total_installs": 603,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-09T01:58:59.000Z",
+          "code_updated_at": "2023-01-09T01:58:59.000Z",
+          "namespace": "www.zjce.gov.cn",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "浙里学习小助手",
+          "description": "浙里学习辅助|更快地学习党政知识",
+          "url": "https://greasyfork.org/scripts/457882-%E6%B5%99%E9%87%8C%E5%AD%A6%E4%B9%A0%E5%B0%8F%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/457882/%E6%B5%99%E9%87%8C%E5%AD%A6%E4%B9%A0%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 2668,
+          "license": "MIT License",
+          "version": "0.9.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "myKavita",
+  "description": "自动更改Kavita用户设置",
+  "url": "https://greasyfork.org/scripts/477064-mykavita",
+  "code_url": "https://update.greasyfork.org/scripts/477064/myKavita.user.js",
+  "code_size": 8837,
+  "license": null,
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

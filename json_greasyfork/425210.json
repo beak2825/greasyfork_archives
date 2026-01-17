@@ -1,0 +1,33 @@
+{
+  "id": 425210,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-18T14:49:33.000Z",
+  "code_updated_at": "2023-02-11T07:08:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 109962,
+      "name": "Uncle bach",
+      "created_at": "2017-03-14T18:33:30.000Z",
+      "url": "https://greasyfork.org/users/109962-uncle-bach"
+    }
+  ],
+  "name": "ServerTimeAndAutoTriger",
+  "description": "ServerTimeAndAutoTrigeruserscript",
+  "url": "https://greasyfork.org/scripts/425210-servertimeandautotriger",
+  "code_url": "https://update.greasyfork.org/scripts/425210/ServerTimeAndAutoTriger.user.js",
+  "code_size": 7526,
+  "license": null,
+  "version": "0.35",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

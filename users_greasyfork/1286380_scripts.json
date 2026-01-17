@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492494,
+    "daily_installs": 0,
+    "total_installs": 2608,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-14T10:37:29.000Z",
+    "code_updated_at": "2024-04-15T06:46:22.000Z",
+    "namespace": "unrival",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286380,
+        "name": "Airo",
+        "created_at": "2024-04-10T09:44:52.000Z",
+        "url": "https://greasyfork.org/users/1286380-airo"
+      }
+    ],
+    "name": "【超星学习通速通】\"你就用吧一用一个不吱声\"|刷课、章节测试随便搞定|想高效刷网课就选它",
+    "description": "▶▶▶上次更新：2024.4.15◀◀◀支持超星视频、文档、答题、自定义正确率、掉线自动登录|取消视频文件加载，多开也不占用网速，放心追剧|自定义答题正确率，提高学习效率|每日功能测试，在发现问题前就解决问题，防清进度，无不良记录",
+    "url": "https://greasyfork.org/scripts/492494-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E9%80%9F%E9%80%9A-%E4%BD%A0%E5%B0%B1%E7%94%A8%E5%90%A7%E4%B8%80%E7%94%A8%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%90%B1%E5%A3%B0-%E5%88%B7%E8%AF%BE-%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95%E9%9A%8F%E4%BE%BF%E6%90%9E%E5%AE%9A-%E6%83%B3%E9%AB%98%E6%95%88%E5%88%B7%E7%BD%91%E8%AF%BE%E5%B0%B1%E9%80%89%E5%AE%83",
+    "code_url": "https://update.greasyfork.org/scripts/492494/%E3%80%90%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E9%80%9F%E9%80%9A%E3%80%91%22%E4%BD%A0%E5%B0%B1%E7%94%A8%E5%90%A7%E4%B8%80%E7%94%A8%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%90%B1%E5%A3%B0%22%7C%E5%88%B7%E8%AF%BE%E3%80%81%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95%E9%9A%8F%E4%BE%BF%E6%90%9E%E5%AE%9A%7C%E6%83%B3%E9%AB%98%E6%95%88%E5%88%B7%E7%BD%91%E8%AF%BE%E5%B0%B1%E9%80%89%E5%AE%83.user.js",
+    "code_size": 300497,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

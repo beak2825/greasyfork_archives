@@ -1,0 +1,101 @@
+[
+  {
+    "id": 460134,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-16T15:07:02.000Z",
+    "code_updated_at": "2023-02-16T15:13:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 887779,
+        "name": "匿名Cat",
+        "created_at": "2022-03-15T12:44:33.000Z",
+        "url": "https://greasyfork.org/users/887779-%E5%8C%BF%E5%90%8Dcat"
+      }
+    ],
+    "name": "Twitter文章完全ミュート",
+    "description": "公式ミュート機能は単語（とTwitterが認識した語句）にしか効きません。ブラウザ版Twitterでこれを解決します。ミュートワード編集はコード弄ってね。正規表現OK",
+    "url": "https://greasyfork.org/scripts/460134-twitter%E6%96%87%E7%AB%A0%E5%AE%8C%E5%85%A8%E3%83%9F%E3%83%A5%E3%83%BC%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/460134/Twitter%E6%96%87%E7%AB%A0%E5%AE%8C%E5%85%A8%E3%83%9F%E3%83%A5%E3%83%BC%E3%83%88.user.js",
+    "code_size": 1169,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458612,
+    "daily_installs": 0,
+    "total_installs": 140,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-21T04:00:44.000Z",
+    "code_updated_at": "2024-11-17T03:43:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 887779,
+        "name": "匿名Cat",
+        "created_at": "2022-03-15T12:44:33.000Z",
+        "url": "https://greasyfork.org/users/887779-%E5%8C%BF%E5%90%8Dcat"
+      }
+    ],
+    "name": "YouTube動画上に現在時刻表示",
+    "description": "時間管理 YouTube何時間も見ちゃう人向け 時刻をダブルクリックでデジタル時計・アナログ時計切り替え",
+    "url": "https://greasyfork.org/scripts/458612-youtube%E5%8B%95%E7%94%BB%E4%B8%8A%E3%81%AB%E7%8F%BE%E5%9C%A8%E6%99%82%E5%88%BB%E8%A1%A8%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/458612/YouTube%E5%8B%95%E7%94%BB%E4%B8%8A%E3%81%AB%E7%8F%BE%E5%9C%A8%E6%99%82%E5%88%BB%E8%A1%A8%E7%A4%BA.user.js",
+    "code_size": 3950,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457402,
+    "daily_installs": 0,
+    "total_installs": 156,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-31T15:29:12.000Z",
+    "code_updated_at": "2024-02-13T08:49:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 887779,
+        "name": "匿名Cat",
+        "created_at": "2022-03-15T12:44:33.000Z",
+        "url": "https://greasyfork.org/users/887779-%E5%8C%BF%E5%90%8Dcat"
+      }
+    ],
+    "name": "旧5ch 画像&動画etc",
+    "description": "画像 & YouTube動画読込表示 / 画像レス & 板リンク抽出 / jump(リンク中継ページ)無効 / 規制回避リンク認識 / シンプルな見た目",
+    "url": "https://greasyfork.org/scripts/457402-%E6%97%A75ch-%E7%94%BB%E5%83%8F-%E5%8B%95%E7%94%BBetc",
+    "code_url": "https://update.greasyfork.org/scripts/457402/%E6%97%A75ch%20%E7%94%BB%E5%83%8F%E5%8B%95%E7%94%BBetc.user.js",
+    "code_size": 10388,
+    "license": "MIT License",
+    "version": "1.2.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 425292,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-20T13:38:19.000Z",
+  "code_updated_at": "2024-11-26T23:26:03.000Z",
+  "namespace": "https://greasyfork.org/de/users/577453",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 577453,
+      "name": "KnutEdelbert",
+      "created_at": "2020-06-02T15:03:35.000Z",
+      "url": "https://greasyfork.org/users/577453-knutedelbert",
+      "scripts": []
+    }
+  ],
+  "name": "OnlineligaFriendlyHelper",
+  "description": "Zusatzinfos für Friendlies für www.onlineliga.de (OFA)",
+  "url": "https://greasyfork.org/scripts/425292-onlineligafriendlyhelper",
+  "code_url": "https://update.greasyfork.org/scripts/425292/OnlineligaFriendlyHelper.user.js",
+  "code_size": 21412,
+  "license": "LGPLv3",
+  "version": "0.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

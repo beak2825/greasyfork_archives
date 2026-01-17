@@ -1,0 +1,59 @@
+{
+  "id": 465712,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-07T07:56:25.000Z",
+  "code_updated_at": "2023-05-07T09:13:50.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1074830,
+      "name": "xmoore",
+      "created_at": "2023-05-07T07:50:19.000Z",
+      "url": "https://greasyfork.org/users/1074830-xmoore",
+      "scripts": [
+        {
+          "id": 475940,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-23T12:06:43.000Z",
+          "code_updated_at": "2023-09-30T14:52:49.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "тестинг перемещения",
+          "description": "для перемещения тем",
+          "url": "https://greasyfork.org/scripts/475940-%D1%82%D0%B5%D1%81%D1%82%D0%B8%D0%BD%D0%B3-%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D1%8F",
+          "code_url": "https://update.greasyfork.org/scripts/475940/%D1%82%D0%B5%D1%81%D1%82%D0%B8%D0%BD%D0%B3%20%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D1%8F.user.js",
+          "code_size": 5079,
+          "license": "MIT License",
+          "version": "0.0.0.4",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "QC & Tech",
+  "description": "Специально для техов и кк",
+  "url": "https://greasyfork.org/scripts/465712-qc-tech",
+  "code_url": "https://update.greasyfork.org/scripts/465712/QC%20%20Tech.user.js",
+  "code_size": 115523,
+  "license": "MIT License",
+  "version": "13.1.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

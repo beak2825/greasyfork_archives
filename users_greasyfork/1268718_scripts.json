@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488666,
+    "daily_installs": 0,
+    "total_installs": 114,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-01T05:57:11.000Z",
+    "code_updated_at": "2024-05-27T16:50:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268718,
+        "name": "ryuumoe",
+        "created_at": "2024-03-01T05:38:26.000Z",
+        "url": "https://greasyfork.org/users/1268718-ryuumoe"
+      }
+    ],
+    "name": "摸鱼奎恩直播间网页版隐藏右侧广告",
+    "description": "隐藏右侧的广告栏",
+    "url": "https://greasyfork.org/scripts/488666-%E6%91%B8%E9%B1%BC%E5%A5%8E%E6%81%A9%E7%9B%B4%E6%92%AD%E9%97%B4%E7%BD%91%E9%A1%B5%E7%89%88%E9%9A%90%E8%97%8F%E5%8F%B3%E4%BE%A7%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/488666/%E6%91%B8%E9%B1%BC%E5%A5%8E%E6%81%A9%E7%9B%B4%E6%92%AD%E9%97%B4%E7%BD%91%E9%A1%B5%E7%89%88%E9%9A%90%E8%97%8F%E5%8F%B3%E4%BE%A7%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 463,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

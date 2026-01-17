@@ -1,0 +1,34 @@
+{
+  "id": 431374,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-25T19:03:18.000Z",
+  "code_updated_at": "2021-08-25T19:03:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 808579,
+      "name": "Travels LIVE",
+      "created_at": "2021-08-25T18:49:33.000Z",
+      "url": "https://greasyfork.org/users/808579-travels-live",
+      "scripts": []
+    }
+  ],
+  "name": "АвтоОхрамон Хромарвор Mistwar",
+  "description": "АвтоОхрамон для MistWar.ru",
+  "url": "https://greasyfork.org/scripts/431374-%D0%B0%D0%B2%D1%82%D0%BE%D0%BE%D1%85%D1%80%D0%B0%D0%BC%D0%BE%D0%BD-%D1%85%D1%80%D0%BE%D0%BC%D0%B0%D1%80%D0%B2%D0%BE%D1%80-mistwar",
+  "code_url": "https://update.greasyfork.org/scripts/431374/%D0%90%D0%B2%D1%82%D0%BE%D0%9E%D1%85%D1%80%D0%B0%D0%BC%D0%BE%D0%BD%20%D0%A5%D1%80%D0%BE%D0%BC%D0%B0%D1%80%D0%B2%D0%BE%D1%80%20Mistwar.user.js",
+  "code_size": 1020,
+  "license": null,
+  "version": "0.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

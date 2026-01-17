@@ -1,0 +1,68 @@
+[
+  {
+    "id": 450420,
+    "daily_installs": 0,
+    "total_installs": 112,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-29T17:01:53.000Z",
+    "code_updated_at": "2022-08-29T17:01:52.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 943008,
+        "name": "defuseее 444",
+        "created_at": "2022-08-04T12:13:34.000Z",
+        "url": "https://greasyfork.org/users/943008-defuse%D0%B5%D0%B5-444"
+      }
+    ],
+    "name": "Black Russia для Лидеров",
+    "description": "Fresko is higher than you thought",
+    "url": "https://greasyfork.org/scripts/450420-black-russia-%D0%B4%D0%BB%D1%8F-%D0%BB%D0%B8%D0%B4%D0%B5%D1%80%D0%BE%D0%B2",
+    "code_url": "https://update.greasyfork.org/scripts/450420/Black%20Russia%20%D0%B4%D0%BB%D1%8F%20%D0%9B%D0%B8%D0%B4%D0%B5%D1%80%D0%BE%D0%B2.user.js",
+    "code_size": 142829,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449362,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-11T10:48:35.000Z",
+    "code_updated_at": "2022-08-11T11:08:28.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 943008,
+        "name": "defuseее 444",
+        "created_at": "2022-08-04T12:13:34.000Z",
+        "url": "https://greasyfork.org/users/943008-defuse%D0%B5%D0%B5-444"
+      }
+    ],
+    "name": "Для моих любимых Кураторов форума.",
+    "description": "by.J.Rockefeller",
+    "url": "https://greasyfork.org/scripts/449362-%D0%B4%D0%BB%D1%8F-%D0%BC%D0%BE%D0%B8%D1%85-%D0%BB%D1%8E%D0%B1%D0%B8%D0%BC%D1%8B%D1%85-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/449362/%D0%94%D0%BB%D1%8F%20%D0%BC%D0%BE%D0%B8%D1%85%20%D0%BB%D1%8E%D0%B1%D0%B8%D0%BC%D1%8B%D1%85%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 59010,
+    "license": "MIT License",
+    "version": "3.5",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

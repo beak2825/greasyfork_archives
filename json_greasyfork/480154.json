@@ -1,0 +1,59 @@
+{
+  "id": 480154,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-18T02:24:15.000Z",
+  "code_updated_at": "2024-04-20T21:03:18.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 944122,
+      "name": "BastianHentschel",
+      "created_at": "2022-08-07T21:13:12.000Z",
+      "url": "https://greasyfork.org/users/944122-bastianhentschel",
+      "scripts": [
+        {
+          "id": 449141,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-07T21:21:02.000Z",
+          "code_updated_at": "2022-08-07T21:21:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Scryfall: Add to Deck",
+          "description": "Adds the 'Add to Deck' button from a cards page to the cards on the search page.",
+          "url": "https://greasyfork.org/scripts/449141-scryfall-add-to-deck",
+          "code_url": "https://update.greasyfork.org/scripts/449141/Scryfall%3A%20Add%20to%20Deck.user.js",
+          "code_size": 2025,
+          "license": "GNU GPLv3",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Scryfall: yawgatog.com links",
+  "description": "This is a userscript.",
+  "url": "https://greasyfork.org/scripts/480154-scryfall-yawgatog-com-links",
+  "code_url": "https://update.greasyfork.org/scripts/480154/Scryfall%3A%20yawgatogcom%20links.user.js",
+  "code_size": 2042,
+  "license": "MIT License",
+  "version": "1.2.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

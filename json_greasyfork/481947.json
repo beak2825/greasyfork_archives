@@ -1,0 +1,33 @@
+{
+  "id": 481947,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-11T14:01:50.000Z",
+  "code_updated_at": "2023-12-11T14:04:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 945212,
+      "name": "天下悠悠",
+      "created_at": "2022-08-11T03:59:35.000Z",
+      "url": "https://greasyfork.org/users/945212-%E5%A4%A9%E4%B8%8B%E6%82%A0%E6%82%A0"
+    }
+  ],
+  "name": "提瓦特大地图标点替换工具",
+  "description": "解决米哈游官方大地图标点点开是空白的问题",
+  "url": "https://greasyfork.org/scripts/481947-%E6%8F%90%E7%93%A6%E7%89%B9%E5%A4%A7%E5%9C%B0%E5%9B%BE%E6%A0%87%E7%82%B9%E6%9B%BF%E6%8D%A2%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/481947/%E6%8F%90%E7%93%A6%E7%89%B9%E5%A4%A7%E5%9C%B0%E5%9B%BE%E6%A0%87%E7%82%B9%E6%9B%BF%E6%8D%A2%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 1161,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

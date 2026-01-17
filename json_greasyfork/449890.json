@@ -1,0 +1,33 @@
+{
+  "id": 449890,
+  "daily_installs": 0,
+  "total_installs": 1598,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-20T20:54:34.000Z",
+  "code_updated_at": "2022-08-20T21:12:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 228293,
+      "name": "John Ren",
+      "created_at": "2018-11-25T13:01:46.000Z",
+      "url": "https://greasyfork.org/users/228293-john-ren"
+    }
+  ],
+  "name": "图书馆参考咨询联盟 文献传递助手",
+  "description": "辅助获取图书资源",
+  "url": "https://greasyfork.org/scripts/449890-%E5%9B%BE%E4%B9%A6%E9%A6%86%E5%8F%82%E8%80%83%E5%92%A8%E8%AF%A2%E8%81%94%E7%9B%9F-%E6%96%87%E7%8C%AE%E4%BC%A0%E9%80%92%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/449890/%E5%9B%BE%E4%B9%A6%E9%A6%86%E5%8F%82%E8%80%83%E5%92%A8%E8%AF%A2%E8%81%94%E7%9B%9F%20%E6%96%87%E7%8C%AE%E4%BC%A0%E9%80%92%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 3999,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

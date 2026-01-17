@@ -1,0 +1,33 @@
+{
+  "id": 489187,
+  "daily_installs": 0,
+  "total_installs": 146,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-06T21:02:59.000Z",
+  "code_updated_at": "2024-03-06T21:02:59.000Z",
+  "namespace": "http://yourwebsite.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 890908,
+      "name": "brayde lindell",
+      "created_at": "2022-03-22T14:49:57.000Z",
+      "url": "https://greasyfork.org/users/890908-brayde-lindell"
+    }
+  ],
+  "name": "Ed club/typing club Auto Assignment Completer",
+  "description": "Automatically completes assignments on Greasy Fork with simulated typing, 100% accuracy, and 60 typing speed.",
+  "url": "https://greasyfork.org/scripts/489187-ed-club-typing-club-auto-assignment-completer",
+  "code_url": "https://update.greasyfork.org/scripts/489187/Ed%20clubtyping%20club%20Auto%20Assignment%20Completer.user.js",
+  "code_size": 1597,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

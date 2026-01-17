@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487561,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-18T01:16:08.000Z",
+    "code_updated_at": "2024-02-18T01:16:08.000Z",
+    "namespace": "YSMC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262770,
+        "name": "rafael-rodrigues1503",
+        "created_at": "2024-02-18T01:09:13.000Z",
+        "url": "https://greasyfork.org/users/1262770-rafael-rodrigues1503"
+      }
+    ],
+    "name": "YouTube Search Middle Click",
+    "description": "This extension allows you to open a YouTube search on a new tab by middle-clicking the search button.",
+    "url": "https://greasyfork.org/scripts/487561-youtube-search-middle-click",
+    "code_url": "https://update.greasyfork.org/scripts/487561/YouTube%20Search%20Middle%20Click.user.js",
+    "code_size": 873,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

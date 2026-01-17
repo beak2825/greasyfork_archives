@@ -1,0 +1,34 @@
+{
+  "id": 471996,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-29T16:03:24.000Z",
+  "code_updated_at": "2023-07-29T16:03:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 971973,
+      "name": "小李子805116",
+      "created_at": "2022-10-17T12:35:57.000Z",
+      "url": "https://greasyfork.org/users/971973-%E5%B0%8F%E6%9D%8E%E5%AD%90805116",
+      "scripts": []
+    }
+  ],
+  "name": "lib学习",
+  "description": "tddh kh ihip guck",
+  "url": "https://greasyfork.org/scripts/471996-lib%E5%AD%A6%E4%B9%A0",
+  "code_url": "https://update.greasyfork.org/scripts/471996/1227445/lib%E5%AD%A6%E4%B9%A0.js",
+  "code_size": 356,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 469493,
+    "daily_installs": 0,
+    "total_installs": 1328,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-26T11:57:27.000Z",
+    "code_updated_at": "2023-12-04T23:32:53.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1112525,
+        "name": "B34R",
+        "created_at": "2023-06-26T10:13:30.000Z",
+        "url": "https://greasyfork.org/users/1112525-b34r"
+      }
+    ],
+    "name": "/=|- B34R -|=\\ /=\\ Legit Script for Legit Players /=\\",
+    "description": "ArrowUp Key = Modification Menu | ArrowLeft Key = Setting | ArrowRight Key = MainMenu | ArrowDown Key = InfoBox | Anti Ads |",
+    "url": "https://greasyfork.org/scripts/469493-b34r-legit-script-for-legit-players",
+    "code_url": "https://update.greasyfork.org/scripts/469493/%3D%7C-%20B34R%20-%7C%3D%5C%20%3D%5C%20Legit%20Script%20for%20Legit%20Players%20%3D%5C.user.js",
+    "code_size": 51071,
+    "license": null,
+    "version": "final",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

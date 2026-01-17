@@ -96,6 +96,171 @@
     "version": "0.1",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 494323,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-07T15:41:02.000Z",
+    "code_updated_at": "2024-05-08T02:55:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114627,
+        "name": "Bor1s",
+        "created_at": "2023-06-29T02:59:49.000Z",
+        "url": "https://greasyfork.org/users/1114627-bor1s"
+      }
+    ],
+    "name": "平安立信导出数据",
+    "description": "导出",
+    "url": "https://greasyfork.org/scripts/494323-%E5%B9%B3%E5%AE%89%E7%AB%8B%E4%BF%A1%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE",
+    "code_url": "https://update.greasyfork.org/scripts/494323/%E5%B9%B3%E5%AE%89%E7%AB%8B%E4%BF%A1%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE.user.js",
+    "code_size": 7390,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 493559,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-26T17:15:39.000Z",
+    "code_updated_at": "2024-05-09T05:12:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114627,
+        "name": "Bor1s",
+        "created_at": "2023-06-29T02:59:49.000Z",
+        "url": "https://greasyfork.org/users/1114627-bor1s"
+      }
+    ],
+    "name": "即科金融Geek",
+    "description": "Geek 即科金融 批量导出数据",
+    "url": "https://greasyfork.org/scripts/493559-%E5%8D%B3%E7%A7%91%E9%87%91%E8%9E%8Dgeek",
+    "code_url": "https://update.greasyfork.org/scripts/493559/%E5%8D%B3%E7%A7%91%E9%87%91%E8%9E%8DGeek.user.js",
+    "code_size": 17126,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479600,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-12T09:18:50.000Z",
+    "code_updated_at": "2023-11-12T09:18:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114627,
+        "name": "Bor1s",
+        "created_at": "2023-06-29T02:59:49.000Z",
+        "url": "https://greasyfork.org/users/1114627-bor1s"
+      }
+    ],
+    "name": "人人贷自动划扣",
+    "description": "自动划扣50，成功即微信server酱推送提醒",
+    "url": "https://greasyfork.org/scripts/479600-%E4%BA%BA%E4%BA%BA%E8%B4%B7%E8%87%AA%E5%8A%A8%E5%88%92%E6%89%A3",
+    "code_url": "https://update.greasyfork.org/scripts/479600/%E4%BA%BA%E4%BA%BA%E8%B4%B7%E8%87%AA%E5%8A%A8%E5%88%92%E6%89%A3.user.js",
+    "code_size": 23131,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479273,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-08T01:11:15.000Z",
+    "code_updated_at": "2023-11-08T01:11:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114627,
+        "name": "Bor1s",
+        "created_at": "2023-06-29T02:59:49.000Z",
+        "url": "https://greasyfork.org/users/1114627-bor1s"
+      }
+    ],
+    "name": "fanyusoft凡宇",
+    "description": "凡宇催收管理系统导出客户信息为csv",
+    "url": "https://greasyfork.org/scripts/479273-fanyusoft%E5%87%A1%E5%AE%87",
+    "code_url": "https://update.greasyfork.org/scripts/479273/fanyusoft%E5%87%A1%E5%AE%87.user.js",
+    "code_size": 9174,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
+  },
+  {
+    "id": 479272,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-08T01:02:47.000Z",
+    "code_updated_at": "2024-06-05T04:56:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114627,
+        "name": "Bor1s",
+        "created_at": "2023-06-29T02:59:49.000Z",
+        "url": "https://greasyfork.org/users/1114627-bor1s"
+      }
+    ],
+    "name": "aiyoumi米盾云",
+    "description": "爱又米系统导出信息",
+    "url": "https://greasyfork.org/scripts/479272-aiyoumi%E7%B1%B3%E7%9B%BE%E4%BA%91",
+    "code_url": "https://update.greasyfork.org/scripts/479272/aiyoumi%E7%B1%B3%E7%9B%BE%E4%BA%91.user.js",
+    "code_size": 12845,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
   }
 ]

@@ -1,0 +1,33 @@
+{
+  "id": 466941,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-23T20:13:21.000Z",
+  "code_updated_at": "2023-05-23T20:14:44.000Z",
+  "namespace": "teracloud.jp 다이렉트 다운로드 주소 일괄 복사.",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816911,
+      "name": "채널샤메",
+      "created_at": "2021-09-19T08:03:10.000Z",
+      "url": "https://greasyfork.org/users/816911-%EC%B1%84%EB%84%90%EC%83%A4%EB%A9%94"
+    }
+  ],
+  "name": "teracloud.jp 다이렉트 다운로드 주소 일괄 복사.",
+  "description": "teracloud.jp 다이렉트 다운로드 주소를 복사 복사합니다.",
+  "url": "https://greasyfork.org/scripts/466941-teracloud-jp-%EB%8B%A4%EC%9D%B4%EB%A0%89%ED%8A%B8-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EC%A3%BC%EC%86%8C-%EC%9D%BC%EA%B4%84-%EB%B3%B5%EC%82%AC",
+  "code_url": "https://update.greasyfork.org/scripts/466941/teracloudjp%20%EB%8B%A4%EC%9D%B4%EB%A0%89%ED%8A%B8%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%20%EC%A3%BC%EC%86%8C%20%EC%9D%BC%EA%B4%84%20%EB%B3%B5%EC%82%AC.user.js",
+  "code_size": 7520,
+  "license": null,
+  "version": "0.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

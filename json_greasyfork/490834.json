@@ -1,0 +1,34 @@
+{
+  "id": 490834,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-25T13:38:40.000Z",
+  "code_updated_at": "2024-03-27T16:38:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1279261,
+      "name": "3coma3",
+      "created_at": "2024-03-25T13:34:56.000Z",
+      "url": "https://greasyfork.org/users/1279261-3coma3",
+      "scripts": []
+    }
+  ],
+  "name": "My Glove80 Layouts Improved",
+  "description": "Make easier to select and delete multiple Glove80 layouts",
+  "url": "https://greasyfork.org/scripts/490834-my-glove80-layouts-improved",
+  "code_url": "https://update.greasyfork.org/scripts/490834/My%20Glove80%20Layouts%20Improved.user.js",
+  "code_size": 10794,
+  "license": "MIT License",
+  "version": "2024-03-27_2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

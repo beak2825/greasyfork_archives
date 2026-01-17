@@ -1,0 +1,33 @@
+{
+  "id": 418634,
+  "daily_installs": 0,
+  "total_installs": 73,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-14T20:09:40.000Z",
+  "code_updated_at": "2020-12-15T20:42:10.000Z",
+  "namespace": "https://greasyfork.org/ru/scripts/418634-auctionhuntmenu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 449752,
+      "name": "Kolt Piton",
+      "created_at": "2020-02-25T11:25:58.000Z",
+      "url": "https://greasyfork.org/users/449752-kolt-piton"
+    }
+  ],
+  "name": "AuctionHuntMenu",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/418634-auctionhuntmenu",
+  "code_url": "https://update.greasyfork.org/scripts/418634/AuctionHuntMenu.user.js",
+  "code_size": 7512,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

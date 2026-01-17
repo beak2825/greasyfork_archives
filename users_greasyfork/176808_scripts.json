@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476294,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-28T20:40:03.000Z",
+    "code_updated_at": "2023-09-28T20:40:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 176808,
+        "name": "Dellos7",
+        "created_at": "2018-03-27T13:22:16.000Z",
+        "url": "https://greasyfork.org/users/176808-dellos7"
+      }
+    ],
+    "name": "Descargar Identidad Digital ITACA",
+    "description": "Script para descargar un CSV con el listado de identidades digitales y contraseñas de un grupo de ITACA",
+    "url": "https://greasyfork.org/scripts/476294-descargar-identidad-digital-itaca",
+    "code_url": "https://update.greasyfork.org/scripts/476294/Descargar%20Identidad%20Digital%20ITACA.user.js",
+    "code_size": 3885,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 477047,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-09T11:17:15.000Z",
+  "code_updated_at": "2023-10-09T11:17:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1191841,
+      "name": "bakeiam",
+      "created_at": "2023-10-09T07:42:59.000Z",
+      "url": "https://greasyfork.org/users/1191841-bakeiam"
+    }
+  ],
+  "name": "UserScriptSelfAdaption",
+  "description": "try to take over the world!该版本会自适应你的用户名等信息",
+  "url": "https://greasyfork.org/scripts/477047-userscriptselfadaption",
+  "code_url": "https://update.greasyfork.org/scripts/477047/UserScriptSelfAdaption.user.js",
+  "code_size": 18830,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

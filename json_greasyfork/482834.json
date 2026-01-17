@@ -1,0 +1,34 @@
+{
+  "id": 482834,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-21T16:19:04.000Z",
+  "code_updated_at": "2024-03-28T16:29:39.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1165643,
+      "name": "datafanclub",
+      "created_at": "2023-09-03T16:15:54.000Z",
+      "url": "https://greasyfork.org/users/1165643-datafanclub",
+      "scripts": []
+    }
+  ],
+  "name": "雪球监控",
+  "description": "2024/2/8 12:50:00",
+  "url": "https://greasyfork.org/scripts/482834-%E9%9B%AA%E7%90%83%E7%9B%91%E6%8E%A7",
+  "code_url": "https://update.greasyfork.org/scripts/482834/%E9%9B%AA%E7%90%83%E7%9B%91%E6%8E%A7.user.js",
+  "code_size": 6027,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

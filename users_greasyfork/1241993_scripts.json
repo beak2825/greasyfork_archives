@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483643,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-01T20:35:59.000Z",
+    "code_updated_at": "2024-03-15T00:51:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1241993,
+        "name": "wowthatisrandom",
+        "created_at": "2024-01-01T16:16:53.000Z",
+        "url": "https://greasyfork.org/users/1241993-wowthatisrandom"
+      }
+    ],
+    "name": "Creality Print Local Web Layout",
+    "description": "Relayout creality prints local dashboard and fix camera size",
+    "url": "https://greasyfork.org/scripts/483643-creality-print-local-web-layout",
+    "code_url": "https://update.greasyfork.org/scripts/483643/Creality%20Print%20Local%20Web%20Layout.user.js",
+    "code_size": 3228,
+    "license": null,
+    "version": "2024.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491257,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-30T14:32:05.000Z",
+    "code_updated_at": "2025-02-08T11:46:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1281627,
+        "name": "yellow_mt",
+        "created_at": "2024-03-30T14:02:03.000Z",
+        "url": "https://greasyfork.org/users/1281627-yellow-mt"
+      }
+    ],
+    "name": "洛谷宽度优化",
+    "description": "解除洛谷1100px宽度限制，而且优化了部分界面",
+    "url": "https://greasyfork.org/scripts/491257-%E6%B4%9B%E8%B0%B7%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/491257/%E6%B4%9B%E8%B0%B7%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 811,
+    "license": null,
+    "version": "0.3.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

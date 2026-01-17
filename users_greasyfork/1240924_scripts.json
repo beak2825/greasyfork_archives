@@ -1,0 +1,101 @@
+[
+  {
+    "id": 483984,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-05T17:58:01.000Z",
+    "code_updated_at": "2024-02-17T23:30:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1240924,
+        "name": "Nathan R",
+        "created_at": "2023-12-29T23:45:27.000Z",
+        "url": "https://greasyfork.org/users/1240924-nathan-r"
+      }
+    ],
+    "name": "Filter Enabled+ Calendar for Leaders",
+    "description": "Filter appointments on the calendar by status, source, and user. Reapply filters when data updates.",
+    "url": "https://greasyfork.org/scripts/483984-filter-enabled-calendar-for-leaders",
+    "code_url": "https://update.greasyfork.org/scripts/483984/Filter%20Enabled%2B%20Calendar%20for%20Leaders.user.js",
+    "code_size": 1153,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 483796,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-04T00:00:30.000Z",
+    "code_updated_at": "2024-01-20T20:42:22.000Z",
+    "namespace": "https://yournamespace.example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1240924,
+        "name": "Nathan R",
+        "created_at": "2023-12-29T23:45:27.000Z",
+        "url": "https://greasyfork.org/users/1240924-nathan-r"
+      }
+    ],
+    "name": "Copy Lead Button",
+    "description": "Add Copy Lead button to pages starting with \"https://enabledplus.com/Lead\"",
+    "url": "https://greasyfork.org/scripts/483796-copy-lead-button",
+    "code_url": "https://update.greasyfork.org/scripts/483796/Copy%20Lead%20Button.user.js",
+    "code_size": 8712,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 483413,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-29T23:47:58.000Z",
+    "code_updated_at": "2025-08-12T01:10:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1240924,
+        "name": "Nathan R",
+        "created_at": "2023-12-29T23:45:27.000Z",
+        "url": "https://greasyfork.org/users/1240924-nathan-r"
+      }
+    ],
+    "name": "LeadPerfection Enhancer",
+    "description": "Dispo sort on Issue pages; inline “Copy” next to each phone; “Copy Text Msg” below; pulls your LP first name; full-width container; robust polling on SPA nav.",
+    "url": "https://greasyfork.org/scripts/483413-leadperfection-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/483413/LeadPerfection%20Enhancer.user.js",
+    "code_size": 7632,
+    "license": "MIT License",
+    "version": "4.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485637,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-25T09:14:53.000Z",
+    "code_updated_at": "2024-01-25T09:14:53.000Z",
+    "namespace": "https://greasyfork.org/en/users/22079-hntee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 22079,
+        "name": "hntee",
+        "created_at": "2015-12-05T10:01:57.000Z",
+        "url": "https://greasyfork.org/users/22079-hntee"
+      }
+    ],
+    "name": "Porkbun Helper",
+    "description": "Remove Porkbun unavailable domains",
+    "url": "https://greasyfork.org/scripts/485637-porkbun-helper",
+    "code_url": "https://update.greasyfork.org/scripts/485637/Porkbun%20Helper.user.js",
+    "code_size": 1129,
+    "license": "MIT License",
+    "version": "2024-01-25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -64,5 +64,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 475787,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-21T03:10:02.000Z",
+    "code_updated_at": "2024-08-07T14:13:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810949,
+        "name": "maple.",
+        "created_at": "2021-09-01T05:20:21.000Z",
+        "url": "https://greasyfork.org/users/810949-maple"
+      }
+    ],
+    "name": "Peek-Boss [窥视Boss直聘]",
+    "description": "偷偷查看Boss直聘;作用于公司上班环境，不适合查看boss的场景。修改了boss的图标以及标题。以及对色彩做了暗色处理，使它看起来不那么明显。",
+    "url": "https://greasyfork.org/scripts/475787-peek-boss-%E7%AA%A5%E8%A7%86boss%E7%9B%B4%E8%81%98",
+    "code_url": "https://update.greasyfork.org/scripts/475787/Peek-Boss%20%5B%E7%AA%A5%E8%A7%86Boss%E7%9B%B4%E8%81%98%5D.user.js",
+    "code_size": 10177,
+    "license": "Apache License 2.0",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435856,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-21T14:15:07.000Z",
+    "code_updated_at": "2022-01-03T07:08:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810949,
+        "name": "maple.",
+        "created_at": "2021-09-01T05:20:21.000Z",
+        "url": "https://greasyfork.org/users/810949-maple"
+      }
+    ],
+    "name": "单个课程循环浏览",
+    "description": "单个课程循环浏览.",
+    "url": "https://greasyfork.org/scripts/435856-%E5%8D%95%E4%B8%AA%E8%AF%BE%E7%A8%8B%E5%BE%AA%E7%8E%AF%E6%B5%8F%E8%A7%88",
+    "code_url": "https://update.greasyfork.org/scripts/435856/%E5%8D%95%E4%B8%AA%E8%AF%BE%E7%A8%8B%E5%BE%AA%E7%8E%AF%E6%B5%8F%E8%A7%88.user.js",
+    "code_size": 3810,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 435139,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-07T09:56:24.000Z",
+    "code_updated_at": "2022-01-03T07:05:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810949,
+        "name": "maple.",
+        "created_at": "2021-09-01T05:20:21.000Z",
+        "url": "https://greasyfork.org/users/810949-maple"
+      }
+    ],
+    "name": "教育网脚本",
+    "description": "全国煤炭行业现代远程教育培训网每月培训自动播放，自动下一个，静音。",
+    "url": "https://greasyfork.org/scripts/435139-%E6%95%99%E8%82%B2%E7%BD%91%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/435139/%E6%95%99%E8%82%B2%E7%BD%91%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 8701,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432222,
+    "daily_installs": 0,
+    "total_installs": 171511,
+    "fan_score": "61.8",
+    "good_ratings": 35,
+    "ok_ratings": 23,
+    "bad_ratings": 5,
+    "created_at": "2021-09-11T01:29:01.000Z",
+    "code_updated_at": "2023-05-04T03:50:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810949,
+        "name": "maple.",
+        "created_at": "2021-09-01T05:20:21.000Z",
+        "url": "https://greasyfork.org/users/810949-maple"
+      }
+    ],
+    "name": "职教云|智慧职教助手[稳定版]",
+    "description": "智慧职教自动刷课，点击进入课程首页自动开始（播放视频第一次手动静音），可结合浏览器倍数插件一起使用（最好别超过1.5倍速）",
+    "url": "https://greasyfork.org/scripts/432222-%E8%81%8C%E6%95%99%E4%BA%91-%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E5%8A%A9%E6%89%8B-%E7%A8%B3%E5%AE%9A%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/432222/%E8%81%8C%E6%95%99%E4%BA%91%7C%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E5%8A%A9%E6%89%8B%5B%E7%A8%B3%E5%AE%9A%E7%89%88%5D.user.js",
+    "code_size": 23024,
+    "license": null,
+    "version": "1.3.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431734,
+    "daily_installs": 0,
+    "total_installs": 428,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-01T05:29:56.000Z",
+    "code_updated_at": "2023-10-18T07:33:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810949,
+        "name": "maple.",
+        "created_at": "2021-09-01T05:20:21.000Z",
+        "url": "https://greasyfork.org/users/810949-maple"
+      }
+    ],
+    "name": "哔哩哔哩工具[快捷键|视频时长]",
+    "description": "快捷键【c】打开关闭弹幕，跳过充电鸣谢，自动下一个，视频时长统计",
+    "url": "https://greasyfork.org/scripts/431734-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%B7%A5%E5%85%B7-%E5%BF%AB%E6%8D%B7%E9%94%AE-%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF",
+    "code_url": "https://update.greasyfork.org/scripts/431734/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%B7%A5%E5%85%B7%5B%E5%BF%AB%E6%8D%B7%E9%94%AE%7C%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%5D.user.js",
+    "code_size": 9308,
+    "license": null,
+    "version": "2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

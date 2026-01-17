@@ -1,0 +1,59 @@
+{
+  "id": 455761,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-01T06:57:52.000Z",
+  "code_updated_at": "2022-12-01T14:11:53.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/455761-bring-my-color-back",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 935891,
+      "name": "mztown",
+      "created_at": "2022-07-15T06:11:04.000Z",
+      "url": "https://greasyfork.org/users/935891-mztown",
+      "scripts": [
+        {
+          "id": 455761,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-01T06:57:52.000Z",
+          "code_updated_at": "2022-12-01T14:11:53.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/455761-bring-my-color-back",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bring My Color Back",
+          "description": "Remove grayscale filter enforced on ominous events. Be happy.",
+          "url": "https://greasyfork.org/scripts/455761-bring-my-color-back",
+          "code_url": "https://update.greasyfork.org/scripts/455761/Bring%20My%20Color%20Back.user.js",
+          "code_size": 1351,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bring My Color Back",
+  "description": "Remove grayscale filter enforced on ominous events. Be happy.",
+  "url": "https://greasyfork.org/scripts/455761-bring-my-color-back",
+  "code_url": "https://update.greasyfork.org/scripts/455761/Bring%20My%20Color%20Back.user.js",
+  "code_size": 1351,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

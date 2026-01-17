@@ -64,5 +64,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 478174,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-24T15:08:01.000Z",
+    "code_updated_at": "2023-12-06T12:44:27.000Z",
+    "namespace": "https://t.bilibili.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 674544,
+        "name": "XX NB",
+        "created_at": "2020-08-08T17:24:31.000Z",
+        "url": "https://greasyfork.org/users/674544-xx-nb"
+      }
+    ],
+    "name": "B站动态广告、抽奖、关键字净化",
+    "description": "自动屏蔽转发抽奖和UP主推荐的商品，且可设定自定义的屏蔽词",
+    "url": "https://greasyfork.org/scripts/478174-b%E7%AB%99%E5%8A%A8%E6%80%81%E5%B9%BF%E5%91%8A-%E6%8A%BD%E5%A5%96-%E5%85%B3%E9%94%AE%E5%AD%97%E5%87%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/478174/B%E7%AB%99%E5%8A%A8%E6%80%81%E5%B9%BF%E5%91%8A%E3%80%81%E6%8A%BD%E5%A5%96%E3%80%81%E5%85%B3%E9%94%AE%E5%AD%97%E5%87%80%E5%8C%96.user.js",
+    "code_size": 4692,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477503,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-16T02:28:14.000Z",
+    "code_updated_at": "2023-10-16T02:28:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 674544,
+        "name": "XX NB",
+        "created_at": "2020-08-08T17:24:31.000Z",
+        "url": "https://greasyfork.org/users/674544-xx-nb"
+      }
+    ],
+    "name": "补天WEB导出",
+    "description": "用于联通补天WEB",
+    "url": "https://greasyfork.org/scripts/477503-%E8%A1%A5%E5%A4%A9web%E5%AF%BC%E5%87%BA",
+    "code_url": "https://update.greasyfork.org/scripts/477503/%E8%A1%A5%E5%A4%A9WEB%E5%AF%BC%E5%87%BA.user.js",
+    "code_size": 4467,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 463354,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-05T17:34:18.000Z",
+  "code_updated_at": "2025-05-15T14:05:52.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/463354-1_the-bump",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906522,
+      "name": "sports_wook",
+      "created_at": "2022-04-25T00:32:15.000Z",
+      "url": "https://greasyfork.org/users/906522-sports-wook",
+      "scripts": []
+    }
+  ],
+  "name": "1_The-Bump",
+  "description": "fix layout on mobile & block ads",
+  "url": "https://greasyfork.org/scripts/463354-1-the-bump",
+  "code_url": "https://update.greasyfork.org/scripts/463354/1_The-Bump.user.js",
+  "code_size": 1703,
+  "license": null,
+  "version": "2025.05.15",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

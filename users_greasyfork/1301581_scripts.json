@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494946,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-14T15:01:23.000Z",
+    "code_updated_at": "2024-05-14T15:01:23.000Z",
+    "namespace": "https://gw2pc.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1301581,
+        "name": "Korunos",
+        "created_at": "2024-05-14T14:48:18.000Z",
+        "url": "https://greasyfork.org/users/1301581-korunos"
+      }
+    ],
+    "name": "GW2PC T6 Stack Price with Discount",
+    "description": "Show the price of a whole stack (250) for each of the T6 materials with a 10% discount on https://gw2pc.com/t6/",
+    "url": "https://greasyfork.org/scripts/494946-gw2pc-t6-stack-price-with-discount",
+    "code_url": "https://update.greasyfork.org/scripts/494946/GW2PC%20T6%20Stack%20Price%20with%20Discount.user.js",
+    "code_size": 3778,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

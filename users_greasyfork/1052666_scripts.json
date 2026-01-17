@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463200,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-04T02:01:25.000Z",
+    "code_updated_at": "2023-04-27T19:49:02.000Z",
+    "namespace": "http://preciosclaros.gob.ar/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052666,
+        "name": "Jonatan Pintos",
+        "created_at": "2023-04-04T01:58:30.000Z",
+        "url": "https://greasyfork.org/users/1052666-jonatan-pintos"
+      }
+    ],
+    "name": "Precios Claros",
+    "description": "Compara precios en PreciosClaros",
+    "url": "https://greasyfork.org/scripts/463200-precios-claros",
+    "code_url": "https://update.greasyfork.org/scripts/463200/Precios%20Claros.user.js",
+    "code_size": 22803,
+    "license": "MIT License",
+    "version": "0.52",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

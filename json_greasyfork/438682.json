@@ -1,0 +1,33 @@
+{
+  "id": 438682,
+  "daily_installs": 0,
+  "total_installs": 105,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-17T13:39:21.000Z",
+  "code_updated_at": "2022-01-18T12:21:59.000Z",
+  "namespace": "udemyTranscript",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 866015,
+      "name": "K Demir",
+      "created_at": "2022-01-17T13:34:39.000Z",
+      "url": "https://greasyfork.org/users/866015-k-demir"
+    }
+  ],
+  "name": "Copy Udemy Transcript to the clipboard!",
+  "description": "You can copy the Udemy transcript text and manupilate newlines automatically.",
+  "url": "https://greasyfork.org/scripts/438682-copy-udemy-transcript-to-the-clipboard",
+  "code_url": "https://update.greasyfork.org/scripts/438682/Copy%20Udemy%20Transcript%20to%20the%20clipboard%21.user.js",
+  "code_size": 2456,
+  "license": "good2see",
+  "version": "1.0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

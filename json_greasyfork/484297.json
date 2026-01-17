@@ -1,0 +1,33 @@
+{
+  "id": 484297,
+  "daily_installs": 0,
+  "total_installs": 465,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-09T00:53:11.000Z",
+  "code_updated_at": "2024-01-09T00:53:11.000Z",
+  "namespace": "c.ai quality score",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1245284,
+      "name": "Philipuss1",
+      "created_at": "2024-01-09T00:43:49.000Z",
+      "url": "https://greasyfork.org/users/1245284-philipuss1"
+    }
+  ],
+  "name": "Add Quality Score to C.AI",
+  "description": "this userscript adds a 'quality' score to characters. it's based on the actions/likes ratio. this way you can be more informed when choosing a character to talk to",
+  "url": "https://greasyfork.org/scripts/484297-add-quality-score-to-c-ai",
+  "code_url": "https://update.greasyfork.org/scripts/484297/Add%20Quality%20Score%20to%20CAI.user.js",
+  "code_size": 1923,
+  "license": "GPLv3",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456297,
+    "daily_installs": 0,
+    "total_installs": 574,
+    "fan_score": "60.4",
+    "good_ratings": 13,
+    "ok_ratings": 1,
+    "bad_ratings": 2,
+    "created_at": "2022-12-08T21:23:40.000Z",
+    "code_updated_at": "2025-12-23T21:18:47.000Z",
+    "namespace": "Beta",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 6087,
+        "name": "mrfix",
+        "created_at": "2014-10-16T06:31:05.000Z",
+        "url": "https://greasyfork.org/users/6087-mrfix"
+      }
+    ],
+    "name": "Empire Overview",
+    "description": "Script for Ikariam 8.x.x, Overview tables for resources, buildings and military inspired by Ikariam Empire Board",
+    "url": "https://greasyfork.org/scripts/456297-empire-overview",
+    "code_url": "https://update.greasyfork.org/scripts/456297/Empire%20Overview.user.js",
+    "code_size": 648904,
+    "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+    "version": "1.1947",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

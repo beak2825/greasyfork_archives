@@ -1,0 +1,33 @@
+{
+  "id": 452898,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-12T03:25:22.000Z",
+  "code_updated_at": "2022-10-16T07:40:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 969465,
+      "name": "lietome",
+      "created_at": "2022-10-12T03:20:45.000Z",
+      "url": "https://greasyfork.org/users/969465-lietome"
+    }
+  ],
+  "name": "Mira Comment Collector",
+  "description": "直播互动抓取脚本",
+  "url": "https://greasyfork.org/scripts/452898-mira-comment-collector",
+  "code_url": "https://update.greasyfork.org/scripts/452898/Mira%20Comment%20Collector.user.js",
+  "code_size": 4635,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

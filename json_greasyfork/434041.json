@@ -1,0 +1,33 @@
+{
+  "id": 434041,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-17T15:39:09.000Z",
+  "code_updated_at": "2021-10-17T15:39:09.000Z",
+  "namespace": "passtheheadphones.me",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 165243,
+      "name": "Quoph",
+      "created_at": "2018-01-02T03:04:41.000Z",
+      "url": "https://greasyfork.org/users/165243-quoph"
+    }
+  ],
+  "name": "RED Least Seeded by Artist",
+  "description": "Lists the least seeded releases on artist & collage pages",
+  "url": "https://greasyfork.org/scripts/434041-red-least-seeded-by-artist",
+  "code_url": "https://update.greasyfork.org/scripts/434041/RED%20Least%20Seeded%20by%20Artist.user.js",
+  "code_size": 9372,
+  "license": null,
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

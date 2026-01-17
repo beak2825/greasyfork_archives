@@ -1,0 +1,59 @@
+{
+  "id": 459445,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-04T19:22:09.000Z",
+  "code_updated_at": "2023-02-04T19:22:09.000Z",
+  "namespace": "remove_twitter_blue_ad_and_put_lists_back",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 825842,
+      "name": "Suyooo",
+      "created_at": "2021-10-16T14:36:05.000Z",
+      "url": "https://greasyfork.org/users/825842-suyooo",
+      "scripts": [
+        {
+          "id": 433989,
+          "daily_installs": 0,
+          "total_installs": 93,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-16T14:39:03.000Z",
+          "code_updated_at": "2022-09-17T06:51:17.000Z",
+          "namespace": "https://greasyfork.org/users/825842",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Discord - Do Not Mention on Replies By Default",
+          "description": "Sets Mention on Reply to Off by default, and adds Alt+m as a keyboard shortcut to toggle",
+          "url": "https://greasyfork.org/scripts/433989-discord-do-not-mention-on-replies-by-default",
+          "code_url": "https://update.greasyfork.org/scripts/433989/Discord%20-%20Do%20Not%20Mention%20on%20Replies%20By%20Default.user.js",
+          "code_size": 1224,
+          "license": "Apache License 2.0",
+          "version": "3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Replace Twitter Blue Button with Lists Button",
+  "description": "Undoes the change where a Twitter Blue sign-up link replace the Lists button in the sidebar",
+  "url": "https://greasyfork.org/scripts/459445-replace-twitter-blue-button-with-lists-button",
+  "code_url": "https://update.greasyfork.org/scripts/459445/Replace%20Twitter%20Blue%20Button%20with%20Lists%20Button.user.js",
+  "code_size": 3151,
+  "license": "GNU GPLv3",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

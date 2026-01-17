@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445432,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-23T14:51:35.000Z",
+    "code_updated_at": "2022-05-23T14:51:35.000Z",
+    "namespace": "https://github.com/Teages/tampermonkey-things/tree/main/osu-web/osu-web-modding-queues-highlight",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 917707,
+        "name": "Teages",
+        "created_at": "2022-05-23T14:44:47.000Z",
+        "url": "https://greasyfork.org/users/917707-teages"
+      }
+    ],
+    "name": "osu!web highlight for modding queues",
+    "description": "highlight post in Modding Queues of osu! forum.",
+    "url": "https://greasyfork.org/scripts/445432-osu-web-highlight-for-modding-queues",
+    "code_url": "https://update.greasyfork.org/scripts/445432/osu%21web%20highlight%20for%20modding%20queues.user.js",
+    "code_size": 3615,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

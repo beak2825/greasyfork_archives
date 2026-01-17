@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424724,
+    "daily_installs": 0,
+    "total_installs": 160,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-08T23:18:32.000Z",
+    "code_updated_at": "2021-04-08T23:18:32.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 756525,
+        "name": "anekos",
+        "created_at": "2021-04-08T23:14:09.000Z",
+        "url": "https://greasyfork.org/users/756525-anekos"
+      }
+    ],
+    "name": "aliexpress.com no shitty links",
+    "description": "4/8/2021, 8:29:16 PM",
+    "url": "https://greasyfork.org/scripts/424724-aliexpress-com-no-links",
+    "code_url": "https://update.greasyfork.org/scripts/424724/aliexpresscom%20no%20shitty%20links.user.js",
+    "code_size": 1342,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

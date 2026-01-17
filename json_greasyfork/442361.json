@@ -1,0 +1,34 @@
+{
+  "id": 442361,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-30T14:46:43.000Z",
+  "code_updated_at": "2022-03-30T14:46:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 895473,
+      "name": "Lennart Neelis",
+      "created_at": "2022-03-30T14:21:25.000Z",
+      "url": "https://greasyfork.org/users/895473-lennart-neelis",
+      "scripts": []
+    }
+  ],
+  "name": "End In Progress",
+  "description": "set top 1000 queue items from 'In Progress' to 'Failed'.",
+  "url": "https://greasyfork.org/scripts/442361-end-in-progress",
+  "code_url": "https://update.greasyfork.org/scripts/442361/End%20In%20Progress.user.js",
+  "code_size": 6126,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

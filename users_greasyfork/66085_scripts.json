@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 471291,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-20T21:04:48.000Z",
+    "code_updated_at": "2023-07-20T21:12:34.000Z",
+    "namespace": "https://greasyfork.org/users/66085",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 66085,
+        "name": "trumpetbear",
+        "created_at": "2016-09-14T04:41:44.000Z",
+        "url": "https://greasyfork.org/users/66085-trumpetbear"
+      }
+    ],
+    "name": "Sic 'Em 365 - Notification Hover",
+    "description": "Show Notifications on hover",
+    "url": "https://greasyfork.org/scripts/471291-sic-em-365-notification-hover",
+    "code_url": "https://update.greasyfork.org/scripts/471291/Sic%20%27Em%20365%20-%20Notification%20Hover.user.js",
+    "code_size": 567,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441651,
+    "daily_installs": 0,
+    "total_installs": 183,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-17T11:23:55.000Z",
+    "code_updated_at": "2022-03-18T05:20:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888586,
+        "name": "ImFirstPlace",
+        "created_at": "2022-03-17T11:00:51.000Z",
+        "url": "https://greasyfork.org/users/888586-imfirstplace"
+      }
+    ],
+    "name": "Remove Roblox URL Tracking",
+    "description": "Removes the newly implemented roblox URL tracking parameters.",
+    "url": "https://greasyfork.org/scripts/441651-remove-roblox-url-tracking",
+    "code_url": "https://update.greasyfork.org/scripts/441651/Remove%20Roblox%20URL%20Tracking.user.js",
+    "code_size": 2211,
+    "license": "GPL-3.0 License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

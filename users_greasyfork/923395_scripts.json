@@ -1,0 +1,68 @@
+[
+  {
+    "id": 465165,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-30T01:11:36.000Z",
+    "code_updated_at": "2025-10-14T03:46:41.000Z",
+    "namespace": "zam157.fck-x",
+    "support_url": "https://github.com/zam157/tamper/tree/master/scripts/fck-x",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 923395,
+        "name": "zam157",
+        "created_at": "2022-06-08T10:01:43.000Z",
+        "url": "https://greasyfork.org/users/923395-zam157"
+      }
+    ],
+    "name": "Fck X (Twitter)",
+    "description": "F**k X!",
+    "url": "https://greasyfork.org/scripts/465165-fck-x-twitter",
+    "code_url": "https://update.greasyfork.org/scripts/465165/Fck%20X%20%28Twitter%29.user.js",
+    "code_size": 2810,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 446255,
+    "daily_installs": 0,
+    "total_installs": 397,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-09T09:45:24.000Z",
+    "code_updated_at": "2025-10-16T11:45:49.000Z",
+    "namespace": "zam157.pilifukker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 923395,
+        "name": "zam157",
+        "created_at": "2022-06-08T10:01:43.000Z",
+        "url": "https://greasyfork.org/users/923395-zam157"
+      }
+    ],
+    "name": "去nm的哔哩哔哩",
+    "description": "Fuck pilipili",
+    "url": "https://greasyfork.org/scripts/446255-%E5%8E%BBnm%E7%9A%84%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9",
+    "code_url": "https://update.greasyfork.org/scripts/446255/%E5%8E%BBnm%E7%9A%84%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9.user.js",
+    "code_size": 2577,
+    "license": "MIT License",
+    "version": "0.10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

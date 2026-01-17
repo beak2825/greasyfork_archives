@@ -1,0 +1,59 @@
+{
+  "id": 442886,
+  "daily_installs": 0,
+  "total_installs": 71,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-06T16:07:47.000Z",
+  "code_updated_at": "2022-04-11T12:54:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 898631,
+      "name": "fhaze",
+      "created_at": "2022-04-06T16:04:04.000Z",
+      "url": "https://greasyfork.org/users/898631-fhaze",
+      "scripts": [
+        {
+          "id": 442886,
+          "daily_installs": 0,
+          "total_installs": 71,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-06T16:07:47.000Z",
+          "code_updated_at": "2022-04-11T12:54:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Teams Auto-Expand Chat",
+          "description": "Auto-Expand Chats Topics",
+          "url": "https://greasyfork.org/scripts/442886-teams-auto-expand-chat",
+          "code_url": "https://update.greasyfork.org/scripts/442886/Teams%20Auto-Expand%20Chat.user.js",
+          "code_size": 3076,
+          "license": null,
+          "version": "0.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Teams Auto-Expand Chat",
+  "description": "Auto-Expand Chats Topics",
+  "url": "https://greasyfork.org/scripts/442886-teams-auto-expand-chat",
+  "code_url": "https://update.greasyfork.org/scripts/442886/Teams%20Auto-Expand%20Chat.user.js",
+  "code_size": 3076,
+  "license": null,
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

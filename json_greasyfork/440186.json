@@ -1,0 +1,59 @@
+{
+  "id": 440186,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-17T09:46:44.000Z",
+  "code_updated_at": "2022-02-22T22:27:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 877528,
+      "name": "TianLuen",
+      "created_at": "2022-02-17T09:40:50.000Z",
+      "url": "https://greasyfork.org/users/877528-tianluen",
+      "scripts": [
+        {
+          "id": 440186,
+          "daily_installs": 0,
+          "total_installs": 34,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-17T09:46:44.000Z",
+          "code_updated_at": "2022-02-22T22:27:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ex-sccn",
+          "description": "更好的sccn",
+          "url": "https://greasyfork.org/scripts/440186-ex-sccn",
+          "code_url": "https://update.greasyfork.org/scripts/440186/Ex-sccn.user.js",
+          "code_size": 4399,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ex-sccn",
+  "description": "更好的sccn",
+  "url": "https://greasyfork.org/scripts/440186-ex-sccn",
+  "code_url": "https://update.greasyfork.org/scripts/440186/Ex-sccn.user.js",
+  "code_size": 4399,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

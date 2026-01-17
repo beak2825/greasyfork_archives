@@ -1,0 +1,59 @@
+{
+  "id": 435762,
+  "daily_installs": 0,
+  "total_installs": 108,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-20T03:05:48.000Z",
+  "code_updated_at": "2021-11-20T03:05:48.000Z",
+  "namespace": "http://tampermonkey.net/undefined",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841313,
+      "name": "someGenki",
+      "created_at": "2021-11-20T02:55:00.000Z",
+      "url": "https://greasyfork.org/users/841313-somegenki",
+      "scripts": [
+        {
+          "id": 435762,
+          "daily_installs": 0,
+          "total_installs": 108,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-20T03:05:48.000Z",
+          "code_updated_at": "2021-11-20T03:05:48.000Z",
+          "namespace": "http://tampermonkey.net/undefined",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动跳过网站的外链提示",
+          "description": "一个很简单的小脚本，用于自动跳转知乎、掘金、简书等打开外链的跳转/离开提示(不算是外链直达)，这样写简单又通用。\\n另外可以用外链直达方式，那就是替换页面中的跳转链接为真实链接或者接管a标签的点击事件",
+          "url": "https://greasyfork.org/scripts/435762-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87%E7%BD%91%E7%AB%99%E7%9A%84%E5%A4%96%E9%93%BE%E6%8F%90%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/435762/%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87%E7%BD%91%E7%AB%99%E7%9A%84%E5%A4%96%E9%93%BE%E6%8F%90%E7%A4%BA.user.js",
+          "code_size": 1624,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动跳过网站的外链提示",
+  "description": "一个很简单的小脚本，用于自动跳转知乎、掘金、简书等打开外链的跳转/离开提示(不算是外链直达)，这样写简单又通用。\\n另外可以用外链直达方式，那就是替换页面中的跳转链接为真实链接或者接管a标签的点击事件",
+  "url": "https://greasyfork.org/scripts/435762-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87%E7%BD%91%E7%AB%99%E7%9A%84%E5%A4%96%E9%93%BE%E6%8F%90%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/435762/%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87%E7%BD%91%E7%AB%99%E7%9A%84%E5%A4%96%E9%93%BE%E6%8F%90%E7%A4%BA.user.js",
+  "code_size": 1624,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

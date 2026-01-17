@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492706,
+    "daily_installs": 2,
+    "total_installs": 3761,
+    "fan_score": "72.2",
+    "good_ratings": 10,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-17T02:06:39.000Z",
+    "code_updated_at": "2024-09-26T03:46:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1288991,
+        "name": "hdshing",
+        "created_at": "2024-04-16T10:58:25.000Z",
+        "url": "https://greasyfork.org/users/1288991-hdshing"
+      }
+    ],
+    "name": "图片下载 | 页面所有图片打包下载 | 单张下载 | 图片预览放大,旋转,信息展示 | 简单有效，想要哪张点哪张",
+    "description": "简单纯洁的网页图片下载工具，侵入性小不影响原网页显示，可集中展示页面所有图片，可点击预览放大，可旋转，可查看图片信息(尺寸，格式，图片大小) | （Ctrl+鼠标右键）下载单个图片",
+    "url": "https://greasyfork.org/scripts/492706-%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD-%E9%A1%B5%E9%9D%A2%E6%89%80%E6%9C%89%E5%9B%BE%E7%89%87%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD-%E5%8D%95%E5%BC%A0%E4%B8%8B%E8%BD%BD-%E5%9B%BE%E7%89%87%E9%A2%84%E8%A7%88%E6%94%BE%E5%A4%A7-%E6%97%8B%E8%BD%AC-%E4%BF%A1%E6%81%AF%E5%B1%95%E7%A4%BA-%E7%AE%80%E5%8D%95%E6%9C%89%E6%95%88-%E6%83%B3%E8%A6%81%E5%93%AA%E5%BC%A0%E7%82%B9%E5%93%AA%E5%BC%A0",
+    "code_url": "https://update.greasyfork.org/scripts/492706/%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%20%7C%20%E9%A1%B5%E9%9D%A2%E6%89%80%E6%9C%89%E5%9B%BE%E7%89%87%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD%20%7C%20%E5%8D%95%E5%BC%A0%E4%B8%8B%E8%BD%BD%20%7C%20%E5%9B%BE%E7%89%87%E9%A2%84%E8%A7%88%E6%94%BE%E5%A4%A7%2C%E6%97%8B%E8%BD%AC%2C%E4%BF%A1%E6%81%AF%E5%B1%95%E7%A4%BA%20%7C%20%E7%AE%80%E5%8D%95%E6%9C%89%E6%95%88%EF%BC%8C%E6%83%B3%E8%A6%81%E5%93%AA%E5%BC%A0%E7%82%B9%E5%93%AA%E5%BC%A0.user.js",
+    "code_size": 72435,
+    "license": "GPLv3",
+    "version": "v4.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

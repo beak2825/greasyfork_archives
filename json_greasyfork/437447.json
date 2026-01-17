@@ -1,0 +1,33 @@
+{
+  "id": 437447,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-22T22:19:33.000Z",
+  "code_updated_at": "2021-12-23T04:18:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 856306,
+      "name": "john joe",
+      "created_at": "2021-12-22T02:33:14.000Z",
+      "url": "https://greasyfork.org/users/856306-john-joe"
+    }
+  ],
+  "name": "Google Search hotkeys",
+  "description": "Quick-select from google search using numbers 1-9. Does not work on sub-results. Adds numbers for reference. Also does NOT yet work on complex results such as yt vids/twitter posts.",
+  "url": "https://greasyfork.org/scripts/437447-google-search-hotkeys",
+  "code_url": "https://update.greasyfork.org/scripts/437447/Google%20Search%20hotkeys.user.js",
+  "code_size": 3548,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 436175,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-27T15:30:54.000Z",
+  "code_updated_at": "2021-11-27T15:30:53.000Z",
+  "namespace": "https://forum.vio-v.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 845251,
+      "name": "sprayzcs",
+      "created_at": "2021-11-27T15:14:11.000Z",
+      "url": "https://greasyfork.org/users/845251-sprayzcs",
+      "scripts": [
+        {
+          "id": 436175,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-27T15:30:54.000Z",
+          "code_updated_at": "2021-11-27T15:30:53.000Z",
+          "namespace": "https://forum.vio-v.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Vio-V Darkmode Signaturen Fix",
+          "description": "Fixes the display of dynamic signatures in dark mode",
+          "url": "https://greasyfork.org/scripts/436175-vio-v-darkmode-signaturen-fix",
+          "code_url": "https://update.greasyfork.org/scripts/436175/Vio-V%20Darkmode%20Signaturen%20Fix.user.js",
+          "code_size": 654,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Vio-V Darkmode Signaturen Fix",
+  "description": "Fixes the display of dynamic signatures in dark mode",
+  "url": "https://greasyfork.org/scripts/436175-vio-v-darkmode-signaturen-fix",
+  "code_url": "https://update.greasyfork.org/scripts/436175/Vio-V%20Darkmode%20Signaturen%20Fix.user.js",
+  "code_size": 654,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

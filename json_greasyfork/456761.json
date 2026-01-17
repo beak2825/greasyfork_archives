@@ -1,0 +1,34 @@
+{
+  "id": 456761,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-18T06:49:01.000Z",
+  "code_updated_at": "2022-12-18T06:49:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 996914,
+      "name": "bin9461",
+      "created_at": "2022-12-13T09:13:16.000Z",
+      "url": "https://greasyfork.org/users/996914-bin9461",
+      "scripts": []
+    }
+  ],
+  "name": "一键教评",
+  "description": "一键教评1.0",
+  "url": "https://greasyfork.org/scripts/456761-%E4%B8%80%E9%94%AE%E6%95%99%E8%AF%84",
+  "code_url": "https://update.greasyfork.org/scripts/456761/%E4%B8%80%E9%94%AE%E6%95%99%E8%AF%84.user.js",
+  "code_size": 921,
+  "license": "bin",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

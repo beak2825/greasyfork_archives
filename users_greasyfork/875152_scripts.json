@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439840,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-10T23:21:26.000Z",
+    "code_updated_at": "2022-02-11T14:14:17.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 875152,
+        "name": "hobbycoder7",
+        "created_at": "2022-02-10T23:01:50.000Z",
+        "url": "https://greasyfork.org/users/875152-hobbycoder7"
+      }
+    ],
+    "name": "Pandora.com desktop player hotkeys",
+    "description": "keyboard short cuts to thumbs down, tired of track, thumbs up, and next track. J K L and N.",
+    "url": "https://greasyfork.org/scripts/439840-pandora-com-desktop-player-hotkeys",
+    "code_url": "https://update.greasyfork.org/scripts/439840/Pandoracom%20desktop%20player%20hotkeys.user.js",
+    "code_size": 1502,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

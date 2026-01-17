@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474746,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-07T11:10:07.000Z",
+    "code_updated_at": "2023-09-07T11:10:07.000Z",
+    "namespace": "https://greasyfork.org/en/users/2159-woxxom",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2159,
+        "name": "woxxom",
+        "created_at": "2014-05-24T11:14:13.000Z",
+        "url": "https://greasyfork.org/users/2159-woxxom"
+      }
+    ],
+    "name": "Drag upwards to open in new tab",
+    "description": "Click and drag a link upwards (20 pixels or more) to open it in a new tab. This script is particularly convenient if you override links to open in current tab by default using an extension or a script like https://greasyfork.org/scripts/4416",
+    "url": "https://greasyfork.org/scripts/474746-drag-upwards-to-open-in-new-tab",
+    "code_url": "https://update.greasyfork.org/scripts/474746/Drag%20upwards%20to%20open%20in%20new%20tab.user.js",
+    "code_size": 1880,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

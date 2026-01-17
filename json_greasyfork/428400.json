@@ -1,0 +1,33 @@
+{
+  "id": 428400,
+  "daily_installs": 0,
+  "total_installs": 70,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-24T11:40:02.000Z",
+  "code_updated_at": "2021-06-24T11:41:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 786915,
+      "name": "Krzysztof Rymski",
+      "created_at": "2021-06-24T11:38:36.000Z",
+      "url": "https://greasyfork.org/users/786915-krzysztof-rymski"
+    }
+  ],
+  "name": "KaniWani audio",
+  "description": "Play audio in KaniWani upon Modification of script so audio is played on right and wrong answers.",
+  "url": "https://greasyfork.org/scripts/428400-kaniwani-audio",
+  "code_url": "https://update.greasyfork.org/scripts/428400/KaniWani%20audio.user.js",
+  "code_size": 7336,
+  "license": null,
+  "version": "0.27",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

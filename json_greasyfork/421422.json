@@ -1,0 +1,59 @@
+{
+  "id": 421422,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-08T08:32:39.000Z",
+  "code_updated_at": "2021-02-18T03:21:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 735644,
+      "name": "zlyheut",
+      "created_at": "2021-02-08T08:22:01.000Z",
+      "url": "https://greasyfork.org/users/735644-zlyheut",
+      "scripts": [
+        {
+          "id": 421422,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-08T08:32:39.000Z",
+          "code_updated_at": "2021-02-18T03:21:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动选中并提交对应的issueCode, autoSubmitError",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/421422-%E8%87%AA%E5%8A%A8%E9%80%89%E4%B8%AD%E5%B9%B6%E6%8F%90%E4%BA%A4%E5%AF%B9%E5%BA%94%E7%9A%84issuecode-autosubmiterror",
+          "code_url": "https://update.greasyfork.org/scripts/421422/%E8%87%AA%E5%8A%A8%E9%80%89%E4%B8%AD%E5%B9%B6%E6%8F%90%E4%BA%A4%E5%AF%B9%E5%BA%94%E7%9A%84issueCode%2C%20autoSubmitError.user.js",
+          "code_size": 1130,
+          "license": null,
+          "version": "0.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动选中并提交对应的issueCode, autoSubmitError",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/421422-%E8%87%AA%E5%8A%A8%E9%80%89%E4%B8%AD%E5%B9%B6%E6%8F%90%E4%BA%A4%E5%AF%B9%E5%BA%94%E7%9A%84issuecode-autosubmiterror",
+  "code_url": "https://update.greasyfork.org/scripts/421422/%E8%87%AA%E5%8A%A8%E9%80%89%E4%B8%AD%E5%B9%B6%E6%8F%90%E4%BA%A4%E5%AF%B9%E5%BA%94%E7%9A%84issueCode%2C%20autoSubmitError.user.js",
+  "code_size": 1130,
+  "license": null,
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

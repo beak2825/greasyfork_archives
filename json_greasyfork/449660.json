@@ -1,0 +1,34 @@
+{
+  "id": 449660,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-16T12:36:01.000Z",
+  "code_updated_at": "2022-08-16T12:36:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 914747,
+      "name": "Aims",
+      "created_at": "2022-05-16T04:45:23.000Z",
+      "url": "https://greasyfork.org/users/914747-aims",
+      "scripts": []
+    }
+  ],
+  "name": "FPS Increaser",
+  "description": "Increases FPS in game if your monitor can handle it. Do not use if you have a high refresh rate monitor (i.e. over 60hz)",
+  "url": "https://greasyfork.org/scripts/449660-fps-increaser",
+  "code_url": "https://update.greasyfork.org/scripts/449660/FPS%20Increaser.user.js",
+  "code_size": 476,
+  "license": null,
+  "version": "0.11111111",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

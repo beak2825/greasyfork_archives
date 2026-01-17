@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441329,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-11T08:21:03.000Z",
+    "code_updated_at": "2022-03-14T02:08:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 885797,
+        "name": "guangmingwan",
+        "created_at": "2022-03-11T08:03:30.000Z",
+        "url": "https://greasyfork.org/users/885797-guangmingwan"
+      }
+    ],
+    "name": "抖音快速下单",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/441329-%E6%8A%96%E9%9F%B3%E5%BF%AB%E9%80%9F%E4%B8%8B%E5%8D%95",
+    "code_url": "https://update.greasyfork.org/scripts/441329/%E6%8A%96%E9%9F%B3%E5%BF%AB%E9%80%9F%E4%B8%8B%E5%8D%95.user.js",
+    "code_size": 6168,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

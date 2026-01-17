@@ -1,0 +1,34 @@
+{
+  "id": 454516,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-09T11:04:08.000Z",
+  "code_updated_at": "2022-11-09T11:04:08.000Z",
+  "namespace": "https://greasyfork.org/users/981122",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 981122,
+      "name": "Oxymoron13",
+      "created_at": "2022-11-09T10:47:32.000Z",
+      "url": "https://greasyfork.org/users/981122-oxymoron13",
+      "scripts": []
+    }
+  ],
+  "name": "WK Katakana For On'yomi custom",
+  "description": "A userscript for wanikani that transforms everything related to on'yomi into katakana.",
+  "url": "https://greasyfork.org/scripts/454516-wk-katakana-for-on-yomi-custom",
+  "code_url": "https://update.greasyfork.org/scripts/454516/WK%20Katakana%20For%20On%27yomi%20custom.user.js",
+  "code_size": 39323,
+  "license": "GPL v3.0",
+  "version": "0.0.1.20221109110408",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

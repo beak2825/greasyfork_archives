@@ -1,0 +1,59 @@
+{
+  "id": 489153,
+  "daily_installs": 0,
+  "total_installs": 76,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-06T11:40:33.000Z",
+  "code_updated_at": "2024-06-29T13:21:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1271006,
+      "name": "Xu Zachery",
+      "created_at": "2024-03-06T11:34:40.000Z",
+      "url": "https://greasyfork.org/users/1271006-xu-zachery",
+      "scripts": [
+        {
+          "id": 489153,
+          "daily_installs": 0,
+          "total_installs": 76,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-06T11:40:33.000Z",
+          "code_updated_at": "2024-06-29T13:21:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站（守望先锋）直播间遮罩层自动删除脚本",
+          "description": "自动删除B站（守望先锋）直播间的遮罩层DIV元素",
+          "url": "https://greasyfork.org/scripts/489153-b%E7%AB%99-%E5%AE%88%E6%9C%9B%E5%85%88%E9%94%8B-%E7%9B%B4%E6%92%AD%E9%97%B4%E9%81%AE%E7%BD%A9%E5%B1%82%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/489153/B%E7%AB%99%EF%BC%88%E5%AE%88%E6%9C%9B%E5%85%88%E9%94%8B%EF%BC%89%E7%9B%B4%E6%92%AD%E9%97%B4%E9%81%AE%E7%BD%A9%E5%B1%82%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 930,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站（守望先锋）直播间遮罩层自动删除脚本",
+  "description": "自动删除B站（守望先锋）直播间的遮罩层DIV元素",
+  "url": "https://greasyfork.org/scripts/489153-b%E7%AB%99-%E5%AE%88%E6%9C%9B%E5%85%88%E9%94%8B-%E7%9B%B4%E6%92%AD%E9%97%B4%E9%81%AE%E7%BD%A9%E5%B1%82%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/489153/B%E7%AB%99%EF%BC%88%E5%AE%88%E6%9C%9B%E5%85%88%E9%94%8B%EF%BC%89%E7%9B%B4%E6%92%AD%E9%97%B4%E9%81%AE%E7%BD%A9%E5%B1%82%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 930,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

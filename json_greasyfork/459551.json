@@ -1,0 +1,33 @@
+{
+  "id": 459551,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-06T21:52:55.000Z",
+  "code_updated_at": "2023-02-06T21:52:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 949556,
+      "name": "jacobgantzpolyglot",
+      "created_at": "2022-08-22T15:53:47.000Z",
+      "url": "https://greasyfork.org/users/949556-jacobgantzpolyglot"
+    }
+  ],
+  "name": "disconnect agent leg",
+  "description": "disconnect agent leg in nice",
+  "url": "https://greasyfork.org/scripts/459551-disconnect-agent-leg",
+  "code_url": "https://update.greasyfork.org/scripts/459551/disconnect%20agent%20leg.user.js",
+  "code_size": 1522,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426733,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-19T21:04:47.000Z",
+    "code_updated_at": "2021-05-28T10:53:31.000Z",
+    "namespace": "https://greasyfork.org/users/774005",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774005,
+        "name": "bmtg42",
+        "created_at": "2021-05-19T21:01:31.000Z",
+        "url": "https://greasyfork.org/users/774005-bmtg42"
+      }
+    ],
+    "name": "WME Bad Suffixes",
+    "description": "Find roads with incorrect suffix abbrevations",
+    "url": "https://greasyfork.org/scripts/426733-wme-bad-suffixes",
+    "code_url": "https://update.greasyfork.org/scripts/426733/WME%20Bad%20Suffixes.user.js",
+    "code_size": 10278,
+    "license": null,
+    "version": "1.03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

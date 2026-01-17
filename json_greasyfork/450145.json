@@ -1,0 +1,59 @@
+{
+  "id": 450145,
+  "daily_installs": 0,
+  "total_installs": 891,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-25T07:12:33.000Z",
+  "code_updated_at": "2022-08-25T07:23:10.000Z",
+  "namespace": "Baiduwenkuvip",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 950537,
+      "name": "Ma Hei",
+      "created_at": "2022-08-25T06:11:28.000Z",
+      "url": "https://greasyfork.org/users/950537-ma-hei",
+      "scripts": [
+        {
+          "id": 450145,
+          "daily_installs": 0,
+          "total_installs": 891,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-25T07:12:33.000Z",
+          "code_updated_at": "2022-08-25T07:23:10.000Z",
+          "namespace": "Baiduwenkuvip",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "百度文库VIP",
+          "description": "这是一个百度文库VIP",
+          "url": "https://greasyfork.org/scripts/450145-%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93vip",
+          "code_url": "https://update.greasyfork.org/scripts/450145/%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93VIP.user.js",
+          "code_size": 1086,
+          "license": "The MIT License (MIT); http://opensource.org/licenses/MIT",
+          "version": "0.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "百度文库VIP",
+  "description": "这是一个百度文库VIP",
+  "url": "https://greasyfork.org/scripts/450145-%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93vip",
+  "code_url": "https://update.greasyfork.org/scripts/450145/%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93VIP.user.js",
+  "code_size": 1086,
+  "license": "The MIT License (MIT); http://opensource.org/licenses/MIT",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

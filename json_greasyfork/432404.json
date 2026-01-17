@@ -1,0 +1,34 @@
+{
+  "id": 432404,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-14T11:53:20.000Z",
+  "code_updated_at": "2024-06-15T09:37:46.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 102550,
+      "name": "xg su",
+      "created_at": "2017-02-14T12:39:02.000Z",
+      "url": "https://greasyfork.org/users/102550-xg-su",
+      "scripts": []
+    }
+  ],
+  "name": "Quick Search - 快速搜索",
+  "description": "无缝集成 划词搜索 + 快捷键搜索 + 搜索跳转 + 网址导航, 享受丝滑搜索体验",
+  "url": "https://greasyfork.org/scripts/432404-quick-search-%E5%BF%AB%E9%80%9F%E6%90%9C%E7%B4%A2",
+  "code_url": "https://update.greasyfork.org/scripts/432404/Quick%20Search%20-%20%E5%BF%AB%E9%80%9F%E6%90%9C%E7%B4%A2.user.js",
+  "code_size": 774393,
+  "license": null,
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

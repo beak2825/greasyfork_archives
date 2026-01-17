@@ -1,0 +1,33 @@
+{
+  "id": 451897,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-23T13:38:55.000Z",
+  "code_updated_at": "2022-09-26T18:30:11.000Z",
+  "namespace": "https://greasyfork.org/en/users/962705",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 962705,
+      "name": "rrreddd",
+      "created_at": "2022-09-23T13:34:01.000Z",
+      "url": "https://greasyfork.org/users/962705-rrreddd"
+    }
+  ],
+  "name": "Bonk Friends - red mod",
+  "description": "Notifies user when friends are online",
+  "url": "https://greasyfork.org/scripts/451897-bonk-friends-red-mod",
+  "code_url": "https://update.greasyfork.org/scripts/451897/Bonk%20Friends%20-%20red%20mod.user.js",
+  "code_size": 3193,
+  "license": "MIT License",
+  "version": "0.4a",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

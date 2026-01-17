@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441689,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-18T09:08:39.000Z",
+    "code_updated_at": "2022-03-18T09:08:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888685,
+        "name": "GolThr",
+        "created_at": "2022-03-17T14:51:28.000Z",
+        "url": "https://greasyfork.org/users/888685-golthr"
+      }
+    ],
+    "name": "TianchiNotebook",
+    "description": "天池Notebook界面优化。",
+    "url": "https://greasyfork.org/scripts/441689-tianchinotebook",
+    "code_url": "https://update.greasyfork.org/scripts/441689/TianchiNotebook.user.js",
+    "code_size": 4524,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

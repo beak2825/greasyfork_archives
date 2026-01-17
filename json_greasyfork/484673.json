@@ -1,0 +1,34 @@
+{
+  "id": 484673,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-12T14:37:57.000Z",
+  "code_updated_at": "2024-01-22T11:03:17.000Z",
+  "namespace": "http://your.namespace.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed Combined ING Andreas Göschel",
+  "description": "Insert multiple transaction elements with custom details and change account balances",
+  "url": "https://greasyfork.org/scripts/484673-ed-combined-ing-andreas-g%C3%B6schel",
+  "code_url": "https://update.greasyfork.org/scripts/484673/Ed%20Combined%20ING%20Andreas%20G%C3%B6schel.user.js",
+  "code_size": 464,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

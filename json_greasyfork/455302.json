@@ -1,0 +1,33 @@
+{
+  "id": 455302,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-23T15:41:07.000Z",
+  "code_updated_at": "2022-11-27T15:11:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 302934,
+      "name": "Toshi",
+      "created_at": "2019-05-18T14:26:41.000Z",
+      "url": "https://greasyfork.org/users/302934-toshi"
+    }
+  ],
+  "name": "[YouTube] Auto add Text in ChatBox",
+  "description": "Auto add Text in ChatBox.",
+  "url": "https://greasyfork.org/scripts/455302-youtube-auto-add-text-in-chatbox",
+  "code_url": "https://update.greasyfork.org/scripts/455302/1121818/%5BYouTube%5D%20Auto%20add%20Text%20in%20ChatBox.js",
+  "code_size": 1562,
+  "license": null,
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

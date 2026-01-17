@@ -1,0 +1,35 @@
+[
+  {
+    "id": 459897,
+    "daily_installs": 0,
+    "total_installs": 200,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-12T11:15:43.000Z",
+    "code_updated_at": "2023-10-01T02:41:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1026000,
+        "name": "Masaoki_Seta",
+        "created_at": "2023-02-12T10:48:34.000Z",
+        "url": "https://greasyfork.org/users/1026000-masaoki-seta"
+      }
+    ],
+    "name": "AtCoderPenaltyRateCheckEaser",
+    "description": "提出フォームの上にペナルティ率を表示して、提出前に確認しやすくします",
+    "url": "https://greasyfork.org/scripts/459897-atcoderpenaltyratecheckeaser",
+    "code_url": "https://update.greasyfork.org/scripts/459897/AtCoderPenaltyRateCheckEaser.user.js",
+    "code_size": 2837,
+    "license": "MIT License",
+    "version": "0.2.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 444512,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-05T16:03:14.000Z",
+  "code_updated_at": "2022-05-06T12:54:39.000Z",
+  "namespace": "discord-utilities",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 895439,
+      "name": "trashed",
+      "created_at": "2022-03-30T13:01:51.000Z",
+      "url": "https://greasyfork.org/users/895439-trashed",
+      "scripts": []
+    }
+  ],
+  "name": "Discord Utilities",
+  "description": "Discord utilities with lots of features that fully customizable!",
+  "url": "https://greasyfork.org/scripts/444512-discord-utilities",
+  "code_url": "https://update.greasyfork.org/scripts/444512/Discord%20Utilities.user.js",
+  "code_size": 26631,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

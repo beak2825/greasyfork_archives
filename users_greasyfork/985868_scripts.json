@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455179,
+    "daily_installs": 0,
+    "total_installs": 415,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-21T04:37:59.000Z",
+    "code_updated_at": "2022-12-02T09:17:49.000Z",
+    "namespace": "http://zhelper.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 985868,
+        "name": "不负所爱",
+        "created_at": "2022-11-21T04:36:47.000Z",
+        "url": "https://greasyfork.org/users/985868-%E4%B8%8D%E8%B4%9F%E6%89%80%E7%88%B1"
+      }
+    ],
+    "name": "zhelper下载助手-可下载z-libirary资源",
+    "description": "本脚本暂停更新，请不要再下载，请访问新版地址下载电子书：https://node1.v5.zhelper.net/",
+    "url": "https://greasyfork.org/scripts/455179-zhelper%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-%E5%8F%AF%E4%B8%8B%E8%BD%BDz-libirary%E8%B5%84%E6%BA%90",
+    "code_url": "https://update.greasyfork.org/scripts/455179/zhelper%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-%E5%8F%AF%E4%B8%8B%E8%BD%BDz-libirary%E8%B5%84%E6%BA%90.user.js",
+    "code_size": 1075,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

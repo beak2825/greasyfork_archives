@@ -1,0 +1,34 @@
+{
+  "id": 444556,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-06T13:23:11.000Z",
+  "code_updated_at": "2022-05-16T13:14:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 775654,
+      "name": "shine_foam",
+      "created_at": "2021-05-24T10:32:46.000Z",
+      "url": "https://greasyfork.org/users/775654-shine-foam",
+      "scripts": []
+    }
+  ],
+  "name": "mayuan-old",
+  "description": "test-old-ok-v1.3.1",
+  "url": "https://greasyfork.org/scripts/444556-mayuan-old",
+  "code_url": "https://update.greasyfork.org/scripts/444556/mayuan-old.user.js",
+  "code_size": 991378,
+  "license": "MIT License",
+  "version": "0.0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

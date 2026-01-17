@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460094,
+    "daily_installs": 0,
+    "total_installs": 2680,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-16T04:19:02.000Z",
+    "code_updated_at": "2023-02-16T04:19:01.000Z",
+    "namespace": "www.bilibili.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 991602,
+        "name": "BIYUEHU",
+        "created_at": "2022-12-03T04:21:03.000Z",
+        "url": "https://greasyfork.org/users/991602-biyuehu"
+      }
+    ],
+    "name": "糊狸-B站成分查询Helper",
+    "description": "用于标注B站评论区用户成分属性,三相与Vtuber的数据来源于原插件\"新三相之力指示器F\",与本人无关;其余为自己添加,优化了原插件堆了七八百行的屎山,动态化处理后仅200余行;仅供娱乐不代表本人任何立场",
+    "url": "https://greasyfork.org/scripts/460094-%E7%B3%8A%E7%8B%B8-b%E7%AB%99%E6%88%90%E5%88%86%E6%9F%A5%E8%AF%A2helper",
+    "code_url": "https://update.greasyfork.org/scripts/460094/%E7%B3%8A%E7%8B%B8-B%E7%AB%99%E6%88%90%E5%88%86%E6%9F%A5%E8%AF%A2Helper.user.js",
+    "code_size": 8276,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

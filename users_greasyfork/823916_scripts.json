@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443242,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-12T12:13:06.000Z",
+    "code_updated_at": "2022-04-12T12:13:06.000Z",
+    "namespace": "https://github.com/wang1212/user-script/blob/main/nodejs-docs-navigation",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 823916,
+        "name": "【全国求助寻找网】离婚证制作 | 定制离婚证 - 通信联络系统",
+        "created_at": "2021-10-11T03:15:42.000Z",
+        "url": "https://greasyfork.org/users/823916-%E5%85%A8%E5%9B%BD%E6%B1%82%E5%8A%A9%E5%AF%BB%E6%89%BE%E7%BD%91-%E7%A6%BB%E5%A9%9A%E8%AF%81%E5%88%B6%E4%BD%9C-%E5%AE%9A%E5%88%B6%E7%A6%BB%E5%A9%9A%E8%AF%81-%E9%80%9A%E4%BF%A1%E8%81%94%E7%BB%9C%E7%B3%BB%E7%BB%9F"
+      }
+    ],
+    "name": "查找内容挑选",
+    "description": "测试功能阶段，待完善",
+    "url": "https://greasyfork.org/scripts/443242-%E6%9F%A5%E6%89%BE%E5%86%85%E5%AE%B9%E6%8C%91%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/443242/%E6%9F%A5%E6%89%BE%E5%86%85%E5%AE%B9%E6%8C%91%E9%80%89.user.js",
+    "code_size": 3911,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "ch",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

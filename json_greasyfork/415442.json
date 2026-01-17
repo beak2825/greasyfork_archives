@@ -1,0 +1,59 @@
+{
+  "id": 415442,
+  "daily_installs": 0,
+  "total_installs": 1847,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-04T05:27:16.000Z",
+  "code_updated_at": "2020-11-04T05:28:38.000Z",
+  "namespace": "XiaoShuai_QQMusic_script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 701287,
+      "name": "areny6",
+      "created_at": "2020-11-04T05:24:36.000Z",
+      "url": "https://greasyfork.org/users/701287-areny6",
+      "scripts": [
+        {
+          "id": 415442,
+          "daily_installs": 0,
+          "total_installs": 1847,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-04T05:27:16.000Z",
+          "code_updated_at": "2020-11-04T05:28:38.000Z",
+          "namespace": "XiaoShuai_QQMusic_script",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "小帅的QQ音乐下载脚本 小帅长期维护ing...每天进步一点点！",
+          "description": "【自用】小帅改QQ音乐下载",
+          "url": "https://greasyfork.org/scripts/415442-%E5%B0%8F%E5%B8%85%E7%9A%84qq%E9%9F%B3%E4%B9%90%E4%B8%8B%E8%BD%BD%E8%84%9A%E6%9C%AC-%E5%B0%8F%E5%B8%85%E9%95%BF%E6%9C%9F%E7%BB%B4%E6%8A%A4ing-%E6%AF%8F%E5%A4%A9%E8%BF%9B%E6%AD%A5%E4%B8%80%E7%82%B9%E7%82%B9",
+          "code_url": "https://update.greasyfork.org/scripts/415442/%E5%B0%8F%E5%B8%85%E7%9A%84QQ%E9%9F%B3%E4%B9%90%E4%B8%8B%E8%BD%BD%E8%84%9A%E6%9C%AC%20%E5%B0%8F%E5%B8%85%E9%95%BF%E6%9C%9F%E7%BB%B4%E6%8A%A4ing%E6%AF%8F%E5%A4%A9%E8%BF%9B%E6%AD%A5%E4%B8%80%E7%82%B9%E7%82%B9%EF%BC%81.user.js",
+          "code_size": 3531,
+          "license": "GPL License",
+          "version": "1.0.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "小帅的QQ音乐下载脚本 小帅长期维护ing...每天进步一点点！",
+  "description": "【自用】小帅改QQ音乐下载",
+  "url": "https://greasyfork.org/scripts/415442-%E5%B0%8F%E5%B8%85%E7%9A%84qq%E9%9F%B3%E4%B9%90%E4%B8%8B%E8%BD%BD%E8%84%9A%E6%9C%AC-%E5%B0%8F%E5%B8%85%E9%95%BF%E6%9C%9F%E7%BB%B4%E6%8A%A4ing-%E6%AF%8F%E5%A4%A9%E8%BF%9B%E6%AD%A5%E4%B8%80%E7%82%B9%E7%82%B9",
+  "code_url": "https://update.greasyfork.org/scripts/415442/%E5%B0%8F%E5%B8%85%E7%9A%84QQ%E9%9F%B3%E4%B9%90%E4%B8%8B%E8%BD%BD%E8%84%9A%E6%9C%AC%20%E5%B0%8F%E5%B8%85%E9%95%BF%E6%9C%9F%E7%BB%B4%E6%8A%A4ing%E6%AF%8F%E5%A4%A9%E8%BF%9B%E6%AD%A5%E4%B8%80%E7%82%B9%E7%82%B9%EF%BC%81.user.js",
+  "code_size": 3531,
+  "license": "GPL License",
+  "version": "1.0.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

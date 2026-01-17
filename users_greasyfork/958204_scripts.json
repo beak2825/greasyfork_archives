@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458202,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-13T20:23:47.000Z",
+    "code_updated_at": "2023-01-13T20:23:47.000Z",
+    "namespace": "AmaniNakupendaWeWe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 958204,
+        "name": "backto2020",
+        "created_at": "2022-09-12T14:29:40.000Z",
+        "url": "https://greasyfork.org/users/958204-backto2020"
+      }
+    ],
+    "name": "Redirect Wikimedia Projects from Mobile Version to Desktop Version",
+    "description": "Redirect wiki projects from mobile version to desktop version with ManifestV3. Including wikipedia, wikibooks, wiktionary, wikiquote, wikimedia, wikisource, wikiversity, wikispecies, wikidata, wikivoyage and wikinews.",
+    "url": "https://greasyfork.org/scripts/458202-redirect-wikimedia-projects-from-mobile-version-to-desktop-version",
+    "code_url": "https://update.greasyfork.org/scripts/458202/Redirect%20Wikimedia%20Projects%20from%20Mobile%20Version%20to%20Desktop%20Version.user.js",
+    "code_size": 1050,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

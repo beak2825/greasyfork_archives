@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422662,
+    "daily_installs": 0,
+    "total_installs": 259,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-04T18:05:22.000Z",
+    "code_updated_at": "2021-04-27T20:35:43.000Z",
+    "namespace": "https://github.com/jakebathman/Twitch-Channel-Points-Claimer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 106481,
+        "name": "jakebathman",
+        "created_at": "2017-03-01T14:13:31.000Z",
+        "url": "https://greasyfork.org/users/106481-jakebathman"
+      }
+    ],
+    "name": "Twitch Channel Points Claimer",
+    "description": "Automatically claim channel points. Based on original script by PartMent",
+    "url": "https://greasyfork.org/scripts/422662-twitch-channel-points-claimer",
+    "code_url": "https://update.greasyfork.org/scripts/422662/Twitch%20Channel%20Points%20Claimer.user.js",
+    "code_size": 5262,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 491011,
+  "daily_installs": 0,
+  "total_installs": 95,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-03-27T13:31:05.000Z",
+  "code_updated_at": "2024-09-01T14:47:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1280205,
+      "name": "Alexander Yaremchuk",
+      "created_at": "2024-03-27T13:22:43.000Z",
+      "url": "https://greasyfork.org/users/1280205-alexander-yaremchuk"
+    }
+  ],
+  "name": "Make ChatGPT scrollable with keyboard",
+  "description": "This app makes it scrollable by setting tabindex to outer div making it focusable",
+  "url": "https://greasyfork.org/scripts/491011-make-chatgpt-scrollable-with-keyboard",
+  "code_url": "https://update.greasyfork.org/scripts/491011/Make%20ChatGPT%20scrollable%20with%20keyboard.user.js",
+  "code_size": 1781,
+  "license": "MIT License",
+  "version": "2024-09-01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

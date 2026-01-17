@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488762,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-02T04:27:10.000Z",
+    "code_updated_at": "2024-03-02T05:08:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1269121,
+        "name": "Piggy424008",
+        "created_at": "2024-03-02T04:22:27.000Z",
+        "url": "https://greasyfork.org/users/1269121-piggy424008"
+      }
+    ],
+    "name": "Haofenshu Hacker",
+    "description": "Overview a contest information in www.haofenshu.com",
+    "url": "https://greasyfork.org/scripts/488762-haofenshu-hacker",
+    "code_url": "https://update.greasyfork.org/scripts/488762/Haofenshu%20Hacker.user.js",
+    "code_size": 3012,
+    "license": "MIT License",
+    "version": "2024-03-01-2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

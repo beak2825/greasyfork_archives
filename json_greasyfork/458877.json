@@ -1,0 +1,59 @@
+{
+  "id": 458877,
+  "daily_installs": 0,
+  "total_installs": 322,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-26T05:58:13.000Z",
+  "code_updated_at": "2023-01-26T05:58:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1014577,
+      "name": "craftAlex",
+      "created_at": "2023-01-20T10:44:56.000Z",
+      "url": "https://greasyfork.org/users/1014577-craftalex",
+      "scripts": [
+        {
+          "id": 458877,
+          "daily_installs": 0,
+          "total_installs": 322,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-26T05:58:13.000Z",
+          "code_updated_at": "2023-01-26T05:58:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "猫国建设者修改器",
+          "description": "猫国建设者资源修改",
+          "url": "https://greasyfork.org/scripts/458877-%E7%8C%AB%E5%9B%BD%E5%BB%BA%E8%AE%BE%E8%80%85%E4%BF%AE%E6%94%B9%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/458877/%E7%8C%AB%E5%9B%BD%E5%BB%BA%E8%AE%BE%E8%80%85%E4%BF%AE%E6%94%B9%E5%99%A8.user.js",
+          "code_size": 3208,
+          "license": "MIT License",
+          "version": "1.14514",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "猫国建设者修改器",
+  "description": "猫国建设者资源修改",
+  "url": "https://greasyfork.org/scripts/458877-%E7%8C%AB%E5%9B%BD%E5%BB%BA%E8%AE%BE%E8%80%85%E4%BF%AE%E6%94%B9%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/458877/%E7%8C%AB%E5%9B%BD%E5%BB%BA%E8%AE%BE%E8%80%85%E4%BF%AE%E6%94%B9%E5%99%A8.user.js",
+  "code_size": 3208,
+  "license": "MIT License",
+  "version": "1.14514",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

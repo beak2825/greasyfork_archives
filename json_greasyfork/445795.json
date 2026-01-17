@@ -1,0 +1,33 @@
+{
+  "id": 445795,
+  "daily_installs": 0,
+  "total_installs": 1893,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-31T07:56:08.000Z",
+  "code_updated_at": "2022-05-31T08:27:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 845120,
+      "name": "cdz",
+      "created_at": "2021-11-27T09:59:30.000Z",
+      "url": "https://greasyfork.org/users/845120-cdz"
+    }
+  ],
+  "name": "mediumAuto",
+  "description": "mediumAuto相关",
+  "url": "https://greasyfork.org/scripts/445795-mediumauto",
+  "code_url": "https://update.greasyfork.org/scripts/445795/mediumAuto.user.js",
+  "code_size": 11910,
+  "license": "lly",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

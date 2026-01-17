@@ -1,0 +1,33 @@
+{
+  "id": 485122,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-18T06:12:50.000Z",
+  "code_updated_at": "2024-01-18T06:12:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 469080,
+      "name": "Fuse Vaqu",
+      "created_at": "2020-03-25T21:36:53.000Z",
+      "url": "https://greasyfork.org/users/469080-fuse-vaqu"
+    }
+  ],
+  "name": "Flarex gold nick blinker(customizable)",
+  "description": "gold nick name flicker for flarex",
+  "url": "https://greasyfork.org/scripts/485122-flarex-gold-nick-blinker-customizable",
+  "code_url": "https://update.greasyfork.org/scripts/485122/Flarex%20gold%20nick%20blinker%28customizable%29.user.js",
+  "code_size": 2127,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

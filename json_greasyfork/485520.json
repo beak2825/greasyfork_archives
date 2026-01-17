@@ -1,0 +1,34 @@
+{
+  "id": 485520,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-23T19:18:40.000Z",
+  "code_updated_at": "2024-01-23T19:18:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 709376,
+      "name": "endofthyme",
+      "created_at": "2020-11-26T20:43:11.000Z",
+      "url": "https://greasyfork.org/users/709376-endofthyme",
+      "scripts": []
+    }
+  ],
+  "name": "AO3: [Wrangling] Canonize from Spreadsheet with URL Parameters",
+  "description": "Autofills syn field with URL parameter",
+  "url": "https://greasyfork.org/scripts/485520-ao3-wrangling-canonize-from-spreadsheet-with-url-parameters",
+  "code_url": "https://update.greasyfork.org/scripts/485520/AO3%3A%20%5BWrangling%5D%20Canonize%20from%20Spreadsheet%20with%20URL%20Parameters.user.js",
+  "code_size": 811,
+  "license": "GPL-3.0 <https://www.gnu.org/licenses/gpl.html>",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

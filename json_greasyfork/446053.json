@@ -1,0 +1,59 @@
+{
+  "id": 446053,
+  "daily_installs": 0,
+  "total_installs": 63,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-05T22:59:54.000Z",
+  "code_updated_at": "2022-07-05T22:04:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 922451,
+      "name": "scr1ptst3r",
+      "created_at": "2022-06-05T20:39:08.000Z",
+      "url": "https://greasyfork.org/users/922451-scr1ptst3r",
+      "scripts": [
+        {
+          "id": 446053,
+          "daily_installs": 0,
+          "total_installs": 63,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-05T22:59:54.000Z",
+          "code_updated_at": "2022-07-05T22:04:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Blinkist \"Today's Free Blink\" text scraper",
+          "description": "This script combines the chapter texts into one text.",
+          "url": "https://greasyfork.org/scripts/446053-blinkist-today-s-free-blink-text-scraper",
+          "code_url": "https://update.greasyfork.org/scripts/446053/Blinkist%20%22Today%27s%20Free%20Blink%22%20text%20scraper.user.js",
+          "code_size": 4884,
+          "license": "MIT License",
+          "version": "0.9.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Blinkist \"Today's Free Blink\" text scraper",
+  "description": "This script combines the chapter texts into one text.",
+  "url": "https://greasyfork.org/scripts/446053-blinkist-today-s-free-blink-text-scraper",
+  "code_url": "https://update.greasyfork.org/scripts/446053/Blinkist%20%22Today%27s%20Free%20Blink%22%20text%20scraper.user.js",
+  "code_size": 4884,
+  "license": "MIT License",
+  "version": "0.9.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

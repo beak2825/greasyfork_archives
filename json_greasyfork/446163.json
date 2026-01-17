@@ -1,0 +1,34 @@
+{
+  "id": 446163,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-08T03:23:15.000Z",
+  "code_updated_at": "2022-06-08T03:34:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 923227,
+      "name": "wallace Lin",
+      "created_at": "2022-06-08T03:15:38.000Z",
+      "url": "https://greasyfork.org/users/923227-wallace-lin",
+      "scripts": []
+    }
+  ],
+  "name": "PaGamO 輔助操作",
+  "description": "PaGamO操作輔助",
+  "url": "https://greasyfork.org/scripts/446163-pagamo-%E8%BC%94%E5%8A%A9%E6%93%8D%E4%BD%9C",
+  "code_url": "https://update.greasyfork.org/scripts/446163/PaGamO%20%E8%BC%94%E5%8A%A9%E6%93%8D%E4%BD%9C.user.js",
+  "code_size": 1817,
+  "license": null,
+  "version": "V1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

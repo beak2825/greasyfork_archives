@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465197,
+    "daily_installs": 0,
+    "total_installs": 78,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-30T15:27:39.000Z",
+    "code_updated_at": "2025-02-16T05:48:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1070763,
+        "name": "mouse0w0",
+        "created_at": "2023-04-30T15:17:04.000Z",
+        "url": "https://greasyfork.org/users/1070763-mouse0w0"
+      }
+    ],
+    "name": "获取哔哩哔哩高清图片",
+    "description": "Ctrl+右键图片在新标签页打开高清图片，如果未指向图片则尝试打开本页的高清封面。",
+    "url": "https://greasyfork.org/scripts/465197-%E8%8E%B7%E5%8F%96%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E9%AB%98%E6%B8%85%E5%9B%BE%E7%89%87",
+    "code_url": "https://update.greasyfork.org/scripts/465197/%E8%8E%B7%E5%8F%96%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E9%AB%98%E6%B8%85%E5%9B%BE%E7%89%87.user.js",
+    "code_size": 2415,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

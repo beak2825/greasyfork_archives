@@ -1,0 +1,33 @@
+{
+  "id": 489364,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-09T06:26:26.000Z",
+  "code_updated_at": "2024-03-09T06:28:33.000Z",
+  "namespace": "https://kichhoat24h.com/earn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 7610,
+      "name": "BoomBookTR",
+      "created_at": "2014-12-14T12:51:22.000Z",
+      "url": "https://greasyfork.org/users/7610-boombooktr"
+    }
+  ],
+  "name": "kichhoat24h Earn Sayfa Yenile",
+  "description": "EkşiSözlük sayfasını otomatik yeniler.",
+  "url": "https://greasyfork.org/scripts/489364-kichhoat24h-earn-sayfa-yenile",
+  "code_url": "https://update.greasyfork.org/scripts/489364/kichhoat24h%20Earn%20Sayfa%20Yenile.user.js",
+  "code_size": 1101,
+  "license": "GNU General Public License v2.0 only",
+  "version": "v0.2",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

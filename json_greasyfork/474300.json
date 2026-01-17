@@ -1,0 +1,33 @@
+{
+  "id": 474300,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-08-31T18:35:33.000Z",
+  "code_updated_at": "2023-10-05T14:55:21.000Z",
+  "namespace": "https://greasyfork.org/es/users/758165-AlÉxito",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 758165,
+      "name": "ayd prueba",
+      "created_at": "2021-04-12T17:28:02.000Z",
+      "url": "https://greasyfork.org/users/758165-ayd-prueba"
+    }
+  ],
+  "name": "Hide videos that are in playlist",
+  "description": "When you are adding videos to your playlists Sometimes you don't remember if you've already added that video. This script puts an H button next to the search bar to Hide videos you've already added to your playlists, so there are no duplicate videos in your playlists.",
+  "url": "https://greasyfork.org/scripts/474300-hide-videos-that-are-in-playlist",
+  "code_url": "https://update.greasyfork.org/scripts/474300/Hide%20videos%20that%20are%20in%20playlist.user.js",
+  "code_size": 3275,
+  "license": "MIT   feel free to modify improve and share",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

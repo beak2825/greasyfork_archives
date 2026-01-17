@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483594,
+    "daily_installs": 0,
+    "total_installs": 191,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-01-01T06:56:24.000Z",
+    "code_updated_at": "2024-01-07T14:12:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1241790,
+        "name": "Trịnh Hưng",
+        "created_at": "2024-01-01T06:47:36.000Z",
+        "url": "https://greasyfork.org/users/1241790-tr%E1%BB%8Bnh-h%C6%B0ng"
+      }
+    ],
+    "name": "Battledudes.io Menu Music Toggle",
+    "description": "Add custom menu music to Battledudes.io with a toggle button",
+    "url": "https://greasyfork.org/scripts/483594-battledudes-io-menu-music-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/483594/Battledudesio%20Menu%20Music%20Toggle.user.js",
+    "code_size": 1568,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 475806,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-21T08:21:44.000Z",
+  "code_updated_at": "2023-09-21T10:17:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1177557,
+      "name": "leconte112",
+      "created_at": "2023-09-21T08:13:29.000Z",
+      "url": "https://greasyfork.org/users/1177557-leconte112",
+      "scripts": [
+        {
+          "id": 475806,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-21T08:21:44.000Z",
+          "code_updated_at": "2023-09-21T10:17:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Spoiler Protection for tampermonkey",
+          "description": "Apply a black box to elements containing specific keywords on web pages, including dynamically loaded content when scrolling",
+          "url": "https://greasyfork.org/scripts/475806-spoiler-protection-for-tampermonkey",
+          "code_url": "https://update.greasyfork.org/scripts/475806/Spoiler%20Protection%20for%20tampermonkey.user.js",
+          "code_size": 2842,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Spoiler Protection for tampermonkey",
+  "description": "Apply a black box to elements containing specific keywords on web pages, including dynamically loaded content when scrolling",
+  "url": "https://greasyfork.org/scripts/475806-spoiler-protection-for-tampermonkey",
+  "code_url": "https://update.greasyfork.org/scripts/475806/Spoiler%20Protection%20for%20tampermonkey.user.js",
+  "code_size": 2842,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

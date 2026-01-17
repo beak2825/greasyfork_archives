@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481429,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-05T04:40:28.000Z",
+    "code_updated_at": "2023-12-05T04:43:34.000Z",
+    "namespace": "BlockAnyThingYouWant",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1084021,
+        "name": "iceyumao",
+        "created_at": "2023-05-24T13:28:56.000Z",
+        "url": "https://greasyfork.org/users/1084021-iceyumao"
+      }
+    ],
+    "name": "AC-block-keyword-from-google-and-baidu",
+    "description": "从谷歌 百度 必应搜索结果中屏蔽自定义关键字，关键字自己确定吧，想想大概2-3个版本就不会更新了，因为每个人的关键字不一样",
+    "url": "https://greasyfork.org/scripts/481429-ac-block-keyword-from-google-and-baidu",
+    "code_url": "https://update.greasyfork.org/scripts/481429/AC-block-keyword-from-google-and-baidu.user.js",
+    "code_size": 2897,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

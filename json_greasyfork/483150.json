@@ -1,0 +1,33 @@
+{
+  "id": 483150,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-26T11:57:24.000Z",
+  "code_updated_at": "2023-12-27T02:57:04.000Z",
+  "namespace": "https://edu.inspur.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1239428,
+      "name": "sdqdzzw",
+      "created_at": "2023-12-26T11:43:17.000Z",
+      "url": "https://greasyfork.org/users/1239428-sdqdzzw"
+    }
+  ],
+  "name": "浪潮学习",
+  "description": "用于浪潮爱学习学习，可以在课程界面自动开始学习，edge>设置>系统和性能>不让这些站点进入睡眠：添加“https://edu.inspur.com/”",
+  "url": "https://greasyfork.org/scripts/483150-%E6%B5%AA%E6%BD%AE%E5%AD%A6%E4%B9%A0",
+  "code_url": "https://update.greasyfork.org/scripts/483150/%E6%B5%AA%E6%BD%AE%E5%AD%A6%E4%B9%A0.user.js",
+  "code_size": 8595,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

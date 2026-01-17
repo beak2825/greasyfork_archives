@@ -1,0 +1,34 @@
+{
+  "id": 433274,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-01T23:18:28.000Z",
+  "code_updated_at": "2021-10-01T23:27:56.000Z",
+  "namespace": "T-Kanal",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 746749,
+      "name": "Stereo-K",
+      "created_at": "2021-03-13T09:09:53.000Z",
+      "url": "https://greasyfork.org/users/746749-stereo-k",
+      "scripts": []
+    }
+  ],
+  "name": "H-Virus modify by Stereo.K",
+  "description": "Pennergame Haustierbot",
+  "url": "https://greasyfork.org/scripts/433274-h-virus-modify-by-stereo-k",
+  "code_url": "https://update.greasyfork.org/scripts/433274/H-Virus%20modify%20by%20StereoK.user.js",
+  "code_size": 175337,
+  "license": null,
+  "version": "1.1",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

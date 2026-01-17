@@ -1,0 +1,33 @@
+{
+  "id": 433629,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-09T14:48:06.000Z",
+  "code_updated_at": "2021-10-09T14:48:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 671442,
+      "name": "eggplants",
+      "created_at": "2020-07-29T23:31:32.000Z",
+      "url": "https://greasyfork.org/users/671442-eggplants"
+    }
+  ],
+  "name": "Goodbye GeocitiesJP, Hello GeoLog",
+  "description": "Geocities JP to GeoLog(geolog.mydns.jp) Auto Redirector",
+  "url": "https://greasyfork.org/scripts/433629-goodbye-geocitiesjp-hello-geolog",
+  "code_url": "https://update.greasyfork.org/scripts/433629/Goodbye%20GeocitiesJP%2C%20Hello%20GeoLog.user.js",
+  "code_size": 547,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

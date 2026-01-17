@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468855,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-17T07:41:49.000Z",
+    "code_updated_at": "2023-06-17T07:41:49.000Z",
+    "namespace": "https://greasyfork.org/users/1044439",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1044439,
+        "name": "AntonDumov",
+        "created_at": "2023-03-18T21:20:13.000Z",
+        "url": "https://greasyfork.org/users/1044439-antondumov"
+      }
+    ],
+    "name": "hdrezka Video and Subtitle Downloader WIP",
+    "description": "Downloads videos and subtitles on specific webpages",
+    "url": "https://greasyfork.org/scripts/468855-hdrezka-video-and-subtitle-downloader-wip",
+    "code_url": "https://update.greasyfork.org/scripts/468855/hdrezka%20Video%20and%20Subtitle%20Downloader%20WIP.user.js",
+    "code_size": 5229,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

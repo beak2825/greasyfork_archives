@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461448,
+    "daily_installs": 0,
+    "total_installs": 3159,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-08T12:44:48.000Z",
+    "code_updated_at": "2025-09-24T07:37:24.000Z",
+    "namespace": "http://zhydada.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1038649,
+        "name": "zhyDaDa",
+        "created_at": "2023-03-08T12:09:16.000Z",
+        "url": "https://greasyfork.org/users/1038649-zhydada"
+      }
+    ],
+    "name": "zhyDaDa_超星网课助手",
+    "description": "[个人向] 刷超星尔雅的网课, 现在支持pdf/ppt/视频/音频的处理, 提供了设置面板可以调节, 解决了鼠标移开视频暂停的问题",
+    "url": "https://greasyfork.org/scripts/461448-zhydada-%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/461448/zhyDaDa_%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 36276,
+    "license": "personal - use only",
+    "version": "1.21.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

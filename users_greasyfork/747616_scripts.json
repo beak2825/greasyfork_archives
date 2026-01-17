@@ -1,0 +1,68 @@
+[
+  {
+    "id": 424281,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-31T19:05:23.000Z",
+    "code_updated_at": "2021-03-31T19:05:23.000Z",
+    "namespace": "NyaggerSquad",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 747616,
+        "name": "Orthodox Jihad",
+        "created_at": "2021-03-15T17:36:42.000Z",
+        "url": "https://greasyfork.org/users/747616-orthodox-jihad"
+      }
+    ],
+    "name": "NyaggerTunes CLEAN",
+    "description": "You'll cowards don't even riichi. Now with Youtube integration, press escape to open menu and input video IDs to replace music. Create playlists by separating with commas. (Remember to unblock youtube, ytimg and googlevideo scripts and allow site autoplay in your browser)",
+    "url": "https://greasyfork.org/scripts/424281-nyaggertunes-clean",
+    "code_url": "https://update.greasyfork.org/scripts/424281/NyaggerTunes%20CLEAN.user.js",
+    "code_size": 13849,
+    "license": null,
+    "version": "1.04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 423267,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-15T17:43:01.000Z",
+    "code_updated_at": "2021-03-15T17:43:01.000Z",
+    "namespace": "NyaggerSquad",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 747616,
+        "name": "Orthodox Jihad",
+        "created_at": "2021-03-15T17:36:42.000Z",
+        "url": "https://greasyfork.org/users/747616-orthodox-jihad"
+      }
+    ],
+    "name": "Weeb Names",
+    "description": "For all your weeaboo needs, change WEEB_LEVEL in script if you feel like it",
+    "url": "https://greasyfork.org/scripts/423267-weeb-names",
+    "code_url": "https://update.greasyfork.org/scripts/423267/Weeb%20Names.user.js",
+    "code_size": 3734,
+    "license": null,
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 487284,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-14T10:40:24.000Z",
+  "code_updated_at": "2026-01-14T02:03:41.000Z",
+  "namespace": "https://misskey.niri.la/@amamamaou",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1261100,
+      "name": "amamamaou",
+      "created_at": "2024-02-14T10:30:02.000Z",
+      "url": "https://greasyfork.org/users/1261100-amamamaou"
+    }
+  ],
+  "name": "BOOTH Library Beautifier",
+  "description": "BOOTHのライブラリ/ギフト一覧の情報量を増やし見やすくします（簡易実装）",
+  "url": "https://greasyfork.org/scripts/487284-booth-library-beautifier",
+  "code_url": "https://update.greasyfork.org/scripts/487284/BOOTH%20Library%20Beautifier.user.js",
+  "code_size": 10243,
+  "license": "MIT License",
+  "version": "0.7.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

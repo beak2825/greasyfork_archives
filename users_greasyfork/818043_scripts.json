@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432818,
+    "daily_installs": 0,
+    "total_installs": 359,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-22T17:52:49.000Z",
+    "code_updated_at": "2021-09-23T18:15:21.000Z",
+    "namespace": "https://greasyfork.org/users/818043",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 818043,
+        "name": "Nikola Terbo",
+        "created_at": "2021-09-22T17:24:19.000Z",
+        "url": "https://greasyfork.org/users/818043-nikola-terbo"
+      }
+    ],
+    "name": "video-translation",
+    "description": "voice-over translation",
+    "url": "https://greasyfork.org/scripts/432818-video-translation",
+    "code_url": "https://update.greasyfork.org/scripts/432818/video-translation.user.js",
+    "code_size": 4517,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 464586,
+  "daily_installs": 0,
+  "total_installs": 441,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-21T20:39:37.000Z",
+  "code_updated_at": "2024-06-25T15:50:12.000Z",
+  "namespace": "vk-metabot-user-js",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1064147,
+      "name": "botnadzor",
+      "created_at": "2023-04-20T10:53:36.000Z",
+      "url": "https://greasyfork.org/users/1064147-botnadzor",
+      "scripts": [
+        {
+          "id": 464586,
+          "daily_installs": 0,
+          "total_installs": 441,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-21T20:39:37.000Z",
+          "code_updated_at": "2024-06-25T15:50:12.000Z",
+          "namespace": "vk-metabot-user-js",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ботнадзор (botnadzor.org)",
+          "description": "Подсветка ботов в VK",
+          "url": "https://greasyfork.org/scripts/464586-%D0%B1%D0%BE%D1%82%D0%BD%D0%B0%D0%B4%D0%B7%D0%BE%D1%80-botnadzor-org",
+          "code_url": "https://update.greasyfork.org/scripts/464586/%D0%91%D0%BE%D1%82%D0%BD%D0%B0%D0%B4%D0%B7%D0%BE%D1%80%20%28botnadzororg%29.user.js",
+          "code_size": 154254,
+          "license": null,
+          "version": "4.1.3",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ботнадзор (botnadzor.org)",
+  "description": "Подсветка ботов в VK",
+  "url": "https://greasyfork.org/scripts/464586-%D0%B1%D0%BE%D1%82%D0%BD%D0%B0%D0%B4%D0%B7%D0%BE%D1%80-botnadzor-org",
+  "code_url": "https://update.greasyfork.org/scripts/464586/%D0%91%D0%BE%D1%82%D0%BD%D0%B0%D0%B4%D0%B7%D0%BE%D1%80%20%28botnadzororg%29.user.js",
+  "code_size": 154254,
+  "license": null,
+  "version": "4.1.3",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

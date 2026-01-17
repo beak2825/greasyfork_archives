@@ -1,0 +1,33 @@
+{
+  "id": 452467,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-04T12:13:14.000Z",
+  "code_updated_at": "2022-11-18T11:58:41.000Z",
+  "namespace": "https://studiomoxxi.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 907800,
+      "name": "StudioMoxxi",
+      "created_at": "2022-04-27T17:54:39.000Z",
+      "url": "https://greasyfork.org/users/907800-studiomoxxi"
+    }
+  ],
+  "name": "Tools: Omod",
+  "description": "one click at a time",
+  "url": "https://greasyfork.org/scripts/452467-tools-omod",
+  "code_url": "https://update.greasyfork.org/scripts/452467/Tools%3A%20Omod.user.js",
+  "code_size": 296716,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

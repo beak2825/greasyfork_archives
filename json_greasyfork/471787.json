@@ -1,0 +1,59 @@
+{
+  "id": 471787,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-26T19:34:02.000Z",
+  "code_updated_at": "2023-07-26T19:34:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1136653,
+      "name": "mariorossi",
+      "created_at": "2023-07-26T19:30:52.000Z",
+      "url": "https://greasyfork.org/users/1136653-mariorossi",
+      "scripts": [
+        {
+          "id": 471787,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-26T19:34:02.000Z",
+          "code_updated_at": "2023-07-26T19:34:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "short2video",
+          "description": "che scifo gli short",
+          "url": "https://greasyfork.org/scripts/471787-short2video",
+          "code_url": "https://update.greasyfork.org/scripts/471787/short2video.user.js",
+          "code_size": 667,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "short2video",
+  "description": "che scifo gli short",
+  "url": "https://greasyfork.org/scripts/471787-short2video",
+  "code_url": "https://update.greasyfork.org/scripts/471787/short2video.user.js",
+  "code_size": 667,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

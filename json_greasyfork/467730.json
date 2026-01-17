@@ -1,0 +1,33 @@
+{
+  "id": 467730,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-02T14:27:52.000Z",
+  "code_updated_at": "2023-06-02T14:27:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1089183,
+      "name": "P34R1",
+      "created_at": "2023-06-02T14:03:25.000Z",
+      "url": "https://greasyfork.org/users/1089183-p34r1"
+    }
+  ],
+  "name": "Web Math Minute Auto Complete",
+  "description": "automatically answers webmathminute.com",
+  "url": "https://greasyfork.org/scripts/467730-web-math-minute-auto-complete",
+  "code_url": "https://update.greasyfork.org/scripts/467730/Web%20Math%20Minute%20Auto%20Complete.user.js",
+  "code_size": 1928,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

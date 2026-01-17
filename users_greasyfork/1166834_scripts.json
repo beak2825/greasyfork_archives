@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474688,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-06T14:32:41.000Z",
+    "code_updated_at": "2023-09-06T14:32:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166834,
+        "name": "wucanqin",
+        "created_at": "2023-09-05T14:53:07.000Z",
+        "url": "https://greasyfork.org/users/1166834-wucanqin"
+      }
+    ],
+    "name": "Confirm确认框取消",
+    "description": "用于jspxzx网站Confirm确认框取消",
+    "url": "https://greasyfork.org/scripts/474688-confirm%E7%A1%AE%E8%AE%A4%E6%A1%86%E5%8F%96%E6%B6%88",
+    "code_url": "https://update.greasyfork.org/scripts/474688/Confirm%E7%A1%AE%E8%AE%A4%E6%A1%86%E5%8F%96%E6%B6%88.user.js",
+    "code_size": 558,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

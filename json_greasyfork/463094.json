@@ -1,0 +1,34 @@
+{
+  "id": 463094,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-02T02:49:49.000Z",
+  "code_updated_at": "2023-04-02T02:49:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1051704,
+      "name": "TT TD",
+      "created_at": "2023-04-02T02:29:42.000Z",
+      "url": "https://greasyfork.org/users/1051704-tt-td",
+      "scripts": []
+    }
+  ],
+  "name": "自关",
+  "description": "关注",
+  "url": "https://greasyfork.org/scripts/463094-%E8%87%AA%E5%85%B3",
+  "code_url": "https://update.greasyfork.org/scripts/463094/%E8%87%AA%E5%85%B3.user.js",
+  "code_size": 3716,
+  "license": "MIT License",
+  "version": "0.11",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

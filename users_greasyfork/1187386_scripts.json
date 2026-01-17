@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476652,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-04T00:09:18.000Z",
+    "code_updated_at": "2023-10-04T00:09:18.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1187386,
+        "name": "hackcloth",
+        "created_at": "2023-10-04T00:07:24.000Z",
+        "url": "https://greasyfork.org/users/1187386-hackcloth"
+      }
+    ],
+    "name": "box3破解防沉迷",
+    "description": "破解防沉迷",
+    "url": "https://greasyfork.org/scripts/476652-box3%E7%A0%B4%E8%A7%A3%E9%98%B2%E6%B2%89%E8%BF%B7",
+    "code_url": "https://update.greasyfork.org/scripts/476652/box3%E7%A0%B4%E8%A7%A3%E9%98%B2%E6%B2%89%E8%BF%B7.user.js",
+    "code_size": 1431,
+    "license": "GPL",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445295,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-20T13:48:11.000Z",
+    "code_updated_at": "2022-05-20T13:57:10.000Z",
+    "namespace": "https://www.sketchengine.eu/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 916478,
+        "name": "blahma",
+        "created_at": "2022-05-20T13:01:17.000Z",
+        "url": "https://greasyfork.org/users/916478-blahma"
+      }
+    ],
+    "name": "Wordle regex solver by Sketch Engine",
+    "description": "Helps you solve a Wordle puzzle by generating a regular expression. To look up possible solutions in a word list, Sketch Engine subscription is required (30-day free trial available, no card required).",
+    "url": "https://greasyfork.org/scripts/445295-wordle-regex-solver-by-sketch-engine",
+    "code_url": "https://update.greasyfork.org/scripts/445295/Wordle%20regex%20solver%20by%20Sketch%20Engine.user.js",
+    "code_size": 2365,
+    "license": null,
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

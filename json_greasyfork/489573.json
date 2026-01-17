@@ -1,0 +1,59 @@
+{
+  "id": 489573,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-11T15:20:55.000Z",
+  "code_updated_at": "2024-03-11T15:20:55.000Z",
+  "namespace": "https://greasyfork.org/users/1273152",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1273152,
+      "name": "Mael",
+      "created_at": "2024-03-11T15:09:10.000Z",
+      "url": "https://greasyfork.org/users/1273152-mael",
+      "scripts": [
+        {
+          "id": 489573,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-11T15:20:55.000Z",
+          "code_updated_at": "2024-03-11T15:20:55.000Z",
+          "namespace": "https://greasyfork.org/users/1273152",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Contador de votos BBB",
+          "description": "Esse script adiciona um contador simples de votos na página de votos por torcida. Para resetar a contagem, basta clicar em limpar",
+          "url": "https://greasyfork.org/scripts/489573-contador-de-votos-bbb",
+          "code_url": "https://update.greasyfork.org/scripts/489573/Contador%20de%20votos%20BBB.user.js",
+          "code_size": 1854,
+          "license": "MIT License",
+          "version": "1",
+          "locale": "pt",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Contador de votos BBB",
+  "description": "Esse script adiciona um contador simples de votos na página de votos por torcida. Para resetar a contagem, basta clicar em limpar",
+  "url": "https://greasyfork.org/scripts/489573-contador-de-votos-bbb",
+  "code_url": "https://update.greasyfork.org/scripts/489573/Contador%20de%20votos%20BBB.user.js",
+  "code_size": 1854,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

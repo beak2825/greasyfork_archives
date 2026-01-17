@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447112,
+    "daily_installs": 0,
+    "total_installs": 546,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-27T08:19:06.000Z",
+    "code_updated_at": "2023-04-21T22:53:51.000Z",
+    "namespace": "辉哥博客",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 803804,
+        "name": "Mr·HuiGe",
+        "created_at": "2021-08-12T09:47:39.000Z",
+        "url": "https://greasyfork.org/users/803804-mr-huige"
+      }
+    ],
+    "name": "国外静态资源CDN加速访问",
+    "description": "将国外的静态资源js和css资源替换成国内的 CDN 地址|CDN赞助商-蓝易云安全：https://www.tsyvps.com/aff/AVEWBVAM",
+    "url": "https://greasyfork.org/scripts/447112-%E5%9B%BD%E5%A4%96%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90cdn%E5%8A%A0%E9%80%9F%E8%AE%BF%E9%97%AE",
+    "code_url": "https://update.greasyfork.org/scripts/447112/%E5%9B%BD%E5%A4%96%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90CDN%E5%8A%A0%E9%80%9F%E8%AE%BF%E9%97%AE.user.js",
+    "code_size": 2645,
+    "license": "GNU General Public License v2.0 only",
+    "version": "0.0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

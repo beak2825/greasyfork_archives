@@ -1,0 +1,34 @@
+{
+  "id": 487454,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-16T11:33:48.000Z",
+  "code_updated_at": "2024-02-26T23:44:58.000Z",
+  "namespace": "赛尔号启航Pc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1262019,
+      "name": "超梦",
+      "created_at": "2024-02-16T11:05:19.000Z",
+      "url": "https://greasyfork.org/users/1262019-%E8%B6%85%E6%A2%A6",
+      "scripts": []
+    }
+  ],
+  "name": "赛尔号启航Pc",
+  "description": "赛尔号启航Pc.",
+  "url": "https://greasyfork.org/scripts/487454-%E8%B5%9B%E5%B0%94%E5%8F%B7%E5%90%AF%E8%88%AApc",
+  "code_url": "https://update.greasyfork.org/scripts/487454/%E8%B5%9B%E5%B0%94%E5%8F%B7%E5%90%AF%E8%88%AAPc.user.js",
+  "code_size": 172200,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "3.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

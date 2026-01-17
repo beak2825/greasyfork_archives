@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426826,
+    "daily_installs": 0,
+    "total_installs": 284,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-05-21T18:17:27.000Z",
+    "code_updated_at": "2021-05-21T18:17:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774732,
+        "name": "lontopo Pro",
+        "created_at": "2021-05-21T18:15:26.000Z",
+        "url": "https://greasyfork.org/users/774732-lontopo-pro"
+      }
+    ],
+    "name": "Freerice",
+    "description": "Make sure you are on multiplication table",
+    "url": "https://greasyfork.org/scripts/426826-freerice",
+    "code_url": "https://update.greasyfork.org/scripts/426826/Freerice.user.js",
+    "code_size": 1094,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

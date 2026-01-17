@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468121,
+    "daily_installs": 0,
+    "total_installs": 610,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-07T11:25:34.000Z",
+    "code_updated_at": "2023-06-07T11:33:43.000Z",
+    "namespace": "果子修改删去确认弹框，改大点击按钮，慕课自动互评满分，填写评语：作业完成的好，决定给你满分。",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093207,
+        "name": "junguoqianshan",
+        "created_at": "2023-06-07T11:19:58.000Z",
+        "url": "https://greasyfork.org/users/1093207-junguoqianshan"
+      }
+    ],
+    "name": "中国大学MOOC课后作业自动互评",
+    "description": "2023/06/07 19:06:00",
+    "url": "https://greasyfork.org/scripts/468121-%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6mooc%E8%AF%BE%E5%90%8E%E4%BD%9C%E4%B8%9A%E8%87%AA%E5%8A%A8%E4%BA%92%E8%AF%84",
+    "code_url": "https://update.greasyfork.org/scripts/468121/%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6MOOC%E8%AF%BE%E5%90%8E%E4%BD%9C%E4%B8%9A%E8%87%AA%E5%8A%A8%E4%BA%92%E8%AF%84.user.js",
+    "code_size": 1947,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

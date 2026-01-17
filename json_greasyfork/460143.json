@@ -1,0 +1,59 @@
+{
+  "id": 460143,
+  "daily_installs": 3,
+  "total_installs": 1390,
+  "fan_score": "67.6",
+  "good_ratings": 8,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-16T18:01:56.000Z",
+  "code_updated_at": "2026-01-14T20:18:41.000Z",
+  "namespace": "https://greasyfork.org/users/786427",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 786427,
+      "name": "suren_chan",
+      "created_at": "2021-06-23T05:51:52.000Z",
+      "url": "https://greasyfork.org/users/786427-suren-chan",
+      "scripts": [
+        {
+          "id": 460143,
+          "daily_installs": 3,
+          "total_installs": 1390,
+          "fan_score": "67.6",
+          "good_ratings": 8,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-16T18:01:56.000Z",
+          "code_updated_at": "2026-01-14T20:18:41.000Z",
+          "namespace": "https://greasyfork.org/users/786427",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "淘宝详情、天猫详情，主图、主图视频、SKU图一键打包下载，淘宝链接、天猫链接精简",
+          "description": "一键打包下载详情、主图、SKU和视频，集成到淘宝侧边栏",
+          "url": "https://greasyfork.org/scripts/460143-%E6%B7%98%E5%AE%9D%E8%AF%A6%E6%83%85-%E5%A4%A9%E7%8C%AB%E8%AF%A6%E6%83%85-%E4%B8%BB%E5%9B%BE-%E4%B8%BB%E5%9B%BE%E8%A7%86%E9%A2%91-sku%E5%9B%BE%E4%B8%80%E9%94%AE%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD-%E6%B7%98%E5%AE%9D%E9%93%BE%E6%8E%A5-%E5%A4%A9%E7%8C%AB%E9%93%BE%E6%8E%A5%E7%B2%BE%E7%AE%80",
+          "code_url": "https://update.greasyfork.org/scripts/460143/%E6%B7%98%E5%AE%9D%E8%AF%A6%E6%83%85%E3%80%81%E5%A4%A9%E7%8C%AB%E8%AF%A6%E6%83%85%EF%BC%8C%E4%B8%BB%E5%9B%BE%E3%80%81%E4%B8%BB%E5%9B%BE%E8%A7%86%E9%A2%91%E3%80%81SKU%E5%9B%BE%E4%B8%80%E9%94%AE%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD%EF%BC%8C%E6%B7%98%E5%AE%9D%E9%93%BE%E6%8E%A5%E3%80%81%E5%A4%A9%E7%8C%AB%E9%93%BE%E6%8E%A5%E7%B2%BE%E7%AE%80.user.js",
+          "code_size": 66639,
+          "license": "MIT License",
+          "version": "2026.01.15",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "淘宝详情、天猫详情，主图、主图视频、SKU图一键打包下载，淘宝链接、天猫链接精简",
+  "description": "一键打包下载详情、主图、SKU和视频，集成到淘宝侧边栏",
+  "url": "https://greasyfork.org/scripts/460143-%E6%B7%98%E5%AE%9D%E8%AF%A6%E6%83%85-%E5%A4%A9%E7%8C%AB%E8%AF%A6%E6%83%85-%E4%B8%BB%E5%9B%BE-%E4%B8%BB%E5%9B%BE%E8%A7%86%E9%A2%91-sku%E5%9B%BE%E4%B8%80%E9%94%AE%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD-%E6%B7%98%E5%AE%9D%E9%93%BE%E6%8E%A5-%E5%A4%A9%E7%8C%AB%E9%93%BE%E6%8E%A5%E7%B2%BE%E7%AE%80",
+  "code_url": "https://update.greasyfork.org/scripts/460143/%E6%B7%98%E5%AE%9D%E8%AF%A6%E6%83%85%E3%80%81%E5%A4%A9%E7%8C%AB%E8%AF%A6%E6%83%85%EF%BC%8C%E4%B8%BB%E5%9B%BE%E3%80%81%E4%B8%BB%E5%9B%BE%E8%A7%86%E9%A2%91%E3%80%81SKU%E5%9B%BE%E4%B8%80%E9%94%AE%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD%EF%BC%8C%E6%B7%98%E5%AE%9D%E9%93%BE%E6%8E%A5%E3%80%81%E5%A4%A9%E7%8C%AB%E9%93%BE%E6%8E%A5%E7%B2%BE%E7%AE%80.user.js",
+  "code_size": 66639,
+  "license": "MIT License",
+  "version": "2026.01.15",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

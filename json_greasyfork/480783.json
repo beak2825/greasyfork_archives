@@ -1,0 +1,33 @@
+{
+  "id": 480783,
+  "daily_installs": 2,
+  "total_installs": 963,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-26T02:20:14.000Z",
+  "code_updated_at": "2024-06-09T06:13:23.000Z",
+  "namespace": "http://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1003340,
+      "name": "ThatOneGuy YT (ThatOneGuySS)",
+      "created_at": "2022-12-27T05:21:45.000Z",
+      "url": "https://greasyfork.org/users/1003340-thatoneguy-yt-thatoneguyss"
+    }
+  ],
+  "name": "Blossom V3",
+  "description": "Revamped Blossom V2. Compatible with v45.0 and up.",
+  "url": "https://greasyfork.org/scripts/480783-blossom-v3",
+  "code_url": "https://update.greasyfork.org/scripts/480783/Blossom%20V3.user.js",
+  "code_size": 20373,
+  "license": null,
+  "version": "3.22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

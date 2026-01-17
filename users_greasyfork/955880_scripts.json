@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454009,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-31T06:39:05.000Z",
+    "code_updated_at": "2022-10-31T06:39:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 955880,
+        "name": "Ascrew",
+        "created_at": "2022-09-08T02:22:17.000Z",
+        "url": "https://greasyfork.org/users/955880-ascrew"
+      }
+    ],
+    "name": "buff filter",
+    "description": "buff filter!",
+    "url": "https://greasyfork.org/scripts/454009-buff-filter",
+    "code_url": "https://update.greasyfork.org/scripts/454009/buff%20filter.user.js",
+    "code_size": 10911,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

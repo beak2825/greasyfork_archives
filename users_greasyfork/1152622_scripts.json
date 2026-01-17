@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473174,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-16T10:25:37.000Z",
+    "code_updated_at": "2023-08-18T10:05:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1152622,
+        "name": "llorryc",
+        "created_at": "2023-08-16T10:18:44.000Z",
+        "url": "https://greasyfork.org/users/1152622-llorryc"
+      }
+    ],
+    "name": "Steam库存增强插件",
+    "description": "一个Steam库存增强脚本, 支持以下功能：在鼠标悬停在饰品时在console打印assetid信息，点击饰品卡片打印饰品详细信息",
+    "url": "https://greasyfork.org/scripts/473174-steam%E5%BA%93%E5%AD%98%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/473174/Steam%E5%BA%93%E5%AD%98%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 3815,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

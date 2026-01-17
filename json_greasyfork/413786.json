@@ -1,0 +1,66 @@
+{
+  "id": 413786,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-19T07:33:36.000Z",
+  "code_updated_at": "2020-10-28T09:49:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 542364,
+      "name": "Johnny xie",
+      "created_at": "2020-04-27T05:23:40.000Z",
+      "url": "https://greasyfork.org/users/542364-johnny-xie",
+      "scripts": [
+        {
+          "id": 502565,
+          "daily_installs": 1,
+          "total_installs": 163,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-04T06:09:32.000Z",
+          "code_updated_at": "2024-08-10T01:12:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "精简抖音直播页",
+          "description": "streamline douyin live page",
+          "url": "https://greasyfork.org/scripts/502565-%E7%B2%BE%E7%AE%80%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E9%A1%B5",
+          "code_url": "https://update.greasyfork.org/scripts/502565/%E7%B2%BE%E7%AE%80%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E9%A1%B5.user.js",
+          "code_size": 2753,
+          "license": "MIT License",
+          "version": "v1.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    },
+    {
+      "id": 696348,
+      "name": "lolotang",
+      "created_at": "2020-10-19T07:37:33.000Z",
+      "url": "https://greasyfork.org/users/696348-lolotang",
+      "scripts": []
+    }
+  ],
+  "name": "自动看课 21tb",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/413786-%E8%87%AA%E5%8A%A8%E7%9C%8B%E8%AF%BE-21tb",
+  "code_url": "https://update.greasyfork.org/scripts/413786/%E8%87%AA%E5%8A%A8%E7%9C%8B%E8%AF%BE%2021tb.user.js",
+  "code_size": 3732,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

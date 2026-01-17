@@ -1,0 +1,33 @@
+{
+  "id": 438260,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-09T07:50:00.000Z",
+  "code_updated_at": "2022-04-28T23:38:02.000Z",
+  "namespace": "https://greasyfork.org/en/users/670188-hacker09?sort=daily_installs",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670188,
+      "name": "hacker09",
+      "created_at": "2020-07-25T20:51:35.000Z",
+      "url": "https://greasyfork.org/users/670188-hacker09"
+    }
+  ],
+  "name": "Redirect to imgur",
+  "description": "Seaching for imgur on google auto redirects to https://imgur.com/upload/",
+  "url": "https://greasyfork.org/scripts/438260-redirect-to-imgur",
+  "code_url": "https://update.greasyfork.org/scripts/438260/Redirect%20to%20imgur.user.js",
+  "code_size": 762,
+  "license": null,
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

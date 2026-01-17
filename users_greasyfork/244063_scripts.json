@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443378,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-14T13:43:31.000Z",
+    "code_updated_at": "2022-09-11T04:37:36.000Z",
+    "namespace": "https://greasyfork.org/users/244063",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 244063,
+        "name": "nxo",
+        "created_at": "2019-02-02T13:47:19.000Z",
+        "url": "https://greasyfork.org/users/244063-nxo"
+      }
+    ],
+    "name": "Simple gogoplay",
+    "description": "2022/3/15 9:02:03",
+    "url": "https://greasyfork.org/scripts/443378-simple-gogoplay",
+    "code_url": "https://update.greasyfork.org/scripts/443378/Simple%20gogoplay.user.js",
+    "code_size": 1033,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

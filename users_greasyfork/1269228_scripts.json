@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488776,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-02T08:23:37.000Z",
+    "code_updated_at": "2024-03-02T08:23:37.000Z",
+    "namespace": "https://www.gears-for-engineers.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1269228,
+        "name": "timdrijvers",
+        "created_at": "2024-03-02T08:21:26.000Z",
+        "url": "https://greasyfork.org/users/1269228-timdrijvers"
+      }
+    ],
+    "name": "Jortt hour and project overview",
+    "description": "Make an overview of all registered hours, default fixed hourly rate",
+    "url": "https://greasyfork.org/scripts/488776-jortt-hour-and-project-overview",
+    "code_url": "https://update.greasyfork.org/scripts/488776/Jortt%20hour%20and%20project%20overview.user.js",
+    "code_size": 12399,
+    "license": "MIT License",
+    "version": "2024-03-01",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

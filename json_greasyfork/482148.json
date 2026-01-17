@@ -1,0 +1,34 @@
+{
+  "id": 482148,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-14T03:09:47.000Z",
+  "code_updated_at": "2024-03-21T00:05:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1142431,
+      "name": "Guribot",
+      "created_at": "2023-08-02T23:22:37.000Z",
+      "url": "https://greasyfork.org/users/1142431-guribot",
+      "scripts": []
+    }
+  ],
+  "name": "Price Switch",
+  "description": "Pressing tab on a price box will go to the next price box, rather than the Remove box",
+  "url": "https://greasyfork.org/scripts/482148-price-switch",
+  "code_url": "https://update.greasyfork.org/scripts/482148/Price%20Switch.user.js",
+  "code_size": 1361,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

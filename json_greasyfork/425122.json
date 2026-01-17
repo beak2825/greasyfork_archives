@@ -1,0 +1,59 @@
+{
+  "id": 425122,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-16T10:50:21.000Z",
+  "code_updated_at": "2021-04-21T19:15:30.000Z",
+  "namespace": "http://itmunk.dk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 760324,
+      "name": "supercigar",
+      "created_at": "2021-04-16T10:47:20.000Z",
+      "url": "https://greasyfork.org/users/760324-supercigar",
+      "scripts": [
+        {
+          "id": 425122,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-16T10:50:21.000Z",
+          "code_updated_at": "2021-04-21T19:15:30.000Z",
+          "namespace": "http://itmunk.dk",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Overleaf Collapse All Folders",
+          "description": "Adds a button, that when pressed, collapses all folders within the Overleaf file viewer.",
+          "url": "https://greasyfork.org/scripts/425122-overleaf-collapse-all-folders",
+          "code_url": "https://update.greasyfork.org/scripts/425122/Overleaf%20Collapse%20All%20Folders.user.js",
+          "code_size": 2822,
+          "license": null,
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Overleaf Collapse All Folders",
+  "description": "Adds a button, that when pressed, collapses all folders within the Overleaf file viewer.",
+  "url": "https://greasyfork.org/scripts/425122-overleaf-collapse-all-folders",
+  "code_url": "https://update.greasyfork.org/scripts/425122/Overleaf%20Collapse%20All%20Folders.user.js",
+  "code_size": 2822,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 468431,
+  "daily_installs": 0,
+  "total_installs": 272,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-11T12:35:27.000Z",
+  "code_updated_at": "2023-11-10T07:35:43.000Z",
+  "namespace": "https://github.com/Misaka-Mikoto-Tech",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 169186,
+      "name": "Misaka-Mikoto-Tech",
+      "created_at": "2018-02-03T03:35:08.000Z",
+      "url": "https://greasyfork.org/users/169186-misaka-mikoto-tech",
+      "scripts": [
+        {
+          "id": 468431,
+          "daily_installs": 0,
+          "total_installs": 272,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-11T12:35:27.000Z",
+          "code_updated_at": "2023-11-10T07:35:43.000Z",
+          "namespace": "https://github.com/Misaka-Mikoto-Tech",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动关闭B站登录对话框",
+          "description": "B站在未登录状态下视频播放一分钟或者页面可见状态发生改变，就会弹出登录框，此脚本帮忙自动点击这个登录框的关闭按钮",
+          "url": "https://greasyfork.org/scripts/468431-%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%ADb%E7%AB%99%E7%99%BB%E5%BD%95%E5%AF%B9%E8%AF%9D%E6%A1%86",
+          "code_url": "https://update.greasyfork.org/scripts/468431/%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%ADB%E7%AB%99%E7%99%BB%E5%BD%95%E5%AF%B9%E8%AF%9D%E6%A1%86.user.js",
+          "code_size": 1445,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动关闭B站登录对话框",
+  "description": "B站在未登录状态下视频播放一分钟或者页面可见状态发生改变，就会弹出登录框，此脚本帮忙自动点击这个登录框的关闭按钮",
+  "url": "https://greasyfork.org/scripts/468431-%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%ADb%E7%AB%99%E7%99%BB%E5%BD%95%E5%AF%B9%E8%AF%9D%E6%A1%86",
+  "code_url": "https://update.greasyfork.org/scripts/468431/%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%ADB%E7%AB%99%E7%99%BB%E5%BD%95%E5%AF%B9%E8%AF%9D%E6%A1%86.user.js",
+  "code_size": 1445,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

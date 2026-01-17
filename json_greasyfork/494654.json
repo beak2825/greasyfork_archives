@@ -1,0 +1,59 @@
+{
+  "id": 494654,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-11T09:45:06.000Z",
+  "code_updated_at": "2024-06-24T03:32:58.000Z",
+  "namespace": "http://cvat.sailyond.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1299894,
+      "name": "Jacky John Jerry",
+      "created_at": "2024-05-11T09:41:16.000Z",
+      "url": "https://greasyfork.org/users/1299894-jacky-john-jerry",
+      "scripts": [
+        {
+          "id": 494654,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-11T09:45:06.000Z",
+          "code_updated_at": "2024-06-24T03:32:58.000Z",
+          "namespace": "http://cvat.sailyond.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "sailyond-cvat",
+          "description": "use on sailyond cvat",
+          "url": "https://greasyfork.org/scripts/494654-sailyond-cvat",
+          "code_url": "https://update.greasyfork.org/scripts/494654/sailyond-cvat.user.js",
+          "code_size": 3507,
+          "license": "MIT License",
+          "version": "20240624",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "sailyond-cvat",
+  "description": "use on sailyond cvat",
+  "url": "https://greasyfork.org/scripts/494654-sailyond-cvat",
+  "code_url": "https://update.greasyfork.org/scripts/494654/sailyond-cvat.user.js",
+  "code_size": 3507,
+  "license": "MIT License",
+  "version": "20240624",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

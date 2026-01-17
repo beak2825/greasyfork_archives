@@ -1,0 +1,59 @@
+{
+  "id": 435249,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-09T08:42:40.000Z",
+  "code_updated_at": "2021-11-09T08:42:40.000Z",
+  "namespace": "https://github.com/techstay/myscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 835038,
+      "name": "xy406043",
+      "created_at": "2021-11-09T08:24:50.000Z",
+      "url": "https://greasyfork.org/users/835038-xy406043",
+      "scripts": [
+        {
+          "id": 435249,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-09T08:42:40.000Z",
+          "code_updated_at": "2021-11-09T08:42:40.000Z",
+          "namespace": "https://github.com/techstay/myscripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页TDKI等信息内容展示",
+          "description": "本脚本用于展示网页的 标题、链接、描述、关键字、图标、预览图等信息 并可支持双击选中复制  ，便于快捷使用网页信息，免于控制台 HTML结构内查找",
+          "url": "https://greasyfork.org/scripts/435249-%E7%BD%91%E9%A1%B5tdki%E7%AD%89%E4%BF%A1%E6%81%AF%E5%86%85%E5%AE%B9%E5%B1%95%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/435249/%E7%BD%91%E9%A1%B5TDKI%E7%AD%89%E4%BF%A1%E6%81%AF%E5%86%85%E5%AE%B9%E5%B1%95%E7%A4%BA.user.js",
+          "code_size": 15809,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网页TDKI等信息内容展示",
+  "description": "本脚本用于展示网页的 标题、链接、描述、关键字、图标、预览图等信息 并可支持双击选中复制  ，便于快捷使用网页信息，免于控制台 HTML结构内查找",
+  "url": "https://greasyfork.org/scripts/435249-%E7%BD%91%E9%A1%B5tdki%E7%AD%89%E4%BF%A1%E6%81%AF%E5%86%85%E5%AE%B9%E5%B1%95%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/435249/%E7%BD%91%E9%A1%B5TDKI%E7%AD%89%E4%BF%A1%E6%81%AF%E5%86%85%E5%AE%B9%E5%B1%95%E7%A4%BA.user.js",
+  "code_size": 15809,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440260,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-18T14:12:17.000Z",
+    "code_updated_at": "2022-02-18T14:13:57.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 877950,
+        "name": "andreiboghean00",
+        "created_at": "2022-02-18T13:20:40.000Z",
+        "url": "https://greasyfork.org/users/877950-andreiboghean00"
+      }
+    ],
+    "name": "sigma16 tab key",
+    "description": "2/18/2022, 1:15:38 PM",
+    "url": "https://greasyfork.org/scripts/440260-sigma16-tab-key",
+    "code_url": "https://update.greasyfork.org/scripts/440260/sigma16%20tab%20key.user.js",
+    "code_size": 1935,
+    "license": "MIT License",
+    "version": "1.001",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 491889,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-07T10:57:28.000Z",
+  "code_updated_at": "2024-04-07T10:58:37.000Z",
+  "namespace": "xingxiaoxin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 881303,
+      "name": "ccav213",
+      "created_at": "2022-02-28T03:33:33.000Z",
+      "url": "https://greasyfork.org/users/881303-ccav213",
+      "scripts": [
+        {
+          "id": 444118,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-28T02:38:31.000Z",
+          "code_updated_at": "2022-04-28T02:55:36.000Z",
+          "namespace": "chinaxinge",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "中信网新闻发布",
+          "description": "发布信息过滤域名",
+          "url": "https://greasyfork.org/scripts/444118-%E4%B8%AD%E4%BF%A1%E7%BD%91%E6%96%B0%E9%97%BB%E5%8F%91%E5%B8%83",
+          "code_url": "https://update.greasyfork.org/scripts/444118/%E4%B8%AD%E4%BF%A1%E7%BD%91%E6%96%B0%E9%97%BB%E5%8F%91%E5%B8%83.user.js",
+          "code_size": 4339,
+          "license": "AGPL License",
+          "version": "0.1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "邢小信",
+  "description": "xingxiaoxin",
+  "url": "https://greasyfork.org/scripts/491889-%E9%82%A2%E5%B0%8F%E4%BF%A1",
+  "code_url": "https://update.greasyfork.org/scripts/491889/%E9%82%A2%E5%B0%8F%E4%BF%A1.user.js",
+  "code_size": 3119,
+  "license": "AGPL License",
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

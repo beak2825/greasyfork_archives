@@ -1,0 +1,34 @@
+{
+  "id": 483093,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-25T17:20:43.000Z",
+  "code_updated_at": "2024-11-29T16:56:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1238936,
+      "name": "Lonewolf_12138",
+      "created_at": "2023-12-25T07:45:13.000Z",
+      "url": "https://greasyfork.org/users/1238936-lonewolf-12138",
+      "scripts": []
+    }
+  ],
+  "name": "小萝卜斗鱼活动助手-水友版本",
+  "description": "斗鱼活动助手",
+  "url": "https://greasyfork.org/scripts/483093-%E5%B0%8F%E8%90%9D%E5%8D%9C%E6%96%97%E9%B1%BC%E6%B4%BB%E5%8A%A8%E5%8A%A9%E6%89%8B-%E6%B0%B4%E5%8F%8B%E7%89%88%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/483093/%E5%B0%8F%E8%90%9D%E5%8D%9C%E6%96%97%E9%B1%BC%E6%B4%BB%E5%8A%A8%E5%8A%A9%E6%89%8B-%E6%B0%B4%E5%8F%8B%E7%89%88%E6%9C%AC.user.js",
+  "code_size": 50014,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "2024.11.30-1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 475576,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-18T08:44:40.000Z",
+    "code_updated_at": "2023-09-21T15:25:34.000Z",
+    "namespace": "https://space.bilibili.com/346631924",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1175612,
+        "name": "sydowlle",
+        "created_at": "2023-09-18T08:29:21.000Z",
+        "url": "https://greasyfork.org/users/1175612-sydowlle"
+      }
+    ],
+    "name": "bili dark mode",
+    "description": "dark mode of bilibili webpage",
+    "url": "https://greasyfork.org/scripts/475576-bili-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/475576/bili%20dark%20mode.user.js",
+    "code_size": 4490,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 424737,
+  "daily_installs": 0,
+  "total_installs": 176,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-09T05:48:00.000Z",
+  "code_updated_at": "2021-04-16T14:44:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 756347,
+      "name": "来世一笑",
+      "created_at": "2021-04-08T11:39:36.000Z",
+      "url": "https://greasyfork.org/users/756347-%E6%9D%A5%E4%B8%96%E4%B8%80%E7%AC%91",
+      "scripts": [
+        {
+          "id": 424737,
+          "daily_installs": 0,
+          "total_installs": 176,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-09T05:48:00.000Z",
+          "code_updated_at": "2021-04-16T14:44:17.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页净化",
+          "description": "去除常用站点无用信息，目前支持https://translate.google.cn/、https://cn.bing.com/、https://blog.csdn.net/。全局背景色（看情况）",
+          "url": "https://greasyfork.org/scripts/424737-%E7%BD%91%E9%A1%B5%E5%87%80%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/424737/%E7%BD%91%E9%A1%B5%E5%87%80%E5%8C%96.user.js",
+          "code_size": 7364,
+          "license": null,
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网页净化",
+  "description": "去除常用站点无用信息，目前支持https://translate.google.cn/、https://cn.bing.com/、https://blog.csdn.net/。全局背景色（看情况）",
+  "url": "https://greasyfork.org/scripts/424737-%E7%BD%91%E9%A1%B5%E5%87%80%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/424737/%E7%BD%91%E9%A1%B5%E5%87%80%E5%8C%96.user.js",
+  "code_size": 7364,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 456498,
+  "daily_installs": 0,
+  "total_installs": 99,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-12T16:31:04.000Z",
+  "code_updated_at": "2022-12-12T17:03:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 455199,
+      "name": "RnLuck",
+      "created_at": "2020-03-07T00:33:17.000Z",
+      "url": "https://greasyfork.org/users/455199-rnluck"
+    }
+  ],
+  "name": "m-team imdb分数查询优化及页面美化",
+  "description": "mteam 电影板块, 根据 imdb 分数高亮颜色",
+  "url": "https://greasyfork.org/scripts/456498-m-team-imdb%E5%88%86%E6%95%B0%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%8F%8A%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/456498/m-team%20imdb%E5%88%86%E6%95%B0%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%8F%8A%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96.user.js",
+  "code_size": 3692,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

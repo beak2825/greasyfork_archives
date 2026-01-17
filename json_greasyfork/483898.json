@@ -1,0 +1,59 @@
+{
+  "id": 483898,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-04T20:14:55.000Z",
+  "code_updated_at": "2024-01-04T20:14:55.000Z",
+  "namespace": "http://www.physicsandmathstutor.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1243349,
+      "name": "IMB11",
+      "created_at": "2024-01-04T20:13:56.000Z",
+      "url": "https://greasyfork.org/users/1243349-imb11",
+      "scripts": [
+        {
+          "id": 483898,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-04T20:14:55.000Z",
+          "code_updated_at": "2024-01-04T20:14:55.000Z",
+          "namespace": "http://www.physicsandmathstutor.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Physics and Maths Tutor PDF Redirect",
+          "description": "Redirects you to the actual PDF page, so you dont need to listen to the crappy adverts.",
+          "url": "https://greasyfork.org/scripts/483898-physics-and-maths-tutor-pdf-redirect",
+          "code_url": "https://update.greasyfork.org/scripts/483898/Physics%20and%20Maths%20Tutor%20PDF%20Redirect.user.js",
+          "code_size": 938,
+          "license": "MIT License",
+          "version": "2024-01-04",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Physics and Maths Tutor PDF Redirect",
+  "description": "Redirects you to the actual PDF page, so you dont need to listen to the crappy adverts.",
+  "url": "https://greasyfork.org/scripts/483898-physics-and-maths-tutor-pdf-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/483898/Physics%20and%20Maths%20Tutor%20PDF%20Redirect.user.js",
+  "code_size": 938,
+  "license": "MIT License",
+  "version": "2024-01-04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

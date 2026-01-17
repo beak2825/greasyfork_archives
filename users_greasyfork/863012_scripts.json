@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438300,
+    "daily_installs": 0,
+    "total_installs": 3275,
+    "fan_score": "15.0",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2022-01-10T04:43:50.000Z",
+    "code_updated_at": "2022-01-11T04:55:19.000Z",
+    "namespace": "PureLive",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 863012,
+        "name": "TigerTon",
+        "created_at": "2022-01-10T04:37:23.000Z",
+        "url": "https://greasyfork.org/users/863012-tigerton"
+      }
+    ],
+    "name": "纯净直播 - PureLive",
+    "description": "无广告、无弹幕，纯净直播。支持斗鱼直播、虎牙直播、企鹅电竞、哔哩哔哩直播平台。",
+    "url": "https://greasyfork.org/scripts/438300-%E7%BA%AF%E5%87%80%E7%9B%B4%E6%92%AD-purelive",
+    "code_url": "https://update.greasyfork.org/scripts/438300/%E7%BA%AF%E5%87%80%E7%9B%B4%E6%92%AD%20-%20PureLive.user.js",
+    "code_size": 2628,
+    "license": "GNU AGPLv3",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

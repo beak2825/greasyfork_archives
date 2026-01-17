@@ -1,0 +1,59 @@
+{
+  "id": 491579,
+  "daily_installs": 2,
+  "total_installs": 263,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-03T17:00:55.000Z",
+  "code_updated_at": "2024-04-18T18:44:50.000Z",
+  "namespace": "Mannix",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1283456,
+      "name": "Mannix",
+      "created_at": "2024-04-03T15:38:38.000Z",
+      "url": "https://greasyfork.org/users/1283456-mannix",
+      "scripts": [
+        {
+          "id": 491579,
+          "daily_installs": 2,
+          "total_installs": 263,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-03T17:00:55.000Z",
+          "code_updated_at": "2024-04-18T18:44:50.000Z",
+          "namespace": "Mannix",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "阻止跳转APP for 哔哩哔哩 (゜-゜)つロ 干杯~-bilibili",
+          "description": "自动点开视频页、隐藏打开APP按钮、阻止跳转APP、恢复点击事件",
+          "url": "https://greasyfork.org/scripts/491579-%E9%98%BB%E6%AD%A2%E8%B7%B3%E8%BD%ACapp-for-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-%E3%81%A4%E3%83%AD-%E5%B9%B2%E6%9D%AF-bilibili",
+          "code_url": "https://update.greasyfork.org/scripts/491579/%E9%98%BB%E6%AD%A2%E8%B7%B3%E8%BD%ACAPP%20for%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%20%28%E3%82%9C-%E3%82%9C%29%E3%81%A4%E3%83%AD%20%E5%B9%B2%E6%9D%AF~-bilibili.user.js",
+          "code_size": 6605,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "阻止跳转APP for 哔哩哔哩 (゜-゜)つロ 干杯~-bilibili",
+  "description": "自动点开视频页、隐藏打开APP按钮、阻止跳转APP、恢复点击事件",
+  "url": "https://greasyfork.org/scripts/491579-%E9%98%BB%E6%AD%A2%E8%B7%B3%E8%BD%ACapp-for-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-%E3%81%A4%E3%83%AD-%E5%B9%B2%E6%9D%AF-bilibili",
+  "code_url": "https://update.greasyfork.org/scripts/491579/%E9%98%BB%E6%AD%A2%E8%B7%B3%E8%BD%ACAPP%20for%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%20%28%E3%82%9C-%E3%82%9C%29%E3%81%A4%E3%83%AD%20%E5%B9%B2%E6%9D%AF~-bilibili.user.js",
+  "code_size": 6605,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 432262,
+  "daily_installs": 0,
+  "total_installs": 304,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-11T19:05:34.000Z",
+  "code_updated_at": "2021-09-11T19:05:34.000Z",
+  "namespace": "http://www.xx7z.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 814471,
+      "name": "小轩砌站",
+      "created_at": "2021-09-11T18:59:05.000Z",
+      "url": "https://greasyfork.org/users/814471-%E5%B0%8F%E8%BD%A9%E7%A0%8C%E7%AB%99",
+      "scripts": [
+        {
+          "id": 432262,
+          "daily_installs": 0,
+          "total_installs": 304,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-11T19:05:34.000Z",
+          "code_updated_at": "2021-09-11T19:05:34.000Z",
+          "namespace": "http://www.xx7z.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "屏蔽musictools暗号",
+          "description": "每次下musictools都要去公众号回复暗号，比较麻烦，写了个简单的小脚本隐藏了暗号窗口。",
+          "url": "https://greasyfork.org/scripts/432262-%E5%B1%8F%E8%94%BDmusictools%E6%9A%97%E5%8F%B7",
+          "code_url": "https://update.greasyfork.org/scripts/432262/%E5%B1%8F%E8%94%BDmusictools%E6%9A%97%E5%8F%B7.user.js",
+          "code_size": 723,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "屏蔽musictools暗号",
+  "description": "每次下musictools都要去公众号回复暗号，比较麻烦，写了个简单的小脚本隐藏了暗号窗口。",
+  "url": "https://greasyfork.org/scripts/432262-%E5%B1%8F%E8%94%BDmusictools%E6%9A%97%E5%8F%B7",
+  "code_url": "https://update.greasyfork.org/scripts/432262/%E5%B1%8F%E8%94%BDmusictools%E6%9A%97%E5%8F%B7.user.js",
+  "code_size": 723,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

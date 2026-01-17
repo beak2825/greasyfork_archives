@@ -1,0 +1,35 @@
+[
+  {
+    "id": 493177,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-22T14:38:51.000Z",
+    "code_updated_at": "2024-04-22T14:47:07.000Z",
+    "namespace": "ooooooooo.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291781,
+        "name": "Creative Studio",
+        "created_at": "2024-04-22T14:33:48.000Z",
+        "url": "https://greasyfork.org/users/1291781-creative-studio"
+      }
+    ],
+    "name": "Unlimited_downloader",
+    "description": "Get video and audio binary streams directly, breaking all download limitations. (As long as you can play, then you can download!)",
+    "url": "https://greasyfork.org/scripts/493177-unlimited-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/493177/Unlimited_downloader.user.js",
+    "code_size": 4175,
+    "license": null,
+    "version": "1.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

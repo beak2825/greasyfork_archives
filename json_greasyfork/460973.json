@@ -1,0 +1,59 @@
+{
+  "id": 460973,
+  "daily_installs": 1,
+  "total_installs": 11991,
+  "fan_score": "77.0",
+  "good_ratings": 28,
+  "ok_ratings": 6,
+  "bad_ratings": 0,
+  "created_at": "2023-03-01T11:24:17.000Z",
+  "code_updated_at": "2023-12-01T10:24:30.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1034730-%E9%9A%8F%E7%BC%98%E7%8E%A9%E5%AE%B6?locale_override=1",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1034730,
+      "name": "随缘玩家",
+      "created_at": "2023-03-01T10:51:27.000Z",
+      "url": "https://greasyfork.org/users/1034730-%E9%9A%8F%E7%BC%98%E7%8E%A9%E5%AE%B6",
+      "scripts": [
+        {
+          "id": 460973,
+          "daily_installs": 1,
+          "total_installs": 11991,
+          "fan_score": "77.0",
+          "good_ratings": 28,
+          "ok_ratings": 6,
+          "bad_ratings": 0,
+          "created_at": "2023-03-01T11:24:17.000Z",
+          "code_updated_at": "2023-12-01T10:24:30.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/1034730-%E9%9A%8F%E7%BC%98%E7%8E%A9%E5%AE%B6?locale_override=1",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "跳过抖音广告",
+          "description": "关闭抖音弹窗登录,跳过抖音广告和直播,观看直播默认原画",
+          "url": "https://greasyfork.org/scripts/460973-%E8%B7%B3%E8%BF%87%E6%8A%96%E9%9F%B3%E5%B9%BF%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/460973/%E8%B7%B3%E8%BF%87%E6%8A%96%E9%9F%B3%E5%B9%BF%E5%91%8A.user.js",
+          "code_size": 27845,
+          "license": "随缘玩家",
+          "version": "0.31",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "跳过抖音广告",
+  "description": "关闭抖音弹窗登录,跳过抖音广告和直播,观看直播默认原画",
+  "url": "https://greasyfork.org/scripts/460973-%E8%B7%B3%E8%BF%87%E6%8A%96%E9%9F%B3%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/460973/%E8%B7%B3%E8%BF%87%E6%8A%96%E9%9F%B3%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 27845,
+  "license": "随缘玩家",
+  "version": "0.31",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

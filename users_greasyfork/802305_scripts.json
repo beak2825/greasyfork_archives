@@ -1,0 +1,101 @@
+[
+  {
+    "id": 432904,
+    "daily_installs": 0,
+    "total_installs": 155,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-24T17:50:19.000Z",
+    "code_updated_at": "2021-10-02T23:31:07.000Z",
+    "namespace": "Neoscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 802305,
+        "name": "themagicteeth",
+        "created_at": "2021-08-08T19:15:53.000Z",
+        "url": "https://greasyfork.org/users/802305-themagicteeth"
+      }
+    ],
+    "name": "Mysterious Symol Hole Forever",
+    "description": "Plays Mysterious Symol Hole",
+    "url": "https://greasyfork.org/scripts/432904-mysterious-symol-hole-forever",
+    "code_url": "https://update.greasyfork.org/scripts/432904/Mysterious%20Symol%20Hole%20Forever.user.js",
+    "code_size": 775,
+    "license": null,
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432903,
+    "daily_installs": 0,
+    "total_installs": 171,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-24T17:47:06.000Z",
+    "code_updated_at": "2021-10-02T23:38:52.000Z",
+    "namespace": "Neopets",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 802305,
+        "name": "themagicteeth",
+        "created_at": "2021-08-08T19:15:53.000Z",
+        "url": "https://greasyfork.org/users/802305-themagicteeth"
+      }
+    ],
+    "name": "Handy Buttons",
+    "description": "Adds a button to automatically copy page source, and open various helpful pages that need the source HTML",
+    "url": "https://greasyfork.org/scripts/432903-handy-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/432903/Handy%20Buttons.user.js",
+    "code_size": 7015,
+    "license": null,
+    "version": "1.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432622,
+    "daily_installs": 0,
+    "total_installs": 114,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-09-18T20:27:17.000Z",
+    "code_updated_at": "2021-09-18T23:10:54.000Z",
+    "namespace": "Neoscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 802305,
+        "name": "themagicteeth",
+        "created_at": "2021-08-08T19:15:53.000Z",
+        "url": "https://greasyfork.org/users/802305-themagicteeth"
+      }
+    ],
+    "name": "TCG Album Helper",
+    "description": "Adds info menu about missing TCG cards.",
+    "url": "https://greasyfork.org/scripts/432622-tcg-album-helper",
+    "code_url": "https://update.greasyfork.org/scripts/432622/TCG%20Album%20Helper.user.js",
+    "code_size": 44283,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

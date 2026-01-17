@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465501,
+    "daily_installs": 0,
+    "total_installs": 115,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T11:05:20.000Z",
+    "code_updated_at": "2023-05-04T11:05:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1072870,
+        "name": "Hải Vũ Công",
+        "created_at": "2023-05-04T10:59:28.000Z",
+        "url": "https://greasyfork.org/users/1072870-h%E1%BA%A3i-v%C5%A9-c%C3%B4ng"
+      }
+    ],
+    "name": "Hải CP VN",
+    "description": "This will force you to stay in Hải CP VN (Global) channel on ROBLOX aka the stable branch instead of the beta channels.",
+    "url": "https://greasyfork.org/scripts/465501-h%E1%BA%A3i-cp-vn",
+    "code_url": "https://update.greasyfork.org/scripts/465501/H%E1%BA%A3i%20CP%20VN.user.js",
+    "code_size": 1372,
+    "license": "MIT License",
+    "version": "0.4.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

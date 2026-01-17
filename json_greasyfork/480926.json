@@ -1,0 +1,59 @@
+{
+  "id": 480926,
+  "daily_installs": 0,
+  "total_installs": 148,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-28T05:42:21.000Z",
+  "code_updated_at": "2023-11-28T05:42:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1224602,
+      "name": "basiczombie-47",
+      "created_at": "2023-11-28T05:40:34.000Z",
+      "url": "https://greasyfork.org/users/1224602-basiczombie-47",
+      "scripts": [
+        {
+          "id": 480926,
+          "daily_installs": 0,
+          "total_installs": 148,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-28T05:42:21.000Z",
+          "code_updated_at": "2023-11-28T05:42:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VC自动填充",
+          "description": "vc自动填充脚本（除了hcaptcha验证），记得将wantedVPS的内容替换为你想要的vps序号，可以的话也修改一下密码。",
+          "url": "https://greasyfork.org/scripts/480926-vc%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85",
+          "code_url": "https://update.greasyfork.org/scripts/480926/VC%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85.user.js",
+          "code_size": 1194,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VC自动填充",
+  "description": "vc自动填充脚本（除了hcaptcha验证），记得将wantedVPS的内容替换为你想要的vps序号，可以的话也修改一下密码。",
+  "url": "https://greasyfork.org/scripts/480926-vc%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85",
+  "code_url": "https://update.greasyfork.org/scripts/480926/VC%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85.user.js",
+  "code_size": 1194,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

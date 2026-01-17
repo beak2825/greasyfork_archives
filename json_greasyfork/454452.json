@@ -1,0 +1,34 @@
+{
+  "id": 454452,
+  "daily_installs": 1,
+  "total_installs": 70,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-08T08:36:42.000Z",
+  "code_updated_at": "2026-01-07T08:34:46.000Z",
+  "namespace": "http://www.akuvox.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 666597,
+      "name": "phoenixylf",
+      "created_at": "2020-07-14T03:07:25.000Z",
+      "url": "https://greasyfork.org/users/666597-phoenixylf",
+      "scripts": []
+    }
+  ],
+  "name": "Akuvox ChanDao-Project",
+  "description": "内部使用，外部无效，方便快捷创建项目",
+  "url": "https://greasyfork.org/scripts/454452-akuvox-chandao-project",
+  "code_url": "https://update.greasyfork.org/scripts/454452/Akuvox%20ChanDao-Project.user.js",
+  "code_size": 17068,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

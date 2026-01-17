@@ -1,0 +1,134 @@
+[
+  {
+    "id": 464359,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-19T04:46:57.000Z",
+    "code_updated_at": "2023-06-30T14:16:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1058822,
+        "name": "dzx504",
+        "created_at": "2023-04-12T12:41:41.000Z",
+        "url": "https://greasyfork.org/users/1058822-dzx504"
+      }
+    ],
+    "name": "辱骂标记  提交强制刷新",
+    "description": "辱骂标记  提交强制刷新 v0.2 实时刷新.来量提醒 v0.3重复点批量辱骂bug修复",
+    "url": "https://greasyfork.org/scripts/464359-%E8%BE%B1%E9%AA%82%E6%A0%87%E8%AE%B0-%E6%8F%90%E4%BA%A4%E5%BC%BA%E5%88%B6%E5%88%B7%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/464359/%E8%BE%B1%E9%AA%82%E6%A0%87%E8%AE%B0%20%20%E6%8F%90%E4%BA%A4%E5%BC%BA%E5%88%B6%E5%88%B7%E6%96%B0.user.js",
+    "code_size": 2515,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 464190,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-17T00:37:27.000Z",
+    "code_updated_at": "2023-06-21T11:12:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1058822,
+        "name": "dzx504",
+        "created_at": "2023-04-12T12:41:41.000Z",
+        "url": "https://greasyfork.org/users/1058822-dzx504"
+      }
+    ],
+    "name": "用户审核待审量显示数字【前端】0.8",
+    "description": "用户审核待审量显示数字【前端】 & 复审待审量显示 V0.2 从张栋服务器取数据 V0.3 适配非蓝色浏览器 V0.4 总量显示",
+    "url": "https://greasyfork.org/scripts/464190-%E7%94%A8%E6%88%B7%E5%AE%A1%E6%A0%B8%E5%BE%85%E5%AE%A1%E9%87%8F%E6%98%BE%E7%A4%BA%E6%95%B0%E5%AD%97-%E5%89%8D%E7%AB%AF-0-8",
+    "code_url": "https://update.greasyfork.org/scripts/464190/%E7%94%A8%E6%88%B7%E5%AE%A1%E6%A0%B8%E5%BE%85%E5%AE%A1%E9%87%8F%E6%98%BE%E7%A4%BA%E6%95%B0%E5%AD%97%E3%80%90%E5%89%8D%E7%AB%AF%E3%80%9108.user.js",
+    "code_size": 12275,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463891,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-13T08:23:56.000Z",
+    "code_updated_at": "2023-06-30T12:36:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1058822,
+        "name": "dzx504",
+        "created_at": "2023-04-12T12:41:41.000Z",
+        "url": "https://greasyfork.org/users/1058822-dzx504"
+      }
+    ],
+    "name": "V2 all",
+    "description": "【竞品】新增图片移到命中内容栏；命中外链超显示；家族报警; 挂机报警",
+    "url": "https://greasyfork.org/scripts/463891-v2-all",
+    "code_url": "https://update.greasyfork.org/scripts/463891/V2%20all.user.js",
+    "code_size": 18300,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463883,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-13T04:55:14.000Z",
+    "code_updated_at": "2023-04-13T04:55:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1058822,
+        "name": "dzx504",
+        "created_at": "2023-04-12T12:41:41.000Z",
+        "url": "https://greasyfork.org/users/1058822-dzx504"
+      }
+    ],
+    "name": "V2前端优化",
+    "description": "1,添加手写理由选项",
+    "url": "https://greasyfork.org/scripts/463883-v2%E5%89%8D%E7%AB%AF%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/463883/V2%E5%89%8D%E7%AB%AF%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 1773,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

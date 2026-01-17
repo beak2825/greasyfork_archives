@@ -1,0 +1,59 @@
+{
+  "id": 472488,
+  "daily_installs": 0,
+  "total_installs": 416,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-05T12:52:47.000Z",
+  "code_updated_at": "2023-08-07T14:31:28.000Z",
+  "namespace": "https://hunau.web2.superchutou.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1144617,
+      "name": "吴二凡",
+      "created_at": "2023-08-05T12:46:17.000Z",
+      "url": "https://greasyfork.org/users/1144617-%E5%90%B4%E4%BA%8C%E5%87%A1",
+      "scripts": [
+        {
+          "id": 472488,
+          "daily_installs": 0,
+          "total_installs": 416,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-05T12:52:47.000Z",
+          "code_updated_at": "2023-08-07T14:31:28.000Z",
+          "namespace": "https://hunau.web2.superchutou.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "刷题脚本",
+          "description": "播完自动切换到下一个视频的小脚本..",
+          "url": "https://greasyfork.org/scripts/472488-%E5%88%B7%E9%A2%98%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/472488/%E5%88%B7%E9%A2%98%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 7263,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "刷题脚本",
+  "description": "播完自动切换到下一个视频的小脚本..",
+  "url": "https://greasyfork.org/scripts/472488-%E5%88%B7%E9%A2%98%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/472488/%E5%88%B7%E9%A2%98%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 7263,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 421343,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-07T01:13:13.000Z",
+  "code_updated_at": "2021-02-08T04:50:45.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 735248,
+      "name": "JudahGoldstein",
+      "created_at": "2021-02-07T01:11:15.000Z",
+      "url": "https://greasyfork.org/users/735248-judahgoldstein",
+      "scripts": [
+        {
+          "id": 421343,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-07T01:13:13.000Z",
+          "code_updated_at": "2021-02-08T04:50:45.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "York SSO Autologin",
+          "description": "clicks the login button automaticaly when the SSO page loads, only works if you have autofill on.",
+          "url": "https://greasyfork.org/scripts/421343-york-sso-autologin",
+          "code_url": "https://update.greasyfork.org/scripts/421343/York%20SSO%20Autologin.user.js",
+          "code_size": 1154,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "York SSO Autologin",
+  "description": "clicks the login button automaticaly when the SSO page loads, only works if you have autofill on.",
+  "url": "https://greasyfork.org/scripts/421343-york-sso-autologin",
+  "code_url": "https://update.greasyfork.org/scripts/421343/York%20SSO%20Autologin.user.js",
+  "code_size": 1154,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 440730,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-28T19:56:47.000Z",
+  "code_updated_at": "2022-03-11T23:15:59.000Z",
+  "namespace": "https://greasyfork.org/en/users/752105-w4it",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816452,
+      "name": "Aurora Casto!",
+      "created_at": "2021-09-17T20:41:24.000Z",
+      "url": "https://greasyfork.org/users/816452-aurora-casto",
+      "scripts": []
+    }
+  ],
+  "name": "Catier Hack Client | Katana + Musket | AUTOHEAL |  Anti-Insta  |  starter resources and more!!",
+  "description": "This was SISI's HacK but I decided to name it Catier Hack Client. Not only the name of the mod was changed, also the power of it! To know how to use it read the description! Hope you enjoy!! this is a sad copy of pancake mod",
+  "url": "https://greasyfork.org/scripts/440730-catier-hack-client-katana-musket-autoheal-anti-insta-starter-resources-and-more",
+  "code_url": "https://update.greasyfork.org/scripts/440730/Catier%20Hack%20Client%20%7C%20Katana%20%2B%20Musket%20%7C%20AUTOHEAL%20%7C%20%20Anti-Insta%20%20%7C%20%20starter%20resources%20and%20more%21%21.user.js",
+  "code_size": 53627,
+  "license": null,
+  "version": "v.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

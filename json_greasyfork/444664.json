@@ -1,0 +1,33 @@
+{
+  "id": 444664,
+  "daily_installs": 0,
+  "total_installs": 69,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-08T10:00:47.000Z",
+  "code_updated_at": "2022-05-08T10:35:19.000Z",
+  "namespace": "Hans5958",
+  "support_url": "https://github.com/Hans5958/userscripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 95635,
+      "name": "Hans5958",
+      "created_at": "2017-01-17T12:34:37.000Z",
+      "url": "https://greasyfork.org/users/95635-hans5958"
+    }
+  ],
+  "name": "Scratch 3 Developer Tools",
+  "description": "To enhance your Scratch Editing Experience. Injects the code on the source code from https://github.com/griffpatch/Scratch3-Dev-Tools. (Deprecated: Use Scratch Addons instead.)",
+  "url": "https://greasyfork.org/scripts/444664-scratch-3-developer-tools",
+  "code_url": "https://update.greasyfork.org/scripts/444664/Scratch%203%20Developer%20Tools.user.js",
+  "code_size": 1342,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

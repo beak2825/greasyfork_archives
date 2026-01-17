@@ -1,0 +1,59 @@
+{
+  "id": 447637,
+  "daily_installs": 0,
+  "total_installs": 79,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-09T13:19:15.000Z",
+  "code_updated_at": "2022-07-25T18:36:03.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 933981,
+      "name": "Марат Сытько",
+      "created_at": "2022-07-09T10:04:21.000Z",
+      "url": "https://greasyfork.org/users/933981-%D0%BC%D0%B0%D1%80%D0%B0%D1%82-%D1%81%D1%8B%D1%82%D1%8C%D0%BA%D0%BE",
+      "scripts": [
+        {
+          "id": 447637,
+          "daily_installs": 0,
+          "total_installs": 79,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-09T13:19:15.000Z",
+          "code_updated_at": "2022-07-25T18:36:03.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BLACK RUSSIA SOCHI | Скрипт для кураторов форума",
+          "description": "by Marco_Stocco",
+          "url": "https://greasyfork.org/scripts/447637-black-russia-sochi-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+          "code_url": "https://update.greasyfork.org/scripts/447637/BLACK%20RUSSIA%20SOCHI%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+          "code_size": 141321,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BLACK RUSSIA SOCHI | Скрипт для кураторов форума",
+  "description": "by Marco_Stocco",
+  "url": "https://greasyfork.org/scripts/447637-black-russia-sochi-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/447637/BLACK%20RUSSIA%20SOCHI%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+  "code_size": 141321,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

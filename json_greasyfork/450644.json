@@ -1,0 +1,34 @@
+{
+  "id": 450644,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-02T23:36:36.000Z",
+  "code_updated_at": "2023-02-24T17:23:30.000Z",
+  "namespace": "m0tch.nsWatcherSpies",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 919297,
+      "name": "predator101",
+      "created_at": "2022-05-27T23:19:41.000Z",
+      "url": "https://greasyfork.org/users/919297-predator101",
+      "scripts": []
+    }
+  ],
+  "name": "NS Watcher Spies",
+  "description": "Show tornstats spies on ns-watcher",
+  "url": "https://greasyfork.org/scripts/450644-ns-watcher-spies",
+  "code_url": "https://update.greasyfork.org/scripts/450644/NS%20Watcher%20Spies.user.js",
+  "code_size": 8365,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 485853,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-28T04:14:02.000Z",
+  "code_updated_at": "2024-01-31T01:39:19.000Z",
+  "namespace": "http://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1254105,
+      "name": "Salvador Verduzco",
+      "created_at": "2024-01-27T23:57:05.000Z",
+      "url": "https://greasyfork.org/users/1254105-salvador-verduzco"
+    }
+  ],
+  "name": "VUX THEME",
+  "description": "a script i made cuz i was bored",
+  "url": "https://greasyfork.org/scripts/485853-vux-theme",
+  "code_url": "https://update.greasyfork.org/scripts/485853/VUX%20THEME.user.js",
+  "code_size": 19495,
+  "license": null,
+  "version": "3.9.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

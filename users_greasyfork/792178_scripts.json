@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429168,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-10T12:09:47.000Z",
+    "code_updated_at": "2021-07-10T12:09:47.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 792178,
+        "name": "文宇001",
+        "created_at": "2021-07-10T10:14:14.000Z",
+        "url": "https://greasyfork.org/users/792178-%E6%96%87%E5%AE%87001"
+      }
+    ],
+    "name": "https://jsglpt.gdedu.gov.cn/GD公需课刷课",
+    "description": "广东省教师继续教育信息管理平台公需课刷课",
+    "url": "https://greasyfork.org/scripts/429168-https-jsglpt-gdedu-gov-cn-gd%E5%85%AC%E9%9C%80%E8%AF%BE%E5%88%B7%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/429168/https%3AjsglptgdedugovcnGD%E5%85%AC%E9%9C%80%E8%AF%BE%E5%88%B7%E8%AF%BE.user.js",
+    "code_size": 6022,
+    "license": null,
+    "version": "1.0记录版",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

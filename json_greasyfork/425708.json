@@ -1,0 +1,34 @@
+{
+  "id": 425708,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-29T15:28:41.000Z",
+  "code_updated_at": "2021-04-29T16:43:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 766584,
+      "name": "abcluis",
+      "created_at": "2021-04-29T15:26:07.000Z",
+      "url": "https://greasyfork.org/users/766584-abcluis",
+      "scripts": []
+    }
+  ],
+  "name": "Script Auto-Close Whatsapp reminders",
+  "description": "Script to send whatsapp messages",
+  "url": "https://greasyfork.org/scripts/425708-script-auto-close-whatsapp-reminders",
+  "code_url": "https://update.greasyfork.org/scripts/425708/Script%20Auto-Close%20Whatsapp%20reminders.user.js",
+  "code_size": 942,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 439887,
+  "daily_installs": 0,
+  "total_installs": 124,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-11T22:29:41.000Z",
+  "code_updated_at": "2022-02-11T22:42:00.000Z",
+  "namespace": "https://rinsuki.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 163419,
+      "name": "rinsuki",
+      "created_at": "2017-12-17T06:09:11.000Z",
+      "url": "https://greasyfork.org/users/163419-rinsuki"
+    }
+  ],
+  "name": "Comment Smoother for niconico live",
+  "description": "ニコニコ生放送のコメントをぬるぬるにします",
+  "url": "https://greasyfork.org/scripts/439887-comment-smoother-for-niconico-live",
+  "code_url": "https://update.greasyfork.org/scripts/439887/Comment%20Smoother%20for%20niconico%20live.user.js",
+  "code_size": 2117,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

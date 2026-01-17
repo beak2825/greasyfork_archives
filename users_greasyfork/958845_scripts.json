@@ -1,0 +1,101 @@
+[
+  {
+    "id": 451374,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-14T14:17:09.000Z",
+    "code_updated_at": "2022-09-14T14:17:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 958845,
+        "name": "Marvin P.",
+        "created_at": "2022-09-13T19:03:14.000Z",
+        "url": "https://greasyfork.org/users/958845-marvin-p"
+      }
+    ],
+    "name": "YouTube Playlist Link Extractor Enhanced (beta)",
+    "description": "Enhanced version of Youtube Playlist Video Link Extractor by Yooness Rostamy. Updates the code to work on modern versions and adds the ability to list unavailable videos.",
+    "url": "https://greasyfork.org/scripts/451374-youtube-playlist-link-extractor-enhanced-beta",
+    "code_url": "https://update.greasyfork.org/scripts/451374/YouTube%20Playlist%20Link%20Extractor%20Enhanced%20%28beta%29.user.js",
+    "code_size": 4653,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451360,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-14T10:24:10.000Z",
+    "code_updated_at": "2022-09-14T10:24:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 958845,
+        "name": "Marvin P.",
+        "created_at": "2022-09-13T19:03:14.000Z",
+        "url": "https://greasyfork.org/users/958845-marvin-p"
+      }
+    ],
+    "name": "YouTube Playlist Link Extractor Enhanced (backup)",
+    "description": "Enhanced version of Youtube Playlist Video Link Extractor by Yooness Rostamy. Updates the code to work on modern versions and adds the ability to list unavailable videos.",
+    "url": "https://greasyfork.org/scripts/451360-youtube-playlist-link-extractor-enhanced-backup",
+    "code_url": "https://update.greasyfork.org/scripts/451360/YouTube%20Playlist%20Link%20Extractor%20Enhanced%20%28backup%29.user.js",
+    "code_size": 2672,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451324,
+    "daily_installs": 0,
+    "total_installs": 103,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-09-13T20:56:19.000Z",
+    "code_updated_at": "2022-09-22T21:41:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 958845,
+        "name": "Marvin P.",
+        "created_at": "2022-09-13T19:03:14.000Z",
+        "url": "https://greasyfork.org/users/958845-marvin-p"
+      }
+    ],
+    "name": "YouTube Playlist Link Extractor Enhanced",
+    "description": "Enhanced version of Youtube Playlist Video Link Extractor by Yooness Rostamy. Updates the code to work on modern versions and adds the ability to list unavailable videos.",
+    "url": "https://greasyfork.org/scripts/451324-youtube-playlist-link-extractor-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/451324/YouTube%20Playlist%20Link%20Extractor%20Enhanced.user.js",
+    "code_size": 4711,
+    "license": null,
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

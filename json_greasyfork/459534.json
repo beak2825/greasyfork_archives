@@ -1,0 +1,59 @@
+{
+  "id": 459534,
+  "daily_installs": 0,
+  "total_installs": 524,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-06T15:10:22.000Z",
+  "code_updated_at": "2023-05-13T02:48:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 428585,
+      "name": "awslnotbad",
+      "created_at": "2019-12-26T07:33:06.000Z",
+      "url": "https://greasyfork.org/users/428585-awslnotbad",
+      "scripts": [
+        {
+          "id": 459534,
+          "daily_installs": 0,
+          "total_installs": 524,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-06T15:10:22.000Z",
+          "code_updated_at": "2023-05-13T02:48:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微软积分自动搜索",
+          "description": "自动进行搜索任务",
+          "url": "https://greasyfork.org/scripts/459534-%E5%BE%AE%E8%BD%AF%E7%A7%AF%E5%88%86%E8%87%AA%E5%8A%A8%E6%90%9C%E7%B4%A2",
+          "code_url": "https://update.greasyfork.org/scripts/459534/%E5%BE%AE%E8%BD%AF%E7%A7%AF%E5%88%86%E8%87%AA%E5%8A%A8%E6%90%9C%E7%B4%A2.user.js",
+          "code_size": 1319,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微软积分自动搜索",
+  "description": "自动进行搜索任务",
+  "url": "https://greasyfork.org/scripts/459534-%E5%BE%AE%E8%BD%AF%E7%A7%AF%E5%88%86%E8%87%AA%E5%8A%A8%E6%90%9C%E7%B4%A2",
+  "code_url": "https://update.greasyfork.org/scripts/459534/%E5%BE%AE%E8%BD%AF%E7%A7%AF%E5%88%86%E8%87%AA%E5%8A%A8%E6%90%9C%E7%B4%A2.user.js",
+  "code_size": 1319,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

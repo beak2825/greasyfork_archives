@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494984,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-15T01:03:02.000Z",
+    "code_updated_at": "2024-05-15T01:05:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435154,
+        "name": "jncqlc",
+        "created_at": "2020-01-14T06:54:57.000Z",
+        "url": "https://greasyfork.org/users/435154-jncqlc"
+      }
+    ],
+    "name": "汉语拼音",
+    "description": "Translate selected text to pinyin and display it",
+    "url": "https://greasyfork.org/scripts/494984-%E6%B1%89%E8%AF%AD%E6%8B%BC%E9%9F%B3",
+    "code_url": "https://update.greasyfork.org/scripts/494984/%E6%B1%89%E8%AF%AD%E6%8B%BC%E9%9F%B3.user.js",
+    "code_size": 2119,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 453879,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-28T06:44:28.000Z",
+  "code_updated_at": "2024-11-09T04:02:46.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 703945,
+      "name": "zymbth",
+      "created_at": "2020-11-11T01:51:06.000Z",
+      "url": "https://greasyfork.org/users/703945-zymbth"
+    }
+  ],
+  "name": "csdn文章全屏阅读",
+  "description": "csdn文章全屏阅读，开关在侧边工具栏中",
+  "url": "https://greasyfork.org/scripts/453879-csdn%E6%96%87%E7%AB%A0%E5%85%A8%E5%B1%8F%E9%98%85%E8%AF%BB",
+  "code_url": "https://update.greasyfork.org/scripts/453879/csdn%E6%96%87%E7%AB%A0%E5%85%A8%E5%B1%8F%E9%98%85%E8%AF%BB.user.js",
+  "code_size": 2188,
+  "license": "MIT License",
+  "version": "0.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 488613,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-29T13:06:14.000Z",
+  "code_updated_at": "2024-02-29T13:06:14.000Z",
+  "namespace": "https://greasyfork.org/users/1268364",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1268364,
+      "name": "anonymousII",
+      "created_at": "2024-02-29T08:19:36.000Z",
+      "url": "https://greasyfork.org/users/1268364-anonymousii",
+      "scripts": [
+        {
+          "id": 488613,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-29T13:06:14.000Z",
+          "code_updated_at": "2024-02-29T13:06:14.000Z",
+          "namespace": "https://greasyfork.org/users/1268364",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove Down-thumb Count for CC98",
+          "description": "隐藏CC98每个帖子的获踩数量",
+          "url": "https://greasyfork.org/scripts/488613-remove-down-thumb-count-for-cc98",
+          "code_url": "https://update.greasyfork.org/scripts/488613/Remove%20Down-thumb%20Count%20for%20CC98.user.js",
+          "code_size": 1006,
+          "license": "GNU Affero General Public License v3.0",
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove Down-thumb Count for CC98",
+  "description": "隐藏CC98每个帖子的获踩数量",
+  "url": "https://greasyfork.org/scripts/488613-remove-down-thumb-count-for-cc98",
+  "code_url": "https://update.greasyfork.org/scripts/488613/Remove%20Down-thumb%20Count%20for%20CC98.user.js",
+  "code_size": 1006,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

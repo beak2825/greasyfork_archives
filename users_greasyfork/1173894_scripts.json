@@ -30,6 +30,39 @@
     "version": "2.50",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489771,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-14T05:26:47.000Z",
+    "code_updated_at": "2024-03-17T12:26:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173894,
+        "name": "paladiny",
+        "created_at": "2023-09-15T17:58:41.000Z",
+        "url": "https://greasyfork.org/users/1173894-paladiny"
+      }
+    ],
+    "name": "Collecting Tickets",
+    "description": "Collecting Tickets Automatically in Events",
+    "url": "https://greasyfork.org/scripts/489771-collecting-tickets",
+    "code_url": "https://update.greasyfork.org/scripts/489771/Collecting%20Tickets.user.js",
+    "code_size": 1462,
+    "license": "MIT License",
+    "version": "1.09",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 477081,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-10T04:27:21.000Z",
+  "code_updated_at": "2023-10-10T08:29:44.000Z",
+  "namespace": "http://luxiaoxiao.work/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 984420,
+      "name": "MrLinda",
+      "created_at": "2022-11-17T10:58:16.000Z",
+      "url": "https://greasyfork.org/users/984420-mrlinda",
+      "scripts": [
+        {
+          "id": 477081,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-10T04:27:21.000Z",
+          "code_updated_at": "2023-10-10T08:29:44.000Z",
+          "namespace": "http://luxiaoxiao.work/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WHUCodeInference",
+          "description": "武大本科生院附件下载自动填验证码",
+          "url": "https://greasyfork.org/scripts/477081-whucodeinference",
+          "code_url": "https://update.greasyfork.org/scripts/477081/WHUCodeInference.user.js",
+          "code_size": 2082,
+          "license": "MIT License",
+          "version": "0.2.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WHUCodeInference",
+  "description": "武大本科生院附件下载自动填验证码",
+  "url": "https://greasyfork.org/scripts/477081-whucodeinference",
+  "code_url": "https://update.greasyfork.org/scripts/477081/WHUCodeInference.user.js",
+  "code_size": 2082,
+  "license": "MIT License",
+  "version": "0.2.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 453390,
+    "daily_installs": 0,
+    "total_installs": 423,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-19T23:00:40.000Z",
+    "code_updated_at": "2022-11-02T05:06:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972846,
+        "name": "bogidot",
+        "created_at": "2022-10-19T22:41:49.000Z",
+        "url": "https://greasyfork.org/users/972846-bogidot"
+      }
+    ],
+    "name": "Dead Frontier Marketeer",
+    "description": "QoL features for the Dead Frontier Market. Displays the price per quantity of items (such as ammunition). And allows you to double click items to search.",
+    "url": "https://greasyfork.org/scripts/453390-dead-frontier-marketeer",
+    "code_url": "https://update.greasyfork.org/scripts/453390/Dead%20Frontier%20Marketeer.user.js",
+    "code_size": 4777,
+    "license": "MIT License",
+    "version": "0.8010",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 492358,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-12T14:12:53.000Z",
+    "code_updated_at": "2024-04-12T14:12:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1280629,
+        "name": "Aurélien Delmas",
+        "created_at": "2024-03-28T10:50:46.000Z",
+        "url": "https://greasyfork.org/users/1280629-aur%C3%A9lien-delmas"
+      }
+    ],
+    "name": "Sales Dashboard",
+    "description": "Improve visual appeal and add the option of getting rid of bells",
+    "url": "https://greasyfork.org/scripts/492358-sales-dashboard",
+    "code_url": "https://update.greasyfork.org/scripts/492358/Sales%20Dashboard.user.js",
+    "code_size": 5039,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492353,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-12T13:26:19.000Z",
+    "code_updated_at": "2024-04-22T10:54:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1280629,
+        "name": "Aurélien Delmas",
+        "created_at": "2024-03-28T10:50:46.000Z",
+        "url": "https://greasyfork.org/users/1280629-aur%C3%A9lien-delmas"
+      }
+    ],
+    "name": "5-Anker to BO",
+    "description": "5-Anker to Back-Office",
+    "url": "https://greasyfork.org/scripts/492353-5-anker-to-bo",
+    "code_url": "https://update.greasyfork.org/scripts/492353/5-Anker%20to%20BO.user.js",
+    "code_size": 1341,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "id": 416494,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-20T23:01:58.000Z",
+    "code_updated_at": "2020-11-27T01:05:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698323,
+        "name": "botclimber",
+        "created_at": "2020-10-25T19:10:17.000Z",
+        "url": "https://greasyfork.org/users/698323-botclimber"
+      }
+    ],
+    "name": "MasterPiece nr 4",
+    "description": "betting script",
+    "url": "https://greasyfork.org/scripts/416494-masterpiece-nr-4",
+    "code_url": "https://update.greasyfork.org/scripts/416494/MasterPiece%20nr%204.user.js",
+    "code_size": 2797,
+    "license": null,
+    "version": "0.09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416487,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-20T19:00:21.000Z",
+    "code_updated_at": "2020-11-20T19:00:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698323,
+        "name": "botclimber",
+        "created_at": "2020-10-25T19:10:17.000Z",
+        "url": "https://greasyfork.org/users/698323-botclimber"
+      }
+    ],
+    "name": "maths",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/416487-maths",
+    "code_url": "https://update.greasyfork.org/scripts/416487/maths.user.js",
+    "code_size": 1985,
+    "license": null,
+    "version": "0.09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416141,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-15T15:23:45.000Z",
+    "code_updated_at": "2020-11-15T15:23:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698323,
+        "name": "botclimber",
+        "created_at": "2020-10-25T19:10:17.000Z",
+        "url": "https://greasyfork.org/users/698323-botclimber"
+      }
+    ],
+    "name": "gods thought",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/416141-gods-thought",
+    "code_url": "https://update.greasyfork.org/scripts/416141/gods%20thought.user.js",
+    "code_size": 3570,
+    "license": null,
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415964,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-12T02:17:41.000Z",
+    "code_updated_at": "2020-11-12T16:44:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698323,
+        "name": "botclimber",
+        "created_at": "2020-10-25T19:10:17.000Z",
+        "url": "https://greasyfork.org/users/698323-botclimber"
+      }
+    ],
+    "name": "anesova dads god",
+    "description": "script for live bets",
+    "url": "https://greasyfork.org/scripts/415964-anesova-dads-god",
+    "code_url": "https://update.greasyfork.org/scripts/415964/anesova%20dads%20god.user.js",
+    "code_size": 2380,
+    "license": null,
+    "version": "0.14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415963,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-12T02:17:28.000Z",
+    "code_updated_at": "2020-11-12T16:45:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698323,
+        "name": "botclimber",
+        "created_at": "2020-10-25T19:10:17.000Z",
+        "url": "https://greasyfork.org/users/698323-botclimber"
+      }
+    ],
+    "name": "anesova money counter",
+    "description": "cal diff between profit|loss",
+    "url": "https://greasyfork.org/scripts/415963-anesova-money-counter",
+    "code_url": "https://update.greasyfork.org/scripts/415963/anesova%20money%20counter.user.js",
+    "code_size": 1406,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

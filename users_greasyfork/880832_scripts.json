@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440638,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-26T14:15:16.000Z",
+    "code_updated_at": "2022-02-26T16:06:22.000Z",
+    "namespace": "tumpio@sci.fi",
+    "support_url": "https://github.com/tumpio/gmscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 880832,
+        "name": "fldkjsfkljskerem",
+        "created_at": "2022-02-26T14:10:14.000Z",
+        "url": "https://greasyfork.org/users/880832-fldkjsfkljskerem"
+      }
+    ],
+    "name": "Custom Playback Speed",
+    "description": "Load more results automatically and endlessly.",
+    "url": "https://greasyfork.org/scripts/440638-custom-playback-speed",
+    "code_url": "https://update.greasyfork.org/scripts/440638/Custom%20Playback%20Speed.user.js",
+    "code_size": 1346,
+    "license": "MIT License",
+    "version": "0.0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

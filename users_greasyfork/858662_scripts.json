@@ -1,0 +1,200 @@
+[
+  {
+    "id": 438482,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-13T15:30:13.000Z",
+    "code_updated_at": "2022-01-13T15:30:13.000Z",
+    "namespace": "https://triburile.ro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858662,
+        "name": "fpo",
+        "created_at": "2021-12-28T21:54:09.000Z",
+        "url": "https://greasyfork.org/users/858662-fpo"
+      }
+    ],
+    "name": "CRESTE SUPORTI",
+    "description": "Creste suporti",
+    "url": "https://greasyfork.org/scripts/438482-creste-suporti",
+    "code_url": "https://update.greasyfork.org/scripts/438482/CRESTE%20SUPORTI.user.js",
+    "code_size": 11101,
+    "license": null,
+    "version": "0.1",
+    "locale": "ca",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438481,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-13T15:20:40.000Z",
+    "code_updated_at": "2022-01-13T15:20:40.000Z",
+    "namespace": "https://triburile.ro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858662,
+        "name": "fpo",
+        "created_at": "2021-12-28T21:54:09.000Z",
+        "url": "https://greasyfork.org/users/858662-fpo"
+      }
+    ],
+    "name": "Log in",
+    "description": "login and logout",
+    "url": "https://greasyfork.org/scripts/438481-log-in",
+    "code_url": "https://update.greasyfork.org/scripts/438481/Log%20in.user.js",
+    "code_size": 1672,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438480,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-13T14:59:52.000Z",
+    "code_updated_at": "2022-01-13T14:59:52.000Z",
+    "namespace": "https://triburile.ro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858662,
+        "name": "fpo",
+        "created_at": "2021-12-28T21:54:09.000Z",
+        "url": "https://greasyfork.org/users/858662-fpo"
+      }
+    ],
+    "name": "Redirect",
+    "description": "Redirect between main, recruit, scavenge",
+    "url": "https://greasyfork.org/scripts/438480-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/438480/Redirect.user.js",
+    "code_size": 2970,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438477,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-13T14:54:13.000Z",
+    "code_updated_at": "2022-01-13T14:54:13.000Z",
+    "namespace": "http://triburile.ro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858662,
+        "name": "fpo",
+        "created_at": "2021-12-28T21:54:09.000Z",
+        "url": "https://greasyfork.org/users/858662-fpo"
+      }
+    ],
+    "name": "Auto recruit",
+    "description": "Recruit",
+    "url": "https://greasyfork.org/scripts/438477-auto-recruit",
+    "code_url": "https://update.greasyfork.org/scripts/438477/Auto%20recruit.user.js",
+    "code_size": 2529,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 437711,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-28T22:06:26.000Z",
+    "code_updated_at": "2021-12-28T22:06:26.000Z",
+    "namespace": "https://greasyfork.org/users/151096",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858662,
+        "name": "fpo",
+        "created_at": "2021-12-28T21:54:09.000Z",
+        "url": "https://greasyfork.org/users/858662-fpo"
+      }
+    ],
+    "name": "Train Pally",
+    "description": "Trains pally automatically",
+    "url": "https://greasyfork.org/scripts/437711-train-pally",
+    "code_url": "https://update.greasyfork.org/scripts/437711/Train%20Pally.user.js",
+    "code_size": 705,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 437709,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-28T21:57:59.000Z",
+    "code_updated_at": "2021-12-28T21:57:59.000Z",
+    "namespace": "FunnyPocketBook",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858662,
+        "name": "fpo",
+        "created_at": "2021-12-28T21:54:09.000Z",
+        "url": "https://greasyfork.org/users/858662-fpo"
+      }
+    ],
+    "name": "Show total incoming troops in village info",
+    "description": "Shows the total incoming troops (support and attack) in the village info screen",
+    "url": "https://greasyfork.org/scripts/437709-show-total-incoming-troops-in-village-info",
+    "code_url": "https://update.greasyfork.org/scripts/437709/Show%20total%20incoming%20troops%20in%20village%20info.user.js",
+    "code_size": 13294,
+    "license": null,
+    "version": "0.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

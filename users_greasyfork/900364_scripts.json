@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443176,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-11T09:37:05.000Z",
+    "code_updated_at": "2022-04-11T09:37:05.000Z",
+    "namespace": "https://greasyfork.org/users/900364",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 900364,
+        "name": "kintama",
+        "created_at": "2022-04-10T16:12:31.000Z",
+        "url": "https://greasyfork.org/users/900364-kintama"
+      }
+    ],
+    "name": "梦蓝增强",
+    "description": "增加了快捷操作和播放历史记录",
+    "url": "https://greasyfork.org/scripts/443176-%E6%A2%A6%E8%93%9D%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/443176/%E6%A2%A6%E8%93%9D%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 6210,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

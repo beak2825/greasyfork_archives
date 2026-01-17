@@ -1,0 +1,68 @@
+[
+  {
+    "id": 483018,
+    "daily_installs": 0,
+    "total_installs": 267,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-24T16:22:24.000Z",
+    "code_updated_at": "2023-12-24T16:24:14.000Z",
+    "namespace": "https://greasyfork.org/users/1238418",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1238418,
+        "name": "104xvision",
+        "created_at": "2023-12-23T22:02:22.000Z",
+        "url": "https://greasyfork.org/users/1238418-104xvision"
+      }
+    ],
+    "name": "Simple skribbl.io Menu",
+    "description": "A simple version of the skribbl.io main menu screen.",
+    "url": "https://greasyfork.org/scripts/483018-simple-skribbl-io-menu",
+    "code_url": "https://update.greasyfork.org/scripts/483018/Simple%20skribblio%20Menu.user.js",
+    "code_size": 678,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482963,
+    "daily_installs": 0,
+    "total_installs": 149,
+    "fan_score": "39.6",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-12-23T22:06:15.000Z",
+    "code_updated_at": "2023-12-24T11:47:47.000Z",
+    "namespace": "https://update.greasyfork.org/scripts/482963/OPX%20Nitro%20Anywhere.user.js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1238418,
+        "name": "104xvision",
+        "created_at": "2023-12-23T22:02:22.000Z",
+        "url": "https://greasyfork.org/users/1238418-104xvision"
+      }
+    ],
+    "name": "OPX Nitro Anywhere",
+    "description": "This script allows you to get a nitro subscription code from Opera GX without having Opera GX to claim it.",
+    "url": "https://greasyfork.org/scripts/482963-opx-nitro-anywhere",
+    "code_url": "https://update.greasyfork.org/scripts/482963/OPX%20Nitro%20Anywhere.user.js",
+    "code_size": 1989,
+    "license": "MIT License",
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

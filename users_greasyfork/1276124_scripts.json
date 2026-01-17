@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490178,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-18T10:21:17.000Z",
+    "code_updated_at": "2024-03-18T11:23:19.000Z",
+    "namespace": "https://github.com/gideonsenku",
+    "support_url": "https://github.com/gideonsenku/figma-image-upload/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1276124,
+        "name": "gideonsenku",
+        "created_at": "2024-03-18T10:20:29.000Z",
+        "url": "https://greasyfork.org/users/1276124-gideonsenku"
+      }
+    ],
+    "name": "Figma Image Upload",
+    "description": "Figma Image Upload图片上传工具",
+    "url": "https://greasyfork.org/scripts/490178-figma-image-upload",
+    "code_url": "https://update.greasyfork.org/scripts/490178/Figma%20Image%20Upload.user.js",
+    "code_size": 27288,
+    "license": "MIT; https://github.com/gideonsenku/figma-image-upload/blob/main/LICENSE",
+    "version": "0.3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

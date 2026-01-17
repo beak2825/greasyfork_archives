@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442951,
+    "daily_installs": 1,
+    "total_installs": 646,
+    "fan_score": "20.8",
+    "good_ratings": 1,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2022-04-07T23:48:06.000Z",
+    "code_updated_at": "2022-04-10T02:18:03.000Z",
+    "namespace": "https://greasyfork.org/en/users/899130",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 899130,
+        "name": "Cor_Caroli",
+        "created_at": "2022-04-07T21:27:21.000Z",
+        "url": "https://greasyfork.org/users/899130-cor-caroli"
+      }
+    ],
+    "name": "AO3 Text Replacer",
+    "description": "Replace certain words on AO3 fanfics with new ones of your choosing",
+    "url": "https://greasyfork.org/scripts/442951-ao3-text-replacer",
+    "code_url": "https://update.greasyfork.org/scripts/442951/AO3%20Text%20Replacer.user.js",
+    "code_size": 2383,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

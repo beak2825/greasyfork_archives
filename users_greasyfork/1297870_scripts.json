@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494279,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-07T04:05:34.000Z",
+    "code_updated_at": "2024-05-07T04:27:38.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297870,
+        "name": "yuki.yin",
+        "created_at": "2024-05-07T03:53:37.000Z",
+        "url": "https://greasyfork.org/users/1297870-yuki-yin"
+      }
+    ],
+    "name": "Safari小说阅读器 for iOS",
+    "description": "极简的 iOS Safari 端辅助小说阅读脚本",
+    "url": "https://greasyfork.org/scripts/494279-safari%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8-for-ios",
+    "code_url": "https://update.greasyfork.org/scripts/494279/Safari%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8%20for%20iOS.user.js",
+    "code_size": 7978,
+    "license": "GPLv3",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

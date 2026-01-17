@@ -360,7 +360,7 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 547571,
@@ -394,5 +394,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 485275,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-20T00:31:05.000Z",
+    "code_updated_at": "2024-01-20T00:31:05.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1250244,
+        "name": "Casdy82827272",
+        "created_at": "2024-01-19T08:19:48.000Z",
+        "url": "https://greasyfork.org/users/1250244-casdy82827272"
+      }
+    ],
+    "name": "Linkvertise Bypasser - English",
+    "description": "This userscript bypasses Linkvertise links and takes you directly to the destination page.",
+    "url": "https://greasyfork.org/scripts/485275-linkvertise-bypasser-english",
+    "code_url": "https://update.greasyfork.org/scripts/485275/Linkvertise%20Bypasser%20-%20English.user.js",
+    "code_size": 729,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 485230,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-19T08:23:45.000Z",
+    "code_updated_at": "2024-01-19T08:43:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1250244,
+        "name": "Casdy82827272",
+        "created_at": "2024-01-19T08:19:48.000Z",
+        "url": "https://greasyfork.org/users/1250244-casdy82827272"
+      }
+    ],
+    "name": "Linkvertise Bypasser (Automated)",
+    "description": "Bypass Linkvertise links and automatically click the \"Continue\" button",
+    "url": "https://greasyfork.org/scripts/485230-linkvertise-bypasser-automated",
+    "code_url": "https://update.greasyfork.org/scripts/485230/Linkvertise%20Bypasser%20%28Automated%29.user.js",
+    "code_size": 798,
+    "license": null,
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 474335,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-01T08:50:05.000Z",
+  "code_updated_at": "2023-11-13T06:15:56.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1163997,
+      "name": "LTZDLY",
+      "created_at": "2023-09-01T08:33:25.000Z",
+      "url": "https://greasyfork.org/users/1163997-ltzdly",
+      "scripts": [
+        {
+          "id": 474335,
+          "daily_installs": 0,
+          "total_installs": 41,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-01T08:50:05.000Z",
+          "code_updated_at": "2023-11-13T06:15:56.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TJ_crack",
+          "description": "2023/8/31 16:16:43",
+          "url": "https://greasyfork.org/scripts/474335-tj-crack",
+          "code_url": "https://update.greasyfork.org/scripts/474335/TJ_crack.user.js",
+          "code_size": 3810,
+          "license": "MIT License",
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TJ_crack",
+  "description": "2023/8/31 16:16:43",
+  "url": "https://greasyfork.org/scripts/474335-tj-crack",
+  "code_url": "https://update.greasyfork.org/scripts/474335/TJ_crack.user.js",
+  "code_size": 3810,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 414038,
+  "daily_installs": 0,
+  "total_installs": 284,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-21T17:20:00.000Z",
+  "code_updated_at": "2020-11-13T03:51:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 697086,
+      "name": "periodically-makes-puns",
+      "created_at": "2020-10-21T16:26:42.000Z",
+      "url": "https://greasyfork.org/users/697086-periodically-makes-puns"
+    }
+  ],
+  "name": "Action Text",
+  "description": "Display attacks and attack values next to users in multiplayer modes with attack.",
+  "url": "https://greasyfork.org/scripts/414038-action-text",
+  "code_url": "https://update.greasyfork.org/scripts/414038/Action%20Text.user.js",
+  "code_size": 11394,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

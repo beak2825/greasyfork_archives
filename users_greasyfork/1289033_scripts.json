@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492669,
+    "daily_installs": 0,
+    "total_installs": 147,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-16T13:08:51.000Z",
+    "code_updated_at": "2024-04-16T13:11:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1289033,
+        "name": "crdhs",
+        "created_at": "2024-04-16T12:57:37.000Z",
+        "url": "https://greasyfork.org/users/1289033-crdhs"
+      }
+    ],
+    "name": "Download Spotify Playlist art downloader",
+    "description": "Downloads Spotify images on album pages.",
+    "url": "https://greasyfork.org/scripts/492669-download-spotify-playlist-art-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/492669/Download%20Spotify%20Playlist%20art%20downloader.user.js",
+    "code_size": 1288,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

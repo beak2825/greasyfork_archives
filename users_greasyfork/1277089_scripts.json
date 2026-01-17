@@ -1,0 +1,101 @@
+[
+  {
+    "id": 493433,
+    "daily_installs": 1,
+    "total_installs": 4678,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-04-25T06:20:45.000Z",
+    "code_updated_at": "2024-05-12T00:54:19.000Z",
+    "namespace": "https://eesk.top",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1277089,
+        "name": "addxwy",
+        "created_at": "2024-03-20T16:47:33.000Z",
+        "url": "https://greasyfork.org/users/1277089-addxwy"
+      }
+    ],
+    "name": "🔵全国图书联盟❤豆瓣🔥京东⭕一键复制🔵一键查询🔍",
+    "description": "全国图书馆参考咨询联盟⭕DXID🔥豆瓣读书❤京东图书🔥读秀SSID❤一键复制🔵一键查询🔍图书电子版⭕图书互助⭕图书文献分享⭕下载电子书，图书联盟，douban.com🔍jd.com👆www.ucdrs.superlib.net👆duxiu.com👆pan.baidu.com⭕比红太狼的平底锅功能更加简便，实用，清洁，只要安装这一个插件即可完成您全网找电子书，1000万+资源，电子书代找，百度网盘图书pdf互助，用完我们的插件请您留下宝贵建议！",
+    "url": "https://greasyfork.org/scripts/493433-%E5%85%A8%E5%9B%BD%E5%9B%BE%E4%B9%A6%E8%81%94%E7%9B%9F-%E8%B1%86%E7%93%A3-%E4%BA%AC%E4%B8%9C-%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6-%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2",
+    "code_url": "https://update.greasyfork.org/scripts/493433/%F0%9F%94%B5%E5%85%A8%E5%9B%BD%E5%9B%BE%E4%B9%A6%E8%81%94%E7%9B%9F%E2%9D%A4%E8%B1%86%E7%93%A3%F0%9F%94%A5%E4%BA%AC%E4%B8%9C%E2%AD%95%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6%F0%9F%94%B5%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2%F0%9F%94%8D.user.js",
+    "code_size": 9645,
+    "license": "MIT License",
+    "version": "0.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 492994,
+    "daily_installs": 1,
+    "total_installs": 9194,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-20T08:12:52.000Z",
+    "code_updated_at": "2024-05-06T10:30:41.000Z",
+    "namespace": "https://greasyfork.org/scripts/492994",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1277089,
+        "name": "addxwy",
+        "created_at": "2024-03-20T16:47:33.000Z",
+        "url": "https://greasyfork.org/users/1277089-addxwy"
+      }
+    ],
+    "name": "🌐全国图书馆参考咨询联盟🔍📘一键查询电子版图书✔️",
+    "description": "全国图书馆参考咨询联盟【一键查询电子版图书】为搜索红太狼的平底锅的朋友新加功能，显示dxid、等为用于图书文献、图书互助、图书资源查询、群组找书等场景；全方位助力您下载各类书籍显示大学数字图书馆国际合作计划(cadal)的书号-ssno，可以直接显示文献的读秀ssid号或dxid进行互助，pdf电子版，图书代找，图书电子版，PC、手机、MAC、苹果设备都可用一键查询超星龙岩东莞图书馆深圳图书馆广东图书馆获取书籍电子版PDF,图书馆有最新2024年的书籍，豆瓣读书，百度网盘图书pdf互助，图书分享，pan.baidu.com。",
+    "url": "https://greasyfork.org/scripts/492994-%E5%85%A8%E5%9B%BD%E5%9B%BE%E4%B9%A6%E9%A6%86%E5%8F%82%E8%80%83%E5%92%A8%E8%AF%A2%E8%81%94%E7%9B%9F-%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2%E7%94%B5%E5%AD%90%E7%89%88%E5%9B%BE%E4%B9%A6",
+    "code_url": "https://update.greasyfork.org/scripts/492994/%F0%9F%8C%90%E5%85%A8%E5%9B%BD%E5%9B%BE%E4%B9%A6%E9%A6%86%E5%8F%82%E8%80%83%E5%92%A8%E8%AF%A2%E8%81%94%E7%9B%9F%F0%9F%94%8D%F0%9F%93%98%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2%E7%94%B5%E5%AD%90%E7%89%88%E5%9B%BE%E4%B9%A6%E2%9C%94%EF%B8%8F.user.js",
+    "code_size": 8182,
+    "license": "MIT License",
+    "version": "0.3.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 490869,
+    "daily_installs": 0,
+    "total_installs": 6407,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-26T00:40:15.000Z",
+    "code_updated_at": "2024-04-20T13:00:54.000Z",
+    "namespace": "https://eesk.top#   https://eeshu.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1277089,
+        "name": "addxwy",
+        "created_at": "2024-03-20T16:47:33.000Z",
+        "url": "https://greasyfork.org/users/1277089-addxwy"
+      }
+    ],
+    "name": "图书文献助手🔥图书馆联盟🔥豆瓣🔥一键查询",
+    "description": "全国图书参考咨询联盟，图书互助，文献互助，电子书资源，pdf电子书代找，电子书下载，电子书互助，电子书分享，豆瓣读书助手，文献互助小帮手，豆瓣资源下载大师，超星数字图书馆，龙岩网络图书馆，读书小助手，读秀，互助者联盟，油猴插件脚本，图书To搜索[红太狼的平底锅]，这个版本更加简单整洁，支持当当网，孔夫子，豆瓣，一键图书互助，支持读秀SSID码查询，EE书库：https://eesk.top",
+    "url": "https://greasyfork.org/scripts/490869-%E5%9B%BE%E4%B9%A6%E6%96%87%E7%8C%AE%E5%8A%A9%E6%89%8B-%E5%9B%BE%E4%B9%A6%E9%A6%86%E8%81%94%E7%9B%9F-%E8%B1%86%E7%93%A3-%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2",
+    "code_url": "https://update.greasyfork.org/scripts/490869/%E5%9B%BE%E4%B9%A6%E6%96%87%E7%8C%AE%E5%8A%A9%E6%89%8B%F0%9F%94%A5%E5%9B%BE%E4%B9%A6%E9%A6%86%E8%81%94%E7%9B%9F%F0%9F%94%A5%E8%B1%86%E7%93%A3%F0%9F%94%A5%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2.user.js",
+    "code_size": 5760,
+    "license": null,
+    "version": "0.2.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 419495,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-01T14:40:45.000Z",
+  "code_updated_at": "2022-03-29T08:51:59.000Z",
+  "namespace": "http://pan.alonealone.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 723052,
+      "name": "Shilong Hsu",
+      "created_at": "2021-01-01T14:24:16.000Z",
+      "url": "https://greasyfork.org/users/723052-shilong-hsu",
+      "scripts": []
+    }
+  ],
+  "name": "有道文档翻译导出",
+  "description": "有道文档翻译预览页面图片批量下载，存到本地方便合成pdf。",
+  "url": "https://greasyfork.org/scripts/419495-%E6%9C%89%E9%81%93%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E5%AF%BC%E5%87%BA",
+  "code_url": "https://update.greasyfork.org/scripts/419495/%E6%9C%89%E9%81%93%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E5%AF%BC%E5%87%BA.user.js",
+  "code_size": 2539,
+  "license": "MIT License",
+  "version": "0.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

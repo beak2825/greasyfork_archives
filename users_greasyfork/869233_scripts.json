@@ -1,0 +1,68 @@
+[
+  {
+    "id": 439110,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-25T13:13:32.000Z",
+    "code_updated_at": "2025-01-06T09:09:24.000Z",
+    "namespace": "https://lego.binginternal.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 869233,
+        "name": "Shiwen Zhang",
+        "created_at": "2022-01-25T12:53:02.000Z",
+        "url": "https://greasyfork.org/users/869233-shiwen-zhang"
+      }
+    ],
+    "name": "Cosmos file plain view",
+    "description": "Show the content of Cosmos files as plain text",
+    "url": "https://greasyfork.org/scripts/439110-cosmos-file-plain-view",
+    "code_url": "https://update.greasyfork.org/scripts/439110/Cosmos%20file%20plain%20view.user.js",
+    "code_size": 3448,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 439108,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-25T13:06:28.000Z",
+    "code_updated_at": "2023-02-17T09:45:57.000Z",
+    "namespace": "https://lego.binginternal.com/polaris",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 869233,
+        "name": "Shiwen Zhang",
+        "created_at": "2022-01-25T12:53:02.000Z",
+        "url": "https://greasyfork.org/users/869233-shiwen-zhang"
+      }
+    ],
+    "name": "Polaris portal URL converter",
+    "description": "Convert non-clickable URL texts on the portal to links",
+    "url": "https://greasyfork.org/scripts/439108-polaris-portal-url-converter",
+    "code_url": "https://update.greasyfork.org/scripts/439108/Polaris%20portal%20URL%20converter.user.js",
+    "code_size": 1762,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

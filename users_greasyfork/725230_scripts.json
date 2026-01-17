@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419906,
+    "daily_installs": 0,
+    "total_installs": 150,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-08T17:55:16.000Z",
+    "code_updated_at": "2021-01-08T17:55:15.000Z",
+    "namespace": "https://chipwolf.uk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725230,
+        "name": "Chip Wolf",
+        "created_at": "2021-01-08T17:50:25.000Z",
+        "url": "https://greasyfork.org/users/725230-chip-wolf"
+      }
+    ],
+    "name": "Google Stadia - Force 4K VP9",
+    "description": "Forces 4K resolution and the VP9 codec on Google Stadia; especially useful for clarity on ultra widescreen monitors",
+    "url": "https://greasyfork.org/scripts/419906-google-stadia-force-4k-vp9",
+    "code_url": "https://update.greasyfork.org/scripts/419906/Google%20Stadia%20-%20Force%204K%20VP9.user.js",
+    "code_size": 1017,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

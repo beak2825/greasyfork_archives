@@ -1,0 +1,33 @@
+{
+  "id": 457146,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-25T23:07:29.000Z",
+  "code_updated_at": "2022-12-25T23:07:29.000Z",
+  "namespace": "http://odyniec.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 875003,
+      "name": "Dodi Riyadi Saputra",
+      "created_at": "2022-02-10T12:50:09.000Z",
+      "url": "https://greasyfork.org/users/875003-dodi-riyadi-saputra"
+    }
+  ],
+  "name": "Saputra",
+  "description": "Easy configuration dialog builder for user scripts",
+  "url": "https://greasyfork.org/scripts/457146-saputra",
+  "code_url": "https://update.greasyfork.org/scripts/457146/1131826/Saputra.js",
+  "code_size": 33552,
+  "license": null,
+  "version": "0.0.1.20180110115321",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 474405,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-02T09:45:45.000Z",
+  "code_updated_at": "2023-09-02T09:45:44.000Z",
+  "namespace": "https://greasyfork.org/hu/users/1159232-kepek",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1159232,
+      "name": "Kepek",
+      "created_at": "2023-08-25T16:33:16.000Z",
+      "url": "https://greasyfork.org/users/1159232-kepek"
+    }
+  ],
+  "name": "nCore torrent preview cover + 3 images from description",
+  "description": "The list page shows the cover image and the 3 images in the description.",
+  "url": "https://greasyfork.org/scripts/474405-ncore-torrent-preview-cover-3-images-from-description",
+  "code_url": "https://update.greasyfork.org/scripts/474405/nCore%20torrent%20preview%20cover%20%2B%203%20images%20from%20description.user.js",
+  "code_size": 3430,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

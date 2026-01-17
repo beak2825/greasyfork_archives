@@ -1,0 +1,59 @@
+{
+  "id": 447323,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-02T02:30:02.000Z",
+  "code_updated_at": "2022-07-02T02:55:47.000Z",
+  "namespace": "eitho",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 755300,
+      "name": "Eitho",
+      "created_at": "2021-04-05T18:19:28.000Z",
+      "url": "https://greasyfork.org/users/755300-eitho",
+      "scripts": [
+        {
+          "id": 447323,
+          "daily_installs": 0,
+          "total_installs": 55,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-02T02:30:02.000Z",
+          "code_updated_at": "2022-07-02T02:55:47.000Z",
+          "namespace": "eitho",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Filmweb 1337x",
+          "description": "Skrypt dodaje do Filmweba linki do szybkiego pobierania filmu/serialu z 1337x",
+          "url": "https://greasyfork.org/scripts/447323-filmweb-1337x",
+          "code_url": "https://update.greasyfork.org/scripts/447323/Filmweb%201337x.user.js",
+          "code_size": 6746,
+          "license": null,
+          "version": "0.1.1",
+          "locale": "pl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Filmweb 1337x",
+  "description": "Skrypt dodaje do Filmweba linki do szybkiego pobierania filmu/serialu z 1337x",
+  "url": "https://greasyfork.org/scripts/447323-filmweb-1337x",
+  "code_url": "https://update.greasyfork.org/scripts/447323/Filmweb%201337x.user.js",
+  "code_size": 6746,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 491833,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-06T21:42:59.000Z",
+  "code_updated_at": "2024-06-02T18:35:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1282254,
+      "name": "LTW Crypto",
+      "created_at": "2024-04-01T00:36:28.000Z",
+      "url": "https://greasyfork.org/users/1282254-ltw-crypto",
+      "scripts": []
+    }
+  ],
+  "name": "CoinPayZ",
+  "description": "Login, Faucet, Daily bonus, 8 Shortlinks e Saque.",
+  "url": "https://greasyfork.org/scripts/491833-coinpayz",
+  "code_url": "https://update.greasyfork.org/scripts/491833/CoinPayZ.user.js",
+  "code_size": 13350,
+  "license": "none",
+  "version": "0.6",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

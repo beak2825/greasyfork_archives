@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474281,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-31T10:18:14.000Z",
+    "code_updated_at": "2023-08-31T10:26:35.000Z",
+    "namespace": "Grizzly86",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163377,
+        "name": "Grizzly86",
+        "created_at": "2023-08-31T08:45:10.000Z",
+        "url": "https://greasyfork.org/users/1163377-grizzly86"
+      }
+    ],
+    "name": "Google Podcasts - Remove completed episodes",
+    "description": "Remove completed podcast episodes from google podcasts",
+    "url": "https://greasyfork.org/scripts/474281-google-podcasts-remove-completed-episodes",
+    "code_url": "https://update.greasyfork.org/scripts/474281/Google%20Podcasts%20-%20Remove%20completed%20episodes.user.js",
+    "code_size": 1442,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

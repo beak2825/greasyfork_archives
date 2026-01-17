@@ -262,5 +262,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 467975,
+    "daily_installs": 0,
+    "total_installs": 270,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-05T12:51:55.000Z",
+    "code_updated_at": "2025-08-15T01:54:08.000Z",
+    "namespace": "https://github.com/magicFeirl/ExportCivitAIMetadata.git",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "ExportCivitAIMetadata",
+    "description": "导出 civitai.com 的 safetensors 模型元数据 / Export .safetensor file's metadata from civitAI",
+    "url": "https://greasyfork.org/scripts/467975-exportcivitaimetadata",
+    "code_url": "https://update.greasyfork.org/scripts/467975/ExportCivitAIMetadata.user.js",
+    "code_size": 10429,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 447843,
+    "daily_installs": 0,
+    "total_installs": 79,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-14T10:02:54.000Z",
+    "code_updated_at": "2025-07-15T05:51:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "移除B站动态页的话题栏",
+    "description": "移除B站动态页的傻*话题栏，眼不见心不烦",
+    "url": "https://greasyfork.org/scripts/447843-%E7%A7%BB%E9%99%A4b%E7%AB%99%E5%8A%A8%E6%80%81%E9%A1%B5%E7%9A%84%E8%AF%9D%E9%A2%98%E6%A0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/447843/%E7%A7%BB%E9%99%A4B%E7%AB%99%E5%8A%A8%E6%80%81%E9%A1%B5%E7%9A%84%E8%AF%9D%E9%A2%98%E6%A0%8F.user.js",
+    "code_size": 621,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440296,
+    "daily_installs": 0,
+    "total_installs": 88,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-19T09:06:56.000Z",
+    "code_updated_at": "2022-07-12T10:39:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "N站视频信息查询",
+    "description": "获取 B 站视频简介中 N 站视频的实时信息，包括播放量、弹幕数、简介等，并显示在视频简介中。",
+    "url": "https://greasyfork.org/scripts/440296-n%E7%AB%99%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF%E6%9F%A5%E8%AF%A2",
+    "code_url": "https://update.greasyfork.org/scripts/440296/N%E7%AB%99%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF%E6%9F%A5%E8%AF%A2.user.js",
+    "code_size": 6736,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439692,
+    "daily_installs": 0,
+    "total_installs": 1922,
+    "fan_score": "29.9",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2022-02-08T06:18:20.000Z",
+    "code_updated_at": "2023-02-20T02:11:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "Nico dl",
+    "description": "下载N站视频 | Download video from nicovideo.jp",
+    "url": "https://greasyfork.org/scripts/439692-nico-dl",
+    "code_url": "https://update.greasyfork.org/scripts/439692/Nico%20dl.user.js",
+    "code_size": 5993,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 471854,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-27T15:43:15.000Z",
+  "code_updated_at": "2023-08-18T19:10:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1137323,
+      "name": "paaadj",
+      "created_at": "2023-07-27T15:40:48.000Z",
+      "url": "https://greasyfork.org/users/1137323-paaadj",
+      "scripts": []
+    }
+  ],
+  "name": "JijaTrading",
+  "description": "multi live search for poe trade site",
+  "url": "https://greasyfork.org/scripts/471854-jijatrading",
+  "code_url": "https://update.greasyfork.org/scripts/471854/JijaTrading.user.js",
+  "code_size": 34077,
+  "license": "MIT License",
+  "version": "0.1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

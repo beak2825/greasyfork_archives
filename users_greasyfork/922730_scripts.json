@@ -1,0 +1,35 @@
+[
+  {
+    "id": 446087,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-06T13:09:20.000Z",
+    "code_updated_at": "2022-07-28T01:03:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922730,
+        "name": "Drgl",
+        "created_at": "2022-06-06T13:02:05.000Z",
+        "url": "https://greasyfork.org/users/922730-drgl"
+      }
+    ],
+    "name": "财税教学自动填写凭证",
+    "description": "自动点击",
+    "url": "https://greasyfork.org/scripts/446087-%E8%B4%A2%E7%A8%8E%E6%95%99%E5%AD%A6%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E5%87%AD%E8%AF%81",
+    "code_url": "https://update.greasyfork.org/scripts/446087/%E8%B4%A2%E7%A8%8E%E6%95%99%E5%AD%A6%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E5%87%AD%E8%AF%81.user.js",
+    "code_size": 1904,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 436526,
+  "daily_installs": 0,
+  "total_installs": 68,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-04T02:53:47.000Z",
+  "code_updated_at": "2022-07-06T13:53:28.000Z",
+  "namespace": "Whalinvest",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 848283,
+      "name": "Mini8586",
+      "created_at": "2021-12-04T02:47:18.000Z",
+      "url": "https://greasyfork.org/users/848283-mini8586"
+    }
+  ],
+  "name": "Whalinvest - Open/Close all box",
+  "description": "Improve display the bots of the bag",
+  "url": "https://greasyfork.org/scripts/436526-whalinvest-open-close-all-box",
+  "code_url": "https://update.greasyfork.org/scripts/436526/Whalinvest%20-%20OpenClose%20all%20box.user.js",
+  "code_size": 26992,
+  "license": "none",
+  "version": "0.2.7.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 430883,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-16T10:28:25.000Z",
+  "code_updated_at": "2021-08-26T03:08:19.000Z",
+  "namespace": "http://www.zhmdy.top",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 197246,
+      "name": "zmfmc",
+      "created_at": "2018-07-20T12:22:49.000Z",
+      "url": "https://greasyfork.org/users/197246-zmfmc",
+      "scripts": []
+    }
+  ],
+  "name": "全网VIP视频破解去广告免费看+全网音乐下载",
+  "description": "本脚本精选解析线路为大家提供优酷、爱奇艺、腾讯、乐视、芒果等各大视频网站视频解析服务，让你省去购买视频VIP费用，同时提供网易云音乐、QQ音乐、酷狗、酷我、虾米、蜻蜓FM、荔枝FM、喜马拉雅等网站音乐和有声书免客户端下载和查券功能。",
+  "url": "https://greasyfork.org/scripts/430883-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A%E5%85%8D%E8%B4%B9%E7%9C%8B-%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/430883/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A%E5%85%8D%E8%B4%B9%E7%9C%8B%2B%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 8655,
+  "license": "GPL License",
+  "version": "3.8.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

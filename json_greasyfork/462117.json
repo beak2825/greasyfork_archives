@@ -1,0 +1,34 @@
+{
+  "id": 462117,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-19T11:17:57.000Z",
+  "code_updated_at": "2023-03-19T12:44:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1044536,
+      "name": "asdasdasda",
+      "created_at": "2023-03-19T10:54:46.000Z",
+      "url": "https://greasyfork.org/users/1044536-asdasdasda",
+      "scripts": []
+    }
+  ],
+  "name": "autofisting",
+  "description": "lolostim hueta",
+  "url": "https://greasyfork.org/scripts/462117-autofisting",
+  "code_url": "https://update.greasyfork.org/scripts/462117/autofisting.user.js",
+  "code_size": 1289,
+  "license": null,
+  "version": "9.0.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

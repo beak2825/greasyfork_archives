@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431887,
+    "daily_installs": 0,
+    "total_installs": 1001,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-04T03:06:55.000Z",
+    "code_updated_at": "2024-03-09T07:37:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 812011,
+        "name": "lt125327422",
+        "created_at": "2021-09-04T02:46:37.000Z",
+        "url": "https://greasyfork.org/users/812011-lt125327422"
+      }
+    ],
+    "name": "office 365 cloud disc batch download / office 365 云盘批量下载",
+    "description": "office 365 云盘批量下载自带的批量下载大于60G以上文件总是失败,在右下角新增了全部下载按钮,食用方法,配合下载工具,并且切换为无需弹框确认的模式, todo 选择部分的来重新下载",
+    "url": "https://greasyfork.org/scripts/431887-office-365-cloud-disc-batch-download-office-365-%E4%BA%91%E7%9B%98%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/431887/office%20365%20cloud%20disc%20batch%20download%20%20office%20365%20%E4%BA%91%E7%9B%98%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 3200,
+    "license": null,
+    "version": "0.32",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

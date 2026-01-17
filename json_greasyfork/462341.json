@@ -1,0 +1,59 @@
+{
+  "id": 462341,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-22T17:08:06.000Z",
+  "code_updated_at": "2023-03-31T03:18:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1046305,
+      "name": "ShittyCodeMan",
+      "created_at": "2023-03-22T17:02:49.000Z",
+      "url": "https://greasyfork.org/users/1046305-codeman",
+      "scripts": [
+        {
+          "id": 462341,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-22T17:08:06.000Z",
+          "code_updated_at": "2023-03-31T03:18:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Blacklisting Youtube channels DIY",
+          "description": "Blacklisting channels",
+          "url": "https://greasyfork.org/scripts/462341-blacklisting-youtube-channels-diy",
+          "code_url": "https://update.greasyfork.org/scripts/462341/Blacklisting%20Youtube%20channels%20DIY.user.js",
+          "code_size": 1905,
+          "license": null,
+          "version": "0.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Blacklisting Youtube channels DIY",
+  "description": "Blacklisting channels",
+  "url": "https://greasyfork.org/scripts/462341-blacklisting-youtube-channels-diy",
+  "code_url": "https://update.greasyfork.org/scripts/462341/Blacklisting%20Youtube%20channels%20DIY.user.js",
+  "code_size": 1905,
+  "license": null,
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

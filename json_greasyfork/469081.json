@@ -1,0 +1,33 @@
+{
+  "id": 469081,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-20T15:24:34.000Z",
+  "code_updated_at": "2023-06-20T15:24:34.000Z",
+  "namespace": "KD Script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 428626,
+      "name": "kd",
+      "created_at": "2019-12-26T09:03:20.000Z",
+      "url": "https://greasyfork.org/users/428626-kd"
+    }
+  ],
+  "name": "Lumendatabase - Make links clickable",
+  "description": "Make links on Lumendatabase clickable!",
+  "url": "https://greasyfork.org/scripts/469081-lumendatabase-make-links-clickable",
+  "code_url": "https://update.greasyfork.org/scripts/469081/Lumendatabase%20-%20Make%20links%20clickable.user.js",
+  "code_size": 649,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

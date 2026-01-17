@@ -1,0 +1,33 @@
+{
+  "id": 458452,
+  "daily_installs": 0,
+  "total_installs": 158,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-17T21:08:38.000Z",
+  "code_updated_at": "2023-01-17T21:08:38.000Z",
+  "namespace": "https://github.com/Devorkk/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1013563,
+      "name": "Devorkk",
+      "created_at": "2023-01-17T20:46:06.000Z",
+      "url": "https://greasyfork.org/users/1013563-devorkk"
+    }
+  ],
+  "name": "Custom Profile Backgrounds",
+  "description": "KoGaMa Custom Profile Background Support.",
+  "url": "https://greasyfork.org/scripts/458452-custom-profile-backgrounds",
+  "code_url": "https://update.greasyfork.org/scripts/458452/Custom%20Profile%20Backgrounds.user.js",
+  "code_size": 1679,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 455908,
+  "daily_installs": 0,
+  "total_installs": 71,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-03T06:19:05.000Z",
+  "code_updated_at": "2022-12-03T06:28:22.000Z",
+  "namespace": "None",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 991649,
+      "name": "SheepChef",
+      "created_at": "2022-12-03T06:13:07.000Z",
+      "url": "https://greasyfork.org/users/991649-sheepchef"
+    }
+  ],
+  "name": "复彩",
+  "description": "一个简单的脚本，强行去除页面上所有元素的灰度滤镜。",
+  "url": "https://greasyfork.org/scripts/455908-%E5%A4%8D%E5%BD%A9",
+  "code_url": "https://update.greasyfork.org/scripts/455908/%E5%A4%8D%E5%BD%A9.user.js",
+  "code_size": 525,
+  "license": "MIT License",
+  "version": "1.0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

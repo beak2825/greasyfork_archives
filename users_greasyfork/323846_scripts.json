@@ -295,5 +295,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493103,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-21T17:04:24.000Z",
+    "code_updated_at": "2024-04-21T17:04:24.000Z",
+    "namespace": "Forum",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 323846,
+        "name": "Isilin",
+        "created_at": "2019-08-06T07:31:03.000Z",
+        "url": "https://greasyfork.org/users/323846-isilin"
+      }
+    ],
+    "name": "BreakingLineCode",
+    "description": "Ajoute un retour à la ligne automatique pour la balise code.",
+    "url": "https://greasyfork.org/scripts/493103-breakinglinecode",
+    "code_url": "https://update.greasyfork.org/scripts/493103/BreakingLineCode.user.js",
+    "code_size": 1237,
+    "license": "WTF Public License; http://en.wikipedia.org/wiki/WTF_Public_License",
+    "version": "1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 488837,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-02T21:31:09.000Z",
+    "code_updated_at": "2024-03-03T17:20:53.000Z",
+    "namespace": "InGame",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 323846,
+        "name": "Isilin",
+        "created_at": "2019-08-06T07:31:03.000Z",
+        "url": "https://greasyfork.org/users/323846-isilin"
+      }
+    ],
+    "name": "ECCB",
+    "description": "Editeur de Commentaires de Conteneurs en Banque",
+    "url": "https://greasyfork.org/scripts/488837-eccb",
+    "code_url": "https://update.greasyfork.org/scripts/488837/ECCB.user.js",
+    "code_size": 2931,
+    "license": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "version": "1.2",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432214,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-10T17:43:24.000Z",
+    "code_updated_at": "2021-09-10T17:44:40.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 323846,
+        "name": "Isilin",
+        "created_at": "2019-08-06T07:31:03.000Z",
+        "url": "https://greasyfork.org/users/323846-isilin"
+      }
+    ],
+    "name": "ThemeDC - ♥Nivéole♥",
+    "description": "ThemeDC créé juste pour ♥Nivéole♥",
+    "url": "https://greasyfork.org/scripts/432214-themedc-niv%C3%A9ole",
+    "code_url": "https://update.greasyfork.org/scripts/432214/ThemeDC%20-%20%E2%99%A5Niv%C3%A9ole%E2%99%A5.user.css",
+    "code_size": 32241,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415294,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-02T05:55:04.000Z",
+    "code_updated_at": "2025-03-25T17:27:00.000Z",
+    "namespace": "Dreadcast",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 323846,
+        "name": "Isilin",
+        "created_at": "2019-08-06T07:31:03.000Z",
+        "url": "https://greasyfork.org/users/323846-isilin"
+      }
+    ],
+    "name": "Messagerie : Titres Perso",
+    "description": "Personnalisation des titres et des avatars d'aperçu, sur la messagerie. Inspiré du script original \"Messagerie : Titre Perso\".",
+    "url": "https://greasyfork.org/scripts/415294-messagerie-titres-perso",
+    "code_url": "https://update.greasyfork.org/scripts/415294/Messagerie%20%3A%20Titres%20Perso.user.js",
+    "code_size": 7633,
+    "license": null,
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415259,
+    "daily_installs": 1,
+    "total_installs": 374,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-01T19:45:09.000Z",
+    "code_updated_at": "2020-11-02T04:10:52.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 323846,
+        "name": "Isilin",
+        "created_at": "2019-08-06T07:31:03.000Z",
+        "url": "https://greasyfork.org/users/323846-isilin"
+      }
+    ],
+    "name": "ShowSilhouette - By Isilin",
+    "description": "Version originale de ShowSilhouette, adaptée pour Dreadcast 4.7.",
+    "url": "https://greasyfork.org/scripts/415259-showsilhouette-by-isilin",
+    "code_url": "https://update.greasyfork.org/scripts/415259/ShowSilhouette%20-%20By%20Isilin.user.css",
+    "code_size": 2584,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 460373,
+    "daily_installs": 0,
+    "total_installs": 134,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-20T10:41:03.000Z",
+    "code_updated_at": "2023-02-20T10:41:03.000Z",
+    "namespace": "https://greasyfork.org//",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1029917,
+        "name": "AuZzi-X",
+        "created_at": "2023-02-19T15:03:24.000Z",
+        "url": "https://greasyfork.org/users/1029917-auzzi-x"
+      }
+    ],
+    "name": "Hide the [1], [2], [3]... number system for better copying",
+    "description": "This will hide the [1], [2], [3]... number system for better copying",
+    "url": "https://greasyfork.org/scripts/460373-hide-the-1-2-3-number-system-for-better-copying",
+    "code_url": "https://update.greasyfork.org/scripts/460373/Hide%20the%20%5B1%5D%2C%20%5B2%5D%2C%20%5B3%5D%20number%20system%20for%20better%20copying.user.js",
+    "code_size": 1879,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460314,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-19T15:08:16.000Z",
+    "code_updated_at": "2023-02-19T15:08:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1029917,
+        "name": "AuZzi-X",
+        "created_at": "2023-02-19T15:03:24.000Z",
+        "url": "https://greasyfork.org/users/1029917-auzzi-x"
+      }
+    ],
+    "name": "Save Video As",
+    "description": "Automatically right-clicks on videos and prompts you to select a location and rename the file based on the current selected heading for the course.",
+    "url": "https://greasyfork.org/scripts/460314-save-video-as",
+    "code_url": "https://update.greasyfork.org/scripts/460314/Save%20Video%20As.user.js",
+    "code_size": 919,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

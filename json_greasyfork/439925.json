@@ -1,0 +1,59 @@
+{
+  "id": 439925,
+  "daily_installs": 0,
+  "total_installs": 404,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-12T15:58:30.000Z",
+  "code_updated_at": "2022-02-12T15:58:29.000Z",
+  "namespace": "http://github.com/theopolisme",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 875865,
+      "name": "Hassen Keder",
+      "created_at": "2022-02-12T15:58:10.000Z",
+      "url": "https://greasyfork.org/users/875865-hassen-keder",
+      "scripts": [
+        {
+          "id": 439925,
+          "daily_installs": 0,
+          "total_installs": 404,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-12T15:58:30.000Z",
+          "code_updated_at": "2022-02-12T15:58:29.000Z",
+          "namespace": "http://github.com/theopolisme",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Study Island Bot",
+          "description": "Automatically answer questions on Study Island",
+          "url": "https://greasyfork.org/scripts/439925-study-island-bot",
+          "code_url": "https://update.greasyfork.org/scripts/439925/Study%20Island%20Bot.user.js",
+          "code_size": 14316,
+          "license": "MIT License",
+          "version": "1.01",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Study Island Bot",
+  "description": "Automatically answer questions on Study Island",
+  "url": "https://greasyfork.org/scripts/439925-study-island-bot",
+  "code_url": "https://update.greasyfork.org/scripts/439925/Study%20Island%20Bot.user.js",
+  "code_size": 14316,
+  "license": "MIT License",
+  "version": "1.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

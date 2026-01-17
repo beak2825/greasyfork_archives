@@ -1,0 +1,68 @@
+[
+  {
+    "id": 458870,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-25T22:43:17.000Z",
+    "code_updated_at": "2023-01-25T22:45:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104925,
+        "name": "Shaun Greiner",
+        "created_at": "2017-02-22T20:05:46.000Z",
+        "url": "https://greasyfork.org/users/104925-shaun-greiner"
+      }
+    ],
+    "name": "No Blank Page on Print Labels",
+    "description": "Changes container to not need blank page after print.",
+    "url": "https://greasyfork.org/scripts/458870-no-blank-page-on-print-labels",
+    "code_url": "https://update.greasyfork.org/scripts/458870/No%20Blank%20Page%20on%20Print%20Labels.user.js",
+    "code_size": 652,
+    "license": "MIT License",
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445042,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2022-05-16T06:23:43.000Z",
+    "code_updated_at": "2022-05-16T08:01:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104925,
+        "name": "Shaun Greiner",
+        "created_at": "2017-02-22T20:05:46.000Z",
+        "url": "https://greasyfork.org/users/104925-shaun-greiner"
+      }
+    ],
+    "name": "Autoplay Next Episode",
+    "description": "Adds an auto-play feature to WCO.tv",
+    "url": "https://greasyfork.org/scripts/445042-autoplay-next-episode",
+    "code_url": "https://update.greasyfork.org/scripts/445042/Autoplay%20Next%20Episode.user.js",
+    "code_size": 1688,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

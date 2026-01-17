@@ -262,5 +262,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 480188,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-18T13:07:32.000Z",
+    "code_updated_at": "2023-11-18T13:07:32.000Z",
+    "namespace": "https://greasyfork.org/users/1204402",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1204402,
+        "name": "Sheets McGee",
+        "created_at": "2023-10-26T10:25:38.000Z",
+        "url": "https://greasyfork.org/users/1204402-sheets-mcgee"
+      }
+    ],
+    "name": "Attack Percentage Notifier",
+    "description": "I think this is the execute script?",
+    "url": "https://greasyfork.org/scripts/480188-attack-percentage-notifier",
+    "code_url": "https://update.greasyfork.org/scripts/480188/Attack%20Percentage%20Notifier.user.js",
+    "code_size": 4090,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478315,
+    "daily_installs": 0,
+    "total_installs": 203,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-26T11:17:01.000Z",
+    "code_updated_at": "2023-10-28T22:33:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1204402,
+        "name": "Sheets McGee",
+        "created_at": "2023-10-26T10:25:38.000Z",
+        "url": "https://greasyfork.org/users/1204402-sheets-mcgee"
+      }
+    ],
+    "name": "Chain Timer Enhancer",
+    "description": "Increase the size and move an element with class \"bar-descr___muXn5\" to the top of the page",
+    "url": "https://greasyfork.org/scripts/478315-chain-timer-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/478315/Chain%20Timer%20Enhancer.user.js",
+    "code_size": 2963,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

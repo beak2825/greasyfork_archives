@@ -1,0 +1,200 @@
+[
+  {
+    "id": 469942,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-02T03:29:21.000Z",
+    "code_updated_at": "2023-07-16T03:37:54.000Z",
+    "namespace": "https://greasyfork.org/users/814278",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814278,
+        "name": "true3429",
+        "created_at": "2021-09-11T05:54:24.000Z",
+        "url": "https://greasyfork.org/users/814278-true3429"
+      }
+    ],
+    "name": "Youtube Shorts 新增跳轉連結",
+    "description": "在Youtube Shorts 新增跳轉連結",
+    "url": "https://greasyfork.org/scripts/469942-youtube-shorts-%E6%96%B0%E5%A2%9E%E8%B7%B3%E8%BD%89%E9%80%A3%E7%B5%90",
+    "code_url": "https://update.greasyfork.org/scripts/469942/Youtube%20Shorts%20%E6%96%B0%E5%A2%9E%E8%B7%B3%E8%BD%89%E9%80%A3%E7%B5%90.user.js",
+    "code_size": 1188,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 448546,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-27T14:39:43.000Z",
+    "code_updated_at": "2022-07-27T14:39:43.000Z",
+    "namespace": "https://greasyfork.org/users/814278",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814278,
+        "name": "true3429",
+        "created_at": "2021-09-11T05:54:24.000Z",
+        "url": "https://greasyfork.org/users/814278-true3429"
+      }
+    ],
+    "name": "解除痞客邦無法選取",
+    "description": "解除不能選取複製的問題",
+    "url": "https://greasyfork.org/scripts/448546-%E8%A7%A3%E9%99%A4%E7%97%9E%E5%AE%A2%E9%82%A6%E7%84%A1%E6%B3%95%E9%81%B8%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/448546/%E8%A7%A3%E9%99%A4%E7%97%9E%E5%AE%A2%E9%82%A6%E7%84%A1%E6%B3%95%E9%81%B8%E5%8F%96.user.js",
+    "code_size": 501,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437795,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-30T13:46:13.000Z",
+    "code_updated_at": "2021-12-30T13:57:17.000Z",
+    "namespace": "https://greasyfork.org/users/814278",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814278,
+        "name": "true3429",
+        "created_at": "2021-09-11T05:54:24.000Z",
+        "url": "https://greasyfork.org/users/814278-true3429"
+      }
+    ],
+    "name": "全本小說網手機版",
+    "description": "幫助在使用手機閱讀全本小說網時，能使用滑鼠手勢輕鬆地換頁",
+    "url": "https://greasyfork.org/scripts/437795-%E5%85%A8%E6%9C%AC%E5%B0%8F%E8%AA%AA%E7%B6%B2%E6%89%8B%E6%A9%9F%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/437795/%E5%85%A8%E6%9C%AC%E5%B0%8F%E8%AA%AA%E7%B6%B2%E6%89%8B%E6%A9%9F%E7%89%88.user.js",
+    "code_size": 6105,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432233,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-11T06:16:55.000Z",
+    "code_updated_at": "2022-07-27T14:37:14.000Z",
+    "namespace": "https://greasyfork.org/users/814278",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814278,
+        "name": "true3429",
+        "created_at": "2021-09-11T05:54:24.000Z",
+        "url": "https://greasyfork.org/users/814278-true3429"
+      }
+    ],
+    "name": "影片速度快捷鍵",
+    "description": "speed up/down video",
+    "url": "https://greasyfork.org/scripts/432233-%E5%BD%B1%E7%89%87%E9%80%9F%E5%BA%A6%E5%BF%AB%E6%8D%B7%E9%8D%B5",
+    "code_url": "https://update.greasyfork.org/scripts/432233/%E5%BD%B1%E7%89%87%E9%80%9F%E5%BA%A6%E5%BF%AB%E6%8D%B7%E9%8D%B5.user.js",
+    "code_size": 3196,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432232,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-11T06:15:53.000Z",
+    "code_updated_at": "2021-09-11T06:15:53.000Z",
+    "namespace": "https://greasyfork.org/users/814278",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814278,
+        "name": "true3429",
+        "created_at": "2021-09-11T05:54:24.000Z",
+        "url": "https://greasyfork.org/users/814278-true3429"
+      }
+    ],
+    "name": "新概念符號調整",
+    "description": "特定字串轉換",
+    "url": "https://greasyfork.org/scripts/432232-%E6%96%B0%E6%A6%82%E5%BF%B5%E7%AC%A6%E8%99%9F%E8%AA%BF%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/432232/%E6%96%B0%E6%A6%82%E5%BF%B5%E7%AC%A6%E8%99%9F%E8%AA%BF%E6%95%B4.user.js",
+    "code_size": 3819,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432231,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-11T05:59:25.000Z",
+    "code_updated_at": "2021-10-18T11:06:57.000Z",
+    "namespace": "https://greasyfork.org/users/814278",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814278,
+        "name": "true3429",
+        "created_at": "2021-09-11T05:54:24.000Z",
+        "url": "https://greasyfork.org/users/814278-true3429"
+      }
+    ],
+    "name": "UU看書手機版",
+    "description": "幫助在使用手機閱讀UU看書時，能使用滑鼠手勢輕鬆地換頁",
+    "url": "https://greasyfork.org/scripts/432231-uu%E7%9C%8B%E6%9B%B8%E6%89%8B%E6%A9%9F%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/432231/UU%E7%9C%8B%E6%9B%B8%E6%89%8B%E6%A9%9F%E7%89%88.user.js",
+    "code_size": 13246,
+    "license": "MIT License",
+    "version": "0.1.10",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

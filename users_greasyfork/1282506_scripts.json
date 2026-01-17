@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491420,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-01T13:55:54.000Z",
+    "code_updated_at": "2024-04-01T13:55:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282506,
+        "name": "user a",
+        "created_at": "2024-04-01T13:49:09.000Z",
+        "url": "https://greasyfork.org/users/1282506-user-a"
+      }
+    ],
+    "name": "fuck baijiahao",
+    "description": "删掉bing搜索结果中的百家号",
+    "url": "https://greasyfork.org/scripts/491420-baijiahao",
+    "code_url": "https://update.greasyfork.org/scripts/491420/fuck%20baijiahao.user.js",
+    "code_size": 679,
+    "license": null,
+    "version": "2024-04-01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

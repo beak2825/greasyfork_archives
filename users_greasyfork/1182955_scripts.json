@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 476278,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-28T14:11:42.000Z",
+    "code_updated_at": "2023-09-28T14:11:42.000Z",
+    "namespace": "http://AnyCopy/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1182955,
+        "name": "RimuruChan",
+        "created_at": "2023-09-28T14:09:54.000Z",
+        "url": "https://greasyfork.org/users/1182955-rimuruchan"
+      }
+    ],
+    "name": "AnyCopy",
+    "description": "允许复制那该死的题目文本",
+    "url": "https://greasyfork.org/scripts/476278-anycopy",
+    "code_url": "https://update.greasyfork.org/scripts/476278/AnyCopy.user.js",
+    "code_size": 696,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

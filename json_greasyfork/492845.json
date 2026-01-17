@@ -1,0 +1,34 @@
+{
+  "id": 492845,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-18T13:07:25.000Z",
+  "code_updated_at": "2024-05-02T11:08:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed WM MICHAEL WETZELSBERGER",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/492845-ed-wm-michael-wetzelsberger",
+  "code_url": "https://update.greasyfork.org/scripts/492845/Ed%20WM%20MICHAEL%20WETZELSBERGER.user.js",
+  "code_size": 70872,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

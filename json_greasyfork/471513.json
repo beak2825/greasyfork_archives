@@ -1,0 +1,33 @@
+{
+  "id": 471513,
+  "daily_installs": 0,
+  "total_installs": 892,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-23T13:10:34.000Z",
+  "code_updated_at": "2025-07-11T13:12:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1134069,
+      "name": "cunqian Tang",
+      "created_at": "2023-07-23T12:59:53.000Z",
+      "url": "https://greasyfork.org/users/1134069-cunqian-tang"
+    }
+  ],
+  "name": "万能复制插件（预览 + 历史 + 美观提示）",
+  "description": "Ctrl+点击或长按复制网页内容，附带来源 + 高亮 + 音效 + 弹窗预览 + 历史记录",
+  "url": "https://greasyfork.org/scripts/471513-%E4%B8%87%E8%83%BD%E5%A4%8D%E5%88%B6%E6%8F%92%E4%BB%B6-%E9%A2%84%E8%A7%88-%E5%8E%86%E5%8F%B2-%E7%BE%8E%E8%A7%82%E6%8F%90%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/471513/%E4%B8%87%E8%83%BD%E5%A4%8D%E5%88%B6%E6%8F%92%E4%BB%B6%EF%BC%88%E9%A2%84%E8%A7%88%20%2B%20%E5%8E%86%E5%8F%B2%20%2B%20%E7%BE%8E%E8%A7%82%E6%8F%90%E7%A4%BA%EF%BC%89.user.js",
+  "code_size": 5910,
+  "license": null,
+  "version": "10.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

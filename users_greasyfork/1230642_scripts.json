@@ -1,0 +1,68 @@
+[
+  {
+    "id": 484024,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-06T04:16:28.000Z",
+    "code_updated_at": "2024-01-06T04:16:28.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230642,
+        "name": "lianlianlianlianlianlian",
+        "created_at": "2023-12-08T18:03:49.000Z",
+        "url": "https://greasyfork.org/users/1230642-lianlianlianlianlianlian"
+      }
+    ],
+    "name": "auto lucky draw",
+    "description": "自动破产工具",
+    "url": "https://greasyfork.org/scripts/484024-auto-lucky-draw",
+    "code_url": "https://update.greasyfork.org/scripts/484024/auto%20lucky%20draw.user.js",
+    "code_size": 1404,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484022,
+    "daily_installs": 0,
+    "total_installs": 105,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-06T03:53:26.000Z",
+    "code_updated_at": "2024-01-06T03:53:25.000Z",
+    "namespace": "claim",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230642,
+        "name": "lianlianlianlianlianlian",
+        "created_at": "2023-12-08T18:03:49.000Z",
+        "url": "https://greasyfork.org/users/1230642-lianlianlianlianlianlian"
+      }
+    ],
+    "name": "一键认领",
+    "description": "一键认领种子",
+    "url": "https://greasyfork.org/scripts/484022-%E4%B8%80%E9%94%AE%E8%AE%A4%E9%A2%86",
+    "code_url": "https://update.greasyfork.org/scripts/484022/%E4%B8%80%E9%94%AE%E8%AE%A4%E9%A2%86.user.js",
+    "code_size": 6153,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

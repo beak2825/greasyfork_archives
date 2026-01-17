@@ -64,5 +64,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 474446,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-03T07:00:51.000Z",
+    "code_updated_at": "2023-09-25T23:39:24.000Z",
+    "namespace": "https://greasyfork.org/users/957127-supertouch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957127,
+        "name": "SuperTouch",
+        "created_at": "2022-09-11T02:55:47.000Z",
+        "url": "https://greasyfork.org/users/957127-supertouch"
+      }
+    ],
+    "name": "Plex Playlist Generator",
+    "description": "Generate playlists from shows on Plex",
+    "url": "https://greasyfork.org/scripts/474446-plex-playlist-generator",
+    "code_url": "https://update.greasyfork.org/scripts/474446/Plex%20Playlist%20Generator.user.js",
+    "code_size": 7129,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474390,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-02T04:28:20.000Z",
+    "code_updated_at": "2024-05-02T18:00:40.000Z",
+    "namespace": "https://greasyfork.org/en/users/957127-supertouch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957127,
+        "name": "SuperTouch",
+        "created_at": "2022-09-11T02:55:47.000Z",
+        "url": "https://greasyfork.org/users/957127-supertouch"
+      }
+    ],
+    "name": "MAL Enhancements",
+    "description": "Enhancements for MyAnimeList: Restore old rating display, fix reviews, add a toggle for new reviews, and fix event listeners",
+    "url": "https://greasyfork.org/scripts/474390-mal-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/474390/MAL%20Enhancements.user.js",
+    "code_size": 7311,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473875,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-25T13:31:25.000Z",
+    "code_updated_at": "2023-08-25T13:31:25.000Z",
+    "namespace": "Dicks",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957127,
+        "name": "SuperTouch",
+        "created_at": "2022-09-11T02:55:47.000Z",
+        "url": "https://greasyfork.org/users/957127-supertouch"
+      }
+    ],
+    "name": "MessageCounter",
+    "description": "Counter messages sent on perplexity.ai",
+    "url": "https://greasyfork.org/scripts/473875-messagecounter",
+    "code_url": "https://update.greasyfork.org/scripts/473875/MessageCounter.user.js",
+    "code_size": 1623,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 457417,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-31T22:38:07.000Z",
+    "code_updated_at": "2022-12-31T23:48:14.000Z",
+    "namespace": "https://greasyfork.org/users/957127",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957127,
+        "name": "SuperTouch",
+        "created_at": "2022-09-11T02:55:47.000Z",
+        "url": "https://greasyfork.org/users/957127-supertouch"
+      }
+    ],
+    "name": "ADC MAL Jikan",
+    "description": "Adds a fallback mechanism for MAL API",
+    "url": "https://greasyfork.org/scripts/457417-adc-mal-jikan",
+    "code_url": "https://update.greasyfork.org/scripts/457417/ADC%20MAL%20Jikan.user.js",
+    "code_size": 2725,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 452124,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-27T18:01:04.000Z",
+    "code_updated_at": "2022-10-08T18:28:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957127,
+        "name": "SuperTouch",
+        "created_at": "2022-09-11T02:55:47.000Z",
+        "url": "https://greasyfork.org/users/957127-supertouch"
+      }
+    ],
+    "name": "Jellyfin Playlist Generator",
+    "description": "Adds a button to generate M3U playlists from shows for Jellyfin",
+    "url": "https://greasyfork.org/scripts/452124-jellyfin-playlist-generator",
+    "code_url": "https://update.greasyfork.org/scripts/452124/Jellyfin%20Playlist%20Generator.user.js",
+    "code_size": 4045,
+    "license": null,
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451122,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-11T03:17:49.000Z",
+    "code_updated_at": "2022-09-11T03:17:48.000Z",
+    "namespace": "https://greasyfork.org/en/users/957127-supertouch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957127,
+        "name": "SuperTouch",
+        "created_at": "2022-09-11T02:55:47.000Z",
+        "url": "https://greasyfork.org/users/957127-supertouch"
+      }
+    ],
+    "name": "MAL Restore Rating",
+    "description": "Restore MAL's old rating display",
+    "url": "https://greasyfork.org/scripts/451122-mal-restore-rating",
+    "code_url": "https://update.greasyfork.org/scripts/451122/MAL%20Restore%20Rating.user.js",
+    "code_size": 1187,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

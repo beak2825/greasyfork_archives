@@ -1,0 +1,134 @@
+[
+  {
+    "id": 484264,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-08T16:48:53.000Z",
+    "code_updated_at": "2024-01-08T16:50:36.000Z",
+    "namespace": "http://minhill.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3020,
+        "name": "hanchy",
+        "created_at": "2014-06-24T23:50:13.000Z",
+        "url": "https://greasyfork.org/users/3020-hanchy"
+      }
+    ],
+    "name": "tt1069 jammer remove",
+    "description": "remove jammer in tt1069",
+    "url": "https://greasyfork.org/scripts/484264-tt1069-jammer-remove",
+    "code_url": "https://update.greasyfork.org/scripts/484264/tt1069%20jammer%20remove.user.js",
+    "code_size": 679,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460541,
+    "daily_installs": 0,
+    "total_installs": 122,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-23T02:38:08.000Z",
+    "code_updated_at": "2023-03-08T07:46:49.000Z",
+    "namespace": "http://minhill.com/slms",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3020,
+        "name": "hanchy",
+        "created_at": "2014-06-24T23:50:13.000Z",
+        "url": "https://greasyfork.org/users/3020-hanchy"
+      }
+    ],
+    "name": "Snap Links Mod shortcuts",
+    "description": "从网页中批量复制、打开链接，选择复选框",
+    "url": "https://greasyfork.org/scripts/460541-snap-links-mod-shortcuts",
+    "code_url": "https://update.greasyfork.org/scripts/460541/Snap%20Links%20Mod%20shortcuts.user.js",
+    "code_size": 23278,
+    "license": "The MIT License (MIT); http://opensource.org/licenses/MIT",
+    "version": "2023.03.08",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 428447,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-25T11:07:10.000Z",
+    "code_updated_at": "2021-06-25T11:07:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3020,
+        "name": "hanchy",
+        "created_at": "2014-06-24T23:50:13.000Z",
+        "url": "https://greasyfork.org/users/3020-hanchy"
+      }
+    ],
+    "name": "cmatc reload",
+    "description": "cmatc定时重载",
+    "url": "https://greasyfork.org/scripts/428447-cmatc-reload",
+    "code_url": "https://update.greasyfork.org/scripts/428447/cmatc%20reload.user.js",
+    "code_size": 604,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415457,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-04T08:38:53.000Z",
+    "code_updated_at": "2021-03-17T07:09:48.000Z",
+    "namespace": "http://minhill.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3020,
+        "name": "hanchy",
+        "created_at": "2014-06-24T23:50:13.000Z",
+        "url": "https://greasyfork.org/users/3020-hanchy"
+      }
+    ],
+    "name": "SmartPP Helper",
+    "description": "增强分发系统功能，检验分发系统异常值",
+    "url": "https://greasyfork.org/scripts/415457-smartpp-helper",
+    "code_url": "https://update.greasyfork.org/scripts/415457/SmartPP%20Helper.user.js",
+    "code_size": 17767,
+    "license": null,
+    "version": "0.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

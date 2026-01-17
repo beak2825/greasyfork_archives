@@ -1,0 +1,34 @@
+{
+  "id": 424208,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-30T12:20:42.000Z",
+  "code_updated_at": "2021-03-30T12:20:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 753006,
+      "name": "Zoltán Györkei",
+      "created_at": "2021-03-30T12:09:45.000Z",
+      "url": "https://greasyfork.org/users/753006-zolt%C3%A1n-gy%C3%B6rkei",
+      "scripts": []
+    }
+  ],
+  "name": "foxAutoJustification",
+  "description": "automatic justification field processor",
+  "url": "https://greasyfork.org/scripts/424208-foxautojustification",
+  "code_url": "https://update.greasyfork.org/scripts/424208/foxAutoJustification.user.js",
+  "code_size": 1483,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 427672,
+  "daily_installs": 0,
+  "total_installs": 114,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-08T13:26:26.000Z",
+  "code_updated_at": "2021-06-09T15:08:23.000Z",
+  "namespace": "天涯之北",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 780831,
+      "name": "天涯之北",
+      "created_at": "2021-06-07T12:36:32.000Z",
+      "url": "https://greasyfork.org/users/780831-%E5%A4%A9%E6%B6%AF%E4%B9%8B%E5%8C%97",
+      "scripts": [
+        {
+          "id": 427672,
+          "daily_installs": 0,
+          "total_installs": 114,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-08T13:26:26.000Z",
+          "code_updated_at": "2021-06-09T15:08:23.000Z",
+          "namespace": "天涯之北",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "广西科技大学校园网自动登录",
+          "description": "自动登录校园网，减少等待时间。代码指令只是模拟用户输入点击。",
+          "url": "https://greasyfork.org/scripts/427672-%E5%B9%BF%E8%A5%BF%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+          "code_url": "https://update.greasyfork.org/scripts/427672/%E5%B9%BF%E8%A5%BF%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+          "code_size": 3880,
+          "license": null,
+          "version": "0.1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "广西科技大学校园网自动登录",
+  "description": "自动登录校园网，减少等待时间。代码指令只是模拟用户输入点击。",
+  "url": "https://greasyfork.org/scripts/427672-%E5%B9%BF%E8%A5%BF%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/427672/%E5%B9%BF%E8%A5%BF%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 3880,
+  "license": null,
+  "version": "0.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

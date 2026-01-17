@@ -1,0 +1,34 @@
+{
+  "id": 452553,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-06T10:14:24.000Z",
+  "code_updated_at": "2022-10-06T10:14:24.000Z",
+  "namespace": "super_video_helper_cat",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 967132,
+      "name": "大刀说",
+      "created_at": "2022-10-06T08:51:30.000Z",
+      "url": "https://greasyfork.org/users/967132-%E5%A4%A7%E5%88%80%E8%AF%B4",
+      "scripts": []
+    }
+  ],
+  "name": "全网VIP视频免费破解去广告，全网音乐直接下载，油管、Facebook等国外视频解析下载，网盘搜索引擎破解无限下载等",
+  "description": "功能可选择性打开：此脚本所有内容功能均为引用他人。所有涉及广告等内容均和本人无关，请使用这自行鉴别~！",
+  "url": "https://greasyfork.org/scripts/452553-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A-%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD-%E6%B2%B9%E7%AE%A1-facebook%E7%AD%89%E5%9B%BD%E5%A4%96%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD-%E7%BD%91%E7%9B%98%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E7%A0%B4%E8%A7%A3%E6%97%A0%E9%99%90%E4%B8%8B%E8%BD%BD%E7%AD%89",
+  "code_url": "https://update.greasyfork.org/scripts/452553/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A%EF%BC%8C%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD%EF%BC%8C%E6%B2%B9%E7%AE%A1%E3%80%81Facebook%E7%AD%89%E5%9B%BD%E5%A4%96%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD%EF%BC%8C%E7%BD%91%E7%9B%98%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E7%A0%B4%E8%A7%A3%E6%97%A0%E9%99%90%E4%B8%8B%E8%BD%BD%E7%AD%89.user.js",
+  "code_size": 106693,
+  "license": "AGPL License",
+  "version": "4.1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 445433,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-23T15:19:11.000Z",
+  "code_updated_at": "2022-05-23T15:19:10.000Z",
+  "namespace": "Fake115Upload@Never4Ever",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 727139,
+      "name": "whotfami",
+      "created_at": "2021-01-13T21:20:12.000Z",
+      "url": "https://greasyfork.org/users/727139-whotfami"
+    }
+  ],
+  "name": "115转存助手ui优化版",
+  "description": "2022.04.02 更新，115转存助手ui优化版 v3.5 (143.2022.0402.1)(based on Fake115Upload 1.4.3 @T3rry)",
+  "url": "https://greasyfork.org/scripts/445433-115%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8Bui%E4%BC%98%E5%8C%96%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/445433/115%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8Bui%E4%BC%98%E5%8C%96%E7%89%88.user.js",
+  "code_size": 194521,
+  "license": null,
+  "version": "143.2022.0402.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

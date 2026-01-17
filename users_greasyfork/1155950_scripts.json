@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473779,
+    "daily_installs": 0,
+    "total_installs": 113,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-24T03:57:18.000Z",
+    "code_updated_at": "2023-08-24T03:57:18.000Z",
+    "namespace": "https://gist.github.com/ral-hole/d4a33d94d1284bdf529ddb2c3302ac82",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1155950,
+        "name": "ral-hole",
+        "created_at": "2023-08-21T05:13:36.000Z",
+        "url": "https://greasyfork.org/users/1155950-ral-hole"
+      }
+    ],
+    "name": "No NetEase Popup 无网易弹窗",
+    "description": "Bypass NetEase promotion popup when you visit Minecraft.net in China. 在中国访问 Minecraft.net 时，绕过网易的弹出窗口。",
+    "url": "https://greasyfork.org/scripts/473779-no-netease-popup-%E6%97%A0%E7%BD%91%E6%98%93%E5%BC%B9%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/473779/No%20NetEase%20Popup%20%E6%97%A0%E7%BD%91%E6%98%93%E5%BC%B9%E7%AA%97.user.js",
+    "code_size": 658,
+    "license": "GPLv3",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

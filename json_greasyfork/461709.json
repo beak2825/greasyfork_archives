@@ -1,0 +1,34 @@
+{
+  "id": 461709,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-12T16:48:38.000Z",
+  "code_updated_at": "2023-03-12T16:48:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 681070,
+      "name": "Péter Csala",
+      "created_at": "2020-08-20T02:58:07.000Z",
+      "url": "https://greasyfork.org/users/681070-p%C3%A9ter-csala",
+      "scripts": []
+    }
+  ],
+  "name": "WK Vimy Lessons",
+  "description": "Adds HJKL navigation to the wanikani lessons page",
+  "url": "https://greasyfork.org/scripts/461709-wk-vimy-lessons",
+  "code_url": "https://update.greasyfork.org/scripts/461709/WK%20Vimy%20Lessons.user.js",
+  "code_size": 1429,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 482129,
+  "daily_installs": 0,
+  "total_installs": 88,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-13T16:44:21.000Z",
+  "code_updated_at": "2023-12-19T09:10:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1233372,
+      "name": "Erykizd",
+      "created_at": "2023-12-13T16:31:21.000Z",
+      "url": "https://greasyfork.org/users/1233372-erykizd",
+      "scripts": [
+        {
+          "id": 482129,
+          "daily_installs": 0,
+          "total_installs": 88,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-13T16:44:21.000Z",
+          "code_updated_at": "2023-12-19T09:10:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Adblock for video commercials",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/482129-adblock-for-video-commercials",
+          "code_url": "https://update.greasyfork.org/scripts/482129/Adblock%20for%20video%20commercials.user.js",
+          "code_size": 1306,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Adblock for video commercials",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/482129-adblock-for-video-commercials",
+  "code_url": "https://update.greasyfork.org/scripts/482129/Adblock%20for%20video%20commercials.user.js",
+  "code_size": 1306,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

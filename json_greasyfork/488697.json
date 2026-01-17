@@ -1,0 +1,33 @@
+{
+  "id": 488697,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-01T11:22:52.000Z",
+  "code_updated_at": "2024-03-01T11:34:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1120194,
+      "name": "BylethC",
+      "created_at": "2023-07-06T11:01:59.000Z",
+      "url": "https://greasyfork.org/users/1120194-bylethc"
+    }
+  ],
+  "name": "从 Excel 解析邮件内容",
+  "description": "自动把多语言结果填入网页",
+  "url": "https://greasyfork.org/scripts/488697-%E4%BB%8E-excel-%E8%A7%A3%E6%9E%90%E9%82%AE%E4%BB%B6%E5%86%85%E5%AE%B9",
+  "code_url": "https://update.greasyfork.org/scripts/488697/%E4%BB%8E%20Excel%20%E8%A7%A3%E6%9E%90%E9%82%AE%E4%BB%B6%E5%86%85%E5%AE%B9.user.js",
+  "code_size": 7447,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

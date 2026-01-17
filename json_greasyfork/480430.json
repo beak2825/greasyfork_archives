@@ -1,0 +1,33 @@
+{
+  "id": 480430,
+  "daily_installs": 1,
+  "total_installs": 12308,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-21T06:38:57.000Z",
+  "code_updated_at": "2024-01-10T11:43:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1219946,
+      "name": "慌得一批的荒",
+      "created_at": "2023-11-19T04:16:19.000Z",
+      "url": "https://greasyfork.org/users/1219946-%E6%85%8C%E5%BE%97%E4%B8%80%E6%89%B9%E7%9A%84%E8%8D%92"
+    }
+  ],
+  "name": "Steam市场cs武器箱批量出售",
+  "description": "批量出售cs武器箱",
+  "url": "https://greasyfork.org/scripts/480430-steam%E5%B8%82%E5%9C%BAcs%E6%AD%A6%E5%99%A8%E7%AE%B1%E6%89%B9%E9%87%8F%E5%87%BA%E5%94%AE",
+  "code_url": "https://update.greasyfork.org/scripts/480430/Steam%E5%B8%82%E5%9C%BAcs%E6%AD%A6%E5%99%A8%E7%AE%B1%E6%89%B9%E9%87%8F%E5%87%BA%E5%94%AE.user.js",
+  "code_size": 2567,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

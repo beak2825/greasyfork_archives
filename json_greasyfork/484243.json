@@ -1,0 +1,59 @@
+{
+  "id": 484243,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-08T13:28:30.000Z",
+  "code_updated_at": "2024-01-08T13:28:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1245092,
+      "name": "Eisie Alex",
+      "created_at": "2024-01-08T13:26:37.000Z",
+      "url": "https://greasyfork.org/users/1245092-eisie-alex",
+      "scripts": [
+        {
+          "id": 484243,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-08T13:28:30.000Z",
+          "code_updated_at": "2024-01-08T13:28:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "超星自助评教",
+          "description": "在i.chaoxing.com子页面中点击radio按钮并提交",
+          "url": "https://greasyfork.org/scripts/484243-%E8%B6%85%E6%98%9F%E8%87%AA%E5%8A%A9%E8%AF%84%E6%95%99",
+          "code_url": "https://update.greasyfork.org/scripts/484243/%E8%B6%85%E6%98%9F%E8%87%AA%E5%8A%A9%E8%AF%84%E6%95%99.user.js",
+          "code_size": 2115,
+          "license": "GreaysFork",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "超星自助评教",
+  "description": "在i.chaoxing.com子页面中点击radio按钮并提交",
+  "url": "https://greasyfork.org/scripts/484243-%E8%B6%85%E6%98%9F%E8%87%AA%E5%8A%A9%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/484243/%E8%B6%85%E6%98%9F%E8%87%AA%E5%8A%A9%E8%AF%84%E6%95%99.user.js",
+  "code_size": 2115,
+  "license": "GreaysFork",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

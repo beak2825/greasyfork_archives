@@ -1,0 +1,33 @@
+{
+  "id": 418927,
+  "daily_installs": 0,
+  "total_installs": 337,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-21T05:31:58.000Z",
+  "code_updated_at": "2023-09-24T11:43:36.000Z",
+  "namespace": "phant0ms.me",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 719239,
+      "name": "phant0ms",
+      "created_at": "2020-12-21T05:29:27.000Z",
+      "url": "https://greasyfork.org/users/719239-phant0ms"
+    }
+  ],
+  "name": "移除知乎、简书、freebuf标题",
+  "description": "移除去掉知乎标题、简书标题、freebuf标题、在未登录时自动关闭知乎专栏的登录弹窗|方便划水！",
+  "url": "https://greasyfork.org/scripts/418927-%E7%A7%BB%E9%99%A4%E7%9F%A5%E4%B9%8E-%E7%AE%80%E4%B9%A6-freebuf%E6%A0%87%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/418927/%E7%A7%BB%E9%99%A4%E7%9F%A5%E4%B9%8E%E3%80%81%E7%AE%80%E4%B9%A6%E3%80%81freebuf%E6%A0%87%E9%A2%98.user.js",
+  "code_size": 2313,
+  "license": null,
+  "version": "0.6.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

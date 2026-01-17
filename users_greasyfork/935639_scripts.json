@@ -1,0 +1,35 @@
+[
+  {
+    "id": 459925,
+    "daily_installs": 0,
+    "total_installs": 438,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-12T19:41:14.000Z",
+    "code_updated_at": "2023-02-22T12:27:17.000Z",
+    "namespace": "https://www.instagram.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 935639,
+        "name": "Legend-Recalls",
+        "created_at": "2022-07-14T12:51:54.000Z",
+        "url": "https://greasyfork.org/users/935639-legend-recalls"
+      }
+    ],
+    "name": "BetterInstagram",
+    "description": "An Instagram Modifier and Theme, You can inject it using Tampermoney or Greasemonkey.",
+    "url": "https://greasyfork.org/scripts/459925-betterinstagram",
+    "code_url": "https://update.greasyfork.org/scripts/459925/BetterInstagram.user.js",
+    "code_size": 22279,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 467907,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-04T16:53:00.000Z",
+  "code_updated_at": "2023-06-09T11:49:19.000Z",
+  "namespace": "https://forum.blackrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1091017,
+      "name": "Юрий Лукин",
+      "created_at": "2023-06-04T16:44:50.000Z",
+      "url": "https://greasyfork.org/users/1091017-%D1%8E%D1%80%D0%B8%D0%B9-%D0%BB%D1%83%D0%BA%D0%B8%D0%BD"
+    }
+  ],
+  "name": "КФ Ferb_Williams Black",
+  "description": "Скрипт для Кураторов форума на ответы на жалобы игроков | Black Russia Black",
+  "url": "https://greasyfork.org/scripts/467907-%D0%BA%D1%84-ferb-williams-black",
+  "code_url": "https://update.greasyfork.org/scripts/467907/%D0%9A%D0%A4%20Ferb_Williams%20Black.user.js",
+  "code_size": 137273,
+  "license": "MIT License",
+  "version": "1.2.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

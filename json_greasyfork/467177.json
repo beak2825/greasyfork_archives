@@ -1,0 +1,59 @@
+{
+  "id": 467177,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-26T19:11:48.000Z",
+  "code_updated_at": "2023-06-18T18:47:32.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 49575,
+      "name": "hymbz",
+      "created_at": "2016-06-17T20:29:06.000Z",
+      "url": "https://greasyfork.org/users/49575-hymbz",
+      "scripts": [
+        {
+          "id": 374903,
+          "daily_installs": 57,
+          "total_installs": 45752,
+          "fan_score": "97.6",
+          "good_ratings": 602,
+          "ok_ratings": 13,
+          "bad_ratings": 1,
+          "created_at": "2018-11-28T16:10:23.000Z",
+          "code_updated_at": "2025-12-07T18:34:19.000Z",
+          "namespace": "ComicRead",
+          "support_url": "https://github.com/hymbz/ComicReadScript/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ComicRead",
+          "description": "为漫画站增加双页阅读、翻译等优化体验的增强功能。百合会（记录阅读历史、自动签到等）、百合会新站、E-Hentai（关联外站、快捷收藏、标签染色、识别广告页等）、nhentai（彻底屏蔽漫画、无限滚动）、Yurifans（自动签到）、拷贝漫画(copymanga)（显示最后阅读记录、解锁隐藏漫画）、再漫画、漫画柜(manhuagui)、动漫屋(dm5)、mangabz、komiic、無限動漫、绅士漫画(wnacg)、禁漫天堂、NoyAcg、熱辣漫畫、hanime1、hitomi、hdoujin、SchaleNetwork、nude-moon、HentaiZap、IMHentai、HentaiEra、HentaiEnvy、MangaDex、welovemanga、kemono、nekohouse、Pixiv、明日方舟泰拉记事社、最前線、Tachidesk、LANraragi",
+          "url": "https://greasyfork.org/scripts/374903-comicread",
+          "code_url": "https://update.greasyfork.org/scripts/374903/ComicRead.user.js",
+          "code_size": 623950,
+          "license": "GNU Affero General Public License v3.0 or later",
+          "version": "12.4.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "dmzjDecrypt",
+  "description": "解析 dmzj v4 api 返回数据",
+  "url": "https://greasyfork.org/scripts/467177-dmzjdecrypt",
+  "code_url": "https://update.greasyfork.org/scripts/467177/1207199/dmzjDecrypt.js",
+  "code_size": 234835,
+  "license": null,
+  "version": "0.0.1.20230618184732",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

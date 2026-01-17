@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415833,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-09T23:29:51.000Z",
+    "code_updated_at": "2020-11-10T01:05:51.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 703366,
+        "name": "flipping",
+        "created_at": "2020-11-09T23:20:35.000Z",
+        "url": "https://greasyfork.org/users/703366-flipping"
+      }
+    ],
+    "name": "Bitchute playback speed control hotkeys",
+    "description": "Allows for adjusting the Bitchute player playback speed using the + and - numpad keys, adjusing playback by 25% increments, and allows setting the speed above the standard 2x speed cap. It will temporarily show the current playback speed in a little popup in the top-right corner of the player.",
+    "url": "https://greasyfork.org/scripts/415833-bitchute-playback-speed-control-hotkeys",
+    "code_url": "https://update.greasyfork.org/scripts/415833/Bitchute%20playback%20speed%20control%20hotkeys.user.js",
+    "code_size": 2842,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

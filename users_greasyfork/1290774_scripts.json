@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493830,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-30T07:27:50.000Z",
+    "code_updated_at": "2024-08-02T10:54:46.000Z",
+    "namespace": "http://your.homepage/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1290774,
+        "name": "uniqueStar",
+        "created_at": "2024-04-20T09:22:46.000Z",
+        "url": "https://greasyfork.org/users/1290774-uniquestar"
+      }
+    ],
+    "name": "Chat聊天",
+    "description": "Linux.do chat聊天室，请你尽情发挥",
+    "url": "https://greasyfork.org/scripts/493830-chat%E8%81%8A%E5%A4%A9",
+    "code_url": "https://update.greasyfork.org/scripts/493830/Chat%E8%81%8A%E5%A4%A9.user.js",
+    "code_size": 53820,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 492999,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-20T09:29:24.000Z",
+    "code_updated_at": "2024-05-13T16:09:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1290774,
+        "name": "uniqueStar",
+        "created_at": "2024-04-20T09:22:46.000Z",
+        "url": "https://greasyfork.org/users/1290774-uniquestar"
+      }
+    ],
+    "name": "话题聊天室",
+    "description": "Linux.do话题聊天室，在浏览其他帖子时，仍可以观察之前帖子的动态",
+    "url": "https://greasyfork.org/scripts/492999-%E8%AF%9D%E9%A2%98%E8%81%8A%E5%A4%A9%E5%AE%A4",
+    "code_url": "https://update.greasyfork.org/scripts/492999/%E8%AF%9D%E9%A2%98%E8%81%8A%E5%A4%A9%E5%AE%A4.user.js",
+    "code_size": 44332,
+    "license": "MIT License",
+    "version": "4.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

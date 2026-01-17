@@ -1,0 +1,68 @@
+[
+  {
+    "id": 432177,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-10T04:15:59.000Z",
+    "code_updated_at": "2021-09-11T12:31:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735113,
+        "name": "八葉ユーマ",
+        "created_at": "2021-02-06T12:06:25.000Z",
+        "url": "https://greasyfork.org/users/735113-%E5%85%AB%E8%91%89%E3%83%A6%E3%83%BC%E3%83%9E"
+      }
+    ],
+    "name": "YoutubeLiveConnectionsTranspoter",
+    "description": "title",
+    "url": "https://greasyfork.org/scripts/432177-youtubeliveconnectionstranspoter",
+    "code_url": "https://update.greasyfork.org/scripts/432177/YoutubeLiveConnectionsTranspoter.user.js",
+    "code_size": 1740,
+    "license": null,
+    "version": "1.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 421309,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-06T12:12:42.000Z",
+    "code_updated_at": "2022-05-15T15:46:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735113,
+        "name": "八葉ユーマ",
+        "created_at": "2021-02-06T12:06:25.000Z",
+        "url": "https://greasyfork.org/users/735113-%E5%85%AB%E8%91%89%E3%83%A6%E3%83%BC%E3%83%9E"
+      }
+    ],
+    "name": "ふたクロ更新ボタンクリッカー",
+    "description": "ふたばでの配信用に作成しました",
+    "url": "https://greasyfork.org/scripts/421309-%E3%81%B5%E3%81%9F%E3%82%AF%E3%83%AD%E6%9B%B4%E6%96%B0%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AB%E3%83%BC",
+    "code_url": "https://update.greasyfork.org/scripts/421309/%E3%81%B5%E3%81%9F%E3%82%AF%E3%83%AD%E6%9B%B4%E6%96%B0%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AB%E3%83%BC.user.js",
+    "code_size": 1549,
+    "license": null,
+    "version": "0.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

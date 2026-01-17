@@ -1,0 +1,200 @@
+[
+  {
+    "id": 472275,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-02T16:46:34.000Z",
+    "code_updated_at": "2023-08-02T16:46:34.000Z",
+    "namespace": "http://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1137608,
+        "name": "Pamela Coutinho",
+        "created_at": "2023-07-28T04:47:32.000Z",
+        "url": "https://greasyfork.org/users/1137608-pamela-coutinho"
+      }
+    ],
+    "name": "Buscar Palavras-chave",
+    "description": "buscar palavras chaves",
+    "url": "https://greasyfork.org/scripts/472275-buscar-palavras-chave",
+    "code_url": "https://update.greasyfork.org/scripts/472275/Buscar%20Palavras-chave.user.js",
+    "code_size": 846,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 472024,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-30T00:32:48.000Z",
+    "code_updated_at": "2023-07-30T00:32:47.000Z",
+    "namespace": "https://leaked.wiki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1137608,
+        "name": "Pamela Coutinho",
+        "created_at": "2023-07-28T04:47:32.000Z",
+        "url": "https://greasyfork.org/users/1137608-pamela-coutinho"
+      }
+    ],
+    "name": "Hotpot.ai Unlimited",
+    "description": "Removes the local cooldowns for Hotpot.ai allowing you to generate multiple images at once! + max",
+    "url": "https://greasyfork.org/scripts/472024-hotpot-ai-unlimited",
+    "code_url": "https://update.greasyfork.org/scripts/472024/Hotpotai%20Unlimited.user.js",
+    "code_size": 1421,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 472023,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-30T00:28:55.000Z",
+    "code_updated_at": "2023-07-30T00:28:55.000Z",
+    "namespace": "https://leaked.wiki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1137608,
+        "name": "Pamela Coutinho",
+        "created_at": "2023-07-28T04:47:32.000Z",
+        "url": "https://greasyfork.org/users/1137608-pamela-coutinho"
+      }
+    ],
+    "name": "Hotpot.ai Unlimited",
+    "description": "Removes the local cooldowns for Hotpot.ai allowing you to generate multiple images at once! + max",
+    "url": "https://greasyfork.org/scripts/472023-hotpot-ai-unlimited",
+    "code_url": "https://update.greasyfork.org/scripts/472023/Hotpotai%20Unlimited.user.js",
+    "code_size": 1339,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 472012,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-29T22:33:13.000Z",
+    "code_updated_at": "2023-07-29T22:48:38.000Z",
+    "namespace": "https://leaked.wiki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1137608,
+        "name": "Pamela Coutinho",
+        "created_at": "2023-07-28T04:47:32.000Z",
+        "url": "https://greasyfork.org/users/1137608-pamela-coutinho"
+      }
+    ],
+    "name": "Hotpot.ai Unlimiter",
+    "description": "Removes the local cooldowns for Hotpot.ai allowing you to generate multiple images at once! + add options",
+    "url": "https://greasyfork.org/scripts/472012-hotpot-ai-unlimiter",
+    "code_url": "https://update.greasyfork.org/scripts/472012/Hotpotai%20Unlimiter.user.js",
+    "code_size": 1246,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471952,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T20:15:34.000Z",
+    "code_updated_at": "2023-07-28T20:15:34.000Z",
+    "namespace": "https://leaked.wiki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1137608,
+        "name": "Pamela Coutinho",
+        "created_at": "2023-07-28T04:47:32.000Z",
+        "url": "https://greasyfork.org/users/1137608-pamela-coutinho"
+      }
+    ],
+    "name": "Hotpot.ai Unlimiter",
+    "description": "Removes the local cooldowns for Hotpot.ai allowing you to generate multiple images at once!",
+    "url": "https://greasyfork.org/scripts/471952-hotpot-ai-unlimiter",
+    "code_url": "https://update.greasyfork.org/scripts/471952/Hotpotai%20Unlimiter.user.js",
+    "code_size": 1410,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471928,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T14:46:50.000Z",
+    "code_updated_at": "2023-07-28T14:46:50.000Z",
+    "namespace": "https://leaked.wiki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1137608,
+        "name": "Pamela Coutinho",
+        "created_at": "2023-07-28T04:47:32.000Z",
+        "url": "https://greasyfork.org/users/1137608-pamela-coutinho"
+      }
+    ],
+    "name": "hotpot.ai Unlimiter",
+    "description": "Removes the local cooldowns for Hotpot.ai allowing you to generate multiple images at once!",
+    "url": "https://greasyfork.org/scripts/471928-hotpot-ai-unlimiter",
+    "code_url": "https://update.greasyfork.org/scripts/471928/hotpotai%20Unlimiter.user.js",
+    "code_size": 1053,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

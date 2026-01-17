@@ -1,0 +1,34 @@
+{
+  "id": 475784,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-21T02:54:56.000Z",
+  "code_updated_at": "2024-03-18T15:29:00.000Z",
+  "namespace": "https://github.com/ruesin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1131946,
+      "name": "ruesin",
+      "created_at": "2023-07-21T03:22:23.000Z",
+      "url": "https://greasyfork.org/users/1131946-ruesin",
+      "scripts": []
+    }
+  ],
+  "name": "卡思助手-私享版",
+  "description": "！！！内部使用，不要对外扩散！！！",
+  "url": "https://greasyfork.org/scripts/475784-%E5%8D%A1%E6%80%9D%E5%8A%A9%E6%89%8B-%E7%A7%81%E4%BA%AB%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/475784/%E5%8D%A1%E6%80%9D%E5%8A%A9%E6%89%8B-%E7%A7%81%E4%BA%AB%E7%89%88.user.js",
+  "code_size": 105429,
+  "license": "GPL License",
+  "version": "1.1.13",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 432660,
+  "daily_installs": 0,
+  "total_installs": 330,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-19T14:45:07.000Z",
+  "code_updated_at": "2021-09-21T11:38:46.000Z",
+  "namespace": "https://greasyfork.org/it/users/457042-giuseppe-tarricone",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 457042,
+      "name": "Giuseppe Tarricone",
+      "created_at": "2020-03-10T13:48:02.000Z",
+      "url": "https://greasyfork.org/users/457042-giuseppe-tarricone",
+      "scripts": [
+        {
+          "id": 432660,
+          "daily_installs": 0,
+          "total_installs": 330,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-19T14:45:07.000Z",
+          "code_updated_at": "2021-09-21T11:38:46.000Z",
+          "namespace": "https://greasyfork.org/it/users/457042-giuseppe-tarricone",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto-Spin Roll - Freebitco.in  by Giuseppe Tarricone.",
+          "description": "Auto-Spin Roll after 15-30-45 second",
+          "url": "https://greasyfork.org/scripts/432660-auto-spin-roll-freebitco-in-by-giuseppe-tarricone",
+          "code_url": "https://update.greasyfork.org/scripts/432660/Auto-Spin%20Roll%20-%20Freebitcoin%20%20by%20Giuseppe%20Tarricone.user.js",
+          "code_size": 3859,
+          "license": "GNU General Public License v3.0 only",
+          "version": "2.1.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto-Spin Roll - Freebitco.in  by Giuseppe Tarricone.",
+  "description": "Auto-Spin Roll after 15-30-45 second",
+  "url": "https://greasyfork.org/scripts/432660-auto-spin-roll-freebitco-in-by-giuseppe-tarricone",
+  "code_url": "https://update.greasyfork.org/scripts/432660/Auto-Spin%20Roll%20-%20Freebitcoin%20%20by%20Giuseppe%20Tarricone.user.js",
+  "code_size": 3859,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

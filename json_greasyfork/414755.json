@@ -1,0 +1,34 @@
+{
+  "id": 414755,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-27T12:32:10.000Z",
+  "code_updated_at": "2020-10-28T05:27:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 698579,
+      "name": "41888438",
+      "created_at": "2020-10-27T03:11:56.000Z",
+      "url": "https://greasyfork.org/users/698579-41888438",
+      "scripts": []
+    }
+  ],
+  "name": "Livestream detect",
+  "description": "auto jump to livestream",
+  "url": "https://greasyfork.org/scripts/414755-livestream-detect",
+  "code_url": "https://update.greasyfork.org/scripts/414755/Livestream%20detect.user.js",
+  "code_size": 1825,
+  "license": null,
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

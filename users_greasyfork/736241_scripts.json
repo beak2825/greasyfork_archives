@@ -1,0 +1,101 @@
+[
+  {
+    "id": 468720,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-15T09:56:23.000Z",
+    "code_updated_at": "2023-06-15T09:56:23.000Z",
+    "namespace": "https://greasyfork.org/users/736241",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 736241,
+        "name": "ouyen",
+        "created_at": "2021-02-10T07:35:40.000Z",
+        "url": "https://greasyfork.org/users/736241-ouyen"
+      }
+    ],
+    "name": "bang search for google & bing",
+    "description": "\"bring the duckduckgo bang search to google and bing\"",
+    "url": "https://greasyfork.org/scripts/468720-bang-search-for-google-bing",
+    "code_url": "https://update.greasyfork.org/scripts/468720/bang%20search%20for%20google%20%20bing.user.js",
+    "code_size": 949975,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 428635,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-29T12:24:12.000Z",
+    "code_updated_at": "2021-06-29T12:27:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 736241,
+        "name": "ouyen",
+        "created_at": "2021-02-10T07:35:40.000Z",
+        "url": "https://greasyfork.org/users/736241-ouyen"
+      }
+    ],
+    "name": "知乎直接看",
+    "description": "不用打开知乎app，直接看文章",
+    "url": "https://greasyfork.org/scripts/428635-%E7%9F%A5%E4%B9%8E%E7%9B%B4%E6%8E%A5%E7%9C%8B",
+    "code_url": "https://update.greasyfork.org/scripts/428635/%E7%9F%A5%E4%B9%8E%E7%9B%B4%E6%8E%A5%E7%9C%8B.user.js",
+    "code_size": 4332,
+    "license": null,
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 421511,
+    "daily_installs": 0,
+    "total_installs": 498,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-10T07:50:54.000Z",
+    "code_updated_at": "2021-12-23T13:41:25.000Z",
+    "namespace": "Steam_ARS&pуб_to_RMB",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 736241,
+        "name": "ouyen",
+        "created_at": "2021-02-10T07:35:40.000Z",
+        "url": "https://greasyfork.org/users/736241-ouyen"
+      }
+    ],
+    "name": "Steam_ARS&pуб_to_RMB",
+    "description": "把steam上的俄罗斯卢布和阿根廷比索换算成人民币",
+    "url": "https://greasyfork.org/scripts/421511-steam-ars-p%D1%83%D0%B1-to-rmb",
+    "code_url": "https://update.greasyfork.org/scripts/421511/Steam_ARSp%D1%83%D0%B1_to_RMB.user.js",
+    "code_size": 1679,
+    "license": "MIT License",
+    "version": "2.5.211223",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

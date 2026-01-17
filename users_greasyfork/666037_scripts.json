@@ -1,0 +1,35 @@
+[
+  {
+    "id": 414827,
+    "daily_installs": 0,
+    "total_installs": 174,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-28T04:16:55.000Z",
+    "code_updated_at": "2020-10-28T04:34:42.000Z",
+    "namespace": "https://x-ing.space",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666037,
+        "name": "FlyOrBoom",
+        "created_at": "2020-07-12T07:57:57.000Z",
+        "url": "https://greasyfork.org/users/666037-flyorboom"
+      }
+    ],
+    "name": "Retroogle",
+    "description": "Revert Google product icons to their pre-2020 style.",
+    "url": "https://greasyfork.org/scripts/414827-retroogle",
+    "code_url": "https://update.greasyfork.org/scripts/414827/Retroogle.user.js",
+    "code_size": 910,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

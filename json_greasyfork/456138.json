@@ -1,0 +1,33 @@
+{
+  "id": 456138,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-06T18:07:17.000Z",
+  "code_updated_at": "2022-12-06T18:07:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 993666,
+      "name": "tiger31",
+      "created_at": "2022-12-06T18:04:42.000Z",
+      "url": "https://greasyfork.org/users/993666-tiger31"
+    }
+  ],
+  "name": "Paper Scissors",
+  "description": "Removes annoying unclosable modal window",
+  "url": "https://greasyfork.org/scripts/456138-paper-scissors",
+  "code_url": "https://update.greasyfork.org/scripts/456138/Paper%20Scissors.user.js",
+  "code_size": 1056,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

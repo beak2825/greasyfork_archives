@@ -1,0 +1,59 @@
+{
+  "id": 440694,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-28T00:30:08.000Z",
+  "code_updated_at": "2022-03-09T17:33:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 881264,
+      "name": "Sergio Lopez Belinchon",
+      "created_at": "2022-02-28T00:25:21.000Z",
+      "url": "https://greasyfork.org/users/881264-sergio-lopez-belinchon",
+      "scripts": [
+        {
+          "id": 440694,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-28T00:30:08.000Z",
+          "code_updated_at": "2022-03-09T17:33:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bubble Logger",
+          "description": "log uncaught window (XHR.send, XHR.onerror) exceptions and write them in the document as bootstrap alert html elements",
+          "url": "https://greasyfork.org/scripts/440694-bubble-logger",
+          "code_url": "https://update.greasyfork.org/scripts/440694/Bubble%20Logger.user.js",
+          "code_size": 35767,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bubble Logger",
+  "description": "log uncaught window (XHR.send, XHR.onerror) exceptions and write them in the document as bootstrap alert html elements",
+  "url": "https://greasyfork.org/scripts/440694-bubble-logger",
+  "code_url": "https://update.greasyfork.org/scripts/440694/Bubble%20Logger.user.js",
+  "code_size": 35767,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483878,
+    "daily_installs": 2,
+    "total_installs": 882,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-04T17:17:08.000Z",
+    "code_updated_at": "2025-01-16T23:50:22.000Z",
+    "namespace": "https://github.com/afyi/bliveclear",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1243303,
+        "name": "猫东东",
+        "created_at": "2024-01-04T16:56:20.000Z",
+        "url": "https://greasyfork.org/users/1243303-%E7%8C%AB%E4%B8%9C%E4%B8%9C"
+      }
+    ],
+    "name": "哔哩哔哩(B站|Bilibili)全屏直播净化",
+    "description": "1. 去掉B站(live.bilibili.com)网页全屏或者全屏时出现的讨厌的打赏工具栏的小工具，2. 去掉直播间左下或者右下马赛克的功能",
+    "url": "https://greasyfork.org/scripts/483878-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-b%E7%AB%99-bilibili-%E5%85%A8%E5%B1%8F%E7%9B%B4%E6%92%AD%E5%87%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/483878/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%28B%E7%AB%99%7CBilibili%29%E5%85%A8%E5%B1%8F%E7%9B%B4%E6%92%AD%E5%87%80%E5%8C%96.user.js",
+    "code_size": 6781,
+    "license": "MIT License",
+    "version": "1.3.7.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

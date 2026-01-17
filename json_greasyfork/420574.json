@@ -1,0 +1,59 @@
+{
+  "id": 420574,
+  "daily_installs": 1,
+  "total_installs": 1440,
+  "fan_score": "67.6",
+  "good_ratings": 8,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-23T14:49:52.000Z",
+  "code_updated_at": "2021-01-23T14:49:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 730505,
+      "name": "indexasp",
+      "created_at": "2021-01-23T14:25:58.000Z",
+      "url": "https://greasyfork.org/users/730505-indexasp",
+      "scripts": [
+        {
+          "id": 420574,
+          "daily_installs": 1,
+          "total_installs": 1440,
+          "fan_score": "67.6",
+          "good_ratings": 8,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-23T14:49:52.000Z",
+          "code_updated_at": "2021-01-23T14:49:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Edge双击关闭当前页面",
+          "description": "在当前网页中双击左键关闭当前页面.注意：由于浏览器的权限限制，某些页面(自己手动打开的标签页，浏览器内置页，受浏览器保护的页面等)无法使用双击左键关闭，请鼠标移至标签页上方点击'X'关闭",
+          "url": "https://greasyfork.org/scripts/420574-edge%E5%8F%8C%E5%87%BB%E5%85%B3%E9%97%AD%E5%BD%93%E5%89%8D%E9%A1%B5%E9%9D%A2",
+          "code_url": "https://update.greasyfork.org/scripts/420574/Edge%E5%8F%8C%E5%87%BB%E5%85%B3%E9%97%AD%E5%BD%93%E5%89%8D%E9%A1%B5%E9%9D%A2.user.js",
+          "code_size": 661,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Edge双击关闭当前页面",
+  "description": "在当前网页中双击左键关闭当前页面.注意：由于浏览器的权限限制，某些页面(自己手动打开的标签页，浏览器内置页，受浏览器保护的页面等)无法使用双击左键关闭，请鼠标移至标签页上方点击'X'关闭",
+  "url": "https://greasyfork.org/scripts/420574-edge%E5%8F%8C%E5%87%BB%E5%85%B3%E9%97%AD%E5%BD%93%E5%89%8D%E9%A1%B5%E9%9D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/420574/Edge%E5%8F%8C%E5%87%BB%E5%85%B3%E9%97%AD%E5%BD%93%E5%89%8D%E9%A1%B5%E9%9D%A2.user.js",
+  "code_size": 661,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

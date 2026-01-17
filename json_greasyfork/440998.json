@@ -1,0 +1,33 @@
+{
+  "id": 440998,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-06T01:39:35.000Z",
+  "code_updated_at": "2022-11-29T11:23:24.000Z",
+  "namespace": "bupt_ucloud_helper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 883435,
+      "name": "zhiwei",
+      "created_at": "2022-03-06T01:31:36.000Z",
+      "url": "https://greasyfork.org/users/883435-zhiwei"
+    }
+  ],
+  "name": "云邮教学空间资源文件一键下载",
+  "description": "为云邮教学空间资源预览页面添加下载原文件按钮，支持各类型文件，绕过只允许在线查看的设置。",
+  "url": "https://greasyfork.org/scripts/440998-%E4%BA%91%E9%82%AE%E6%95%99%E5%AD%A6%E7%A9%BA%E9%97%B4%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/440998/%E4%BA%91%E9%82%AE%E6%95%99%E5%AD%A6%E7%A9%BA%E9%97%B4%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 1335,
+  "license": "GNU GPLv3",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

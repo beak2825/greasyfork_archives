@@ -1,0 +1,68 @@
+[
+  {
+    "id": 470073,
+    "daily_installs": 1,
+    "total_installs": 1421,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-07-03T19:08:53.000Z",
+    "code_updated_at": "2023-07-03T19:08:53.000Z",
+    "namespace": "E11ips0iD_YandexAntiAds",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731961,
+        "name": "E1ipS0iD",
+        "created_at": "2021-01-27T21:31:48.000Z",
+        "url": "https://greasyfork.org/users/731961-e1ips0id"
+      }
+    ],
+    "name": "YaAntiAds",
+    "description": "Блокировка рекламы и баннера \"Установите yandex\" на yandex.ru",
+    "url": "https://greasyfork.org/scripts/470073-yaantiads",
+    "code_url": "https://update.greasyfork.org/scripts/470073/YaAntiAds.user.js",
+    "code_size": 1645,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 451424,
+    "daily_installs": 0,
+    "total_installs": 266,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-15T13:26:49.000Z",
+    "code_updated_at": "2023-11-10T00:14:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731961,
+        "name": "E1ipS0iD",
+        "created_at": "2021-01-27T21:31:48.000Z",
+        "url": "https://greasyfork.org/users/731961-e1ips0id"
+      }
+    ],
+    "name": "Ya YouTube search",
+    "description": "Поиск видео в YouTube со страницы Яндекса.",
+    "url": "https://greasyfork.org/scripts/451424-ya-youtube-search",
+    "code_url": "https://update.greasyfork.org/scripts/451424/Ya%20YouTube%20search.user.js",
+    "code_size": 1920,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

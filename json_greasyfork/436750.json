@@ -1,0 +1,59 @@
+{
+  "id": 436750,
+  "daily_installs": 0,
+  "total_installs": 94,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-08T10:11:29.000Z",
+  "code_updated_at": "2022-12-18T12:34:39.000Z",
+  "namespace": "https://github.com/Xav1erSue/Newjw_HDU_AutoChoose",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 850272,
+      "name": "Xav1erSue",
+      "created_at": "2021-12-08T09:51:55.000Z",
+      "url": "https://greasyfork.org/users/850272-xav1ersue",
+      "scripts": [
+        {
+          "id": 436750,
+          "daily_installs": 0,
+          "total_installs": 94,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-08T10:11:29.000Z",
+          "code_updated_at": "2022-12-18T12:34:39.000Z",
+          "namespace": "https://github.com/Xav1erSue/Newjw_HDU_AutoChoose",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "【2021】杭电新教务系统自动学评教",
+          "description": "杭电新教务系统自动学评教",
+          "url": "https://greasyfork.org/scripts/436750-2021-%E6%9D%AD%E7%94%B5%E6%96%B0%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%AD%A6%E8%AF%84%E6%95%99",
+          "code_url": "https://update.greasyfork.org/scripts/436750/%E3%80%902021%E3%80%91%E6%9D%AD%E7%94%B5%E6%96%B0%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%AD%A6%E8%AF%84%E6%95%99.user.js",
+          "code_size": 9604,
+          "license": null,
+          "version": "3.3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "【2021】杭电新教务系统自动学评教",
+  "description": "杭电新教务系统自动学评教",
+  "url": "https://greasyfork.org/scripts/436750-2021-%E6%9D%AD%E7%94%B5%E6%96%B0%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%AD%A6%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/436750/%E3%80%902021%E3%80%91%E6%9D%AD%E7%94%B5%E6%96%B0%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%AD%A6%E8%AF%84%E6%95%99.user.js",
+  "code_size": 9604,
+  "license": null,
+  "version": "3.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

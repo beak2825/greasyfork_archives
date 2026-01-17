@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421633,
+    "daily_installs": 0,
+    "total_installs": 217,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-12T15:18:44.000Z",
+    "code_updated_at": "2021-02-14T04:33:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 736898,
+        "name": "iceshadows",
+        "created_at": "2021-02-12T15:16:38.000Z",
+        "url": "https://greasyfork.org/users/736898-iceshadows"
+      }
+    ],
+    "name": "留星网VIP内容破解",
+    "description": "留星网VIP内容破解脚本",
+    "url": "https://greasyfork.org/scripts/421633-%E7%95%99%E6%98%9F%E7%BD%91vip%E5%86%85%E5%AE%B9%E7%A0%B4%E8%A7%A3",
+    "code_url": "https://update.greasyfork.org/scripts/421633/%E7%95%99%E6%98%9F%E7%BD%91VIP%E5%86%85%E5%AE%B9%E7%A0%B4%E8%A7%A3.user.js",
+    "code_size": 834,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

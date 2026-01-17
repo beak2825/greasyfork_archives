@@ -1,0 +1,41 @@
+[
+  {
+    "id": 420630,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-24T22:40:18.000Z",
+    "code_updated_at": "2021-01-24T22:40:18.000Z",
+    "namespace": "https://greasyfork.org/users/146029/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 146029,
+        "name": "Illy Gull",
+        "created_at": "2017-08-02T23:25:40.000Z",
+        "url": "https://greasyfork.org/users/146029-illy-gull"
+      },
+      {
+        "id": 142117,
+        "name": "DrSharky",
+        "created_at": "2017-07-19T17:05:45.000Z",
+        "url": "https://greasyfork.org/users/142117-drsharky"
+      }
+    ],
+    "name": "EMbed",
+    "description": "Embeds imgur images on EpicMafia",
+    "url": "https://greasyfork.org/scripts/420630-embed",
+    "code_url": "https://update.greasyfork.org/scripts/420630/EMbed.user.js",
+    "code_size": 5484,
+    "license": null,
+    "version": "0.1",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

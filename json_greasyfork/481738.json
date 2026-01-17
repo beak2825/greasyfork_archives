@@ -1,0 +1,59 @@
+{
+  "id": 481738,
+  "daily_installs": 2,
+  "total_installs": 982,
+  "fan_score": "56.6",
+  "good_ratings": 5,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-09T02:11:32.000Z",
+  "code_updated_at": "2025-09-04T14:39:11.000Z",
+  "namespace": "https://github.com/ADJazzzz",
+  "support_url": "https://github.com/ADJazzzz/BLSPAM/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1230754,
+      "name": "ADJazz",
+      "created_at": "2023-12-09T02:05:09.000Z",
+      "url": "https://greasyfork.org/users/1230754-adjazz",
+      "scripts": [
+        {
+          "id": 481738,
+          "daily_installs": 2,
+          "total_installs": 982,
+          "fan_score": "56.6",
+          "good_ratings": 5,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-09T02:11:32.000Z",
+          "code_updated_at": "2025-09-04T14:39:11.000Z",
+          "namespace": "https://github.com/ADJazzzz",
+          "support_url": "https://github.com/ADJazzzz/BLSPAM/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili-Live-Spamer",
+          "description": "B站直播文字、表情独轮车",
+          "url": "https://greasyfork.org/scripts/481738-bilibili-live-spamer",
+          "code_url": "https://update.greasyfork.org/scripts/481738/Bilibili-Live-Spamer.user.js",
+          "code_size": 112459,
+          "license": "MIT License",
+          "version": "1.4.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili-Live-Spamer",
+  "description": "B站直播文字、表情独轮车",
+  "url": "https://greasyfork.org/scripts/481738-bilibili-live-spamer",
+  "code_url": "https://update.greasyfork.org/scripts/481738/Bilibili-Live-Spamer.user.js",
+  "code_size": 112459,
+  "license": "MIT License",
+  "version": "1.4.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 466482,
+  "daily_installs": 0,
+  "total_installs": 398,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-05-17T05:37:15.000Z",
+  "code_updated_at": "2025-12-31T02:01:49.000Z",
+  "namespace": "https://greasyfork.org/users/135090",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 863179,
+      "name": "zwb83925462",
+      "created_at": "2022-01-10T12:08:36.000Z",
+      "url": "https://greasyfork.org/users/863179-zwb83925462"
+    }
+  ],
+  "name": "CCTV视频解析",
+  "description": "将CCTV视频解析成HLS地址.",
+  "url": "https://greasyfork.org/scripts/466482-cctv%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/466482/CCTV%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 8493,
+  "license": "CC",
+  "version": "1.6.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

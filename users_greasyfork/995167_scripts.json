@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457836,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-08T04:18:53.000Z",
+    "code_updated_at": "2023-01-08T04:18:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 995167,
+        "name": "Ninjaboy73",
+        "created_at": "2022-12-09T21:41:15.000Z",
+        "url": "https://greasyfork.org/users/995167-ninjaboy73"
+      }
+    ],
+    "name": "Ninjaboy73 Theme. Made with EZTHEME",
+    "description": "Awesome youtuber, awesome theme",
+    "url": "https://greasyfork.org/scripts/457836-ninjaboy73-theme-made-with-eztheme",
+    "code_url": "https://update.greasyfork.org/scripts/457836/Ninjaboy73%20Theme%20Made%20with%20EZTHEME.user.js",
+    "code_size": 3885,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

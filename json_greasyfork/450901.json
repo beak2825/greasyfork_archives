@@ -1,0 +1,59 @@
+{
+  "id": 450901,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-07T08:16:53.000Z",
+  "code_updated_at": "2022-09-07T08:16:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 955599,
+      "name": "shanpuzzo",
+      "created_at": "2022-09-07T08:14:40.000Z",
+      "url": "https://greasyfork.org/users/955599-shanpuzzo",
+      "scripts": [
+        {
+          "id": 450901,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-07T08:16:53.000Z",
+          "code_updated_at": "2022-09-07T08:16:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DOWN WITH SOCCER",
+          "description": "elimina la strip dei risultati di champions da Repubblica.it",
+          "url": "https://greasyfork.org/scripts/450901-down-with-soccer",
+          "code_url": "https://update.greasyfork.org/scripts/450901/DOWN%20WITH%20SOCCER.user.js",
+          "code_size": 551,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "it",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DOWN WITH SOCCER",
+  "description": "elimina la strip dei risultati di champions da Repubblica.it",
+  "url": "https://greasyfork.org/scripts/450901-down-with-soccer",
+  "code_url": "https://update.greasyfork.org/scripts/450901/DOWN%20WITH%20SOCCER.user.js",
+  "code_size": 551,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

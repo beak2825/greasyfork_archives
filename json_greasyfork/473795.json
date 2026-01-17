@@ -1,0 +1,34 @@
+{
+  "id": 473795,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-24T09:01:15.000Z",
+  "code_updated_at": "2023-08-24T09:01:15.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 162038,
+      "name": "a294228566",
+      "created_at": "2017-12-06T04:11:08.000Z",
+      "url": "https://greasyfork.org/users/162038-a294228566",
+      "scripts": []
+    }
+  ],
+  "name": "获取1688-规格ID",
+  "description": "获取1688-规格ID ..",
+  "url": "https://greasyfork.org/scripts/473795-%E8%8E%B7%E5%8F%961688-%E8%A7%84%E6%A0%BCid",
+  "code_url": "https://update.greasyfork.org/scripts/473795/%E8%8E%B7%E5%8F%961688-%E8%A7%84%E6%A0%BCID.user.js",
+  "code_size": 1377,
+  "license": null,
+  "version": "0.0.2.20230802",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

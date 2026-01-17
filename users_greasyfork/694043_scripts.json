@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412883,
+    "daily_installs": 3,
+    "total_installs": 7292,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-11T03:58:41.000Z",
+    "code_updated_at": "2020-10-17T03:47:06.000Z",
+    "namespace": "https://greasyfork.org/scripts/412883",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694043,
+        "name": "HenryJiu",
+        "created_at": "2020-10-11T03:38:42.000Z",
+        "url": "https://greasyfork.org/users/694043-henryjiu"
+      }
+    ],
+    "name": "Github 加速与增强 - 高速下载",
+    "description": "为 Github 的 Clone、Release、Raw、Code(ZIP) 添加高速下载和镜像站跳转，实现各种加速",
+    "url": "https://greasyfork.org/scripts/412883-github-%E5%8A%A0%E9%80%9F%E4%B8%8E%E5%A2%9E%E5%BC%BA-%E9%AB%98%E9%80%9F%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/412883/Github%20%E5%8A%A0%E9%80%9F%E4%B8%8E%E5%A2%9E%E5%BC%BA%20-%20%E9%AB%98%E9%80%9F%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 19203,
+    "license": "GPL-3.0 License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 427502,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-04T07:56:55.000Z",
+  "code_updated_at": "2021-06-04T07:56:55.000Z",
+  "namespace": "https://github.com/nameldk/user-script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 157189,
+      "name": "nameldk",
+      "created_at": "2017-10-27T10:38:45.000Z",
+      "url": "https://greasyfork.org/users/157189-nameldk"
+    }
+  ],
+  "name": "TOC to RFC",
+  "description": "add TOC menu to RFC.",
+  "url": "https://greasyfork.org/scripts/427502-toc-to-rfc",
+  "code_url": "https://update.greasyfork.org/scripts/427502/TOC%20to%20RFC.user.js",
+  "code_size": 1513,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

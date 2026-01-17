@@ -1,0 +1,33 @@
+{
+  "id": 446140,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-07T14:44:53.000Z",
+  "code_updated_at": "2023-03-26T16:50:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 472487,
+      "name": "AN drew",
+      "created_at": "2020-03-31T12:06:42.000Z",
+      "url": "https://greasyfork.org/users/472487-an-drew"
+    }
+  ],
+  "name": "greasyfork显示长时间未更新脚本",
+  "description": "未更新的脚本背景显示为浅红",
+  "url": "https://greasyfork.org/scripts/446140-greasyfork%E6%98%BE%E7%A4%BA%E9%95%BF%E6%97%B6%E9%97%B4%E6%9C%AA%E6%9B%B4%E6%96%B0%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/446140/greasyfork%E6%98%BE%E7%A4%BA%E9%95%BF%E6%97%B6%E9%97%B4%E6%9C%AA%E6%9B%B4%E6%96%B0%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 843,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

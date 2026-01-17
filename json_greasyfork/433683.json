@@ -1,0 +1,33 @@
+{
+  "id": 433683,
+  "daily_installs": 0,
+  "total_installs": 300,
+  "fan_score": "48.7",
+  "good_ratings": 6,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-10-10T16:44:46.000Z",
+  "code_updated_at": "2023-05-27T13:20:05.000Z",
+  "namespace": "168116060@qq.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 823801,
+      "name": "wd16811",
+      "created_at": "2021-10-10T16:34:34.000Z",
+      "url": "https://greasyfork.org/users/823801-wd16811"
+    }
+  ],
+  "name": "b站排行榜过滤 哔哩哔哩 bilibili B站 排行榜",
+  "description": "过滤已阅视频和黑名单up主的视频",
+  "url": "https://greasyfork.org/scripts/433683-b%E7%AB%99%E6%8E%92%E8%A1%8C%E6%A6%9C%E8%BF%87%E6%BB%A4-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-bilibili-b%E7%AB%99-%E6%8E%92%E8%A1%8C%E6%A6%9C",
+  "code_url": "https://update.greasyfork.org/scripts/433683/b%E7%AB%99%E6%8E%92%E8%A1%8C%E6%A6%9C%E8%BF%87%E6%BB%A4%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%20bilibili%20B%E7%AB%99%20%E6%8E%92%E8%A1%8C%E6%A6%9C.user.js",
+  "code_size": 4481,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

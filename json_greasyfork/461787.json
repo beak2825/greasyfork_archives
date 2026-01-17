@@ -1,0 +1,33 @@
+{
+  "id": 461787,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-14T00:57:39.000Z",
+  "code_updated_at": "2023-07-26T06:54:02.000Z",
+  "namespace": "kanade",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1041753,
+      "name": "_kanade_",
+      "created_at": "2023-03-14T00:50:08.000Z",
+      "url": "https://greasyfork.org/users/1041753-kanade"
+    }
+  ],
+  "name": "Misskey 自動プレビュー",
+  "description": "ノート投稿ダイアログを開いたとき、自動でプレビューモードをONにします",
+  "url": "https://greasyfork.org/scripts/461787-misskey-%E8%87%AA%E5%8B%95%E3%83%97%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC",
+  "code_url": "https://update.greasyfork.org/scripts/461787/Misskey%20%E8%87%AA%E5%8B%95%E3%83%97%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC.user.js",
+  "code_size": 1938,
+  "license": "MIT License",
+  "version": "1.1.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

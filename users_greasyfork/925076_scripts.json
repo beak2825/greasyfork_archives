@@ -1,0 +1,101 @@
+[
+  {
+    "id": 487314,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-14T18:31:06.000Z",
+    "code_updated_at": "2024-02-14T18:36:41.000Z",
+    "namespace": "d8e7078b-abee-407d-bcb6-096b59eeac17",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 925076,
+        "name": "winarbor",
+        "created_at": "2022-06-13T05:18:37.000Z",
+        "url": "https://greasyfork.org/users/925076-winarbor"
+      }
+    ],
+    "name": "bilibili_live_gaoneng",
+    "description": "哔哩哔哩直播高能用户人数",
+    "url": "https://greasyfork.org/scripts/487314-bilibili-live-gaoneng",
+    "code_url": "https://update.greasyfork.org/scripts/487314/bilibili_live_gaoneng.user.js",
+    "code_size": 2122,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485539,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-24T04:01:40.000Z",
+    "code_updated_at": "2024-05-16T18:34:21.000Z",
+    "namespace": "d8e7078b-abee-407d-bcb6-096b59eeac17",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 925076,
+        "name": "winarbor",
+        "created_at": "2022-06-13T05:18:37.000Z",
+        "url": "https://greasyfork.org/users/925076-winarbor"
+      }
+    ],
+    "name": "TorrentFilter",
+    "description": "Filter and highlight torrents with conditions",
+    "url": "https://greasyfork.org/scripts/485539-torrentfilter",
+    "code_url": "https://update.greasyfork.org/scripts/485539/TorrentFilter.user.js",
+    "code_size": 16593,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485320,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-20T15:38:37.000Z",
+    "code_updated_at": "2024-04-20T18:40:21.000Z",
+    "namespace": "d8e7078b-abee-407d-bcb6-096b59eeac17",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 925076,
+        "name": "winarbor",
+        "created_at": "2022-06-13T05:18:37.000Z",
+        "url": "https://greasyfork.org/users/925076-winarbor"
+      }
+    ],
+    "name": "Post Formatter",
+    "description": "Format upload info",
+    "url": "https://greasyfork.org/scripts/485320-post-formatter",
+    "code_url": "https://update.greasyfork.org/scripts/485320/Post%20Formatter.user.js",
+    "code_size": 112513,
+    "license": "MIT License",
+    "version": "1.3.2.15",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

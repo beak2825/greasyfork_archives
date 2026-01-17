@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455359,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-24T18:33:39.000Z",
+    "code_updated_at": "2022-11-24T18:33:39.000Z",
+    "namespace": "http://id.svitla.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 987429,
+        "name": "Artem Pylypchuk",
+        "created_at": "2022-11-24T18:17:21.000Z",
+        "url": "https://greasyfork.org/users/987429-artem-pylypchuk"
+      }
+    ],
+    "name": "Svitla ID Tools",
+    "description": "Adds a button to put 8 hours for all days not marked as holidays or days off",
+    "url": "https://greasyfork.org/scripts/455359-svitla-id-tools",
+    "code_url": "https://update.greasyfork.org/scripts/455359/Svitla%20ID%20Tools.user.js",
+    "code_size": 4282,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

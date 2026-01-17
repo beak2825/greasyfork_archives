@@ -196,5 +196,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 488646,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-29T23:15:21.000Z",
+    "code_updated_at": "2025-08-31T01:21:45.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/488646-testertv-newgooglebuttons",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TesterTV_NewGoogleButtons",
+    "description": "Remove Google's standard buttons and add fixed ones (Web, Images, Videos, Map, Translate, News).",
+    "url": "https://greasyfork.org/scripts/488646-testertv-newgooglebuttons",
+    "code_url": "https://update.greasyfork.org/scripts/488646/TesterTV_NewGoogleButtons.user.js",
+    "code_size": 3485,
+    "license": null,
+    "version": "2025-08-31",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482417,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-16T19:57:55.000Z",
+    "code_updated_at": "2023-12-16T19:59:16.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/482417-testertv-youtube-screenshots",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TesterTV_YouTube_Screenshots",
+    "description": "Create YouTube Screenshots",
+    "url": "https://greasyfork.org/scripts/482417-testertv-youtube-screenshots",
+    "code_url": "https://update.greasyfork.org/scripts/482417/TesterTV_YouTube_Screenshots.user.js",
+    "code_size": 21778,
+    "license": "GPL version 3 or any later version",
+    "version": "2023.12.16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482343,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-16T01:48:52.000Z",
+    "code_updated_at": "2023-12-16T14:29:14.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/482343-testertv-let-it-snow/code",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TesterTV_Let_It_Snow",
+    "description": "Make it snow on the webpage",
+    "url": "https://greasyfork.org/scripts/482343-testertv-let-it-snow",
+    "code_url": "https://update.greasyfork.org/scripts/482343/TesterTV_Let_It_Snow.user.js",
+    "code_size": 1609,
+    "license": "GPL version 3 or any later version",
+    "version": "2023.12.16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482237,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-14T21:02:11.000Z",
+    "code_updated_at": "2025-08-30T17:28:06.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/482237-testertv-youtube-effects",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TesterTV_YouTube_Effects",
+    "description": "Add video effects with persistent sliders",
+    "url": "https://greasyfork.org/scripts/482237-testertv-youtube-effects",
+    "code_url": "https://update.greasyfork.org/scripts/482237/TesterTV_YouTube_Effects.user.js",
+    "code_size": 8809,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "2025.08.30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482232,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-14T20:37:39.000Z",
+    "code_updated_at": "2025-09-17T23:37:32.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/482232-testertv-scrollbuttons",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TesterTV_ScrollButtons",
+    "description": "Quick scroll buttons that keep the same on-screen size and the same distance from bottom/sides while zooming.",
+    "url": "https://greasyfork.org/scripts/482232-testertv-scrollbuttons",
+    "code_url": "https://update.greasyfork.org/scripts/482232/TesterTV_ScrollButtons.user.js",
+    "code_size": 15437,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "2025.09.16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 479202,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-06T23:00:50.000Z",
+    "code_updated_at": "2025-08-31T01:01:27.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/479202-testertv-translit-beta",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TesterTV_Translit",
+    "description": "Convert Latin text to Russian (custom mapping) with quick clipboard copy.",
+    "url": "https://greasyfork.org/scripts/479202-testertv-translit",
+    "code_url": "https://update.greasyfork.org/scripts/479202/TesterTV_Translit.user.js",
+    "code_size": 7258,
+    "license": "GNU GPLv3 or later",
+    "version": "2025.08.31",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

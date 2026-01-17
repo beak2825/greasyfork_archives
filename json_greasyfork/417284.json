@@ -1,0 +1,34 @@
+{
+  "id": 417284,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-01T09:46:30.000Z",
+  "code_updated_at": "2020-12-01T09:46:30.000Z",
+  "namespace": "https://qmining.frylabs.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 710948,
+      "name": "János Kiss",
+      "created_at": "2020-12-01T09:44:09.000Z",
+      "url": "https://greasyfork.org/users/710948-j%C3%A1nos-kiss",
+      "scripts": []
+    }
+  ],
+  "name": "Moodle/Elearning/KMOOC test help",
+  "description": "Online Moodle/Elearning/KMOOC test help",
+  "url": "https://greasyfork.org/scripts/417284-moodle-elearning-kmooc-test-help",
+  "code_url": "https://update.greasyfork.org/scripts/417284/MoodleElearningKMOOC%20test%20help.user.js",
+  "code_size": 78128,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "2.0.1.21",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463900,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-13T10:35:27.000Z",
+    "code_updated_at": "2023-04-14T14:35:46.000Z",
+    "namespace": "https://greasyfork.org/users/377794",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 377794,
+        "name": "pjy612",
+        "created_at": "2019-09-25T00:49:22.000Z",
+        "url": "https://greasyfork.org/users/377794-pjy612"
+      }
+    ],
+    "name": "汉兜随心玩",
+    "description": "随心玩汉兜",
+    "url": "https://greasyfork.org/scripts/463900-%E6%B1%89%E5%85%9C%E9%9A%8F%E5%BF%83%E7%8E%A9",
+    "code_url": "https://update.greasyfork.org/scripts/463900/%E6%B1%89%E5%85%9C%E9%9A%8F%E5%BF%83%E7%8E%A9.user.js",
+    "code_size": 1293,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

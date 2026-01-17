@@ -1,0 +1,34 @@
+{
+  "id": 439353,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-30T08:20:06.000Z",
+  "code_updated_at": "2022-01-30T08:20:06.000Z",
+  "namespace": "https://greasyfork.org/users/831932",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 831932,
+      "name": "黑呦呦",
+      "created_at": "2021-11-04T04:51:34.000Z",
+      "url": "https://greasyfork.org/users/831932-%E9%BB%91%E5%91%A6%E5%91%A6",
+      "scripts": []
+    }
+  ],
+  "name": "安全中心",
+  "description": "自动打开 已知的 不让人打开的网址",
+  "url": "https://greasyfork.org/scripts/439353-%E5%AE%89%E5%85%A8%E4%B8%AD%E5%BF%83",
+  "code_url": "https://update.greasyfork.org/scripts/439353/%E5%AE%89%E5%85%A8%E4%B8%AD%E5%BF%83.user.js",
+  "code_size": 1861,
+  "license": null,
+  "version": "1.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "id": 452143,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-28T05:12:08.000Z",
+    "code_updated_at": "2025-12-10T03:33:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952429,
+        "name": "chenqy",
+        "created_at": "2022-08-30T09:19:58.000Z",
+        "url": "https://greasyfork.org/users/952429-chenqy"
+      },
+      {
+        "id": 964245,
+        "name": "heiyantutu",
+        "created_at": "2022-09-28T03:13:22.000Z",
+        "url": "https://greasyfork.org/users/964245-heiyantutu"
+      },
+      {
+        "id": 1350872,
+        "name": "satin520",
+        "created_at": "2024-08-13T07:29:07.000Z",
+        "url": "https://greasyfork.org/users/1350872-satin520"
+      }
+    ],
+    "name": "【JIRA】辅助功能",
+    "description": "复制标题与链接；创建子任务自动填充；新标签页打开需求、任务；计算总工时 自动填写Tempo 日期填写错误提示",
+    "url": "https://greasyfork.org/scripts/452143-jira-%E8%BE%85%E5%8A%A9%E5%8A%9F%E8%83%BD",
+    "code_url": "https://update.greasyfork.org/scripts/452143/%E3%80%90JIRA%E3%80%91%E8%BE%85%E5%8A%A9%E5%8A%9F%E8%83%BD.user.js",
+    "code_size": 24859,
+    "license": "MIT License",
+    "version": "1.0.41",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

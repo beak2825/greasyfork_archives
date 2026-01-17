@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488116,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-23T15:29:04.000Z",
+    "code_updated_at": "2024-02-23T15:29:04.000Z",
+    "namespace": "https://greasyfork.org/users/1265868",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265868,
+        "name": "trollo_boy",
+        "created_at": "2024-02-23T10:53:32.000Z",
+        "url": "https://greasyfork.org/users/1265868-trollo-boy"
+      }
+    ],
+    "name": "MAL Public Score (Manga & Anime lists version)",
+    "description": "Modified version of the last \"MAL Public Score\" which has been enhanced to work with both MyAnimeList (MAL) anime and manga lists",
+    "url": "https://greasyfork.org/scripts/488116-mal-public-score-manga-anime-lists-version",
+    "code_url": "https://update.greasyfork.org/scripts/488116/MAL%20Public%20Score%20%28Manga%20%20Anime%20lists%20version%29.user.js",
+    "code_size": 6561,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

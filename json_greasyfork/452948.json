@@ -1,0 +1,33 @@
+{
+  "id": 452948,
+  "daily_installs": 0,
+  "total_installs": 135,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-13T01:33:44.000Z",
+  "code_updated_at": "2023-11-19T14:00:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 969911,
+      "name": "Smax2k",
+      "created_at": "2022-10-13T01:19:00.000Z",
+      "url": "https://greasyfork.org/users/969911-smax2k"
+    }
+  ],
+  "name": "YouTube Disable Scrollbar",
+  "description": "I don't want Youtube scrollbar!",
+  "url": "https://greasyfork.org/scripts/452948-youtube-disable-scrollbar",
+  "code_url": "https://update.greasyfork.org/scripts/452948/YouTube%20Disable%20Scrollbar.user.js",
+  "code_size": 686,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

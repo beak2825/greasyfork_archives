@@ -1,0 +1,59 @@
+{
+  "id": 437784,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-30T07:20:37.000Z",
+  "code_updated_at": "2021-12-30T07:20:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 820102,
+      "name": "gy1682005",
+      "created_at": "2021-09-29T07:38:15.000Z",
+      "url": "https://greasyfork.org/users/820102-gy1682005",
+      "scripts": [
+        {
+          "id": 433145,
+          "daily_installs": 0,
+          "total_installs": 40,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-29T07:49:30.000Z",
+          "code_updated_at": "2021-09-29T07:58:57.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "爱回收填表助手",
+          "description": "自动填表助手demo",
+          "url": "https://greasyfork.org/scripts/433145-%E7%88%B1%E5%9B%9E%E6%94%B6%E5%A1%AB%E8%A1%A8%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/433145/%E7%88%B1%E5%9B%9E%E6%94%B6%E5%A1%AB%E8%A1%A8%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 8524,
+          "license": null,
+          "version": "210929.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OPC运维中心-定时刷新",
+  "description": "OPC运维中心定时刷新",
+  "url": "https://greasyfork.org/scripts/437784-opc%E8%BF%90%E7%BB%B4%E4%B8%AD%E5%BF%83-%E5%AE%9A%E6%97%B6%E5%88%B7%E6%96%B0",
+  "code_url": "https://update.greasyfork.org/scripts/437784/OPC%E8%BF%90%E7%BB%B4%E4%B8%AD%E5%BF%83-%E5%AE%9A%E6%97%B6%E5%88%B7%E6%96%B0.user.js",
+  "code_size": 946,
+  "license": "none",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

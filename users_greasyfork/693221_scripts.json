@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412665,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-08T01:04:38.000Z",
+    "code_updated_at": "2021-02-05T13:14:23.000Z",
+    "namespace": "add_review",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 693221,
+        "name": "clvin",
+        "created_at": "2020-10-08T00:19:21.000Z",
+        "url": "https://greasyfork.org/users/693221-clvin"
+      }
+    ],
+    "name": "京东加评测视频",
+    "description": "在京东的产品页面上加上评测视频，目前只支持B站视频。",
+    "url": "https://greasyfork.org/scripts/412665-%E4%BA%AC%E4%B8%9C%E5%8A%A0%E8%AF%84%E6%B5%8B%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/412665/%E4%BA%AC%E4%B8%9C%E5%8A%A0%E8%AF%84%E6%B5%8B%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 7040,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

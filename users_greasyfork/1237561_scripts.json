@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482849,
+    "daily_installs": 0,
+    "total_installs": 149,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-22T02:47:19.000Z",
+    "code_updated_at": "2023-12-22T03:13:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1237561,
+        "name": "Cap1taL",
+        "created_at": "2023-12-22T02:42:20.000Z",
+        "url": "https://greasyfork.org/users/1237561-cap1tal"
+      }
+    ],
+    "name": "Luogu Diff Modify",
+    "description": "做题别看难度了哥",
+    "url": "https://greasyfork.org/scripts/482849-luogu-diff-modify",
+    "code_url": "https://update.greasyfork.org/scripts/482849/Luogu%20Diff%20Modify.user.js",
+    "code_size": 2088,
+    "license": "MIT License",
+    "version": "114514",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

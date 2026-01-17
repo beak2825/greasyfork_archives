@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440450,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-22T11:41:59.000Z",
+    "code_updated_at": "2022-02-22T11:41:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 879313,
+        "name": "Syhen_XX",
+        "created_at": "2022-02-22T11:23:59.000Z",
+        "url": "https://greasyfork.org/users/879313-syhen-xx"
+      }
+    ],
+    "name": "浙江农林大学上网脚本",
+    "description": "哼哼哼啊啊啊啊啊啊啊啊啊啊",
+    "url": "https://greasyfork.org/scripts/440450-%E6%B5%99%E6%B1%9F%E5%86%9C%E6%9E%97%E5%A4%A7%E5%AD%A6%E4%B8%8A%E7%BD%91%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/440450/%E6%B5%99%E6%B1%9F%E5%86%9C%E6%9E%97%E5%A4%A7%E5%AD%A6%E4%B8%8A%E7%BD%91%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 993,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

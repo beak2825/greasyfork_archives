@@ -1,0 +1,33 @@
+{
+  "id": 440096,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-15T21:31:56.000Z",
+  "code_updated_at": "2022-02-15T21:31:56.000Z",
+  "namespace": "shshub",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 876975,
+      "name": "mynovelhost",
+      "created_at": "2022-02-15T21:22:20.000Z",
+      "url": "https://greasyfork.org/users/876975-mynovelhost"
+    }
+  ],
+  "name": "SmsHub Normalizer",
+  "description": "NormalizeSmsHub",
+  "url": "https://greasyfork.org/scripts/440096-smshub-normalizer",
+  "code_url": "https://update.greasyfork.org/scripts/440096/SmsHub%20Normalizer.user.js",
+  "code_size": 4326,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

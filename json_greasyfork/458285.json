@@ -1,0 +1,33 @@
+{
+  "id": 458285,
+  "daily_installs": 0,
+  "total_installs": 1266,
+  "fan_score": "35.9",
+  "good_ratings": 4,
+  "ok_ratings": 2,
+  "bad_ratings": 1,
+  "created_at": "2023-01-15T10:18:00.000Z",
+  "code_updated_at": "2023-03-01T17:44:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 990185,
+      "name": "vikiweb",
+      "created_at": "2022-11-30T12:21:58.000Z",
+      "url": "https://greasyfork.org/users/990185-vikiweb"
+    }
+  ],
+  "name": "Dutchycorp Script Coin roll + PTC Support",
+  "description": "Free Dutchycorp rolls",
+  "url": "https://greasyfork.org/scripts/458285-dutchycorp-script-coin-roll-ptc-support",
+  "code_url": "https://update.greasyfork.org/scripts/458285/Dutchycorp%20Script%20Coin%20roll%20%2B%20PTC%20Support.user.js",
+  "code_size": 5533,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

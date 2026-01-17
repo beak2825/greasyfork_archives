@@ -1,0 +1,59 @@
+{
+  "id": 491778,
+  "daily_installs": 2,
+  "total_installs": 2452,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2024-04-06T07:30:40.000Z",
+  "code_updated_at": "2024-04-06T07:30:40.000Z",
+  "namespace": "JonJon565",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1218815,
+      "name": "ElementalX1",
+      "created_at": "2023-11-16T21:39:28.000Z",
+      "url": "https://greasyfork.org/users/1218815-elementalx1",
+      "scripts": [
+        {
+          "id": 491778,
+          "daily_installs": 2,
+          "total_installs": 2452,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2024-04-06T07:30:40.000Z",
+          "code_updated_at": "2024-04-06T07:30:40.000Z",
+          "namespace": "JonJon565",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mouse Line Aimer for zombsroyale.io",
+          "description": "Creates a line that follows the mouse",
+          "url": "https://greasyfork.org/scripts/491778-mouse-line-aimer-for-zombsroyale-io",
+          "code_url": "https://update.greasyfork.org/scripts/491778/Mouse%20Line%20Aimer%20for%20zombsroyaleio.user.js",
+          "code_size": 1744,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mouse Line Aimer for zombsroyale.io",
+  "description": "Creates a line that follows the mouse",
+  "url": "https://greasyfork.org/scripts/491778-mouse-line-aimer-for-zombsroyale-io",
+  "code_url": "https://update.greasyfork.org/scripts/491778/Mouse%20Line%20Aimer%20for%20zombsroyaleio.user.js",
+  "code_size": 1744,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

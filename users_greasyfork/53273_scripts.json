@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484872,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-15T02:55:00.000Z",
+    "code_updated_at": "2024-12-03T02:26:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 53273,
+        "name": "whoami123",
+        "created_at": "2016-07-05T12:44:09.000Z",
+        "url": "https://greasyfork.org/users/53273-whoami123"
+      }
+    ],
+    "name": "隐藏Epoint提醒",
+    "description": "隐藏新点每日提醒",
+    "url": "https://greasyfork.org/scripts/484872-%E9%9A%90%E8%97%8Fepoint%E6%8F%90%E9%86%92",
+    "code_url": "https://update.greasyfork.org/scripts/484872/%E9%9A%90%E8%97%8FEpoint%E6%8F%90%E9%86%92.user.js",
+    "code_size": 924,
+    "license": "MIT License",
+    "version": "2024-12-03",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

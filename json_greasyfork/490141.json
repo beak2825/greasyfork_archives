@@ -1,0 +1,34 @@
+{
+  "id": 490141,
+  "daily_installs": 3,
+  "total_installs": 350,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-18T02:29:07.000Z",
+  "code_updated_at": "2024-10-15T01:02:26.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265194,
+      "name": "루시퍼홍",
+      "created_at": "2024-02-22T04:51:34.000Z",
+      "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D",
+      "scripts": []
+    }
+  ],
+  "name": "[루시퍼홍] 호갱노노 단지 테두리 그리기",
+  "description": "2024. 5. 3. 오후 14:05:18",
+  "url": "https://greasyfork.org/scripts/490141-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%ED%98%B8%EA%B0%B1%EB%85%B8%EB%85%B8-%EB%8B%A8%EC%A7%80-%ED%85%8C%EB%91%90%EB%A6%AC-%EA%B7%B8%EB%A6%AC%EA%B8%B0",
+  "code_url": "https://update.greasyfork.org/scripts/490141/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%ED%98%B8%EA%B0%B1%EB%85%B8%EB%85%B8%20%EB%8B%A8%EC%A7%80%20%ED%85%8C%EB%91%90%EB%A6%AC%20%EA%B7%B8%EB%A6%AC%EA%B8%B0.user.js",
+  "code_size": 18695,
+  "license": null,
+  "version": "1.09",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

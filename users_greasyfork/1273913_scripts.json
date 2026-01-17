@@ -1,0 +1,101 @@
+[
+  {
+    "id": 489705,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-13T08:04:06.000Z",
+    "code_updated_at": "2024-03-13T08:04:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1273913,
+        "name": "wangzhy",
+        "created_at": "2024-03-13T07:58:39.000Z",
+        "url": "https://greasyfork.org/users/1273913-wangzhy"
+      }
+    ],
+    "name": "定时页面滚动",
+    "description": "每隔3秒自动翻页",
+    "url": "https://greasyfork.org/scripts/489705-%E5%AE%9A%E6%97%B6%E9%A1%B5%E9%9D%A2%E6%BB%9A%E5%8A%A8",
+    "code_url": "https://update.greasyfork.org/scripts/489705/%E5%AE%9A%E6%97%B6%E9%A1%B5%E9%9D%A2%E6%BB%9A%E5%8A%A8.user.js",
+    "code_size": 1261,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 489704,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-13T08:02:32.000Z",
+    "code_updated_at": "2024-03-13T08:02:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1273913,
+        "name": "wangzhy",
+        "created_at": "2024-03-13T07:58:39.000Z",
+        "url": "https://greasyfork.org/users/1273913-wangzhy"
+      }
+    ],
+    "name": "定时页面滚动",
+    "description": "每隔3秒自动翻页",
+    "url": "https://greasyfork.org/scripts/489704-%E5%AE%9A%E6%97%B6%E9%A1%B5%E9%9D%A2%E6%BB%9A%E5%8A%A8",
+    "code_url": "https://update.greasyfork.org/scripts/489704/%E5%AE%9A%E6%97%B6%E9%A1%B5%E9%9D%A2%E6%BB%9A%E5%8A%A8.user.js",
+    "code_size": 1261,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 489703,
+    "daily_installs": 0,
+    "total_installs": 185,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-13T08:01:26.000Z",
+    "code_updated_at": "2024-03-14T02:47:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1273913,
+        "name": "wangzhy",
+        "created_at": "2024-03-13T07:58:39.000Z",
+        "url": "https://greasyfork.org/users/1273913-wangzhy"
+      }
+    ],
+    "name": "Linux.do 自动翻页",
+    "description": "每隔3秒自动翻页",
+    "url": "https://greasyfork.org/scripts/489703-linux-do-%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/489703/Linuxdo%20%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5.user.js",
+    "code_size": 1269,
+    "license": "MIT License",
+    "version": "20240314",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

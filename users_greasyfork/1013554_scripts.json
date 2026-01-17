@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458451,
+    "daily_installs": 0,
+    "total_installs": 216,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-01-17T20:15:09.000Z",
+    "code_updated_at": "2023-01-21T01:25:06.000Z",
+    "namespace": "Change ChatGPT Image And Text To Speach Function",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1013554,
+        "name": "kaes-u-paya",
+        "created_at": "2023-01-17T19:37:44.000Z",
+        "url": "https://greasyfork.org/users/1013554-kaes-u-paya"
+      }
+    ],
+    "name": "Change ChatGPT Image And Text To Speech Function",
+    "description": "ChatGPT",
+    "url": "https://greasyfork.org/scripts/458451-change-chatgpt-image-and-text-to-speech-function",
+    "code_url": "https://update.greasyfork.org/scripts/458451/Change%20ChatGPT%20Image%20And%20Text%20To%20Speech%20Function.user.js",
+    "code_size": 9813,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

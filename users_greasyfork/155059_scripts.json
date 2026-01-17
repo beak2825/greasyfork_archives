@@ -1,0 +1,101 @@
+[
+  {
+    "id": 470130,
+    "daily_installs": 3,
+    "total_installs": 2013,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-04T09:15:11.000Z",
+    "code_updated_at": "2023-07-04T09:15:10.000Z",
+    "namespace": "https://github.com/zoosewu/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155059,
+        "name": "Zoosewu",
+        "created_at": "2017-10-05T13:14:20.000Z",
+        "url": "https://greasyfork.org/users/155059-zoosewu"
+      }
+    ],
+    "name": "lurldownloader",
+    "description": "download file in lurl",
+    "url": "https://greasyfork.org/scripts/470130-lurldownloader",
+    "code_url": "https://update.greasyfork.org/scripts/470130/lurldownloader.user.js",
+    "code_size": 1812,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 450744,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-04T13:57:28.000Z",
+    "code_updated_at": "2022-09-05T14:16:22.000Z",
+    "namespace": "https://github.com/zoosewu/PTTChatOnYoutube",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155059,
+        "name": "Zoosewu",
+        "created_at": "2017-10-05T13:14:20.000Z",
+        "url": "https://greasyfork.org/users/155059-zoosewu"
+      }
+    ],
+    "name": "TimelessJewel Simulator Modifier Remover",
+    "description": "TimelessJewel Simulator Remove Modifier",
+    "url": "https://greasyfork.org/scripts/450744-timelessjewel-simulator-modifier-remover",
+    "code_url": "https://update.greasyfork.org/scripts/450744/TimelessJewel%20Simulator%20Modifier%20Remover.user.js",
+    "code_size": 543,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418469,
+    "daily_installs": 0,
+    "total_installs": 7028,
+    "fan_score": "65.7",
+    "good_ratings": 14,
+    "ok_ratings": 2,
+    "bad_ratings": 1,
+    "created_at": "2020-12-10T21:37:33.000Z",
+    "code_updated_at": "2023-12-03T15:41:14.000Z",
+    "namespace": "https://github.com/zoosewu/PTTChatOnYoutube",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155059,
+        "name": "Zoosewu",
+        "created_at": "2017-10-05T13:14:20.000Z",
+        "url": "https://greasyfork.org/users/155059-zoosewu"
+      }
+    ],
+    "name": "pttchatonyoutube",
+    "description": "Connect ptt pushes to youtube chatroom",
+    "url": "https://greasyfork.org/scripts/418469-pttchatonyoutube",
+    "code_url": "https://update.greasyfork.org/scripts/418469/pttchatonyoutube.user.js",
+    "code_size": 464259,
+    "license": "MIT License",
+    "version": "3.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

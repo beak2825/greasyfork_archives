@@ -1,0 +1,59 @@
+{
+  "id": 458065,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-12T00:19:51.000Z",
+  "code_updated_at": "2023-01-22T23:47:57.000Z",
+  "namespace": "https://greasyfork.org/users/1802-wes-pardus",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1802,
+      "name": "Wes@Pardus",
+      "created_at": "2014-05-21T05:37:18.000Z",
+      "url": "https://greasyfork.org/users/1802-wes-pardus",
+      "scripts": [
+        {
+          "id": 2713,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2014-06-21T05:58:49.000Z",
+          "code_updated_at": "2014-10-07T03:03:51.000Z",
+          "namespace": "https://greasyfork.org/users/1802-wes-pardus",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Trader Attack Disabler",
+          "description": "Disables the attack buttons on the building screen.",
+          "url": "https://greasyfork.org/scripts/2713-trader-attack-disabler",
+          "code_url": "https://update.greasyfork.org/scripts/2713/Trader%20Attack%20Disabler.user.js",
+          "code_size": 727,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Empire Outlaw Assistant",
+  "description": "This script will check the Empire's list of Outlaw pilots against your foes list, and will create a list of who you have not foelisted and display it beneath the lookup button for easy selection and foelisting.",
+  "url": "https://greasyfork.org/scripts/458065-empire-outlaw-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/458065/Empire%20Outlaw%20Assistant.user.js",
+  "code_size": 5265,
+  "license": "MIT License",
+  "version": "1.101",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

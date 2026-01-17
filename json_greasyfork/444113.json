@@ -1,0 +1,33 @@
+{
+  "id": 444113,
+  "daily_installs": 0,
+  "total_installs": 174,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-28T00:11:07.000Z",
+  "code_updated_at": "2022-04-28T00:11:07.000Z",
+  "namespace": "https://greasyfork.org/users/858426",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 858426,
+      "name": "Toonidy",
+      "created_at": "2021-12-28T07:56:20.000Z",
+      "url": "https://greasyfork.org/users/858426-toonidy"
+    }
+  ],
+  "name": "Nitro Type - Auto Close Reward Popup",
+  "description": "Closes the Reward Popup automatically on race pages.",
+  "url": "https://greasyfork.org/scripts/444113-nitro-type-auto-close-reward-popup",
+  "code_url": "https://update.greasyfork.org/scripts/444113/Nitro%20Type%20-%20Auto%20Close%20Reward%20Popup.user.js",
+  "code_size": 5137,
+  "license": "MIT License",
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

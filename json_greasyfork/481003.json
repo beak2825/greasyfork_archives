@@ -1,0 +1,59 @@
+{
+  "id": 481003,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-29T07:57:24.000Z",
+  "code_updated_at": "2023-11-29T07:58:47.000Z",
+  "namespace": "https://greasyfork.org/users/1225152",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1225152,
+      "name": "张晃",
+      "created_at": "2023-11-29T07:54:43.000Z",
+      "url": "https://greasyfork.org/users/1225152-%E5%BC%A0%E6%99%83",
+      "scripts": [
+        {
+          "id": 481003,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-29T07:57:24.000Z",
+          "code_updated_at": "2023-11-29T07:58:47.000Z",
+          "namespace": "https://greasyfork.org/users/1225152",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "山西公考网助手",
+          "description": "山西公考网的油猴脚本，用于广告去除、允许复制、来源网址直接点击跳转",
+          "url": "https://greasyfork.org/scripts/481003-%E5%B1%B1%E8%A5%BF%E5%85%AC%E8%80%83%E7%BD%91%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/481003/%E5%B1%B1%E8%A5%BF%E5%85%AC%E8%80%83%E7%BD%91%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 1297,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "山西公考网助手",
+  "description": "山西公考网的油猴脚本，用于广告去除、允许复制、来源网址直接点击跳转",
+  "url": "https://greasyfork.org/scripts/481003-%E5%B1%B1%E8%A5%BF%E5%85%AC%E8%80%83%E7%BD%91%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/481003/%E5%B1%B1%E8%A5%BF%E5%85%AC%E8%80%83%E7%BD%91%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 1297,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

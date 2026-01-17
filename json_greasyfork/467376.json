@@ -1,0 +1,33 @@
+{
+  "id": 467376,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-29T08:16:42.000Z",
+  "code_updated_at": "2023-05-30T08:11:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1086614,
+      "name": "师二帅",
+      "created_at": "2023-05-29T07:55:23.000Z",
+      "url": "https://greasyfork.org/users/1086614-%E5%B8%88%E4%BA%8C%E5%B8%85"
+    }
+  ],
+  "name": "帅连点连点",
+  "description": "独创",
+  "url": "https://greasyfork.org/scripts/467376-%E5%B8%85%E8%BF%9E%E7%82%B9%E8%BF%9E%E7%82%B9",
+  "code_url": "https://update.greasyfork.org/scripts/467376/%E5%B8%85%E8%BF%9E%E7%82%B9%E8%BF%9E%E7%82%B9.user.js",
+  "code_size": 2551,
+  "license": "No License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

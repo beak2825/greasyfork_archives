@@ -1,0 +1,33 @@
+{
+  "id": 420280,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-16T11:26:12.000Z",
+  "code_updated_at": "2021-01-16T13:55:12.000Z",
+  "namespace": "https://greasyfork.org/users/728004",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 728004,
+      "name": "riverstore",
+      "created_at": "2021-01-16T11:23:46.000Z",
+      "url": "https://greasyfork.org/users/728004-riverstore"
+    }
+  ],
+  "name": "vnedu",
+  "description": "Script tự động điền nhận xét cho VNEdu",
+  "url": "https://greasyfork.org/scripts/420280-vnedu",
+  "code_url": "https://update.greasyfork.org/scripts/420280/vnedu.user.js",
+  "code_size": 5302,
+  "license": null,
+  "version": "1.03",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

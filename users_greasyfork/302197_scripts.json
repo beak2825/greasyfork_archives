@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472692,
+    "daily_installs": 1,
+    "total_installs": 518,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-08T03:52:21.000Z",
+    "code_updated_at": "2023-08-19T23:02:38.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/472692-twitch-always-disable-featured-clips-only",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 302197,
+        "name": "Taizun",
+        "created_at": "2019-05-16T01:56:14.000Z",
+        "url": "https://greasyfork.org/users/302197-taizun"
+      }
+    ],
+    "name": "Twitch - Disable empty \"Featured Clips Only\" page",
+    "description": "Automatically toggles \"Featured Clips Only\" off if the clips page doesn't have any featured clips.",
+    "url": "https://greasyfork.org/scripts/472692-twitch-disable-empty-featured-clips-only-page",
+    "code_url": "https://update.greasyfork.org/scripts/472692/Twitch%20-%20Disable%20empty%20%22Featured%20Clips%20Only%22%20page.user.js",
+    "code_size": 2093,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

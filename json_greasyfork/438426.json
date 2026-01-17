@@ -1,0 +1,34 @@
+{
+  "id": 438426,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-12T15:47:00.000Z",
+  "code_updated_at": "2022-01-12T15:47:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 864044,
+      "name": "77585211",
+      "created_at": "2022-01-12T15:31:58.000Z",
+      "url": "https://greasyfork.org/users/864044-77585211",
+      "scripts": []
+    }
+  ],
+  "name": "不学习何以强国",
+  "description": "不学习何以强国，解放双手自动读文章,看视频，做习题。",
+  "url": "https://greasyfork.org/scripts/438426-%E4%B8%8D%E5%AD%A6%E4%B9%A0%E4%BD%95%E4%BB%A5%E5%BC%BA%E5%9B%BD",
+  "code_url": "https://update.greasyfork.org/scripts/438426/%E4%B8%8D%E5%AD%A6%E4%B9%A0%E4%BD%95%E4%BB%A5%E5%BC%BA%E5%9B%BD.user.js",
+  "code_size": 44210,
+  "license": null,
+  "version": "1.8.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

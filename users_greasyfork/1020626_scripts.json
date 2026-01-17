@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483129,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-26T09:16:21.000Z",
+    "code_updated_at": "2023-12-26T09:16:21.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1020626-wszx3394?locale_override=1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1020626,
+        "name": "wszx3394",
+        "created_at": "2023-02-02T13:18:12.000Z",
+        "url": "https://greasyfork.org/users/1020626-wszx3394"
+      }
+    ],
+    "name": "抖音跳过广告-GPT优化",
+    "description": "关闭抖音弹窗登录,跳过抖音广告和直播,观看直播默认原画",
+    "url": "https://greasyfork.org/scripts/483129-%E6%8A%96%E9%9F%B3%E8%B7%B3%E8%BF%87%E5%B9%BF%E5%91%8A-gpt%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/483129/%E6%8A%96%E9%9F%B3%E8%B7%B3%E8%BF%87%E5%B9%BF%E5%91%8A-GPT%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 10658,
+    "license": "wszx3394",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

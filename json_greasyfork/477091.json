@@ -1,0 +1,34 @@
+{
+  "id": 477091,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-10T07:18:44.000Z",
+  "code_updated_at": "2023-10-10T07:20:49.000Z",
+  "namespace": "https://greasyfork.org/users/463031",
+  "support_url": "https://gitlab.com/liulipack/UserScript",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 463031,
+      "name": "Fei Lu",
+      "created_at": "2020-03-20T08:58:59.000Z",
+      "url": "https://greasyfork.org/users/463031-fei-lu",
+      "scripts": []
+    }
+  ],
+  "name": "通用_息屏播放",
+  "description": "让移动设备浏览器支持息屏播放",
+  "url": "https://greasyfork.org/scripts/477091-%E9%80%9A%E7%94%A8-%E6%81%AF%E5%B1%8F%E6%92%AD%E6%94%BE",
+  "code_url": "https://update.greasyfork.org/scripts/477091/%E9%80%9A%E7%94%A8_%E6%81%AF%E5%B1%8F%E6%92%AD%E6%94%BE.user.js",
+  "code_size": 1074,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 453020,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-14T02:48:16.000Z",
+  "code_updated_at": "2024-04-01T02:01:19.000Z",
+  "namespace": "detail.1688.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 970072,
+      "name": "whxnhk",
+      "created_at": "2022-10-13T07:39:02.000Z",
+      "url": "https://greasyfork.org/users/970072-whxnhk",
+      "scripts": []
+    }
+  ],
+  "name": "阿里巴巴SKU图片提取",
+  "description": "阿里巴巴SKU图片批量下载",
+  "url": "https://greasyfork.org/scripts/453020-%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4sku%E5%9B%BE%E7%89%87%E6%8F%90%E5%8F%96",
+  "code_url": "https://update.greasyfork.org/scripts/453020/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4SKU%E5%9B%BE%E7%89%87%E6%8F%90%E5%8F%96.user.js",
+  "code_size": 5220,
+  "license": "MIT License",
+  "version": "0.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

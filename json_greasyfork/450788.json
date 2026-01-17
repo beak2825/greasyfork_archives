@@ -1,0 +1,33 @@
+{
+  "id": 450788,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-05T11:48:03.000Z",
+  "code_updated_at": "2022-09-05T11:48:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 954883,
+      "name": "Jeffreymaomao",
+      "created_at": "2022-09-05T11:35:14.000Z",
+      "url": "https://greasyfork.org/users/954883-jeffreymaomao"
+    }
+  ],
+  "name": "中正開課表格優化",
+  "description": "由於中正大學的開課系統在對時間上過於麻煩，用JavaScript生成課表，用於對照時間",
+  "url": "https://greasyfork.org/scripts/450788-%E4%B8%AD%E6%AD%A3%E9%96%8B%E8%AA%B2%E8%A1%A8%E6%A0%BC%E5%84%AA%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/450788/%E4%B8%AD%E6%AD%A3%E9%96%8B%E8%AA%B2%E8%A1%A8%E6%A0%BC%E5%84%AA%E5%8C%96.user.js",
+  "code_size": 23693,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

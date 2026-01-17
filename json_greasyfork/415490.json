@@ -1,0 +1,34 @@
+{
+  "id": 415490,
+  "daily_installs": 0,
+  "total_installs": 325,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-04T22:18:18.000Z",
+  "code_updated_at": "2020-11-04T22:18:17.000Z",
+  "namespace": "Agar.ix",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 398872,
+      "name": "Юрий Беляев",
+      "created_at": "2019-11-18T00:06:34.000Z",
+      "url": "https://greasyfork.org/users/398872-%D1%8E%D1%80%D0%B8%D0%B9-%D0%B1%D0%B5%D0%BB%D1%8F%D0%B5%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "Agarix",
+  "description": "Custom mod for agar.io",
+  "url": "https://greasyfork.org/scripts/415490-agarix",
+  "code_url": "https://update.greasyfork.org/scripts/415490/Agarix.user.js",
+  "code_size": 687,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

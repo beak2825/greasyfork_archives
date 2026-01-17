@@ -1,0 +1,59 @@
+{
+  "id": 432494,
+  "daily_installs": 1,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-16T09:51:16.000Z",
+  "code_updated_at": "2021-09-17T05:16:35.000Z",
+  "namespace": "Script Runner Pro",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 815982,
+      "name": "Laywolf",
+      "created_at": "2021-09-16T09:47:01.000Z",
+      "url": "https://greasyfork.org/users/815982-laywolf",
+      "scripts": [
+        {
+          "id": 432494,
+          "daily_installs": 1,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-16T09:51:16.000Z",
+          "code_updated_at": "2021-09-17T05:16:35.000Z",
+          "namespace": "Script Runner Pro",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "rpg.kr 편의기능 애드온",
+          "description": "게임 플레이에 필요한 편의기능을 구현한 스크립트입니다.",
+          "url": "https://greasyfork.org/scripts/432494-rpg-kr-%ED%8E%B8%EC%9D%98%EA%B8%B0%EB%8A%A5-%EC%95%A0%EB%93%9C%EC%98%A8",
+          "code_url": "https://update.greasyfork.org/scripts/432494/rpgkr%20%ED%8E%B8%EC%9D%98%EA%B8%B0%EB%8A%A5%20%EC%95%A0%EB%93%9C%EC%98%A8.user.js",
+          "code_size": 4204,
+          "license": null,
+          "version": "0.1.0",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "rpg.kr 편의기능 애드온",
+  "description": "게임 플레이에 필요한 편의기능을 구현한 스크립트입니다.",
+  "url": "https://greasyfork.org/scripts/432494-rpg-kr-%ED%8E%B8%EC%9D%98%EA%B8%B0%EB%8A%A5-%EC%95%A0%EB%93%9C%EC%98%A8",
+  "code_url": "https://update.greasyfork.org/scripts/432494/rpgkr%20%ED%8E%B8%EC%9D%98%EA%B8%B0%EB%8A%A5%20%EC%95%A0%EB%93%9C%EC%98%A8.user.js",
+  "code_size": 4204,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

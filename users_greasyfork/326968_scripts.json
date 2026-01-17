@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456665,
+    "daily_installs": 0,
+    "total_installs": 1894,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-16T08:06:44.000Z",
+    "code_updated_at": "2022-12-25T05:39:44.000Z",
+    "namespace": "lzwi/copyija",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326968,
+        "name": "lzw-723",
+        "created_at": "2019-08-17T11:58:32.000Z",
+        "url": "https://greasyfork.org/users/326968-lzw-723"
+      }
+    ],
+    "name": "copyija",
+    "description": "网页复制限制解除脚本",
+    "url": "https://greasyfork.org/scripts/456665-copyija",
+    "code_url": "https://update.greasyfork.org/scripts/456665/copyija.user.js",
+    "code_size": 2535,
+    "license": "GPL-3",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

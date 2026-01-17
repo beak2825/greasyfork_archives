@@ -1,0 +1,33 @@
+{
+  "id": 468275,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-09T07:26:32.000Z",
+  "code_updated_at": "2023-06-09T07:26:32.000Z",
+  "namespace": "https://greasyfork.org/users/1092876",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1092876,
+      "name": "whalefall001",
+      "created_at": "2023-06-07T02:30:12.000Z",
+      "url": "https://greasyfork.org/users/1092876-whalefall001"
+    }
+  ],
+  "name": "匿名聊天网自动脚本",
+  "description": "ssby匿名聊天网自动脚本",
+  "url": "https://greasyfork.org/scripts/468275-%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9%E7%BD%91%E8%87%AA%E5%8A%A8%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/468275/%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9%E7%BD%91%E8%87%AA%E5%8A%A8%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 5111,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

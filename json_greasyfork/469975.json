@@ -1,0 +1,59 @@
+{
+  "id": 469975,
+  "daily_installs": 0,
+  "total_installs": 509,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-02T12:50:15.000Z",
+  "code_updated_at": "2023-07-02T12:53:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1037467,
+      "name": "xdr630",
+      "created_at": "2023-03-06T11:30:55.000Z",
+      "url": "https://greasyfork.org/users/1037467-xdr630",
+      "scripts": [
+        {
+          "id": 469975,
+          "daily_installs": 0,
+          "total_installs": 509,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-02T12:50:15.000Z",
+          "code_updated_at": "2023-07-02T12:53:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "移除CSDN关注才能阅读文章",
+          "description": "本插件用于移除CSDN关注博主才可阅读博文的限制",
+          "url": "https://greasyfork.org/scripts/469975-%E7%A7%BB%E9%99%A4csdn%E5%85%B3%E6%B3%A8%E6%89%8D%E8%83%BD%E9%98%85%E8%AF%BB%E6%96%87%E7%AB%A0",
+          "code_url": "https://update.greasyfork.org/scripts/469975/%E7%A7%BB%E9%99%A4CSDN%E5%85%B3%E6%B3%A8%E6%89%8D%E8%83%BD%E9%98%85%E8%AF%BB%E6%96%87%E7%AB%A0.user.js",
+          "code_size": 849,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "移除CSDN关注才能阅读文章",
+  "description": "本插件用于移除CSDN关注博主才可阅读博文的限制",
+  "url": "https://greasyfork.org/scripts/469975-%E7%A7%BB%E9%99%A4csdn%E5%85%B3%E6%B3%A8%E6%89%8D%E8%83%BD%E9%98%85%E8%AF%BB%E6%96%87%E7%AB%A0",
+  "code_url": "https://update.greasyfork.org/scripts/469975/%E7%A7%BB%E9%99%A4CSDN%E5%85%B3%E6%B3%A8%E6%89%8D%E8%83%BD%E9%98%85%E8%AF%BB%E6%96%87%E7%AB%A0.user.js",
+  "code_size": 849,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

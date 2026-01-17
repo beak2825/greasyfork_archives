@@ -30,6 +30,39 @@
     "version": "3.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492881,
+    "daily_installs": 1,
+    "total_installs": 450,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-18T23:13:14.000Z",
+    "code_updated_at": "2024-04-23T20:39:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1290063,
+        "name": "verticalfx",
+        "created_at": "2024-04-18T23:11:08.000Z",
+        "url": "https://greasyfork.org/users/1290063-verticalfx"
+      }
+    ],
+    "name": "Roblox Gotham Font Changer",
+    "description": "Change the font on Roblox to Gotham",
+    "url": "https://greasyfork.org/scripts/492881-roblox-gotham-font-changer",
+    "code_url": "https://update.greasyfork.org/scripts/492881/Roblox%20Gotham%20Font%20Changer.user.js",
+    "code_size": 2579,
+    "license": "MIT License",
+    "version": "0.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

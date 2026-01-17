@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452710,
+    "daily_installs": 0,
+    "total_installs": 1155,
+    "fan_score": "24.1",
+    "good_ratings": 2,
+    "ok_ratings": 3,
+    "bad_ratings": 1,
+    "created_at": "2022-10-08T20:45:08.000Z",
+    "code_updated_at": "2022-10-19T21:12:40.000Z",
+    "namespace": "https://github.com/Nxve/AutoMudae",
+    "support_url": "https://github.com/Nxve/AutoMudae/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 967335,
+        "name": "Nxve",
+        "created_at": "2022-10-06T19:21:33.000Z",
+        "url": "https://greasyfork.org/users/967335-nxve"
+      }
+    ],
+    "name": "AutoMudae",
+    "description": "Automates the use of Mudae bot in Discord",
+    "url": "https://greasyfork.org/scripts/452710-automudae",
+    "code_url": "https://update.greasyfork.org/scripts/452710/AutoMudae.user.js",
+    "code_size": 84151,
+    "license": "GNU GPLv3",
+    "version": "0.8.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

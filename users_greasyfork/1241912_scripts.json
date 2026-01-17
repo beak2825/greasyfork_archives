@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483617,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-01T12:43:49.000Z",
+    "code_updated_at": "2024-01-11T10:15:09.000Z",
+    "namespace": "Secret MindTech",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1241912,
+        "name": "Preet Patel",
+        "created_at": "2024-01-01T12:40:35.000Z",
+        "url": "https://greasyfork.org/users/1241912-preet-patel"
+      }
+    ],
+    "name": "Secret MindTech - Personal Use Plugin",
+    "description": "Infinite scroll for job feed. Scroll up and scroll donw buttons. Reveal real number of applicants for a job.",
+    "url": "https://greasyfork.org/scripts/483617-secret-mindtech-personal-use-plugin",
+    "code_url": "https://update.greasyfork.org/scripts/483617/Secret%20MindTech%20-%20Personal%20Use%20Plugin.user.js",
+    "code_size": 4547,
+    "license": null,
+    "version": "0.0.2.20161026195722",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

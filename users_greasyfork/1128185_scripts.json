@@ -1,0 +1,200 @@
+[
+  {
+    "id": 487805,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-20T07:36:07.000Z",
+    "code_updated_at": "2024-02-20T07:36:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128185,
+        "name": "yama can (Yama can)",
+        "created_at": "2023-07-16T08:48:59.000Z",
+        "url": "https://greasyfork.org/users/1128185-yama-can-yama-can"
+      }
+    ],
+    "name": "AC Array Checker",
+    "description": "AtCoderのTaskページにおいて配列の要素の最大値が指定した数より小さい場合に強調します。",
+    "url": "https://greasyfork.org/scripts/487805-ac-array-checker",
+    "code_url": "https://update.greasyfork.org/scripts/487805/AC%20Array%20Checker.user.js",
+    "code_size": 1237,
+    "license": "MIT License",
+    "version": "2024-02-20",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 480928,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-28T08:16:17.000Z",
+    "code_updated_at": "2024-04-07T14:07:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128185,
+        "name": "yama can (Yama can)",
+        "created_at": "2023-07-16T08:48:59.000Z",
+        "url": "https://greasyfork.org/users/1128185-yama-can-yama-can"
+      }
+    ],
+    "name": "AJL Score",
+    "description": "AtCoderの成績表にAJLのScoreを追加します。",
+    "url": "https://greasyfork.org/scripts/480928-ajl-score",
+    "code_url": "https://update.greasyfork.org/scripts/480928/AJL%20Score.user.js",
+    "code_size": 2776,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473804,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-24T11:07:18.000Z",
+    "code_updated_at": "2023-08-24T11:07:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128185,
+        "name": "yama can (Yama can)",
+        "created_at": "2023-07-16T08:48:59.000Z",
+        "url": "https://greasyfork.org/users/1128185-yama-can-yama-can"
+      }
+    ],
+    "name": "Now Week",
+    "description": "Add the color to JPREP's Dashboard.",
+    "url": "https://greasyfork.org/scripts/473804-now-week",
+    "code_url": "https://update.greasyfork.org/scripts/473804/Now%20Week.user.js",
+    "code_size": 988,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473794,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-24T09:00:00.000Z",
+    "code_updated_at": "2023-08-24T08:59:59.000Z",
+    "namespace": "https://atcoder.jp/",
+    "support_url": "https://github.com/magurofly/atcoder-easy-test/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128185,
+        "name": "yama can (Yama can)",
+        "created_at": "2023-07-16T08:48:59.000Z",
+        "url": "https://greasyfork.org/users/1128185-yama-can-yama-can"
+      }
+    ],
+    "name": "AtCoder Easy Test v2 for ACE",
+    "description": "Make testing sample cases easy",
+    "url": "https://greasyfork.org/scripts/473794-atcoder-easy-test-v2-for-ace",
+    "code_url": "https://update.greasyfork.org/scripts/473794/AtCoder%20Easy%20Test%20v2%20for%20ACE.user.js",
+    "code_size": 98832,
+    "license": "MIT License",
+    "version": "2.11.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473790,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-24T08:43:21.000Z",
+    "code_updated_at": "2023-08-24T08:57:24.000Z",
+    "namespace": "http://atcoder.jp/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128185,
+        "name": "yama can (Yama can)",
+        "created_at": "2023-07-16T08:48:59.000Z",
+        "url": "https://greasyfork.org/users/1128185-yama-can-yama-can"
+      }
+    ],
+    "name": "AtCoder Template for ACE Editor",
+    "description": "言語ごとにテンプレートを登録して、貼り付けの手間を減らします",
+    "url": "https://greasyfork.org/scripts/473790-atcoder-template-for-ace-editor",
+    "code_url": "https://update.greasyfork.org/scripts/473790/AtCoder%20Template%20for%20ACE%20Editor.user.js",
+    "code_size": 6452,
+    "license": "CC0 1.0 Universal",
+    "version": "0.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470954,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-16T08:49:53.000Z",
+    "code_updated_at": "2023-07-16T12:34:05.000Z",
+    "namespace": "https://atcoder.jp/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128185,
+        "name": "yama can (Yama can)",
+        "created_at": "2023-07-16T08:48:59.000Z",
+        "url": "https://greasyfork.org/users/1128185-yama-can-yama-can"
+      }
+    ],
+    "name": "AC Iconner",
+    "description": "AtCoderのユーザー名の前にユーザーのアイコンを表示します。",
+    "url": "https://greasyfork.org/scripts/470954-ac-iconner",
+    "code_url": "https://update.greasyfork.org/scripts/470954/AC%20Iconner.user.js",
+    "code_size": 2167,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

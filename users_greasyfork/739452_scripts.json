@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422085,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-21T06:00:17.000Z",
+    "code_updated_at": "2021-02-21T06:00:16.000Z",
+    "namespace": "https://www.reddit.com/user/TheRadiantAxe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739452,
+        "name": "TheRadiantAxe",
+        "created_at": "2021-02-21T05:45:28.000Z",
+        "url": "https://greasyfork.org/users/739452-theradiantaxe"
+      }
+    ],
+    "name": "RedditGifts Timezone Adjuster",
+    "description": "Adjust the \"last pulled\" time to the local time",
+    "url": "https://greasyfork.org/scripts/422085-redditgifts-timezone-adjuster",
+    "code_url": "https://update.greasyfork.org/scripts/422085/RedditGifts%20Timezone%20Adjuster.user.js",
+    "code_size": 2267,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

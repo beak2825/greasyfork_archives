@@ -1,0 +1,33 @@
+{
+  "id": 449159,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-08T12:21:03.000Z",
+  "code_updated_at": "2023-03-03T21:49:52.000Z",
+  "namespace": "https://eksisozluk.com/biri/bagcivan",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 944358,
+      "name": "Tevfik Bagcivan",
+      "created_at": "2022-08-08T12:16:11.000Z",
+      "url": "https://greasyfork.org/users/944358-tevfik-bagcivan"
+    }
+  ],
+  "name": "enrtyNo",
+  "description": "ekşi sözlük entrylerine sıra numarası verme aracı",
+  "url": "https://greasyfork.org/scripts/449159-enrtyno",
+  "code_url": "https://update.greasyfork.org/scripts/449159/enrtyNo.user.js",
+  "code_size": 4246,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

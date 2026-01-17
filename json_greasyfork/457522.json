@@ -1,0 +1,59 @@
+{
+  "id": 457522,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-02T21:49:08.000Z",
+  "code_updated_at": "2023-01-02T21:49:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1003704,
+      "name": "Curtis Butler",
+      "created_at": "2022-12-28T03:51:52.000Z",
+      "url": "https://greasyfork.org/users/1003704-curtis-butler",
+      "scripts": [
+        {
+          "id": 457522,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-02T21:49:08.000Z",
+          "code_updated_at": "2023-01-02T21:49:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Crunchyroll Light Theme",
+          "description": "Crunchyroll light theme script because there's no official light theme. This is also my first public script.",
+          "url": "https://greasyfork.org/scripts/457522-crunchyroll-light-theme",
+          "code_url": "https://update.greasyfork.org/scripts/457522/Crunchyroll%20Light%20Theme.user.js",
+          "code_size": 2658,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Crunchyroll Light Theme",
+  "description": "Crunchyroll light theme script because there's no official light theme. This is also my first public script.",
+  "url": "https://greasyfork.org/scripts/457522-crunchyroll-light-theme",
+  "code_url": "https://update.greasyfork.org/scripts/457522/Crunchyroll%20Light%20Theme.user.js",
+  "code_size": 2658,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

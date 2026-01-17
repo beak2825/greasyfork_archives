@@ -1,0 +1,34 @@
+{
+  "id": 474755,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-07T12:43:29.000Z",
+  "code_updated_at": "2023-09-07T12:43:29.000Z",
+  "namespace": "mafia.maxmed",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1154608,
+      "name": "SethSolutions",
+      "created_at": "2023-08-19T04:24:09.000Z",
+      "url": "https://greasyfork.org/users/1154608-sethsolutions",
+      "scripts": []
+    }
+  ],
+  "name": "Waller Waller",
+  "description": "Waller walla walle wellerman wally wolla well well wall woll walter..",
+  "url": "https://greasyfork.org/scripts/474755-waller-waller",
+  "code_url": "https://update.greasyfork.org/scripts/474755/Waller%20Waller.user.js",
+  "code_size": 51857,
+  "license": "MIT License",
+  "version": "3.8.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

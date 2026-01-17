@@ -1,0 +1,59 @@
+{
+  "id": 467497,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-30T14:02:44.000Z",
+  "code_updated_at": "2023-05-30T14:02:44.000Z",
+  "namespace": "http://pj.bit.edu.cn/pjxt2.0/*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1060181,
+      "name": "charles-hsuz",
+      "created_at": "2023-04-14T15:32:11.000Z",
+      "url": "https://greasyfork.org/users/1060181-charles-hsuz",
+      "scripts": [
+        {
+          "id": 467497,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-30T14:02:44.000Z",
+          "code_updated_at": "2023-05-30T14:02:44.000Z",
+          "namespace": "http://pj.bit.edu.cn/pjxt2.0/*",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动评教脚本",
+          "description": "针对BIT的自动评教脚本",
+          "url": "https://greasyfork.org/scripts/467497-%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/467497/%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 947,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动评教脚本",
+  "description": "针对BIT的自动评教脚本",
+  "url": "https://greasyfork.org/scripts/467497-%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/467497/%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 947,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

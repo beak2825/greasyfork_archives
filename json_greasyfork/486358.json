@@ -1,0 +1,33 @@
+{
+  "id": 486358,
+  "daily_installs": 1,
+  "total_installs": 3774,
+  "fan_score": "46.3",
+  "good_ratings": 4,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-02-03T06:22:58.000Z",
+  "code_updated_at": "2024-02-09T02:53:30.000Z",
+  "namespace": "Bilibili直播免登录",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1256718,
+      "name": "js216",
+      "created_at": "2024-02-03T06:14:35.000Z",
+      "url": "https://greasyfork.org/users/1256718-js216"
+    }
+  ],
+  "name": "Bilibili直播免登录",
+  "description": "避免未登录状态下在B站看直播时跳转到404页面",
+  "url": "https://greasyfork.org/scripts/486358-bilibili%E7%9B%B4%E6%92%AD%E5%85%8D%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/486358/Bilibili%E7%9B%B4%E6%92%AD%E5%85%8D%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 2014,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

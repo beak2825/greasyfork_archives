@@ -30,6 +30,105 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 494516,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-09T18:16:03.000Z",
+    "code_updated_at": "2024-05-09T18:18:10.000Z",
+    "namespace": "https://greasyfork.org/users/30602",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30602,
+        "name": "Jakieś Imię",
+        "created_at": "2016-02-16T20:46:09.000Z",
+        "url": "https://greasyfork.org/users/30602-jakie%C5%9B-imi%C4%99"
+      }
+    ],
+    "name": "Hejto - Next notification",
+    "description": "A faster way to read your notifications!",
+    "url": "https://greasyfork.org/scripts/494516-hejto-next-notification",
+    "code_url": "https://update.greasyfork.org/scripts/494516/Hejto%20-%20Next%20notification.user.js",
+    "code_size": 2755,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438853,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-20T06:21:32.000Z",
+    "code_updated_at": "2022-02-23T08:55:15.000Z",
+    "namespace": "calamarihelper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30602,
+        "name": "Jakieś Imię",
+        "created_at": "2016-02-16T20:46:09.000Z",
+        "url": "https://greasyfork.org/users/30602-jakie%C5%9B-imi%C4%99"
+      }
+    ],
+    "name": "Calamari helper",
+    "description": "Adds a description to all events.",
+    "url": "https://greasyfork.org/scripts/438853-calamari-helper",
+    "code_url": "https://update.greasyfork.org/scripts/438853/Calamari%20helper.user.js",
+    "code_size": 2801,
+    "license": "MIT License",
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 418550,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-12T12:34:36.000Z",
+    "code_updated_at": "2020-12-12T12:34:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30602,
+        "name": "Jakieś Imię",
+        "created_at": "2016-02-16T20:46:09.000Z",
+        "url": "https://greasyfork.org/users/30602-jakie%C5%9B-imi%C4%99"
+      }
+    ],
+    "name": "Wykop Del Comments",
+    "description": "Delete old comments on wykop.pl",
+    "url": "https://greasyfork.org/scripts/418550-wykop-del-comments",
+    "code_url": "https://update.greasyfork.org/scripts/418550/Wykop%20Del%20Comments.user.js",
+    "code_size": 2999,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

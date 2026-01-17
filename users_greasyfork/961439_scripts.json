@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451671,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-20T05:43:21.000Z",
+    "code_updated_at": "2022-09-20T08:44:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 961439,
+        "name": "xinyu deng",
+        "created_at": "2022-09-20T05:40:22.000Z",
+        "url": "https://greasyfork.org/users/961439-xinyu-deng"
+      }
+    ],
+    "name": "out discord",
+    "description": "此脚本退出dc登录",
+    "url": "https://greasyfork.org/scripts/451671-out-discord",
+    "code_url": "https://update.greasyfork.org/scripts/451671/out%20discord.user.js",
+    "code_size": 477,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 487216,
+  "daily_installs": 0,
+  "total_installs": 72,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-13T07:38:16.000Z",
+  "code_updated_at": "2024-03-07T05:14:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1260637,
+      "name": "donobon",
+      "created_at": "2024-02-13T06:36:58.000Z",
+      "url": "https://greasyfork.org/users/1260637-donobon",
+      "scripts": [
+        {
+          "id": 487216,
+          "daily_installs": 0,
+          "total_installs": 72,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-13T07:38:16.000Z",
+          "code_updated_at": "2024-03-07T05:14:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto Clicker for Bitcoin private keys / wallets on privatekeys.app",
+          "description": "Simple script that clicks the random page button until it finds active wallets on the body of the site then stops.",
+          "url": "https://greasyfork.org/scripts/487216-auto-clicker-for-bitcoin-private-keys-wallets-on-privatekeys-app",
+          "code_url": "https://update.greasyfork.org/scripts/487216/Auto%20Clicker%20for%20Bitcoin%20private%20keys%20%20wallets%20on%20privatekeysapp.user.js",
+          "code_size": 2636,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto Clicker for Bitcoin private keys / wallets on privatekeys.app",
+  "description": "Simple script that clicks the random page button until it finds active wallets on the body of the site then stops.",
+  "url": "https://greasyfork.org/scripts/487216-auto-clicker-for-bitcoin-private-keys-wallets-on-privatekeys-app",
+  "code_url": "https://update.greasyfork.org/scripts/487216/Auto%20Clicker%20for%20Bitcoin%20private%20keys%20%20wallets%20on%20privatekeysapp.user.js",
+  "code_size": 2636,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

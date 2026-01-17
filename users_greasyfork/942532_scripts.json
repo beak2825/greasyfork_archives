@@ -1,0 +1,68 @@
+[
+  {
+    "id": 451615,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-19T06:15:24.000Z",
+    "code_updated_at": "2022-09-19T06:15:23.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/942532-beer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942532,
+        "name": "beer",
+        "created_at": "2022-08-03T04:27:32.000Z",
+        "url": "https://greasyfork.org/users/942532-beer"
+      }
+    ],
+    "name": "Mteam VIP Faker",
+    "description": "仅供娱乐，请勿当真.",
+    "url": "https://greasyfork.org/scripts/451615-mteam-vip-faker",
+    "code_url": "https://update.greasyfork.org/scripts/451615/Mteam%20VIP%20Faker.user.js",
+    "code_size": 1253,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451454,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-16T01:18:37.000Z",
+    "code_updated_at": "2022-11-27T01:07:45.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/942532-beer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942532,
+        "name": "beer",
+        "created_at": "2022-08-03T04:27:32.000Z",
+        "url": "https://greasyfork.org/users/942532-beer"
+      }
+    ],
+    "name": "Azusa Torrent Helper",
+    "description": "Assist with checking torrents for Azusa.",
+    "url": "https://greasyfork.org/scripts/451454-azusa-torrent-helper",
+    "code_url": "https://update.greasyfork.org/scripts/451454/Azusa%20Torrent%20Helper.user.js",
+    "code_size": 49608,
+    "license": "MIT License",
+    "version": "0.1.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 433909,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-15T05:24:28.000Z",
+  "code_updated_at": "2021-11-04T00:51:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 825322,
+      "name": "623262832@qq.com",
+      "created_at": "2021-10-15T05:17:36.000Z",
+      "url": "https://greasyfork.org/users/825322-623262832-qq-com"
+    }
+  ],
+  "name": "网页广告链接提取ajax",
+  "description": "提取网页广告链接",
+  "url": "https://greasyfork.org/scripts/433909-%E7%BD%91%E9%A1%B5%E5%B9%BF%E5%91%8A%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96ajax",
+  "code_url": "https://update.greasyfork.org/scripts/433909/%E7%BD%91%E9%A1%B5%E5%B9%BF%E5%91%8A%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96ajax.user.js",
+  "code_size": 9828,
+  "license": null,
+  "version": "1.70",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

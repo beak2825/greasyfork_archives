@@ -1,0 +1,68 @@
+[
+  {
+    "id": 490305,
+    "daily_installs": 0,
+    "total_installs": 102,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-03-20T02:21:13.000Z",
+    "code_updated_at": "2024-03-20T02:21:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1237259,
+        "name": "learnnn",
+        "created_at": "2023-12-21T10:20:31.000Z",
+        "url": "https://greasyfork.org/users/1237259-learnnn"
+      }
+    ],
+    "name": "无图模式",
+    "description": "无图模式一键切换显示或者隐藏模式，方便摸鱼",
+    "url": "https://greasyfork.org/scripts/490305-%E6%97%A0%E5%9B%BE%E6%A8%A1%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/490305/%E6%97%A0%E5%9B%BE%E6%A8%A1%E5%BC%8F.user.js",
+    "code_size": 1611,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482844,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-22T01:23:17.000Z",
+    "code_updated_at": "2023-12-27T04:13:16.000Z",
+    "namespace": "http://your.namespace/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1237259,
+        "name": "learnnn",
+        "created_at": "2023-12-21T10:20:31.000Z",
+        "url": "https://greasyfork.org/users/1237259-learnnn"
+      }
+    ],
+    "name": "美元转人民币",
+    "description": "在网页中识别美元金额，并在后面添加相应的人民币金额",
+    "url": "https://greasyfork.org/scripts/482844-%E7%BE%8E%E5%85%83%E8%BD%AC%E4%BA%BA%E6%B0%91%E5%B8%81",
+    "code_url": "https://update.greasyfork.org/scripts/482844/%E7%BE%8E%E5%85%83%E8%BD%AC%E4%BA%BA%E6%B0%91%E5%B8%81.user.js",
+    "code_size": 6975,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

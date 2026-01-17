@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421906,
+    "daily_installs": 0,
+    "total_installs": 3438,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-17T21:21:56.000Z",
+    "code_updated_at": "2021-02-17T21:21:56.000Z",
+    "namespace": "https://bitbucket.org/antonolsson91/nexus-mods-stardew-valley-improved-ux/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 738379,
+        "name": "Eagle Enterprises",
+        "created_at": "2021-02-17T21:16:52.000Z",
+        "url": "https://greasyfork.org/users/738379-eagle-enterprises"
+      }
+    ],
+    "name": "Nexus Mods - Stardew Valley - Download Mod Faster - Improved UX",
+    "description": "Improves the user experience for nexusmods.com visitors by adding Insta-DL buttons in various places like |1) categories mod tiles |2) mod description/file page",
+    "url": "https://greasyfork.org/scripts/421906-nexus-mods-stardew-valley-download-mod-faster-improved-ux",
+    "code_url": "https://update.greasyfork.org/scripts/421906/Nexus%20Mods%20-%20Stardew%20Valley%20-%20Download%20Mod%20Faster%20-%20Improved%20UX.user.js",
+    "code_size": 10308,
+    "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 469973,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-02T11:44:14.000Z",
+  "code_updated_at": "2023-07-02T11:42:04.000Z",
+  "namespace": "https://box3.codemao.cn/u/alanbest",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 942818,
+      "name": "function()",
+      "created_at": "2022-08-04T02:02:28.000Z",
+      "url": "https://greasyfork.org/users/942818-function",
+      "scripts": []
+    }
+  ],
+  "name": "Box3++ 2",
+  "description": "Box3++",
+  "url": "https://greasyfork.org/scripts/469973-box3-2",
+  "code_url": "https://update.greasyfork.org/scripts/469973/Box3%2B%2B%202.user.js",
+  "code_size": 73628,
+  "license": "MIT License",
+  "version": "0.8.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

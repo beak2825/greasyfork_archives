@@ -1,0 +1,34 @@
+{
+  "id": 443085,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-09T22:53:22.000Z",
+  "code_updated_at": "2022-04-09T22:53:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 681070,
+      "name": "Péter Csala",
+      "created_at": "2020-08-20T02:58:07.000Z",
+      "url": "https://greasyfork.org/users/681070-p%C3%A9ter-csala",
+      "scripts": []
+    }
+  ],
+  "name": "WK Dashboard Community Notifications",
+  "description": "Bring the community notifications to wanikani.com",
+  "url": "https://greasyfork.org/scripts/443085-wk-dashboard-community-notifications",
+  "code_url": "https://update.greasyfork.org/scripts/443085/WK%20Dashboard%20Community%20Notifications.user.js",
+  "code_size": 2044,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

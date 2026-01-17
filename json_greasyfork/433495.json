@@ -1,0 +1,33 @@
+{
+  "id": 433495,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-06T14:47:13.000Z",
+  "code_updated_at": "2021-10-06T14:47:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 802168,
+      "name": "hackersky109",
+      "created_at": "2021-08-08T12:38:58.000Z",
+      "url": "https://greasyfork.org/users/802168-hackersky109"
+    }
+  ],
+  "name": "Shopee conversations UI Hider For YYT",
+  "description": "This scripts is used for hide the some UI of shopee conversations.",
+  "url": "https://greasyfork.org/scripts/433495-shopee-conversations-ui-hider-for-yyt",
+  "code_url": "https://update.greasyfork.org/scripts/433495/Shopee%20conversations%20UI%20Hider%20For%20YYT.user.js",
+  "code_size": 3935,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 427847,
+  "daily_installs": 1,
+  "total_installs": 111,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-12T15:25:10.000Z",
+  "code_updated_at": "2021-06-12T15:25:10.000Z",
+  "namespace": "https://greasyfork.org/users/782600",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 782600,
+      "name": "WFGFW",
+      "created_at": "2021-06-12T10:02:42.000Z",
+      "url": "https://greasyfork.org/users/782600-wfgfw"
+    }
+  ],
+  "name": "CORS-via-GM",
+  "description": "CORS via Greasemonkey/Tampermonkey",
+  "url": "https://greasyfork.org/scripts/427847-cors-via-gm",
+  "code_url": "https://update.greasyfork.org/scripts/427847/CORS-via-GM.user.js",
+  "code_size": 2184,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443419,
+    "daily_installs": 0,
+    "total_installs": 218,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-15T14:43:17.000Z",
+    "code_updated_at": "2022-09-30T14:19:56.000Z",
+    "namespace": "https://github.com/NicerWang",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 885965,
+        "name": "NicerWang",
+        "created_at": "2022-03-11T14:11:17.000Z",
+        "url": "https://greasyfork.org/users/885965-nicerwang"
+      }
+    ],
+    "name": "力扣（Leetcode-cn）清理大师",
+    "description": "本脚本旨在消除力扣刷题界面的无用信息，并仿照OJ对力扣进行改动。",
+    "url": "https://greasyfork.org/scripts/443419-%E5%8A%9B%E6%89%A3-leetcode-cn-%E6%B8%85%E7%90%86%E5%A4%A7%E5%B8%88",
+    "code_url": "https://update.greasyfork.org/scripts/443419/%E5%8A%9B%E6%89%A3%EF%BC%88Leetcode-cn%EF%BC%89%E6%B8%85%E7%90%86%E5%A4%A7%E5%B8%88.user.js",
+    "code_size": 2881,
+    "license": null,
+    "version": "0.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

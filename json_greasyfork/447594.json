@@ -1,0 +1,33 @@
+{
+  "id": 447594,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-08T08:55:52.000Z",
+  "code_updated_at": "2022-09-06T07:18:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 812086,
+      "name": "ootruieo",
+      "created_at": "2021-09-04T08:02:22.000Z",
+      "url": "https://greasyfork.org/users/812086-ootruieo"
+    }
+  ],
+  "name": "猫猫保种组工作统计",
+  "description": "Seeds statistics for Pterclub",
+  "url": "https://greasyfork.org/scripts/447594-%E7%8C%AB%E7%8C%AB%E4%BF%9D%E7%A7%8D%E7%BB%84%E5%B7%A5%E4%BD%9C%E7%BB%9F%E8%AE%A1",
+  "code_url": "https://update.greasyfork.org/scripts/447594/%E7%8C%AB%E7%8C%AB%E4%BF%9D%E7%A7%8D%E7%BB%84%E5%B7%A5%E4%BD%9C%E7%BB%9F%E8%AE%A1.user.js",
+  "code_size": 7651,
+  "license": "GNU GPLv3",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

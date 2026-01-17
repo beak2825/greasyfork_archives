@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435223,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-08T20:28:32.000Z",
+    "code_updated_at": "2021-11-08T20:28:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 833722,
+        "name": "CharlesAPeterson",
+        "created_at": "2021-11-08T20:19:25.000Z",
+        "url": "https://greasyfork.org/users/833722-charlesapeterson"
+      }
+    ],
+    "name": "SIMPLE AUTOCLICKER FOR COOKIE CLICKER",
+    "description": "Simple autoclicker for cookie clicker, just add and go to cookie clicker.",
+    "url": "https://greasyfork.org/scripts/435223-simple-autoclicker-for-cookie-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/435223/SIMPLE%20AUTOCLICKER%20FOR%20COOKIE%20CLICKER.user.js",
+    "code_size": 555,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

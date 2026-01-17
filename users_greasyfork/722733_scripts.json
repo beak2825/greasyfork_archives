@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419433,
+    "daily_installs": 0,
+    "total_installs": 275,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-31T09:17:45.000Z",
+    "code_updated_at": "2020-12-31T09:17:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 722733,
+        "name": "Slopr",
+        "created_at": "2020-12-31T08:48:33.000Z",
+        "url": "https://greasyfork.org/users/722733-slopr"
+      }
+    ],
+    "name": "慕课网视频暂停广告隐藏",
+    "description": "www.icourse163.org 视频暂停的时候隐藏烦人的广告。",
+    "url": "https://greasyfork.org/scripts/419433-%E6%85%95%E8%AF%BE%E7%BD%91%E8%A7%86%E9%A2%91%E6%9A%82%E5%81%9C%E5%B9%BF%E5%91%8A%E9%9A%90%E8%97%8F",
+    "code_url": "https://update.greasyfork.org/scripts/419433/%E6%85%95%E8%AF%BE%E7%BD%91%E8%A7%86%E9%A2%91%E6%9A%82%E5%81%9C%E5%B9%BF%E5%91%8A%E9%9A%90%E8%97%8F.user.js",
+    "code_size": 971,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

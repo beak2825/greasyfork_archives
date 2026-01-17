@@ -1,0 +1,35 @@
+[
+  {
+    "id": 493898,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-01T11:02:34.000Z",
+    "code_updated_at": "2025-04-05T05:21:32.000Z",
+    "namespace": "mailto:mastertohno@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1295565,
+        "name": "Mastah Shiki Tohno",
+        "created_at": "2024-05-01T10:51:40.000Z",
+        "url": "https://greasyfork.org/users/1295565-mastah-shiki-tohno"
+      }
+    ],
+    "name": "Remove Channels from WhatsApp Web (Scoped + Safe)",
+    "description": "Removes the Channels button from the WhatsApp Web interface, scoped to header only",
+    "url": "https://greasyfork.org/scripts/493898-remove-channels-from-whatsapp-web-scoped-safe",
+    "code_url": "https://update.greasyfork.org/scripts/493898/Remove%20Channels%20from%20WhatsApp%20Web%20%28Scoped%20%2B%20Safe%29.user.js",
+    "code_size": 1781,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

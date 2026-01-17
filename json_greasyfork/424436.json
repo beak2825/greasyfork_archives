@@ -1,0 +1,34 @@
+{
+  "id": 424436,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-03T15:40:07.000Z",
+  "code_updated_at": "2021-04-04T01:17:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 754481,
+      "name": "Blurryface",
+      "created_at": "2021-04-03T12:03:24.000Z",
+      "url": "https://greasyfork.org/users/754481-blurryface",
+      "scripts": []
+    }
+  ],
+  "name": "中国语文自动刷新",
+  "description": "处于学习资料界面时，5-11分钟自动刷新一次",
+  "url": "https://greasyfork.org/scripts/424436-%E4%B8%AD%E5%9B%BD%E8%AF%AD%E6%96%87%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0",
+  "code_url": "https://update.greasyfork.org/scripts/424436/%E4%B8%AD%E5%9B%BD%E8%AF%AD%E6%96%87%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0.user.js",
+  "code_size": 676,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

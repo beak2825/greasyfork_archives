@@ -1,0 +1,59 @@
+{
+  "id": 425263,
+  "daily_installs": 0,
+  "total_installs": 2856,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-20T01:20:45.000Z",
+  "code_updated_at": "2021-04-20T01:31:33.000Z",
+  "namespace": "Chen Yankai",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 762352,
+      "name": "cykcykcykcyk",
+      "created_at": "2021-04-20T01:02:38.000Z",
+      "url": "https://greasyfork.org/users/762352-cykcykcykcyk",
+      "scripts": [
+        {
+          "id": 425263,
+          "daily_installs": 0,
+          "total_installs": 2856,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-20T01:20:45.000Z",
+          "code_updated_at": "2021-04-20T01:31:33.000Z",
+          "namespace": "Chen Yankai",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "允许复制网页内容",
+          "description": "解决大部分网站复制弹窗等等阻止我们复制的功能",
+          "url": "https://greasyfork.org/scripts/425263-%E5%85%81%E8%AE%B8%E5%A4%8D%E5%88%B6%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9",
+          "code_url": "https://update.greasyfork.org/scripts/425263/%E5%85%81%E8%AE%B8%E5%A4%8D%E5%88%B6%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9.user.js",
+          "code_size": 6076,
+          "license": null,
+          "version": "0.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "允许复制网页内容",
+  "description": "解决大部分网站复制弹窗等等阻止我们复制的功能",
+  "url": "https://greasyfork.org/scripts/425263-%E5%85%81%E8%AE%B8%E5%A4%8D%E5%88%B6%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9",
+  "code_url": "https://update.greasyfork.org/scripts/425263/%E5%85%81%E8%AE%B8%E5%A4%8D%E5%88%B6%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9.user.js",
+  "code_size": 6076,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

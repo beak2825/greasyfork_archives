@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433163,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-29T13:45:38.000Z",
+    "code_updated_at": "2024-01-12T09:48:26.000Z",
+    "namespace": "TGU_WL",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 820213,
+        "name": "Drzad",
+        "created_at": "2021-09-29T13:41:22.000Z",
+        "url": "https://greasyfork.org/users/820213-drzad"
+      }
+    ],
+    "name": "TGU物理实验中心课程筛选",
+    "description": "快速找到可以选的实验课",
+    "url": "https://greasyfork.org/scripts/433163-tgu%E7%89%A9%E7%90%86%E5%AE%9E%E9%AA%8C%E4%B8%AD%E5%BF%83%E8%AF%BE%E7%A8%8B%E7%AD%9B%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/433163/TGU%E7%89%A9%E7%90%86%E5%AE%9E%E9%AA%8C%E4%B8%AD%E5%BF%83%E8%AF%BE%E7%A8%8B%E7%AD%9B%E9%80%89.user.js",
+    "code_size": 2959,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

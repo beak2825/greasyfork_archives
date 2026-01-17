@@ -1,0 +1,34 @@
+{
+  "id": 413056,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-13T08:03:53.000Z",
+  "code_updated_at": "2024-09-10T14:39:40.000Z",
+  "namespace": "https://github.com/yegorgunko/shikme-tools",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 694598,
+      "name": "Phobos mx",
+      "created_at": "2020-10-13T06:25:44.000Z",
+      "url": "https://greasyfork.org/users/694598-phobos-mx",
+      "scripts": []
+    }
+  ],
+  "name": "customBackground",
+  "description": "Set custom chat background",
+  "url": "https://greasyfork.org/scripts/413056-custombackground",
+  "code_url": "https://update.greasyfork.org/scripts/413056/customBackground.user.js",
+  "code_size": 8826,
+  "license": null,
+  "version": "0.21",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

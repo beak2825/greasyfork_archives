@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480125,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-17T14:24:49.000Z",
+    "code_updated_at": "2023-11-17T14:24:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1110582,
+        "name": "lolucas",
+        "created_at": "2023-06-24T05:54:45.000Z",
+        "url": "https://greasyfork.org/users/1110582-lolucas"
+      }
+    ],
+    "name": "F11全屏失败修复工具+全屏自定义",
+    "description": "make F11 available",
+    "url": "https://greasyfork.org/scripts/480125-f11%E5%85%A8%E5%B1%8F%E5%A4%B1%E8%B4%A5%E4%BF%AE%E5%A4%8D%E5%B7%A5%E5%85%B7-%E5%85%A8%E5%B1%8F%E8%87%AA%E5%AE%9A%E4%B9%89",
+    "code_url": "https://update.greasyfork.org/scripts/480125/F11%E5%85%A8%E5%B1%8F%E5%A4%B1%E8%B4%A5%E4%BF%AE%E5%A4%8D%E5%B7%A5%E5%85%B7%2B%E5%85%A8%E5%B1%8F%E8%87%AA%E5%AE%9A%E4%B9%89.user.js",
+    "code_size": 1978,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

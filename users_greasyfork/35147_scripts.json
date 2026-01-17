@@ -1,0 +1,167 @@
+[
+  {
+    "id": 481015,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-29T11:29:14.000Z",
+    "code_updated_at": "2024-01-23T09:38:43.000Z",
+    "namespace": "http://your.namespace.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 35147,
+        "name": "LynXHimself",
+        "created_at": "2016-03-25T14:05:49.000Z",
+        "url": "https://greasyfork.org/users/35147-lynxhimself"
+      }
+    ],
+    "name": "Link Replacer - Multiple Elements",
+    "description": "Replace a specific string in links on a webpage based on multiple text elements",
+    "url": "https://greasyfork.org/scripts/481015-link-replacer-multiple-elements",
+    "code_url": "https://update.greasyfork.org/scripts/481015/Link%20Replacer%20-%20Multiple%20Elements.user.js",
+    "code_size": 2714,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478400,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-27T11:03:28.000Z",
+    "code_updated_at": "2024-10-31T10:54:03.000Z",
+    "namespace": "http://your-namespace.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 35147,
+        "name": "LynXHimself",
+        "created_at": "2016-03-25T14:05:49.000Z",
+        "url": "https://greasyfork.org/users/35147-lynxhimself"
+      }
+    ],
+    "name": "Adjust Iframe Height on emploi-public",
+    "description": "Adjust the height of the iframe in the Bootstrap modal",
+    "url": "https://greasyfork.org/scripts/478400-adjust-iframe-height-on-emploi-public",
+    "code_url": "https://update.greasyfork.org/scripts/478400/Adjust%20Iframe%20Height%20on%20emploi-public.user.js",
+    "code_size": 1208,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478397,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-27T10:37:50.000Z",
+    "code_updated_at": "2025-05-26T19:24:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 35147,
+        "name": "LynXHimself",
+        "created_at": "2016-03-25T14:05:49.000Z",
+        "url": "https://greasyfork.org/users/35147-lynxhimself"
+      }
+    ],
+    "name": "Percentage calculator for emploi-public",
+    "description": "Correctly calculates and displays percentage and remaining count overlay (2 lines)",
+    "url": "https://greasyfork.org/scripts/478397-percentage-calculator-for-emploi-public",
+    "code_url": "https://update.greasyfork.org/scripts/478397/Percentage%20calculator%20for%20emploi-public.user.js",
+    "code_size": 4503,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478019,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-22T18:47:06.000Z",
+    "code_updated_at": "2025-05-26T18:35:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 35147,
+        "name": "LynXHimself",
+        "created_at": "2016-03-25T14:05:49.000Z",
+        "url": "https://greasyfork.org/users/35147-lynxhimself"
+      }
+    ],
+    "name": "Date Extractor and Overlay",
+    "description": "Extract data from Emploi Public Backoffice and show it in overlay",
+    "url": "https://greasyfork.org/scripts/478019-date-extractor-and-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/478019/Date%20Extractor%20and%20Overlay.user.js",
+    "code_size": 4781,
+    "license": null,
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 476345,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-29T16:12:16.000Z",
+    "code_updated_at": "2023-09-29T16:13:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 35147,
+        "name": "LynXHimself",
+        "created_at": "2016-03-25T14:05:49.000Z",
+        "url": "https://greasyfork.org/users/35147-lynxhimself"
+      }
+    ],
+    "name": "JukeHost songs links extractor",
+    "description": "Extract JukeHost songs links in one click",
+    "url": "https://greasyfork.org/scripts/476345-jukehost-songs-links-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/476345/JukeHost%20songs%20links%20extractor.user.js",
+    "code_size": 1348,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

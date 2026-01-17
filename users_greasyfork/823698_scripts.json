@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433663,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-10T11:13:04.000Z",
+    "code_updated_at": "2022-01-15T06:41:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 823698,
+        "name": "xiaohedadao",
+        "created_at": "2021-10-10T11:08:34.000Z",
+        "url": "https://greasyfork.org/users/823698-xiaohedadao"
+      }
+    ],
+    "name": "Town Star Auto-Sell",
+    "description": "Automatically sell crafted items.",
+    "url": "https://greasyfork.org/scripts/433663-town-star-auto-sell",
+    "code_url": "https://update.greasyfork.org/scripts/433663/Town%20Star%20Auto-Sell.user.js",
+    "code_size": 8680,
+    "license": null,
+    "version": "3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

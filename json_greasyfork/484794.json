@@ -1,0 +1,59 @@
+{
+  "id": 484794,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-14T04:10:37.000Z",
+  "code_updated_at": "2024-01-14T04:10:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1247721,
+      "name": "超级大帅哥",
+      "created_at": "2024-01-14T03:39:44.000Z",
+      "url": "https://greasyfork.org/users/1247721-%E8%B6%85%E7%BA%A7%E5%A4%A7%E5%B8%85%E5%93%A5",
+      "scripts": [
+        {
+          "id": 484794,
+          "daily_installs": 0,
+          "total_installs": 49,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-14T04:10:37.000Z",
+          "code_updated_at": "2024-01-14T04:10:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页编辑",
+          "description": "用于编辑网站,可以在任何一个网站上添加或删除信息,效果和在控制台输入document.body.contentEditable = true;是一样的,点击开启可以开启,点击关闭可以关闭",
+          "url": "https://greasyfork.org/scripts/484794-%E7%BD%91%E9%A1%B5%E7%BC%96%E8%BE%91",
+          "code_url": "https://update.greasyfork.org/scripts/484794/%E7%BD%91%E9%A1%B5%E7%BC%96%E8%BE%91.user.js",
+          "code_size": 1363,
+          "license": "超级大帅哥",
+          "version": "2024-01-14",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网页编辑",
+  "description": "用于编辑网站,可以在任何一个网站上添加或删除信息,效果和在控制台输入document.body.contentEditable = true;是一样的,点击开启可以开启,点击关闭可以关闭",
+  "url": "https://greasyfork.org/scripts/484794-%E7%BD%91%E9%A1%B5%E7%BC%96%E8%BE%91",
+  "code_url": "https://update.greasyfork.org/scripts/484794/%E7%BD%91%E9%A1%B5%E7%BC%96%E8%BE%91.user.js",
+  "code_size": 1363,
+  "license": "超级大帅哥",
+  "version": "2024-01-14",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

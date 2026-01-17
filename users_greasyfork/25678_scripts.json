@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456647,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-16T01:20:52.000Z",
+    "code_updated_at": "2025-06-05T01:47:29.000Z",
+    "namespace": "https://bbs7070.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 25678,
+        "name": "viewtheard",
+        "created_at": "2016-01-01T09:33:44.000Z",
+        "url": "https://greasyfork.org/users/25678-viewtheard"
+      }
+    ],
+    "name": "bbs7070增强开发版",
+    "description": "增强论坛用户体验",
+    "url": "https://greasyfork.org/scripts/456647-bbs7070%E5%A2%9E%E5%BC%BA%E5%BC%80%E5%8F%91%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/456647/bbs7070%E5%A2%9E%E5%BC%BA%E5%BC%80%E5%8F%91%E7%89%88.user.js",
+    "code_size": 15360,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

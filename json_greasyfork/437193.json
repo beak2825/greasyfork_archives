@@ -1,0 +1,34 @@
+{
+  "id": 437193,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-17T11:51:54.000Z",
+  "code_updated_at": "2021-12-17T12:04:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 854479,
+      "name": "nomius10",
+      "created_at": "2021-12-17T11:48:22.000Z",
+      "url": "https://greasyfork.org/users/854479-nomius10",
+      "scripts": []
+    }
+  ],
+  "name": "Wanikani Enter Key Rebind",
+  "description": "Rebinds the enter and backspace keys to reduce strain on the right pinky finger",
+  "url": "https://greasyfork.org/scripts/437193-wanikani-enter-key-rebind",
+  "code_url": "https://update.greasyfork.org/scripts/437193/Wanikani%20Enter%20Key%20Rebind.user.js",
+  "code_size": 1813,
+  "license": "MIT; http://opensource.org/licenses/MIT",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

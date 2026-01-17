@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463894,
+    "daily_installs": 1,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-13T09:18:17.000Z",
+    "code_updated_at": "2023-04-19T19:23:25.000Z",
+    "namespace": "antontsvil",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1059382,
+        "name": "antontsvil",
+        "created_at": "2023-04-13T09:02:55.000Z",
+        "url": "https://greasyfork.org/users/1059382-antontsvil"
+      }
+    ],
+    "name": "CircleCI Workflow Panner",
+    "description": "Pan across large workflow charts using your mouse instead of relying on the scrollbars. Set naturalScroll to false to disable inverted panning.",
+    "url": "https://greasyfork.org/scripts/463894-circleci-workflow-panner",
+    "code_url": "https://update.greasyfork.org/scripts/463894/CircleCI%20Workflow%20Panner.user.js",
+    "code_size": 2075,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

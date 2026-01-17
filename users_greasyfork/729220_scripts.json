@@ -1,0 +1,101 @@
+[
+  {
+    "id": 448411,
+    "daily_installs": 0,
+    "total_installs": 140,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-25T01:48:18.000Z",
+    "code_updated_at": "2022-07-25T01:48:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729220,
+        "name": "monogamyg",
+        "created_at": "2021-01-20T03:26:33.000Z",
+        "url": "https://greasyfork.org/users/729220-monogamyg"
+      }
+    ],
+    "name": "Melee Start",
+    "description": "Move 'Start Fight' button to melee slot",
+    "url": "https://greasyfork.org/scripts/448411-melee-start",
+    "code_url": "https://update.greasyfork.org/scripts/448411/Melee%20Start.user.js",
+    "code_size": 2617,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 421354,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-07T04:59:22.000Z",
+    "code_updated_at": "2021-02-10T04:28:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729220,
+        "name": "monogamyg",
+        "created_at": "2021-01-20T03:26:33.000Z",
+        "url": "https://greasyfork.org/users/729220-monogamyg"
+      }
+    ],
+    "name": "TORN: No Poker Chat",
+    "description": "remove poker chat",
+    "url": "https://greasyfork.org/scripts/421354-torn-no-poker-chat",
+    "code_url": "https://update.greasyfork.org/scripts/421354/TORN%3A%20No%20Poker%20Chat.user.js",
+    "code_size": 1526,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421279,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-06T05:10:13.000Z",
+    "code_updated_at": "2021-02-08T19:29:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729220,
+        "name": "monogamyg",
+        "created_at": "2021-01-20T03:26:33.000Z",
+        "url": "https://greasyfork.org/users/729220-monogamyg"
+      }
+    ],
+    "name": "R*1 / HvR Attack Assistance",
+    "description": "Request Attack/Smoke/Tear Gas assistance in R discord from attack screen",
+    "url": "https://greasyfork.org/scripts/421279-r-1-hvr-attack-assistance",
+    "code_url": "https://update.greasyfork.org/scripts/421279/R%2A1%20%20HvR%20Attack%20Assistance.user.js",
+    "code_size": 6570,
+    "license": null,
+    "version": "0.1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 439144,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-26T04:54:56.000Z",
+  "code_updated_at": "2022-01-26T04:59:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 462216,
+      "name": "98ktutu",
+      "created_at": "2020-03-19T10:49:00.000Z",
+      "url": "https://greasyfork.org/users/462216-98ktutu",
+      "scripts": []
+    }
+  ],
+  "name": "gdysxh_com_exam_list",
+  "description": "药师培训_远程协会_考试系统_答案提示",
+  "url": "https://greasyfork.org/scripts/439144-gdysxh-com-exam-list",
+  "code_url": "https://update.greasyfork.org/scripts/439144/gdysxh_com_exam_list.user.js",
+  "code_size": 2285,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

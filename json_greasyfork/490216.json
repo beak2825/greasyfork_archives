@@ -1,0 +1,59 @@
+{
+  "id": 490216,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-18T22:00:40.000Z",
+  "code_updated_at": "2024-04-17T01:02:51.000Z",
+  "namespace": "https://tiktakgames.com.tr/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1276314,
+      "name": "TikTak Games",
+      "created_at": "2024-03-18T21:51:50.000Z",
+      "url": "https://greasyfork.org/users/1276314-tiktak-games",
+      "scripts": [
+        {
+          "id": 490216,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-18T22:00:40.000Z",
+          "code_updated_at": "2024-04-17T01:02:51.000Z",
+          "namespace": "https://tiktakgames.com.tr/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TikTok Live Heartbeat",
+          "description": "Script to send heartbeat to TikTok live streams to keep them alive",
+          "url": "https://greasyfork.org/scripts/490216-tiktok-live-heartbeat",
+          "code_url": "https://update.greasyfork.org/scripts/490216/TikTok%20Live%20Heartbeat.user.js",
+          "code_size": 19646,
+          "license": "MIT License",
+          "version": "1.2.5",
+          "locale": "tr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TikTok Live Heartbeat",
+  "description": "Script to send heartbeat to TikTok live streams to keep them alive",
+  "url": "https://greasyfork.org/scripts/490216-tiktok-live-heartbeat",
+  "code_url": "https://update.greasyfork.org/scripts/490216/TikTok%20Live%20Heartbeat.user.js",
+  "code_size": 19646,
+  "license": "MIT License",
+  "version": "1.2.5",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

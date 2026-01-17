@@ -1,0 +1,59 @@
+{
+  "id": 449911,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-21T07:25:10.000Z",
+  "code_updated_at": "2022-08-21T07:25:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 948940,
+      "name": "fannice",
+      "created_at": "2022-08-21T07:14:47.000Z",
+      "url": "https://greasyfork.org/users/948940-fannice",
+      "scripts": [
+        {
+          "id": 449911,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-21T07:25:10.000Z",
+          "code_updated_at": "2022-08-21T07:25:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "厂长资源网自动播放",
+          "description": "显示搜索的参数",
+          "url": "https://greasyfork.org/scripts/449911-%E5%8E%82%E9%95%BF%E8%B5%84%E6%BA%90%E7%BD%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE",
+          "code_url": "https://update.greasyfork.org/scripts/449911/%E5%8E%82%E9%95%BF%E8%B5%84%E6%BA%90%E7%BD%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE.user.js",
+          "code_size": 4842,
+          "license": "本人代码；",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "厂长资源网自动播放",
+  "description": "显示搜索的参数",
+  "url": "https://greasyfork.org/scripts/449911-%E5%8E%82%E9%95%BF%E8%B5%84%E6%BA%90%E7%BD%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE",
+  "code_url": "https://update.greasyfork.org/scripts/449911/%E5%8E%82%E9%95%BF%E8%B5%84%E6%BA%90%E7%BD%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE.user.js",
+  "code_size": 4842,
+  "license": "本人代码；",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

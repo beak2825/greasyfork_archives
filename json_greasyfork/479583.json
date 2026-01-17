@@ -1,0 +1,59 @@
+{
+  "id": 479583,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-12T05:32:53.000Z",
+  "code_updated_at": "2023-11-12T08:09:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1215834,
+      "name": "Lei.",
+      "created_at": "2023-11-12T05:24:55.000Z",
+      "url": "https://greasyfork.org/users/1215834-lei",
+      "scripts": [
+        {
+          "id": 481198,
+          "daily_installs": 0,
+          "total_installs": 163,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-02T01:03:08.000Z",
+          "code_updated_at": "2023-12-02T02:04:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Christmas ShellShockers!",
+          "description": "It's ShellShockers but Christmas Themed!",
+          "url": "https://greasyfork.org/scripts/481198-christmas-shellshockers",
+          "code_url": "https://update.greasyfork.org/scripts/481198/Christmas%20ShellShockers%21.user.js",
+          "code_size": 15228,
+          "license": null,
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "A Green ShellShock Theme",
+  "description": "It's ShellShockers but Green!",
+  "url": "https://greasyfork.org/scripts/479583-a-green-shellshock-theme",
+  "code_url": "https://update.greasyfork.org/scripts/479583/A%20Green%20ShellShock%20Theme.user.js",
+  "code_size": 14591,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

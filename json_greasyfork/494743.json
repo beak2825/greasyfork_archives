@@ -1,0 +1,34 @@
+{
+  "id": 494743,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-12T11:40:40.000Z",
+  "code_updated_at": "2024-05-12T11:40:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1300502,
+      "name": "iklo",
+      "created_at": "2024-05-12T11:38:12.000Z",
+      "url": "https://greasyfork.org/users/1300502-iklo",
+      "scripts": []
+    }
+  ],
+  "name": "멜론티켓 취소표 표시",
+  "description": "멜론티켓 취소표를 빨간색으로 표시해줌",
+  "url": "https://greasyfork.org/scripts/494743-%EB%A9%9C%EB%A1%A0%ED%8B%B0%EC%BC%93-%EC%B7%A8%EC%86%8C%ED%91%9C-%ED%91%9C%EC%8B%9C",
+  "code_url": "https://update.greasyfork.org/scripts/494743/%EB%A9%9C%EB%A1%A0%ED%8B%B0%EC%BC%93%20%EC%B7%A8%EC%86%8C%ED%91%9C%20%ED%91%9C%EC%8B%9C.user.js",
+  "code_size": 7220,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 467363,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-29T06:43:29.000Z",
+  "code_updated_at": "2023-05-29T08:17:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 989457,
+      "name": "siji-Xian",
+      "created_at": "2022-11-29T03:34:28.000Z",
+      "url": "https://greasyfork.org/users/989457-siji-xian"
+    }
+  ],
+  "name": "GMV TO 5A(批量删除)",
+  "description": "云图扩展工具",
+  "url": "https://greasyfork.org/scripts/467363-gmv-to-5a-%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4",
+  "code_url": "https://update.greasyfork.org/scripts/467363/GMV%20TO%205A%28%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%29.user.js",
+  "code_size": 6224,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

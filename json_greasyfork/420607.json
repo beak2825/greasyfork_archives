@@ -1,0 +1,59 @@
+{
+  "id": 420607,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-24T12:11:17.000Z",
+  "code_updated_at": "2021-01-24T12:12:59.000Z",
+  "namespace": "maberi/planets.nu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 620090,
+      "name": "Maberi",
+      "created_at": "2020-06-21T15:33:56.000Z",
+      "url": "https://greasyfork.org/users/620090-maberi",
+      "scripts": [
+        {
+          "id": 420607,
+          "daily_installs": 0,
+          "total_installs": 28,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-24T12:11:17.000Z",
+          "code_updated_at": "2021-01-24T12:12:59.000Z",
+          "namespace": "maberi/planets.nu",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ion Storm protection",
+          "description": "Adds ion storm protection level to \"more details\" ship window (click on ship photo)",
+          "url": "https://greasyfork.org/scripts/420607-ion-storm-protection",
+          "code_url": "https://update.greasyfork.org/scripts/420607/Ion%20Storm%20protection.user.js",
+          "code_size": 1687,
+          "license": "Lesser Gnu Public License, version 2.1",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ion Storm protection",
+  "description": "Adds ion storm protection level to \"more details\" ship window (click on ship photo)",
+  "url": "https://greasyfork.org/scripts/420607-ion-storm-protection",
+  "code_url": "https://update.greasyfork.org/scripts/420607/Ion%20Storm%20protection.user.js",
+  "code_size": 1687,
+  "license": "Lesser Gnu Public License, version 2.1",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

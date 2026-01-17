@@ -1,0 +1,33 @@
+{
+  "id": 425608,
+  "daily_installs": 1,
+  "total_installs": 1482441,
+  "fan_score": "65.1",
+  "good_ratings": 28,
+  "ok_ratings": 5,
+  "bad_ratings": 5,
+  "created_at": "2021-04-27T08:30:58.000Z",
+  "code_updated_at": "2021-08-30T12:39:59.000Z",
+  "namespace": "wosaj",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 705861,
+      "name": "wosaj",
+      "created_at": "2020-11-17T02:50:11.000Z",
+      "url": "https://greasyfork.org/users/705861-wosaj"
+    }
+  ],
+  "name": "超星学习通助手[最新题库](考试专版)",
+  "description": "自动搜索尔雅MOOC考试答案，支持自动答题、自动切换题目、隐藏答案搜索提示框等，解除各类功能限制，开放自定义参数",
+  "url": "https://greasyfork.org/scripts/425608-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B-%E6%9C%80%E6%96%B0%E9%A2%98%E5%BA%93-%E8%80%83%E8%AF%95%E4%B8%93%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/425608/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B%5B%E6%9C%80%E6%96%B0%E9%A2%98%E5%BA%93%5D%28%E8%80%83%E8%AF%95%E4%B8%93%E7%89%88%29.user.js",
+  "code_size": 12344,
+  "license": "MIT License",
+  "version": "2.5.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

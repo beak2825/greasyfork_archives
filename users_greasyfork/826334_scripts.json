@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 459344,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-02T21:48:00.000Z",
+    "code_updated_at": "2023-02-02T21:48:00.000Z",
+    "namespace": "htt*://voice.google.*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 826334,
+        "name": "LikeToAccess",
+        "created_at": "2021-10-18T08:07:08.000Z",
+        "url": "https://greasyfork.org/users/826334-liketoaccess"
+      }
+    ],
+    "name": "Remove Sidebar",
+    "description": "Remove the suggested call sidebar from Google Voice",
+    "url": "https://greasyfork.org/scripts/459344-remove-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/459344/Remove%20Sidebar.user.js",
+    "code_size": 1835,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458758,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-23T22:34:27.000Z",
+    "code_updated_at": "2023-01-23T22:34:27.000Z",
+    "namespace": "https://voice.google.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 826334,
+        "name": "LikeToAccess",
+        "created_at": "2021-10-18T08:07:08.000Z",
+        "url": "https://greasyfork.org/users/826334-liketoaccess"
+      }
+    ],
+    "name": "Remove Sidebar",
+    "description": "Removes annoying sidebar from the left side of the screen",
+    "url": "https://greasyfork.org/scripts/458758-remove-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/458758/Remove%20Sidebar.user.js",
+    "code_size": 1885,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434060,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-18T08:08:52.000Z",
+    "code_updated_at": "2021-10-18T08:08:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 826334,
+        "name": "LikeToAccess",
+        "created_at": "2021-10-18T08:07:08.000Z",
+        "url": "https://greasyfork.org/users/826334-liketoaccess"
+      }
+    ],
+    "name": "GoMovies Video Upscaler [v4.0]",
+    "description": "Automatically increases video quality to the highest setting.",
+    "url": "https://greasyfork.org/scripts/434060-gomovies-video-upscaler-v4-0",
+    "code_url": "https://update.greasyfork.org/scripts/434060/GoMovies%20Video%20Upscaler%20%5Bv40%5D.user.js",
+    "code_size": 88569,
+    "license": null,
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

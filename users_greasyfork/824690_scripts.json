@@ -1,0 +1,134 @@
+[
+  {
+    "id": 433825,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-13T09:39:41.000Z",
+    "code_updated_at": "2021-10-13T09:39:41.000Z",
+    "namespace": "https://greasyfork.org/users/824690",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824690,
+        "name": "throwawayfkdkkdkdkdkdkd",
+        "created_at": "2021-10-13T07:08:41.000Z",
+        "url": "https://greasyfork.org/users/824690-throwawayfkdkkdkdkdkdkd"
+      }
+    ],
+    "name": "nur holz- GRCR",
+    "description": "Grepolis Report Converter Revolution Tools",
+    "url": "https://greasyfork.org/scripts/433825-nur-holz-grcr",
+    "code_url": "https://update.greasyfork.org/scripts/433825/nur%20holz-%20GRCR.user.js",
+    "code_size": 577281,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "5.0.9",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433822,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-13T09:07:08.000Z",
+    "code_updated_at": "2021-10-13T09:07:07.000Z",
+    "namespace": "https://greasyfork.org/users/824690",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824690,
+        "name": "throwawayfkdkkdkdkdkdkd",
+        "created_at": "2021-10-13T07:08:41.000Z",
+        "url": "https://greasyfork.org/users/824690-throwawayfkdkkdkdkdkdkd"
+      }
+    ],
+    "name": "Ohne silber - GRCR",
+    "description": "Grepolis Report Converter Revolution Tools",
+    "url": "https://greasyfork.org/scripts/433822-ohne-silber-grcr",
+    "code_url": "https://update.greasyfork.org/scripts/433822/Ohne%20silber%20-%20GRCR.user.js",
+    "code_size": 577331,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "5.0.9",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433817,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-13T08:06:05.000Z",
+    "code_updated_at": "2021-10-13T08:06:04.000Z",
+    "namespace": "https://greasyfork.org/users/824690",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824690,
+        "name": "throwawayfkdkkdkdkdkdkd",
+        "created_at": "2021-10-13T07:08:41.000Z",
+        "url": "https://greasyfork.org/users/824690-throwawayfkdkkdkdkdkdkd"
+      }
+    ],
+    "name": "Ohne Silber - GRCR",
+    "description": "Grepolis Report Converter Revolution Tools",
+    "url": "https://greasyfork.org/scripts/433817-ohne-silber-grcr",
+    "code_url": "https://update.greasyfork.org/scripts/433817/Ohne%20Silber%20-%20GRCR.user.js",
+    "code_size": 577317,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "5.0.9",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433811,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-13T07:11:34.000Z",
+    "code_updated_at": "2021-10-13T07:11:34.000Z",
+    "namespace": "https://greasyfork.org/users/824690",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824690,
+        "name": "throwawayfkdkkdkdkdkdkd",
+        "created_at": "2021-10-13T07:08:41.000Z",
+        "url": "https://greasyfork.org/users/824690-throwawayfkdkkdkdkdkdkd"
+      }
+    ],
+    "name": "Ohne Holz - GRCR",
+    "description": "Grepolis Report Converter Revolution Tools",
+    "url": "https://greasyfork.org/scripts/433811-ohne-holz-grcr",
+    "code_url": "https://update.greasyfork.org/scripts/433811/Ohne%20Holz%20-%20GRCR.user.js",
+    "code_size": 577315,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "5.0.9",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

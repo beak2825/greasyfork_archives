@@ -1,0 +1,68 @@
+[
+  {
+    "id": 476806,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-06T04:38:43.000Z",
+    "code_updated_at": "2023-11-26T05:50:35.000Z",
+    "namespace": "https://greasyfork.org/hu/users/1159232-kepek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1159232,
+        "name": "Kepek",
+        "created_at": "2023-08-25T16:33:16.000Z",
+        "url": "https://greasyfork.org/users/1159232-kepek"
+      }
+    ],
+    "name": "BitPorn torrent preview cover",
+    "description": "The list page shows the cover images",
+    "url": "https://greasyfork.org/scripts/476806-bitporn-torrent-preview-cover",
+    "code_url": "https://update.greasyfork.org/scripts/476806/BitPorn%20torrent%20preview%20cover.user.js",
+    "code_size": 1210,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473927,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-26T08:25:05.000Z",
+    "code_updated_at": "2023-08-26T12:26:06.000Z",
+    "namespace": "http://userscripts.org/users/293336",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1159232,
+        "name": "Kepek",
+        "created_at": "2023-08-25T16:33:16.000Z",
+        "url": "https://greasyfork.org/users/1159232-kepek"
+      }
+    ],
+    "name": "nCore preview image replacer",
+    "description": "it replaces the little [i] button on nCore to the actual image.",
+    "url": "https://greasyfork.org/scripts/473927-ncore-preview-image-replacer",
+    "code_url": "https://update.greasyfork.org/scripts/473927/nCore%20preview%20image%20replacer.user.js",
+    "code_size": 1942,
+    "license": "Creative Commons Attribution License",
+    "version": "0.21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

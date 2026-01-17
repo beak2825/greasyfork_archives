@@ -1,0 +1,34 @@
+{
+  "id": 432966,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-25T22:21:46.000Z",
+  "code_updated_at": "2026-01-14T03:35:03.000Z",
+  "namespace": "https://greasyfork.org/users/64143",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 64143,
+      "name": "Adam Winn",
+      "created_at": "2016-09-05T00:59:23.000Z",
+      "url": "https://greasyfork.org/users/64143-adam-winn",
+      "scripts": []
+    }
+  ],
+  "name": "Pick'ems Group Pick Grid",
+  "description": "Show a Group Pick Grid for the Pick'ems",
+  "url": "https://greasyfork.org/scripts/432966-pick-ems-group-pick-grid",
+  "code_url": "https://update.greasyfork.org/scripts/432966/Pick%27ems%20Group%20Pick%20Grid.user.js",
+  "code_size": 442006,
+  "license": "MIT License",
+  "version": "4.5.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

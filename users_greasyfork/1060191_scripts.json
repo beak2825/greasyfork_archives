@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464016,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T15:52:56.000Z",
+    "code_updated_at": "2024-01-17T02:05:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060191,
+        "name": "dmitrii-galantsev",
+        "created_at": "2023-04-14T15:48:27.000Z",
+        "url": "https://greasyfork.org/users/1060191-dmitrii-galantsev"
+      }
+    ],
+    "name": "popi bands!",
+    "description": "Highlight some of my favorite bands",
+    "url": "https://greasyfork.org/scripts/464016-popi-bands",
+    "code_url": "https://update.greasyfork.org/scripts/464016/popi%20bands%21.user.js",
+    "code_size": 3845,
+    "license": "MIT License",
+    "version": "0.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

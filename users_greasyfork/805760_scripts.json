@@ -1,0 +1,35 @@
+[
+  {
+    "id": 430989,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-18T03:21:09.000Z",
+    "code_updated_at": "2021-08-18T03:46:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805760,
+        "name": "cat loaf",
+        "created_at": "2021-08-18T03:09:30.000Z",
+        "url": "https://greasyfork.org/users/805760-cat-loaf"
+      }
+    ],
+    "name": "FLVS Navbar Changer",
+    "description": "Changes the Navbar height between 0, or original height",
+    "url": "https://greasyfork.org/scripts/430989-flvs-navbar-changer",
+    "code_url": "https://update.greasyfork.org/scripts/430989/FLVS%20Navbar%20Changer.user.js",
+    "code_size": 2584,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

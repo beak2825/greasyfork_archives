@@ -1,0 +1,34 @@
+{
+  "id": 442826,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-05T19:10:24.000Z",
+  "code_updated_at": "2022-04-15T16:13:19.000Z",
+  "namespace": "https://greasyfork.org/users/898237",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 898237,
+      "name": "tss-dan",
+      "created_at": "2022-04-05T19:04:39.000Z",
+      "url": "https://greasyfork.org/users/898237-tss-dan",
+      "scripts": []
+    }
+  ],
+  "name": "Pitt Omeka Contributors Email",
+  "description": "Adds approve/reject buttons to omeka contributors page",
+  "url": "https://greasyfork.org/scripts/442826-pitt-omeka-contributors-email",
+  "code_url": "https://update.greasyfork.org/scripts/442826/Pitt%20Omeka%20Contributors%20Email.user.js",
+  "code_size": 2887,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

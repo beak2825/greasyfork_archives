@@ -1,0 +1,59 @@
+{
+  "id": 453111,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-15T16:00:06.000Z",
+  "code_updated_at": "2022-10-15T16:00:06.000Z",
+  "namespace": "snooz",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 971219,
+      "name": "snooz",
+      "created_at": "2022-10-15T15:54:49.000Z",
+      "url": "https://greasyfork.org/users/971219-snooz",
+      "scripts": [
+        {
+          "id": 453111,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-15T16:00:06.000Z",
+          "code_updated_at": "2022-10-15T16:00:06.000Z",
+          "namespace": "snooz",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tradera overview",
+          "description": "Makes it easier to quickly see what happened to your auctions on the Overview and Notification pages at Tradera.",
+          "url": "https://greasyfork.org/scripts/453111-tradera-overview",
+          "code_url": "https://update.greasyfork.org/scripts/453111/Tradera%20overview.user.js",
+          "code_size": 906,
+          "license": "MIT License",
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Tradera overview",
+  "description": "Makes it easier to quickly see what happened to your auctions on the Overview and Notification pages at Tradera.",
+  "url": "https://greasyfork.org/scripts/453111-tradera-overview",
+  "code_url": "https://update.greasyfork.org/scripts/453111/Tradera%20overview.user.js",
+  "code_size": 906,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

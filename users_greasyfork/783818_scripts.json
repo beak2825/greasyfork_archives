@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428013,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-15T19:51:42.000Z",
+    "code_updated_at": "2021-06-15T19:51:42.000Z",
+    "namespace": "https://migdaliyr.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 783818,
+        "name": "MigdaliyrArchitect",
+        "created_at": "2021-06-15T19:31:02.000Z",
+        "url": "https://greasyfork.org/users/783818-migdaliyrarchitect"
+      }
+    ],
+    "name": "SLOWLY Arrival Times",
+    "description": "Display arrival time estimations for SLOWLY.",
+    "url": "https://greasyfork.org/scripts/428013-slowly-arrival-times",
+    "code_url": "https://update.greasyfork.org/scripts/428013/SLOWLY%20Arrival%20Times.user.js",
+    "code_size": 4166,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

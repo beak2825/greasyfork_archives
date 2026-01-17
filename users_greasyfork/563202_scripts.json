@@ -1,0 +1,68 @@
+[
+  {
+    "id": 444975,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-14T18:57:49.000Z",
+    "code_updated_at": "2024-11-25T09:37:14.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 563202,
+        "name": "vlararara",
+        "created_at": "2020-05-15T09:33:04.000Z",
+        "url": "https://greasyfork.org/users/563202-vlararara"
+      }
+    ],
+    "name": "辽宁干部在线专业技术区学习2024",
+    "description": "针对2024年辽宁干部在线专业技术区学习使用",
+    "url": "https://greasyfork.org/scripts/444975-%E8%BE%BD%E5%AE%81%E5%B9%B2%E9%83%A8%E5%9C%A8%E7%BA%BF%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%8C%BA%E5%AD%A6%E4%B9%A02024",
+    "code_url": "https://update.greasyfork.org/scripts/444975/%E8%BE%BD%E5%AE%81%E5%B9%B2%E9%83%A8%E5%9C%A8%E7%BA%BF%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%8C%BA%E5%AD%A6%E4%B9%A02024.user.js",
+    "code_size": 3556,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 426031,
+    "daily_installs": 0,
+    "total_installs": 1654,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-06T06:14:28.000Z",
+    "code_updated_at": "2024-11-06T11:41:10.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 563202,
+        "name": "vlararara",
+        "created_at": "2020-05-15T09:33:04.000Z",
+        "url": "https://greasyfork.org/users/563202-vlararara"
+      }
+    ],
+    "name": "文档在线预览与下载更名",
+    "description": "2024/11/6",
+    "url": "https://greasyfork.org/scripts/426031-%E6%96%87%E6%A1%A3%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88%E4%B8%8E%E4%B8%8B%E8%BD%BD%E6%9B%B4%E5%90%8D",
+    "code_url": "https://update.greasyfork.org/scripts/426031/%E6%96%87%E6%A1%A3%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88%E4%B8%8E%E4%B8%8B%E8%BD%BD%E6%9B%B4%E5%90%8D.user.js",
+    "code_size": 6169,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

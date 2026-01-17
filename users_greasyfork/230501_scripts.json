@@ -1,0 +1,167 @@
+[
+  {
+    "id": 464127,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-16T05:11:16.000Z",
+    "code_updated_at": "2023-04-16T05:11:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 230501,
+        "name": "tddschn",
+        "created_at": "2018-12-05T05:10:22.000Z",
+        "url": "https://greasyfork.org/users/230501-tddschn"
+      }
+    ],
+    "name": "SAP AI Playground | Copy Pre Content Button",
+    "description": "Adds a copy button to copy the content of the specified pre element",
+    "url": "https://greasyfork.org/scripts/464127-sap-ai-playground-copy-pre-content-button",
+    "code_url": "https://update.greasyfork.org/scripts/464127/SAP%20AI%20Playground%20%7C%20Copy%20Pre%20Content%20Button.user.js",
+    "code_size": 1746,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463987,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T12:15:38.000Z",
+    "code_updated_at": "2023-04-14T12:15:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 230501,
+        "name": "tddschn",
+        "created_at": "2018-12-05T05:10:22.000Z",
+        "url": "https://greasyfork.org/users/230501-tddschn"
+      }
+    ],
+    "name": "SAP AI Playground | Modify maxlength of textarea",
+    "description": "Increase maxlength attribute to 800000 for textarea with CSS selector #search",
+    "url": "https://greasyfork.org/scripts/463987-sap-ai-playground-modify-maxlength-of-textarea",
+    "code_url": "https://update.greasyfork.org/scripts/463987/SAP%20AI%20Playground%20%7C%20Modify%20maxlength%20of%20textarea.user.js",
+    "code_size": 1260,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463986,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T12:15:18.000Z",
+    "code_updated_at": "2023-04-14T12:15:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 230501,
+        "name": "tddschn",
+        "created_at": "2018-12-05T05:10:22.000Z",
+        "url": "https://greasyfork.org/users/230501-tddschn"
+      }
+    ],
+    "name": "SAP AI Playground | Select GPT-4-32k Option",
+    "description": "Automatically select the gpt-4-32k option for the select element with ID model",
+    "url": "https://greasyfork.org/scripts/463986-sap-ai-playground-select-gpt-4-32k-option",
+    "code_url": "https://update.greasyfork.org/scripts/463986/SAP%20AI%20Playground%20%7C%20Select%20GPT-4-32k%20Option.user.js",
+    "code_size": 1316,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444897,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-13T01:44:37.000Z",
+    "code_updated_at": "2022-05-13T02:40:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 230501,
+        "name": "tddschn",
+        "created_at": "2018-12-05T05:10:22.000Z",
+        "url": "https://greasyfork.org/users/230501-tddschn"
+      }
+    ],
+    "name": "wjx report editor",
+    "description": "Edit your wjx.cn reports",
+    "url": "https://greasyfork.org/scripts/444897-wjx-report-editor",
+    "code_url": "https://update.greasyfork.org/scripts/444897/wjx%20report%20editor.user.js",
+    "code_size": 8604,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432030,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-07T04:43:59.000Z",
+    "code_updated_at": "2021-09-07T04:44:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 230501,
+        "name": "tddschn",
+        "created_at": "2018-12-05T05:10:22.000Z",
+        "url": "https://greasyfork.org/users/230501-tddschn"
+      }
+    ],
+    "name": "Add a scroll bar track to pymotw.com",
+    "description": "Add a scroll bar track to pymotw.com, for macOS users",
+    "url": "https://greasyfork.org/scripts/432030-add-a-scroll-bar-track-to-pymotw-com",
+    "code_url": "https://update.greasyfork.org/scripts/432030/Add%20a%20scroll%20bar%20track%20to%20pymotwcom.user.js",
+    "code_size": 1126,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

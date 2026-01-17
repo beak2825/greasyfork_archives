@@ -1,0 +1,34 @@
+{
+  "id": 459326,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-02T15:42:38.000Z",
+  "code_updated_at": "2023-02-06T08:55:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1020693,
+      "name": "Ye-Tian-Zero",
+      "created_at": "2023-02-02T15:38:53.000Z",
+      "url": "https://greasyfork.org/users/1020693-ye-tian-zero",
+      "scripts": []
+    }
+  ],
+  "name": "LokiExplore",
+  "description": "solve chrome grafana loki explore bug without updating, for detail: https://github.com/grafana/grafana/issues/54535",
+  "url": "https://greasyfork.org/scripts/459326-lokiexplore",
+  "code_url": "https://update.greasyfork.org/scripts/459326/LokiExplore.user.js",
+  "code_size": 808,
+  "license": null,
+  "version": "0.1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

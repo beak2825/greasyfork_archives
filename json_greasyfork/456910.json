@@ -1,0 +1,33 @@
+{
+  "id": 456910,
+  "daily_installs": 2,
+  "total_installs": 447,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-20T18:43:18.000Z",
+  "code_updated_at": "2025-07-20T02:44:47.000Z",
+  "namespace": "github.com/windupbird144",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 309574,
+      "name": "windupbird144",
+      "created_at": "2019-06-13T21:57:49.000Z",
+      "url": "https://greasyfork.org/users/309574-windupbird144"
+    }
+  ],
+  "name": "Grundo's Café stamp album helper",
+  "description": "Extend features of the stamp album on Grundo's Café",
+  "url": "https://greasyfork.org/scripts/456910-grundo-s-caf%C3%A9-stamp-album-helper",
+  "code_url": "https://update.greasyfork.org/scripts/456910/Grundo%27s%20Caf%C3%A9%20stamp%20album%20helper.user.js",
+  "code_size": 14963,
+  "license": "MIT License",
+  "version": "0.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

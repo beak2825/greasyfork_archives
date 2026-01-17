@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462255,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-21T12:20:14.000Z",
+    "code_updated_at": "2023-03-21T12:20:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 827654,
+        "name": "wish5115",
+        "created_at": "2021-10-22T10:27:15.000Z",
+        "url": "https://greasyfork.org/users/827654-wish5115"
+      }
+    ],
+    "name": "在线音频编辑器增强插件",
+    "description": "支持c键打开导出片段对话框；x键快速导出片段；增加了菜单”名称“，可以设置导出片段的文件命名",
+    "url": "https://greasyfork.org/scripts/462255-%E5%9C%A8%E7%BA%BF%E9%9F%B3%E9%A2%91%E7%BC%96%E8%BE%91%E5%99%A8%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/462255/%E5%9C%A8%E7%BA%BF%E9%9F%B3%E9%A2%91%E7%BC%96%E8%BE%91%E5%99%A8%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 2360,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

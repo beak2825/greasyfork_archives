@@ -1,0 +1,34 @@
+{
+  "id": 465832,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-09T03:12:26.000Z",
+  "code_updated_at": "2023-05-09T08:30:50.000Z",
+  "namespace": "http://tampermonkey.net/Mr_sun",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1075832,
+      "name": "Mr_sun996",
+      "created_at": "2023-05-09T02:48:27.000Z",
+      "url": "https://greasyfork.org/users/1075832-mr-sun996",
+      "scripts": []
+    }
+  ],
+  "name": "继续教育",
+  "description": "你好",
+  "url": "https://greasyfork.org/scripts/465832-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2",
+  "code_url": "https://update.greasyfork.org/scripts/465832/%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2.user.js",
+  "code_size": 3570,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

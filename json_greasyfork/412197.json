@@ -1,0 +1,34 @@
+{
+  "id": 412197,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-29T07:18:14.000Z",
+  "code_updated_at": "2020-09-29T07:18:14.000Z",
+  "namespace": "https://f0reach.me",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 662155,
+      "name": "f0reachARR",
+      "created_at": "2020-07-01T13:25:17.000Z",
+      "url": "https://greasyfork.org/users/662155-f0reacharr",
+      "scripts": []
+    }
+  ],
+  "name": "KITソフトウェア演習自動保存",
+  "description": "KITソフトウェア演習でコードを自動保存します",
+  "url": "https://greasyfork.org/scripts/412197-kit%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E6%BC%94%E7%BF%92%E8%87%AA%E5%8B%95%E4%BF%9D%E5%AD%98",
+  "code_url": "https://update.greasyfork.org/scripts/412197/KIT%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E6%BC%94%E7%BF%92%E8%87%AA%E5%8B%95%E4%BF%9D%E5%AD%98.user.js",
+  "code_size": 2145,
+  "license": null,
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

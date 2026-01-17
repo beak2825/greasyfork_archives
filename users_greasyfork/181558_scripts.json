@@ -1,0 +1,200 @@
+[
+  {
+    "id": 493469,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T13:14:45.000Z",
+    "code_updated_at": "2024-04-25T13:14:45.000Z",
+    "namespace": "https://greasyfork.org/users/181558",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 181558,
+        "name": "minarai",
+        "created_at": "2018-04-23T12:24:49.000Z",
+        "url": "https://greasyfork.org/users/181558-minarai"
+      }
+    ],
+    "name": "PrivacyTestsでPassedを数える",
+    "description": "-",
+    "url": "https://greasyfork.org/scripts/493469-privacytests%E3%81%A7passed%E3%82%92%E6%95%B0%E3%81%88%E3%82%8B",
+    "code_url": "https://update.greasyfork.org/scripts/493469/PrivacyTests%E3%81%A7Passed%E3%82%92%E6%95%B0%E3%81%88%E3%82%8B.user.js",
+    "code_size": 1202,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 487074,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-11T08:14:38.000Z",
+    "code_updated_at": "2025-09-16T12:47:09.000Z",
+    "namespace": "https://greasyfork.org/users/181558",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 181558,
+        "name": "minarai",
+        "created_at": "2018-04-23T12:24:49.000Z",
+        "url": "https://greasyfork.org/users/181558-minarai"
+      }
+    ],
+    "name": "YouTubeのフィルタを表に出す",
+    "description": "フィルタボタンを押すのが面倒な人向け",
+    "url": "https://greasyfork.org/scripts/487074-youtube%E3%81%AE%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF%E3%82%92%E8%A1%A8%E3%81%AB%E5%87%BA%E3%81%99",
+    "code_url": "https://update.greasyfork.org/scripts/487074/YouTube%E3%81%AE%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF%E3%82%92%E8%A1%A8%E3%81%AB%E5%87%BA%E3%81%99.user.js",
+    "code_size": 7385,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 487073,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-11T08:05:48.000Z",
+    "code_updated_at": "2025-07-29T11:21:23.000Z",
+    "namespace": "https://greasyfork.org/users/181558",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 181558,
+        "name": "minarai",
+        "created_at": "2018-04-23T12:24:49.000Z",
+        "url": "https://greasyfork.org/users/181558-minarai"
+      }
+    ],
+    "name": "Tableの表をソート",
+    "description": "開始行をAlt+左/Alt+右クリック：表を↑/↓順に並べ替え　縦罫線をドラッグ：左右に調節　Ctrl+ドラッグ：何でもリサイズ",
+    "url": "https://greasyfork.org/scripts/487073-table%E3%81%AE%E8%A1%A8%E3%82%92%E3%82%BD%E3%83%BC%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/487073/Table%E3%81%AE%E8%A1%A8%E3%82%92%E3%82%BD%E3%83%BC%E3%83%88.user.js",
+    "code_size": 13905,
+    "license": null,
+    "version": "0.1.8",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434191,
+    "daily_installs": 0,
+    "total_installs": 74,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-10-20T13:52:04.000Z",
+    "code_updated_at": "2026-01-08T11:15:36.000Z",
+    "namespace": "https://greasyfork.org/users/181558",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 181558,
+        "name": "minarai",
+        "created_at": "2018-04-23T12:24:49.000Z",
+        "url": "https://greasyfork.org/users/181558-minarai"
+      }
+    ],
+    "name": "画像のホバーで拡大",
+    "description": "Shift+H:オンオフ切替　ホバー中の画像を（y:GoogleLensで画像検索／d:名前を付けて保存(+Shift:suffixを指定)）　a:twitterで画像をトリミングさせない",
+    "url": "https://greasyfork.org/scripts/434191-%E7%94%BB%E5%83%8F%E3%81%AE%E3%83%9B%E3%83%90%E3%83%BC%E3%81%A7%E6%8B%A1%E5%A4%A7",
+    "code_url": "https://update.greasyfork.org/scripts/434191/%E7%94%BB%E5%83%8F%E3%81%AE%E3%83%9B%E3%83%90%E3%83%BC%E3%81%A7%E6%8B%A1%E5%A4%A7.user.js",
+    "code_size": 57415,
+    "license": null,
+    "version": "0.1.44",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416843,
+    "daily_installs": 0,
+    "total_installs": 411,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-26T10:24:01.000Z",
+    "code_updated_at": "2026-01-08T11:13:06.000Z",
+    "namespace": "https://greasyfork.org/users/181558",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 181558,
+        "name": "minarai",
+        "created_at": "2018-04-23T12:24:49.000Z",
+        "url": "https://greasyfork.org/users/181558-minarai"
+      }
+    ],
+    "name": "5chサムネイル表示他",
+    "description": "r（文字列非選択時）:ホバー中のレスへのアンカーを記入(R:追記）　r（文字列選択時）:選択文字列を引用（R:追記）　m:ホバー中のレスの10番前からを表示　,:ホバー中のレス以降を表示　.:ホバー中のレス以前を表示　d:書き込み欄にスクロール　y:ホバー中の画像をyandexで画像検索　l:ホバー中のレスへのリンクをコピー　8/9:サムネイルぼかし-/+",
+    "url": "https://greasyfork.org/scripts/416843-5ch%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB%E8%A1%A8%E7%A4%BA%E4%BB%96",
+    "code_url": "https://update.greasyfork.org/scripts/416843/5ch%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB%E8%A1%A8%E7%A4%BA%E4%BB%96.user.js",
+    "code_size": 115226,
+    "license": null,
+    "version": "0.2.8",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415141,
+    "daily_installs": 2,
+    "total_installs": 750,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-10-31T04:51:10.000Z",
+    "code_updated_at": "2025-12-29T12:03:52.000Z",
+    "namespace": "https://greasyfork.org/users/181558",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 181558,
+        "name": "minarai",
+        "created_at": "2018-04-23T12:24:49.000Z",
+        "url": "https://greasyfork.org/users/181558-minarai"
+      }
+    ],
+    "name": "「Show more」ボタンを自動で押す",
+    "description": "Shift+[;]:自動クリックする要素を設定",
+    "url": "https://greasyfork.org/scripts/415141-show-more-%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%87%AA%E5%8B%95%E3%81%A7%E6%8A%BC%E3%81%99",
+    "code_url": "https://update.greasyfork.org/scripts/415141/%E3%80%8CShow%20more%E3%80%8D%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%87%AA%E5%8B%95%E3%81%A7%E6%8A%BC%E3%81%99.user.js",
+    "code_size": 29470,
+    "license": null,
+    "version": "0.1.22",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

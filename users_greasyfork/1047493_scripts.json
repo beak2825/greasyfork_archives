@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462505,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-24T22:02:48.000Z",
+    "code_updated_at": "2023-03-24T22:02:47.000Z",
+    "namespace": "https://gist.github.com/stokito/a7babfa3c04c92c6c4142581145fe33d",
+    "support_url": "https://gist.github.com/stokito/a7babfa3c04c92c6c4142581145fe33d",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1047493,
+        "name": "Sergey Ponomarev",
+        "created_at": "2023-03-24T22:01:47.000Z",
+        "url": "https://greasyfork.org/users/1047493-sergey-ponomarev"
+      }
+    ],
+    "name": "WebDAV Browser",
+    "description": "Browse WebDAV share directly from a browser",
+    "url": "https://greasyfork.org/scripts/462505-webdav-browser",
+    "code_url": "https://update.greasyfork.org/scripts/462505/WebDAV%20Browser.user.js",
+    "code_size": 1504,
+    "license": "BSD Zero Clause License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

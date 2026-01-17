@@ -1,0 +1,33 @@
+{
+  "id": 446333,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-11T06:03:10.000Z",
+  "code_updated_at": "2022-06-11T06:03:09.000Z",
+  "namespace": "https://nimingxx.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 913037,
+      "name": "hd H",
+      "created_at": "2022-05-11T10:04:23.000Z",
+      "url": "https://greasyfork.org/users/913037-hd-h"
+    }
+  ],
+  "name": "nimingxxlittleassistantcheckDuiZhang",
+  "description": "“队”输入框不为空且“队”不在队伍中时离开队伍",
+  "url": "https://greasyfork.org/scripts/446333-nimingxxlittleassistantcheckduizhang",
+  "code_url": "https://update.greasyfork.org/scripts/446333/nimingxxlittleassistantcheckDuiZhang.user.js",
+  "code_size": 1388,
+  "license": "MIT License",
+  "version": "0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

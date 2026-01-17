@@ -1,0 +1,68 @@
+[
+  {
+    "id": 428510,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-06-26T16:03:53.000Z",
+    "code_updated_at": "2021-06-26T20:18:02.000Z",
+    "namespace": "https://alzarath.dev/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 756537,
+        "name": "Alzarath",
+        "created_at": "2021-04-09T00:17:05.000Z",
+        "url": "https://greasyfork.org/users/756537-alzarath"
+      }
+    ],
+    "name": "Youtube Live Time",
+    "description": "Forces the display of the current video time for live streams",
+    "url": "https://greasyfork.org/scripts/428510-youtube-live-time",
+    "code_url": "https://update.greasyfork.org/scripts/428510/Youtube%20Live%20Time.user.js",
+    "code_size": 659,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424726,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-09T01:04:19.000Z",
+    "code_updated_at": "2021-04-09T02:43:41.000Z",
+    "namespace": "https://alzarath.dev/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 756537,
+        "name": "Alzarath",
+        "created_at": "2021-04-09T00:17:05.000Z",
+        "url": "https://greasyfork.org/users/756537-alzarath"
+      }
+    ],
+    "name": "Collapsible NextCloud Music",
+    "description": "Show/Collapse Artists and Albums in NextCloud's Music App",
+    "url": "https://greasyfork.org/scripts/424726-collapsible-nextcloud-music",
+    "code_url": "https://update.greasyfork.org/scripts/424726/Collapsible%20NextCloud%20Music.user.js",
+    "code_size": 11412,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

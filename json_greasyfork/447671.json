@@ -1,0 +1,59 @@
+{
+  "id": 447671,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-10T12:17:33.000Z",
+  "code_updated_at": "2022-07-10T12:37:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 934321,
+      "name": "lppedd",
+      "created_at": "2022-07-10T12:10:24.000Z",
+      "url": "https://greasyfork.org/users/934321-lppedd",
+      "scripts": [
+        {
+          "id": 447671,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-10T12:17:33.000Z",
+          "code_updated_at": "2022-07-10T12:37:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Poste Italiane - loader 160 anni",
+          "description": "Rimuove il loader forzato per il 160esimo anniversario",
+          "url": "https://greasyfork.org/scripts/447671-poste-italiane-loader-160-anni",
+          "code_url": "https://update.greasyfork.org/scripts/447671/Poste%20Italiane%20-%20loader%20160%20anni.user.js",
+          "code_size": 853,
+          "license": "MIT - https://opensource.org/licenses/mit-license.php",
+          "version": "0.3",
+          "locale": "it",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Poste Italiane - loader 160 anni",
+  "description": "Rimuove il loader forzato per il 160esimo anniversario",
+  "url": "https://greasyfork.org/scripts/447671-poste-italiane-loader-160-anni",
+  "code_url": "https://update.greasyfork.org/scripts/447671/Poste%20Italiane%20-%20loader%20160%20anni.user.js",
+  "code_size": 853,
+  "license": "MIT - https://opensource.org/licenses/mit-license.php",
+  "version": "0.3",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 446684,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-18T22:51:28.000Z",
+    "code_updated_at": "2025-03-09T14:08:32.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 167625,
+        "name": "krystian3w",
+        "created_at": "2018-01-21T12:23:30.000Z",
+        "url": "https://greasyfork.org/users/167625-krystian3w"
+      }
+    ],
+    "name": "Linki GNU/Linux",
+    "description": "Podgląd linków przed najechaniem z pomocą CSS",
+    "url": "https://greasyfork.org/scripts/446684-linki-gnu-linux",
+    "code_url": "https://update.greasyfork.org/scripts/446684/Linki%20GNULinux.user.css",
+    "code_size": 578,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441423,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-12T21:21:25.000Z",
+    "code_updated_at": "2025-03-09T14:07:57.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 167625,
+        "name": "krystian3w",
+        "created_at": "2018-01-21T12:23:30.000Z",
+        "url": "https://greasyfork.org/users/167625-krystian3w"
+      }
+    ],
+    "name": "tezeusz.pl on XP",
+    "description": "Reset opacity and scroll only!",
+    "url": "https://greasyfork.org/scripts/441423-tezeusz-pl-on-xp",
+    "code_url": "https://update.greasyfork.org/scripts/441423/tezeuszpl%20on%20XP.user.css",
+    "code_size": 513,
+    "license": "CC BY 4.0 https://creativecommons.org/licenses/by/4.0/",
+    "version": "1.0.18",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434685,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-30T16:19:07.000Z",
+    "code_updated_at": "2026-01-05T11:47:11.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 167625,
+        "name": "krystian3w",
+        "created_at": "2018-01-21T12:23:30.000Z",
+        "url": "https://greasyfork.org/users/167625-krystian3w"
+      }
+    ],
+    "name": "GitHub Red Issues",
+    "description": "Turns the issue color of closed issues from purple back to red - back reddish color icon for closed github issues.",
+    "url": "https://greasyfork.org/scripts/434685-github-red-issues",
+    "code_url": "https://update.greasyfork.org/scripts/434685/GitHub%20Red%20Issues.user.css",
+    "code_size": 7238,
+    "license": "CC BY-NC-SA 4.0 https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "10.6.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480936,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-28T10:32:47.000Z",
+    "code_updated_at": "2023-11-28T10:32:47.000Z",
+    "namespace": "https://www.webhek.com/post/color-test/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1224712,
+        "name": "beyond yang",
+        "created_at": "2023-11-28T10:29:30.000Z",
+        "url": "https://greasyfork.org/users/1224712-beyond-yang"
+      }
+    ],
+    "name": "color-test-hack",
+    "description": "try press H button when you play the game",
+    "url": "https://greasyfork.org/scripts/480936-color-test-hack",
+    "code_url": "https://update.greasyfork.org/scripts/480936/color-test-hack.user.js",
+    "code_size": 2305,
+    "license": "MIT License",
+    "version": "1.0.20231128",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

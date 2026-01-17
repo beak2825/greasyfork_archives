@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442616,
+    "daily_installs": 0,
+    "total_installs": 366,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-03T06:48:23.000Z",
+    "code_updated_at": "2022-04-03T06:48:22.000Z",
+    "namespace": "https://xuz.sjzkz.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 896572,
+        "name": "zhou xu",
+        "created_at": "2022-04-02T09:14:26.000Z",
+        "url": "https://greasyfork.org/users/896572-zhou-xu"
+      }
+    ],
+    "name": "Melvor Idle梅沃尔放置小工具。",
+    "description": "向游戏插入各种内置功能!为保持游戏乐趣，做了一些限制，金币每点击一次，加1M，祈祷、屠杀点击一次加1k，添加物品只能添加已获得过的物品。添加物品时，可输入物品ID，也可输入中文或英文名称。",
+    "url": "https://greasyfork.org/scripts/442616-melvor-idle%E6%A2%85%E6%B2%83%E5%B0%94%E6%94%BE%E7%BD%AE%E5%B0%8F%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/442616/Melvor%20Idle%E6%A2%85%E6%B2%83%E5%B0%94%E6%94%BE%E7%BD%AE%E5%B0%8F%E5%B7%A5%E5%85%B7%E3%80%82.user.js",
+    "code_size": 4852,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

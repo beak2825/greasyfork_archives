@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451113,
+    "daily_installs": 0,
+    "total_installs": 448,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-09-10T17:35:13.000Z",
+    "code_updated_at": "2025-06-07T06:11:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395285,
+        "name": "Faper",
+        "created_at": "2019-11-06T04:04:00.000Z",
+        "url": "https://greasyfork.org/users/395285-faper"
+      }
+    ],
+    "name": "Pixiv Origin Image",
+    "description": "Pixiv原图显示",
+    "url": "https://greasyfork.org/scripts/451113-pixiv-origin-image",
+    "code_url": "https://update.greasyfork.org/scripts/451113/Pixiv%20Origin%20Image.user.js",
+    "code_size": 2593,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

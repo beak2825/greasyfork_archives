@@ -1,0 +1,59 @@
+{
+  "id": 427560,
+  "daily_installs": 0,
+  "total_installs": 85,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-06T04:43:52.000Z",
+  "code_updated_at": "2021-06-06T12:22:45.000Z",
+  "namespace": "https://github.com/nejidev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 780210,
+      "name": "nejidev",
+      "created_at": "2021-06-06T04:09:37.000Z",
+      "url": "https://greasyfork.org/users/780210-nejidev",
+      "scripts": [
+        {
+          "id": 427560,
+          "daily_installs": 0,
+          "total_installs": 85,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-06T04:43:52.000Z",
+          "code_updated_at": "2021-06-06T12:22:45.000Z",
+          "namespace": "https://github.com/nejidev",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "hj remove ad　沪江小D 广告去除工具",
+          "description": "hj dic remove ad 沪江小D 广告去除工具",
+          "url": "https://greasyfork.org/scripts/427560-hj-remove-ad-%E6%B2%AA%E6%B1%9F%E5%B0%8Fd-%E5%B9%BF%E5%91%8A%E5%8E%BB%E9%99%A4%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/427560/hj%20remove%20ad%E3%80%80%E6%B2%AA%E6%B1%9F%E5%B0%8FD%20%E5%B9%BF%E5%91%8A%E5%8E%BB%E9%99%A4%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 839,
+          "license": null,
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "hj remove ad　沪江小D 广告去除工具",
+  "description": "hj dic remove ad 沪江小D 广告去除工具",
+  "url": "https://greasyfork.org/scripts/427560-hj-remove-ad-%E6%B2%AA%E6%B1%9F%E5%B0%8Fd-%E5%B9%BF%E5%91%8A%E5%8E%BB%E9%99%A4%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/427560/hj%20remove%20ad%E3%80%80%E6%B2%AA%E6%B1%9F%E5%B0%8FD%20%E5%B9%BF%E5%91%8A%E5%8E%BB%E9%99%A4%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 839,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

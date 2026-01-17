@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462340,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-22T16:48:31.000Z",
+    "code_updated_at": "2023-03-22T16:48:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1046293,
+        "name": "Burak Yıldırım",
+        "created_at": "2023-03-22T16:29:21.000Z",
+        "url": "https://greasyfork.org/users/1046293-burak-y%C4%B1ld%C4%B1r%C4%B1m"
+      }
+    ],
+    "name": "DisneySubtitlesLikeNetflix",
+    "description": "The script modifies the appearance of Disney+ subtitles to resemble the subtitles on Netflix. Your device must have \"Netflix Sans\" font installed.",
+    "url": "https://greasyfork.org/scripts/462340-disneysubtitleslikenetflix",
+    "code_url": "https://update.greasyfork.org/scripts/462340/DisneySubtitlesLikeNetflix.user.js",
+    "code_size": 1210,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

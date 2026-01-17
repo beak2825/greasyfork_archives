@@ -30,6 +30,72 @@
     "version": "1.0",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 450447,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-30T07:37:53.000Z",
+    "code_updated_at": "2022-08-30T07:37:53.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 52502,
+        "name": "张立行",
+        "created_at": "2016-07-01T14:02:26.000Z",
+        "url": "https://greasyfork.org/users/52502-%E5%BC%A0%E7%AB%8B%E8%A1%8C"
+      }
+    ],
+    "name": "自动切换商品详情页标题",
+    "description": "8/30/2022, 2:04:52 PM 单品的详情页 tab 标题会自动切换为 itemid + 类目名称的格式，方便识别",
+    "url": "https://greasyfork.org/scripts/450447-%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E5%95%86%E5%93%81%E8%AF%A6%E6%83%85%E9%A1%B5%E6%A0%87%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/450447/%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E5%95%86%E5%93%81%E8%AF%A6%E6%83%85%E9%A1%B5%E6%A0%87%E9%A2%98.user.js",
+    "code_size": 1414,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 449823,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-19T11:17:14.000Z",
+    "code_updated_at": "2024-08-05T10:34:13.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 52502,
+        "name": "张立行",
+        "created_at": "2016-07-01T14:02:26.000Z",
+        "url": "https://greasyfork.org/users/52502-%E5%BC%A0%E7%AB%8B%E8%A1%8C"
+      }
+    ],
+    "name": "自动切换详情页为 f 参数",
+    "description": "240805，修复最新订单时间",
+    "url": "https://greasyfork.org/scripts/449823-%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E8%AF%A6%E6%83%85%E9%A1%B5%E4%B8%BA-f-%E5%8F%82%E6%95%B0",
+    "code_url": "https://update.greasyfork.org/scripts/449823/%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E8%AF%A6%E6%83%85%E9%A1%B5%E4%B8%BA%20f%20%E5%8F%82%E6%95%B0.user.js",
+    "code_size": 2340,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

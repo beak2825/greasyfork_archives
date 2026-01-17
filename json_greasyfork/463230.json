@@ -1,0 +1,59 @@
+{
+  "id": 463230,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-04T09:22:34.000Z",
+  "code_updated_at": "2023-04-04T09:22:33.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1052862,
+      "name": "吴腾",
+      "created_at": "2023-04-04T09:19:01.000Z",
+      "url": "https://greasyfork.org/users/1052862-%E5%90%B4%E8%85%BE",
+      "scripts": [
+        {
+          "id": 463230,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-04T09:22:34.000Z",
+          "code_updated_at": "2023-04-04T09:22:33.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "llvm docs页面隐藏侧边栏",
+          "description": "2023/4/4 16:20:24",
+          "url": "https://greasyfork.org/scripts/463230-llvm-docs%E9%A1%B5%E9%9D%A2%E9%9A%90%E8%97%8F%E4%BE%A7%E8%BE%B9%E6%A0%8F",
+          "code_url": "https://update.greasyfork.org/scripts/463230/llvm%20docs%E9%A1%B5%E9%9D%A2%E9%9A%90%E8%97%8F%E4%BE%A7%E8%BE%B9%E6%A0%8F.user.js",
+          "code_size": 1257,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "llvm docs页面隐藏侧边栏",
+  "description": "2023/4/4 16:20:24",
+  "url": "https://greasyfork.org/scripts/463230-llvm-docs%E9%A1%B5%E9%9D%A2%E9%9A%90%E8%97%8F%E4%BE%A7%E8%BE%B9%E6%A0%8F",
+  "code_url": "https://update.greasyfork.org/scripts/463230/llvm%20docs%E9%A1%B5%E9%9D%A2%E9%9A%90%E8%97%8F%E4%BE%A7%E8%BE%B9%E6%A0%8F.user.js",
+  "code_size": 1257,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

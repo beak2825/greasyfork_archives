@@ -1,0 +1,33 @@
+{
+  "id": 492015,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-08T20:50:04.000Z",
+  "code_updated_at": "2024-04-08T20:50:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1282606,
+      "name": "bertigert",
+      "created_at": "2024-04-01T18:23:54.000Z",
+      "url": "https://greasyfork.org/users/1282606-bertigert"
+    }
+  ],
+  "name": "50 plus quiz Helper",
+  "description": "Helper for different 50 plus quizzes",
+  "url": "https://greasyfork.org/scripts/492015-50-plus-quiz-helper",
+  "code_url": "https://update.greasyfork.org/scripts/492015/50%20plus%20quiz%20Helper.user.js",
+  "code_size": 1228,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

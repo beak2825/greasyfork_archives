@@ -1,0 +1,33 @@
+{
+  "id": 477176,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-11T12:48:47.000Z",
+  "code_updated_at": "2023-10-11T12:48:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1193339,
+      "name": "sck451",
+      "created_at": "2023-10-11T08:22:54.000Z",
+      "url": "https://greasyfork.org/users/1193339-sck451"
+    }
+  ],
+  "name": "Rich PC Specialist post to forum",
+  "description": "Make a PC Specialist Rich post-to-forum page, adding the possibility to make comments and format them",
+  "url": "https://greasyfork.org/scripts/477176-rich-pc-specialist-post-to-forum",
+  "code_url": "https://update.greasyfork.org/scripts/477176/Rich%20PC%20Specialist%20post%20to%20forum.user.js",
+  "code_size": 4564,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

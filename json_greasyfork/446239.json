@@ -1,0 +1,59 @@
+{
+  "id": 446239,
+  "daily_installs": 3,
+  "total_installs": 4966,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-06-09T04:40:51.000Z",
+  "code_updated_at": "2025-12-20T06:15:15.000Z",
+  "namespace": "https://github.com/Ujhhgtg",
+  "support_url": "https://github.com/Ujhhgtg/CSDNGreener/issues/new?assignees=Ujhhgtg&labels=help+wanted&template=ISSUE_TEMPLATE.md&title=",
+  "contribution_url": "https://doc.stackoverflow.wiki/web/#/21?page_id=138",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 812450,
+      "name": "FeyXieXzf",
+      "created_at": "2021-09-05T14:06:31.000Z",
+      "url": "https://greasyfork.org/users/812450-feyxiexzf",
+      "scripts": [
+        {
+          "id": 446239,
+          "daily_installs": 3,
+          "total_installs": 4966,
+          "fan_score": "31.0",
+          "good_ratings": 2,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-06-09T04:40:51.000Z",
+          "code_updated_at": "2025-12-20T06:15:15.000Z",
+          "namespace": "https://github.com/Ujhhgtg",
+          "support_url": "https://github.com/Ujhhgtg/CSDNGreener/issues/new?assignees=Ujhhgtg&labels=help+wanted&template=ISSUE_TEMPLATE.md&title=",
+          "contribution_url": "https://doc.stackoverflow.wiki/web/#/21?page_id=138",
+          "contribution_amount": null,
+          "name": "更好的 CSDNGreener",
+          "description": "不含使用情况统计及广告的 CSDNGreener|⚡️全新4.0版本！拥有数项独家功能的最强CSDN脚本，不服比一比⚡️|🕶无需登录CSDN，获得比会员更佳的体验|🖥自定义背景图，分辨率自适配，分屏不用滚动|💾超级预优化|🔖独家超级免会员|🏷独家原创文章免登录展开|🔌独家推荐内容自由开关|📠独家免登录复制|🔗独家防外链重定向|📝独家论坛未登录自动展开文章、评论|🌵全面净化|📈沉浸阅读|🧴净化剪贴板|📕作者信息文章顶部展示",
+          "url": "https://greasyfork.org/scripts/446239-%E6%9B%B4%E5%A5%BD%E7%9A%84-csdngreener",
+          "code_url": "https://update.greasyfork.org/scripts/446239/%E6%9B%B4%E5%A5%BD%E7%9A%84%20CSDNGreener.user.js",
+          "code_size": 98272,
+          "license": "MIT License",
+          "version": "4.2.6a",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "更好的 CSDNGreener",
+  "description": "不含使用情况统计及广告的 CSDNGreener|⚡️全新4.0版本！拥有数项独家功能的最强CSDN脚本，不服比一比⚡️|🕶无需登录CSDN，获得比会员更佳的体验|🖥自定义背景图，分辨率自适配，分屏不用滚动|💾超级预优化|🔖独家超级免会员|🏷独家原创文章免登录展开|🔌独家推荐内容自由开关|📠独家免登录复制|🔗独家防外链重定向|📝独家论坛未登录自动展开文章、评论|🌵全面净化|📈沉浸阅读|🧴净化剪贴板|📕作者信息文章顶部展示",
+  "url": "https://greasyfork.org/scripts/446239-%E6%9B%B4%E5%A5%BD%E7%9A%84-csdngreener",
+  "code_url": "https://update.greasyfork.org/scripts/446239/%E6%9B%B4%E5%A5%BD%E7%9A%84%20CSDNGreener.user.js",
+  "code_size": 98272,
+  "license": "MIT License",
+  "version": "4.2.6a",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

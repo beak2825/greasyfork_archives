@@ -1,0 +1,59 @@
+{
+  "id": 488601,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-29T07:42:19.000Z",
+  "code_updated_at": "2024-02-29T07:42:19.000Z",
+  "namespace": "https://github.com/forestsheep911/monkey-kintone-batch-mention-research",
+  "support_url": "https://github.com/forestsheep911/monkey-kintone-batch-mention-research/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1177518,
+      "name": "forestsheep911",
+      "created_at": "2023-09-21T07:09:53.000Z",
+      "url": "https://greasyfork.org/users/1177518-forestsheep911",
+      "scripts": [
+        {
+          "id": 517872,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-18T08:41:22.000Z",
+          "code_updated_at": "2024-12-17T09:00:02.000Z",
+          "namespace": "waitandesee-furnish-5923078164",
+          "support_url": "https://github.com/forestsheep911/monkey-notion-video-enhancer/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "wwpdw-bootstrap",
+          "description": "观影网站加强体验",
+          "url": "https://greasyfork.org/scripts/517872-wwpdw-bootstrap",
+          "code_url": "https://update.greasyfork.org/scripts/517872/wwpdw-bootstrap.user.js",
+          "code_size": 15162,
+          "license": "MIT License",
+          "version": "1.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "kintone-easy-mention",
+  "description": "monkey-kintone-batch-mention",
+  "url": "https://greasyfork.org/scripts/488601-kintone-easy-mention",
+  "code_url": "https://update.greasyfork.org/scripts/488601/kintone-easy-mention.user.js",
+  "code_size": 43617,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

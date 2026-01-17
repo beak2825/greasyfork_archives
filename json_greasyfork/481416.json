@@ -1,0 +1,34 @@
+{
+  "id": 481416,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-04T22:40:51.000Z",
+  "code_updated_at": "2024-09-20T12:08:32.000Z",
+  "namespace": "xyzabcd",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 5723,
+      "name": "russia-spb",
+      "created_at": "2014-09-30T11:59:20.000Z",
+      "url": "https://greasyfork.org/users/5723-russia-spb",
+      "scripts": []
+    }
+  ],
+  "name": "Deutsche",
+  "description": "create a duell statistik",
+  "url": "https://greasyfork.org/scripts/481416-deutsche",
+  "code_url": "https://update.greasyfork.org/scripts/481416/Deutsche.user.js",
+  "code_size": 1109596,
+  "license": null,
+  "version": "v0.74-0-g5218b7e-dirty",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

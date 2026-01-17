@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466192,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-13T10:11:57.000Z",
+    "code_updated_at": "2025-05-31T02:50:55.000Z",
+    "namespace": "owpe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 295848,
+        "name": "CrimsonVex",
+        "created_at": "2019-04-27T07:50:09.000Z",
+        "url": "https://greasyfork.org/users/295848-crimsonvex"
+      }
+    ],
+    "name": "OSRS Wiki Prices Extender",
+    "description": "Extends the OSRS Wiki Prices page with flipping-oriented utilities",
+    "url": "https://greasyfork.org/scripts/466192-osrs-wiki-prices-extender",
+    "code_url": "https://update.greasyfork.org/scripts/466192/OSRS%20Wiki%20Prices%20Extender.user.js",
+    "code_size": 105978,
+    "license": "MIT License",
+    "version": "2.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

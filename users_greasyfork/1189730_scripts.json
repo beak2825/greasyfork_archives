@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 476845,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-06T18:13:37.000Z",
+    "code_updated_at": "2023-10-06T18:13:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1189730,
+        "name": "SnabbSpelare",
+        "created_at": "2023-10-06T15:58:04.000Z",
+        "url": "https://greasyfork.org/users/1189730-snabbspelare"
+      }
+    ],
+    "name": "VACYourFriendsRevamp (VACYFRe)",
+    "description": "Prank your friends by adding a fake VAC ban to their Steam profiles. Customize the number of VAC bans and days since their last ban with this script.",
+    "url": "https://greasyfork.org/scripts/476845-vacyourfriendsrevamp-vacyfre",
+    "code_url": "https://update.greasyfork.org/scripts/476845/VACYourFriendsRevamp%20%28VACYFRe%29.user.js",
+    "code_size": 3240,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

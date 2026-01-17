@@ -1,0 +1,34 @@
+{
+  "id": 451813,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-22T13:42:19.000Z",
+  "code_updated_at": "2022-12-16T13:35:16.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 295034,
+      "name": "Timesient",
+      "created_at": "2019-04-24T12:38:14.000Z",
+      "url": "https://greasyfork.org/users/295034-timesient",
+      "scripts": []
+    }
+  ],
+  "name": "PublusNovelPage",
+  "description": "Use for generating novel page instance in Publus reader.",
+  "url": "https://greasyfork.org/scripts/451813-publusnovelpage",
+  "code_url": "https://update.greasyfork.org/scripts/451813/1128858/PublusNovelPage.js",
+  "code_size": 16147,
+  "license": null,
+  "version": "0.0.1.20221216133516",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 437201,
+  "daily_installs": 0,
+  "total_installs": 166,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-17T14:37:39.000Z",
+  "code_updated_at": "2021-12-17T14:37:39.000Z",
+  "namespace": "https://greasyfork.org/en/users/798613",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 798613,
+      "name": "Mandi",
+      "created_at": "2021-07-30T09:32:39.000Z",
+      "url": "https://greasyfork.org/users/798613-mandi",
+      "scripts": [
+        {
+          "id": 437201,
+          "daily_installs": 0,
+          "total_installs": 166,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-17T14:37:39.000Z",
+          "code_updated_at": "2021-12-17T14:37:39.000Z",
+          "namespace": "https://greasyfork.org/en/users/798613",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Neopets - Lab Ray - Safety First",
+          "description": "Hide specific pets from the lab ray page so no accidental zapping!",
+          "url": "https://greasyfork.org/scripts/437201-neopets-lab-ray-safety-first",
+          "code_url": "https://update.greasyfork.org/scripts/437201/Neopets%20-%20Lab%20Ray%20-%20Safety%20First.user.js",
+          "code_size": 819,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Neopets - Lab Ray - Safety First",
+  "description": "Hide specific pets from the lab ray page so no accidental zapping!",
+  "url": "https://greasyfork.org/scripts/437201-neopets-lab-ray-safety-first",
+  "code_url": "https://update.greasyfork.org/scripts/437201/Neopets%20-%20Lab%20Ray%20-%20Safety%20First.user.js",
+  "code_size": 819,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 475812,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-21T10:38:56.000Z",
+    "code_updated_at": "2023-09-21T10:38:56.000Z",
+    "namespace": "https://greasyfork.org/users/1177654",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177654,
+        "name": "froppley",
+        "created_at": "2023-09-21T10:37:47.000Z",
+        "url": "https://greasyfork.org/users/1177654-froppley"
+      }
+    ],
+    "name": "billwurtz questions time format converted to Swatch Internet Time",
+    "description": "converts billwurtz's time format to Swatch Internet Time",
+    "url": "https://greasyfork.org/scripts/475812-billwurtz-questions-time-format-converted-to-swatch-internet-time",
+    "code_url": "https://update.greasyfork.org/scripts/475812/billwurtz%20questions%20time%20format%20converted%20to%20Swatch%20Internet%20Time.user.js",
+    "code_size": 1512,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

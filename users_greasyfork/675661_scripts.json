@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 438917,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-21T10:42:13.000Z",
+    "code_updated_at": "2022-01-21T10:42:13.000Z",
+    "namespace": "https://github.com/jerone/UserScripts",
+    "support_url": null,
+    "contribution_url": "https://www.paypal.me/IhToN",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 675661,
+        "name": "IhToN",
+        "created_at": "2020-08-12T17:24:36.000Z",
+        "url": "https://greasyfork.org/users/675661-ihton"
+      }
+    ],
+    "name": "Twitter - Silence CryptoBros",
+    "description": "Hide CryptoBros messages from twitter",
+    "url": "https://greasyfork.org/scripts/438917-twitter-silence-cryptobros",
+    "code_url": "https://update.greasyfork.org/scripts/438917/Twitter%20-%20Silence%20CryptoBros.user.js",
+    "code_size": 2666,
+    "license": "CC-BY-NC-SA-4.0; https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 414640,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-25T19:38:20.000Z",
+    "code_updated_at": "2020-10-25T19:38:19.000Z",
+    "namespace": "https://atalgaba.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 675661,
+        "name": "IhToN",
+        "created_at": "2020-08-12T17:24:36.000Z",
+        "url": "https://greasyfork.org/users/675661-ihton"
+      }
+    ],
+    "name": "YouTube MediaKeys integration",
+    "description": "Add missing keyboard media keys integration to YouTube.",
+    "url": "https://greasyfork.org/scripts/414640-youtube-mediakeys-integration",
+    "code_url": "https://update.greasyfork.org/scripts/414640/YouTube%20MediaKeys%20integration.user.js",
+    "code_size": 893,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

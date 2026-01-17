@@ -1,0 +1,59 @@
+{
+  "id": 433211,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-30T09:31:02.000Z",
+  "code_updated_at": "2023-09-26T19:22:21.000Z",
+  "namespace": "https://greasyfork.org/users/gad_m/wme_live_cameras_il",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 80157,
+      "name": "gad_m",
+      "created_at": "2016-11-15T06:16:20.000Z",
+      "url": "https://greasyfork.org/users/80157-gad-m",
+      "scripts": [
+        {
+          "id": 36050,
+          "daily_installs": 0,
+          "total_installs": 120,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2017-12-05T22:38:50.000Z",
+          "code_updated_at": "2024-09-09T18:09:22.000Z",
+          "namespace": "https://greasyfork.org/users/gad_m/wme_status",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WME Status",
+          "description": "Show map build information",
+          "url": "https://greasyfork.org/scripts/36050-wme-status",
+          "code_url": "https://update.greasyfork.org/scripts/36050/WME%20Status.user.js",
+          "code_size": 13998,
+          "license": null,
+          "version": "0.1.18",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WME Live Cameras (IL)",
+  "description": "Shows Israel live cameras in Waze Map Editor.",
+  "url": "https://greasyfork.org/scripts/433211-wme-live-cameras-il",
+  "code_url": "https://update.greasyfork.org/scripts/433211/WME%20Live%20Cameras%20%28IL%29.user.js",
+  "code_size": 69963,
+  "license": "MIT License",
+  "version": "1.0.17",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

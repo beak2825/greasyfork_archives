@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465278,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-02T00:39:31.000Z",
+    "code_updated_at": "2023-05-02T00:39:31.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1071437,
+        "name": "Lukas Kuzy",
+        "created_at": "2023-05-02T00:37:01.000Z",
+        "url": "https://greasyfork.org/users/1071437-lukas-kuzy"
+      }
+    ],
+    "name": "Скрипт by L.Kuzy",
+    "description": "Скрипт для Кураторов Форума by Kuzy",
+    "url": "https://greasyfork.org/scripts/465278-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-by-l-kuzy",
+    "code_url": "https://update.greasyfork.org/scripts/465278/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20by%20LKuzy.user.js",
+    "code_size": 86534,
+    "license": "MIT License",
+    "version": "1.70",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462874,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-29T20:16:35.000Z",
+    "code_updated_at": "2023-03-29T20:16:35.000Z",
+    "namespace": "http://www.amazon.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050132,
+        "name": "Charles Weng",
+        "created_at": "2023-03-29T20:14:18.000Z",
+        "url": "https://greasyfork.org/users/1050132-charles-weng"
+      }
+    ],
+    "name": "Amazon Live Double Previously Live Playback Speed",
+    "description": "On finding a video on Amazon.com/live, double the playback rate if there is a previously live badge",
+    "url": "https://greasyfork.org/scripts/462874-amazon-live-double-previously-live-playback-speed",
+    "code_url": "https://update.greasyfork.org/scripts/462874/Amazon%20Live%20Double%20Previously%20Live%20Playback%20Speed.user.js",
+    "code_size": 2190,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

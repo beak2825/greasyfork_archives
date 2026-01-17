@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449775,
+    "daily_installs": 0,
+    "total_installs": 234,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-18T12:59:31.000Z",
+    "code_updated_at": "2023-09-21T02:38:06.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/200326-snake-cap",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200326,
+        "name": "Snake Cap",
+        "created_at": "2018-08-02T00:03:04.000Z",
+        "url": "https://greasyfork.org/users/200326-snake-cap"
+      }
+    ],
+    "name": "腾讯云-合作伙伴学堂 - 自动学习外挂",
+    "description": "此插件的目的是为了实现用户在<腾讯云-合作伙伴学堂>能够自动挂机学习, 插件会自动点击 <播放>, <静音>, <恢复播放进度>, <确认>, <下一课>按钮。目前已知的问题如下: 1.有时候由于学习窗口处于不活跃状态, 所以插件的功能可能会无法触发; 2.此插件只能自动挂机当前章节下的所有课程, 如果用户希望学习其他章节的内容, 需要手动切换章节.",
+    "url": "https://greasyfork.org/scripts/449775-%E8%85%BE%E8%AE%AF%E4%BA%91-%E5%90%88%E4%BD%9C%E4%BC%99%E4%BC%B4%E5%AD%A6%E5%A0%82-%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%A4%96%E6%8C%82",
+    "code_url": "https://update.greasyfork.org/scripts/449775/%E8%85%BE%E8%AE%AF%E4%BA%91-%E5%90%88%E4%BD%9C%E4%BC%99%E4%BC%B4%E5%AD%A6%E5%A0%82%20-%20%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%A4%96%E6%8C%82.user.js",
+    "code_size": 3962,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

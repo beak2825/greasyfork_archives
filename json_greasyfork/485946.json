@@ -1,0 +1,59 @@
+{
+  "id": 485946,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-29T06:51:33.000Z",
+  "code_updated_at": "2024-01-29T18:51:46.000Z",
+  "namespace": "https://gist.github.com/renzynx/23af8aadf885e26ed4b072fc3eb68e2f",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1254576,
+      "name": "renzynx",
+      "created_at": "2024-01-29T04:53:01.000Z",
+      "url": "https://greasyfork.org/users/1254576-renzynx",
+      "scripts": [
+        {
+          "id": 485946,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-29T06:51:33.000Z",
+          "code_updated_at": "2024-01-29T18:51:46.000Z",
+          "namespace": "https://gist.github.com/renzynx/23af8aadf885e26ed4b072fc3eb68e2f",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tăng tốc nhận EXP cho tutientruyen",
+          "description": "Bỏ qua 30s chờ để +1 EXP trên tutientruyen, thay vào đó là mỗi 3s bạn sẽ được +1 EXP",
+          "url": "https://greasyfork.org/scripts/485946-t%C4%83ng-t%E1%BB%91c-nh%E1%BA%ADn-exp-cho-tutientruyen",
+          "code_url": "https://update.greasyfork.org/scripts/485946/T%C4%83ng%20t%E1%BB%91c%20nh%E1%BA%ADn%20EXP%20cho%20tutientruyen.user.js",
+          "code_size": 1060,
+          "license": "MIT License",
+          "version": "0.0.1",
+          "locale": "vi",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Tăng tốc nhận EXP cho tutientruyen",
+  "description": "Bỏ qua 30s chờ để +1 EXP trên tutientruyen, thay vào đó là mỗi 3s bạn sẽ được +1 EXP",
+  "url": "https://greasyfork.org/scripts/485946-t%C4%83ng-t%E1%BB%91c-nh%E1%BA%ADn-exp-cho-tutientruyen",
+  "code_url": "https://update.greasyfork.org/scripts/485946/T%C4%83ng%20t%E1%BB%91c%20nh%E1%BA%ADn%20EXP%20cho%20tutientruyen.user.js",
+  "code_size": 1060,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

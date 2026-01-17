@@ -1,0 +1,59 @@
+{
+  "id": 450950,
+  "daily_installs": 0,
+  "total_installs": 949,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-08T05:30:41.000Z",
+  "code_updated_at": "2024-10-16T15:14:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 955913,
+      "name": "信阳学院晋先生",
+      "created_at": "2022-09-08T03:28:59.000Z",
+      "url": "https://greasyfork.org/users/955913-%E4%BF%A1%E9%98%B3%E5%AD%A6%E9%99%A2%E6%99%8B%E5%85%88%E7%94%9F",
+      "scripts": [
+        {
+          "id": 450950,
+          "daily_installs": 0,
+          "total_installs": 949,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-08T05:30:41.000Z",
+          "code_updated_at": "2024-10-16T15:14:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🚀学习通章节学习次数🚀",
+          "description": "打开学习通任意章节，实现章节学习次数自动增加",
+          "url": "https://greasyfork.org/scripts/450950-%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%AB%A0%E8%8A%82%E5%AD%A6%E4%B9%A0%E6%AC%A1%E6%95%B0",
+          "code_url": "https://update.greasyfork.org/scripts/450950/%F0%9F%9A%80%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%AB%A0%E8%8A%82%E5%AD%A6%E4%B9%A0%E6%AC%A1%E6%95%B0%F0%9F%9A%80.user.js",
+          "code_size": 512,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🚀学习通章节学习次数🚀",
+  "description": "打开学习通任意章节，实现章节学习次数自动增加",
+  "url": "https://greasyfork.org/scripts/450950-%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%AB%A0%E8%8A%82%E5%AD%A6%E4%B9%A0%E6%AC%A1%E6%95%B0",
+  "code_url": "https://update.greasyfork.org/scripts/450950/%F0%9F%9A%80%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%AB%A0%E8%8A%82%E5%AD%A6%E4%B9%A0%E6%AC%A1%E6%95%B0%F0%9F%9A%80.user.js",
+  "code_size": 512,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

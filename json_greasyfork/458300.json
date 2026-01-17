@@ -1,0 +1,33 @@
+{
+  "id": 458300,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-15T16:48:38.000Z",
+  "code_updated_at": "2023-01-15T16:49:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1012589,
+      "name": "EvolvedGhost",
+      "created_at": "2023-01-15T16:36:04.000Z",
+      "url": "https://greasyfork.org/users/1012589-evolvedghost"
+    }
+  ],
+  "name": "快速取关B站2022年百大UP主",
+  "description": "快速取关B站2022年百大UP主，作用页面：https://www.bilibili.com/blackboard/BPU2022-poweruplist.html",
+  "url": "https://greasyfork.org/scripts/458300-%E5%BF%AB%E9%80%9F%E5%8F%96%E5%85%B3b%E7%AB%992022%E5%B9%B4%E7%99%BE%E5%A4%A7up%E4%B8%BB",
+  "code_url": "https://update.greasyfork.org/scripts/458300/%E5%BF%AB%E9%80%9F%E5%8F%96%E5%85%B3B%E7%AB%992022%E5%B9%B4%E7%99%BE%E5%A4%A7UP%E4%B8%BB.user.js",
+  "code_size": 4359,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

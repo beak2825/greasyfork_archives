@@ -1,0 +1,33 @@
+{
+  "id": 478204,
+  "daily_installs": 0,
+  "total_installs": 52,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-25T04:40:16.000Z",
+  "code_updated_at": "2023-10-25T08:43:44.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1202577-%E5%AD%90%E5%9F%9F",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1202577,
+      "name": "子域",
+      "created_at": "2023-10-23T10:52:47.000Z",
+      "url": "https://greasyfork.org/users/1202577-%E5%AD%90%E5%9F%9F"
+    }
+  ],
+  "name": "加载本地弹幕",
+  "description": "在哔哩哔哩网页加载本地xml弹幕",
+  "url": "https://greasyfork.org/scripts/478204-%E5%8A%A0%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%BC%B9%E5%B9%95",
+  "code_url": "https://update.greasyfork.org/scripts/478204/%E5%8A%A0%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%BC%B9%E5%B9%95.user.js",
+  "code_size": 7575,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

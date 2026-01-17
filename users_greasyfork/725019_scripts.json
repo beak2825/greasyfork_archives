@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419846,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-08T03:29:00.000Z",
+    "code_updated_at": "2021-11-03T17:21:27.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725019,
+        "name": "wshon",
+        "created_at": "2021-01-08T02:34:41.000Z",
+        "url": "https://greasyfork.org/users/725019-wshon"
+      }
+    ],
+    "name": "Ame Helper",
+    "description": "Some optimize for Ame+ system",
+    "url": "https://greasyfork.org/scripts/419846-ame-helper",
+    "code_url": "https://update.greasyfork.org/scripts/419846/Ame%20Helper.user.js",
+    "code_size": 1904,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

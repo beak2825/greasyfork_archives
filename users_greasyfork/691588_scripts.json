@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412742,
+    "daily_installs": 0,
+    "total_installs": 130,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-09T10:29:26.000Z",
+    "code_updated_at": "2020-10-09T10:29:26.000Z",
+    "namespace": "github.com/Mrgrtt",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 691588,
+        "name": "Mrgrtt",
+        "created_at": "2020-10-01T09:21:15.000Z",
+        "url": "https://greasyfork.org/users/691588-mrgrtt"
+      }
+    ],
+    "name": "桂林理工校园网自动登录",
+    "description": "用于桂林理工校园网自动登录",
+    "url": "https://greasyfork.org/scripts/412742-%E6%A1%82%E6%9E%97%E7%90%86%E5%B7%A5%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/412742/%E6%A1%82%E6%9E%97%E7%90%86%E5%B7%A5%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 1202,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

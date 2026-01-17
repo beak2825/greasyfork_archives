@@ -1,0 +1,33 @@
+{
+  "id": 470369,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-07T18:11:50.000Z",
+  "code_updated_at": "2023-07-19T16:16:58.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1087228,
+      "name": "Shadowsodyyy",
+      "created_at": "2023-05-30T10:11:25.000Z",
+      "url": "https://greasyfork.org/users/1087228-shadowsodyyy"
+    }
+  ],
+  "name": "👻Для Кураторов форума CHERRY👻[by S.Troyanov]",
+  "description": "Предложения по улучшению --> https://vk.com/sodyyyxx",
+  "url": "https://greasyfork.org/scripts/470369-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-cherry-by-s-troyanov",
+  "code_url": "https://update.greasyfork.org/scripts/470369/%F0%9F%91%BB%D0%94%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20CHERRY%F0%9F%91%BB%5Bby%20STroyanov%5D.user.js",
+  "code_size": 128491,
+  "license": null,
+  "version": "1.0.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

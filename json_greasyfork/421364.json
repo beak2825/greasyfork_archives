@@ -1,0 +1,34 @@
+{
+  "id": 421364,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-07T08:13:23.000Z",
+  "code_updated_at": "2021-04-20T06:39:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 397427,
+      "name": "Hunk Hu",
+      "created_at": "2019-11-13T03:58:16.000Z",
+      "url": "https://greasyfork.org/users/397427-hunk-hu",
+      "scripts": []
+    }
+  ],
+  "name": "getalicode",
+  "description": "页面数据提取",
+  "url": "https://greasyfork.org/scripts/421364-getalicode",
+  "code_url": "https://update.greasyfork.org/scripts/421364/getalicode.user.js",
+  "code_size": 4703,
+  "license": null,
+  "version": "1.23",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

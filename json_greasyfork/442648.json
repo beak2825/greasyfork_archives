@@ -1,0 +1,59 @@
+{
+  "id": 442648,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-03T14:26:06.000Z",
+  "code_updated_at": "2022-04-03T14:26:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 504255,
+      "name": "花丸晴尨",
+      "created_at": "2020-04-12T06:15:33.000Z",
+      "url": "https://greasyfork.org/users/504255-%E8%8A%B1%E4%B8%B8%E6%99%B4%E5%B0%A8",
+      "scripts": [
+        {
+          "id": 442648,
+          "daily_installs": 0,
+          "total_installs": 39,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-03T14:26:06.000Z",
+          "code_updated_at": "2022-04-03T14:26:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "同传弹幕",
+          "description": "B站同传弹幕高亮显示",
+          "url": "https://greasyfork.org/scripts/442648-%E5%90%8C%E4%BC%A0%E5%BC%B9%E5%B9%95",
+          "code_url": "https://update.greasyfork.org/scripts/442648/%E5%90%8C%E4%BC%A0%E5%BC%B9%E5%B9%95.user.js",
+          "code_size": 1215,
+          "license": "MIT License",
+          "version": "1.0.",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "同传弹幕",
+  "description": "B站同传弹幕高亮显示",
+  "url": "https://greasyfork.org/scripts/442648-%E5%90%8C%E4%BC%A0%E5%BC%B9%E5%B9%95",
+  "code_url": "https://update.greasyfork.org/scripts/442648/%E5%90%8C%E4%BC%A0%E5%BC%B9%E5%B9%95.user.js",
+  "code_size": 1215,
+  "license": "MIT License",
+  "version": "1.0.",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

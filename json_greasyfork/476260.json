@@ -1,0 +1,33 @@
+{
+  "id": 476260,
+  "daily_installs": 0,
+  "total_installs": 411,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-28T09:40:45.000Z",
+  "code_updated_at": "2023-09-28T09:40:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 992589,
+      "name": "obt",
+      "created_at": "2022-12-05T02:32:06.000Z",
+      "url": "https://greasyfork.org/users/992589-obt"
+    }
+  ],
+  "name": "中研企课程习题自动作答",
+  "description": "自动选择答案，解放自我",
+  "url": "https://greasyfork.org/scripts/476260-%E4%B8%AD%E7%A0%94%E4%BC%81%E8%AF%BE%E7%A8%8B%E4%B9%A0%E9%A2%98%E8%87%AA%E5%8A%A8%E4%BD%9C%E7%AD%94",
+  "code_url": "https://update.greasyfork.org/scripts/476260/%E4%B8%AD%E7%A0%94%E4%BC%81%E8%AF%BE%E7%A8%8B%E4%B9%A0%E9%A2%98%E8%87%AA%E5%8A%A8%E4%BD%9C%E7%AD%94.user.js",
+  "code_size": 1628,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 465386,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-02T15:34:00.000Z",
+    "code_updated_at": "2025-08-23T11:00:37.000Z",
+    "namespace": "https://ciffelia.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 23659,
+        "name": "ciffelia",
+        "created_at": "2015-12-18T05:03:44.000Z",
+        "url": "https://greasyfork.org/users/23659-ciffelia"
+      }
+    ],
+    "name": "Google Search English Button",
+    "description": "Googleの検索結果ページに英語のページだけを表示するボタンを追加",
+    "url": "https://greasyfork.org/scripts/465386-google-search-english-button",
+    "code_url": "https://update.greasyfork.org/scripts/465386/Google%20Search%20English%20Button.user.js",
+    "code_size": 1105,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 427978,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-15T04:54:22.000Z",
+    "code_updated_at": "2022-08-05T08:22:10.000Z",
+    "namespace": "https://ciffelia.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 23659,
+        "name": "ciffelia",
+        "created_at": "2015-12-18T05:03:44.000Z",
+        "url": "https://greasyfork.org/users/23659-ciffelia"
+      }
+    ],
+    "name": "Copy Pinyin Button",
+    "description": "Copy pinyin input",
+    "url": "https://greasyfork.org/scripts/427978-copy-pinyin-button",
+    "code_url": "https://update.greasyfork.org/scripts/427978/Copy%20Pinyin%20Button.user.js",
+    "code_size": 766,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 425082,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-15T11:25:24.000Z",
+    "code_updated_at": "2023-02-06T16:19:36.000Z",
+    "namespace": "https://ciffelia.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 23659,
+        "name": "ciffelia",
+        "created_at": "2015-12-18T05:03:44.000Z",
+        "url": "https://greasyfork.org/users/23659-ciffelia"
+      }
+    ],
+    "name": "KOAN forever",
+    "description": "Automatically extends sessions on KOAN.",
+    "url": "https://greasyfork.org/scripts/425082-koan-forever",
+    "code_url": "https://update.greasyfork.org/scripts/425082/KOAN%20forever.user.js",
+    "code_size": 570,
+    "license": null,
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

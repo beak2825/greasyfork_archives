@@ -1,0 +1,34 @@
+{
+  "id": 455162,
+  "daily_installs": 0,
+  "total_installs": 65,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-20T19:58:16.000Z",
+  "code_updated_at": "2022-11-20T19:58:16.000Z",
+  "namespace": "grundos.cafe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 985754,
+      "name": "Gwyl",
+      "created_at": "2022-11-20T19:42:53.000Z",
+      "url": "https://greasyfork.org/users/985754-gwyl",
+      "scripts": []
+    }
+  ],
+  "name": "Grundos Cafe Stamp Checker",
+  "description": "Adds buttons to check stamp album page for individual stamps",
+  "url": "https://greasyfork.org/scripts/455162-grundos-cafe-stamp-checker",
+  "code_url": "https://update.greasyfork.org/scripts/455162/Grundos%20Cafe%20Stamp%20Checker.user.js",
+  "code_size": 10041,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

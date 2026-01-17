@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487055,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-11T03:34:31.000Z",
+    "code_updated_at": "2024-02-12T02:48:27.000Z",
+    "namespace": "https://github.com/windboot/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1259865,
+        "name": "windboot",
+        "created_at": "2024-02-11T03:15:49.000Z",
+        "url": "https://greasyfork.org/users/1259865-windboot"
+      }
+    ],
+    "name": "github-helper",
+    "description": "github helper - proxy,qrcode,",
+    "url": "https://greasyfork.org/scripts/487055-github-helper",
+    "code_url": "https://update.greasyfork.org/scripts/487055/github-helper.user.js",
+    "code_size": 22202,
+    "license": "MIT License",
+    "version": "v0.1.3",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

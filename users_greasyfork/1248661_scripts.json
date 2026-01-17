@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484953,
+    "daily_installs": 58,
+    "total_installs": 110060,
+    "fan_score": "36.3",
+    "good_ratings": 9,
+    "ok_ratings": 4,
+    "bad_ratings": 6,
+    "created_at": "2024-01-16T02:43:02.000Z",
+    "code_updated_at": "2024-02-19T08:40:54.000Z",
+    "namespace": "https://github.com/Gao-Lezhe/Online-disk-direct-link-download-assistant",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1248661,
+        "name": "lezhe",
+        "created_at": "2024-01-16T02:17:19.000Z",
+        "url": "https://greasyfork.org/users/1248661-lezhe"
+      }
+    ],
+    "name": "百度网盘下载助手",
+    "description": "可以获取网盘文件真实下载地址。现已支持百度网盘、阿里网盘、天翼网、盘迅雷网盘、夸克网盘、移动网盘（139网盘）六大网盘，基于【网盘直链下载助手】修改自1.0.8.2版本,自用,去推广,修原有BUG,修改界面,甚至比原版还好用！",
+    "url": "https://greasyfork.org/scripts/484953-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/484953/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 211443,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

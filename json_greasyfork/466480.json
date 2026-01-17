@@ -1,0 +1,33 @@
+{
+  "id": 466480,
+  "daily_installs": 4,
+  "total_installs": 9285,
+  "fan_score": "64.6",
+  "good_ratings": 7,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-17T05:29:09.000Z",
+  "code_updated_at": "2025-10-14T08:48:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1040212,
+      "name": "soulpursuit",
+      "created_at": "2023-03-11T05:37:59.000Z",
+      "url": "https://greasyfork.org/users/1040212-soulpursuit"
+    }
+  ],
+  "name": "小草简洁助手",
+  "description": "为小草榴社区、1024、cl进行一些外科手术操作·回家不迷路，草榴最新地址 ·帖子内快速切换上下帖 ·预加载下一帖 ·限制页面宽度为1080 ·等比例无缝看图 ·图片查看模式 ·使用手机版面 ·帖子精简对于游客身份无关的内容·图片批量下载功能",
+  "url": "https://greasyfork.org/scripts/466480-%E5%B0%8F%E8%8D%89%E7%AE%80%E6%B4%81%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/466480/%E5%B0%8F%E8%8D%89%E7%AE%80%E6%B4%81%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 49585,
+  "license": null,
+  "version": "3.01",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

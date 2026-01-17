@@ -1,0 +1,33 @@
+{
+  "id": 461167,
+  "daily_installs": 0,
+  "total_installs": 163,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-04T12:22:03.000Z",
+  "code_updated_at": "2023-04-02T03:38:20.000Z",
+  "namespace": "https://github.com/tljk/splitview/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1036389,
+      "name": "tljk",
+      "created_at": "2023-03-04T11:10:31.000Z",
+      "url": "https://greasyfork.org/users/1036389-tljk"
+    }
+  ],
+  "name": "split view new",
+  "description": "long press link to open in side panel, 长按链接在侧边栏打开",
+  "url": "https://greasyfork.org/scripts/461167-split-view-new",
+  "code_url": "https://update.greasyfork.org/scripts/461167/split%20view%20new.user.js",
+  "code_size": 5154,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

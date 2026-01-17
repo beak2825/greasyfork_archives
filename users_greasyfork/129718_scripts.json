@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433258,
+    "daily_installs": 0,
+    "total_installs": 627,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-10-01T14:12:51.000Z",
+    "code_updated_at": "2025-07-20T14:41:13.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/433258",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 129718,
+        "name": "starudream",
+        "created_at": "2017-06-05T12:59:59.000Z",
+        "url": "https://greasyfork.org/users/129718-starudream"
+      }
+    ],
+    "name": "HLTV 阅读优化",
+    "description": "HLTV 阅读优化，关闭广告",
+    "url": "https://greasyfork.org/scripts/433258-hltv-%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/433258/HLTV%20%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 844,
+    "license": "Apache License 2.0",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

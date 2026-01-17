@@ -1,0 +1,34 @@
+{
+  "id": 478722,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-31T14:18:50.000Z",
+  "code_updated_at": "2023-10-31T14:18:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1023408,
+      "name": "likundeli10",
+      "created_at": "2023-02-08T03:13:10.000Z",
+      "url": "https://greasyfork.org/users/1023408-likundeli10",
+      "scripts": []
+    }
+  ],
+  "name": "新增折讓單",
+  "description": "新增折讓單 功能",
+  "url": "https://greasyfork.org/scripts/478722-%E6%96%B0%E5%A2%9E%E6%8A%98%E8%AE%93%E5%96%AE",
+  "code_url": "https://update.greasyfork.org/scripts/478722/%E6%96%B0%E5%A2%9E%E6%8A%98%E8%AE%93%E5%96%AE.user.js",
+  "code_size": 714,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

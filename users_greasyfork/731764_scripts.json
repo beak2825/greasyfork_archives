@@ -196,5 +196,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 491340,
+    "daily_installs": 0,
+    "total_installs": 4915,
+    "fan_score": "55.2",
+    "good_ratings": 9,
+    "ok_ratings": 2,
+    "bad_ratings": 1,
+    "created_at": "2024-03-31T15:30:12.000Z",
+    "code_updated_at": "2025-03-14T11:19:14.000Z",
+    "namespace": "https://github.com/Ocyss/boos-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731764,
+        "name": "Ocyss",
+        "created_at": "2021-01-27T07:39:43.000Z",
+        "url": "https://greasyfork.org/users/731764-ocyss"
+      }
+    ],
+    "name": "Boss直聘助手",
+    "description": "优化UI去除广告,批量投递简历,高级筛选,GPT自动打招呼,多账号管理...",
+    "url": "https://greasyfork.org/scripts/491340-boss%E7%9B%B4%E8%81%98%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/491340/Boss%E7%9B%B4%E8%81%98%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 1282434,
+    "license": "MIT License",
+    "version": "0.3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485281,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-20T01:37:01.000Z",
+    "code_updated_at": "2024-01-20T01:37:01.000Z",
+    "namespace": "https://github.com/Ocyss/ali-video",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731764,
+        "name": "Ocyss",
+        "created_at": "2021-01-27T07:39:43.000Z",
+        "url": "https://greasyfork.org/users/731764-ocyss"
+      }
+    ],
+    "name": "阿里云盘助手(罗根修复版)",
+    "description": "fork自罗根大人，自用修复版。aliyundrive全部重定向到alipan，支持生成文件下载链接、修改文件后缀,支持第三方播放器Artplayer(突破视频2分钟限制,长按倍速,选集,历史播放)",
+    "url": "https://greasyfork.org/scripts/485281-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E5%8A%A9%E6%89%8B-%E7%BD%97%E6%A0%B9%E4%BF%AE%E5%A4%8D%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/485281/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E5%8A%A9%E6%89%8B%28%E7%BD%97%E6%A0%B9%E4%BF%AE%E5%A4%8D%E7%89%88%29.user.js",
+    "code_size": 494681,
+    "license": "MIT License",
+    "version": "3.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 475363,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-15T15:20:47.000Z",
+    "code_updated_at": "2023-11-11T09:54:10.000Z",
+    "namespace": "Ocyss",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731764,
+        "name": "Ocyss",
+        "created_at": "2021-01-27T07:39:43.000Z",
+        "url": "https://greasyfork.org/users/731764-ocyss"
+      }
+    ],
+    "name": "力扣新版UI评论区",
+    "description": "杀软,tm的会不会设计?",
+    "url": "https://greasyfork.org/scripts/475363-%E5%8A%9B%E6%89%A3%E6%96%B0%E7%89%88ui%E8%AF%84%E8%AE%BA%E5%8C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/475363/%E5%8A%9B%E6%89%A3%E6%96%B0%E7%89%88UI%E8%AF%84%E8%AE%BA%E5%8C%BA.user.js",
+    "code_size": 6744,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469650,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-28T12:21:25.000Z",
+    "code_updated_at": "2023-06-28T12:21:25.000Z",
+    "namespace": "Ocyss",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731764,
+        "name": "Ocyss",
+        "created_at": "2021-01-27T07:39:43.000Z",
+        "url": "https://greasyfork.org/users/731764-ocyss"
+      }
+    ],
+    "name": "好好看看数据范围",
+    "description": "看好范围很重要~",
+    "url": "https://greasyfork.org/scripts/469650-%E5%A5%BD%E5%A5%BD%E7%9C%8B%E7%9C%8B%E6%95%B0%E6%8D%AE%E8%8C%83%E5%9B%B4",
+    "code_url": "https://update.greasyfork.org/scripts/469650/%E5%A5%BD%E5%A5%BD%E7%9C%8B%E7%9C%8B%E6%95%B0%E6%8D%AE%E8%8C%83%E5%9B%B4.user.js",
+    "code_size": 643,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

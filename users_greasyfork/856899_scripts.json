@@ -1,0 +1,68 @@
+[
+  {
+    "id": 438728,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-18T09:46:43.000Z",
+    "code_updated_at": "2022-01-18T09:46:42.000Z",
+    "namespace": "https://hz.cn2down.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 856899,
+        "name": "zenghp2015",
+        "created_at": "2021-12-23T13:49:15.000Z",
+        "url": "https://greasyfork.org/users/856899-zenghp2015"
+      }
+    ],
+    "name": "豆瓣采集【内部工具】",
+    "description": "豆瓣新书速递、最受关注、豆瓣阅读",
+    "url": "https://greasyfork.org/scripts/438728-%E8%B1%86%E7%93%A3%E9%87%87%E9%9B%86-%E5%86%85%E9%83%A8%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/438728/%E8%B1%86%E7%93%A3%E9%87%87%E9%9B%86%E3%80%90%E5%86%85%E9%83%A8%E5%B7%A5%E5%85%B7%E3%80%91.user.js",
+    "code_size": 3923,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 437492,
+    "daily_installs": 0,
+    "total_installs": 8680,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-12-23T14:12:17.000Z",
+    "code_updated_at": "2022-01-03T16:26:09.000Z",
+    "namespace": "https://hz.cn2down.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 856899,
+        "name": "zenghp2015",
+        "created_at": "2021-12-23T13:49:15.000Z",
+        "url": "https://greasyfork.org/users/856899-zenghp2015"
+      }
+    ],
+    "name": "🔥🔥🔥全国图书联盟读秀豆瓣京东图书获取🔥🔥🔥",
+    "description": "可以直接显示图书的isbn号，支持读秀、超星、龙岩、全国图书参考联盟，豆瓣，京东，功能还在开发中，敬请期待！！苍鸟资源互助联盟（https://hz.cn2down.com）",
+    "url": "https://greasyfork.org/scripts/437492-%E5%85%A8%E5%9B%BD%E5%9B%BE%E4%B9%A6%E8%81%94%E7%9B%9F%E8%AF%BB%E7%A7%80%E8%B1%86%E7%93%A3%E4%BA%AC%E4%B8%9C%E5%9B%BE%E4%B9%A6%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/437492/%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5%E5%85%A8%E5%9B%BD%E5%9B%BE%E4%B9%A6%E8%81%94%E7%9B%9F%E8%AF%BB%E7%A7%80%E8%B1%86%E7%93%A3%E4%BA%AC%E4%B8%9C%E5%9B%BE%E4%B9%A6%E8%8E%B7%E5%8F%96%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5.user.js",
+    "code_size": 8803,
+    "license": "MIT License",
+    "version": "0.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

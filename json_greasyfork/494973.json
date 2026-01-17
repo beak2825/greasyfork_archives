@@ -1,0 +1,59 @@
+{
+  "id": 494973,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-14T21:31:30.000Z",
+  "code_updated_at": "2024-05-15T14:55:24.000Z",
+  "namespace": "https://greasyfork.org/users/1301704",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1301704,
+      "name": "liewstar",
+      "created_at": "2024-05-14T20:51:41.000Z",
+      "url": "https://greasyfork.org/users/1301704-liewstar",
+      "scripts": [
+        {
+          "id": 494973,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-14T21:31:30.000Z",
+          "code_updated_at": "2024-05-15T14:55:24.000Z",
+          "namespace": "https://greasyfork.org/users/1301704",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站观看视频时长记录",
+          "description": "记录每天观看b站视频的时长，促进激励自己猛猛学习",
+          "url": "https://greasyfork.org/scripts/494973-b%E7%AB%99%E8%A7%82%E7%9C%8B%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%E8%AE%B0%E5%BD%95",
+          "code_url": "https://update.greasyfork.org/scripts/494973/B%E7%AB%99%E8%A7%82%E7%9C%8B%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%E8%AE%B0%E5%BD%95.user.js",
+          "code_size": 7848,
+          "license": "GNU General Public License v3.0",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站观看视频时长记录",
+  "description": "记录每天观看b站视频的时长，促进激励自己猛猛学习",
+  "url": "https://greasyfork.org/scripts/494973-b%E7%AB%99%E8%A7%82%E7%9C%8B%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%E8%AE%B0%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/494973/B%E7%AB%99%E8%A7%82%E7%9C%8B%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%E8%AE%B0%E5%BD%95.user.js",
+  "code_size": 7848,
+  "license": "GNU General Public License v3.0",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

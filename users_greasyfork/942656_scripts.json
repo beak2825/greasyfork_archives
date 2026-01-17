@@ -1,0 +1,68 @@
+[
+  {
+    "id": 457909,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-09T11:01:42.000Z",
+    "code_updated_at": "2023-01-09T11:01:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942656,
+        "name": "szeto",
+        "created_at": "2022-08-03T12:12:42.000Z",
+        "url": "https://greasyfork.org/users/942656-szeto"
+      }
+    ],
+    "name": "barriergate visualize",
+    "description": "add shift mutiselect on data protal",
+    "url": "https://greasyfork.org/scripts/457909-barriergate-visualize",
+    "code_url": "https://update.greasyfork.org/scripts/457909/barriergate%20visualize.user.js",
+    "code_size": 14375,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 448856,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-03T12:54:14.000Z",
+    "code_updated_at": "2022-10-25T01:48:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942656,
+        "name": "szeto",
+        "created_at": "2022-08-03T12:12:42.000Z",
+        "url": "https://greasyfork.org/users/942656-szeto"
+      }
+    ],
+    "name": "data protal extension",
+    "description": "data portal 插件",
+    "url": "https://greasyfork.org/scripts/448856-data-protal-extension",
+    "code_url": "https://update.greasyfork.org/scripts/448856/data%20protal%20extension.user.js",
+    "code_size": 6464,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

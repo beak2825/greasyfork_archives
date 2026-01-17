@@ -1,0 +1,134 @@
+[
+  {
+    "id": 482378,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-16T10:05:33.000Z",
+    "code_updated_at": "2023-12-16T10:10:04.000Z",
+    "namespace": "https://greasyfork.org/users/981958",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 981958,
+        "name": "Cursed",
+        "created_at": "2022-11-11T11:34:13.000Z",
+        "url": "https://greasyfork.org/users/981958-cursed"
+      }
+    ],
+    "name": "SigMod Client (Macros) - [BETA]",
+    "description": "The best mod you can find for Sigmally: Macros, tag system (minimap, chat), FPS boost, color mod, custom skins, save names, themes and more!",
+    "url": "https://greasyfork.org/scripts/482378-sigmod-client-macros-beta",
+    "code_url": "https://update.greasyfork.org/scripts/482378/SigMod%20Client%20%28Macros%29%20-%20%5BBETA%5D.user.js",
+    "code_size": 261237,
+    "license": "MIT License",
+    "version": "8.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470004,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-02T22:15:33.000Z",
+    "code_updated_at": "2023-07-02T22:15:32.000Z",
+    "namespace": "https://discord.gg/gHmhpCaPfP",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 981958,
+        "name": "Cursed",
+        "created_at": "2022-11-11T11:34:13.000Z",
+        "url": "https://greasyfork.org/users/981958-cursed"
+      }
+    ],
+    "name": "Sigmally Mod (Macros, Client)",
+    "description": "Sigmally Mod for Sigmally.com | Macros, Themes, Client, Autorespawn and much more!",
+    "url": "https://greasyfork.org/scripts/470004-sigmally-mod-macros-client",
+    "code_url": "https://update.greasyfork.org/scripts/470004/Sigmally%20Mod%20%28Macros%2C%20Client%29.user.js",
+    "code_size": 129734,
+    "license": "MIT License",
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 464636,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-22T19:07:39.000Z",
+    "code_updated_at": "2023-04-22T19:07:38.000Z",
+    "namespace": "https://greasyfork.org/users/981958",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 981958,
+        "name": "Cursed",
+        "created_at": "2022-11-11T11:34:13.000Z",
+        "url": "https://greasyfork.org/users/981958-cursed"
+      }
+    ],
+    "name": "Sigmally on Drugs",
+    "description": "Weird Sigmally",
+    "url": "https://greasyfork.org/scripts/464636-sigmally-on-drugs",
+    "code_url": "https://update.greasyfork.org/scripts/464636/Sigmally%20on%20Drugs.user.js",
+    "code_size": 1206,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459962,
+    "daily_installs": 0,
+    "total_installs": 1671,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-13T16:59:35.000Z",
+    "code_updated_at": "2024-02-12T14:49:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 981958,
+        "name": "Cursed",
+        "created_at": "2022-11-11T11:34:13.000Z",
+        "url": "https://greasyfork.org/users/981958-cursed"
+      }
+    ],
+    "name": "CzMod",
+    "description": "CzMod by Cursed with Many Features! (Outdated, laggy)",
+    "url": "https://greasyfork.org/scripts/459962-czmod",
+    "code_url": "https://update.greasyfork.org/scripts/459962/CzMod.user.js",
+    "code_size": 69553,
+    "license": "MIT License",
+    "version": "0.1.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 471700,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-25T15:05:33.000Z",
+  "code_updated_at": "2023-08-03T09:36:21.000Z",
+  "namespace": "https://greasyfork.org/users/1135652",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1135652,
+      "name": "TheLastRar",
+      "created_at": "2023-07-25T14:53:13.000Z",
+      "url": "https://greasyfork.org/users/1135652-thelastrar",
+      "scripts": []
+    }
+  ],
+  "name": "ActiveX Twitter",
+  "description": "Bringing DirectX & ActiveX to Twitter/X",
+  "url": "https://greasyfork.org/scripts/471700-activex-twitter",
+  "code_url": "https://update.greasyfork.org/scripts/471700/ActiveX%20Twitter.user.js",
+  "code_size": 1453,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

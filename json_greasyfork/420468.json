@@ -1,0 +1,34 @@
+{
+  "id": 420468,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-20T18:20:09.000Z",
+  "code_updated_at": "2021-01-20T18:20:09.000Z",
+  "namespace": "Tampermonkey for Chrome",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 729509,
+      "name": "sijian shen",
+      "created_at": "2021-01-20T18:15:32.000Z",
+      "url": "https://greasyfork.org/users/729509-sijian-shen",
+      "scripts": []
+    }
+  ],
+  "name": "资源索引1",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/420468-%E8%B5%84%E6%BA%90%E7%B4%A2%E5%BC%951",
+  "code_url": "https://update.greasyfork.org/scripts/420468/%E8%B5%84%E6%BA%90%E7%B4%A2%E5%BC%951.user.js",
+  "code_size": 508,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

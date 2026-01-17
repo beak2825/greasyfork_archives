@@ -1,0 +1,59 @@
+{
+  "id": 488091,
+  "daily_installs": 0,
+  "total_installs": 744,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-23T11:01:27.000Z",
+  "code_updated_at": "2024-02-23T11:09:32.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265833,
+      "name": "Bedirhan ALAN",
+      "created_at": "2024-02-23T09:26:01.000Z",
+      "url": "https://greasyfork.org/users/1265833-bedirhan-alan",
+      "scripts": [
+        {
+          "id": 488091,
+          "daily_installs": 0,
+          "total_installs": 744,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-23T11:01:27.000Z",
+          "code_updated_at": "2024-02-23T11:09:32.000Z",
+          "namespace": "",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Sigmally Modder By ShadowSoftware",
+          "description": "Clans Menu",
+          "url": "https://greasyfork.org/scripts/488091-sigmally-modder-by-shadowsoftware",
+          "code_url": "https://update.greasyfork.org/scripts/488091/Sigmally%20Modder%20By%20ShadowSoftware.user.js",
+          "code_size": 266252,
+          "license": "MIT License",
+          "version": "8.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Sigmally Modder By ShadowSoftware",
+  "description": "Clans Menu",
+  "url": "https://greasyfork.org/scripts/488091-sigmally-modder-by-shadowsoftware",
+  "code_url": "https://update.greasyfork.org/scripts/488091/Sigmally%20Modder%20By%20ShadowSoftware.user.js",
+  "code_size": 266252,
+  "license": "MIT License",
+  "version": "8.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

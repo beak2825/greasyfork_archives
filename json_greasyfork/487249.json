@@ -1,0 +1,33 @@
+{
+  "id": 487249,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-13T16:43:48.000Z",
+  "code_updated_at": "2024-02-13T16:51:06.000Z",
+  "namespace": "https://greasyfork.org/users/325815",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 325815,
+      "name": "monat151",
+      "created_at": "2019-08-13T13:42:52.000Z",
+      "url": "https://greasyfork.org/users/325815-monat151"
+    }
+  ],
+  "name": "Nga 显示VIP",
+  "description": "在看帖界面显示用户是否是VIP",
+  "url": "https://greasyfork.org/scripts/487249-nga-%E6%98%BE%E7%A4%BAvip",
+  "code_url": "https://update.greasyfork.org/scripts/487249/Nga%20%E6%98%BE%E7%A4%BAVIP.user.js",
+  "code_size": 2806,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

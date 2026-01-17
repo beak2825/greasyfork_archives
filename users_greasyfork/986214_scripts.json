@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455216,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-22T00:36:20.000Z",
+    "code_updated_at": "2023-01-02T01:35:00.000Z",
+    "namespace": "https://greasyfork.org/en/users/986214-romymopen",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986214,
+        "name": "romymopen",
+        "created_at": "2022-11-22T00:12:20.000Z",
+        "url": "https://greasyfork.org/users/986214-romymopen"
+      }
+    ],
+    "name": "Reddit Stern Dropifier",
+    "description": "For use on the Howard Stern subreddit (reddit.com/r/howardstern/). Converts some of the better known Stern drops to playable audio",
+    "url": "https://greasyfork.org/scripts/455216-reddit-stern-dropifier",
+    "code_url": "https://update.greasyfork.org/scripts/455216/Reddit%20Stern%20Dropifier.user.js",
+    "code_size": 6716,
+    "license": "Public Domain",
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

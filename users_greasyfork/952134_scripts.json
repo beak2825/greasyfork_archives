@@ -1,0 +1,35 @@
+[
+  {
+    "id": 450407,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-29T12:36:12.000Z",
+    "code_updated_at": "2022-09-16T19:14:30.000Z",
+    "namespace": "https://greasyfork.org/users/952134",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952134,
+        "name": "Roman Davydov",
+        "created_at": "2022-08-29T12:15:18.000Z",
+        "url": "https://greasyfork.org/users/952134-roman-davydov"
+      }
+    ],
+    "name": "Link to \"friends who play\" on the deleted games' pages",
+    "description": "Adds a link to \"friends who play\" page on the deleted games' pages. Works only when your Steam is in English.",
+    "url": "https://greasyfork.org/scripts/450407-link-to-friends-who-play-on-the-deleted-games-pages",
+    "code_url": "https://update.greasyfork.org/scripts/450407/Link%20to%20%22friends%20who%20play%22%20on%20the%20deleted%20games%27%20pages.user.js",
+    "code_size": 972,
+    "license": "MIT License",
+    "version": "0.0.1.20220916191430",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

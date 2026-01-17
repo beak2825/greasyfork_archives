@@ -1,0 +1,59 @@
+{
+  "id": 479885,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-14T18:38:40.000Z",
+  "code_updated_at": "2025-09-29T04:32:22.000Z",
+  "namespace": "https://greasyfork.org/users/1217444",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1217444,
+      "name": "zjbthomas",
+      "created_at": "2023-11-14T18:34:01.000Z",
+      "url": "https://greasyfork.org/users/1217444-zjbthomas",
+      "scripts": [
+        {
+          "id": 479885,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-14T18:38:40.000Z",
+          "code_updated_at": "2025-09-29T04:32:22.000Z",
+          "namespace": "https://greasyfork.org/users/1217444",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "明日方舟一图流-活动商店优化",
+          "description": "标记活动商店已兑换物品。",
+          "url": "https://greasyfork.org/scripts/479885-%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%E4%B8%80%E5%9B%BE%E6%B5%81-%E6%B4%BB%E5%8A%A8%E5%95%86%E5%BA%97%E4%BC%98%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/479885/%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%E4%B8%80%E5%9B%BE%E6%B5%81-%E6%B4%BB%E5%8A%A8%E5%95%86%E5%BA%97%E4%BC%98%E5%8C%96.user.js",
+          "code_size": 8720,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "明日方舟一图流-活动商店优化",
+  "description": "标记活动商店已兑换物品。",
+  "url": "https://greasyfork.org/scripts/479885-%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%E4%B8%80%E5%9B%BE%E6%B5%81-%E6%B4%BB%E5%8A%A8%E5%95%86%E5%BA%97%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/479885/%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%E4%B8%80%E5%9B%BE%E6%B5%81-%E6%B4%BB%E5%8A%A8%E5%95%86%E5%BA%97%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 8720,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

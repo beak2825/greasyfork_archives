@@ -1,0 +1,34 @@
+{
+  "id": 438600,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-15T14:40:56.000Z",
+  "code_updated_at": "2023-02-24T04:24:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 3000,
+      "name": "Z233",
+      "created_at": "2014-06-24T03:29:20.000Z",
+      "url": "https://greasyfork.org/users/3000-z233",
+      "scripts": []
+    }
+  ],
+  "name": "Acwing Clean",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/438600-acwing-clean",
+  "code_url": "https://update.greasyfork.org/scripts/438600/Acwing%20Clean.user.js",
+  "code_size": 694,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

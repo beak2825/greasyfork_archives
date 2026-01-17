@@ -1,0 +1,34 @@
+{
+  "id": 429284,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-13T03:45:58.000Z",
+  "code_updated_at": "2021-08-16T22:47:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 792901,
+      "name": "Mike Mathues",
+      "created_at": "2021-07-12T19:22:12.000Z",
+      "url": "https://greasyfork.org/users/792901-mike-mathues",
+      "scripts": []
+    }
+  ],
+  "name": "Hudu Unfurl",
+  "description": "Unfurl Asset links in place",
+  "url": "https://greasyfork.org/scripts/429284-hudu-unfurl",
+  "code_url": "https://update.greasyfork.org/scripts/429284/Hudu%20Unfurl.user.js",
+  "code_size": 8455,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

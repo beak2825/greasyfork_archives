@@ -1,0 +1,59 @@
+{
+  "id": 478418,
+  "daily_installs": 0,
+  "total_installs": 453,
+  "fan_score": "20.8",
+  "good_ratings": 1,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2023-10-27T16:34:28.000Z",
+  "code_updated_at": "2023-10-27T16:34:28.000Z",
+  "namespace": "SomeCheapGuy",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1205327,
+      "name": "SomeScriptWriter",
+      "created_at": "2023-10-27T16:31:08.000Z",
+      "url": "https://greasyfork.org/users/1205327-somescriptwriter",
+      "scripts": [
+        {
+          "id": 478418,
+          "daily_installs": 0,
+          "total_installs": 453,
+          "fan_score": "20.8",
+          "good_ratings": 1,
+          "ok_ratings": 2,
+          "bad_ratings": 0,
+          "created_at": "2023-10-27T16:34:28.000Z",
+          "code_updated_at": "2023-10-27T16:34:28.000Z",
+          "namespace": "SomeCheapGuy",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove Economist Paywall 2023",
+          "description": "Get rid of the paywall for economist.com, copied from chrome extension here: https://github.com/vivek9patel/economist.com-unlocked/blob/master/main.js",
+          "url": "https://greasyfork.org/scripts/478418-remove-economist-paywall-2023",
+          "code_url": "https://update.greasyfork.org/scripts/478418/Remove%20Economist%20Paywall%202023.user.js",
+          "code_size": 3614,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove Economist Paywall 2023",
+  "description": "Get rid of the paywall for economist.com, copied from chrome extension here: https://github.com/vivek9patel/economist.com-unlocked/blob/master/main.js",
+  "url": "https://greasyfork.org/scripts/478418-remove-economist-paywall-2023",
+  "code_url": "https://update.greasyfork.org/scripts/478418/Remove%20Economist%20Paywall%202023.user.js",
+  "code_size": 3614,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

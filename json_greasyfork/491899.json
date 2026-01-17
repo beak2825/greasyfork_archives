@@ -1,0 +1,59 @@
+{
+  "id": 491899,
+  "daily_installs": 0,
+  "total_installs": 206,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-07T12:38:53.000Z",
+  "code_updated_at": "2024-09-15T13:11:52.000Z",
+  "namespace": "https://www.ptt.cc/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1285150,
+      "name": "Anisile",
+      "created_at": "2024-04-07T12:30:13.000Z",
+      "url": "https://greasyfork.org/users/1285150-anisile",
+      "scripts": [
+        {
+          "id": 491899,
+          "daily_installs": 0,
+          "total_installs": 206,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-07T12:38:53.000Z",
+          "code_updated_at": "2024-09-15T13:11:52.000Z",
+          "namespace": "https://www.ptt.cc/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PTT網頁版樓層擴充",
+          "description": "PTT網頁版的樓層擴充套件",
+          "url": "https://greasyfork.org/scripts/491899-ptt%E7%B6%B2%E9%A0%81%E7%89%88%E6%A8%93%E5%B1%A4%E6%93%B4%E5%85%85",
+          "code_url": "https://update.greasyfork.org/scripts/491899/PTT%E7%B6%B2%E9%A0%81%E7%89%88%E6%A8%93%E5%B1%A4%E6%93%B4%E5%85%85.user.js",
+          "code_size": 10835,
+          "license": "GPL",
+          "version": "1.8.1",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PTT網頁版樓層擴充",
+  "description": "PTT網頁版的樓層擴充套件",
+  "url": "https://greasyfork.org/scripts/491899-ptt%E7%B6%B2%E9%A0%81%E7%89%88%E6%A8%93%E5%B1%A4%E6%93%B4%E5%85%85",
+  "code_url": "https://update.greasyfork.org/scripts/491899/PTT%E7%B6%B2%E9%A0%81%E7%89%88%E6%A8%93%E5%B1%A4%E6%93%B4%E5%85%85.user.js",
+  "code_size": 10835,
+  "license": "GPL",
+  "version": "1.8.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

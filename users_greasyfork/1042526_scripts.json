@@ -1,0 +1,101 @@
+[
+  {
+    "id": 473351,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-18T07:08:55.000Z",
+    "code_updated_at": "2023-08-18T07:10:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1042526,
+        "name": "Ymmzy",
+        "created_at": "2023-03-15T10:46:48.000Z",
+        "url": "https://greasyfork.org/users/1042526-ymmzy"
+      }
+    ],
+    "name": "金庸群侠•大乱斗额外按钮",
+    "description": "金庸群侠•大乱斗便利性按钮插件：1.战斗中修改主角目标选择策略按钮；2.残卷使用数量+30按钮。",
+    "url": "https://greasyfork.org/scripts/473351-%E9%87%91%E5%BA%B8%E7%BE%A4%E4%BE%A0-%E5%A4%A7%E4%B9%B1%E6%96%97%E9%A2%9D%E5%A4%96%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/473351/%E9%87%91%E5%BA%B8%E7%BE%A4%E4%BE%A0%E2%80%A2%E5%A4%A7%E4%B9%B1%E6%96%97%E9%A2%9D%E5%A4%96%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 7104,
+    "license": "MIT License",
+    "version": "0.6.161",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472896,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-11T09:44:40.000Z",
+    "code_updated_at": "2023-08-11T09:44:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1042526,
+        "name": "Ymmzy",
+        "created_at": "2023-03-15T10:46:48.000Z",
+        "url": "https://greasyfork.org/users/1042526-ymmzy"
+      }
+    ],
+    "name": "采石场放置（Into The Quarry）自动点击完美按钮",
+    "description": "采石场放置（Into The Quarry）自动点击完美按钮，须停留在按钮界面方可生效",
+    "url": "https://greasyfork.org/scripts/472896-%E9%87%87%E7%9F%B3%E5%9C%BA%E6%94%BE%E7%BD%AE-into-the-quarry-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%AE%8C%E7%BE%8E%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/472896/%E9%87%87%E7%9F%B3%E5%9C%BA%E6%94%BE%E7%BD%AE%EF%BC%88Into%20The%20Quarry%EF%BC%89%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%AE%8C%E7%BE%8E%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 1467,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 464895,
+    "daily_installs": 0,
+    "total_installs": 346,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-26T10:11:11.000Z",
+    "code_updated_at": "2023-04-26T10:11:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1042526,
+        "name": "Ymmzy",
+        "created_at": "2023-03-15T10:46:48.000Z",
+        "url": "https://greasyfork.org/users/1042526-ymmzy"
+      }
+    ],
+    "name": "骑士进度条2 MOD自定义倍速",
+    "description": "骑士进度条2 MOD自定义倍速，点击游戏标题右侧修改倍速，即时生效",
+    "url": "https://greasyfork.org/scripts/464895-%E9%AA%91%E5%A3%AB%E8%BF%9B%E5%BA%A6%E6%9D%A12-mod%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%8D%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/464895/%E9%AA%91%E5%A3%AB%E8%BF%9B%E5%BA%A6%E6%9D%A12%20MOD%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%8D%E9%80%9F.user.js",
+    "code_size": 5286,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

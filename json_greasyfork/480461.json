@@ -1,0 +1,34 @@
+{
+  "id": 480461,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-21T14:05:22.000Z",
+  "code_updated_at": "2023-12-02T17:27:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1209112,
+      "name": "Faq Groland",
+      "created_at": "2023-11-02T07:27:21.000Z",
+      "url": "https://greasyfork.org/users/1209112-faq-groland",
+      "scripts": []
+    }
+  ],
+  "name": "Whoopyrewards",
+  "description": "Renda Extra",
+  "url": "https://greasyfork.org/scripts/480461-whoopyrewards",
+  "code_url": "https://update.greasyfork.org/scripts/480461/Whoopyrewards.user.js",
+  "code_size": 4332,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

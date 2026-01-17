@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424977,
+    "daily_installs": 0,
+    "total_installs": 84,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-13T14:10:45.000Z",
+    "code_updated_at": "2021-04-16T15:06:04.000Z",
+    "namespace": "sourcewater",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326878,
+        "name": "ricroon",
+        "created_at": "2019-08-17T05:06:58.000Z",
+        "url": "https://greasyfork.org/users/326878-ricroon"
+      }
+    ],
+    "name": "其乐自动加体力",
+    "description": "其乐自动加体力!",
+    "url": "https://greasyfork.org/scripts/424977-%E5%85%B6%E4%B9%90%E8%87%AA%E5%8A%A8%E5%8A%A0%E4%BD%93%E5%8A%9B",
+    "code_url": "https://update.greasyfork.org/scripts/424977/%E5%85%B6%E4%B9%90%E8%87%AA%E5%8A%A8%E5%8A%A0%E4%BD%93%E5%8A%9B.user.js",
+    "code_size": 28486,
+    "license": null,
+    "version": "0.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

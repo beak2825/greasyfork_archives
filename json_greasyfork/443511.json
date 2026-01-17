@@ -1,0 +1,34 @@
+{
+  "id": 443511,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-17T08:51:22.000Z",
+  "code_updated_at": "2022-04-17T08:51:22.000Z",
+  "namespace": "https://greasyfork.org/ru/users/816924-grizon",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816924,
+      "name": "Grizon",
+      "created_at": "2021-09-19T08:38:44.000Z",
+      "url": "https://greasyfork.org/users/816924-grizon",
+      "scripts": []
+    }
+  ],
+  "name": "2_CSS_Blocker All content",
+  "description": "Блокировщик всего контента",
+  "url": "https://greasyfork.org/scripts/443511-2-css-blocker-all-content",
+  "code_url": "https://update.greasyfork.org/scripts/443511/2_CSS_Blocker%20All%20content.user.css",
+  "code_size": 419,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

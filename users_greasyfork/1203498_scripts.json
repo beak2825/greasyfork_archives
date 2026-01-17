@@ -1,0 +1,35 @@
+[
+  {
+    "id": 478185,
+    "daily_installs": 0,
+    "total_installs": 68,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-24T21:24:38.000Z",
+    "code_updated_at": "2023-10-24T21:24:38.000Z",
+    "namespace": "tampermonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203498,
+        "name": "mom0005",
+        "created_at": "2023-10-24T21:17:35.000Z",
+        "url": "https://greasyfork.org/users/1203498-mom0005"
+      }
+    ],
+    "name": "Remove Blur",
+    "description": "Removes blur",
+    "url": "https://greasyfork.org/scripts/478185-remove-blur",
+    "code_url": "https://update.greasyfork.org/scripts/478185/Remove%20Blur.user.js",
+    "code_size": 839,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

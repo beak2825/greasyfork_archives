@@ -1,0 +1,34 @@
+{
+  "id": 439644,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-06T19:36:03.000Z",
+  "code_updated_at": "2022-02-06T19:36:02.000Z",
+  "namespace": "googlesearchmarginfixer",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 846358,
+      "name": "Mihály Nagy",
+      "created_at": "2021-11-29T21:22:48.000Z",
+      "url": "https://greasyfork.org/users/846358-mih%C3%A1ly-nagy",
+      "scripts": []
+    }
+  ],
+  "name": "Google Search Margin Fixer",
+  "description": "Fix 44px margin-bottom divs",
+  "url": "https://greasyfork.org/scripts/439644-google-search-margin-fixer",
+  "code_url": "https://update.greasyfork.org/scripts/439644/Google%20Search%20Margin%20Fixer.user.js",
+  "code_size": 1432,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

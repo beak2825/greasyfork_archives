@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466886,
+    "daily_installs": 0,
+    "total_installs": 88,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-23T01:46:41.000Z",
+    "code_updated_at": "2023-05-23T02:06:35.000Z",
+    "namespace": "https://greasyfork.org/users/119029",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1083228,
+        "name": "أكب ر‎تس تسديدهاKت",
+        "created_at": "2023-05-23T01:39:34.000Z",
+        "url": "https://greasyfork.org/users/1083228-%D8%A3%D9%83%D8%A8-%D8%B1-%D8%AA%D8%B3-%D8%AA%D8%B3%D8%AF%D9%8A%D8%AF%D9%87%D8%A7k%D8%AA"
+      }
+    ],
+    "name": "apk.tw auto check-in",
+    "description": "auto check-in",
+    "url": "https://greasyfork.org/scripts/466886-apk-tw-auto-check-in",
+    "code_url": "https://update.greasyfork.org/scripts/466886/apktw%20auto%20check-in.user.js",
+    "code_size": 608,
+    "license": null,
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

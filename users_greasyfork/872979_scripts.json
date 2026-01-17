@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439584,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-05T10:06:44.000Z",
+    "code_updated_at": "2022-02-05T13:44:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 872979,
+        "name": "HubertSing",
+        "created_at": "2022-02-05T09:58:36.000Z",
+        "url": "https://greasyfork.org/users/872979-hubertsing"
+      }
+    ],
+    "name": "完整显示子网页标题",
+    "description": "针对中大电信院官网所有子网页标题被缩略而影响观感的问题，本脚本对其子网页标题进行完整显示。",
+    "url": "https://greasyfork.org/scripts/439584-%E5%AE%8C%E6%95%B4%E6%98%BE%E7%A4%BA%E5%AD%90%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/439584/%E5%AE%8C%E6%95%B4%E6%98%BE%E7%A4%BA%E5%AD%90%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98.user.js",
+    "code_size": 713,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

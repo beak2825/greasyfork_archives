@@ -1,0 +1,33 @@
+{
+  "id": 495062,
+  "daily_installs": 0,
+  "total_installs": 295,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-15T16:30:12.000Z",
+  "code_updated_at": "2024-05-15T17:34:38.000Z",
+  "namespace": "https://greasyfork.org/en/users/1302141-conel",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1302141,
+      "name": "conel",
+      "created_at": "2024-05-15T16:13:03.000Z",
+      "url": "https://greasyfork.org/users/1302141-conel"
+    }
+  ],
+  "name": "bypass fluxus By Stickx",
+  "description": "bypass fluxus use api stickx",
+  "url": "https://greasyfork.org/scripts/495062-bypass-fluxus-by-stickx",
+  "code_url": "https://update.greasyfork.org/scripts/495062/bypass%20fluxus%20By%20Stickx.user.js",
+  "code_size": 606,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 474765,
+  "daily_installs": 0,
+  "total_installs": 1020,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-07T14:17:00.000Z",
+  "code_updated_at": "2023-09-07T14:16:59.000Z",
+  "namespace": "adog",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1167471,
+      "name": "a6op",
+      "created_at": "2023-09-06T14:02:41.000Z",
+      "url": "https://greasyfork.org/users/1167471-a6op",
+      "scripts": [
+        {
+          "id": 474765,
+          "daily_installs": 0,
+          "total_installs": 1020,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-07T14:17:00.000Z",
+          "code_updated_at": "2023-09-07T14:16:59.000Z",
+          "namespace": "adog",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "学习通自动播放视频",
+          "description": "仅支持任务点全为视频的自动播放，静音播放，自动连播,自动下一个任务点",
+          "url": "https://greasyfork.org/scripts/474765-%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91",
+          "code_url": "https://update.greasyfork.org/scripts/474765/%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91.user.js",
+          "code_size": 2312,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "学习通自动播放视频",
+  "description": "仅支持任务点全为视频的自动播放，静音播放，自动连播,自动下一个任务点",
+  "url": "https://greasyfork.org/scripts/474765-%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91",
+  "code_url": "https://update.greasyfork.org/scripts/474765/%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91.user.js",
+  "code_size": 2312,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

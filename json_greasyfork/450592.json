@@ -1,0 +1,33 @@
+{
+  "id": 450592,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-02T00:29:14.000Z",
+  "code_updated_at": "2022-09-02T00:29:14.000Z",
+  "namespace": "https://greasyfork.org/users/776013",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 935667,
+      "name": "Slower Blockman go",
+      "created_at": "2022-07-14T14:31:13.000Z",
+      "url": "https://greasyfork.org/users/935667-slower-blockman-go"
+    }
+  ],
+  "name": "Paulinho Console",
+  "description": "paulin console br",
+  "url": "https://greasyfork.org/scripts/450592-paulinho-console",
+  "code_url": "https://update.greasyfork.org/scripts/450592/Paulinho%20Console.user.js",
+  "code_size": 27908,
+  "license": null,
+  "version": "0.1",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

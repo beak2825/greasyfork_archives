@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465005,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-27T19:47:56.000Z",
+    "code_updated_at": "2023-04-27T19:47:56.000Z",
+    "namespace": "https://*.com/hjstore/images/*.jpg.txt",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1015668,
+        "name": "randomKey",
+        "created_at": "2023-01-23T12:20:53.000Z",
+        "url": "https://greasyfork.org/users/1015668-randomkey"
+      }
+    ],
+    "name": "hj-decode-image",
+    "description": "decode hj data",
+    "url": "https://greasyfork.org/scripts/465005-hj-decode-image",
+    "code_url": "https://update.greasyfork.org/scripts/465005/hj-decode-image.user.js",
+    "code_size": 2027,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

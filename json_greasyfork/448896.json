@@ -1,0 +1,34 @@
+{
+  "id": 448896,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-04T02:19:03.000Z",
+  "code_updated_at": "2022-08-05T00:36:22.000Z",
+  "namespace": "http://userstyles.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 942820,
+      "name": "Percy Sky",
+      "created_at": "2022-08-04T02:14:18.000Z",
+      "url": "https://greasyfork.org/users/942820-percy-sky",
+      "scripts": []
+    }
+  ],
+  "name": "Goatlings - Larger Next Page Buttons",
+  "description": "This increases the size of the buttons that let you page through the usershop, safety box, gallery, item archive and appearance doll archive. It also adds a border and some padding to give them a wider breadth and make them easier to click on.",
+  "url": "https://greasyfork.org/scripts/448896-goatlings-larger-next-page-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/448896/Goatlings%20-%20Larger%20Next%20Page%20Buttons.user.js",
+  "code_size": 7786,
+  "license": null,
+  "version": "0.20170308124244",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

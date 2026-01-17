@@ -1,0 +1,101 @@
+[
+  {
+    "id": 465540,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T22:24:12.000Z",
+    "code_updated_at": "2025-02-08T21:14:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1062734,
+        "name": "dcollinsn",
+        "created_at": "2023-04-18T13:32:07.000Z",
+        "url": "https://greasyfork.org/users/1062734-dcollinsn"
+      }
+    ],
+    "name": "Melee PurpleFox Extract",
+    "description": "Extract information about the current Melee round, and format it for PurpleFox.",
+    "url": "https://greasyfork.org/scripts/465540-melee-purplefox-extract",
+    "code_url": "https://update.greasyfork.org/scripts/465540/Melee%20PurpleFox%20Extract.user.js",
+    "code_size": 2242,
+    "license": null,
+    "version": "1.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465539,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T22:17:33.000Z",
+    "code_updated_at": "2024-10-30T02:34:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1062734,
+        "name": "dcollinsn",
+        "created_at": "2023-04-18T13:32:07.000Z",
+        "url": "https://greasyfork.org/users/1062734-dcollinsn"
+      }
+    ],
+    "name": "[Deprecated] Melee Event Name in Tournament Controller",
+    "description": "This script is no longer required because the functionality is now available automatically in Melee.",
+    "url": "https://greasyfork.org/scripts/465539-deprecated-melee-event-name-in-tournament-controller",
+    "code_url": "https://update.greasyfork.org/scripts/465539/%5BDeprecated%5D%20Melee%20Event%20Name%20in%20Tournament%20Controller.user.js",
+    "code_size": 925,
+    "license": null,
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465538,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T22:17:32.000Z",
+    "code_updated_at": "2024-10-30T07:45:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1062734,
+        "name": "dcollinsn",
+        "created_at": "2023-04-18T13:32:07.000Z",
+        "url": "https://greasyfork.org/users/1062734-dcollinsn"
+      }
+    ],
+    "name": "[Deprecated] Melee Event Name in Enroll Player Modal",
+    "description": "This script is no longer required because the functionality is now available automatically in Melee.",
+    "url": "https://greasyfork.org/scripts/465538-deprecated-melee-event-name-in-enroll-player-modal",
+    "code_url": "https://update.greasyfork.org/scripts/465538/%5BDeprecated%5D%20Melee%20Event%20Name%20in%20Enroll%20Player%20Modal.user.js",
+    "code_size": 907,
+    "license": null,
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

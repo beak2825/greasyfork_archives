@@ -1,0 +1,34 @@
+{
+  "id": 493352,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-24T11:43:29.000Z",
+  "code_updated_at": "2024-04-24T11:43:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1292549,
+      "name": "OkayOkay",
+      "created_at": "2024-04-24T11:23:57.000Z",
+      "url": "https://greasyfork.org/users/1292549-okayokay",
+      "scripts": []
+    }
+  ],
+  "name": "Eudic Study List CSV Exporter",
+  "description": "Export Eudic study list to CSV",
+  "url": "https://greasyfork.org/scripts/493352-eudic-study-list-csv-exporter",
+  "code_url": "https://update.greasyfork.org/scripts/493352/Eudic%20Study%20List%20CSV%20Exporter.user.js",
+  "code_size": 2431,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

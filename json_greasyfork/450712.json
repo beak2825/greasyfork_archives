@@ -1,0 +1,59 @@
+{
+  "id": 450712,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-04T06:06:34.000Z",
+  "code_updated_at": "2022-09-04T06:06:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 954388,
+      "name": "gepik",
+      "created_at": "2022-09-04T05:48:33.000Z",
+      "url": "https://greasyfork.org/users/954388-gepik",
+      "scripts": [
+        {
+          "id": 450709,
+          "daily_installs": 0,
+          "total_installs": 361,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-04T06:01:45.000Z",
+          "code_updated_at": "2025-10-12T09:03:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "6v去广告",
+          "description": "去除6v bt之家 阿里云盘广告",
+          "url": "https://greasyfork.org/scripts/450709-6v%E5%8E%BB%E5%B9%BF%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/450709/6v%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+          "code_size": 4146,
+          "license": "AGPL License",
+          "version": "0.15",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "去广告",
+  "description": "去除6v bt之家广告",
+  "url": "https://greasyfork.org/scripts/450712-%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/450712/%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 3202,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

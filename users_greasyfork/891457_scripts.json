@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442185,
+    "daily_installs": 0,
+    "total_installs": 79,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-27T05:17:28.000Z",
+    "code_updated_at": "2022-03-27T12:42:36.000Z",
+    "namespace": "https://tonkovski.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 891457,
+        "name": "Evan Tonkovski",
+        "created_at": "2022-03-24T03:12:15.000Z",
+        "url": "https://greasyfork.org/users/891457-evan-tonkovski"
+      }
+    ],
+    "name": "REMARKABLE Markers - Icon Progress Tracking for Fextralife Elden Ring Interactive Map",
+    "description": "Enables icon-based progress tracking to mark & hide explored locations (pickups, bosses, etc.) manually. Works on Fextralife Elden Ring map only. Legal notice: This userscript runs in parallel with Fextralife's own progress tracking feature, and does not seek to hack & unlock Fextralife's VIP functions. Warning: All user data are stored locally using the GM_setValue feature, Handle your saved progress with care!",
+    "url": "https://greasyfork.org/scripts/442185-remarkable-markers-icon-progress-tracking-for-fextralife-elden-ring-interactive-map",
+    "code_url": "https://update.greasyfork.org/scripts/442185/REMARKABLE%20Markers%20-%20Icon%20Progress%20Tracking%20for%20Fextralife%20Elden%20Ring%20Interactive%20Map.user.js",
+    "code_size": 5302,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

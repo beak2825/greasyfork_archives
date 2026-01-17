@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480921,
+    "daily_installs": 0,
+    "total_installs": 302,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-28T02:46:37.000Z",
+    "code_updated_at": "2023-11-28T04:38:27.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1084712,
+        "name": "snlmbe",
+        "created_at": "2023-05-25T21:52:29.000Z",
+        "url": "https://greasyfork.org/users/1084712-snlmbe"
+      }
+    ],
+    "name": "Roblox Snlmbe Erişim Menüsü 🚀 (Versiyon 3)",
+    "description": "👩🏽‍🚀 Bu betik, Roblox web sitesindeki gezinme menüsünün yerine hızlı erişim sağlayan kullanıcı dostu bir menü ekler. Menü sayfanın ortasında aşağı kısımda yer alır ve önemli bağlantılara kolayca erişim imkanı sunar. Bu versiyonda çeşitli geliştirmeler yapılmıştır.",
+    "url": "https://greasyfork.org/scripts/480921-roblox-snlmbe-eri%C5%9Fim-men%C3%BCs%C3%BC-versiyon-3",
+    "code_url": "https://update.greasyfork.org/scripts/480921/Roblox%20Snlmbe%20Eri%C5%9Fim%20Men%C3%BCs%C3%BC%20%F0%9F%9A%80%20%28Versiyon%203%29.user.js",
+    "code_size": 6115,
+    "license": "GNU General Public License v3.0 only",
+    "version": "3.1.0",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

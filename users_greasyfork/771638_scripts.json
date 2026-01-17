@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426414,
+    "daily_installs": 0,
+    "total_installs": 927,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-05-13T12:44:30.000Z",
+    "code_updated_at": "2021-09-10T14:19:06.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 771638,
+        "name": "Risuleia",
+        "created_at": "2021-05-13T12:00:05.000Z",
+        "url": "https://greasyfork.org/users/771638-risuleia"
+      }
+    ],
+    "name": "Google Classroom - Moonlight",
+    "description": "Custom theme for Google Classroom",
+    "url": "https://greasyfork.org/scripts/426414-google-classroom-moonlight",
+    "code_url": "https://update.greasyfork.org/scripts/426414/Google%20Classroom%20-%20Moonlight.user.js",
+    "code_size": 15660,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

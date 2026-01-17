@@ -1,0 +1,59 @@
+{
+  "id": 479817,
+  "daily_installs": 0,
+  "total_installs": 217,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-14T06:03:37.000Z",
+  "code_updated_at": "2024-06-20T15:23:08.000Z",
+  "namespace": "https://github.com/liong911/BaidunNetDisk-script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1217118,
+      "name": "liong911",
+      "created_at": "2023-11-14T04:43:51.000Z",
+      "url": "https://greasyfork.org/users/1217118-liong911",
+      "scripts": [
+        {
+          "id": 479817,
+          "daily_installs": 0,
+          "total_installs": 217,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-14T06:03:37.000Z",
+          "code_updated_at": "2024-06-20T15:23:08.000Z",
+          "namespace": "https://github.com/liong911/BaidunNetDisk-script",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "百度网盘文件库目录导出",
+          "description": "适用于新版本百度网盘文件库目录导出的篡改猴脚本。js牛逼！",
+          "url": "https://greasyfork.org/scripts/479817-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E5%BA%93%E7%9B%AE%E5%BD%95%E5%AF%BC%E5%87%BA",
+          "code_url": "https://update.greasyfork.org/scripts/479817/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E5%BA%93%E7%9B%AE%E5%BD%95%E5%AF%BC%E5%87%BA.user.js",
+          "code_size": 11614,
+          "license": "MIT License",
+          "version": "1.1.0",
+          "locale": "de",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "百度网盘文件库目录导出",
+  "description": "适用于新版本百度网盘文件库目录导出的篡改猴脚本。js牛逼！",
+  "url": "https://greasyfork.org/scripts/479817-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E5%BA%93%E7%9B%AE%E5%BD%95%E5%AF%BC%E5%87%BA",
+  "code_url": "https://update.greasyfork.org/scripts/479817/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E5%BA%93%E7%9B%AE%E5%BD%95%E5%AF%BC%E5%87%BA.user.js",
+  "code_size": 11614,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

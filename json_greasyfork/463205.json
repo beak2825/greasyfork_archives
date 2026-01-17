@@ -1,0 +1,33 @@
+{
+  "id": 463205,
+  "daily_installs": 0,
+  "total_installs": 220,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-04T04:15:56.000Z",
+  "code_updated_at": "2024-12-03T02:40:53.000Z",
+  "namespace": "https://greasyfork.org/users/452911",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 452911,
+      "name": "大萌主",
+      "created_at": "2020-03-02T12:02:52.000Z",
+      "url": "https://greasyfork.org/users/452911-%E5%A4%A7%E8%90%8C%E4%B8%BB"
+    }
+  ],
+  "name": "改百度搜索的导航栏字体为黑色",
+  "description": "防止屏蔽广告后看不清字体",
+  "url": "https://greasyfork.org/scripts/463205-%E6%94%B9%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E7%9A%84%E5%AF%BC%E8%88%AA%E6%A0%8F%E5%AD%97%E4%BD%93%E4%B8%BA%E9%BB%91%E8%89%B2",
+  "code_url": "https://update.greasyfork.org/scripts/463205/%E6%94%B9%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E7%9A%84%E5%AF%BC%E8%88%AA%E6%A0%8F%E5%AD%97%E4%BD%93%E4%B8%BA%E9%BB%91%E8%89%B2.user.js",
+  "code_size": 1294,
+  "license": null,
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444106,
+    "daily_installs": 0,
+    "total_installs": 100,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-27T18:31:45.000Z",
+    "code_updated_at": "2022-04-27T18:31:45.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 907804,
+        "name": "sittaman",
+        "created_at": "2022-04-27T18:25:20.000Z",
+        "url": "https://greasyfork.org/users/907804-sittaman"
+      }
+    ],
+    "name": "f*ck linkedin",
+    "description": "4/27/2022, 3:20:07 PM",
+    "url": "https://greasyfork.org/scripts/444106-f-ck-linkedin",
+    "code_url": "https://update.greasyfork.org/scripts/444106/f%2Ack%20linkedin.user.js",
+    "code_size": 361,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

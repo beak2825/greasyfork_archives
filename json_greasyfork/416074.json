@@ -1,0 +1,33 @@
+{
+  "id": 416074,
+  "daily_installs": 0,
+  "total_installs": 379,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-14T05:34:40.000Z",
+  "code_updated_at": "2020-11-22T22:50:43.000Z",
+  "namespace": "https://youtu.be/G79kuxzcl80/song",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 522000,
+      "name": "Ginfio",
+      "created_at": "2020-04-19T02:53:52.000Z",
+      "url": "https://greasyfork.org/users/522000-ginfio"
+    }
+  ],
+  "name": "Nitro Type Streamer Mode",
+  "description": "This script allows you to embed a Nitro Type (or other) YouTube livestreams on Nitro Type – live chat and live video. That way when you're racing on Nitro Type, you don't have to switch back and forth trying to see who's in the chat... TRY IT OUT.",
+  "url": "https://greasyfork.org/scripts/416074-nitro-type-streamer-mode",
+  "code_url": "https://update.greasyfork.org/scripts/416074/Nitro%20Type%20Streamer%20Mode.user.js",
+  "code_size": 13620,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

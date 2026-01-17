@@ -1,0 +1,59 @@
+{
+  "id": 452502,
+  "daily_installs": 0,
+  "total_installs": 156,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-05T05:05:32.000Z",
+  "code_updated_at": "2023-01-14T21:11:03.000Z",
+  "namespace": "https://github.com/TMD20/torrent-quick-search",
+  "support_url": "https://github.com/TMD20/torrent-quick-search",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 966656,
+      "name": "TMD20",
+      "created_at": "2022-10-05T03:16:37.000Z",
+      "url": "https://greasyfork.org/users/966656-tmd20",
+      "scripts": [
+        {
+          "id": 452502,
+          "daily_installs": 0,
+          "total_installs": 156,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-05T05:05:32.000Z",
+          "code_updated_at": "2023-01-14T21:11:03.000Z",
+          "namespace": "https://github.com/TMD20/torrent-quick-search",
+          "support_url": "https://github.com/TMD20/torrent-quick-search",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torrent Quick Search",
+          "description": "Toggle for Searching Torrents via Search aggegrator",
+          "url": "https://greasyfork.org/scripts/452502-torrent-quick-search",
+          "code_url": "https://update.greasyfork.org/scripts/452502/Torrent%20Quick%20Search.user.js",
+          "code_size": 3267,
+          "license": "MIT License",
+          "version": "2.20",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torrent Quick Search",
+  "description": "Toggle for Searching Torrents via Search aggegrator",
+  "url": "https://greasyfork.org/scripts/452502-torrent-quick-search",
+  "code_url": "https://update.greasyfork.org/scripts/452502/Torrent%20Quick%20Search.user.js",
+  "code_size": 3267,
+  "license": "MIT License",
+  "version": "2.20",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

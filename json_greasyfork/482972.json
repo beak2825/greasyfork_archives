@@ -1,0 +1,59 @@
+{
+  "id": 482972,
+  "daily_installs": 0,
+  "total_installs": 884,
+  "fan_score": "6.1",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2023-12-24T01:56:24.000Z",
+  "code_updated_at": "2024-04-03T08:52:07.000Z",
+  "namespace": "npm/vite-plugin-monkey/pornkiller",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1235340,
+      "name": "Mall Ryan",
+      "created_at": "2023-12-17T12:44:57.000Z",
+      "url": "https://greasyfork.org/users/1235340-mall-ryan",
+      "scripts": [
+        {
+          "id": 482972,
+          "daily_installs": 0,
+          "total_installs": 884,
+          "fan_score": "6.1",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2023-12-24T01:56:24.000Z",
+          "code_updated_at": "2024-04-03T08:52:07.000Z",
+          "namespace": "npm/vite-plugin-monkey/pornkiller",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "黄推杀手",
+          "description": "帮助大家更好地使用twitter。 黄推数量过多，并且使用机器人到处引流发表与主题无关的回复，难以手工屏蔽。黄推杀手帮你一键屏蔽黄推，清洁推特环境。截止2023年12月6日，系统已收录超3500账户，90%以上为推友人工投票表决产生。",
+          "url": "https://greasyfork.org/scripts/482972-%E9%BB%84%E6%8E%A8%E6%9D%80%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/482972/%E9%BB%84%E6%8E%A8%E6%9D%80%E6%89%8B.user.js",
+          "code_size": 76700,
+          "license": "AGPL",
+          "version": "1.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "黄推杀手",
+  "description": "帮助大家更好地使用twitter。 黄推数量过多，并且使用机器人到处引流发表与主题无关的回复，难以手工屏蔽。黄推杀手帮你一键屏蔽黄推，清洁推特环境。截止2023年12月6日，系统已收录超3500账户，90%以上为推友人工投票表决产生。",
+  "url": "https://greasyfork.org/scripts/482972-%E9%BB%84%E6%8E%A8%E6%9D%80%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/482972/%E9%BB%84%E6%8E%A8%E6%9D%80%E6%89%8B.user.js",
+  "code_size": 76700,
+  "license": "AGPL",
+  "version": "1.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

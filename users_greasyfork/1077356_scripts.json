@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468239,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-08T20:23:05.000Z",
+    "code_updated_at": "2023-06-12T08:23:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1077356,
+        "name": "sher10ck",
+        "created_at": "2023-05-11T15:11:15.000Z",
+        "url": "https://greasyfork.org/users/1077356-sher10ck"
+      }
+    ],
+    "name": "Junjin Monkey - 掘金猴",
+    "description": "better Juejin experience, remove ads and other useless things, make it clean and simple, just like a monkey!",
+    "url": "https://greasyfork.org/scripts/468239-junjin-monkey-%E6%8E%98%E9%87%91%E7%8C%B4",
+    "code_url": "https://update.greasyfork.org/scripts/468239/Junjin%20Monkey%20-%20%E6%8E%98%E9%87%91%E7%8C%B4.user.js",
+    "code_size": 1388,
+    "license": "MIT License",
+    "version": "0.0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

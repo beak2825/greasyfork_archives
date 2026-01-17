@@ -1,0 +1,68 @@
+[
+  {
+    "id": 452625,
+    "daily_installs": 0,
+    "total_installs": 2643,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-07T16:09:41.000Z",
+    "code_updated_at": "2024-11-12T16:14:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 875839,
+        "name": "吾发克",
+        "created_at": "2022-02-12T14:48:03.000Z",
+        "url": "https://greasyfork.org/users/875839-%E5%90%BE%E5%8F%91%E5%85%8B"
+      }
+    ],
+    "name": "009各大文库网站 去广告",
+    "description": "某道88可直接复制，某丁直接打印，某度文库可复制(仅限于展示的部分)",
+    "url": "https://greasyfork.org/scripts/452625-009%E5%90%84%E5%A4%A7%E6%96%87%E5%BA%93%E7%BD%91%E7%AB%99-%E5%8E%BB%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/452625/009%E5%90%84%E5%A4%A7%E6%96%87%E5%BA%93%E7%BD%91%E7%AB%99%20%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 10248,
+    "license": "wufake",
+    "version": "3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 452019,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-25T18:01:55.000Z",
+    "code_updated_at": "2023-04-25T07:41:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 875839,
+        "name": "吾发克",
+        "created_at": "2022-02-12T14:48:03.000Z",
+        "url": "https://greasyfork.org/users/875839-%E5%90%BE%E5%8F%91%E5%85%8B"
+      }
+    ],
+    "name": "有趣插件",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/452019-%E6%9C%89%E8%B6%A3%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/452019/%E6%9C%89%E8%B6%A3%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 8578,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "2.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

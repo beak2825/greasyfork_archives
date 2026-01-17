@@ -1,0 +1,59 @@
+{
+  "id": 450931,
+  "daily_installs": 0,
+  "total_installs": 316,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-07T16:23:27.000Z",
+  "code_updated_at": "2022-09-07T16:23:27.000Z",
+  "namespace": "http://roblox.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 751280,
+      "name": "אופיר שטורך",
+      "created_at": "2021-03-25T13:43:41.000Z",
+      "url": "https://greasyfork.org/users/751280-%D7%90%D7%95%D7%A4%D7%99%D7%A8-%D7%A9%D7%98%D7%95%D7%A8%D7%9A",
+      "scripts": [
+        {
+          "id": 450931,
+          "daily_installs": 0,
+          "total_installs": 316,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-07T16:23:27.000Z",
+          "code_updated_at": "2022-09-07T16:23:27.000Z",
+          "namespace": "http://roblox.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Roblox Get Universe Id",
+          "description": "Get the universe id of each game, showen next to \"Report Abuse\"",
+          "url": "https://greasyfork.org/scripts/450931-roblox-get-universe-id",
+          "code_url": "https://update.greasyfork.org/scripts/450931/Roblox%20Get%20Universe%20Id.user.js",
+          "code_size": 1179,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Roblox Get Universe Id",
+  "description": "Get the universe id of each game, showen next to \"Report Abuse\"",
+  "url": "https://greasyfork.org/scripts/450931-roblox-get-universe-id",
+  "code_url": "https://update.greasyfork.org/scripts/450931/Roblox%20Get%20Universe%20Id.user.js",
+  "code_size": 1179,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

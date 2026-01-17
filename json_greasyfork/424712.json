@@ -1,0 +1,33 @@
+{
+  "id": 424712,
+  "daily_installs": 0,
+  "total_installs": 639,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-08T16:55:54.000Z",
+  "code_updated_at": "2021-04-10T11:59:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 756464,
+      "name": "nhw649",
+      "created_at": "2021-04-08T16:46:37.000Z",
+      "url": "https://greasyfork.org/users/756464-nhw649"
+    }
+  ],
+  "name": "至善网马原答题、评论",
+  "description": "hhh!",
+  "url": "https://greasyfork.org/scripts/424712-%E8%87%B3%E5%96%84%E7%BD%91%E9%A9%AC%E5%8E%9F%E7%AD%94%E9%A2%98-%E8%AF%84%E8%AE%BA",
+  "code_url": "https://update.greasyfork.org/scripts/424712/%E8%87%B3%E5%96%84%E7%BD%91%E9%A9%AC%E5%8E%9F%E7%AD%94%E9%A2%98%E3%80%81%E8%AF%84%E8%AE%BA.user.js",
+  "code_size": 84028,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

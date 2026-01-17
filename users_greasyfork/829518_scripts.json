@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476495,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-01T11:18:09.000Z",
+    "code_updated_at": "2023-10-01T11:18:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 829518,
+        "name": "jin10086",
+        "created_at": "2021-10-28T06:49:01.000Z",
+        "url": "https://greasyfork.org/users/829518-jin10086"
+      }
+    ],
+    "name": "hookaddress",
+    "description": "模拟任何人的web3地址访问某些网站.",
+    "url": "https://greasyfork.org/scripts/476495-hookaddress",
+    "code_url": "https://update.greasyfork.org/scripts/476495/hookaddress.user.js",
+    "code_size": 2747,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

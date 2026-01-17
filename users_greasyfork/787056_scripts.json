@@ -1,0 +1,101 @@
+[
+  {
+    "id": 441727,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-19T04:56:25.000Z",
+    "code_updated_at": "2022-03-19T04:56:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787056,
+        "name": "Emanuel Farinha",
+        "created_at": "2021-06-24T21:22:34.000Z",
+        "url": "https://greasyfork.org/users/787056-emanuel-farinha"
+      }
+    ],
+    "name": "SFDC Entitlement",
+    "description": "Alert when entitlement or search location is done",
+    "url": "https://greasyfork.org/scripts/441727-sfdc-entitlement",
+    "code_url": "https://update.greasyfork.org/scripts/441727/SFDC%20Entitlement.user.js",
+    "code_size": 7480,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 439331,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-29T18:13:38.000Z",
+    "code_updated_at": "2022-06-30T18:33:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787056,
+        "name": "Emanuel Farinha",
+        "created_at": "2021-06-24T21:22:34.000Z",
+        "url": "https://greasyfork.org/users/787056-emanuel-farinha"
+      }
+    ],
+    "name": "Orange DHCP",
+    "description": "Orange Script",
+    "url": "https://greasyfork.org/scripts/439331-orange-dhcp",
+    "code_url": "https://update.greasyfork.org/scripts/439331/Orange%20DHCP.user.js",
+    "code_size": 5122,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 428734,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-30T22:40:18.000Z",
+    "code_updated_at": "2021-06-30T22:40:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787056,
+        "name": "Emanuel Farinha",
+        "created_at": "2021-06-24T21:22:34.000Z",
+        "url": "https://greasyfork.org/users/787056-emanuel-farinha"
+      }
+    ],
+    "name": "SFDC Open Task Lightning Mode",
+    "description": "You can open SFDC Classic New Task on Lightning with this script.",
+    "url": "https://greasyfork.org/scripts/428734-sfdc-open-task-lightning-mode",
+    "code_url": "https://update.greasyfork.org/scripts/428734/SFDC%20Open%20Task%20Lightning%20Mode.user.js",
+    "code_size": 1761,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

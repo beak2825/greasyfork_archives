@@ -1,0 +1,101 @@
+[
+  {
+    "id": 424114,
+    "daily_installs": 0,
+    "total_installs": 77,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-29T03:49:00.000Z",
+    "code_updated_at": "2021-03-29T03:52:44.000Z",
+    "namespace": "https://greasyfork.org/es/scripts/424114-bypass-new-exam-restriction",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174607,
+        "name": "Nicolás Boettcher",
+        "created_at": "2018-03-12T17:35:57.000Z",
+        "url": "https://greasyfork.org/users/174607-nicol%C3%A1s-boettcher"
+      }
+    ],
+    "name": "Bypass new exam restriction",
+    "description": "Allow bank question selection for qti uploads",
+    "url": "https://greasyfork.org/scripts/424114-bypass-new-exam-restriction",
+    "code_url": "https://update.greasyfork.org/scripts/424114/Bypass%20new%20exam%20restriction.user.js",
+    "code_size": 263371,
+    "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 414578,
+    "daily_installs": 0,
+    "total_installs": 96,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-25T03:10:54.000Z",
+    "code_updated_at": "2020-10-25T03:53:39.000Z",
+    "namespace": "https://greasyfork.org/scripts/414578-decrypt-aes-content",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174607,
+        "name": "Nicolás Boettcher",
+        "created_at": "2018-03-12T17:35:57.000Z",
+        "url": "https://greasyfork.org/users/174607-nicol%C3%A1s-boettcher"
+      }
+    ],
+    "name": "Decrypt AES Content",
+    "description": "Decrypt AES content on html",
+    "url": "https://greasyfork.org/scripts/414578-decrypt-aes-content",
+    "code_url": "https://update.greasyfork.org/scripts/414578/Decrypt%20AES%20Content.user.js",
+    "code_size": 13451,
+    "license": "GPL-3.0-only; http://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "1.3",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412295,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-01T14:12:35.000Z",
+    "code_updated_at": "2020-10-01T14:17:51.000Z",
+    "namespace": "https://greasyfork.org/scripts/412295-remove-read-more/code/Remove%20read%20more.user.js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174607,
+        "name": "Nicolás Boettcher",
+        "created_at": "2018-03-12T17:35:57.000Z",
+        "url": "https://greasyfork.org/users/174607-nicol%C3%A1s-boettcher"
+      }
+    ],
+    "name": "Remove read more",
+    "description": "Permite eliminar el banner de suscripción de www.elmercurio.com para poder leer sin límites",
+    "url": "https://greasyfork.org/scripts/412295-remove-read-more",
+    "code_url": "https://update.greasyfork.org/scripts/412295/Remove%20read%20more.user.js",
+    "code_size": 1076,
+    "license": null,
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

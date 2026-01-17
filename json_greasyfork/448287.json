@@ -1,0 +1,33 @@
+{
+  "id": 448287,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-22T09:47:38.000Z",
+  "code_updated_at": "2024-03-27T09:35:48.000Z",
+  "namespace": "https://greasyfork.org/users/3128",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 3128,
+      "name": "极品小猫",
+      "created_at": "2014-06-30T10:14:44.000Z",
+      "url": "https://greasyfork.org/users/3128-%E6%9E%81%E5%93%81%E5%B0%8F%E7%8C%AB"
+    }
+  ],
+  "name": "B站游戏wiki ——支线任务完成标记",
+  "description": "对H3任务标题添加【任务标记】、【内容折叠】功能，以便于了解自己完成的任务。对树桩、宝箱添加标记功能，记录领取状态。",
+  "url": "https://greasyfork.org/scripts/448287-b%E7%AB%99%E6%B8%B8%E6%88%8Fwiki-%E6%94%AF%E7%BA%BF%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90%E6%A0%87%E8%AE%B0",
+  "code_url": "https://update.greasyfork.org/scripts/448287/B%E7%AB%99%E6%B8%B8%E6%88%8Fwiki%20%E2%80%94%E2%80%94%E6%94%AF%E7%BA%BF%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90%E6%A0%87%E8%AE%B0.user.js",
+  "code_size": 10348,
+  "license": "MIT License",
+  "version": "0.3.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

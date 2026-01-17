@@ -1,0 +1,59 @@
+{
+  "id": 413015,
+  "daily_installs": 0,
+  "total_installs": 494,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-13T03:09:14.000Z",
+  "code_updated_at": "2021-01-28T22:31:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 694568,
+      "name": "LethalLuck",
+      "created_at": "2020-10-13T03:07:03.000Z",
+      "url": "https://greasyfork.org/users/694568-lethalluck",
+      "scripts": [
+        {
+          "id": 413015,
+          "daily_installs": 0,
+          "total_installs": 494,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-13T03:09:14.000Z",
+          "code_updated_at": "2021-01-28T22:31:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LookMovie.ag Anti-AdBlockDetection",
+          "description": "Just sets the class back to blank when AdBlock is detected",
+          "url": "https://greasyfork.org/scripts/413015-lookmovie-ag-anti-adblockdetection",
+          "code_url": "https://update.greasyfork.org/scripts/413015/LookMovieag%20Anti-AdBlockDetection.user.js",
+          "code_size": 451,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LookMovie.ag Anti-AdBlockDetection",
+  "description": "Just sets the class back to blank when AdBlock is detected",
+  "url": "https://greasyfork.org/scripts/413015-lookmovie-ag-anti-adblockdetection",
+  "code_url": "https://update.greasyfork.org/scripts/413015/LookMovieag%20Anti-AdBlockDetection.user.js",
+  "code_size": 451,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

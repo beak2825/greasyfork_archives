@@ -1,0 +1,33 @@
+{
+  "id": 474142,
+  "daily_installs": 0,
+  "total_installs": 778,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-29T10:18:20.000Z",
+  "code_updated_at": "2025-08-21T13:42:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/shiquda/shiquda_UserScript/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 935206,
+      "name": "shiquda",
+      "created_at": "2022-07-13T07:37:46.000Z",
+      "url": "https://greasyfork.org/users/935206-shiquda"
+    }
+  ],
+  "name": "不背单词生词本导出",
+  "description": "不背单词生词本导出，目前支持自动获取单词列表并导出为txt文件。",
+  "url": "https://greasyfork.org/scripts/474142-%E4%B8%8D%E8%83%8C%E5%8D%95%E8%AF%8D%E7%94%9F%E8%AF%8D%E6%9C%AC%E5%AF%BC%E5%87%BA",
+  "code_url": "https://update.greasyfork.org/scripts/474142/%E4%B8%8D%E8%83%8C%E5%8D%95%E8%AF%8D%E7%94%9F%E8%AF%8D%E6%9C%AC%E5%AF%BC%E5%87%BA.user.js",
+  "code_size": 5750,
+  "license": "MIT License",
+  "version": "0.2.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

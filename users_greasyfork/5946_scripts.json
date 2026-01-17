@@ -31,5 +31,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 468577,
+    "daily_installs": 0,
+    "total_installs": 233,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-13T12:14:45.000Z",
+    "code_updated_at": "2024-07-10T05:44:31.000Z",
+    "namespace": "鼠标显示隐藏抖音header搜索和左侧栏",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5946,
+        "name": "476321082",
+        "created_at": "2014-10-10T11:21:41.000Z",
+        "url": "https://greasyfork.org/users/5946-476321082"
+      }
+    ],
+    "name": "隐藏抖音顶左栏",
+    "description": "2023/6/12 19:20:21",
+    "url": "https://greasyfork.org/scripts/468577-%E9%9A%90%E8%97%8F%E6%8A%96%E9%9F%B3%E9%A1%B6%E5%B7%A6%E6%A0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/468577/%E9%9A%90%E8%97%8F%E6%8A%96%E9%9F%B3%E9%A1%B6%E5%B7%A6%E6%A0%8F.user.js",
+    "code_size": 2684,
+    "license": "MIT License",
+    "version": "1.0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 468267,
+    "daily_installs": 0,
+    "total_installs": 137,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-06-09T06:24:11.000Z",
+    "code_updated_at": "2023-06-09T07:38:42.000Z",
+    "namespace": "476321082",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5946,
+        "name": "476321082",
+        "created_at": "2014-10-10T11:21:41.000Z",
+        "url": "https://greasyfork.org/users/5946-476321082"
+      }
+    ],
+    "name": "西瓜视频自动自适应网页全屏剧场模式",
+    "description": "This script does something cool.",
+    "url": "https://greasyfork.org/scripts/468267-%E8%A5%BF%E7%93%9C%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%87%AA%E9%80%82%E5%BA%94%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E5%89%A7%E5%9C%BA%E6%A8%A1%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/468267/%E8%A5%BF%E7%93%9C%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%87%AA%E9%80%82%E5%BA%94%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E5%89%A7%E5%9C%BA%E6%A8%A1%E5%BC%8F.user.js",
+    "code_size": 1528,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466230,
+    "daily_installs": 0,
+    "total_installs": 492,
+    "fan_score": "15.0",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2023-05-14T01:28:05.000Z",
+    "code_updated_at": "2023-05-25T10:56:07.000Z",
+    "namespace": "476321082_js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5946,
+        "name": "476321082",
+        "created_at": "2014-10-10T11:21:41.000Z",
+        "url": "https://greasyfork.org/users/5946-476321082"
+      }
+    ],
+    "name": "youtube新标签页打开🙌😁😁😁",
+    "description": "支持首页，搜索，频道，个人主页等在新标签打开，你懂的",
+    "url": "https://greasyfork.org/scripts/466230-youtube%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/466230/youtube%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80%F0%9F%99%8C%F0%9F%98%81%F0%9F%98%81%F0%9F%98%81.user.js",
+    "code_size": 3195,
+    "license": "MIT License",
+    "version": "1.4.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

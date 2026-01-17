@@ -1,0 +1,33 @@
+{
+  "id": 430390,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-05T15:48:58.000Z",
+  "code_updated_at": "2022-03-28T07:24:40.000Z",
+  "namespace": "HalferScripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 704694,
+      "name": "Strelok halfer",
+      "created_at": "2020-11-13T12:35:34.000Z",
+      "url": "https://greasyfork.org/users/704694-strelok-halfer"
+    }
+  ],
+  "name": "Autonext - anilibria.tv",
+  "description": "Автоматически включает следующую серию для PlayerJS плеера.",
+  "url": "https://greasyfork.org/scripts/430390-autonext-anilibria-tv",
+  "code_url": "https://update.greasyfork.org/scripts/430390/Autonext%20-%20anilibriatv.user.js",
+  "code_size": 669,
+  "license": null,
+  "version": "1.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

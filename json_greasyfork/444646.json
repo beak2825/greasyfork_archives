@@ -1,0 +1,33 @@
+{
+  "id": 444646,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-08T06:38:02.000Z",
+  "code_updated_at": "2022-05-08T06:38:02.000Z",
+  "namespace": "https://greasyfork.org/users/911736",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 911736,
+      "name": "LOOCAKE",
+      "created_at": "2022-05-08T06:29:22.000Z",
+      "url": "https://greasyfork.org/users/911736-loocake"
+    }
+  ],
+  "name": "自动喝明前奶绿",
+  "description": "全自动在奶绿小姐评论区发病",
+  "url": "https://greasyfork.org/scripts/444646-%E8%87%AA%E5%8A%A8%E5%96%9D%E6%98%8E%E5%89%8D%E5%A5%B6%E7%BB%BF",
+  "code_url": "https://update.greasyfork.org/scripts/444646/%E8%87%AA%E5%8A%A8%E5%96%9D%E6%98%8E%E5%89%8D%E5%A5%B6%E7%BB%BF.user.js",
+  "code_size": 8353,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -64,5 +64,137 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 478615,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-30T11:10:59.000Z",
+    "code_updated_at": "2023-11-03T06:49:13.000Z",
+    "namespace": "https://www.cdzero.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949809,
+        "name": "BoYs-J",
+        "created_at": "2022-08-23T08:32:42.000Z",
+        "url": "https://greasyfork.org/users/949809-boys-j"
+      }
+    ],
+    "name": "视频工具",
+    "description": "视频播放工具，一键倍速、小窗！",
+    "url": "https://greasyfork.org/scripts/478615-%E8%A7%86%E9%A2%91%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/478615/%E8%A7%86%E9%A2%91%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 20849,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474076,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-28T08:34:46.000Z",
+    "code_updated_at": "2025-12-30T05:45:24.000Z",
+    "namespace": "https://www.cdzero.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949809,
+        "name": "BoYs-J",
+        "created_at": "2022-08-23T08:32:42.000Z",
+        "url": "https://greasyfork.org/users/949809-boys-j"
+      }
+    ],
+    "name": "巡检车助手",
+    "description": "巡检车助手，量级查询、本地计量系统！",
+    "url": "https://greasyfork.org/scripts/474076-%E5%B7%A1%E6%A3%80%E8%BD%A6%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/474076/%E5%B7%A1%E6%A3%80%E8%BD%A6%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 121670,
+    "license": "MIT License",
+    "version": "1.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473097,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-15T03:03:59.000Z",
+    "code_updated_at": "2023-08-15T08:18:19.000Z",
+    "namespace": "https://www.cdzero.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949809,
+        "name": "BoYs-J",
+        "created_at": "2022-08-23T08:32:42.000Z",
+        "url": "https://greasyfork.org/users/949809-boys-j"
+      }
+    ],
+    "name": "奥维审核助手",
+    "description": "奥维审核助手，审核页面优化，本地计量系统！",
+    "url": "https://greasyfork.org/scripts/473097-%E5%A5%A5%E7%BB%B4%E5%AE%A1%E6%A0%B8%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/473097/%E5%A5%A5%E7%BB%B4%E5%AE%A1%E6%A0%B8%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 27903,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 472528,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-06T03:32:31.000Z",
+    "code_updated_at": "2024-03-01T07:14:12.000Z",
+    "namespace": "https://www.cdzero.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949809,
+        "name": "BoYs-J",
+        "created_at": "2022-08-23T08:32:42.000Z",
+        "url": "https://greasyfork.org/users/949809-boys-j"
+      }
+    ],
+    "name": "京东直播助手",
+    "description": "解决电脑浏览器无法获取京东直播的问题，重写直播观看页面，支持流媒体、商品讲解、SKU跳转等！",
+    "url": "https://greasyfork.org/scripts/472528-%E4%BA%AC%E4%B8%9C%E7%9B%B4%E6%92%AD%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/472528/%E4%BA%AC%E4%B8%9C%E7%9B%B4%E6%92%AD%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 107033,
+    "license": "MIT License",
+    "version": "1.1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465504,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T12:10:03.000Z",
+    "code_updated_at": "2023-05-15T14:44:08.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1072922,
+        "name": "Win ston",
+        "created_at": "2023-05-04T12:07:51.000Z",
+        "url": "https://greasyfork.org/users/1072922-win-ston"
+      }
+    ],
+    "name": "Russia",
+    "description": "Always remember who you are!",
+    "url": "https://greasyfork.org/scripts/465504-russia",
+    "code_url": "https://update.greasyfork.org/scripts/465504/Russia.user.js",
+    "code_size": 25622,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

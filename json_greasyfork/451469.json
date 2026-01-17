@@ -1,0 +1,34 @@
+{
+  "id": 451469,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-16T09:19:57.000Z",
+  "code_updated_at": "2022-09-16T09:19:57.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 922585,
+      "name": "Sema_Fresko",
+      "created_at": "2022-06-06T06:25:44.000Z",
+      "url": "https://greasyfork.org/users/922585-sema-fresko",
+      "scripts": []
+    }
+  ],
+  "name": "Forum Curators Chilli",
+  "description": "Version 3.1.1 bagofix",
+  "url": "https://greasyfork.org/scripts/451469-forum-curators-chilli",
+  "code_url": "https://update.greasyfork.org/scripts/451469/Forum%20Curators%20Chilli.user.js",
+  "code_size": 88763,
+  "license": "MIT License",
+  "version": "3.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

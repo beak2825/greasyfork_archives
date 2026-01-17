@@ -1,0 +1,33 @@
+{
+  "id": 487584,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-18T07:50:00.000Z",
+  "code_updated_at": "2025-04-12T08:03:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1262936,
+      "name": "chenbs",
+      "created_at": "2024-02-18T07:43:02.000Z",
+      "url": "https://greasyfork.org/users/1262936-chenbs"
+    }
+  ],
+  "name": "WZOI 辅助工具",
+  "description": "在 WZOI 中，给样例输入输出、表格等添加复制按钮。并可以一键吸氧、增加搜索、查看自己以前的 AC 代码。",
+  "url": "https://greasyfork.org/scripts/487584-wzoi-%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/487584/WZOI%20%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 49207,
+  "license": "MIT License",
+  "version": "2025-04-12h2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

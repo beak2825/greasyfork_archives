@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489144,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-06T10:06:58.000Z",
+    "code_updated_at": "2024-03-06T10:06:58.000Z",
+    "namespace": "Zeko Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 331295,
+        "name": "zeko075",
+        "created_at": "2019-08-21T03:53:27.000Z",
+        "url": "https://greasyfork.org/users/331295-zeko075"
+      }
+    ],
+    "name": "Auto-Complete AWS/OKTA Authorization requested",
+    "description": "Confirm automatically.",
+    "url": "https://greasyfork.org/scripts/489144-auto-complete-aws-okta-authorization-requested",
+    "code_url": "https://update.greasyfork.org/scripts/489144/Auto-Complete%20AWSOKTA%20Authorization%20requested.user.js",
+    "code_size": 4413,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

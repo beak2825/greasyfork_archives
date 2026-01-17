@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451384,
+    "daily_installs": 0,
+    "total_installs": 229,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-14T18:30:26.000Z",
+    "code_updated_at": "2022-09-14T18:33:19.000Z",
+    "namespace": "https://greasyfork.org/users/693079",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 693079,
+        "name": "[GG]GAMER_YT",
+        "created_at": "2020-10-07T11:36:08.000Z",
+        "url": "https://greasyfork.org/users/693079-gg-gamer-yt"
+      }
+    ],
+    "name": "DeathFadeout Slayer",
+    "description": "Remove DeathFadeout from cowgaem (no intervals :>)",
+    "url": "https://greasyfork.org/scripts/451384-deathfadeout-slayer",
+    "code_url": "https://update.greasyfork.org/scripts/451384/DeathFadeout%20Slayer.user.js",
+    "code_size": 371,
+    "license": null,
+    "version": "69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

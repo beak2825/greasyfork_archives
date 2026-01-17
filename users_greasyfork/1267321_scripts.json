@@ -30,6 +30,39 @@
     "version": "2.2",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488358,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-26T17:32:22.000Z",
+    "code_updated_at": "2024-02-28T03:33:21.000Z",
+    "namespace": "https://t.me/adung98",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1267321,
+        "name": "anhdung98",
+        "created_at": "2024-02-26T17:30:28.000Z",
+        "url": "https://greasyfork.org/users/1267321-anhdung98"
+      }
+    ],
+    "name": "Zing MP3 Lyric KAS",
+    "description": "Export KAS lyric file when open lyric page in Zing MP3",
+    "url": "https://greasyfork.org/scripts/488358-zing-mp3-lyric-kas",
+    "code_url": "https://update.greasyfork.org/scripts/488358/Zing%20MP3%20Lyric%20KAS.user.js",
+    "code_size": 16485,
+    "license": "GNU GPLv3",
+    "version": "2024-02-28",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

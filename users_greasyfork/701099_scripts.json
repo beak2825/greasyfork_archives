@@ -1,0 +1,68 @@
+[
+  {
+    "id": 429539,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-17T20:56:48.000Z",
+    "code_updated_at": "2023-03-11T19:15:53.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 701099,
+        "name": "flaviut",
+        "created_at": "2020-11-03T17:43:35.000Z",
+        "url": "https://greasyfork.org/users/701099-flaviut"
+      }
+    ],
+    "name": "Unit prices on kroger.com",
+    "description": "7/17/2021, 2:48:39 PM",
+    "url": "https://greasyfork.org/scripts/429539-unit-prices-on-kroger-com",
+    "code_url": "https://update.greasyfork.org/scripts/429539/Unit%20prices%20on%20krogercom.user.js",
+    "code_size": 7180,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415420,
+    "daily_installs": 0,
+    "total_installs": 213,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-11-03T17:45:45.000Z",
+    "code_updated_at": "2020-11-03T17:45:45.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 701099,
+        "name": "flaviut",
+        "created_at": "2020-11-03T17:43:35.000Z",
+        "url": "https://greasyfork.org/users/701099-flaviut"
+      }
+    ],
+    "name": "Instant Thingverse Download",
+    "description": "11/3/2020, 08:00:00 PM",
+    "url": "https://greasyfork.org/scripts/415420-instant-thingverse-download",
+    "code_url": "https://update.greasyfork.org/scripts/415420/Instant%20Thingverse%20Download.user.js",
+    "code_size": 2767,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

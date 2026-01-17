@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456595,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-15T00:13:55.000Z",
+    "code_updated_at": "2022-12-16T06:34:08.000Z",
+    "namespace": "https://jw.scitc.com.cn/*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 997689,
+        "name": "ifmmp",
+        "created_at": "2022-12-14T23:48:14.000Z",
+        "url": "https://greasyfork.org/users/997689-ifmmp"
+      }
+    ],
+    "name": "川信评教",
+    "description": "一学期一度的评教时间又到了，希望这个脚本可以让你们的评教更简单",
+    "url": "https://greasyfork.org/scripts/456595-%E5%B7%9D%E4%BF%A1%E8%AF%84%E6%95%99",
+    "code_url": "https://update.greasyfork.org/scripts/456595/%E5%B7%9D%E4%BF%A1%E8%AF%84%E6%95%99.user.js",
+    "code_size": 3932,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

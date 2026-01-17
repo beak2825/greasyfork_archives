@@ -1,0 +1,33 @@
+{
+  "id": 468705,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-15T06:43:03.000Z",
+  "code_updated_at": "2023-06-15T06:43:02.000Z",
+  "namespace": "https://github.com/AliubYiero/TemperScripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1053278,
+      "name": "AliubYiero",
+      "created_at": "2023-04-05T03:53:20.000Z",
+      "url": "https://greasyfork.org/users/1053278-aliubyiero"
+    }
+  ],
+  "name": "教学督导/教学评价自动填写",
+  "description": "自动填写广东科贸职业学院AIC教学督导/教学评价",
+  "url": "https://greasyfork.org/scripts/468705-%E6%95%99%E5%AD%A6%E7%9D%A3%E5%AF%BC-%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99",
+  "code_url": "https://update.greasyfork.org/scripts/468705/%E6%95%99%E5%AD%A6%E7%9D%A3%E5%AF%BC%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99.user.js",
+  "code_size": 4184,
+  "license": "GPL",
+  "version": "beta0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 443396,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-15T01:53:09.000Z",
+  "code_updated_at": "2022-04-15T01:56:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 539791,
+      "name": "vastsa",
+      "created_at": "2020-04-24T03:19:22.000Z",
+      "url": "https://greasyfork.org/users/539791-vastsa",
+      "scripts": [
+        {
+          "id": 443396,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-15T01:53:09.000Z",
+          "code_updated_at": "2022-04-15T01:56:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Show Code To Visual Studio",
+          "description": "Show Github Project to Visual Studio Code!",
+          "url": "https://greasyfork.org/scripts/443396-show-code-to-visual-studio",
+          "code_url": "https://update.greasyfork.org/scripts/443396/Show%20Code%20To%20Visual%20Studio.user.js",
+          "code_size": 614,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Show Code To Visual Studio",
+  "description": "Show Github Project to Visual Studio Code!",
+  "url": "https://greasyfork.org/scripts/443396-show-code-to-visual-studio",
+  "code_url": "https://update.greasyfork.org/scripts/443396/Show%20Code%20To%20Visual%20Studio.user.js",
+  "code_size": 614,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

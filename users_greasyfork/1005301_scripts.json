@@ -295,5 +295,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 490198,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-18T15:38:57.000Z",
+    "code_updated_at": "2025-10-23T10:01:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1005301,
+        "name": "xiaolongmr",
+        "created_at": "2023-01-01T05:26:58.000Z",
+        "url": "https://greasyfork.org/users/1005301-xiaolongmr"
+      }
+    ],
+    "name": "替换亚马逊图片看效果",
+    "description": "支持Base64/URL，替换主图（#detailImg）、固定目标和鼠标悬停图片，同时保留原有固定目标替换，鼠标描边1秒后消失。",
+    "url": "https://greasyfork.org/scripts/490198-%E6%9B%BF%E6%8D%A2%E4%BA%9A%E9%A9%AC%E9%80%8A%E5%9B%BE%E7%89%87%E7%9C%8B%E6%95%88%E6%9E%9C",
+    "code_url": "https://update.greasyfork.org/scripts/490198/%E6%9B%BF%E6%8D%A2%E4%BA%9A%E9%A9%AC%E9%80%8A%E5%9B%BE%E7%89%87%E7%9C%8B%E6%95%88%E6%9E%9C.user.js",
+    "code_size": 6084,
+    "license": "MIT License",
+    "version": "0.23",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 490071,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-17T05:13:04.000Z",
+    "code_updated_at": "2024-03-18T15:57:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1005301,
+        "name": "xiaolongmr",
+        "created_at": "2023-01-01T05:26:58.000Z",
+        "url": "https://greasyfork.org/users/1005301-xiaolongmr"
+      }
+    ],
+    "name": "新图网预览图片去水印",
+    "description": "Remove !con and !ys from image URLs on ixintu.com",
+    "url": "https://greasyfork.org/scripts/490071-%E6%96%B0%E5%9B%BE%E7%BD%91%E9%A2%84%E8%A7%88%E5%9B%BE%E7%89%87%E5%8E%BB%E6%B0%B4%E5%8D%B0",
+    "code_url": "https://update.greasyfork.org/scripts/490071/%E6%96%B0%E5%9B%BE%E7%BD%91%E9%A2%84%E8%A7%88%E5%9B%BE%E7%89%87%E5%8E%BB%E6%B0%B4%E5%8D%B0.user.js",
+    "code_size": 1379,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 487502,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-17T07:17:11.000Z",
+    "code_updated_at": "2024-02-17T07:48:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1005301,
+        "name": "xiaolongmr",
+        "created_at": "2023-01-01T05:26:58.000Z",
+        "url": "https://greasyfork.org/users/1005301-xiaolongmr"
+      }
+    ],
+    "name": "展开资源库",
+    "description": "点击展开目录即可将全部展开，等加载完成后Ctrl+F组合键搜索就可以了",
+    "url": "https://greasyfork.org/scripts/487502-%E5%B1%95%E5%BC%80%E8%B5%84%E6%BA%90%E5%BA%93",
+    "code_url": "https://update.greasyfork.org/scripts/487502/%E5%B1%95%E5%BC%80%E8%B5%84%E6%BA%90%E5%BA%93.user.js",
+    "code_size": 5854,
+    "license": "MIT License",
+    "version": "0.11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 483708,
+    "daily_installs": 0,
+    "total_installs": 178,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-02T17:25:29.000Z",
+    "code_updated_at": "2024-09-22T13:50:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1005301,
+        "name": "xiaolongmr",
+        "created_at": "2023-01-01T05:26:58.000Z",
+        "url": "https://greasyfork.org/users/1005301-xiaolongmr"
+      }
+    ],
+    "name": "B站视频截图",
+    "description": "对当前页面正在播放的B站或油管视频的当前帧进行截图，并启用浏览器下载功能保存到本地。支持设置圆角大小。",
+    "url": "https://greasyfork.org/scripts/483708-b%E7%AB%99%E8%A7%86%E9%A2%91%E6%88%AA%E5%9B%BE",
+    "code_url": "https://update.greasyfork.org/scripts/483708/B%E7%AB%99%E8%A7%86%E9%A2%91%E6%88%AA%E5%9B%BE.user.js",
+    "code_size": 17871,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

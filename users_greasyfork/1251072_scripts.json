@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485344,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-21T00:01:59.000Z",
+    "code_updated_at": "2024-01-21T07:53:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1251072,
+        "name": "Potato 101",
+        "created_at": "2024-01-20T23:56:55.000Z",
+        "url": "https://greasyfork.org/users/1251072-potato-101"
+      }
+    ],
+    "name": "Automatic Gem Claim",
+    "description": "it does things",
+    "url": "https://greasyfork.org/scripts/485344-automatic-gem-claim",
+    "code_url": "https://update.greasyfork.org/scripts/485344/Automatic%20Gem%20Claim.user.js",
+    "code_size": 2640,
+    "license": "MIT License",
+    "version": "2023-12-20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

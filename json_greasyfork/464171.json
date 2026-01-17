@@ -1,0 +1,33 @@
+{
+  "id": 464171,
+  "daily_installs": 0,
+  "total_installs": 88631,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-16T16:29:57.000Z",
+  "code_updated_at": "2023-11-23T06:18:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1039443,
+      "name": "alv002",
+      "created_at": "2023-03-10T01:13:49.000Z",
+      "url": "https://greasyfork.org/users/1039443-alv002"
+    }
+  ],
+  "name": "云班课🆕答题小能手🥇【开源版】",
+  "description": "【😎蓝墨云全自动答题，一键完成所有资源学习😎】、【🧡功能全部免费使用🧡】【🔥抵制网络答题考核制度⚡️，🌵学生的平时成绩不应由简单的题目判定🌵，更不是依靠搜索引擎🔥】，【欢迎加入qq群:😄947446522😄，共同交流进步】。【💚作者在此保证，脚本无任何诸如（手机号，学校信息，等隐私信息收集）💚】",
+  "url": "https://greasyfork.org/scripts/464171-%E4%BA%91%E7%8F%AD%E8%AF%BE-%E7%AD%94%E9%A2%98%E5%B0%8F%E8%83%BD%E6%89%8B-%E5%BC%80%E6%BA%90%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/464171/%E4%BA%91%E7%8F%AD%E8%AF%BE%F0%9F%86%95%E7%AD%94%E9%A2%98%E5%B0%8F%E8%83%BD%E6%89%8B%F0%9F%A5%87%E3%80%90%E5%BC%80%E6%BA%90%E7%89%88%E3%80%91.user.js",
+  "code_size": 42796,
+  "license": "MIT License",
+  "version": "2.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

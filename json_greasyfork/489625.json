@@ -1,0 +1,59 @@
+{
+  "id": 489625,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-12T07:30:15.000Z",
+  "code_updated_at": "2024-03-12T07:33:59.000Z",
+  "namespace": "wenqindong.top",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1273305,
+      "name": "wenqd",
+      "created_at": "2024-03-12T02:21:57.000Z",
+      "url": "https://greasyfork.org/users/1273305-wenqd",
+      "scripts": [
+        {
+          "id": 489629,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-12T07:39:01.000Z",
+          "code_updated_at": "2024-03-12T07:39:01.000Z",
+          "namespace": "wenqindong.top",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "禅道辅助",
+          "description": "禅道辅助脚本，获取任务工时",
+          "url": "https://greasyfork.org/scripts/489629-%E7%A6%85%E9%81%93%E8%BE%85%E5%8A%A9",
+          "code_url": "https://update.greasyfork.org/scripts/489629/%E7%A6%85%E9%81%93%E8%BE%85%E5%8A%A9.user.js",
+          "code_size": 20022,
+          "license": "MIT License",
+          "version": "1.1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "大模型生单训练数据收集",
+  "description": "收集生单期望数据格式",
+  "url": "https://greasyfork.org/scripts/489625-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%94%9F%E5%8D%95%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86",
+  "code_url": "https://update.greasyfork.org/scripts/489625/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%94%9F%E5%8D%95%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86.user.js",
+  "code_size": 21973,
+  "license": "MIT License",
+  "version": "1.1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

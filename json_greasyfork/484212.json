@@ -1,0 +1,59 @@
+{
+  "id": 484212,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-08T08:25:39.000Z",
+  "code_updated_at": "2024-01-08T08:50:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1244939,
+      "name": "goweiwen",
+      "created_at": "2024-01-08T08:24:16.000Z",
+      "url": "https://greasyfork.org/users/1244939-goweiwen",
+      "scripts": [
+        {
+          "id": 484212,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-08T08:25:39.000Z",
+          "code_updated_at": "2024-01-08T08:50:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Eclipse Emu Black Theme",
+          "description": "Changes the red UI on Eclipse to black",
+          "url": "https://greasyfork.org/scripts/484212-eclipse-emu-black-theme",
+          "code_url": "https://update.greasyfork.org/scripts/484212/Eclipse%20Emu%20Black%20Theme.user.js",
+          "code_size": 773,
+          "license": "MIT License",
+          "version": "2024-01-08",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Eclipse Emu Black Theme",
+  "description": "Changes the red UI on Eclipse to black",
+  "url": "https://greasyfork.org/scripts/484212-eclipse-emu-black-theme",
+  "code_url": "https://update.greasyfork.org/scripts/484212/Eclipse%20Emu%20Black%20Theme.user.js",
+  "code_size": 773,
+  "license": "MIT License",
+  "version": "2024-01-08",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

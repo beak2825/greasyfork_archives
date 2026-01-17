@@ -1,0 +1,59 @@
+{
+  "id": 487626,
+  "daily_installs": 0,
+  "total_installs": 986,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-18T14:18:01.000Z",
+  "code_updated_at": "2024-02-18T14:24:42.000Z",
+  "namespace": "The Player :D",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1262779,
+      "name": "João Lucas Florêncio",
+      "created_at": "2024-02-18T01:25:31.000Z",
+      "url": "https://greasyfork.org/users/1262779-jo%C3%A3o-lucas-flor%C3%AAncio",
+      "scripts": [
+        {
+          "id": 487626,
+          "daily_installs": 0,
+          "total_installs": 986,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-18T14:18:01.000Z",
+          "code_updated_at": "2024-02-18T14:24:42.000Z",
+          "namespace": "The Player :D",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DiaMonD The Best by :D",
+          "description": "-  OP M0D  -",
+          "url": "https://greasyfork.org/scripts/487626-diamond-the-best-by-d",
+          "code_url": "https://update.greasyfork.org/scripts/487626/DiaMonD%20The%20Best%20by%20%3AD.user.js",
+          "code_size": 380559,
+          "license": null,
+          "version": "v1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DiaMonD The Best by :D",
+  "description": "-  OP M0D  -",
+  "url": "https://greasyfork.org/scripts/487626-diamond-the-best-by-d",
+  "code_url": "https://update.greasyfork.org/scripts/487626/DiaMonD%20The%20Best%20by%20%3AD.user.js",
+  "code_size": 380559,
+  "license": null,
+  "version": "v1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

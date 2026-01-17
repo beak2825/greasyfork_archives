@@ -1,0 +1,35 @@
+[
+  {
+    "id": 469197,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-22T05:32:36.000Z",
+    "code_updated_at": "2023-06-22T05:32:35.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1108583,
+        "name": "Miho Mihoyo",
+        "created_at": "2023-06-22T05:28:32.000Z",
+        "url": "https://greasyfork.org/users/1108583-miho-mihoyo"
+      }
+    ],
+    "name": "Tab Autocomplete for AMQ",
+    "description": "4/18/2022, 10:05:25 PM",
+    "url": "https://greasyfork.org/scripts/469197-tab-autocomplete-for-amq",
+    "code_url": "https://update.greasyfork.org/scripts/469197/Tab%20Autocomplete%20for%20AMQ.user.js",
+    "code_size": 2591,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

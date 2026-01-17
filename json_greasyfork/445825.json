@@ -1,0 +1,59 @@
+{
+  "id": 445825,
+  "daily_installs": 1,
+  "total_installs": 166,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-31T21:18:28.000Z",
+  "code_updated_at": "2022-05-31T21:18:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 920702,
+      "name": "Studio Hawaii",
+      "created_at": "2022-05-31T21:08:34.000Z",
+      "url": "https://greasyfork.org/users/920702-studio-hawaii",
+      "scripts": [
+        {
+          "id": 445825,
+          "daily_installs": 1,
+          "total_installs": 166,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-31T21:18:28.000Z",
+          "code_updated_at": "2022-05-31T21:18:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fake 505 Screen For Canvas",
+          "description": "Use this to get out of homework. Not recommended for school work, because they will contact support and find out. If your trying to get out of homework make sure to unpin the extension if its pinned. Make sure to replace https or http with * and put /* where the dash is in your school url. If you use this url then your good. Have fun using this for whatever on canvas!",
+          "url": "https://greasyfork.org/scripts/445825-fake-505-screen-for-canvas",
+          "code_url": "https://update.greasyfork.org/scripts/445825/Fake%20505%20Screen%20For%20Canvas.user.js",
+          "code_size": 872,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fake 505 Screen For Canvas",
+  "description": "Use this to get out of homework. Not recommended for school work, because they will contact support and find out. If your trying to get out of homework make sure to unpin the extension if its pinned. Make sure to replace https or http with * and put /* where the dash is in your school url. If you use this url then your good. Have fun using this for whatever on canvas!",
+  "url": "https://greasyfork.org/scripts/445825-fake-505-screen-for-canvas",
+  "code_url": "https://update.greasyfork.org/scripts/445825/Fake%20505%20Screen%20For%20Canvas.user.js",
+  "code_size": 872,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

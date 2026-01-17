@@ -1,0 +1,59 @@
+{
+  "id": 492426,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-13T07:36:50.000Z",
+  "code_updated_at": "2025-09-09T16:54:00.000Z",
+  "namespace": "ddkhzs",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1193247,
+      "name": "updatemaster",
+      "created_at": "2023-10-11T06:19:10.000Z",
+      "url": "https://greasyfork.org/users/1193247-updatemaster",
+      "scripts": [
+        {
+          "id": 492426,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-13T07:36:50.000Z",
+          "code_updated_at": "2025-09-09T16:54:00.000Z",
+          "namespace": "ddkhzs",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "点点开黑助手",
+          "description": "点点开黑助手，爱神秘宝自动查找，定时发送消息，触发发送消息，关闭置顶横幅,屏蔽礼物特效",
+          "url": "https://greasyfork.org/scripts/492426-%E7%82%B9%E7%82%B9%E5%BC%80%E9%BB%91%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/492426/%E7%82%B9%E7%82%B9%E5%BC%80%E9%BB%91%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 17486,
+          "license": "MIT License",
+          "version": "1.1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "点点开黑助手",
+  "description": "点点开黑助手，爱神秘宝自动查找，定时发送消息，触发发送消息，关闭置顶横幅,屏蔽礼物特效",
+  "url": "https://greasyfork.org/scripts/492426-%E7%82%B9%E7%82%B9%E5%BC%80%E9%BB%91%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/492426/%E7%82%B9%E7%82%B9%E5%BC%80%E9%BB%91%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 17486,
+  "license": "MIT License",
+  "version": "1.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

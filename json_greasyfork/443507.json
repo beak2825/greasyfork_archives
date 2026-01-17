@@ -1,0 +1,34 @@
+{
+  "id": 443507,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-17T07:01:33.000Z",
+  "code_updated_at": "2022-04-17T07:17:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816924,
+      "name": "Grizon",
+      "created_at": "2021-09-19T08:38:44.000Z",
+      "url": "https://greasyfork.org/users/816924-grizon",
+      "scripts": []
+    }
+  ],
+  "name": "6_C-Affiliates SH-1 for btcbunch.com",
+  "description": "Short C-Affiliates SH-1 on btcbunch.com",
+  "url": "https://greasyfork.org/scripts/443507-6-c-affiliates-sh-1-for-btcbunch-com",
+  "code_url": "https://update.greasyfork.org/scripts/443507/6_C-Affiliates%20SH-1%20for%20btcbunchcom.user.js",
+  "code_size": 1202,
+  "license": "MIT License",
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

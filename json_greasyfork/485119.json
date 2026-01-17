@@ -1,0 +1,34 @@
+{
+  "id": 485119,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-18T05:50:23.000Z",
+  "code_updated_at": "2024-01-18T06:07:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 862686,
+      "name": "leerukang",
+      "created_at": "2022-01-09T04:39:43.000Z",
+      "url": "https://greasyfork.org/users/862686-leerukang",
+      "scripts": []
+    }
+  ],
+  "name": "Toutiao Customizer",
+  "description": "Remove specific elements and resize images on Toutiao",
+  "url": "https://greasyfork.org/scripts/485119-toutiao-customizer",
+  "code_url": "https://update.greasyfork.org/scripts/485119/Toutiao%20Customizer.user.js",
+  "code_size": 1227,
+  "license": null,
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

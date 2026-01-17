@@ -1,0 +1,33 @@
+{
+  "id": 430054,
+  "daily_installs": 0,
+  "total_installs": 147,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-29T12:18:05.000Z",
+  "code_updated_at": "2021-07-30T08:41:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 9071,
+      "name": "crazythq",
+      "created_at": "2015-02-12T09:00:41.000Z",
+      "url": "https://greasyfork.org/users/9071-crazythq"
+    }
+  ],
+  "name": "掌阅在线看书宽屏样式",
+  "description": "这是一个把页面调整成宽屏样式的脚本，理论上适用于大多数屏幕。",
+  "url": "https://greasyfork.org/scripts/430054-%E6%8E%8C%E9%98%85%E5%9C%A8%E7%BA%BF%E7%9C%8B%E4%B9%A6%E5%AE%BD%E5%B1%8F%E6%A0%B7%E5%BC%8F",
+  "code_url": "https://update.greasyfork.org/scripts/430054/%E6%8E%8C%E9%98%85%E5%9C%A8%E7%BA%BF%E7%9C%8B%E4%B9%A6%E5%AE%BD%E5%B1%8F%E6%A0%B7%E5%BC%8F.user.js",
+  "code_size": 1563,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

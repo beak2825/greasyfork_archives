@@ -1,0 +1,34 @@
+{
+  "id": 430895,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-16T12:38:54.000Z",
+  "code_updated_at": "2021-08-17T00:37:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 666243,
+      "name": "xiejialong",
+      "created_at": "2020-07-13T01:29:47.000Z",
+      "url": "https://greasyfork.org/users/666243-xiejialong",
+      "scripts": []
+    }
+  ],
+  "name": "AI_WRITER",
+  "description": "There was none!!!",
+  "url": "https://greasyfork.org/scripts/430895-ai-writer",
+  "code_url": "https://update.greasyfork.org/scripts/430895/AI_WRITER.user.js",
+  "code_size": 2555,
+  "license": null,
+  "version": "20210817",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

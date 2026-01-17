@@ -1,0 +1,68 @@
+[
+  {
+    "id": 474960,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-10T14:37:46.000Z",
+    "code_updated_at": "2023-10-24T10:29:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201162,
+        "name": "Suppin_Fox",
+        "created_at": "2018-08-05T07:10:20.000Z",
+        "url": "https://greasyfork.org/users/201162-suppin-fox"
+      }
+    ],
+    "name": "Display none user ranking",
+    "description": "twitch user rankingを非表示にする",
+    "url": "https://greasyfork.org/scripts/474960-display-none-user-ranking",
+    "code_url": "https://update.greasyfork.org/scripts/474960/Display%20none%20user%20ranking.user.js",
+    "code_size": 2543,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 440419,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-22T01:59:42.000Z",
+    "code_updated_at": "2022-08-08T09:38:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201162,
+        "name": "Suppin_Fox",
+        "created_at": "2018-08-05T07:10:20.000Z",
+        "url": "https://greasyfork.org/users/201162-suppin-fox"
+      }
+    ],
+    "name": "Pixiv Fanbox HydeUserComments",
+    "description": "pixiv fanboxの投稿へのコメントから不要なユーザを消すスクリプト",
+    "url": "https://greasyfork.org/scripts/440419-pixiv-fanbox-hydeusercomments",
+    "code_url": "https://update.greasyfork.org/scripts/440419/Pixiv%20Fanbox%20HydeUserComments.user.js",
+    "code_size": 2189,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

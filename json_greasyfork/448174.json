@@ -1,0 +1,34 @@
+{
+  "id": 448174,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-20T11:15:41.000Z",
+  "code_updated_at": "2022-07-20T11:15:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 937547,
+      "name": "Oblomovx",
+      "created_at": "2022-07-20T11:13:53.000Z",
+      "url": "https://greasyfork.org/users/937547-oblomovx",
+      "scripts": []
+    }
+  ],
+  "name": "Sportscards links",
+  "description": "Usefull links when buying sportscards",
+  "url": "https://greasyfork.org/scripts/448174-sportscards-links",
+  "code_url": "https://update.greasyfork.org/scripts/448174/Sportscards%20links.user.js",
+  "code_size": 1773,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 475623,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-19T00:07:52.000Z",
+    "code_updated_at": "2023-09-19T00:41:00.000Z",
+    "namespace": "cpx.printiq",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1176037,
+        "name": "Graeme Ross",
+        "created_at": "2023-09-19T00:02:41.000Z",
+        "url": "https://greasyfork.org/users/1176037-graeme-ross"
+      }
+    ],
+    "name": "Add Missing Search Box",
+    "description": "Fix missing search box",
+    "url": "https://greasyfork.org/scripts/475623-add-missing-search-box",
+    "code_url": "https://update.greasyfork.org/scripts/475623/Add%20Missing%20Search%20Box.user.js",
+    "code_size": 407,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

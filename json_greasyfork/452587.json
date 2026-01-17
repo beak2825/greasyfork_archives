@@ -1,0 +1,34 @@
+{
+  "id": 452587,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-07T02:36:17.000Z",
+  "code_updated_at": "2022-10-07T02:36:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 967389,
+      "name": "pmwills",
+      "created_at": "2022-10-07T02:27:48.000Z",
+      "url": "https://greasyfork.org/users/967389-pmwills",
+      "scripts": []
+    }
+  ],
+  "name": "AutoLogin to OpenAthens",
+  "description": "Autologin to OpenAthens",
+  "url": "https://greasyfork.org/scripts/452587-autologin-to-openathens",
+  "code_url": "https://update.greasyfork.org/scripts/452587/AutoLogin%20to%20OpenAthens.user.js",
+  "code_size": 831,
+  "license": "GNU GPL v 3.0",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

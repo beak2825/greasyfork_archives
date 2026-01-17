@@ -1,0 +1,101 @@
+[
+  {
+    "id": 430058,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-29T14:41:24.000Z",
+    "code_updated_at": "2021-07-29T14:41:24.000Z",
+    "namespace": "https://adamw.uk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200280,
+        "name": "Adam Warren",
+        "created_at": "2018-08-01T16:29:26.000Z",
+        "url": "https://greasyfork.org/users/200280-adam-warren"
+      }
+    ],
+    "name": "D&D Beyond: auto-open and lock game log",
+    "description": "Automatically open and lock the game log on character sheets, campaigns and encounters",
+    "url": "https://greasyfork.org/scripts/430058-d-d-beyond-auto-open-and-lock-game-log",
+    "code_url": "https://update.greasyfork.org/scripts/430058/DD%20Beyond%3A%20auto-open%20and%20lock%20game%20log.user.js",
+    "code_size": 938,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 428757,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-01T11:17:09.000Z",
+    "code_updated_at": "2021-07-01T11:17:09.000Z",
+    "namespace": "adamw.uk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200280,
+        "name": "Adam Warren",
+        "created_at": "2018-08-01T16:29:26.000Z",
+        "url": "https://greasyfork.org/users/200280-adam-warren"
+      }
+    ],
+    "name": "D&D Beyond Dark Reader support",
+    "description": "Make D&D Beyond play nice with Dark Reader.",
+    "url": "https://greasyfork.org/scripts/428757-d-d-beyond-dark-reader-support",
+    "code_url": "https://update.greasyfork.org/scripts/428757/DD%20Beyond%20Dark%20Reader%20support.user.css",
+    "code_size": 663,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 418750,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-17T11:29:56.000Z",
+    "code_updated_at": "2020-12-17T16:15:44.000Z",
+    "namespace": "adamw.uk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200280,
+        "name": "Adam Warren",
+        "created_at": "2018-08-01T16:29:26.000Z",
+        "url": "https://greasyfork.org/users/200280-adam-warren"
+      }
+    ],
+    "name": "DuckDuckGo: Default to past year",
+    "description": "Make DuckDuckGo (DDG) default to showing results from the past year.",
+    "url": "https://greasyfork.org/scripts/418750-duckduckgo-default-to-past-year",
+    "code_url": "https://update.greasyfork.org/scripts/418750/DuckDuckGo%3A%20Default%20to%20past%20year.user.js",
+    "code_size": 508,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

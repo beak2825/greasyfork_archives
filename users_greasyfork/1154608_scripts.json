@@ -294,6 +294,171 @@
     "version": "3.1.10",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478764,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-01T05:34:19.000Z",
+    "code_updated_at": "2023-11-01T05:34:19.000Z",
+    "namespace": "https://greasyfork.org/users/1154608",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "Random Target Finder",
+    "description": "Adds a button to the top of the page that opens a new tab with an easy target.",
+    "url": "https://greasyfork.org/scripts/478764-random-target-finder",
+    "code_url": "https://update.greasyfork.org/scripts/478764/Random%20Target%20Finder.user.js",
+    "code_size": 1816,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477430,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-14T18:25:18.000Z",
+    "code_updated_at": "2023-10-14T18:26:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "Attack Button Move",
+    "description": "Move attack button on torn..",
+    "url": "https://greasyfork.org/scripts/477430-attack-button-move",
+    "code_url": "https://update.greasyfork.org/scripts/477430/Attack%20Button%20Move.user.js",
+    "code_size": 4288,
+    "license": "CC-NC-ND",
+    "version": "1.32",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477058,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-09T15:46:59.000Z",
+    "code_updated_at": "2023-10-09T15:48:37.000Z",
+    "namespace": "walla.walla.heasley",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "Torn Start Fight",
+    "description": "Populate list of faction members and wall targets. Adds join attack to hosped player, adds join wall, adds quick ed + join wall",
+    "url": "https://greasyfork.org/scripts/477058-torn-start-fight",
+    "code_url": "https://update.greasyfork.org/scripts/477058/Torn%20Start%20Fight.user.js",
+    "code_size": 56194,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474755,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-07T12:43:29.000Z",
+    "code_updated_at": "2023-09-07T12:43:29.000Z",
+    "namespace": "mafia.maxmed",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "Waller Waller",
+    "description": "Waller walla walle wellerman wally wolla well well wall woll walter..",
+    "url": "https://greasyfork.org/scripts/474755-waller-waller",
+    "code_url": "https://update.greasyfork.org/scripts/474755/Waller%20Waller.user.js",
+    "code_size": 51857,
+    "license": "MIT License",
+    "version": "3.8.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473424,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-19T04:25:44.000Z",
+    "code_updated_at": "2023-08-19T04:25:44.000Z",
+    "namespace": "SMTH",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "SMTH Script",
+    "description": "Watch what you want through the API interface anytime, anywhere！",
+    "url": "https://greasyfork.org/scripts/473424-smth-script",
+    "code_url": "https://update.greasyfork.org/scripts/473424/SMTH%20Script.user.js",
+    "code_size": 457860,
+    "license": null,
+    "version": "3.1.10",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,33 @@
+{
+  "id": 428024,
+  "daily_installs": 0,
+  "total_installs": 403,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-16T06:01:12.000Z",
+  "code_updated_at": "2021-06-16T06:11:18.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/428024-哔哩哔哩专栏纯净复制",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 674644,
+      "name": "beibeibeibei",
+      "created_at": "2020-08-09T05:25:26.000Z",
+      "url": "https://greasyfork.org/users/674644-beibeibeibei"
+    }
+  ],
+  "name": "哔哩哔哩专栏纯净复制",
+  "description": "哔哩哔哩专栏纯净复制，去除作者、链接和出处",
+  "url": "https://greasyfork.org/scripts/428024-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%B8%93%E6%A0%8F%E7%BA%AF%E5%87%80%E5%A4%8D%E5%88%B6",
+  "code_url": "https://update.greasyfork.org/scripts/428024/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%B8%93%E6%A0%8F%E7%BA%AF%E5%87%80%E5%A4%8D%E5%88%B6.user.js",
+  "code_size": 849,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

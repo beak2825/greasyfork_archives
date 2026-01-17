@@ -1,0 +1,34 @@
+{
+  "id": 412100,
+  "daily_installs": 0,
+  "total_installs": 217,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-27T14:08:15.000Z",
+  "code_updated_at": "2020-10-08T00:22:52.000Z",
+  "namespace": "https://pescadordecripto.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 466691,
+      "name": "Jadson Tavares",
+      "created_at": "2020-03-21T20:14:14.000Z",
+      "url": "https://greasyfork.org/users/466691-jadson-tavares",
+      "scripts": []
+    }
+  ],
+  "name": "FaucetCrypto.com (Pescador de Cripto)",
+  "description": "Auto Claim, PTC ADS, Shortlinks",
+  "url": "https://greasyfork.org/scripts/412100-faucetcrypto-com-pescador-de-cripto",
+  "code_url": "https://update.greasyfork.org/scripts/412100/FaucetCryptocom%20%28Pescador%20de%20Cripto%29.user.js",
+  "code_size": 9202,
+  "license": null,
+  "version": "0.8",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

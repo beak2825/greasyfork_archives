@@ -1,0 +1,35 @@
+[
+  {
+    "id": 467884,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-04T13:24:49.000Z",
+    "code_updated_at": "2023-06-06T08:37:56.000Z",
+    "namespace": "핫식스 존나 맛있다",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 992979,
+        "name": "응애나애기태고러",
+        "created_at": "2022-12-05T14:25:24.000Z",
+        "url": "https://greasyfork.org/users/992979-%EC%9D%91%EC%95%A0%EB%82%98%EC%95%A0%EA%B8%B0%ED%83%9C%EA%B3%A0%EB%9F%AC"
+      }
+    ],
+    "name": "유튜브 추첨기",
+    "description": "핫식스",
+    "url": "https://greasyfork.org/scripts/467884-%EC%9C%A0%ED%8A%9C%EB%B8%8C-%EC%B6%94%EC%B2%A8%EA%B8%B0",
+    "code_url": "https://update.greasyfork.org/scripts/467884/%EC%9C%A0%ED%8A%9C%EB%B8%8C%20%EC%B6%94%EC%B2%A8%EA%B8%B0.user.js",
+    "code_size": 6193,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

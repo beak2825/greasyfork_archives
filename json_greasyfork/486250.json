@@ -1,0 +1,34 @@
+{
+  "id": 486250,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-01T19:06:13.000Z",
+  "code_updated_at": "2024-02-01T19:06:13.000Z",
+  "namespace": "http://tampermonkey.net/xbox/nft",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1256168,
+      "name": "没人比我更行",
+      "created_at": "2024-02-01T18:35:55.000Z",
+      "url": "https://greasyfork.org/users/1256168-%E6%B2%A1%E4%BA%BA%E6%AF%94%E6%88%91%E6%9B%B4%E8%A1%8C",
+      "scripts": []
+    }
+  ],
+  "name": "Xbox CLoud Gaming优化整合",
+  "description": "脚本免费！谨防上当受骗！整合和修改现有脚本，优化项详见脚本说明。【若你有好的想法或者BUG可以进xbox云游戏QQ交流1群531602832，2群313340764，3群826510890反馈】",
+  "url": "https://greasyfork.org/scripts/486250-xbox-cloud-gaming%E4%BC%98%E5%8C%96%E6%95%B4%E5%90%88",
+  "code_url": "https://update.greasyfork.org/scripts/486250/Xbox%20CLoud%20Gaming%E4%BC%98%E5%8C%96%E6%95%B4%E5%90%88.user.js",
+  "code_size": 244974,
+  "license": "MIT License",
+  "version": "3.9.3.12",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

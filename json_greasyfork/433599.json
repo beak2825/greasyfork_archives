@@ -1,0 +1,34 @@
+{
+  "id": 433599,
+  "daily_installs": 0,
+  "total_installs": 81,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-08T16:49:06.000Z",
+  "code_updated_at": "2021-12-11T09:16:48.000Z",
+  "namespace": "https://greasyfork.org/users/191824",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 191824,
+      "name": "Denis Gusev",
+      "created_at": "2018-06-18T22:42:38.000Z",
+      "url": "https://greasyfork.org/users/191824-denis-gusev",
+      "scripts": []
+    }
+  ],
+  "name": "Метки городов ДКП new",
+  "description": "...",
+  "url": "https://greasyfork.org/scripts/433599-%D0%BC%D0%B5%D1%82%D0%BA%D0%B8-%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%BE%D0%B2-%D0%B4%D0%BA%D0%BF-new",
+  "code_url": "https://update.greasyfork.org/scripts/433599/%D0%9C%D0%B5%D1%82%D0%BA%D0%B8%20%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%BE%D0%B2%20%D0%94%D0%9A%D0%9F%20new.user.js",
+  "code_size": 31816,
+  "license": null,
+  "version": "0.03",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

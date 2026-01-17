@@ -1,0 +1,59 @@
+{
+  "id": 471154,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-18T23:04:08.000Z",
+  "code_updated_at": "2023-07-18T23:04:08.000Z",
+  "namespace": "https://greasyfork.org/users/1130197",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1130197,
+      "name": "ryo_grid",
+      "created_at": "2023-07-18T22:53:52.000Z",
+      "url": "https://greasyfork.org/users/1130197-ryo-grid",
+      "scripts": [
+        {
+          "id": 471154,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-18T23:04:08.000Z",
+          "code_updated_at": "2023-07-18T23:04:08.000Z",
+          "namespace": "https://greasyfork.org/users/1130197",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "scrapbox.io google translate EN",
+          "description": "this script make pages of scrapbox.io to be translated with google translate",
+          "url": "https://greasyfork.org/scripts/471154-scrapbox-io-google-translate-en",
+          "code_url": "https://update.greasyfork.org/scripts/471154/scrapboxio%20google%20translate%20EN.user.js",
+          "code_size": 510,
+          "license": null,
+          "version": "0.0.1.20230718230408",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "scrapbox.io google translate EN",
+  "description": "this script make pages of scrapbox.io to be translated with google translate",
+  "url": "https://greasyfork.org/scripts/471154-scrapbox-io-google-translate-en",
+  "code_url": "https://update.greasyfork.org/scripts/471154/scrapboxio%20google%20translate%20EN.user.js",
+  "code_size": 510,
+  "license": null,
+  "version": "0.0.1.20230718230408",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

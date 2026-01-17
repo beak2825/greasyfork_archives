@@ -1,0 +1,33 @@
+{
+  "id": 467391,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-29T10:20:44.000Z",
+  "code_updated_at": "2023-05-29T10:20:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1075621,
+      "name": "realdengziqi",
+      "created_at": "2023-05-08T14:33:50.000Z",
+      "url": "https://greasyfork.org/users/1075621-realdengziqi"
+    }
+  ],
+  "name": "bilibili选集视频进度统计",
+  "description": "为选集视频课添加全局的进度统计，方便你按照总进度安排学习计划。",
+  "url": "https://greasyfork.org/scripts/467391-bilibili%E9%80%89%E9%9B%86%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E7%BB%9F%E8%AE%A1",
+  "code_url": "https://update.greasyfork.org/scripts/467391/bilibili%E9%80%89%E9%9B%86%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E7%BB%9F%E8%AE%A1.user.js",
+  "code_size": 3160,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

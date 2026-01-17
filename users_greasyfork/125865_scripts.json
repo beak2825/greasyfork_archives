@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423261,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-15T16:06:24.000Z",
+    "code_updated_at": "2021-03-15T16:06:23.000Z",
+    "namespace": "adustyspectacle",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 125865,
+        "name": "dusty",
+        "created_at": "2017-05-21T05:26:17.000Z",
+        "url": "https://greasyfork.org/users/125865-dusty"
+      }
+    ],
+    "name": "EXR - Remove Inline Styles",
+    "description": "Adds interface to comments to easily insert formatting options in HTML",
+    "url": "https://greasyfork.org/scripts/423261-exr-remove-inline-styles",
+    "code_url": "https://update.greasyfork.org/scripts/423261/EXR%20-%20Remove%20Inline%20Styles.user.js",
+    "code_size": 479,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

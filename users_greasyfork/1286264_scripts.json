@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492585,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-15T12:01:24.000Z",
+    "code_updated_at": "2024-04-15T12:01:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286264,
+        "name": "信标bate",
+        "created_at": "2024-04-10T04:45:04.000Z",
+        "url": "https://greasyfork.org/users/1286264-%E4%BF%A1%E6%A0%87bate"
+      }
+    ],
+    "name": "拦截Minecraft官网网易版的弹窗",
+    "description": "自动点击适用中国大陆地区 IP 访问 Minecraft 官网弹出的网易版弹窗下的“继续浏览该网站”",
+    "url": "https://greasyfork.org/scripts/492585-%E6%8B%A6%E6%88%AAminecraft%E5%AE%98%E7%BD%91%E7%BD%91%E6%98%93%E7%89%88%E7%9A%84%E5%BC%B9%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/492585/%E6%8B%A6%E6%88%AAMinecraft%E5%AE%98%E7%BD%91%E7%BD%91%E6%98%93%E7%89%88%E7%9A%84%E5%BC%B9%E7%AA%97.user.js",
+    "code_size": 890,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

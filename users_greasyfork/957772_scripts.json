@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451221,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-12T03:44:06.000Z",
+    "code_updated_at": "2022-09-12T03:44:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957772,
+        "name": "rodydy",
+        "created_at": "2022-09-12T03:30:21.000Z",
+        "url": "https://greasyfork.org/users/957772-rodydy"
+      }
+    ],
+    "name": "石瓦坡毛概挂科屏蔽器",
+    "description": "帮助您欺骗自己",
+    "url": "https://greasyfork.org/scripts/451221-%E7%9F%B3%E7%93%A6%E5%9D%A1%E6%AF%9B%E6%A6%82%E6%8C%82%E7%A7%91%E5%B1%8F%E8%94%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/451221/%E7%9F%B3%E7%93%A6%E5%9D%A1%E6%AF%9B%E6%A6%82%E6%8C%82%E7%A7%91%E5%B1%8F%E8%94%BD%E5%99%A8.user.js",
+    "code_size": 984,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

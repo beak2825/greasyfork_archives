@@ -1,0 +1,34 @@
+{
+  "id": 434320,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-22T18:45:51.000Z",
+  "code_updated_at": "2021-10-22T18:45:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 113783,
+      "name": "Klattering",
+      "created_at": "2017-03-31T00:06:49.000Z",
+      "url": "https://greasyfork.org/users/113783-klattering",
+      "scripts": []
+    }
+  ],
+  "name": "Blu-Ray News",
+  "description": "Display posts from Blu-Ray news.",
+  "url": "https://greasyfork.org/scripts/434320-blu-ray-news",
+  "code_url": "https://update.greasyfork.org/scripts/434320/Blu-Ray%20News.user.js",
+  "code_size": 5465,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

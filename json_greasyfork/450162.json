@@ -1,0 +1,34 @@
+{
+  "id": 450162,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-25T11:58:06.000Z",
+  "code_updated_at": "2022-08-25T12:42:53.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 950215,
+      "name": "Pasha Morozov",
+      "created_at": "2022-08-24T09:35:07.000Z",
+      "url": "https://greasyfork.org/users/950215-pasha-morozov",
+      "scripts": []
+    }
+  ],
+  "name": "BLACK RUSSIA SPB  || Скрипт Кураторов форума by Y.Hokage.",
+  "description": "При багах,обращайтесь > https://vk.com/morozovpasha2007",
+  "url": "https://greasyfork.org/scripts/450162-black-russia-spb-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-y-hokage",
+  "code_url": "https://update.greasyfork.org/scripts/450162/BLACK%20RUSSIA%20SPB%20%20%7C%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20YHokage.user.js",
+  "code_size": 141306,
+  "license": "MIT License",
+  "version": "1.23",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

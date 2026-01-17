@@ -1,0 +1,59 @@
+{
+  "id": 454468,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-08T13:41:17.000Z",
+  "code_updated_at": "2022-11-08T13:41:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 980780,
+      "name": "blesswxl",
+      "created_at": "2022-11-08T13:28:18.000Z",
+      "url": "https://greasyfork.org/users/980780-blesswxl",
+      "scripts": [
+        {
+          "id": 454468,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-08T13:41:17.000Z",
+          "code_updated_at": "2022-11-08T13:41:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "趣词助手",
+          "description": "趣词助手 - 发音、重点词提示",
+          "url": "https://greasyfork.org/scripts/454468-%E8%B6%A3%E8%AF%8D%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/454468/%E8%B6%A3%E8%AF%8D%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 3614,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "趣词助手",
+  "description": "趣词助手 - 发音、重点词提示",
+  "url": "https://greasyfork.org/scripts/454468-%E8%B6%A3%E8%AF%8D%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/454468/%E8%B6%A3%E8%AF%8D%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 3614,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

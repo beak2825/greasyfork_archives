@@ -1,0 +1,33 @@
+{
+  "id": 421649,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-13T03:11:48.000Z",
+  "code_updated_at": "2021-02-13T03:57:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 737003,
+      "name": "kussy-tessy",
+      "created_at": "2021-02-13T03:08:00.000Z",
+      "url": "https://greasyfork.org/users/737003-kussy-tessy"
+    }
+  ],
+  "name": "dアニメをマウスホイールで倍速設定したり早送りしたりするやつ",
+  "description": "画面の左半分でマウスホイールしたら速度変化、右半分でマウスホイールしたら早送り/巻き戻し",
+  "url": "https://greasyfork.org/scripts/421649-d%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%92%E3%83%9E%E3%82%A6%E3%82%B9%E3%83%9B%E3%82%A4%E3%83%BC%E3%83%AB%E3%81%A7%E5%80%8D%E9%80%9F%E8%A8%AD%E5%AE%9A%E3%81%97%E3%81%9F%E3%82%8A%E6%97%A9%E9%80%81%E3%82%8A%E3%81%97%E3%81%9F%E3%82%8A%E3%81%99%E3%82%8B%E3%82%84%E3%81%A4",
+  "code_url": "https://update.greasyfork.org/scripts/421649/d%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%92%E3%83%9E%E3%82%A6%E3%82%B9%E3%83%9B%E3%82%A4%E3%83%BC%E3%83%AB%E3%81%A7%E5%80%8D%E9%80%9F%E8%A8%AD%E5%AE%9A%E3%81%97%E3%81%9F%E3%82%8A%E6%97%A9%E9%80%81%E3%82%8A%E3%81%97%E3%81%9F%E3%82%8A%E3%81%99%E3%82%8B%E3%82%84%E3%81%A4.user.js",
+  "code_size": 2083,
+  "license": null,
+  "version": "0.12",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

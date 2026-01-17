@@ -1,0 +1,33 @@
+{
+  "id": 437518,
+  "daily_installs": 0,
+  "total_installs": 584,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-12-24T07:36:34.000Z",
+  "code_updated_at": "2023-09-26T05:49:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 846414,
+      "name": "xiaokaizhenshaui",
+      "created_at": "2021-11-30T01:59:43.000Z",
+      "url": "https://greasyfork.org/users/846414-xiaokaizhenshaui"
+    }
+  ],
+  "name": "DingTalk",
+  "description": "这是个可以自动点击钉钉酷学院的脚本。",
+  "url": "https://greasyfork.org/scripts/437518-dingtalk",
+  "code_url": "https://update.greasyfork.org/scripts/437518/DingTalk.user.js",
+  "code_size": 7929,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 417204,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-01T05:29:15.000Z",
+  "code_updated_at": "2020-12-01T05:29:15.000Z",
+  "namespace": "https://greasyfork.org/users/710818",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 710818,
+      "name": "sticks-stuff",
+      "created_at": "2020-12-01T05:27:10.000Z",
+      "url": "https://greasyfork.org/users/710818-sticks-stuff"
+    }
+  ],
+  "name": "Shift + Enter to send tweet",
+  "description": "Press shift and enter at the same time to send a tweet!",
+  "url": "https://greasyfork.org/scripts/417204-shift-enter-to-send-tweet",
+  "code_url": "https://update.greasyfork.org/scripts/417204/Shift%20%2B%20Enter%20to%20send%20tweet.user.js",
+  "code_size": 825,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

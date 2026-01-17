@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455568,
+    "daily_installs": 0,
+    "total_installs": 124,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-29T03:21:12.000Z",
+    "code_updated_at": "2023-04-26T01:46:51.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986002,
+        "name": "CreazyJack",
+        "created_at": "2022-11-21T09:39:00.000Z",
+        "url": "https://greasyfork.org/users/986002-creazyjack"
+      }
+    ],
+    "name": "知乎-关闭右侧栏 - zhihu.com",
+    "description": "2022/11/28 17:36:07",
+    "url": "https://greasyfork.org/scripts/455568-%E7%9F%A5%E4%B9%8E-%E5%85%B3%E9%97%AD%E5%8F%B3%E4%BE%A7%E6%A0%8F-zhihu-com",
+    "code_url": "https://update.greasyfork.org/scripts/455568/%E7%9F%A5%E4%B9%8E-%E5%85%B3%E9%97%AD%E5%8F%B3%E4%BE%A7%E6%A0%8F%20-%20zhihucom.user.js",
+    "code_size": 1134,
+    "license": "GPL License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

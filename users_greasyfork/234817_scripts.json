@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428108,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-17T23:50:02.000Z",
+    "code_updated_at": "2021-06-18T00:30:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 234817,
+        "name": "AlienZ",
+        "created_at": "2018-12-24T21:54:17.000Z",
+        "url": "https://greasyfork.org/users/234817-alienz"
+      }
+    ],
+    "name": "AtoZ Investment Profit DEV",
+    "description": "Subtracts the investments losses and fees from the profit to show total investments gains/losses",
+    "url": "https://greasyfork.org/scripts/428108-atoz-investment-profit-dev",
+    "code_url": "https://update.greasyfork.org/scripts/428108/AtoZ%20Investment%20Profit%20DEV.user.js",
+    "code_size": 1778,
+    "license": null,
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

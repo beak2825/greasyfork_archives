@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452774,
+    "daily_installs": 0,
+    "total_installs": 60,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-09T19:02:18.000Z",
+    "code_updated_at": "2022-10-09T19:02:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 968499,
+        "name": "prod by wintape",
+        "created_at": "2022-10-09T18:56:38.000Z",
+        "url": "https://greasyfork.org/users/968499-prod-by-wintape"
+      }
+    ],
+    "name": "Genius Instant Old",
+    "description": "Converts new ugly Genius designs to old ones",
+    "url": "https://greasyfork.org/scripts/452774-genius-instant-old",
+    "code_url": "https://update.greasyfork.org/scripts/452774/Genius%20Instant%20Old.user.js",
+    "code_size": 656,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

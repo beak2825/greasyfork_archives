@@ -1,0 +1,33 @@
+{
+  "id": 447494,
+  "daily_installs": 0,
+  "total_installs": 93,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-06T09:55:23.000Z",
+  "code_updated_at": "2022-07-14T09:46:28.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 932922,
+      "name": "max.savings",
+      "created_at": "2022-07-06T09:43:21.000Z",
+      "url": "https://greasyfork.org/users/932922-max-savings"
+    }
+  ],
+  "name": "mydealz comment thread expander - mydealz.de",
+  "description": "expands all comment threads.",
+  "url": "https://greasyfork.org/scripts/447494-mydealz-comment-thread-expander-mydealz-de",
+  "code_url": "https://update.greasyfork.org/scripts/447494/mydealz%20comment%20thread%20expander%20-%20mydealzde.user.js",
+  "code_size": 811,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

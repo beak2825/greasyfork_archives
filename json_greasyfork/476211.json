@@ -1,0 +1,59 @@
+{
+  "id": 476211,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-28T03:34:27.000Z",
+  "code_updated_at": "2023-09-28T03:34:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1182524,
+      "name": "NothingExist",
+      "created_at": "2023-09-28T03:24:26.000Z",
+      "url": "https://greasyfork.org/users/1182524-nothingexist",
+      "scripts": [
+        {
+          "id": 476211,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-28T03:34:27.000Z",
+          "code_updated_at": "2023-09-28T03:34:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili Link Modifier",
+          "description": "Modify Bilibili links to open in the current tab",
+          "url": "https://greasyfork.org/scripts/476211-bilibili-link-modifier",
+          "code_url": "https://update.greasyfork.org/scripts/476211/Bilibili%20Link%20Modifier.user.js",
+          "code_size": 1003,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili Link Modifier",
+  "description": "Modify Bilibili links to open in the current tab",
+  "url": "https://greasyfork.org/scripts/476211-bilibili-link-modifier",
+  "code_url": "https://update.greasyfork.org/scripts/476211/Bilibili%20Link%20Modifier.user.js",
+  "code_size": 1003,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

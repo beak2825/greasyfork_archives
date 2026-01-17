@@ -1,0 +1,59 @@
+{
+  "id": 415410,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-03T13:54:08.000Z",
+  "code_updated_at": "2020-11-03T13:54:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 701023,
+      "name": "1870332922",
+      "created_at": "2020-11-03T13:23:50.000Z",
+      "url": "https://greasyfork.org/users/701023-1870332922",
+      "scripts": [
+        {
+          "id": 415410,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-03T13:54:08.000Z",
+          "code_updated_at": "2020-11-03T13:54:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Anti RemoveFan 空格不是空嗝",
+          "description": "反删粉脚本。打开B站UP主uid为303582386的账号主页时，每隔30秒刷新检测是否被删粉，如果被删除则自动添加。如果失效请刷新网页。开个新窗口单独打开主页，然后挂后台就行",
+          "url": "https://greasyfork.org/scripts/415410-anti-removefan-%E7%A9%BA%E6%A0%BC%E4%B8%8D%E6%98%AF%E7%A9%BA%E5%97%9D",
+          "code_url": "https://update.greasyfork.org/scripts/415410/Anti%20RemoveFan%20%E7%A9%BA%E6%A0%BC%E4%B8%8D%E6%98%AF%E7%A9%BA%E5%97%9D.user.js",
+          "code_size": 815,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Anti RemoveFan 空格不是空嗝",
+  "description": "反删粉脚本。打开B站UP主uid为303582386的账号主页时，每隔30秒刷新检测是否被删粉，如果被删除则自动添加。如果失效请刷新网页。开个新窗口单独打开主页，然后挂后台就行",
+  "url": "https://greasyfork.org/scripts/415410-anti-removefan-%E7%A9%BA%E6%A0%BC%E4%B8%8D%E6%98%AF%E7%A9%BA%E5%97%9D",
+  "code_url": "https://update.greasyfork.org/scripts/415410/Anti%20RemoveFan%20%E7%A9%BA%E6%A0%BC%E4%B8%8D%E6%98%AF%E7%A9%BA%E5%97%9D.user.js",
+  "code_size": 815,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

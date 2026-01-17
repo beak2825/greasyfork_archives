@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447301,
+    "daily_installs": 1,
+    "total_installs": 84994,
+    "fan_score": "65.3",
+    "good_ratings": 18,
+    "ok_ratings": 6,
+    "bad_ratings": 1,
+    "created_at": "2022-07-01T12:51:14.000Z",
+    "code_updated_at": "2025-01-03T12:15:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 930143,
+        "name": "Miss.",
+        "created_at": "2022-06-28T16:03:17.000Z",
+        "url": "https://greasyfork.org/users/930143-miss"
+      }
+    ],
+    "name": "🥇优学院小助手（稳定）|视频-章节测试-作业考试查题(三合一)|自动挂机|答题收录|用过都说好",
+    "description": "🆕上次更新：2024.05.12 优学院小助手，用于课件视频|课后作业|考试界面辅助答题(自动答题)。",
+    "url": "https://greasyfork.org/scripts/447301-%E4%BC%98%E5%AD%A6%E9%99%A2%E5%B0%8F%E5%8A%A9%E6%89%8B-%E7%A8%B3%E5%AE%9A-%E8%A7%86%E9%A2%91-%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95-%E4%BD%9C%E4%B8%9A%E8%80%83%E8%AF%95%E6%9F%A5%E9%A2%98-%E4%B8%89%E5%90%88%E4%B8%80-%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA-%E7%AD%94%E9%A2%98%E6%94%B6%E5%BD%95-%E7%94%A8%E8%BF%87%E9%83%BD%E8%AF%B4%E5%A5%BD",
+    "code_url": "https://update.greasyfork.org/scripts/447301/%F0%9F%A5%87%E4%BC%98%E5%AD%A6%E9%99%A2%E5%B0%8F%E5%8A%A9%E6%89%8B%EF%BC%88%E7%A8%B3%E5%AE%9A%EF%BC%89%7C%E8%A7%86%E9%A2%91-%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95-%E4%BD%9C%E4%B8%9A%E8%80%83%E8%AF%95%E6%9F%A5%E9%A2%98%28%E4%B8%89%E5%90%88%E4%B8%80%29%7C%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA%7C%E7%AD%94%E9%A2%98%E6%94%B6%E5%BD%95%7C%E7%94%A8%E8%BF%87%E9%83%BD%E8%AF%B4%E5%A5%BD.user.js",
+    "code_size": 41242,
+    "license": null,
+    "version": "1.4.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

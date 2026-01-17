@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476689,
+    "daily_installs": 1,
+    "total_installs": 805,
+    "fan_score": "6.1",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2023-10-04T14:14:47.000Z",
+    "code_updated_at": "2023-10-04T14:14:47.000Z",
+    "namespace": "https://t.co/V5A0eSOppW",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1188008,
+        "name": "Ivette Dedek",
+        "created_at": "2023-10-04T14:10:14.000Z",
+        "url": "https://greasyfork.org/users/1188008-ivette-dedek"
+      }
+    ],
+    "name": "kiwiSpotify",
+    "description": "make spotify working on mobile",
+    "url": "https://greasyfork.org/scripts/476689-kiwispotify",
+    "code_url": "https://update.greasyfork.org/scripts/476689/kiwiSpotify.user.js",
+    "code_size": 512,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

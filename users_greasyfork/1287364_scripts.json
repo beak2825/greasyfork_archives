@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492590,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-15T13:41:19.000Z",
+    "code_updated_at": "2024-04-15T13:41:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1287364,
+        "name": "liqianfei",
+        "created_at": "2024-04-12T12:51:22.000Z",
+        "url": "https://greasyfork.org/users/1287364-liqianfei"
+      }
+    ],
+    "name": "boss直聘",
+    "description": "test",
+    "url": "https://greasyfork.org/scripts/492590-boss%E7%9B%B4%E8%81%98",
+    "code_url": "https://update.greasyfork.org/scripts/492590/boss%E7%9B%B4%E8%81%98.user.js",
+    "code_size": 2850,
+    "license": "AGPL License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455096,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-19T14:06:12.000Z",
+    "code_updated_at": "2022-11-19T15:31:22.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 985284,
+        "name": "cheater",
+        "created_at": "2022-11-19T13:57:09.000Z",
+        "url": "https://greasyfork.org/users/985284-cheater"
+      }
+    ],
+    "name": "GMail - shorten mailing list tags",
+    "description": "11/19/2022, 3:56:47 PM",
+    "url": "https://greasyfork.org/scripts/455096-gmail-shorten-mailing-list-tags",
+    "code_url": "https://update.greasyfork.org/scripts/455096/GMail%20-%20shorten%20mailing%20list%20tags.user.js",
+    "code_size": 4287,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

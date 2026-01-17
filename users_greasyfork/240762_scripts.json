@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 442943,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-07T16:27:55.000Z",
+    "code_updated_at": "2022-04-07T16:27:55.000Z",
+    "namespace": "im.outv.userscript.bvav",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 240762,
+        "name": "outloudvi",
+        "created_at": "2019-01-20T04:34:17.000Z",
+        "url": "https://greasyfork.org/users/240762-outloudvi"
+      }
+    ],
+    "name": "显示 AV/BV",
+    "description": "在视频页显示 AV/BV 号",
+    "url": "https://greasyfork.org/scripts/442943-%E6%98%BE%E7%A4%BA-av-bv",
+    "code_url": "https://update.greasyfork.org/scripts/442943/%E6%98%BE%E7%A4%BA%20AVBV.user.js",
+    "code_size": 2761,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417150,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-30T10:47:16.000Z",
+    "code_updated_at": "2020-11-30T10:47:15.000Z",
+    "namespace": "im.outv.dont-be-a-hu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 240762,
+        "name": "outloudvi",
+        "created_at": "2019-01-20T04:34:17.000Z",
+        "url": "https://greasyfork.org/users/240762-outloudvi"
+      }
+    ],
+    "name": "Don't Be A Hu",
+    "description": "Improve Zhihu UI",
+    "url": "https://greasyfork.org/scripts/417150-don-t-be-a-hu",
+    "code_url": "https://update.greasyfork.org/scripts/417150/Don%27t%20Be%20A%20Hu.user.css",
+    "code_size": 343,
+    "license": "DBAD (https://github.com/philsturgeon/dbad)",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

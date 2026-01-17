@@ -1,0 +1,33 @@
+{
+  "id": 418392,
+  "daily_installs": 0,
+  "total_installs": 661,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-09T11:05:43.000Z",
+  "code_updated_at": "2020-12-09T11:30:05.000Z",
+  "namespace": "ulita",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 235729,
+      "name": "ulita",
+      "created_at": "2018-12-28T12:06:45.000Z",
+      "url": "https://greasyfork.org/users/235729-ulita"
+    }
+  ],
+  "name": "sjtu学生评价一键好评",
+  "description": "自动填写学生评价",
+  "url": "https://greasyfork.org/scripts/418392-sjtu%E5%AD%A6%E7%94%9F%E8%AF%84%E4%BB%B7%E4%B8%80%E9%94%AE%E5%A5%BD%E8%AF%84",
+  "code_url": "https://update.greasyfork.org/scripts/418392/sjtu%E5%AD%A6%E7%94%9F%E8%AF%84%E4%BB%B7%E4%B8%80%E9%94%AE%E5%A5%BD%E8%AF%84.user.js",
+  "code_size": 1292,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

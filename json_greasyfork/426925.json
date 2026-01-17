@@ -1,0 +1,34 @@
+{
+  "id": 426925,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-23T21:20:32.000Z",
+  "code_updated_at": "2021-05-23T21:20:32.000Z",
+  "namespace": "https://greasyfork.org/users/766674",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 766674,
+      "name": "Nicholas Paul",
+      "created_at": "2021-04-30T01:11:38.000Z",
+      "url": "https://greasyfork.org/users/766674-nicholas-paul",
+      "scripts": []
+    }
+  ],
+  "name": "Reconstruct Classic Watch7 YouTube Layout Fixed",
+  "description": "A revised and (almost) fixed version of the \"simple script that seeks to reconstruct the classic watch7 layout on YouTube.\"",
+  "url": "https://greasyfork.org/scripts/426925-reconstruct-classic-watch7-youtube-layout-fixed",
+  "code_url": "https://update.greasyfork.org/scripts/426925/Reconstruct%20Classic%20Watch7%20YouTube%20Layout%20Fixed.user.js",
+  "code_size": 1227310,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423415,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-17T11:24:55.000Z",
+    "code_updated_at": "2021-04-02T10:23:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 231251,
+        "name": "wehimgak4",
+        "created_at": "2018-12-08T07:50:47.000Z",
+        "url": "https://greasyfork.org/users/231251-wehimgak4"
+      }
+    ],
+    "name": "FTXのWebアプリMod",
+    "description": "FTXのWebアプリの独自のトレード機能を追加したりします。",
+    "url": "https://greasyfork.org/scripts/423415-ftx%E3%81%AEweb%E3%82%A2%E3%83%97%E3%83%AAmod",
+    "code_url": "https://update.greasyfork.org/scripts/423415/FTX%E3%81%AEWeb%E3%82%A2%E3%83%97%E3%83%AAMod.user.js",
+    "code_size": 17569,
+    "license": "LGPLv3",
+    "version": "0.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

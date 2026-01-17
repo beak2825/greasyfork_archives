@@ -1,0 +1,68 @@
+[
+  {
+    "id": 456745,
+    "daily_installs": 0,
+    "total_installs": 435,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-17T23:04:27.000Z",
+    "code_updated_at": "2022-12-17T23:04:27.000Z",
+    "namespace": "get-gaoding-material",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 324763,
+        "name": "sertraline echo",
+        "created_at": "2019-08-09T09:42:32.000Z",
+        "url": "https://greasyfork.org/users/324763-sertraline-echo"
+      }
+    ],
+    "name": "get-gaoding-material",
+    "description": "获取搞定设计画布所有素材",
+    "url": "https://greasyfork.org/scripts/456745-get-gaoding-material",
+    "code_url": "https://update.greasyfork.org/scripts/456745/get-gaoding-material.user.js",
+    "code_size": 9651,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 413853,
+    "daily_installs": 0,
+    "total_installs": 1241,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-20T07:52:28.000Z",
+    "code_updated_at": "2022-12-18T00:48:37.000Z",
+    "namespace": "remote-gaoding-watermark",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 324763,
+        "name": "sertraline echo",
+        "created_at": "2019-08-09T09:42:32.000Z",
+        "url": "https://greasyfork.org/users/324763-sertraline-echo"
+      }
+    ],
+    "name": "remove-gaoding-watermark",
+    "description": "移除搞定设计水印",
+    "url": "https://greasyfork.org/scripts/413853-remove-gaoding-watermark",
+    "code_url": "https://update.greasyfork.org/scripts/413853/remove-gaoding-watermark.user.js",
+    "code_size": 723,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

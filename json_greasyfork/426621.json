@@ -1,0 +1,34 @@
+{
+  "id": 426621,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-17T15:01:09.000Z",
+  "code_updated_at": "2021-05-17T15:01:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 687578,
+      "name": "zmzmzm",
+      "created_at": "2020-09-15T06:10:20.000Z",
+      "url": "https://greasyfork.org/users/687578-zmzmzm",
+      "scripts": []
+    }
+  ],
+  "name": "江西教师全员培训",
+  "description": "油猴挺好用，借此机会，推荐给同行。全员培训，极速学过，省电。大家有兴趣学学javascript之类的东西，做出适合自己使用的工具。应该不局限于河北教师全员培训吧，enetedu.com，高等教育出版社。",
+  "url": "https://greasyfork.org/scripts/426621-%E6%B1%9F%E8%A5%BF%E6%95%99%E5%B8%88%E5%85%A8%E5%91%98%E5%9F%B9%E8%AE%AD",
+  "code_url": "https://update.greasyfork.org/scripts/426621/%E6%B1%9F%E8%A5%BF%E6%95%99%E5%B8%88%E5%85%A8%E5%91%98%E5%9F%B9%E8%AE%AD.user.js",
+  "code_size": 6413,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

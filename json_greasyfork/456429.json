@@ -1,0 +1,33 @@
+{
+  "id": 456429,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-11T07:00:20.000Z",
+  "code_updated_at": "2022-12-11T07:05:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 995802,
+      "name": "ZadenCodes",
+      "created_at": "2022-12-11T06:57:51.000Z",
+      "url": "https://greasyfork.org/users/995802-zadencodes"
+    }
+  ],
+  "name": "Blur YouTube menu bar for ambient mode helper script",
+  "description": "A helper script for my usercss",
+  "url": "https://greasyfork.org/scripts/456429-blur-youtube-menu-bar-for-ambient-mode-helper-script",
+  "code_url": "https://update.greasyfork.org/scripts/456429/Blur%20YouTube%20menu%20bar%20for%20ambient%20mode%20helper%20script.user.js",
+  "code_size": 746,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

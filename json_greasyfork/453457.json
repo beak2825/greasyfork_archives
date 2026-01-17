@@ -1,0 +1,34 @@
+{
+  "id": 453457,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-21T06:00:08.000Z",
+  "code_updated_at": "2022-10-21T06:00:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 971958,
+      "name": "HF0920",
+      "created_at": "2022-10-17T12:03:32.000Z",
+      "url": "https://greasyfork.org/users/971958-hf0920",
+      "scripts": []
+    }
+  ],
+  "name": "lib42classnew～",
+  "description": "青骄第二课堂-知识竞赛2022新版题库",
+  "url": "https://greasyfork.org/scripts/453457-lib42classnew",
+  "code_url": "https://update.greasyfork.org/scripts/453457/1107451/lib42classnew%EF%BD%9E.js",
+  "code_size": 40695,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

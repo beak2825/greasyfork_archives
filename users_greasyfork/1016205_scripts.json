@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458795,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-24T18:43:10.000Z",
+    "code_updated_at": "2023-02-04T08:48:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016205,
+        "name": "Nick Damiano",
+        "created_at": "2023-01-24T18:41:18.000Z",
+        "url": "https://greasyfork.org/users/1016205-nick-damiano"
+      }
+    ],
+    "name": "Automate Theresmore",
+    "description": "Refactor started, still in progress. Initializing automation is required before anything else will work. It will screw up if you do things during the initialization. Currently doesn't do any research automation.",
+    "url": "https://greasyfork.org/scripts/458795-automate-theresmore",
+    "code_url": "https://update.greasyfork.org/scripts/458795/Automate%20Theresmore.user.js",
+    "code_size": 35115,
+    "license": null,
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476783,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-05T20:56:17.000Z",
+    "code_updated_at": "2023-12-25T19:35:41.000Z",
+    "namespace": "https://github.com/Psychosoc1al",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1189041,
+        "name": "Psychosoc1al",
+        "created_at": "2023-10-05T20:16:48.000Z",
+        "url": "https://greasyfork.org/users/1189041-psychosoc1al"
+      }
+    ],
+    "name": "Better OriCOCKs",
+    "description": "Изменение подсчёта баллов и местами дизайна, а также добавление/доработка расписания",
+    "url": "https://greasyfork.org/scripts/476783-better-oricocks",
+    "code_url": "https://update.greasyfork.org/scripts/476783/Better%20OriCOCKs.user.js",
+    "code_size": 19923,
+    "license": "MIT License",
+    "version": "3.0.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

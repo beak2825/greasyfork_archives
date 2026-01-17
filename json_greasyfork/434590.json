@@ -1,0 +1,33 @@
+{
+  "id": 434590,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-28T12:45:25.000Z",
+  "code_updated_at": "2021-10-28T12:45:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 826138,
+      "name": "jijia004",
+      "created_at": "2021-10-17T13:50:49.000Z",
+      "url": "https://greasyfork.org/users/826138-jijia004"
+    }
+  ],
+  "name": "隐藏有道翻译开屏广告",
+  "description": "隐藏有道在线翻译网页开屏广告",
+  "url": "https://greasyfork.org/scripts/434590-%E9%9A%90%E8%97%8F%E6%9C%89%E9%81%93%E7%BF%BB%E8%AF%91%E5%BC%80%E5%B1%8F%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/434590/%E9%9A%90%E8%97%8F%E6%9C%89%E9%81%93%E7%BF%BB%E8%AF%91%E5%BC%80%E5%B1%8F%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 436,
+  "license": null,
+  "version": "0.1",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

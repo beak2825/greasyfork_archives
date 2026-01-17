@@ -1,0 +1,59 @@
+{
+  "id": 442213,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-28T02:02:38.000Z",
+  "code_updated_at": "2022-03-31T18:27:59.000Z",
+  "namespace": "https://laftel.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 894371,
+      "name": "Harim Kim",
+      "created_at": "2022-03-28T01:56:33.000Z",
+      "url": "https://greasyfork.org/users/894371-harim-kim",
+      "scripts": [
+        {
+          "id": 442213,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-28T02:02:38.000Z",
+          "code_updated_at": "2022-03-31T18:27:59.000Z",
+          "namespace": "https://laftel.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "라프텔 이어보기",
+          "description": "라프텔 에피소드 이어보기 기능을 지원하는 스크립트",
+          "url": "https://greasyfork.org/scripts/442213-%EB%9D%BC%ED%94%84%ED%85%94-%EC%9D%B4%EC%96%B4%EB%B3%B4%EA%B8%B0",
+          "code_url": "https://update.greasyfork.org/scripts/442213/%EB%9D%BC%ED%94%84%ED%85%94%20%EC%9D%B4%EC%96%B4%EB%B3%B4%EA%B8%B0.user.js",
+          "code_size": 2004,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "라프텔 이어보기",
+  "description": "라프텔 에피소드 이어보기 기능을 지원하는 스크립트",
+  "url": "https://greasyfork.org/scripts/442213-%EB%9D%BC%ED%94%84%ED%85%94-%EC%9D%B4%EC%96%B4%EB%B3%B4%EA%B8%B0",
+  "code_url": "https://update.greasyfork.org/scripts/442213/%EB%9D%BC%ED%94%84%ED%85%94%20%EC%9D%B4%EC%96%B4%EB%B3%B4%EA%B8%B0.user.js",
+  "code_size": 2004,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

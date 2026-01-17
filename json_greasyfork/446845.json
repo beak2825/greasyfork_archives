@@ -1,0 +1,33 @@
+{
+  "id": 446845,
+  "daily_installs": 0,
+  "total_installs": 188,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-22T04:39:12.000Z",
+  "code_updated_at": "2022-06-28T05:17:31.000Z",
+  "namespace": "N/A",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 920695,
+      "name": "Rosa Lillirio",
+      "created_at": "2022-05-31T19:53:39.000Z",
+      "url": "https://greasyfork.org/users/920695-rosa-lillirio"
+    }
+  ],
+  "name": "AO3: [Wrangling] Comment on tags without leaving bins!!!",
+  "description": "Comment on tags via a popup modal, which even has some text formatting options!!",
+  "url": "https://greasyfork.org/scripts/446845-ao3-wrangling-comment-on-tags-without-leaving-bins",
+  "code_url": "https://update.greasyfork.org/scripts/446845/AO3%3A%20%5BWrangling%5D%20Comment%20on%20tags%20without%20leaving%20bins%21%21%21.user.js",
+  "code_size": 21991,
+  "license": "MIT License",
+  "version": "2.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

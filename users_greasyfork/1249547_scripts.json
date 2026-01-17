@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485083,
+    "daily_installs": 0,
+    "total_installs": 682,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-17T19:28:40.000Z",
+    "code_updated_at": "2025-05-02T07:58:41.000Z",
+    "namespace": "https://greasyfork.org/users/1249547",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1249547,
+        "name": "honest_joe",
+        "created_at": "2024-01-17T19:09:34.000Z",
+        "url": "https://greasyfork.org/users/1249547-honest-joe"
+      }
+    ],
+    "name": "Instagram-Pixwox redirector",
+    "description": "Redirect Instagram to equivalent Pixnoy (formerly Pixwox/Piokok) page",
+    "url": "https://greasyfork.org/scripts/485083-instagram-pixwox-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/485083/Instagram-Pixwox%20redirector.user.js",
+    "code_size": 8341,
+    "license": "MIT License",
+    "version": "1.14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

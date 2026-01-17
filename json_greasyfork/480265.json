@@ -1,0 +1,59 @@
+{
+  "id": 480265,
+  "daily_installs": 0,
+  "total_installs": 1585,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-19T08:23:32.000Z",
+  "code_updated_at": "2023-11-19T08:23:32.000Z",
+  "namespace": "https://greasyfork.org/users/1220066",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1220066,
+      "name": "Abyss Seeker!",
+      "created_at": "2023-11-19T08:21:41.000Z",
+      "url": "https://greasyfork.org/users/1220066-abyss-seeker",
+      "scripts": [
+        {
+          "id": 480265,
+          "daily_installs": 0,
+          "total_installs": 1585,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-19T08:23:32.000Z",
+          "code_updated_at": "2023-11-19T08:23:32.000Z",
+          "namespace": "https://greasyfork.org/users/1220066",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Numerade Blur Unlocker",
+          "description": "Unlock some of the blurred content on numerade",
+          "url": "https://greasyfork.org/scripts/480265-numerade-blur-unlocker",
+          "code_url": "https://update.greasyfork.org/scripts/480265/Numerade%20Blur%20Unlocker.user.js",
+          "code_size": 607,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Numerade Blur Unlocker",
+  "description": "Unlock some of the blurred content on numerade",
+  "url": "https://greasyfork.org/scripts/480265-numerade-blur-unlocker",
+  "code_url": "https://update.greasyfork.org/scripts/480265/Numerade%20Blur%20Unlocker.user.js",
+  "code_size": 607,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

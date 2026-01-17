@@ -1,0 +1,101 @@
+[
+  {
+    "id": 486116,
+    "daily_installs": 0,
+    "total_installs": 356,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-31T06:48:36.000Z",
+    "code_updated_at": "2024-01-31T06:48:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 179966,
+        "name": "jflmao",
+        "created_at": "2018-04-14T09:20:11.000Z",
+        "url": "https://greasyfork.org/users/179966-jflmao"
+      }
+    ],
+    "name": "HOOK 所有已知加解密函数",
+    "description": "HOOK 所有已知加解密函数，用于爬虫破解",
+    "url": "https://greasyfork.org/scripts/486116-hook-%E6%89%80%E6%9C%89%E5%B7%B2%E7%9F%A5%E5%8A%A0%E8%A7%A3%E5%AF%86%E5%87%BD%E6%95%B0",
+    "code_url": "https://update.greasyfork.org/scripts/486116/HOOK%20%E6%89%80%E6%9C%89%E5%B7%B2%E7%9F%A5%E5%8A%A0%E8%A7%A3%E5%AF%86%E5%87%BD%E6%95%B0.user.js",
+    "code_size": 4007,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 454090,
+    "daily_installs": 0,
+    "total_installs": 228,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-01T15:22:50.000Z",
+    "code_updated_at": "2022-12-12T10:51:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 179966,
+        "name": "jflmao",
+        "created_at": "2018-04-14T09:20:11.000Z",
+        "url": "https://greasyfork.org/users/179966-jflmao"
+      }
+    ],
+    "name": "获取本机外网IP地址",
+    "description": "获取本机的外网IP地址",
+    "url": "https://greasyfork.org/scripts/454090-%E8%8E%B7%E5%8F%96%E6%9C%AC%E6%9C%BA%E5%A4%96%E7%BD%91ip%E5%9C%B0%E5%9D%80",
+    "code_url": "https://update.greasyfork.org/scripts/454090/%E8%8E%B7%E5%8F%96%E6%9C%AC%E6%9C%BA%E5%A4%96%E7%BD%91IP%E5%9C%B0%E5%9D%80.user.js",
+    "code_size": 1119,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453080,
+    "daily_installs": 0,
+    "total_installs": 143,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-15T04:48:00.000Z",
+    "code_updated_at": "2022-10-15T06:45:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 179966,
+        "name": "jflmao",
+        "created_at": "2018-04-14T09:20:11.000Z",
+        "url": "https://greasyfork.org/users/179966-jflmao"
+      }
+    ],
+    "name": "天天游戏网免密钥获取资源",
+    "description": "天天游戏网免除密钥获取资源",
+    "url": "https://greasyfork.org/scripts/453080-%E5%A4%A9%E5%A4%A9%E6%B8%B8%E6%88%8F%E7%BD%91%E5%85%8D%E5%AF%86%E9%92%A5%E8%8E%B7%E5%8F%96%E8%B5%84%E6%BA%90",
+    "code_url": "https://update.greasyfork.org/scripts/453080/%E5%A4%A9%E5%A4%A9%E6%B8%B8%E6%88%8F%E7%BD%91%E5%85%8D%E5%AF%86%E9%92%A5%E8%8E%B7%E5%8F%96%E8%B5%84%E6%BA%90.user.js",
+    "code_size": 708,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

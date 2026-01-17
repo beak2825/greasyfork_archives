@@ -1,0 +1,59 @@
+{
+  "id": 478355,
+  "daily_installs": 0,
+  "total_installs": 244,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-26T19:59:12.000Z",
+  "code_updated_at": "2023-10-27T05:31:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1204693,
+      "name": "Andy Yuen",
+      "created_at": "2023-10-26T19:51:47.000Z",
+      "url": "https://greasyfork.org/users/1204693-andy-yuen",
+      "scripts": [
+        {
+          "id": 478355,
+          "daily_installs": 0,
+          "total_installs": 244,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-26T19:59:12.000Z",
+          "code_updated_at": "2023-10-27T05:31:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mobile search engineer switcher",
+          "description": "mobile search engineer switcher, bing google baidu",
+          "url": "https://greasyfork.org/scripts/478355-mobile-search-engineer-switcher",
+          "code_url": "https://update.greasyfork.org/scripts/478355/Mobile%20search%20engineer%20switcher.user.js",
+          "code_size": 3408,
+          "license": "MIT License",
+          "version": "2023.10.28",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mobile search engineer switcher",
+  "description": "mobile search engineer switcher, bing google baidu",
+  "url": "https://greasyfork.org/scripts/478355-mobile-search-engineer-switcher",
+  "code_url": "https://update.greasyfork.org/scripts/478355/Mobile%20search%20engineer%20switcher.user.js",
+  "code_size": 3408,
+  "license": "MIT License",
+  "version": "2023.10.28",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

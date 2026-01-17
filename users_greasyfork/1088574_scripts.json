@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481028,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-29T15:47:43.000Z",
+    "code_updated_at": "2023-11-29T16:12:36.000Z",
+    "namespace": "zhihu_vip",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1088574,
+        "name": "1246774893",
+        "created_at": "2023-06-01T12:53:02.000Z",
+        "url": "https://greasyfork.org/users/1088574-1246774893"
+      }
+    ],
+    "name": "1246774893",
+    "description": "⭕精选解析线路为大家提供优酷、爱奇艺、腾讯、B站、乐视、芒果、搜狐、PPTV等各大视频网站(PC+移动端)视频解析服务，让你省去购买视频VIP费用。⭕去除原视频广告。⭕可自由增加修改线路。⭕可自由选择站内外解析。⭕可自由修改图标位置。❌拒绝收费。⭕持续更新。",
+    "url": "https://greasyfork.org/scripts/481028-1246774893",
+    "code_url": "https://update.greasyfork.org/scripts/481028/1246774893.user.js",
+    "code_size": 254211,
+    "license": "GNU General Public License v3.0 only",
+    "version": "9999",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

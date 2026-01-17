@@ -1,0 +1,33 @@
+{
+  "id": 449234,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-09T16:11:16.000Z",
+  "code_updated_at": "2022-08-09T16:11:15.000Z",
+  "namespace": "https://https://zalo.me/g/mzpssn207",
+  "support_url": "https://github.com/lelinhtinh/Userscript/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 944105,
+      "name": "Nguyen blue",
+      "created_at": "2022-08-07T18:51:01.000Z",
+      "url": "https://greasyfork.org/users/944105-nguyen-blue"
+    }
+  ],
+  "name": "TruyenFull downloader",
+  "description": "Tải truyện tranh từ các trang chia sẻ ở Việt Nam. Nhấn Alt+Y để tải toàn bộ.",
+  "url": "https://greasyfork.org/scripts/449234-truyenfull-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/449234/TruyenFull%20downloader.user.js",
+  "code_size": 12585,
+  "license": "MIT; https://baivong.mit-license.org/license.txt",
+  "version": "vip.1.1",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

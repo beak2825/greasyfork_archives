@@ -1,0 +1,35 @@
+[
+  {
+    "id": 475356,
+    "daily_installs": 2,
+    "total_installs": 1313,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-09-15T13:10:14.000Z",
+    "code_updated_at": "2026-01-01T00:31:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173672,
+        "name": "Pancakelord",
+        "created_at": "2023-09-15T12:59:52.000Z",
+        "url": "https://greasyfork.org/users/1173672-pancakelord"
+      }
+    ],
+    "name": "Ironwood RPG - Pancake-Scripts",
+    "description": "A collection of scripts to enhance Ironwood RPG - https://github.com/Boldy97/ironwood-scripts",
+    "url": "https://greasyfork.org/scripts/475356-ironwood-rpg-pancake-scripts",
+    "code_url": "https://update.greasyfork.org/scripts/475356/Ironwood%20RPG%20-%20Pancake-Scripts.user.js",
+    "code_size": 1280736,
+    "license": null,
+    "version": "6.4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

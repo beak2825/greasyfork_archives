@@ -130,5 +130,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492682,
+    "daily_installs": 0,
+    "total_installs": 135,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-16T18:16:50.000Z",
+    "code_updated_at": "2024-05-29T03:35:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1289140,
+        "name": "Bee Ux",
+        "created_at": "2024-04-16T18:10:39.000Z",
+        "url": "https://greasyfork.org/users/1289140-bee-ux"
+      }
+    ],
+    "name": "Coze 布局调整",
+    "description": "Coze 聊天栏调整, 修改聊天栏默认位置和默认宽度, 添加收起头栏的控制按钮, 优化 Coze 部分细节.",
+    "url": "https://greasyfork.org/scripts/492682-coze-%E5%B8%83%E5%B1%80%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/492682/Coze%20%E5%B8%83%E5%B1%80%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 10165,
+    "license": "MIT License",
+    "version": "1.7.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

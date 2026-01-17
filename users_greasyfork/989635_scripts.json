@@ -63,6 +63,171 @@
     "version": "2025.12.11",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488622,
+    "daily_installs": 0,
+    "total_installs": 1192,
+    "fan_score": "64.6",
+    "good_ratings": 7,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-29T15:15:59.000Z",
+    "code_updated_at": "2025-09-21T13:20:58.000Z",
+    "namespace": "https://greasyfork.org/users/989635",
+    "support_url": "https://github.com/Canaan-HS/MonkeyScript/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989635,
+        "name": "Canaan HS",
+        "created_at": "2022-11-29T09:39:19.000Z",
+        "url": "https://greasyfork.org/users/989635-canaan-hs"
+      }
+    ],
+    "name": "ColaManga 瀏覽增強",
+    "description": "隱藏廣告內容，提昇瀏覽體驗。自訂背景顏色，圖片大小調整。當圖片載入失敗時，自動重新載入圖片。提供熱鍵功能：[← 上一頁]、[下一頁 →]、[↑ 自動上滾動]、[↓ 自動下滾動]。當用戶滾動到頁面底部時，自動跳轉到下一頁。",
+    "url": "https://greasyfork.org/scripts/488622-colamanga-%E7%80%8F%E8%A6%BD%E5%A2%9E%E5%BC%B7",
+    "code_url": "https://update.greasyfork.org/scripts/488622/ColaManga%20%E7%80%8F%E8%A6%BD%E5%A2%9E%E5%BC%B7.user.js",
+    "code_size": 27114,
+    "license": "Mozilla Public License 2.0",
+    "version": "2025.09.21-Beta",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 487608,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-18T12:16:09.000Z",
+    "code_updated_at": "2025-12-11T12:29:12.000Z",
+    "namespace": "https://greasyfork.org/users/989635",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989635,
+        "name": "Canaan HS",
+        "created_at": "2022-11-29T09:39:19.000Z",
+        "url": "https://greasyfork.org/users/989635-canaan-hs"
+      }
+    ],
+    "name": "SyntaxLite_min",
+    "description": "Library for simplifying code logic and syntax (Lite)",
+    "url": "https://greasyfork.org/scripts/487608-syntaxlite-min",
+    "code_url": "https://update.greasyfork.org/scripts/487608/1711627/SyntaxLite_min.js",
+    "code_size": 18019,
+    "license": "Mozilla Public License 2.0",
+    "version": "2025.12.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 472190,
+    "daily_installs": 1,
+    "total_installs": 1250,
+    "fan_score": "75.7",
+    "good_ratings": 12,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-01T14:50:19.000Z",
+    "code_updated_at": "2025-12-12T12:42:14.000Z",
+    "namespace": "https://greasyfork.org/users/989635",
+    "support_url": "https://github.com/Canaan-HS/MonkeyScript/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989635,
+        "name": "Canaan HS",
+        "created_at": "2022-11-29T09:39:19.000Z",
+        "url": "https://greasyfork.org/users/989635-canaan-hs"
+      }
+    ],
+    "name": "Media Volume Booster",
+    "description": "調整媒體音量與濾波器，增強倍數最高 20 倍，設置可記住並自動應用。部分網站可能無效、無聲音或無法播放，可選擇禁用。",
+    "url": "https://greasyfork.org/scripts/472190-media-volume-booster",
+    "code_url": "https://update.greasyfork.org/scripts/472190/%E5%AA%92%E9%AB%94%E9%9F%B3%E9%87%8F%E5%A2%9E%E5%BC%B7%E5%99%A8.user.js",
+    "code_size": 39529,
+    "license": "Mozilla Public License 2.0",
+    "version": "2025.12.12-Beta",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472085,
+    "daily_installs": 1,
+    "total_installs": 927,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-30T19:08:16.000Z",
+    "code_updated_at": "2025-03-24T04:29:43.000Z",
+    "namespace": "https://greasyfork.org/users/989635",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989635,
+        "name": "Canaan HS",
+        "created_at": "2022-11-29T09:39:19.000Z",
+        "url": "https://greasyfork.org/users/989635-canaan-hs"
+      }
+    ],
+    "name": "Twitch Beautify",
+    "description": "直播頁面: 自動美化、滑鼠懸浮時自動收合按鈕、重新播放功能自動觸發。 首頁: 恢復原始樣式、自動暫停與靜音、可拖曳與縮放直播窗口。",
+    "url": "https://greasyfork.org/scripts/472085-twitch-beautify",
+    "code_url": "https://update.greasyfork.org/scripts/472085/Twitch%20Beautify.user.js",
+    "code_size": 7877,
+    "license": "Mozilla Public License 2.0",
+    "version": "0.0.23",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472081,
+    "daily_installs": 1,
+    "total_installs": 1056,
+    "fan_score": "62.9",
+    "good_ratings": 8,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-07-30T18:42:23.000Z",
+    "code_updated_at": "2025-10-22T06:07:11.000Z",
+    "namespace": "https://greasyfork.org/users/989635",
+    "support_url": "https://github.com/Canaan-HS/MonkeyScript/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989635,
+        "name": "Canaan HS",
+        "created_at": "2022-11-29T09:39:19.000Z",
+        "url": "https://greasyfork.org/users/989635-canaan-hs"
+      }
+    ],
+    "name": "YouTube Hide Tool",
+    "description": "該腳本能夠自動隱藏 YouTube 影片結尾的推薦卡，當滑鼠懸浮於影片上方時，推薦卡會恢復顯示。並額外提供快捷鍵切換功能，可隱藏留言區、影片推薦、功能列表，及切換至極簡模式。設置會自動保存，並在下次開啟影片時自動套用。",
+    "url": "https://greasyfork.org/scripts/472081-youtube-hide-tool",
+    "code_url": "https://update.greasyfork.org/scripts/472081/YouTube%20Hide%20Tool.user.js",
+    "code_size": 17892,
+    "license": "Mozilla Public License 2.0",
+    "version": "2025.10.22",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

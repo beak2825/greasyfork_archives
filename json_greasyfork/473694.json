@@ -1,0 +1,59 @@
+{
+  "id": 473694,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-22T21:05:04.000Z",
+  "code_updated_at": "2023-08-22T21:23:07.000Z",
+  "namespace": "XXX",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 996484,
+      "name": "RJVB",
+      "created_at": "2022-12-12T12:34:29.000Z",
+      "url": "https://greasyfork.org/users/996484-rjvb",
+      "scripts": [
+        {
+          "id": 473694,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-22T21:05:04.000Z",
+          "code_updated_at": "2023-08-22T21:23:07.000Z",
+          "namespace": "XXX",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "user comfort for the classicalguitardelcamp forum",
+          "description": "Increases user comfort on the Delcamp CG forum. It makes all text dark, and reverses the silly mangling of commercial domain names.",
+          "url": "https://greasyfork.org/scripts/473694-user-comfort-for-the-classicalguitardelcamp-forum",
+          "code_url": "https://update.greasyfork.org/scripts/473694/user%20comfort%20for%20the%20classicalguitardelcamp%20forum.user.js",
+          "code_size": 16698,
+          "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/us/",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "user comfort for the classicalguitardelcamp forum",
+  "description": "Increases user comfort on the Delcamp CG forum. It makes all text dark, and reverses the silly mangling of commercial domain names.",
+  "url": "https://greasyfork.org/scripts/473694-user-comfort-for-the-classicalguitardelcamp-forum",
+  "code_url": "https://update.greasyfork.org/scripts/473694/user%20comfort%20for%20the%20classicalguitardelcamp%20forum.user.js",
+  "code_size": 16698,
+  "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/us/",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 472855,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-10T19:13:08.000Z",
+  "code_updated_at": "2023-08-31T16:14:25.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1148619,
+      "name": "Михаил Назаров",
+      "created_at": "2023-08-10T18:57:47.000Z",
+      "url": "https://greasyfork.org/users/1148619-%D0%BC%D0%B8%D1%85%D0%B0%D0%B8%D0%BB-%D0%BD%D0%B0%D0%B7%D0%B0%D1%80%D0%BE%D0%B2",
+      "scripts": [
+        {
+          "id": 472855,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-10T19:13:08.000Z",
+          "code_updated_at": "2023-08-31T16:14:25.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Скрипт для Кураторов форума UFA",
+          "description": "Скрипт для Кураторов Форума, сервер Ufa",
+          "url": "https://greasyfork.org/scripts/472855-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-ufa",
+          "code_url": "https://update.greasyfork.org/scripts/472855/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20UFA.user.js",
+          "code_size": 102669,
+          "license": "MIT License",
+          "version": "4.8.3",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Скрипт для Кураторов форума UFA",
+  "description": "Скрипт для Кураторов Форума, сервер Ufa",
+  "url": "https://greasyfork.org/scripts/472855-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-ufa",
+  "code_url": "https://update.greasyfork.org/scripts/472855/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20UFA.user.js",
+  "code_size": 102669,
+  "license": "MIT License",
+  "version": "4.8.3",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

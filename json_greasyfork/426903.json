@@ -1,0 +1,34 @@
+{
+  "id": 426903,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-23T09:20:41.000Z",
+  "code_updated_at": "2021-05-23T09:20:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 751697,
+      "name": "洪淞諭",
+      "created_at": "2021-03-26T14:14:02.000Z",
+      "url": "https://greasyfork.org/users/751697-%E6%B4%AA%E6%B7%9E%E8%AB%AD",
+      "scripts": []
+    }
+  ],
+  "name": "直接獲得學習點數",
+  "description": "行政院環保署環境教育終身學習網快速影片通過驗證",
+  "url": "https://greasyfork.org/scripts/426903-%E7%9B%B4%E6%8E%A5%E7%8D%B2%E5%BE%97%E5%AD%B8%E7%BF%92%E9%BB%9E%E6%95%B8",
+  "code_url": "https://update.greasyfork.org/scripts/426903/%E7%9B%B4%E6%8E%A5%E7%8D%B2%E5%BE%97%E5%AD%B8%E7%BF%92%E9%BB%9E%E6%95%B8.user.js",
+  "code_size": 913,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 423578,
+  "daily_installs": 0,
+  "total_installs": 556,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-19T14:37:48.000Z",
+  "code_updated_at": "2021-03-19T14:37:47.000Z",
+  "namespace": "https://segmentfault.com/a/1190000025182822",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 749203,
+      "name": "AlanIIE",
+      "created_at": "2021-03-19T14:29:26.000Z",
+      "url": "https://greasyfork.org/users/749203-alaniie",
+      "scripts": [
+        {
+          "id": 423578,
+          "daily_installs": 0,
+          "total_installs": 556,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-19T14:37:48.000Z",
+          "code_updated_at": "2021-03-19T14:37:47.000Z",
+          "namespace": "https://segmentfault.com/a/1190000025182822",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "直播录屏工具（防崩溃版）",
+          "description": "此脚本打开后直接注入，无需操作，自动下载，用于各种无法下载环境。如果下载时询问位置，需要设置浏览器默认保存位置，之后可以保存到默认位置。",
+          "url": "https://greasyfork.org/scripts/423578-%E7%9B%B4%E6%92%AD%E5%BD%95%E5%B1%8F%E5%B7%A5%E5%85%B7-%E9%98%B2%E5%B4%A9%E6%BA%83%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/423578/%E7%9B%B4%E6%92%AD%E5%BD%95%E5%B1%8F%E5%B7%A5%E5%85%B7%EF%BC%88%E9%98%B2%E5%B4%A9%E6%BA%83%E7%89%88%EF%BC%89.user.js",
+          "code_size": 5273,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "直播录屏工具（防崩溃版）",
+  "description": "此脚本打开后直接注入，无需操作，自动下载，用于各种无法下载环境。如果下载时询问位置，需要设置浏览器默认保存位置，之后可以保存到默认位置。",
+  "url": "https://greasyfork.org/scripts/423578-%E7%9B%B4%E6%92%AD%E5%BD%95%E5%B1%8F%E5%B7%A5%E5%85%B7-%E9%98%B2%E5%B4%A9%E6%BA%83%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/423578/%E7%9B%B4%E6%92%AD%E5%BD%95%E5%B1%8F%E5%B7%A5%E5%85%B7%EF%BC%88%E9%98%B2%E5%B4%A9%E6%BA%83%E7%89%88%EF%BC%89.user.js",
+  "code_size": 5273,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

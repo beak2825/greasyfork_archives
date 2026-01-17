@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454030,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-31T13:06:29.000Z",
+    "code_updated_at": "2022-10-31T13:06:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 740200,
+        "name": "何沐阳（hello）",
+        "created_at": "2021-02-23T06:34:50.000Z",
+        "url": "https://greasyfork.org/users/740200-%E4%BD%95%E6%B2%90%E9%98%B3-hello"
+      }
+    ],
+    "name": "Scrolling Assistant",
+    "description": "Scrolling Assistanta",
+    "url": "https://greasyfork.org/scripts/454030-scrolling-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/454030/Scrolling%20Assistant.user.js",
+    "code_size": 1655,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

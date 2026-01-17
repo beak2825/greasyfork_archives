@@ -1,0 +1,59 @@
+{
+  "id": 494723,
+  "daily_installs": 8,
+  "total_installs": 4776,
+  "fan_score": "69.4",
+  "good_ratings": 18,
+  "ok_ratings": 3,
+  "bad_ratings": 1,
+  "created_at": "2024-05-12T04:12:58.000Z",
+  "code_updated_at": "2025-02-10T02:45:06.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1300282,
+      "name": "YKJus82rcd",
+      "created_at": "2024-05-12T03:20:07.000Z",
+      "url": "https://greasyfork.org/users/1300282-ykjus82rcd",
+      "scripts": [
+        {
+          "id": 494723,
+          "daily_installs": 8,
+          "total_installs": 4776,
+          "fan_score": "69.4",
+          "good_ratings": 18,
+          "ok_ratings": 3,
+          "bad_ratings": 1,
+          "created_at": "2024-05-12T04:12:58.000Z",
+          "code_updated_at": "2025-02-10T02:45:06.000Z",
+          "namespace": "none",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fuck-Yudao",
+          "description": "Help you climb over the paywall for a so-called \"Free & Open Source Software\", built by someone who truly understand our generations duty. To you-know-who: *thank you*. China's OSS environment got much better because of professionals like you.",
+          "url": "https://greasyfork.org/scripts/494723-yudao",
+          "code_url": "https://update.greasyfork.org/scripts/494723/Fuck-Yudao.user.js",
+          "code_size": 4400,
+          "license": "MIT License",
+          "version": "0.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fuck-Yudao",
+  "description": "Help you climb over the paywall for a so-called \"Free & Open Source Software\", built by someone who truly understand our generations duty. To you-know-who: *thank you*. China's OSS environment got much better because of professionals like you.",
+  "url": "https://greasyfork.org/scripts/494723-yudao",
+  "code_url": "https://update.greasyfork.org/scripts/494723/Fuck-Yudao.user.js",
+  "code_size": 4400,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

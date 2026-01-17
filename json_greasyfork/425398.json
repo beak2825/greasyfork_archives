@@ -1,0 +1,34 @@
+{
+  "id": 425398,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-22T15:12:49.000Z",
+  "code_updated_at": "2021-04-22T15:12:49.000Z",
+  "namespace": "https://dictionary.cambridge.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 763531,
+      "name": "yuuuu",
+      "created_at": "2021-04-22T15:08:24.000Z",
+      "url": "https://greasyfork.org/users/763531-yuuuu",
+      "scripts": []
+    }
+  ],
+  "name": "dictionary cambridge word British pronunciation",
+  "description": "pronunce British pronunciation automatically",
+  "url": "https://greasyfork.org/scripts/425398-dictionary-cambridge-word-british-pronunciation",
+  "code_url": "https://update.greasyfork.org/scripts/425398/dictionary%20cambridge%20word%20British%20pronunciation.user.js",
+  "code_size": 432,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

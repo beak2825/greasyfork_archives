@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481600,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-07T10:57:27.000Z",
+    "code_updated_at": "2023-12-07T10:57:27.000Z",
+    "namespace": "https://bing.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229797,
+        "name": "duckcamera",
+        "created_at": "2023-12-07T10:56:33.000Z",
+        "url": "https://greasyfork.org/users/1229797-duckcamera"
+      }
+    ],
+    "name": "網頁解密插件",
+    "description": "在網頁中尋照可以填入的方框，輸入數字（依序從000～999），並按下顯示「立即解密」的按鈕，如果過一秒後網頁中尋找得到「❌ 密碼錯誤」就換下一個數字，否則就停下",
+    "url": "https://greasyfork.org/scripts/481600-%E7%B6%B2%E9%A0%81%E8%A7%A3%E5%AF%86%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/481600/%E7%B6%B2%E9%A0%81%E8%A7%A3%E5%AF%86%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 1894,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

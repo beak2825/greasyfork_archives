@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415974,
+    "daily_installs": 0,
+    "total_installs": 2305,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-12T05:33:03.000Z",
+    "code_updated_at": "2020-11-12T05:33:02.000Z",
+    "namespace": "http://opera.im/archives/pop-up-flash/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 574851,
+        "name": "GRB6969",
+        "created_at": "2020-05-30T03:18:03.000Z",
+        "url": "https://greasyfork.org/users/574851-grb6969"
+      }
+    ],
+    "name": "Flash悬浮窗播放（可解除鼠标移出窗口，失去焦点视频自动暂停的限制。非常适合用flash player插件播放的网课平台刷视频）",
+    "description": "鼠标悬停在 flash 视频上，视频的左上角会出现一个按钮，点击后可放大浮动在页面上。有效解决了一些视频网页需要获取鼠标焦点才能继续播放的问题，解放你的鼠标。",
+    "url": "https://greasyfork.org/scripts/415974-flash%E6%82%AC%E6%B5%AE%E7%AA%97%E6%92%AD%E6%94%BE-%E5%8F%AF%E8%A7%A3%E9%99%A4%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%87%BA%E7%AA%97%E5%8F%A3-%E5%A4%B1%E5%8E%BB%E7%84%A6%E7%82%B9%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%9A%82%E5%81%9C%E7%9A%84%E9%99%90%E5%88%B6-%E9%9D%9E%E5%B8%B8%E9%80%82%E5%90%88%E7%94%A8flash-player%E6%8F%92%E4%BB%B6%E6%92%AD%E6%94%BE%E7%9A%84%E7%BD%91%E8%AF%BE%E5%B9%B3%E5%8F%B0%E5%88%B7%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/415974/Flash%E6%82%AC%E6%B5%AE%E7%AA%97%E6%92%AD%E6%94%BE%EF%BC%88%E5%8F%AF%E8%A7%A3%E9%99%A4%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%87%BA%E7%AA%97%E5%8F%A3%EF%BC%8C%E5%A4%B1%E5%8E%BB%E7%84%A6%E7%82%B9%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%9A%82%E5%81%9C%E7%9A%84%E9%99%90%E5%88%B6%E3%80%82%E9%9D%9E%E5%B8%B8%E9%80%82%E5%90%88%E7%94%A8flash%20player%E6%8F%92%E4%BB%B6%E6%92%AD%E6%94%BE%E7%9A%84%E7%BD%91%E8%AF%BE%E5%B9%B3%E5%8F%B0%E5%88%B7%E8%A7%86%E9%A2%91%EF%BC%89.user.js",
+    "code_size": 70799,
+    "license": null,
+    "version": "v1.1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

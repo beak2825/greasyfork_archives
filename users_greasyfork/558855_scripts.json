@@ -1,0 +1,35 @@
+[
+  {
+    "id": 430378,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-05T10:00:51.000Z",
+    "code_updated_at": "2021-08-16T12:58:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 558855,
+        "name": "grachel",
+        "created_at": "2020-05-11T08:05:50.000Z",
+        "url": "https://greasyfork.org/users/558855-grachel"
+      }
+    ],
+    "name": "Filman.cc",
+    "description": "Filman script",
+    "url": "https://greasyfork.org/scripts/430378-filman-cc",
+    "code_url": "https://update.greasyfork.org/scripts/430378/Filmancc.user.js",
+    "code_size": 3563,
+    "license": null,
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

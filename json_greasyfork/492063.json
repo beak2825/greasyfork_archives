@@ -1,0 +1,33 @@
+{
+  "id": 492063,
+  "daily_installs": 3,
+  "total_installs": 1425,
+  "fan_score": "30.1",
+  "good_ratings": 2,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2024-04-09T10:31:59.000Z",
+  "code_updated_at": "2024-10-15T15:05:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 736641,
+      "name": "Ján Urban",
+      "created_at": "2021-02-11T17:44:38.000Z",
+      "url": "https://greasyfork.org/users/736641-j%C3%A1n-urban"
+    }
+  ],
+  "name": "Dobby2",
+  "description": "Dobby",
+  "url": "https://greasyfork.org/scripts/492063-dobby2",
+  "code_url": "https://update.greasyfork.org/scripts/492063/Dobby2.user.js",
+  "code_size": 80496,
+  "license": null,
+  "version": "1.52",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

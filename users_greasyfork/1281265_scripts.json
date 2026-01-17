@@ -1,0 +1,68 @@
+[
+  {
+    "id": 492965,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-19T20:15:55.000Z",
+    "code_updated_at": "2024-04-19T20:15:55.000Z",
+    "namespace": "money",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1281265,
+        "name": "taca",
+        "created_at": "2024-03-29T17:18:08.000Z",
+        "url": "https://greasyfork.org/users/1281265-taca"
+      }
+    ],
+    "name": "deez poker",
+    "description": "pokerypokey",
+    "url": "https://greasyfork.org/scripts/492965-deez-poker",
+    "code_url": "https://update.greasyfork.org/scripts/492965/deez%20poker.user.js",
+    "code_size": 4625,
+    "license": "MIT License",
+    "version": "1.2.2",
+    "locale": "eu",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491191,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-29T17:19:00.000Z",
+    "code_updated_at": "2024-03-29T17:25:59.000Z",
+    "namespace": "egg.traverse",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1281265,
+        "name": "taca",
+        "created_at": "2024-03-29T17:18:08.000Z",
+        "url": "https://greasyfork.org/users/1281265-taca"
+      }
+    ],
+    "name": "Deez Nuts",
+    "description": "Modified version of Heasley's egg navigator",
+    "url": "https://greasyfork.org/scripts/491191-deez-nuts",
+    "code_url": "https://update.greasyfork.org/scripts/491191/Deez%20Nuts.user.js",
+    "code_size": 14425,
+    "license": "MIT License",
+    "version": "1.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

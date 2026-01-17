@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418880,
+    "daily_installs": 0,
+    "total_installs": 5881,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-20T07:55:56.000Z",
+    "code_updated_at": "2020-12-20T07:58:03.000Z",
+    "namespace": "dean.swust.Qiangke",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 74681,
+        "name": "lengthmin",
+        "created_at": "2016-10-20T03:16:52.000Z",
+        "url": "https://greasyfork.org/users/74681-lengthmin"
+      }
+    ],
+    "name": "SWUST 抢课+",
+    "description": "自动抢课",
+    "url": "https://greasyfork.org/scripts/418880-swust-%E6%8A%A2%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/418880/SWUST%20%E6%8A%A2%E8%AF%BE%2B.user.js",
+    "code_size": 11042,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 467565,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-31T09:52:49.000Z",
+  "code_updated_at": "2023-05-31T09:52:49.000Z",
+  "namespace": "http://your.namespace.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1087738,
+      "name": "ABucket",
+      "created_at": "2023-05-31T09:51:49.000Z",
+      "url": "https://greasyfork.org/users/1087738-abucket",
+      "scripts": []
+    }
+  ],
+  "name": "ClassAvg for Schoolis",
+  "description": "ClassAvg for Schoolis.",
+  "url": "https://greasyfork.org/scripts/467565-classavg-for-schoolis",
+  "code_url": "https://update.greasyfork.org/scripts/467565/ClassAvg%20for%20Schoolis.user.js",
+  "code_size": 2376,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

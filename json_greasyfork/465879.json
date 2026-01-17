@@ -1,0 +1,33 @@
+{
+  "id": 465879,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-09T21:19:24.000Z",
+  "code_updated_at": "2023-06-01T20:03:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076284,
+      "name": "ɨռզʊɨʀɨռɢ ʍɨռɖ",
+      "created_at": "2023-05-09T20:50:20.000Z",
+      "url": "https://greasyfork.org/users/1076284-%C9%A8%D5%BC%D5%A6%CA%8A%C9%A8%CA%80%C9%A8%D5%BC%C9%A2-%CA%8D%C9%A8%D5%BC%C9%96"
+    }
+  ],
+  "name": "Stop video 12 seconds before the end for Secular Talk videos to avoid the ad at the end",
+  "description": "Stop video 12 seconds before the end for Secular Talk videos on YouTube",
+  "url": "https://greasyfork.org/scripts/465879-stop-video-12-seconds-before-the-end-for-secular-talk-videos-to-avoid-the-ad-at-the-end",
+  "code_url": "https://update.greasyfork.org/scripts/465879/Stop%20video%2012%20seconds%20before%20the%20end%20for%20Secular%20Talk%20videos%20to%20avoid%20the%20ad%20at%20the%20end.user.js",
+  "code_size": 1576,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

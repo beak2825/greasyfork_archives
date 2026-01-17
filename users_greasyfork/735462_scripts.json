@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421383,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-07T14:51:29.000Z",
+    "code_updated_at": "2021-02-07T15:07:46.000Z",
+    "namespace": "https://www.binance.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735462,
+        "name": "Pierre Le Guen",
+        "created_at": "2021-02-07T14:36:00.000Z",
+        "url": "https://greasyfork.org/users/735462-pierre-le-guen"
+      }
+    ],
+    "name": "Remove PNL value.",
+    "description": "Removes the PNL value to prevent emotional trading.",
+    "url": "https://greasyfork.org/scripts/421383-remove-pnl-value",
+    "code_url": "https://update.greasyfork.org/scripts/421383/Remove%20PNL%20value.user.js",
+    "code_size": 1307,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

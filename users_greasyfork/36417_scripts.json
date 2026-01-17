@@ -1,0 +1,68 @@
+[
+  {
+    "id": 430467,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-07T18:25:17.000Z",
+    "code_updated_at": "2021-08-09T00:16:47.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/16950-wme-add-uturns-from-node2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 36417,
+        "name": "Jay Wazin",
+        "created_at": "2016-03-31T23:02:04.000Z",
+        "url": "https://greasyfork.org/users/36417-jay-wazin"
+      }
+    ],
+    "name": "WME Jay's custom QW it all",
+    "description": "Add uturns from node",
+    "url": "https://greasyfork.org/scripts/430467-wme-jay-s-custom-qw-it-all",
+    "code_url": "https://update.greasyfork.org/scripts/430467/WME%20Jay%27s%20custom%20QW%20it%20all.user.js",
+    "code_size": 5787,
+    "license": null,
+    "version": "0.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 430353,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-04T18:35:20.000Z",
+    "code_updated_at": "2021-08-04T18:35:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 36417,
+        "name": "Jay Wazin",
+        "created_at": "2016-03-31T23:02:04.000Z",
+        "url": "https://greasyfork.org/users/36417-jay-wazin"
+      }
+    ],
+    "name": "Jays Custom buttons",
+    "description": "Jay's Custom WME Buttons",
+    "url": "https://greasyfork.org/scripts/430353-jays-custom-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/430353/Jays%20Custom%20buttons.user.js",
+    "code_size": 5459,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

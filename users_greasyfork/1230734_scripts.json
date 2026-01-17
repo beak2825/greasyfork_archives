@@ -1,0 +1,68 @@
+[
+  {
+    "id": 481911,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-11T05:29:44.000Z",
+    "code_updated_at": "2023-12-11T06:00:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230734,
+        "name": "aavvaavvaa",
+        "created_at": "2023-12-09T01:10:45.000Z",
+        "url": "https://greasyfork.org/users/1230734-aavvaavvaa"
+      }
+    ],
+    "name": "buff_auto_pricing",
+    "description": "s",
+    "url": "https://greasyfork.org/scripts/481911-buff-auto-pricing",
+    "code_url": "https://update.greasyfork.org/scripts/481911/buff_auto_pricing.user.js",
+    "code_size": 6559,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 481736,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-09T01:23:01.000Z",
+    "code_updated_at": "2023-12-12T02:40:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230734,
+        "name": "aavvaavvaa",
+        "created_at": "2023-12-09T01:10:45.000Z",
+        "url": "https://greasyfork.org/users/1230734-aavvaavvaa"
+      }
+    ],
+    "name": "SM_v1",
+    "description": "fuckskinsmonkey",
+    "url": "https://greasyfork.org/scripts/481736-sm-v1",
+    "code_url": "https://update.greasyfork.org/scripts/481736/SM_v1.user.js",
+    "code_size": 4208,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

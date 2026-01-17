@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472283,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-02T18:36:10.000Z",
+    "code_updated_at": "2023-08-02T18:36:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142370,
+        "name": "Bansai",
+        "created_at": "2023-08-02T18:24:47.000Z",
+        "url": "https://greasyfork.org/users/1142370-bansai"
+      }
+    ],
+    "name": "Shazan",
+    "description": "Shazanmaster",
+    "url": "https://greasyfork.org/scripts/472283-shazan",
+    "code_url": "https://update.greasyfork.org/scripts/472283/Shazan.user.js",
+    "code_size": 7380,
+    "license": null,
+    "version": "1.4",
+    "locale": "az",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

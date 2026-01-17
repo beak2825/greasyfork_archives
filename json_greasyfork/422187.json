@@ -1,0 +1,59 @@
+{
+  "id": 422187,
+  "daily_installs": 0,
+  "total_installs": 257,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-23T10:00:10.000Z",
+  "code_updated_at": "2021-02-23T10:00:09.000Z",
+  "namespace": "sky",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 75071,
+      "name": "SKYLINE88725",
+      "created_at": "2016-10-22T03:54:53.000Z",
+      "url": "https://greasyfork.org/users/75071-skyline88725",
+      "scripts": [
+        {
+          "id": 422187,
+          "daily_installs": 0,
+          "total_installs": 257,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-23T10:00:10.000Z",
+          "code_updated_at": "2021-02-23T10:00:09.000Z",
+          "namespace": "sky",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "补全hash磁力链并粘贴至粘贴板",
+          "description": "鼠标选中哈希值（散列），会自动进行相应的磁力链接下载",
+          "url": "https://greasyfork.org/scripts/422187-%E8%A1%A5%E5%85%A8hash%E7%A3%81%E5%8A%9B%E9%93%BE%E5%B9%B6%E7%B2%98%E8%B4%B4%E8%87%B3%E7%B2%98%E8%B4%B4%E6%9D%BF",
+          "code_url": "https://update.greasyfork.org/scripts/422187/%E8%A1%A5%E5%85%A8hash%E7%A3%81%E5%8A%9B%E9%93%BE%E5%B9%B6%E7%B2%98%E8%B4%B4%E8%87%B3%E7%B2%98%E8%B4%B4%E6%9D%BF.user.js",
+          "code_size": 1816,
+          "license": "MIT License",
+          "version": "1.0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "补全hash磁力链并粘贴至粘贴板",
+  "description": "鼠标选中哈希值（散列），会自动进行相应的磁力链接下载",
+  "url": "https://greasyfork.org/scripts/422187-%E8%A1%A5%E5%85%A8hash%E7%A3%81%E5%8A%9B%E9%93%BE%E5%B9%B6%E7%B2%98%E8%B4%B4%E8%87%B3%E7%B2%98%E8%B4%B4%E6%9D%BF",
+  "code_url": "https://update.greasyfork.org/scripts/422187/%E8%A1%A5%E5%85%A8hash%E7%A3%81%E5%8A%9B%E9%93%BE%E5%B9%B6%E7%B2%98%E8%B4%B4%E8%87%B3%E7%B2%98%E8%B4%B4%E6%9D%BF.user.js",
+  "code_size": 1816,
+  "license": "MIT License",
+  "version": "1.0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

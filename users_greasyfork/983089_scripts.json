@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454781,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-14T06:28:33.000Z",
+    "code_updated_at": "2022-11-14T06:34:07.000Z",
+    "namespace": "https://www1.szu.edu.cn/board/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983089,
+        "name": "frankH111",
+        "created_at": "2022-11-14T06:07:52.000Z",
+        "url": "https://greasyfork.org/users/983089-frankh111"
+      }
+    ],
+    "name": "深圳大学公文通隐水印去除",
+    "description": "2022/11/14：新发现了公文通存在简单的隐水印，于是打算简单的做点儿应对措施，但估计后面会变复杂，届时需要持续更新，但作者不见得会跟进，所以请别对此抱有过多信心。切记，靠山山倒，靠水水流，信息安全靠自己",
+    "url": "https://greasyfork.org/scripts/454781-%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E5%85%AC%E6%96%87%E9%80%9A%E9%9A%90%E6%B0%B4%E5%8D%B0%E5%8E%BB%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/454781/%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E5%85%AC%E6%96%87%E9%80%9A%E9%9A%90%E6%B0%B4%E5%8D%B0%E5%8E%BB%E9%99%A4.user.js",
+    "code_size": 9497,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 426507,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-15T06:55:04.000Z",
+  "code_updated_at": "2021-05-15T06:55:04.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/370246-sci-hub-button",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 241542,
+      "name": "宋超",
+      "created_at": "2019-01-23T14:59:36.000Z",
+      "url": "https://greasyfork.org/users/241542-%E5%AE%8B%E8%B6%85",
+      "scripts": []
+    }
+  ],
+  "name": "Sci-hub button",
+  "description": "Add sci-hub button on article page. Add sci-hub button after article link. Support Google scholar, bing academic and baidu xueshu. Jump CNKI English article to Chinese article.",
+  "url": "https://greasyfork.org/scripts/426507-sci-hub-button",
+  "code_url": "https://update.greasyfork.org/scripts/426507/Sci-hub%20button.user.js",
+  "code_size": 272517,
+  "license": null,
+  "version": "0.47",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

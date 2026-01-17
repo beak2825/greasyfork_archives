@@ -1,0 +1,33 @@
+{
+  "id": 429692,
+  "daily_installs": 0,
+  "total_installs": 56,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-21T12:13:25.000Z",
+  "code_updated_at": "2021-07-21T12:13:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 236385,
+      "name": "Acez NieR",
+      "created_at": "2019-01-01T02:10:27.000Z",
+      "url": "https://greasyfork.org/users/236385-acez-nier"
+    }
+  ],
+  "name": "实现弹幕自由silisili版dandanplayAPI",
+  "description": "在其他网站上显示弹幕",
+  "url": "https://greasyfork.org/scripts/429692-%E5%AE%9E%E7%8E%B0%E5%BC%B9%E5%B9%95%E8%87%AA%E7%94%B1silisili%E7%89%88dandanplayapi",
+  "code_url": "https://update.greasyfork.org/scripts/429692/%E5%AE%9E%E7%8E%B0%E5%BC%B9%E5%B9%95%E8%87%AA%E7%94%B1silisili%E7%89%88dandanplayAPI.user.js",
+  "code_size": 10756,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486788,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-02-06T18:37:11.000Z",
+    "code_updated_at": "2024-02-06T18:37:42.000Z",
+    "namespace": "https://greasyfork.org/users/1258342",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1258342,
+        "name": "hhhhhhhhhhhhhhhhhhhhhhh0_z",
+        "created_at": "2024-02-06T18:34:06.000Z",
+        "url": "https://greasyfork.org/users/1258342-hhhhhhhhhhhhhhhhhhhhhhh0-z"
+      }
+    ],
+    "name": "Google Enable Dark Mode automatically",
+    "description": "Enables Google Search Dark Mode",
+    "url": "https://greasyfork.org/scripts/486788-google-enable-dark-mode-automatically",
+    "code_url": "https://update.greasyfork.org/scripts/486788/Google%20Enable%20Dark%20Mode%20automatically.user.js",
+    "code_size": 396,
+    "license": null,
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

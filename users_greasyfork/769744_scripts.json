@@ -1,0 +1,68 @@
+[
+  {
+    "id": 470273,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-06T10:31:16.000Z",
+    "code_updated_at": "2023-07-06T22:51:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 769744,
+        "name": "Zhongguorenv5",
+        "created_at": "2021-05-08T03:36:00.000Z",
+        "url": "https://greasyfork.org/users/769744-zhongguorenv5"
+      }
+    ],
+    "name": "Shared Zhile GPT4 Pre Filter",
+    "description": "筛选出gpt4账号, 这是个跑批脚本，需要自己查看控制台的error日志，会打印gpt4账号信息，可以辅助另一个gpt脚本的编写",
+    "url": "https://greasyfork.org/scripts/470273-shared-zhile-gpt4-pre-filter",
+    "code_url": "https://update.greasyfork.org/scripts/470273/Shared%20Zhile%20GPT4%20Pre%20Filter.user.js",
+    "code_size": 3193,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469056,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-20T08:53:56.000Z",
+    "code_updated_at": "2023-10-16T06:13:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 769744,
+        "name": "Zhongguorenv5",
+        "created_at": "2021-05-08T03:36:00.000Z",
+        "url": "https://greasyfork.org/users/769744-zhongguorenv5"
+      }
+    ],
+    "name": "Shared Zhile GPT4",
+    "description": "筛选出gpt4账号 user plus class flag",
+    "url": "https://greasyfork.org/scripts/469056-shared-zhile-gpt4",
+    "code_url": "https://update.greasyfork.org/scripts/469056/Shared%20Zhile%20GPT4.user.js",
+    "code_size": 2728,
+    "license": "MIT License",
+    "version": "1.2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

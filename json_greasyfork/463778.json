@@ -1,0 +1,59 @@
+{
+  "id": 463778,
+  "daily_installs": 0,
+  "total_installs": 53,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-04-11T18:46:19.000Z",
+  "code_updated_at": "2023-04-11T18:46:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1058398,
+      "name": "flippyreaper",
+      "created_at": "2023-04-11T18:42:32.000Z",
+      "url": "https://greasyfork.org/users/1058398-flippyreaper",
+      "scripts": [
+        {
+          "id": 463778,
+          "daily_installs": 0,
+          "total_installs": 53,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-04-11T18:46:19.000Z",
+          "code_updated_at": "2023-04-11T18:46:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove \"For you\" and \"Popular\" from Youtube Channel Videos tab",
+          "description": "Remove \"For you\" and \"Popular\" from Youtube Channel Videos tab .",
+          "url": "https://greasyfork.org/scripts/463778-remove-for-you-and-popular-from-youtube-channel-videos-tab",
+          "code_url": "https://update.greasyfork.org/scripts/463778/Remove%20%22For%20you%22%20and%20%22Popular%22%20from%20Youtube%20Channel%20Videos%20tab.user.js",
+          "code_size": 1221,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove \"For you\" and \"Popular\" from Youtube Channel Videos tab",
+  "description": "Remove \"For you\" and \"Popular\" from Youtube Channel Videos tab .",
+  "url": "https://greasyfork.org/scripts/463778-remove-for-you-and-popular-from-youtube-channel-videos-tab",
+  "code_url": "https://update.greasyfork.org/scripts/463778/Remove%20%22For%20you%22%20and%20%22Popular%22%20from%20Youtube%20Channel%20Videos%20tab.user.js",
+  "code_size": 1221,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

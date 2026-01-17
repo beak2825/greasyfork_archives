@@ -1,0 +1,68 @@
+[
+  {
+    "id": 466234,
+    "daily_installs": 0,
+    "total_installs": 8721,
+    "fan_score": "2.7",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2023-05-14T03:22:02.000Z",
+    "code_updated_at": "2023-05-14T03:25:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1010461,
+        "name": "WJSun",
+        "created_at": "2023-01-11T13:36:10.000Z",
+        "url": "https://greasyfork.org/users/1010461-wjsun"
+      }
+    ],
+    "name": "智慧树/知到|共享课课程十倍速",
+    "description": "将1.5倍速调整为10倍速，切换视频后需要点击右上角按钮",
+    "url": "https://greasyfork.org/scripts/466234-%E6%99%BA%E6%85%A7%E6%A0%91-%E7%9F%A5%E5%88%B0-%E5%85%B1%E4%BA%AB%E8%AF%BE%E8%AF%BE%E7%A8%8B%E5%8D%81%E5%80%8D%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/466234/%E6%99%BA%E6%85%A7%E6%A0%91%E7%9F%A5%E5%88%B0%7C%E5%85%B1%E4%BA%AB%E8%AF%BE%E8%AF%BE%E7%A8%8B%E5%8D%81%E5%80%8D%E9%80%9F.user.js",
+    "code_size": 1203,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458069,
+    "daily_installs": 0,
+    "total_installs": 304,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-12T02:52:13.000Z",
+    "code_updated_at": "2023-01-12T02:52:13.000Z",
+    "namespace": "https://chat.openai.com/chat",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1010461,
+        "name": "WJSun",
+        "created_at": "2023-01-11T13:36:10.000Z",
+        "url": "https://greasyfork.org/users/1010461-wjsun"
+      }
+    ],
+    "name": "智慧树/知到|共享课课程资料下载按钮",
+    "description": "在智慧树/知到共享课的课程资料界面对每个文件提供下载按钮",
+    "url": "https://greasyfork.org/scripts/458069-%E6%99%BA%E6%85%A7%E6%A0%91-%E7%9F%A5%E5%88%B0-%E5%85%B1%E4%BA%AB%E8%AF%BE%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%96%99%E4%B8%8B%E8%BD%BD%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/458069/%E6%99%BA%E6%85%A7%E6%A0%91%E7%9F%A5%E5%88%B0%7C%E5%85%B1%E4%BA%AB%E8%AF%BE%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%96%99%E4%B8%8B%E8%BD%BD%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 1629,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

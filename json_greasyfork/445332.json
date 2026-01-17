@@ -1,0 +1,33 @@
+{
+  "id": 445332,
+  "daily_installs": 0,
+  "total_installs": 219,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-21T12:34:28.000Z",
+  "code_updated_at": "2022-05-21T12:34:28.000Z",
+  "namespace": "https://greasyfork.org/users/916881",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 916881,
+      "name": "Ihidd",
+      "created_at": "2022-05-21T12:17:06.000Z",
+      "url": "https://greasyfork.org/users/916881-ihidd"
+    }
+  ],
+  "name": "4chan 404 Archive Links",
+  "description": "Redirects dead 4chan threads to archives without 4chan-X",
+  "url": "https://greasyfork.org/scripts/445332-4chan-404-archive-links",
+  "code_url": "https://update.greasyfork.org/scripts/445332/4chan%20404%20Archive%20Links.user.js",
+  "code_size": 2450,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

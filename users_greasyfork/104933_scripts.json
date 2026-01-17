@@ -30,6 +30,72 @@
     "version": "1.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 437686,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-12-28T11:17:59.000Z",
+    "code_updated_at": "2021-12-28T11:17:59.000Z",
+    "namespace": "vonRaven",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104933,
+        "name": "vonRaven",
+        "created_at": "2017-02-22T20:43:29.000Z",
+        "url": "https://greasyfork.org/users/104933-vonraven"
+      }
+    ],
+    "name": "Steam: add HowLongToBeat link",
+    "description": "Adds a link to search for the game's playtime on HowLongToBeat",
+    "url": "https://greasyfork.org/scripts/437686-steam-add-howlongtobeat-link",
+    "code_url": "https://update.greasyfork.org/scripts/437686/Steam%3A%20add%20HowLongToBeat%20link.user.js",
+    "code_size": 1027,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437685,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-28T11:16:47.000Z",
+    "code_updated_at": "2021-12-28T11:16:47.000Z",
+    "namespace": "vonRaven",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104933,
+        "name": "vonRaven",
+        "created_at": "2017-02-22T20:43:29.000Z",
+        "url": "https://greasyfork.org/users/104933-vonraven"
+      }
+    ],
+    "name": "Steam: add Youtube trailer link",
+    "description": "Adds a link to search for the game's trailer on Youtube",
+    "url": "https://greasyfork.org/scripts/437685-steam-add-youtube-trailer-link",
+    "code_url": "https://update.greasyfork.org/scripts/437685/Steam%3A%20add%20Youtube%20trailer%20link.user.js",
+    "code_size": 1038,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

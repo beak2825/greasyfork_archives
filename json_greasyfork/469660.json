@@ -1,0 +1,34 @@
+{
+  "id": 469660,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-28T15:33:48.000Z",
+  "code_updated_at": "2023-06-28T15:33:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Vertragssignature Eckehard Liedmann",
+  "description": "Anforderung an GwG - digitale Signatur",
+  "url": "https://greasyfork.org/scripts/469660-vertragssignature-eckehard-liedmann",
+  "code_url": "https://update.greasyfork.org/scripts/469660/Vertragssignature%20Eckehard%20Liedmann.user.js",
+  "code_size": 12391,
+  "license": null,
+  "version": "2.4",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

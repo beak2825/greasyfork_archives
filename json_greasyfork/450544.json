@@ -1,0 +1,59 @@
+{
+  "id": 450544,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-31T14:46:55.000Z",
+  "code_updated_at": "2022-09-29T14:51:26.000Z",
+  "namespace": "https://nicksenzaname.github.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 952996,
+      "name": "NickSenzaName",
+      "created_at": "2022-08-31T14:33:32.000Z",
+      "url": "https://greasyfork.org/users/952996-nicksenzaname",
+      "scripts": [
+        {
+          "id": 450544,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-31T14:46:55.000Z",
+          "code_updated_at": "2022-09-29T14:51:26.000Z",
+          "namespace": "https://nicksenzaname.github.io/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Add Catawiki commission fees",
+          "description": "This script allows to visualize the final price of the item adding fee commisions on Catawiki.",
+          "url": "https://greasyfork.org/scripts/450544-add-catawiki-commission-fees",
+          "code_url": "https://update.greasyfork.org/scripts/450544/Add%20Catawiki%20commission%20fees.user.js",
+          "code_size": 1709,
+          "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Add Catawiki commission fees",
+  "description": "This script allows to visualize the final price of the item adding fee commisions on Catawiki.",
+  "url": "https://greasyfork.org/scripts/450544-add-catawiki-commission-fees",
+  "code_url": "https://update.greasyfork.org/scripts/450544/Add%20Catawiki%20commission%20fees.user.js",
+  "code_size": 1709,
+  "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 461062,
+    "daily_installs": 0,
+    "total_installs": 125,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-02T19:38:59.000Z",
+    "code_updated_at": "2023-04-16T23:09:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 517049,
+        "name": "llinfeng",
+        "created_at": "2020-04-16T13:34:39.000Z",
+        "url": "https://greasyfork.org/users/517049-llinfeng"
+      }
+    ],
+    "name": "Overleaf Editor Custom VIM Keybindings (Code Mirror v6)",
+    "description": "Configure a list of shortcuts for Vim-mode + user-defined :commands for toggling panels on Overleaf.",
+    "url": "https://greasyfork.org/scripts/461062-overleaf-editor-custom-vim-keybindings-code-mirror-v6",
+    "code_url": "https://update.greasyfork.org/scripts/461062/Overleaf%20Editor%20Custom%20VIM%20Keybindings%20%28Code%20Mirror%20v6%29.user.js",
+    "code_size": 8055,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434572,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-28T04:36:03.000Z",
+    "code_updated_at": "2023-04-13T18:44:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 517049,
+        "name": "llinfeng",
+        "created_at": "2020-04-16T13:34:39.000Z",
+        "url": "https://greasyfork.org/users/517049-llinfeng"
+      }
+    ],
+    "name": "Focusmate button simulator - Gmail style",
+    "description": "Focusmate pressing automation",
+    "url": "https://greasyfork.org/scripts/434572-focusmate-button-simulator-gmail-style",
+    "code_url": "https://update.greasyfork.org/scripts/434572/Focusmate%20button%20simulator%20-%20Gmail%20style.user.js",
+    "code_size": 4255,
+    "license": null,
+    "version": "0.3.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434277,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-21T20:09:43.000Z",
+    "code_updated_at": "2021-10-21T22:50:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 517049,
+        "name": "llinfeng",
+        "created_at": "2020-04-16T13:34:39.000Z",
+        "url": "https://greasyfork.org/users/517049-llinfeng"
+      }
+    ],
+    "name": "Overleaf - automatic hardwrap",
+    "description": "Set a hard linebreak at 80th col",
+    "url": "https://greasyfork.org/scripts/434277-overleaf-automatic-hardwrap",
+    "code_url": "https://update.greasyfork.org/scripts/434277/Overleaf%20-%20automatic%20hardwrap.user.js",
+    "code_size": 3842,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434230,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-21T02:20:14.000Z",
+    "code_updated_at": "2022-01-06T15:39:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 517049,
+        "name": "llinfeng",
+        "created_at": "2020-04-16T13:34:39.000Z",
+        "url": "https://greasyfork.org/users/517049-llinfeng"
+      }
+    ],
+    "name": "豆瓣阅读网页背景色修改",
+    "description": "Set the background color to be white",
+    "url": "https://greasyfork.org/scripts/434230-%E8%B1%86%E7%93%A3%E9%98%85%E8%AF%BB%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF%E8%89%B2%E4%BF%AE%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/434230/%E8%B1%86%E7%93%A3%E9%98%85%E8%AF%BB%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF%E8%89%B2%E4%BF%AE%E6%94%B9.user.js",
+    "code_size": 1079,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 479826,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-14T06:59:59.000Z",
+  "code_updated_at": "2023-11-14T07:09:03.000Z",
+  "namespace": "https://forum.matrp.ru/index.php",
+  "support_url": "https://vk.com/valeriaaa_006",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 977157,
+      "name": "Валерия Сосова",
+      "created_at": "2022-10-30T11:30:05.000Z",
+      "url": "https://greasyfork.org/users/977157-%D0%B2%D0%B0%D0%BB%D0%B5%D1%80%D0%B8%D1%8F-%D1%81%D0%BE%D1%81%D0%BE%D0%B2%D0%B0",
+      "scripts": [
+        {
+          "id": 473547,
+          "daily_installs": 0,
+          "total_installs": 105,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2023-08-21T03:24:36.000Z",
+          "code_updated_at": "2023-08-21T09:14:42.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "кураторы форумa PENZA black russia",
+          "description": "author Dmitry_Sokolov <3",
+          "url": "https://greasyfork.org/scripts/473547-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BCa-penza-black-russia",
+          "code_url": "https://update.greasyfork.org/scripts/473547/%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BCa%20PENZA%20black%20russia.user.js",
+          "code_size": 140240,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Скрипт для следящих | Матрешка",
+  "description": "Suggestions for improving the script write here ---> https://vk.com/valeriaaa_006",
+  "url": "https://greasyfork.org/scripts/479826-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D1%81%D0%BB%D0%B5%D0%B4%D1%8F%D1%89%D0%B8%D1%85-%D0%BC%D0%B0%D1%82%D1%80%D0%B5%D1%88%D0%BA%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/479826/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D1%81%D0%BB%D0%B5%D0%B4%D1%8F%D1%89%D0%B8%D1%85%20%7C%20%D0%9C%D0%B0%D1%82%D1%80%D0%B5%D1%88%D0%BA%D0%B0.user.js",
+  "code_size": 13756,
+  "license": "MIT License",
+  "version": "0.0.0",
+  "locale": "bg",
+  "deleted": false,
+  "visibility": "public"
+}

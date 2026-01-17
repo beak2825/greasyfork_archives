@@ -1,0 +1,33 @@
+{
+  "id": 432604,
+  "daily_installs": 0,
+  "total_installs": 63,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-18T09:15:49.000Z",
+  "code_updated_at": "2024-11-21T07:42:29.000Z",
+  "namespace": "https://op.health.dev.zoenet.cn/*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816212,
+      "name": "MineralSalt",
+      "created_at": "2021-09-17T03:37:14.000Z",
+      "url": "https://greasyfork.org/users/816212-mineralsalt"
+    }
+  ],
+  "name": "智业运维端工具",
+  "description": "非常的人性化",
+  "url": "https://greasyfork.org/scripts/432604-%E6%99%BA%E4%B8%9A%E8%BF%90%E7%BB%B4%E7%AB%AF%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/432604/%E6%99%BA%E4%B8%9A%E8%BF%90%E7%BB%B4%E7%AB%AF%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 28651,
+  "license": null,
+  "version": "0.6.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

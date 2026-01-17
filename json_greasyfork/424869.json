@@ -1,0 +1,34 @@
+{
+  "id": 424869,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-11T17:05:44.000Z",
+  "code_updated_at": "2021-04-11T17:07:04.000Z",
+  "namespace": "http://kisscsabi.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 757648,
+      "name": "Levi PC",
+      "created_at": "2021-04-11T17:04:09.000Z",
+      "url": "https://greasyfork.org/users/757648-levi-pc",
+      "scripts": []
+    }
+  ],
+  "name": "Rohadjon meg a Totalcar",
+  "description": "Blokkolja a reklámblokkoló-blokkolót",
+  "url": "https://greasyfork.org/scripts/424869-rohadjon-meg-a-totalcar",
+  "code_url": "https://update.greasyfork.org/scripts/424869/Rohadjon%20meg%20a%20Totalcar.user.js",
+  "code_size": 748,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "hu",
+  "deleted": false,
+  "visibility": "public"
+}

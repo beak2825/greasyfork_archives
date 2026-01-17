@@ -1,0 +1,34 @@
+{
+  "id": 438480,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-13T14:59:52.000Z",
+  "code_updated_at": "2022-01-13T14:59:52.000Z",
+  "namespace": "https://triburile.ro",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 858662,
+      "name": "fpo",
+      "created_at": "2021-12-28T21:54:09.000Z",
+      "url": "https://greasyfork.org/users/858662-fpo",
+      "scripts": []
+    }
+  ],
+  "name": "Redirect",
+  "description": "Redirect between main, recruit, scavenge",
+  "url": "https://greasyfork.org/scripts/438480-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/438480/Redirect.user.js",
+  "code_size": 2970,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

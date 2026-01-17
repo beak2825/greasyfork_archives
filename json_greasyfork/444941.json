@@ -1,0 +1,34 @@
+{
+  "id": 444941,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-13T19:39:00.000Z",
+  "code_updated_at": "2023-09-25T15:23:26.000Z",
+  "namespace": "https://www.九条可怜.cn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 913927,
+      "name": "Karendes",
+      "created_at": "2022-05-13T19:30:41.000Z",
+      "url": "https://greasyfork.org/users/913927-karendes",
+      "scripts": []
+    }
+  ],
+  "name": "九条可怜多线路",
+  "description": "[九条可怜双端]自用多接口多播放器多直链转换脚本,自带内嵌播放器。",
+  "url": "https://greasyfork.org/scripts/444941-%E4%B9%9D%E6%9D%A1%E5%8F%AF%E6%80%9C%E5%A4%9A%E7%BA%BF%E8%B7%AF",
+  "code_url": "https://update.greasyfork.org/scripts/444941/%E4%B9%9D%E6%9D%A1%E5%8F%AF%E6%80%9C%E5%A4%9A%E7%BA%BF%E8%B7%AF.user.js",
+  "code_size": 145166,
+  "license": "End-User License Agreement",
+  "version": "1.0.46",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

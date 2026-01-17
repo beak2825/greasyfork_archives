@@ -1,0 +1,59 @@
+{
+  "id": 427336,
+  "daily_installs": 0,
+  "total_installs": 50,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-01T04:11:00.000Z",
+  "code_updated_at": "2021-07-13T21:07:47.000Z",
+  "namespace": "https://github.com/GizmoOAO/no-vroid",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 444062,
+      "name": "gizmo-ds",
+      "created_at": "2020-02-12T04:27:35.000Z",
+      "url": "https://greasyfork.org/users/444062-gizmo-ds",
+      "scripts": [
+        {
+          "id": 427336,
+          "daily_installs": 0,
+          "total_installs": 50,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-01T04:11:00.000Z",
+          "code_updated_at": "2021-07-13T21:07:47.000Z",
+          "namespace": "https://github.com/GizmoOAO/no-vroid",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "No VRoid",
+          "description": "No VRoid pls",
+          "url": "https://greasyfork.org/scripts/427336-no-vroid",
+          "code_url": "https://update.greasyfork.org/scripts/427336/No%20VRoid.user.js",
+          "code_size": 1051,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "No VRoid",
+  "description": "No VRoid pls",
+  "url": "https://greasyfork.org/scripts/427336-no-vroid",
+  "code_url": "https://update.greasyfork.org/scripts/427336/No%20VRoid.user.js",
+  "code_size": 1051,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472465,
+    "daily_installs": 0,
+    "total_installs": 222,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-05T07:25:41.000Z",
+    "code_updated_at": "2025-01-25T17:45:50.000Z",
+    "namespace": "https://www.asasmr.top/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 837788,
+        "name": "聆巳",
+        "created_at": "2021-11-12T14:04:28.000Z",
+        "url": "https://greasyfork.org/users/837788-%E8%81%86%E5%B7%B3"
+      }
+    ],
+    "name": "爱上ASMR - Plus",
+    "description": "视频评论黑名单屏蔽词、收藏夹备注、音视频下载、评论区时间跳转、显示评分投票、标题封面完整显示、禁用动态头像、",
+    "url": "https://greasyfork.org/scripts/472465-%E7%88%B1%E4%B8%8Aasmr-plus",
+    "code_url": "https://update.greasyfork.org/scripts/472465/%E7%88%B1%E4%B8%8AASMR%20-%20Plus.user.js",
+    "code_size": 41108,
+    "license": "MIT License",
+    "version": "6.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

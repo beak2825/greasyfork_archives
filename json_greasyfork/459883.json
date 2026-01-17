@@ -1,0 +1,33 @@
+{
+  "id": 459883,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-12T06:37:11.000Z",
+  "code_updated_at": "2024-07-24T12:29:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1025857,
+      "name": "prozyy",
+      "created_at": "2023-02-12T06:27:22.000Z",
+      "url": "https://greasyfork.org/users/1025857-prozyy"
+    }
+  ],
+  "name": "MetaLoop2Aria2",
+  "description": "获取MetaLoop文件下载地址，发送Aria2下载请求，同时复制下载链接到剪贴板，方便本地IDM直接从剪贴板创建任务，适配 Chrome浏览器。@Aria2下载:https://github.com/aria2/aria2",
+  "url": "https://greasyfork.org/scripts/459883-metaloop2aria2",
+  "code_url": "https://update.greasyfork.org/scripts/459883/MetaLoop2Aria2.user.js",
+  "code_size": 16831,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "0.0.1.6",
+  "locale": "sv",
+  "deleted": false,
+  "visibility": "public"
+}

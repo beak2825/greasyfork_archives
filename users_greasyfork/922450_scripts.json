@@ -1,0 +1,35 @@
+[
+  {
+    "id": 446048,
+    "daily_installs": 0,
+    "total_installs": 195,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-05T20:51:18.000Z",
+    "code_updated_at": "2022-06-05T20:51:18.000Z",
+    "namespace": "https://greasyfork.org/users/922450",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922450,
+        "name": "saffiya",
+        "created_at": "2022-06-05T20:32:32.000Z",
+        "url": "https://greasyfork.org/users/922450-saffiya"
+      }
+    ],
+    "name": "Replace webp image on Fandom with png",
+    "description": "Really quick script that adds \"&format=original\" to each image opened in a new tab on fandom so that they do not save as a .webp.",
+    "url": "https://greasyfork.org/scripts/446048-replace-webp-image-on-fandom-with-png",
+    "code_url": "https://update.greasyfork.org/scripts/446048/Replace%20webp%20image%20on%20Fandom%20with%20png.user.js",
+    "code_size": 520,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

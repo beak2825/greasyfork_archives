@@ -1,0 +1,33 @@
+{
+  "id": 451244,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-12T08:21:21.000Z",
+  "code_updated_at": "2023-09-11T07:24:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 957915,
+      "name": "tomoyachen",
+      "created_at": "2022-09-12T07:53:40.000Z",
+      "url": "https://greasyfork.org/users/957915-tomoyachen"
+    }
+  ],
+  "name": "Tuskr 小助手",
+  "description": "新增一栏快捷操作，可以选择状态后立即切换到下一条用例",
+  "url": "https://greasyfork.org/scripts/451244-tuskr-%E5%B0%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/451244/Tuskr%20%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 4837,
+  "license": "MIT License",
+  "version": "0.2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

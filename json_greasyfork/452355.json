@@ -1,0 +1,33 @@
+{
+  "id": 452355,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-02T02:58:22.000Z",
+  "code_updated_at": "2022-10-02T02:58:22.000Z",
+  "namespace": "-",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 918950,
+      "name": "boros god",
+      "created_at": "2022-05-26T22:28:15.000Z",
+      "url": "https://greasyfork.org/users/918950-boros-god"
+    }
+  ],
+  "name": "chicken mod",
+  "description": ":ratio: :points: :duck: :chicken:",
+  "url": "https://greasyfork.org/scripts/452355-chicken-mod",
+  "code_url": "https://update.greasyfork.org/scripts/452355/chicken%20mod.user.js",
+  "code_size": 341843,
+  "license": null,
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

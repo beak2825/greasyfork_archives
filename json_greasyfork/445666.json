@@ -1,0 +1,33 @@
+{
+  "id": 445666,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-28T15:51:12.000Z",
+  "code_updated_at": "2024-03-25T04:10:54.000Z",
+  "namespace": "student.racunarstvo.hr",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 810305,
+      "name": "KristijanRoss",
+      "created_at": "2021-08-30T10:59:40.000Z",
+      "url": "https://greasyfork.org/users/810305-kristijanross"
+    }
+  ],
+  "name": "Infoeduka Plus",
+  "description": "Dodaje potreban preostali broj dolazaka i minimalan postotak za potpis.",
+  "url": "https://greasyfork.org/scripts/445666-infoeduka-plus",
+  "code_url": "https://update.greasyfork.org/scripts/445666/Infoeduka%20Plus.user.js",
+  "code_size": 1828,
+  "license": null,
+  "version": "0.5",
+  "locale": "hr",
+  "deleted": false,
+  "visibility": "public"
+}

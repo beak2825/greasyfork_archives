@@ -1,0 +1,59 @@
+{
+  "id": 445688,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-29T04:06:11.000Z",
+  "code_updated_at": "2022-05-29T04:10:19.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/445688",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 919690,
+      "name": "Song Git",
+      "created_at": "2022-05-29T04:00:00.000Z",
+      "url": "https://greasyfork.org/users/919690-song-git",
+      "scripts": [
+        {
+          "id": 445688,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-29T04:06:11.000Z",
+          "code_updated_at": "2022-05-29T04:10:19.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/445688",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "菜园教务系统自动填写教学评价",
+          "description": "适强智教务的自动填写教师评价的脚本，不需要疯狂点击非常满意，延长鼠标寿命。",
+          "url": "https://greasyfork.org/scripts/445688-%E8%8F%9C%E5%9B%AD%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7",
+          "code_url": "https://update.greasyfork.org/scripts/445688/%E8%8F%9C%E5%9B%AD%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7.user.js",
+          "code_size": 3108,
+          "license": "GNU_GPLv3",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "菜园教务系统自动填写教学评价",
+  "description": "适强智教务的自动填写教师评价的脚本，不需要疯狂点击非常满意，延长鼠标寿命。",
+  "url": "https://greasyfork.org/scripts/445688-%E8%8F%9C%E5%9B%AD%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7",
+  "code_url": "https://update.greasyfork.org/scripts/445688/%E8%8F%9C%E5%9B%AD%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7.user.js",
+  "code_size": 3108,
+  "license": "GNU_GPLv3",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

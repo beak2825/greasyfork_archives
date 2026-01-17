@@ -31,5 +31,38 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 488996,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-04T16:36:57.000Z",
+    "code_updated_at": "2024-08-19T16:43:12.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1270270,
+        "name": "Даниил Мишкин",
+        "created_at": "2024-03-04T16:18:44.000Z",
+        "url": "https://greasyfork.org/users/1270270-%D0%B4%D0%B0%D0%BD%D0%B8%D0%B8%D0%BB-%D0%BC%D0%B8%D1%88%D0%BA%D0%B8%D0%BD"
+      }
+    ],
+    "name": "Tech Script",
+    "description": "Скрипт для технических специалистов",
+    "url": "https://greasyfork.org/scripts/488996-tech-script",
+    "code_url": "https://update.greasyfork.org/scripts/488996/Tech%20Script.user.js",
+    "code_size": 83291,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

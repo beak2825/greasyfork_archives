@@ -1,0 +1,101 @@
+[
+  {
+    "id": 486922,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-08T18:26:54.000Z",
+    "code_updated_at": "2024-06-06T11:29:16.000Z",
+    "namespace": "http://bzuco.cloud",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4128,
+        "name": "Endif",
+        "created_at": "2014-08-02T09:06:05.000Z",
+        "url": "https://greasyfork.org/users/4128-endif"
+      }
+    ],
+    "name": "Codegen",
+    "description": "Vygeneruje CSV s kódy k volným sedadlům.",
+    "url": "https://greasyfork.org/scripts/486922-codegen",
+    "code_url": "https://update.greasyfork.org/scripts/486922/Codegen.user.js",
+    "code_size": 5975,
+    "license": "MIT; https://opensource.org/licenses/MIT",
+    "version": "0.2",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 448494,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-26T13:40:03.000Z",
+    "code_updated_at": "2023-07-28T09:10:35.000Z",
+    "namespace": "https://jiraskuvhronov.bzuco.cloud/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4128,
+        "name": "Endif",
+        "created_at": "2014-08-02T09:06:05.000Z",
+        "url": "https://greasyfork.org/users/4128-endif"
+      }
+    ],
+    "name": "BZUCO Customers NFC",
+    "description": "Neoficiální podpora exportu vstupenek na NFC čipy",
+    "url": "https://greasyfork.org/scripts/448494-bzuco-customers-nfc",
+    "code_url": "https://update.greasyfork.org/scripts/448494/BZUCO%20Customers%20NFC.user.js",
+    "code_size": 11419,
+    "license": "MIT; https://opensource.org/licenses/MIT",
+    "version": "0.4",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 448493,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-26T13:34:08.000Z",
+    "code_updated_at": "2022-07-26T13:34:08.000Z",
+    "namespace": "https://jiraskuvhronov.bzuco.cloud/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4128,
+        "name": "Endif",
+        "created_at": "2014-08-02T09:06:05.000Z",
+        "url": "https://greasyfork.org/users/4128-endif"
+      }
+    ],
+    "name": "BZUCO Customers",
+    "description": "Neoficiální vylepšení administrace zákazníků",
+    "url": "https://greasyfork.org/scripts/448493-bzuco-customers",
+    "code_url": "https://update.greasyfork.org/scripts/448493/BZUCO%20Customers.user.js",
+    "code_size": 2614,
+    "license": "MIT; https://opensource.org/licenses/MIT",
+    "version": "0.1",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

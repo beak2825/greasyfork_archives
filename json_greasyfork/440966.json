@@ -1,0 +1,34 @@
+{
+  "id": 440966,
+  "daily_installs": 0,
+  "total_installs": 98,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-05T07:52:01.000Z",
+  "code_updated_at": "2022-05-05T19:09:26.000Z",
+  "namespace": "https://greasyfork.org/cs/users/153384/",
+  "support_url": "https://github.com/JamzaSK/TWInventoryReloaded/issues",
+  "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=97jamza%40gmail.com&item_name=TW+Inventory+Reloaded&currency_code=EUR&source=url",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 5723,
+      "name": "russia-spb",
+      "created_at": "2014-09-30T11:59:20.000Z",
+      "url": "https://greasyfork.org/users/5723-russia-spb",
+      "scripts": []
+    }
+  ],
+  "name": "TW Inventory Reloaded",
+  "description": "Better Inventory and tools for The West!",
+  "url": "https://greasyfork.org/scripts/440966-tw-inventory-reloaded",
+  "code_url": "https://update.greasyfork.org/scripts/440966/TW%20Inventory%20Reloaded.user.js",
+  "code_size": 1278676,
+  "license": "GPL-3.0 http://www.gnu.org/licenses/gpl-3.0.txt",
+  "version": "2.202.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

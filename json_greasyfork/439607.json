@@ -1,0 +1,34 @@
+{
+  "id": 439607,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-05T16:53:32.000Z",
+  "code_updated_at": "2022-02-05T16:53:32.000Z",
+  "namespace": "stack",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 873121,
+      "name": "stack",
+      "created_at": "2022-02-05T16:41:47.000Z",
+      "url": "https://greasyfork.org/users/873121-stack",
+      "scripts": []
+    }
+  ],
+  "name": "贴吧显示原图",
+  "description": "帖子默认加载原图",
+  "url": "https://greasyfork.org/scripts/439607-%E8%B4%B4%E5%90%A7%E6%98%BE%E7%A4%BA%E5%8E%9F%E5%9B%BE",
+  "code_url": "https://update.greasyfork.org/scripts/439607/%E8%B4%B4%E5%90%A7%E6%98%BE%E7%A4%BA%E5%8E%9F%E5%9B%BE.user.js",
+  "code_size": 596,
+  "license": "GPL-3.0 License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

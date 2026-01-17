@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440408,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-21T17:13:51.000Z",
+    "code_updated_at": "2022-02-21T17:28:24.000Z",
+    "namespace": "puic",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 861565,
+        "name": "Myrmex",
+        "created_at": "2022-01-06T03:05:33.000Z",
+        "url": "https://greasyfork.org/users/861565-myrmex"
+      }
+    ],
+    "name": "VK Hide Wall (personal script)",
+    "description": "Remove social elements from VK",
+    "url": "https://greasyfork.org/scripts/440408-vk-hide-wall-personal-script",
+    "code_url": "https://update.greasyfork.org/scripts/440408/VK%20Hide%20Wall%20%28personal%20script%29.user.js",
+    "code_size": 1113,
+    "license": "MIT License",
+    "version": "1.00",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

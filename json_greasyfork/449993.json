@@ -1,0 +1,34 @@
+{
+  "id": 449993,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-22T17:14:23.000Z",
+  "code_updated_at": "2022-08-24T00:48:59.000Z",
+  "namespace": "https://github.com/ShuheiKuriki",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 949585,
+      "name": "栗城周平",
+      "created_at": "2022-08-22T17:10:19.000Z",
+      "url": "https://greasyfork.org/users/949585-%E6%A0%97%E5%9F%8E%E5%91%A8%E5%B9%B3",
+      "scripts": []
+    }
+  ],
+  "name": "AtCoder open-file-button Eraser",
+  "description": "hide atcoder open file button",
+  "url": "https://greasyfork.org/scripts/449993-atcoder-open-file-button-eraser",
+  "code_url": "https://update.greasyfork.org/scripts/449993/AtCoder%20open-file-button%20Eraser.user.js",
+  "code_size": 485,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

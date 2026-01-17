@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447578,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-08T02:14:21.000Z",
+    "code_updated_at": "2022-07-08T02:14:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 933521,
+        "name": "Acosta Bonilla Jose Miguel",
+        "created_at": "2022-07-08T02:12:32.000Z",
+        "url": "https://greasyfork.org/users/933521-acosta-bonilla-jose-miguel"
+      }
+    ],
+    "name": "No Lag Jose",
+    "description": "Jose No lag Gota.io Extension",
+    "url": "https://greasyfork.org/scripts/447578-no-lag-jose",
+    "code_url": "https://update.greasyfork.org/scripts/447578/No%20Lag%20Jose.user.js",
+    "code_size": 5144,
+    "license": null,
+    "version": "0.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

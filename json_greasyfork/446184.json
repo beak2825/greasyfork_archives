@@ -1,0 +1,34 @@
+{
+  "id": 446184,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-08T08:08:31.000Z",
+  "code_updated_at": "2022-06-08T08:08:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 923316,
+      "name": "Yuting Huang",
+      "created_at": "2022-06-08T07:32:30.000Z",
+      "url": "https://greasyfork.org/users/923316-yuting-huang",
+      "scripts": []
+    }
+  ],
+  "name": "Get NEO UcStorage",
+  "description": "copy&paste ucStorage info automatically",
+  "url": "https://greasyfork.org/scripts/446184-get-neo-ucstorage",
+  "code_url": "https://update.greasyfork.org/scripts/446184/Get%20NEO%20UcStorage.user.js",
+  "code_size": 1354,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

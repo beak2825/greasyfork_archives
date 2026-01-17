@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491712,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-05T12:31:33.000Z",
+    "code_updated_at": "2024-04-05T12:31:33.000Z",
+    "namespace": "pamasich-kbin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1217369,
+        "name": "Pamasich",
+        "created_at": "2023-11-14T14:57:57.000Z",
+        "url": "https://greasyfork.org/users/1217369-pamasich"
+      }
+    ],
+    "name": "Kbin CSS Fix",
+    "description": "Fixes broken magazine CSS on /kbin.",
+    "url": "https://greasyfork.org/scripts/491712-kbin-css-fix",
+    "code_url": "https://update.greasyfork.org/scripts/491712/Kbin%20CSS%20Fix.user.js",
+    "code_size": 1321,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

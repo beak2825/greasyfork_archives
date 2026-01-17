@@ -1,0 +1,33 @@
+{
+  "id": 483587,
+  "daily_installs": 16,
+  "total_installs": 7563,
+  "fan_score": "6.0",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 4,
+  "created_at": "2024-01-01T05:07:00.000Z",
+  "code_updated_at": "2025-12-13T03:46:38.000Z",
+  "namespace": "https://8y8x.dev/sigmally-fixes",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 505995,
+      "name": "8y8x",
+      "created_at": "2020-04-12T22:05:56.000Z",
+      "url": "https://greasyfork.org/users/505995-8y8x"
+    }
+  ],
+  "name": "Sigmally Fixes V2",
+  "description": "Easily 10X your FPS on Sigmally.com + many bug fixes + great for multiboxing + supports SigMod",
+  "url": "https://greasyfork.org/scripts/483587-sigmally-fixes-v2",
+  "code_url": "https://update.greasyfork.org/scripts/483587/Sigmally%20Fixes%20V2.user.js",
+  "code_size": 199017,
+  "license": "MIT License",
+  "version": "2.8.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

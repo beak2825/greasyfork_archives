@@ -1,0 +1,68 @@
+[
+  {
+    "id": 461862,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-15T07:54:27.000Z",
+    "code_updated_at": "2023-03-15T07:54:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 517288,
+        "name": "Vector Wang",
+        "created_at": "2020-04-16T15:24:20.000Z",
+        "url": "https://greasyfork.org/users/517288-vector-wang"
+      }
+    ],
+    "name": "click table and download",
+    "description": "help someone save html table to xls easy~",
+    "url": "https://greasyfork.org/scripts/461862-click-table-and-download",
+    "code_url": "https://update.greasyfork.org/scripts/461862/click%20table%20and%20download.user.js",
+    "code_size": 4445,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 450239,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-26T15:39:13.000Z",
+    "code_updated_at": "2023-03-15T07:23:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 517288,
+        "name": "Vector Wang",
+        "created_at": "2020-04-16T15:24:20.000Z",
+        "url": "https://greasyfork.org/users/517288-vector-wang"
+      }
+    ],
+    "name": "save table",
+    "description": "help someone save html table to xls easy~",
+    "url": "https://greasyfork.org/scripts/450239-save-table",
+    "code_url": "https://update.greasyfork.org/scripts/450239/save%20table.user.js",
+    "code_size": 4529,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

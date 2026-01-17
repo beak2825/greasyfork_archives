@@ -1,0 +1,33 @@
+{
+  "id": 470765,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-13T21:09:33.000Z",
+  "code_updated_at": "2023-07-13T21:11:58.000Z",
+  "namespace": "libgen-amazon",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 786838,
+      "name": "SirGryphin",
+      "created_at": "2021-06-24T07:39:01.000Z",
+      "url": "https://greasyfork.org/users/786838-sirgryphin"
+    }
+  ],
+  "name": "Libgen + Annas-Archive on Amazon",
+  "description": "Modded version of this code: https://greasyfork.org/en/scripts/406924-amazon-com-libgen-integration",
+  "url": "https://greasyfork.org/scripts/470765-libgen-annas-archive-on-amazon",
+  "code_url": "https://update.greasyfork.org/scripts/470765/Libgen%20%2B%20Annas-Archive%20on%20Amazon.user.js",
+  "code_size": 6983,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

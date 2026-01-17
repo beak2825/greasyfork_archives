@@ -1,0 +1,33 @@
+{
+  "id": 430010,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-28T18:03:21.000Z",
+  "code_updated_at": "2021-07-29T19:21:11.000Z",
+  "namespace": "honami",
+  "support_url": "https://github.com/leewp14/Fullmet/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 798007,
+      "name": "Lee Wei Peow",
+      "created_at": "2021-07-28T10:36:53.000Z",
+      "url": "https://greasyfork.org/users/798007-lee-wei-peow"
+    }
+  ],
+  "name": "Fullmet",
+  "description": "Enables HTML5 video controls on Google Meet's in-meeting video presentation.",
+  "url": "https://greasyfork.org/scripts/430010-fullmet",
+  "code_url": "https://update.greasyfork.org/scripts/430010/Fullmet.user.js",
+  "code_size": 2835,
+  "license": null,
+  "version": "0.06",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

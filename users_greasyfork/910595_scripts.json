@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444528,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-06T03:01:59.000Z",
+    "code_updated_at": "2022-05-06T03:04:27.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 910595,
+        "name": "Bertam",
+        "created_at": "2022-05-05T07:17:00.000Z",
+        "url": "https://greasyfork.org/users/910595-bertam"
+      }
+    ],
+    "name": "报就餐系统优化",
+    "description": "2022/5/6 上午10:06:48 1.解除报餐日期限制",
+    "url": "https://greasyfork.org/scripts/444528-%E6%8A%A5%E5%B0%B1%E9%A4%90%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/444528/%E6%8A%A5%E5%B0%B1%E9%A4%90%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 1641,
+    "license": "Btm License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

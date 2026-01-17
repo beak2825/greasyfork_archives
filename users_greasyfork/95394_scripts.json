@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 462216,
+    "daily_installs": 0,
+    "total_installs": 168,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-20T18:50:33.000Z",
+    "code_updated_at": "2023-03-20T18:50:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 95394,
+        "name": "BiBiCi",
+        "created_at": "2017-01-16T15:01:10.000Z",
+        "url": "https://greasyfork.org/users/95394-bibici"
+      }
+    ],
+    "name": "去除B站全屏直播礼物栏",
+    "description": "去除观看B站全屏直播下方的礼物栏",
+    "url": "https://greasyfork.org/scripts/462216-%E5%8E%BB%E9%99%A4b%E7%AB%99%E5%85%A8%E5%B1%8F%E7%9B%B4%E6%92%AD%E7%A4%BC%E7%89%A9%E6%A0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/462216/%E5%8E%BB%E9%99%A4B%E7%AB%99%E5%85%A8%E5%B1%8F%E7%9B%B4%E6%92%AD%E7%A4%BC%E7%89%A9%E6%A0%8F.user.js",
+    "code_size": 1515,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

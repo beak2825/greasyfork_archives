@@ -1,0 +1,33 @@
+{
+  "id": 467938,
+  "daily_installs": 0,
+  "total_installs": 87,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-05T01:51:14.000Z",
+  "code_updated_at": "2023-06-05T01:51:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1090623,
+      "name": "weiai6464",
+      "created_at": "2023-06-04T08:46:35.000Z",
+      "url": "https://greasyfork.org/users/1090623-weiai6464"
+    }
+  ],
+  "name": "Location Select",
+  "description": "for XM inner mall!",
+  "url": "https://greasyfork.org/scripts/467938-location-select",
+  "code_url": "https://update.greasyfork.org/scripts/467938/Location%20Select.user.js",
+  "code_size": 2328,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

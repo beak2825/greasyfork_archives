@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461260,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-06T01:15:08.000Z",
+    "code_updated_at": "2023-03-06T01:15:08.000Z",
+    "namespace": "https://github.com/techiemac/cantrillscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1037164,
+        "name": "techiemac",
+        "created_at": "2023-03-06T00:25:09.000Z",
+        "url": "https://greasyfork.org/users/1037164-techiemac"
+      }
+    ],
+    "name": "Cantrill Video Control",
+    "description": "Customize the video player on cantrill.io and adds additional keyboard shortcuts",
+    "url": "https://greasyfork.org/scripts/461260-cantrill-video-control",
+    "code_url": "https://update.greasyfork.org/scripts/461260/Cantrill%20Video%20Control.user.js",
+    "code_size": 5842,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

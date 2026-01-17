@@ -1,0 +1,68 @@
+[
+  {
+    "id": 424372,
+    "daily_installs": 0,
+    "total_installs": 287,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-02T08:43:22.000Z",
+    "code_updated_at": "2021-04-02T09:00:40.000Z",
+    "namespace": "https://greasyfork.org/scripts/424372",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 160175,
+        "name": "奈氩拉托提普",
+        "created_at": "2017-11-21T01:33:19.000Z",
+        "url": "https://greasyfork.org/users/160175-%E5%A5%88%E6%B0%A9%E6%8B%89%E6%89%98%E6%8F%90%E6%99%AE"
+      }
+    ],
+    "name": "果核剥壳净化",
+    "description": "果核剥壳 去广告",
+    "url": "https://greasyfork.org/scripts/424372-%E6%9E%9C%E6%A0%B8%E5%89%A5%E5%A3%B3%E5%87%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/424372/%E6%9E%9C%E6%A0%B8%E5%89%A5%E5%A3%B3%E5%87%80%E5%8C%96.user.js",
+    "code_size": 1325,
+    "license": null,
+    "version": "1.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423482,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-18T09:26:08.000Z",
+    "code_updated_at": "2024-06-24T15:49:45.000Z",
+    "namespace": "https://scp-wiki-cn.wikidot.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 160175,
+        "name": "奈氩拉托提普",
+        "created_at": "2017-11-21T01:33:19.000Z",
+        "url": "https://greasyfork.org/users/160175-%E5%A5%88%E6%B0%A9%E6%8B%89%E6%89%98%E6%8F%90%E6%99%AE"
+      }
+    ],
+    "name": "SCP-CN Jump Document",
+    "description": "SCP-CN 输入文档编号直接跳转",
+    "url": "https://greasyfork.org/scripts/423482-scp-cn-jump-document",
+    "code_url": "https://update.greasyfork.org/scripts/423482/SCP-CN%20Jump%20Document.user.js",
+    "code_size": 6120,
+    "license": "GPL-3.0 License",
+    "version": "2.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

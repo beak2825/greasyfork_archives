@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461684,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-12T08:55:00.000Z",
+    "code_updated_at": "2023-03-25T16:10:56.000Z",
+    "namespace": "babytaikoer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 992978,
+        "name": "galactagun",
+        "created_at": "2022-12-05T14:25:10.000Z",
+        "url": "https://greasyfork.org/users/992978-galactagun"
+      }
+    ],
+    "name": "Kor더히로바",
+    "description": "동더히로바 한국어 번역",
+    "url": "https://greasyfork.org/scripts/461684-kor%EB%8D%94%ED%9E%88%EB%A1%9C%EB%B0%94",
+    "code_url": "https://update.greasyfork.org/scripts/461684/Kor%EB%8D%94%ED%9E%88%EB%A1%9C%EB%B0%94.user.js",
+    "code_size": 42396,
+    "license": null,
+    "version": "0.025",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

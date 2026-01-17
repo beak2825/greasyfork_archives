@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465934,
+    "daily_installs": 0,
+    "total_installs": 158,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-05-10T14:12:07.000Z",
+    "code_updated_at": "2023-05-10T14:12:07.000Z",
+    "namespace": "http://yourdomainhere/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1076656,
+        "name": "Uwe Wy",
+        "created_at": "2023-05-10T13:30:51.000Z",
+        "url": "https://greasyfork.org/users/1076656-uwe-wy"
+      }
+    ],
+    "name": "Disable YouTube Autoplay on Homepage",
+    "description": "Disables automatic video playback on the YouTube homepage and displays only the video thumbnails.",
+    "url": "https://greasyfork.org/scripts/465934-disable-youtube-autoplay-on-homepage",
+    "code_url": "https://update.greasyfork.org/scripts/465934/Disable%20YouTube%20Autoplay%20on%20Homepage.user.js",
+    "code_size": 1639,
+    "license": "CC-BY-NC",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

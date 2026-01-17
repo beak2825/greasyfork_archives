@@ -1,0 +1,34 @@
+{
+  "id": 459378,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-03T10:18:43.000Z",
+  "code_updated_at": "2023-02-03T10:18:43.000Z",
+  "namespace": "https://mp.weixin.qq.com/s/DtcPGtbc34bORAsrsf0OvA",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1001673,
+      "name": "guojizhansky",
+      "created_at": "2022-12-23T07:57:49.000Z",
+      "url": "https://greasyfork.org/users/1001673-guojizhansky",
+      "scripts": []
+    }
+  ],
+  "name": "国际站搜商品显示供应商名称 By 公众号搜索国际站Sky，微信号sky-0945",
+  "description": "解决在国际站上搜索时查看不到供应商的名称问题",
+  "url": "https://greasyfork.org/scripts/459378-%E5%9B%BD%E9%99%85%E7%AB%99%E6%90%9C%E5%95%86%E5%93%81%E6%98%BE%E7%A4%BA%E4%BE%9B%E5%BA%94%E5%95%86%E5%90%8D%E7%A7%B0-by-%E5%85%AC%E4%BC%97%E5%8F%B7%E6%90%9C%E7%B4%A2%E5%9B%BD%E9%99%85%E7%AB%99sky-%E5%BE%AE%E4%BF%A1%E5%8F%B7sky-0945",
+  "code_url": "https://update.greasyfork.org/scripts/459378/%E5%9B%BD%E9%99%85%E7%AB%99%E6%90%9C%E5%95%86%E5%93%81%E6%98%BE%E7%A4%BA%E4%BE%9B%E5%BA%94%E5%95%86%E5%90%8D%E7%A7%B0%20By%20%E5%85%AC%E4%BC%97%E5%8F%B7%E6%90%9C%E7%B4%A2%E5%9B%BD%E9%99%85%E7%AB%99Sky%EF%BC%8C%E5%BE%AE%E4%BF%A1%E5%8F%B7sky-0945.user.js",
+  "code_size": 1414,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

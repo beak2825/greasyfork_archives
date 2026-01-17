@@ -1,0 +1,33 @@
+{
+  "id": 487526,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-17T15:26:48.000Z",
+  "code_updated_at": "2025-08-21T17:37:36.000Z",
+  "namespace": "https://github.com/zhifengle",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 13567,
+      "name": "22earth",
+      "created_at": "2015-07-24T01:04:31.000Z",
+      "url": "https://greasyfork.org/users/13567-22earth"
+    }
+  ],
+  "name": "bangumi search select",
+  "description": "search select in bangumi",
+  "url": "https://greasyfork.org/scripts/487526-bangumi-search-select",
+  "code_url": "https://update.greasyfork.org/scripts/487526/bangumi%20search%20select.user.js",
+  "code_size": 178642,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

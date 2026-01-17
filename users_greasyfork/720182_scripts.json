@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419063,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-23T13:26:31.000Z",
+    "code_updated_at": "2020-12-23T13:27:41.000Z",
+    "namespace": "https://flomoapp.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 720182,
+        "name": "ShroXd",
+        "created_at": "2020-12-23T13:26:01.000Z",
+        "url": "https://greasyfork.org/users/720182-shroxd"
+      }
+    ],
+    "name": "ShangZou",
+    "description": "怎么能是发送呢？",
+    "url": "https://greasyfork.org/scripts/419063-shangzou",
+    "code_url": "https://update.greasyfork.org/scripts/419063/ShangZou.user.js",
+    "code_size": 424,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

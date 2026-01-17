@@ -1,0 +1,59 @@
+{
+  "id": 441498,
+  "daily_installs": 0,
+  "total_installs": 154,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-14T10:01:35.000Z",
+  "code_updated_at": "2022-03-14T10:01:34.000Z",
+  "namespace": "HaileyFoxInSA",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 887222,
+      "name": "Hailey Fox",
+      "created_at": "2022-03-14T09:22:24.000Z",
+      "url": "https://greasyfork.org/users/887222-hailey-fox",
+      "scripts": [
+        {
+          "id": 441498,
+          "daily_installs": 0,
+          "total_installs": 154,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-14T10:01:35.000Z",
+          "code_updated_at": "2022-03-14T10:01:34.000Z",
+          "namespace": "HaileyFoxInSA",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pinterest Backup",
+          "description": "Downloads all original images from your Pinterest.com profile. Creates an entry in the Greasemonkey menu, just go to one of your boards and click the option in the Greasemonkey menu.",
+          "url": "https://greasyfork.org/scripts/441498-pinterest-backup",
+          "code_url": "https://update.greasyfork.org/scripts/441498/Pinterest%20Backup.user.js",
+          "code_size": 392533,
+          "license": "MIT License",
+          "version": "22",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pinterest Backup",
+  "description": "Downloads all original images from your Pinterest.com profile. Creates an entry in the Greasemonkey menu, just go to one of your boards and click the option in the Greasemonkey menu.",
+  "url": "https://greasyfork.org/scripts/441498-pinterest-backup",
+  "code_url": "https://update.greasyfork.org/scripts/441498/Pinterest%20Backup.user.js",
+  "code_size": 392533,
+  "license": "MIT License",
+  "version": "22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

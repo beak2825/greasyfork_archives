@@ -1,0 +1,34 @@
+{
+  "id": 476673,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-04T10:26:14.000Z",
+  "code_updated_at": "2023-10-04T10:26:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1098561,
+      "name": "Coderrrrrrrrrrr",
+      "created_at": "2023-06-14T11:30:21.000Z",
+      "url": "https://greasyfork.org/users/1098561-coderrrrrrrrrrr",
+      "scripts": []
+    }
+  ],
+  "name": "阿里法拍列表页",
+  "description": "info collect",
+  "url": "https://greasyfork.org/scripts/476673-%E9%98%BF%E9%87%8C%E6%B3%95%E6%8B%8D%E5%88%97%E8%A1%A8%E9%A1%B5",
+  "code_url": "https://update.greasyfork.org/scripts/476673/%E9%98%BF%E9%87%8C%E6%B3%95%E6%8B%8D%E5%88%97%E8%A1%A8%E9%A1%B5.user.js",
+  "code_size": 2303,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

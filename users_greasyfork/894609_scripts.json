@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442246,
+    "daily_installs": 0,
+    "total_installs": 1038,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-28T11:52:28.000Z",
+    "code_updated_at": "2022-03-28T11:52:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 894609,
+        "name": "song_gld",
+        "created_at": "2022-03-28T11:40:59.000Z",
+        "url": "https://greasyfork.org/users/894609-song-gld"
+      }
+    ],
+    "name": "河北远程学习",
+    "description": "河北远程学习刷时间",
+    "url": "https://greasyfork.org/scripts/442246-%E6%B2%B3%E5%8C%97%E8%BF%9C%E7%A8%8B%E5%AD%A6%E4%B9%A0",
+    "code_url": "https://update.greasyfork.org/scripts/442246/%E6%B2%B3%E5%8C%97%E8%BF%9C%E7%A8%8B%E5%AD%A6%E4%B9%A0.user.js",
+    "code_size": 651,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

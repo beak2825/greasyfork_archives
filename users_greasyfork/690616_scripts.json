@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 490132,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-17T21:45:32.000Z",
+    "code_updated_at": "2024-03-22T09:50:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 690616,
+        "name": "cn-ml",
+        "created_at": "2020-09-26T15:41:27.000Z",
+        "url": "https://greasyfork.org/users/690616-cn-ml"
+      }
+    ],
+    "name": "Forum Scraper",
+    "description": "Scrapes the forum for links and displays them on TMDb.",
+    "url": "https://greasyfork.org/scripts/490132-forum-scraper",
+    "code_url": "https://update.greasyfork.org/scripts/490132/Forum%20Scraper.user.js",
+    "code_size": 13996,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 424336,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-01T15:36:58.000Z",
+    "code_updated_at": "2021-04-01T15:36:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 690616,
+        "name": "cn-ml",
+        "created_at": "2020-09-26T15:41:27.000Z",
+        "url": "https://greasyfork.org/users/690616-cn-ml"
+      }
+    ],
+    "name": "Stud.IP message tagger",
+    "description": "Add bulk tagging and untagging mechanism to message list",
+    "url": "https://greasyfork.org/scripts/424336-stud-ip-message-tagger",
+    "code_url": "https://update.greasyfork.org/scripts/424336/StudIP%20message%20tagger.user.js",
+    "code_size": 3742,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412018,
+    "daily_installs": 1,
+    "total_installs": 195,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-26T15:45:49.000Z",
+    "code_updated_at": "2024-03-17T21:38:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 690616,
+        "name": "cn-ml",
+        "created_at": "2020-09-26T15:41:27.000Z",
+        "url": "https://greasyfork.org/users/690616-cn-ml"
+      }
+    ],
+    "name": "Base64 Decoder",
+    "description": "Decode any Base64 encoded text strings.",
+    "url": "https://greasyfork.org/scripts/412018-base64-decoder",
+    "code_url": "https://update.greasyfork.org/scripts/412018/Base64%20Decoder.user.js",
+    "code_size": 2507,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

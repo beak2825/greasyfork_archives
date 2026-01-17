@@ -1,0 +1,233 @@
+[
+  {
+    "id": 479739,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-13T11:39:25.000Z",
+    "code_updated_at": "2023-11-13T11:48:08.000Z",
+    "namespace": "https://i.zapic.cc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449814,
+        "name": "klxf",
+        "created_at": "2020-02-25T13:43:49.000Z",
+        "url": "https://greasyfork.org/users/449814-klxf"
+      }
+    ],
+    "name": "aaaaaaa",
+    "description": "aaaaa1333 ⚠",
+    "url": "https://greasyfork.org/scripts/479739-aaaaaaa",
+    "code_url": "https://update.greasyfork.org/scripts/479739/aaaaaaa.user.js",
+    "code_size": 294,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 450671,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-03T13:05:19.000Z",
+    "code_updated_at": "2022-09-13T07:15:53.000Z",
+    "namespace": "https://fang.blog.miri.site/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449814,
+        "name": "klxf",
+        "created_at": "2020-02-25T13:43:49.000Z",
+        "url": "https://greasyfork.org/users/449814-klxf"
+      }
+    ],
+    "name": "喜报",
+    "description": "喜 报",
+    "url": "https://greasyfork.org/scripts/450671-%E5%96%9C%E6%8A%A5",
+    "code_url": "https://update.greasyfork.org/scripts/450671/%E5%96%9C%E6%8A%A5.user.js",
+    "code_size": 574681,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429071,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-08T14:31:26.000Z",
+    "code_updated_at": "2021-07-08T14:31:26.000Z",
+    "namespace": "https://fang.blog.miri.site/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449814,
+        "name": "klxf",
+        "created_at": "2020-02-25T13:43:49.000Z",
+        "url": "https://greasyfork.org/users/449814-klxf"
+      }
+    ],
+    "name": "V3 Repair",
+    "description": "修复 MCBBS V3 模板的一些小 bug",
+    "url": "https://greasyfork.org/scripts/429071-v3-repair",
+    "code_url": "https://update.greasyfork.org/scripts/429071/V3%20Repair.user.js",
+    "code_size": 2239,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425244,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-19T15:14:54.000Z",
+    "code_updated_at": "2021-04-19T15:14:54.000Z",
+    "namespace": "https://fang.blog.miri.site",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449814,
+        "name": "klxf",
+        "created_at": "2020-02-25T13:43:49.000Z",
+        "url": "https://greasyfork.org/users/449814-klxf"
+      }
+    ],
+    "name": "避免误发帖",
+    "description": "防止手残点到发帖按钮",
+    "url": "https://greasyfork.org/scripts/425244-%E9%81%BF%E5%85%8D%E8%AF%AF%E5%8F%91%E5%B8%96",
+    "code_url": "https://update.greasyfork.org/scripts/425244/%E9%81%BF%E5%85%8D%E8%AF%AF%E5%8F%91%E5%B8%96.user.js",
+    "code_size": 1053,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 421201,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-04T12:14:08.000Z",
+    "code_updated_at": "2021-02-04T12:14:08.000Z",
+    "namespace": "https://fang.blog.miri.site",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449814,
+        "name": "klxf",
+        "created_at": "2020-02-25T13:43:49.000Z",
+        "url": "https://greasyfork.org/users/449814-klxf"
+      }
+    ],
+    "name": "Fang's MCBBS Style",
+    "description": "为指定帖子添加样式",
+    "url": "https://greasyfork.org/scripts/421201-fang-s-mcbbs-style",
+    "code_url": "https://update.greasyfork.org/scripts/421201/Fang%27s%20MCBBS%20Style.user.js",
+    "code_size": 828,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 418593,
+    "daily_installs": 0,
+    "total_installs": 175,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-13T15:11:24.000Z",
+    "code_updated_at": "2021-01-24T09:49:53.000Z",
+    "namespace": "https://fang.blog.miri.site",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449814,
+        "name": "klxf",
+        "created_at": "2020-02-25T13:43:49.000Z",
+        "url": "https://greasyfork.org/users/449814-klxf"
+      }
+    ],
+    "name": "锁帖页跳转Printable",
+    "description": "在锁帖页面添加一个跳转到Printable的链接",
+    "url": "https://greasyfork.org/scripts/418593-%E9%94%81%E5%B8%96%E9%A1%B5%E8%B7%B3%E8%BD%ACprintable",
+    "code_url": "https://update.greasyfork.org/scripts/418593/%E9%94%81%E5%B8%96%E9%A1%B5%E8%B7%B3%E8%BD%ACPrintable.user.js",
+    "code_size": 1446,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415173,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-31T11:46:39.000Z",
+    "code_updated_at": "2020-11-13T13:44:12.000Z",
+    "namespace": "https://fang.blog.miri.site",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449814,
+        "name": "klxf",
+        "created_at": "2020-02-25T13:43:49.000Z",
+        "url": "https://greasyfork.org/users/449814-klxf"
+      }
+    ],
+    "name": "挖矿记录页翻页",
+    "description": "在挖矿记录页显示翻页按钮",
+    "url": "https://greasyfork.org/scripts/415173-%E6%8C%96%E7%9F%BF%E8%AE%B0%E5%BD%95%E9%A1%B5%E7%BF%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/415173/%E6%8C%96%E7%9F%BF%E8%AE%B0%E5%BD%95%E9%A1%B5%E7%BF%BB%E9%A1%B5.user.js",
+    "code_size": 3635,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

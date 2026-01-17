@@ -1,0 +1,59 @@
+{
+  "id": 454515,
+  "daily_installs": 0,
+  "total_installs": 72,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-09T10:43:00.000Z",
+  "code_updated_at": "2022-11-09T10:43:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 820002,
+      "name": "浜风",
+      "created_at": "2021-09-29T02:11:41.000Z",
+      "url": "https://greasyfork.org/users/820002-%E6%B5%9C%E9%A3%8E",
+      "scripts": [
+        {
+          "id": 454515,
+          "daily_installs": 0,
+          "total_installs": 72,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-09T10:43:00.000Z",
+          "code_updated_at": "2022-11-09T10:43:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "steam自动移除免费游戏/软件",
+          "description": "steam自动移除免费的游戏/软件",
+          "url": "https://greasyfork.org/scripts/454515-steam%E8%87%AA%E5%8A%A8%E7%A7%BB%E9%99%A4%E5%85%8D%E8%B4%B9%E6%B8%B8%E6%88%8F-%E8%BD%AF%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/454515/steam%E8%87%AA%E5%8A%A8%E7%A7%BB%E9%99%A4%E5%85%8D%E8%B4%B9%E6%B8%B8%E6%88%8F%E8%BD%AF%E4%BB%B6.user.js",
+          "code_size": 753,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "steam自动移除免费游戏/软件",
+  "description": "steam自动移除免费的游戏/软件",
+  "url": "https://greasyfork.org/scripts/454515-steam%E8%87%AA%E5%8A%A8%E7%A7%BB%E9%99%A4%E5%85%8D%E8%B4%B9%E6%B8%B8%E6%88%8F-%E8%BD%AF%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/454515/steam%E8%87%AA%E5%8A%A8%E7%A7%BB%E9%99%A4%E5%85%8D%E8%B4%B9%E6%B8%B8%E6%88%8F%E8%BD%AF%E4%BB%B6.user.js",
+  "code_size": 753,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

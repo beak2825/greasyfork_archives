@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421024,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-02T04:59:36.000Z",
+    "code_updated_at": "2021-02-02T04:59:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 733607,
+        "name": "Yeep_XUN",
+        "created_at": "2021-02-02T03:20:46.000Z",
+        "url": "https://greasyfork.org/users/733607-yeep-xun"
+      }
+    ],
+    "name": "有效去除视频评论bug",
+    "description": "可以自动识别视频中评论中的一些乱码bug去除",
+    "url": "https://greasyfork.org/scripts/421024-%E6%9C%89%E6%95%88%E5%8E%BB%E9%99%A4%E8%A7%86%E9%A2%91%E8%AF%84%E8%AE%BAbug",
+    "code_url": "https://update.greasyfork.org/scripts/421024/%E6%9C%89%E6%95%88%E5%8E%BB%E9%99%A4%E8%A7%86%E9%A2%91%E8%AF%84%E8%AE%BAbug.user.js",
+    "code_size": 1987,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

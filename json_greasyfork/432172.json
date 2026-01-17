@@ -1,0 +1,34 @@
+{
+  "id": 432172,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-10T02:52:55.000Z",
+  "code_updated_at": "2021-09-10T02:52:53.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 706238,
+      "name": "772451348",
+      "created_at": "2020-11-18T02:52:50.000Z",
+      "url": "https://greasyfork.org/users/706238-772451348",
+      "scripts": []
+    }
+  ],
+  "name": "华为商城手机抢购 - vmall.com",
+  "description": "2021/9/2上午8:56:31",
+  "url": "https://greasyfork.org/scripts/432172-%E5%8D%8E%E4%B8%BA%E5%95%86%E5%9F%8E%E6%89%8B%E6%9C%BA%E6%8A%A2%E8%B4%AD-vmall-com",
+  "code_url": "https://update.greasyfork.org/scripts/432172/%E5%8D%8E%E4%B8%BA%E5%95%86%E5%9F%8E%E6%89%8B%E6%9C%BA%E6%8A%A2%E8%B4%AD%20-%20vmallcom.user.js",
+  "code_size": 1349,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

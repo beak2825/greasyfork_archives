@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484989,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-16T15:11:45.000Z",
+    "code_updated_at": "2024-01-16T15:11:45.000Z",
+    "namespace": "http://mepuru.info:12345",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1248956,
+        "name": "Mapleawaa",
+        "created_at": "2024-01-16T15:08:09.000Z",
+        "url": "https://greasyfork.org/users/1248956-mapleawaa"
+      }
+    ],
+    "name": "修改嘉立创开源广场的链接为新建标签页打开",
+    "description": "修改嘉立创开源广场的链接为新建标签页打开默认识别<div class=\"search-content\">下的内容其余部分不受影响",
+    "url": "https://greasyfork.org/scripts/484989-%E4%BF%AE%E6%94%B9%E5%98%89%E7%AB%8B%E5%88%9B%E5%BC%80%E6%BA%90%E5%B9%BF%E5%9C%BA%E7%9A%84%E9%93%BE%E6%8E%A5%E4%B8%BA%E6%96%B0%E5%BB%BA%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/484989/%E4%BF%AE%E6%94%B9%E5%98%89%E7%AB%8B%E5%88%9B%E5%BC%80%E6%BA%90%E5%B9%BF%E5%9C%BA%E7%9A%84%E9%93%BE%E6%8E%A5%E4%B8%BA%E6%96%B0%E5%BB%BA%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80.user.js",
+    "code_size": 988,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "114.514",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

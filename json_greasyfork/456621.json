@@ -1,0 +1,59 @@
+{
+  "id": 456621,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-15T14:01:10.000Z",
+  "code_updated_at": "2022-12-15T14:07:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 998089,
+      "name": "Daniel Mckibbin",
+      "created_at": "2022-12-15T13:59:29.000Z",
+      "url": "https://greasyfork.org/users/998089-daniel-mckibbin",
+      "scripts": [
+        {
+          "id": 456621,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-15T14:01:10.000Z",
+          "code_updated_at": "2022-12-15T14:07:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pluralsight Auto Continue Script",
+          "description": "Source: https://gist.github.com/satyendrakumarsingh/c2f0b08281c78e95d8db6f74c93ed3eb",
+          "url": "https://greasyfork.org/scripts/456621-pluralsight-auto-continue-script",
+          "code_url": "https://update.greasyfork.org/scripts/456621/Pluralsight%20Auto%20Continue%20Script.user.js",
+          "code_size": 723,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pluralsight Auto Continue Script",
+  "description": "Source: https://gist.github.com/satyendrakumarsingh/c2f0b08281c78e95d8db6f74c93ed3eb",
+  "url": "https://greasyfork.org/scripts/456621-pluralsight-auto-continue-script",
+  "code_url": "https://update.greasyfork.org/scripts/456621/Pluralsight%20Auto%20Continue%20Script.user.js",
+  "code_size": 723,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

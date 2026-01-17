@@ -1,0 +1,33 @@
+{
+  "id": 455900,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-03T04:43:10.000Z",
+  "code_updated_at": "2022-12-03T04:43:10.000Z",
+  "namespace": "rplanier",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 991507,
+      "name": "rplanier",
+      "created_at": "2022-12-02T21:38:04.000Z",
+      "url": "https://greasyfork.org/users/991507-rplanier"
+    }
+  ],
+  "name": "Lawline Checkpoint Verifier",
+  "description": "Automatically acknowledges and dismisses the Lawline checkpoint verification modal without requiring user interaction",
+  "url": "https://greasyfork.org/scripts/455900-lawline-checkpoint-verifier",
+  "code_url": "https://update.greasyfork.org/scripts/455900/Lawline%20Checkpoint%20Verifier.user.js",
+  "code_size": 1120,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

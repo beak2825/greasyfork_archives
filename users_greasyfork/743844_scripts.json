@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422717,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-05T09:11:17.000Z",
+    "code_updated_at": "2021-03-05T09:34:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743844,
+        "name": "coldfeudal",
+        "created_at": "2021-03-05T09:08:57.000Z",
+        "url": "https://greasyfork.org/users/743844-coldfeudal"
+      }
+    ],
+    "name": "Show Password",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/422717-show-password",
+    "code_url": "https://update.greasyfork.org/scripts/422717/Show%20Password.user.js",
+    "code_size": 746,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

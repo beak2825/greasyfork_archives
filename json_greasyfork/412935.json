@@ -1,0 +1,33 @@
+{
+  "id": 412935,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-10-11T17:44:18.000Z",
+  "code_updated_at": "2020-10-11T18:19:19.000Z",
+  "namespace": "https://greasyfork.org/users/694202",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 694202,
+      "name": "potchy",
+      "created_at": "2020-10-11T17:36:53.000Z",
+      "url": "https://greasyfork.org/users/694202-potchy"
+    }
+  ],
+  "name": "Naruto Arena Fullscreen",
+  "description": "Allows Naruto Arena to run in full screen. Supports mobile.",
+  "url": "https://greasyfork.org/scripts/412935-naruto-arena-fullscreen",
+  "code_url": "https://update.greasyfork.org/scripts/412935/Naruto%20Arena%20Fullscreen.user.js",
+  "code_size": 995,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

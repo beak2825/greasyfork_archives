@@ -1,0 +1,134 @@
+[
+  {
+    "id": 443067,
+    "daily_installs": 0,
+    "total_installs": 209,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-09T15:15:24.000Z",
+    "code_updated_at": "2022-04-09T15:48:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 322398,
+        "name": "Samira",
+        "created_at": "2019-07-31T20:10:13.000Z",
+        "url": "https://greasyfork.org/users/322398-samira"
+      }
+    ],
+    "name": "Flowgame.io Custom Background!",
+    "description": "Change the map background image",
+    "url": "https://greasyfork.org/scripts/443067-flowgame-io-custom-background",
+    "code_url": "https://update.greasyfork.org/scripts/443067/Flowgameio%20Custom%20Background%21.user.js",
+    "code_size": 1485,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431494,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-27T18:30:24.000Z",
+    "code_updated_at": "2021-08-27T18:38:14.000Z",
+    "namespace": "Truffle Pig Public",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 322398,
+        "name": "Samira",
+        "created_at": "2019-07-31T20:10:13.000Z",
+        "url": "https://greasyfork.org/users/322398-samira"
+      }
+    ],
+    "name": "Truffle Pig Public",
+    "description": "Finding all the tasty truffles for you! (Public Edition)",
+    "url": "https://greasyfork.org/scripts/431494-truffle-pig-public",
+    "code_url": "https://update.greasyfork.org/scripts/431494/Truffle%20Pig%20Public.user.js",
+    "code_size": 26062,
+    "license": null,
+    "version": "0.9.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 417317,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-01T20:52:16.000Z",
+    "code_updated_at": "2020-12-05T19:33:07.000Z",
+    "namespace": "Mass Calculation Script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 322398,
+        "name": "Samira",
+        "created_at": "2019-07-31T20:10:13.000Z",
+        "url": "https://greasyfork.org/users/322398-samira"
+      }
+    ],
+    "name": "Mass Calculation Script",
+    "description": "Automatically do mass calculations",
+    "url": "https://greasyfork.org/scripts/417317-mass-calculation-script",
+    "code_url": "https://update.greasyfork.org/scripts/417317/Mass%20Calculation%20Script.user.js",
+    "code_size": 1072,
+    "license": "MIT License",
+    "version": "0.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 416139,
+    "daily_installs": 0,
+    "total_installs": 1527,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-15T13:07:27.000Z",
+    "code_updated_at": "2021-08-15T12:28:48.000Z",
+    "namespace": "Super Color Name Changer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 322398,
+        "name": "Samira",
+        "created_at": "2019-07-31T20:10:13.000Z",
+        "url": "https://greasyfork.org/users/322398-samira"
+      }
+    ],
+    "name": "Color Changer (NOT WORKING)",
+    "description": "NOT WORKING ANY MORE!",
+    "url": "https://greasyfork.org/scripts/416139-color-changer-not-working",
+    "code_url": "https://update.greasyfork.org/scripts/416139/Color%20Changer%20%28NOT%20WORKING%29.user.js",
+    "code_size": 1263,
+    "license": "MIT License",
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

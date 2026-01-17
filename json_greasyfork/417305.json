@@ -1,0 +1,59 @@
+{
+  "id": 417305,
+  "daily_installs": 0,
+  "total_installs": 120,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-01T14:57:33.000Z",
+  "code_updated_at": "2020-12-01T15:32:38.000Z",
+  "namespace": "https://greasyfork.org/users/710998",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 710998,
+      "name": "David Medina",
+      "created_at": "2020-12-01T12:14:15.000Z",
+      "url": "https://greasyfork.org/users/710998-david-medina",
+      "scripts": [
+        {
+          "id": 417305,
+          "daily_installs": 0,
+          "total_installs": 120,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-12-01T14:57:33.000Z",
+          "code_updated_at": "2020-12-01T15:32:38.000Z",
+          "namespace": "https://greasyfork.org/users/710998",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WDA Spain Estadísticas en español",
+          "description": "WDA Spain Estadísticas en español y botón para copiar la imagen y compartirla en WhatsApp y FaceBook",
+          "url": "https://greasyfork.org/scripts/417305-wda-spain-estad%C3%ADsticas-en-espa%C3%B1ol",
+          "code_url": "https://update.greasyfork.org/scripts/417305/WDA%20Spain%20Estad%C3%ADsticas%20en%20espa%C3%B1ol.user.js",
+          "code_size": 6830,
+          "license": null,
+          "version": "0.6",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WDA Spain Estadísticas en español",
+  "description": "WDA Spain Estadísticas en español y botón para copiar la imagen y compartirla en WhatsApp y FaceBook",
+  "url": "https://greasyfork.org/scripts/417305-wda-spain-estad%C3%ADsticas-en-espa%C3%B1ol",
+  "code_url": "https://update.greasyfork.org/scripts/417305/WDA%20Spain%20Estad%C3%ADsticas%20en%20espa%C3%B1ol.user.js",
+  "code_size": 6830,
+  "license": null,
+  "version": "0.6",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

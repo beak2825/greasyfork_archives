@@ -1,0 +1,33 @@
+{
+  "id": 433145,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-29T07:49:30.000Z",
+  "code_updated_at": "2021-09-29T07:58:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 820102,
+      "name": "gy1682005",
+      "created_at": "2021-09-29T07:38:15.000Z",
+      "url": "https://greasyfork.org/users/820102-gy1682005"
+    }
+  ],
+  "name": "爱回收填表助手",
+  "description": "自动填表助手demo",
+  "url": "https://greasyfork.org/scripts/433145-%E7%88%B1%E5%9B%9E%E6%94%B6%E5%A1%AB%E8%A1%A8%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/433145/%E7%88%B1%E5%9B%9E%E6%94%B6%E5%A1%AB%E8%A1%A8%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 8524,
+  "license": null,
+  "version": "210929.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

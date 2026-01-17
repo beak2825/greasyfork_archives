@@ -1,0 +1,59 @@
+{
+  "id": 493390,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-24T18:45:05.000Z",
+  "code_updated_at": "2024-04-25T08:23:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1292699,
+      "name": "SusieGlitter",
+      "created_at": "2024-04-24T18:30:13.000Z",
+      "url": "https://greasyfork.org/users/1292699-susieglitter",
+      "scripts": [
+        {
+          "id": 493390,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-24T18:45:05.000Z",
+          "code_updated_at": "2024-04-25T08:23:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SJTU/ACMOJ 仙贝智慧收集器",
+          "description": "在SJTU/ACMOJ的提交记录中快速筛选公开AC代码",
+          "url": "https://greasyfork.org/scripts/493390-sjtu-acmoj-%E4%BB%99%E8%B4%9D%E6%99%BA%E6%85%A7%E6%94%B6%E9%9B%86%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/493390/SJTUACMOJ%20%E4%BB%99%E8%B4%9D%E6%99%BA%E6%85%A7%E6%94%B6%E9%9B%86%E5%99%A8.user.js",
+          "code_size": 4657,
+          "license": "MIT License",
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SJTU/ACMOJ 仙贝智慧收集器",
+  "description": "在SJTU/ACMOJ的提交记录中快速筛选公开AC代码",
+  "url": "https://greasyfork.org/scripts/493390-sjtu-acmoj-%E4%BB%99%E8%B4%9D%E6%99%BA%E6%85%A7%E6%94%B6%E9%9B%86%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/493390/SJTUACMOJ%20%E4%BB%99%E8%B4%9D%E6%99%BA%E6%85%A7%E6%94%B6%E9%9B%86%E5%99%A8.user.js",
+  "code_size": 4657,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

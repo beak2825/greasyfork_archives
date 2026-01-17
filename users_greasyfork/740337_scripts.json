@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422206,
+    "daily_installs": 0,
+    "total_installs": 2051,
+    "fan_score": "59.8",
+    "good_ratings": 7,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-02-23T15:10:26.000Z",
+    "code_updated_at": "2022-11-25T01:45:34.000Z",
+    "namespace": "https://twitter.com/laversheet",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 740337,
+        "name": "板海苔",
+        "created_at": "2021-02-23T11:58:29.000Z",
+        "url": "https://greasyfork.org/users/740337-%E6%9D%BF%E6%B5%B7%E8%8B%94"
+      }
+    ],
+    "name": "Workaround For Youtube Chat Memory Leaks (obsoleted)",
+    "description": "Fix Youtube Live Chat Memory Leaks",
+    "url": "https://greasyfork.org/scripts/422206-workaround-for-youtube-chat-memory-leaks-obsoleted",
+    "code_url": "https://update.greasyfork.org/scripts/422206/Workaround%20For%20Youtube%20Chat%20Memory%20Leaks%20%28obsoleted%29.user.js",
+    "code_size": 1015,
+    "license": "BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

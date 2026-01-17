@@ -1,0 +1,34 @@
+{
+  "id": 449967,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-22T07:53:25.000Z",
+  "code_updated_at": "2022-08-22T13:04:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 949361,
+      "name": "bigHammer",
+      "created_at": "2022-08-22T07:50:22.000Z",
+      "url": "https://greasyfork.org/users/949361-bighammer",
+      "scripts": []
+    }
+  ],
+  "name": "QbShowIds",
+  "description": "qb中显示商品id，分类id",
+  "url": "https://greasyfork.org/scripts/449967-qbshowids",
+  "code_url": "https://update.greasyfork.org/scripts/449967/QbShowIds.user.js",
+  "code_size": 4859,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

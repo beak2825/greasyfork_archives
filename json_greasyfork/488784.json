@@ -1,0 +1,59 @@
+{
+  "id": 488784,
+  "daily_installs": 0,
+  "total_installs": 991,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-02T09:29:46.000Z",
+  "code_updated_at": "2024-03-02T09:32:45.000Z",
+  "namespace": "https://greasyfork.org/users/sisopc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 943707,
+      "name": "PeterPanWF",
+      "created_at": "2022-08-06T15:06:39.000Z",
+      "url": "https://greasyfork.org/users/943707-peterpanwf",
+      "scripts": [
+        {
+          "id": 488784,
+          "daily_installs": 0,
+          "total_installs": 991,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-02T09:29:46.000Z",
+          "code_updated_at": "2024-03-02T09:32:45.000Z",
+          "namespace": "https://greasyfork.org/users/sisopc",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "JumpToUCASS_VPN",
+          "description": "CNKI JumpToUCASS_VPN",
+          "url": "https://greasyfork.org/scripts/488784-jumptoucass-vpn",
+          "code_url": "https://update.greasyfork.org/scripts/488784/JumpToUCASS_VPN.user.js",
+          "code_size": 2939,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JumpToUCASS_VPN",
+  "description": "CNKI JumpToUCASS_VPN",
+  "url": "https://greasyfork.org/scripts/488784-jumptoucass-vpn",
+  "code_url": "https://update.greasyfork.org/scripts/488784/JumpToUCASS_VPN.user.js",
+  "code_size": 2939,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 494651,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-11T09:11:28.000Z",
+  "code_updated_at": "2024-05-13T14:15:50.000Z",
+  "namespace": "fuShe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1202435,
+      "name": "bixiacanyao",
+      "created_at": "2023-10-23T06:49:44.000Z",
+      "url": "https://greasyfork.org/users/1202435-bixiacanyao",
+      "scripts": [
+        {
+          "id": 494651,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-11T09:11:28.000Z",
+          "code_updated_at": "2024-05-13T14:15:50.000Z",
+          "namespace": "fuShe",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "zb213cs",
+          "description": "河科院一键评教",
+          "url": "https://greasyfork.org/scripts/494651-zb213cs",
+          "code_url": "https://update.greasyfork.org/scripts/494651/zb213cs.user.js",
+          "code_size": 2173,
+          "license": "none",
+          "version": "1.6.3",
+          "locale": "sk",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "zb213cs",
+  "description": "河科院一键评教",
+  "url": "https://greasyfork.org/scripts/494651-zb213cs",
+  "code_url": "https://update.greasyfork.org/scripts/494651/zb213cs.user.js",
+  "code_size": 2173,
+  "license": "none",
+  "version": "1.6.3",
+  "locale": "sk",
+  "deleted": false,
+  "visibility": "public"
+}

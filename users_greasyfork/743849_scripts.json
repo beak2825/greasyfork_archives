@@ -1,0 +1,233 @@
+[
+  {
+    "id": 472413,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-04T09:49:58.000Z",
+    "code_updated_at": "2023-10-22T15:09:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743849,
+        "name": "java-xiaoyi",
+        "created_at": "2021-03-05T09:16:16.000Z",
+        "url": "https://greasyfork.org/users/743849-java-xiaoyi"
+      }
+    ],
+    "name": "-哔哩猫-（自用版）",
+    "description": "练手",
+    "url": "https://greasyfork.org/scripts/472413-%E5%93%94%E5%93%A9%E7%8C%AB-%E8%87%AA%E7%94%A8%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/472413/-%E5%93%94%E5%93%A9%E7%8C%AB-%EF%BC%88%E8%87%AA%E7%94%A8%E7%89%88%EF%BC%89.user.js",
+    "code_size": 141643,
+    "license": "MIT License",
+    "version": "1.1.68",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 448128,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-19T14:42:39.000Z",
+    "code_updated_at": "2022-07-19T14:42:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743849,
+        "name": "java-xiaoyi",
+        "created_at": "2021-03-05T09:16:16.000Z",
+        "url": "https://greasyfork.org/users/743849-java-xiaoyi"
+      }
+    ],
+    "name": "江湖再见",
+    "description": "练手",
+    "url": "https://greasyfork.org/scripts/448128-%E6%B1%9F%E6%B9%96%E5%86%8D%E8%A7%81",
+    "code_url": "https://update.greasyfork.org/scripts/448128/%E6%B1%9F%E6%B9%96%E5%86%8D%E8%A7%81.user.js",
+    "code_size": 891,
+    "license": "MIT License",
+    "version": "3.5.49",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 442067,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-25T07:47:55.000Z",
+    "code_updated_at": "2023-08-04T09:40:54.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743849,
+        "name": "java-xiaoyi",
+        "created_at": "2021-03-05T09:16:16.000Z",
+        "url": "https://greasyfork.org/users/743849-java-xiaoyi"
+      }
+    ],
+    "name": "荒年-javaex",
+    "description": "javaex",
+    "url": "https://greasyfork.org/scripts/442067-%E8%8D%92%E5%B9%B4-javaex",
+    "code_url": "https://update.greasyfork.org/scripts/442067/1230286/%E8%8D%92%E5%B9%B4-javaex.js",
+    "code_size": 183764,
+    "license": null,
+    "version": "0.0.1.20230804094054",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 440979,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-05T13:30:44.000Z",
+    "code_updated_at": "2022-03-05T13:30:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743849,
+        "name": "java-xiaoyi",
+        "created_at": "2021-03-05T09:16:16.000Z",
+        "url": "https://greasyfork.org/users/743849-java-xiaoyi"
+      }
+    ],
+    "name": "战斗吧歌姬！【内群】",
+    "description": "Bilibili直播间，小心心、天选时刻、实物抽奖、活动抽奖、动态抽奖",
+    "url": "https://greasyfork.org/scripts/440979-%E6%88%98%E6%96%97%E5%90%A7%E6%AD%8C%E5%A7%AC-%E5%86%85%E7%BE%A4",
+    "code_url": "https://update.greasyfork.org/scripts/440979/%E6%88%98%E6%96%97%E5%90%A7%E6%AD%8C%E5%A7%AC%EF%BC%81%E3%80%90%E5%86%85%E7%BE%A4%E3%80%91.user.js",
+    "code_size": 770678,
+    "license": "MIT License",
+    "version": "8.2.17",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438764,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-19T03:45:49.000Z",
+    "code_updated_at": "2022-02-20T04:47:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743849,
+        "name": "java-xiaoyi",
+        "created_at": "2021-03-05T09:16:16.000Z",
+        "url": "https://greasyfork.org/users/743849-java-xiaoyi"
+      }
+    ],
+    "name": "哔哩哔哩邮箱验证",
+    "description": "注:",
+    "url": "https://greasyfork.org/scripts/438764-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E9%82%AE%E7%AE%B1%E9%AA%8C%E8%AF%81",
+    "code_url": "https://update.greasyfork.org/scripts/438764/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E9%82%AE%E7%AE%B1%E9%AA%8C%E8%AF%81.user.js",
+    "code_size": 2593,
+    "license": null,
+    "version": "1.2.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 435819,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-20T17:57:30.000Z",
+    "code_updated_at": "2022-02-15T04:36:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743849,
+        "name": "java-xiaoyi",
+        "created_at": "2021-03-05T09:16:16.000Z",
+        "url": "https://greasyfork.org/users/743849-java-xiaoyi"
+      }
+    ],
+    "name": "战斗吧歌姬！【内群】",
+    "description": "Bilibili直播间，小心心、天选时刻、实物抽奖、活动抽奖、动态抽奖",
+    "url": "https://greasyfork.org/scripts/435819-%E6%88%98%E6%96%97%E5%90%A7%E6%AD%8C%E5%A7%AC-%E5%86%85%E7%BE%A4",
+    "code_url": "https://update.greasyfork.org/scripts/435819/%E6%88%98%E6%96%97%E5%90%A7%E6%AD%8C%E5%A7%AC%EF%BC%81%E3%80%90%E5%86%85%E7%BE%A4%E3%80%91.user.js",
+    "code_size": 765764,
+    "license": "MIT License",
+    "version": "10.2.17",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 422731,
+    "daily_installs": 0,
+    "total_installs": 352,
+    "fan_score": "39.6",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-03-05T10:11:57.000Z",
+    "code_updated_at": "2023-08-04T09:44:37.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743849,
+        "name": "java-xiaoyi",
+        "created_at": "2021-03-05T09:16:16.000Z",
+        "url": "https://greasyfork.org/users/743849-java-xiaoyi"
+      }
+    ],
+    "name": "HN-javaex-formVerify",
+    "description": "javaex-formVerify",
+    "url": "https://greasyfork.org/scripts/422731-hn-javaex-formverify",
+    "code_url": "https://update.greasyfork.org/scripts/422731/1230288/HN-javaex-formVerify.js",
+    "code_size": 7777,
+    "license": null,
+    "version": "0.0.1.20230804094437",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

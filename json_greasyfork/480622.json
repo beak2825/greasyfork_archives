@@ -1,0 +1,34 @@
+{
+  "id": 480622,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-23T15:43:31.000Z",
+  "code_updated_at": "2023-11-23T15:50:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1165610,
+      "name": "Hac Ker",
+      "created_at": "2023-09-03T15:14:13.000Z",
+      "url": "https://greasyfork.org/users/1165610-hac-ker",
+      "scripts": []
+    }
+  ],
+  "name": "百度云快捷转换(国内)",
+  "description": "编码转换(国内)",
+  "url": "https://greasyfork.org/scripts/480622-%E7%99%BE%E5%BA%A6%E4%BA%91%E5%BF%AB%E6%8D%B7%E8%BD%AC%E6%8D%A2-%E5%9B%BD%E5%86%85",
+  "code_url": "https://update.greasyfork.org/scripts/480622/%E7%99%BE%E5%BA%A6%E4%BA%91%E5%BF%AB%E6%8D%B7%E8%BD%AC%E6%8D%A2%28%E5%9B%BD%E5%86%85%29.user.js",
+  "code_size": 1910,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

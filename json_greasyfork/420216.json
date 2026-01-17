@@ -1,0 +1,59 @@
+{
+  "id": 420216,
+  "daily_installs": 0,
+  "total_installs": 539,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-14T23:40:24.000Z",
+  "code_updated_at": "2021-01-14T23:42:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 727491,
+      "name": "0x.z13YT",
+      "created_at": "2021-01-14T23:32:59.000Z",
+      "url": "https://greasyfork.org/users/727491-0x-z13yt",
+      "scripts": [
+        {
+          "id": 420216,
+          "daily_installs": 0,
+          "total_installs": 539,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-14T23:40:24.000Z",
+          "code_updated_at": "2021-01-14T23:42:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Oib.io: Rewritten ONLY USE IF U HAVE RING",
+          "description": "kmccord1's latest in oib technology!!!",
+          "url": "https://greasyfork.org/scripts/420216-oib-io-rewritten-only-use-if-u-have-ring",
+          "code_url": "https://update.greasyfork.org/scripts/420216/Oibio%3A%20Rewritten%20ONLY%20USE%20IF%20U%20HAVE%20RING.user.js",
+          "code_size": 3270,
+          "license": null,
+          "version": "69.420",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Oib.io: Rewritten ONLY USE IF U HAVE RING",
+  "description": "kmccord1's latest in oib technology!!!",
+  "url": "https://greasyfork.org/scripts/420216-oib-io-rewritten-only-use-if-u-have-ring",
+  "code_url": "https://update.greasyfork.org/scripts/420216/Oibio%3A%20Rewritten%20ONLY%20USE%20IF%20U%20HAVE%20RING.user.js",
+  "code_size": 3270,
+  "license": null,
+  "version": "69.420",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

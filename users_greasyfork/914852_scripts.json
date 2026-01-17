@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445050,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-16T09:31:23.000Z",
+    "code_updated_at": "2022-05-16T09:31:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 914852,
+        "name": "le0tan",
+        "created_at": "2022-05-16T09:25:26.000Z",
+        "url": "https://greasyfork.org/users/914852-le0tan"
+      }
+    ],
+    "name": "OWL Auto Check Token Drops",
+    "description": "Automatically checks if \"CONNECTED\" button appears, if not refresh the webpage periodically.",
+    "url": "https://greasyfork.org/scripts/445050-owl-auto-check-token-drops",
+    "code_url": "https://update.greasyfork.org/scripts/445050/OWL%20Auto%20Check%20Token%20Drops.user.js",
+    "code_size": 1307,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

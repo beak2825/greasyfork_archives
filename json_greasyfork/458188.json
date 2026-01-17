@@ -1,0 +1,34 @@
+{
+  "id": 458188,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-13T17:28:39.000Z",
+  "code_updated_at": "2023-01-26T02:03:04.000Z",
+  "namespace": "http://obskyr.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1011665,
+      "name": "marciska",
+      "created_at": "2023-01-13T17:15:00.000Z",
+      "url": "https://greasyfork.org/users/1011665-marciska",
+      "scripts": []
+    }
+  ],
+  "name": "Jitai",
+  "description": "Display WaniKani reviews in randomized fonts, for more varied reading training.",
+  "url": "https://greasyfork.org/scripts/458188-jitai",
+  "code_url": "https://update.greasyfork.org/scripts/458188/Jitai.user.js",
+  "code_size": 11913,
+  "license": "MIT License",
+  "version": "1.3.2-webfonts2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

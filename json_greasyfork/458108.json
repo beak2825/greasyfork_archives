@@ -1,0 +1,33 @@
+{
+  "id": 458108,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-12T14:17:54.000Z",
+  "code_updated_at": "2023-01-13T02:32:03.000Z",
+  "namespace": "https://blog.naver.com/yoonch9009",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1010079,
+      "name": "보글(보글)",
+      "created_at": "2023-01-10T18:16:22.000Z",
+      "url": "https://greasyfork.org/users/1010079-%EB%B3%B4%EA%B8%80-%EB%B3%B4%EA%B8%80"
+    }
+  ],
+  "name": "KB 시세 다운로드",
+  "description": "유나바머 매전기본차트용 KB 시세 다운로드",
+  "url": "https://greasyfork.org/scripts/458108-kb-%EC%8B%9C%EC%84%B8-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C",
+  "code_url": "https://update.greasyfork.org/scripts/458108/KB%20%EC%8B%9C%EC%84%B8%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.user.js",
+  "code_size": 2010,
+  "license": null,
+  "version": "0.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

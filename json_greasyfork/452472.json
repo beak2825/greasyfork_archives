@@ -1,0 +1,33 @@
+{
+  "id": 452472,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-04T14:31:17.000Z",
+  "code_updated_at": "2022-10-04T16:35:05.000Z",
+  "namespace": "https://booklive.jp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 675901,
+      "name": "DD1969",
+      "created_at": "2020-08-13T12:22:09.000Z",
+      "url": "https://greasyfork.org/users/675901-dd1969"
+    }
+  ],
+  "name": "BookliveSpider",
+  "description": "Image spider for booklive.jp | V0.2 添加对试读作品的扒图功能",
+  "url": "https://greasyfork.org/scripts/452472-booklivespider",
+  "code_url": "https://update.greasyfork.org/scripts/452472/BookliveSpider.user.js",
+  "code_size": 14341,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 448439,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-25T11:31:39.000Z",
+  "code_updated_at": "2022-08-03T07:19:08.000Z",
+  "namespace": "https://portal.microsofticm.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 939187,
+      "name": "Naveen Kumar Agarwal",
+      "created_at": "2022-07-25T11:29:04.000Z",
+      "url": "https://greasyfork.org/users/939187-naveen-kumar-agarwal",
+      "scripts": [
+        {
+          "id": 448439,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-25T11:31:39.000Z",
+          "code_updated_at": "2022-08-03T07:19:08.000Z",
+          "namespace": "https://portal.microsofticm.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ICM Alert Helper",
+          "description": "Adds some helpful copy/paste commands to use for alerts in ICM",
+          "url": "https://greasyfork.org/scripts/448439-icm-alert-helper",
+          "code_url": "https://update.greasyfork.org/scripts/448439/ICM%20Alert%20Helper.user.js",
+          "code_size": 12012,
+          "license": null,
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ICM Alert Helper",
+  "description": "Adds some helpful copy/paste commands to use for alerts in ICM",
+  "url": "https://greasyfork.org/scripts/448439-icm-alert-helper",
+  "code_url": "https://update.greasyfork.org/scripts/448439/ICM%20Alert%20Helper.user.js",
+  "code_size": 12012,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

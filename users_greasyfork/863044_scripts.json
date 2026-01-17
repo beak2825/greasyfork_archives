@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438305,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-10T06:14:38.000Z",
+    "code_updated_at": "2022-01-10T06:14:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 863044,
+        "name": "JCB",
+        "created_at": "2022-01-10T06:03:22.000Z",
+        "url": "https://greasyfork.org/users/863044-jcb"
+      }
+    ],
+    "name": "师加网自动切换播放列表视频",
+    "description": "师加网，单主题下有多个视频的，定时检测视频是否停止播放并切换当前课程下的下一个视频",
+    "url": "https://greasyfork.org/scripts/438305-%E5%B8%88%E5%8A%A0%E7%BD%91%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E6%92%AD%E6%94%BE%E5%88%97%E8%A1%A8%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/438305/%E5%B8%88%E5%8A%A0%E7%BD%91%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E6%92%AD%E6%94%BE%E5%88%97%E8%A1%A8%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 1454,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422678,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-04T21:53:21.000Z",
+    "code_updated_at": "2021-03-04T22:05:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 566852,
+        "name": "Texugo",
+        "created_at": "2020-05-19T19:40:17.000Z",
+        "url": "https://greasyfork.org/users/566852-texugo"
+      }
+    ],
+    "name": "Remove img title",
+    "description": "Remove every image title of a page",
+    "url": "https://greasyfork.org/scripts/422678-remove-img-title",
+    "code_url": "https://update.greasyfork.org/scripts/422678/Remove%20img%20title.user.js",
+    "code_size": 701,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

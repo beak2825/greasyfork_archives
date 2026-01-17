@@ -1,0 +1,59 @@
+{
+  "id": 414656,
+  "daily_installs": 1,
+  "total_installs": 6969,
+  "fan_score": "39.7",
+  "good_ratings": 6,
+  "ok_ratings": 2,
+  "bad_ratings": 2,
+  "created_at": "2020-10-26T00:39:50.000Z",
+  "code_updated_at": "2020-11-06T06:52:09.000Z",
+  "namespace": "https://github.com/dankdave69",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 698351,
+      "name": "dankdave69",
+      "created_at": "2020-10-26T00:39:06.000Z",
+      "url": "https://greasyfork.org/users/698351-dankdave69",
+      "scripts": [
+        {
+          "id": 414656,
+          "daily_installs": 1,
+          "total_installs": 6969,
+          "fan_score": "39.7",
+          "good_ratings": 6,
+          "ok_ratings": 2,
+          "bad_ratings": 2,
+          "created_at": "2020-10-26T00:39:50.000Z",
+          "code_updated_at": "2020-11-06T06:52:09.000Z",
+          "namespace": "https://github.com/dankdave69",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Browse Instagram Without Logging In (Removes login/register Pop-up and opens up links)",
+          "description": "Removes annoying login/register popup when scrolling down a profile by adding an [ X ] button on the popup and allows you to see posts without logging on.",
+          "url": "https://greasyfork.org/scripts/414656-browse-instagram-without-logging-in-removes-login-register-pop-up-and-opens-up-links",
+          "code_url": "https://update.greasyfork.org/scripts/414656/Browse%20Instagram%20Without%20Logging%20In%20%28Removes%20loginregister%20Pop-up%20and%20opens%20up%20links%29.user.js",
+          "code_size": 2042,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Browse Instagram Without Logging In (Removes login/register Pop-up and opens up links)",
+  "description": "Removes annoying login/register popup when scrolling down a profile by adding an [ X ] button on the popup and allows you to see posts without logging on.",
+  "url": "https://greasyfork.org/scripts/414656-browse-instagram-without-logging-in-removes-login-register-pop-up-and-opens-up-links",
+  "code_url": "https://update.greasyfork.org/scripts/414656/Browse%20Instagram%20Without%20Logging%20In%20%28Removes%20loginregister%20Pop-up%20and%20opens%20up%20links%29.user.js",
+  "code_size": 2042,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

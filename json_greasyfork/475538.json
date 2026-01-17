@@ -1,0 +1,59 @@
+{
+  "id": 475538,
+  "daily_installs": 0,
+  "total_installs": 47,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-17T20:31:52.000Z",
+  "code_updated_at": "2023-09-22T08:07:04.000Z",
+  "namespace": "tiny-tiny-imm-trans",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1175323,
+      "name": "yamada321",
+      "created_at": "2023-09-17T20:23:45.000Z",
+      "url": "https://greasyfork.org/users/1175323-yamada321",
+      "scripts": [
+        {
+          "id": 475538,
+          "daily_installs": 0,
+          "total_installs": 47,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-17T20:31:52.000Z",
+          "code_updated_at": "2023-09-22T08:07:04.000Z",
+          "namespace": "tiny-tiny-imm-trans",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "imm trans",
+          "description": "alt+a to translate page, alt+b to translate input(see comments in bottom of code), alt+c to translate stuff under mouse position. Google translate api call adpated from https://addons.mozilla.org/en-US/firefox/addon/translation-selected-text/?utm_content=addons-manager-reviews-link&utm_medium=firefox-browser&utm_source=firefox-browser which i find very useful.",
+          "url": "https://greasyfork.org/scripts/475538-imm-trans",
+          "code_url": "https://update.greasyfork.org/scripts/475538/imm%20trans.user.js",
+          "code_size": 4718,
+          "license": "MIT License",
+          "version": "0.2.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "imm trans",
+  "description": "alt+a to translate page, alt+b to translate input(see comments in bottom of code), alt+c to translate stuff under mouse position. Google translate api call adpated from https://addons.mozilla.org/en-US/firefox/addon/translation-selected-text/?utm_content=addons-manager-reviews-link&utm_medium=firefox-browser&utm_source=firefox-browser which i find very useful.",
+  "url": "https://greasyfork.org/scripts/475538-imm-trans",
+  "code_url": "https://update.greasyfork.org/scripts/475538/imm%20trans.user.js",
+  "code_size": 4718,
+  "license": "MIT License",
+  "version": "0.2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

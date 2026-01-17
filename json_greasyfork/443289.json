@@ -1,0 +1,33 @@
+{
+  "id": 443289,
+  "daily_installs": 0,
+  "total_installs": 1995,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-13T01:24:00.000Z",
+  "code_updated_at": "2024-02-28T00:51:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 901427,
+      "name": "DeathlyBower959",
+      "created_at": "2022-04-13T01:16:44.000Z",
+      "url": "https://greasyfork.org/users/901427-deathlybower959"
+    }
+  ],
+  "name": "Brainly Bypass",
+  "description": "Remove paywall from Brainly!",
+  "url": "https://greasyfork.org/scripts/443289-brainly-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/443289/Brainly%20Bypass.user.js",
+  "code_size": 2454,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

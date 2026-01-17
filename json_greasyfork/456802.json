@@ -1,0 +1,33 @@
+{
+  "id": 456802,
+  "daily_installs": 0,
+  "total_installs": 169,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-19T03:38:11.000Z",
+  "code_updated_at": "2022-12-19T03:38:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 990797,
+      "name": "thunder-sword",
+      "created_at": "2022-12-01T14:27:41.000Z",
+      "url": "https://greasyfork.org/users/990797-thunder-sword"
+    }
+  ],
+  "name": "语雀思维导图一键保存",
+  "description": "语雀思维导图一键保存，保存html，自动询问要保存的文件名，自动添加时间戳",
+  "url": "https://greasyfork.org/scripts/456802-%E8%AF%AD%E9%9B%80%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE%E4%B8%80%E9%94%AE%E4%BF%9D%E5%AD%98",
+  "code_url": "https://update.greasyfork.org/scripts/456802/%E8%AF%AD%E9%9B%80%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE%E4%B8%80%E9%94%AE%E4%BF%9D%E5%AD%98.user.js",
+  "code_size": 4974,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

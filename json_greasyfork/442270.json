@@ -1,0 +1,59 @@
+{
+  "id": 442270,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-28T19:51:58.000Z",
+  "code_updated_at": "2022-03-28T19:51:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 395512,
+      "name": "Groodion",
+      "created_at": "2019-11-06T20:15:29.000Z",
+      "url": "https://greasyfork.org/users/395512-groodion",
+      "scripts": [
+        {
+          "id": 442270,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-28T19:51:58.000Z",
+          "code_updated_at": "2022-03-28T19:51:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Meteoblue Astro Now",
+          "description": "Highlight current hour in meteoblue \"Astronomy Seeing\"-table",
+          "url": "https://greasyfork.org/scripts/442270-meteoblue-astro-now",
+          "code_url": "https://update.greasyfork.org/scripts/442270/Meteoblue%20Astro%20Now.user.js",
+          "code_size": 1031,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Meteoblue Astro Now",
+  "description": "Highlight current hour in meteoblue \"Astronomy Seeing\"-table",
+  "url": "https://greasyfork.org/scripts/442270-meteoblue-astro-now",
+  "code_url": "https://update.greasyfork.org/scripts/442270/Meteoblue%20Astro%20Now.user.js",
+  "code_size": 1031,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

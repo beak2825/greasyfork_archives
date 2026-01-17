@@ -1,0 +1,33 @@
+{
+  "id": 419083,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-23T23:23:17.000Z",
+  "code_updated_at": "2020-12-23T23:23:17.000Z",
+  "namespace": "https://github.com/argit2/tweetdeck-gallery",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 469070,
+      "name": "argit2",
+      "created_at": "2020-03-25T21:01:02.000Z",
+      "url": "https://greasyfork.org/users/469070-argit2"
+    }
+  ],
+  "name": "Tweetdeck gallery",
+  "description": "Allows navigating through tweets in tweetdeck by keyboard shorcuts. Also makes ctrl c copy the link of the currently loaded tweet.",
+  "url": "https://greasyfork.org/scripts/419083-tweetdeck-gallery",
+  "code_url": "https://update.greasyfork.org/scripts/419083/Tweetdeck%20gallery.user.js",
+  "code_size": 7174,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

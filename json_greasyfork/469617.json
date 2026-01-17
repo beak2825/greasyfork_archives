@@ -1,0 +1,33 @@
+{
+  "id": 469617,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-28T06:04:51.000Z",
+  "code_updated_at": "2023-06-28T06:04:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1113865,
+      "name": "googlwpp",
+      "created_at": "2023-06-28T02:51:15.000Z",
+      "url": "https://greasyfork.org/users/1113865-googlwpp"
+    }
+  ],
+  "name": "LeetCode Problem Copyer",
+  "description": "复制Leetcode的题目的文本或HTML",
+  "url": "https://greasyfork.org/scripts/469617-leetcode-problem-copyer",
+  "code_url": "https://update.greasyfork.org/scripts/469617/LeetCode%20Problem%20Copyer.user.js",
+  "code_size": 3081,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

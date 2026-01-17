@@ -1,0 +1,33 @@
+{
+  "id": 488603,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-29T08:44:01.000Z",
+  "code_updated_at": "2024-02-29T08:58:44.000Z",
+  "namespace": "https://greasyfork.org/users/1243131",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1243131,
+      "name": "konyakest",
+      "created_at": "2024-01-04T09:36:17.000Z",
+      "url": "https://greasyfork.org/users/1243131-konyakest"
+    }
+  ],
+  "name": "randomOJ",
+  "description": "make NFLSOJ random",
+  "url": "https://greasyfork.org/scripts/488603-randomoj",
+  "code_url": "https://update.greasyfork.org/scripts/488603/randomOJ.user.js",
+  "code_size": 1887,
+  "license": null,
+  "version": "0.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

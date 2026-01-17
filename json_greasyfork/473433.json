@@ -1,0 +1,59 @@
+{
+  "id": 473433,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-19T08:30:24.000Z",
+  "code_updated_at": "2023-08-20T04:05:52.000Z",
+  "namespace": "https://kaka365.cc/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1154741,
+      "name": "batcom",
+      "created_at": "2023-08-19T08:21:50.000Z",
+      "url": "https://greasyfork.org/users/1154741-batcom",
+      "scripts": [
+        {
+          "id": 553158,
+          "daily_installs": 1,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-20T04:15:59.000Z",
+          "code_updated_at": "2025-10-20T04:21:27.000Z",
+          "namespace": "http://mng.jjvip.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bio",
+          "description": "生物一键快速添加",
+          "url": "https://greasyfork.org/scripts/553158-bio",
+          "code_url": "https://update.greasyfork.org/scripts/553158/Bio.user.js",
+          "code_size": 24718,
+          "license": "GPL License",
+          "version": "0.2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "影视幻灯推荐",
+  "description": "影视自动幻灯推荐",
+  "url": "https://greasyfork.org/scripts/473433-%E5%BD%B1%E8%A7%86%E5%B9%BB%E7%81%AF%E6%8E%A8%E8%8D%90",
+  "code_url": "https://update.greasyfork.org/scripts/473433/%E5%BD%B1%E8%A7%86%E5%B9%BB%E7%81%AF%E6%8E%A8%E8%8D%90.user.js",
+  "code_size": 15248,
+  "license": "GPL License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

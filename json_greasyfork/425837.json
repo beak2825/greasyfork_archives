@@ -1,0 +1,33 @@
+{
+  "id": 425837,
+  "daily_installs": 0,
+  "total_installs": 9409,
+  "fan_score": "46.7",
+  "good_ratings": 5,
+  "ok_ratings": 3,
+  "bad_ratings": 0,
+  "created_at": "2021-05-02T18:20:25.000Z",
+  "code_updated_at": "2021-05-02T19:59:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 688946,
+      "name": "kalila-cc",
+      "created_at": "2020-09-19T11:39:10.000Z",
+      "url": "https://greasyfork.org/users/688946-kalila-cc"
+    }
+  ],
+  "name": "UOOC assistant beta",
+  "description": "【使用前先看介绍/有问题可反馈】UOOC 优课联盟助手 (内测版) (UOOC assistant beta)：可选是否倍速 (若取消勾选则一倍速播放)，可选是否静音 (若取消勾选则恢复原音量)，可选是否播放 (若取消勾选则暂停播放)，可选是否连播 (若取消勾选则循环播放)，离开页面保持视频状态，自动回答视频中途弹出问题，可复制已提交测验题目及答案；键盘左右方向键可以控制视频快进/快退，上下方向键可以控制音量增大/减小，空格键可以控制播放/暂停；如果视频标题下面出现 `倍速/静音/播放/连播` 选项说明脚本正常启动运行。",
+  "url": "https://greasyfork.org/scripts/425837-uooc-assistant-beta",
+  "code_url": "https://update.greasyfork.org/scripts/425837/UOOC%20assistant%20beta.user.js",
+  "code_size": 15863,
+  "license": null,
+  "version": "1.0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

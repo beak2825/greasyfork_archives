@@ -1,0 +1,68 @@
+[
+  {
+    "id": 464614,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-22T11:54:37.000Z",
+    "code_updated_at": "2023-04-22T11:54:37.000Z",
+    "namespace": "https://github.com/moontai0724",
+    "support_url": "https://github.com/moontai0724/shopee-product-link-share-script/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165315,
+        "name": "moontai0724",
+        "created_at": "2018-01-02T16:04:41.000Z",
+        "url": "https://greasyfork.org/users/165315-moontai0724"
+      }
+    ],
+    "name": "Shopee Product Link Share Script",
+    "description": "A script adds button to quickly copy product link without extra text.",
+    "url": "https://greasyfork.org/scripts/464614-shopee-product-link-share-script",
+    "code_url": "https://update.greasyfork.org/scripts/464614/Shopee%20Product%20Link%20Share%20Script.user.js",
+    "code_size": 6901,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 430114,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-30T11:35:42.000Z",
+    "code_updated_at": "2022-01-28T07:32:34.000Z",
+    "namespace": "https://www.moontai0724.tw",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165315,
+        "name": "moontai0724",
+        "created_at": "2018-01-02T16:04:41.000Z",
+        "url": "https://greasyfork.org/users/165315-moontai0724"
+      }
+    ],
+    "name": "Gather Town Capture",
+    "description": "Capture screen without UI on gather.town in just a press.",
+    "url": "https://greasyfork.org/scripts/430114-gather-town-capture",
+    "code_url": "https://update.greasyfork.org/scripts/430114/Gather%20Town%20Capture.user.js",
+    "code_size": 4223,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466377,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-16T00:29:26.000Z",
+    "code_updated_at": "2025-09-07T14:21:36.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1079537,
+        "name": "ErshanChandor",
+        "created_at": "2023-05-15T13:27:05.000Z",
+        "url": "https://greasyfork.org/users/1079537-ershanchandor"
+      }
+    ],
+    "name": "arca.live page mover",
+    "description": "2024. 5. 30. 오후 4:58:27",
+    "url": "https://greasyfork.org/scripts/466377-arca-live-page-mover",
+    "code_url": "https://update.greasyfork.org/scripts/466377/arcalive%20page%20mover.user.js",
+    "code_size": 2098,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 489425,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-09T19:22:46.000Z",
+  "code_updated_at": "2025-03-09T03:29:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1271551,
+      "name": "YGL",
+      "created_at": "2024-03-07T21:53:22.000Z",
+      "url": "https://greasyfork.org/users/1271551-ygl"
+    }
+  ],
+  "name": "Chess.com Anti-Misclick",
+  "description": "Ajoute un délai anti-misclick sur Chess.com avec bouton d'activation",
+  "url": "https://greasyfork.org/scripts/489425-chess-com-anti-misclick",
+  "code_url": "https://update.greasyfork.org/scripts/489425/Chesscom%20Anti-Misclick.user.js",
+  "code_size": 3724,
+  "license": "OpenGPL 3.0",
+  "version": "2.0",
+  "locale": "hi",
+  "deleted": false,
+  "visibility": "public"
+}

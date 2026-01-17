@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463675,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-10T10:38:39.000Z",
+    "code_updated_at": "2023-04-10T10:38:39.000Z",
+    "namespace": "Petik",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1055334,
+        "name": "FE777",
+        "created_at": "2023-04-07T12:47:45.000Z",
+        "url": "https://greasyfork.org/users/1055334-fe777"
+      }
+    ],
+    "name": "Petik(高效）",
+    "description": "辅助抢购大麦网门票自动提交订单：只支持网页普通场次、手机浏览器普通场次",
+    "url": "https://greasyfork.org/scripts/463675-petik-%E9%AB%98%E6%95%88",
+    "code_url": "https://update.greasyfork.org/scripts/463675/Petik%28%E9%AB%98%E6%95%88%EF%BC%89.user.js",
+    "code_size": 30305,
+    "license": "secret11979",
+    "version": "2.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

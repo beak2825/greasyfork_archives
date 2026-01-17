@@ -30,6 +30,171 @@
     "version": "2026-01-08",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477521,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-16T09:50:09.000Z",
+    "code_updated_at": "2023-10-16T09:52:29.000Z",
+    "namespace": "http://www.52love1.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388227,
+        "name": "best-love",
+        "created_at": "2019-10-18T06:49:58.000Z",
+        "url": "https://greasyfork.org/users/388227-best-love"
+      }
+    ],
+    "name": "习题生成器去除水印",
+    "description": "习题生成器去除打印水印",
+    "url": "https://greasyfork.org/scripts/477521-%E4%B9%A0%E9%A2%98%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%BB%E9%99%A4%E6%B0%B4%E5%8D%B0",
+    "code_url": "https://update.greasyfork.org/scripts/477521/%E4%B9%A0%E9%A2%98%E7%94%9F%E6%88%90%E5%99%A8%E5%8E%BB%E9%99%A4%E6%B0%B4%E5%8D%B0.user.js",
+    "code_size": 786,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470874,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-15T06:34:07.000Z",
+    "code_updated_at": "2023-07-15T06:34:07.000Z",
+    "namespace": "http://www.52lovehome.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388227,
+        "name": "best-love",
+        "created_at": "2019-10-18T06:49:58.000Z",
+        "url": "https://greasyfork.org/users/388227-best-love"
+      }
+    ],
+    "name": "cctv等真实m38u地址",
+    "description": "cctv等获取真实m38u地址并发送猫抓解析下载",
+    "url": "https://greasyfork.org/scripts/470874-cctv%E7%AD%89%E7%9C%9F%E5%AE%9Em38u%E5%9C%B0%E5%9D%80",
+    "code_url": "https://update.greasyfork.org/scripts/470874/cctv%E7%AD%89%E7%9C%9F%E5%AE%9Em38u%E5%9C%B0%E5%9D%80.user.js",
+    "code_size": 1621,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 467635,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-01T09:22:31.000Z",
+    "code_updated_at": "2023-06-01T09:22:31.000Z",
+    "namespace": "http://www.52lovehome.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388227,
+        "name": "best-love",
+        "created_at": "2019-10-18T06:49:58.000Z",
+        "url": "https://greasyfork.org/users/388227-best-love"
+      }
+    ],
+    "name": "注册测绘师继续教育平台自动选课",
+    "description": "注册测绘师继续教育平台跳过验证码,后台不暂停继续播放",
+    "url": "https://greasyfork.org/scripts/467635-%E6%B3%A8%E5%86%8C%E6%B5%8B%E7%BB%98%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E9%80%89%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/467635/%E6%B3%A8%E5%86%8C%E6%B5%8B%E7%BB%98%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E9%80%89%E8%AF%BE.user.js",
+    "code_size": 3399,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 423466,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-18T02:34:03.000Z",
+    "code_updated_at": "2023-01-03T06:10:37.000Z",
+    "namespace": "http://www.52love1.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388227,
+        "name": "best-love",
+        "created_at": "2019-10-18T06:49:58.000Z",
+        "url": "https://greasyfork.org/users/388227-best-love"
+      }
+    ],
+    "name": "常州继续教育学习(新版无flash)",
+    "description": "常州继续教育学习学习页面自动下一节",
+    "url": "https://greasyfork.org/scripts/423466-%E5%B8%B8%E5%B7%9E%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%AD%A6%E4%B9%A0-%E6%96%B0%E7%89%88%E6%97%A0flash",
+    "code_url": "https://update.greasyfork.org/scripts/423466/%E5%B8%B8%E5%B7%9E%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%AD%A6%E4%B9%A0%28%E6%96%B0%E7%89%88%E6%97%A0flash%29.user.js",
+    "code_size": 1484,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 422688,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-05T06:07:40.000Z",
+    "code_updated_at": "2021-03-06T00:52:03.000Z",
+    "namespace": "http://www.52love1.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388227,
+        "name": "best-love",
+        "created_at": "2019-10-18T06:49:58.000Z",
+        "url": "https://greasyfork.org/users/388227-best-love"
+      }
+    ],
+    "name": "常州继续教育学习全自动选择未学课程",
+    "description": "常州继续教育学习全自动选择未学课程，配合自动学习插件使用",
+    "url": "https://greasyfork.org/scripts/422688-%E5%B8%B8%E5%B7%9E%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%AD%A6%E4%B9%A0%E5%85%A8%E8%87%AA%E5%8A%A8%E9%80%89%E6%8B%A9%E6%9C%AA%E5%AD%A6%E8%AF%BE%E7%A8%8B",
+    "code_url": "https://update.greasyfork.org/scripts/422688/%E5%B8%B8%E5%B7%9E%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%AD%A6%E4%B9%A0%E5%85%A8%E8%87%AA%E5%8A%A8%E9%80%89%E6%8B%A9%E6%9C%AA%E5%AD%A6%E8%AF%BE%E7%A8%8B.user.js",
+    "code_size": 3901,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

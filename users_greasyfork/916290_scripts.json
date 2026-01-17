@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455971,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-04T05:20:04.000Z",
+    "code_updated_at": "2024-12-12T09:33:50.000Z",
+    "namespace": "https://greasyfork.org/users/916290",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 916290,
+        "name": "Lobote",
+        "created_at": "2022-05-20T02:02:03.000Z",
+        "url": "https://greasyfork.org/users/916290-lobote"
+      }
+    ],
+    "name": "衡水学院URP教务系统助手",
+    "description": "自动完成教学评估~",
+    "url": "https://greasyfork.org/scripts/455971-%E8%A1%A1%E6%B0%B4%E5%AD%A6%E9%99%A2urp%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/455971/%E8%A1%A1%E6%B0%B4%E5%AD%A6%E9%99%A2URP%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 2757,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

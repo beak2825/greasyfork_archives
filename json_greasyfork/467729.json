@@ -1,0 +1,33 @@
+{
+  "id": 467729,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-02T14:23:44.000Z",
+  "code_updated_at": "2023-06-02T14:28:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1089194,
+      "name": "kb5000",
+      "created_at": "2023-06-02T14:13:57.000Z",
+      "url": "https://greasyfork.org/users/1089194-kb5000"
+    }
+  ],
+  "name": "YouTube Music Auto-Like",
+  "description": "The YouTube Music Auto-Like is a Tampermonkey script that enhances your YouTube Music experience by enabling automatic liking of the currently playing song through a specific key press, even when the YouTube Music page is running in the background. The script works in tandem with a concurrently running Python script for seamless operation. Ensure both scripts are active for the best experience.",
+  "url": "https://greasyfork.org/scripts/467729-youtube-music-auto-like",
+  "code_url": "https://update.greasyfork.org/scripts/467729/YouTube%20Music%20Auto-Like.user.js",
+  "code_size": 1335,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

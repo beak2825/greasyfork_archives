@@ -1,0 +1,167 @@
+[
+  {
+    "id": 432389,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-14T07:19:51.000Z",
+    "code_updated_at": "2021-09-14T07:19:51.000Z",
+    "namespace": "https://greasyfork.org/users/12821",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12821,
+        "name": "Клешнерукий",
+        "created_at": "2015-06-28T19:19:08.000Z",
+        "url": "https://greasyfork.org/users/12821-%D0%BA%D0%BB%D0%B5%D1%88%D0%BD%D0%B5%D1%80%D1%83%D0%BA%D0%B8%D0%B9"
+      }
+    ],
+    "name": "post_message",
+    "description": "Отправка сообщений",
+    "url": "https://greasyfork.org/scripts/432389-post-message",
+    "code_url": "https://update.greasyfork.org/scripts/432389/post_message.user.js",
+    "code_size": 912,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 423017,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-10T17:50:24.000Z",
+    "code_updated_at": "2021-03-10T19:17:22.000Z",
+    "namespace": "https://greasyfork.org/users/12821",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12821,
+        "name": "Клешнерукий",
+        "created_at": "2015-06-28T19:19:08.000Z",
+        "url": "https://greasyfork.org/users/12821-%D0%BA%D0%BB%D0%B5%D1%88%D0%BD%D0%B5%D1%80%D1%83%D0%BA%D0%B8%D0%B9"
+      }
+    ],
+    "name": "hwm_forum_t_filter",
+    "description": "Фильтр по совпадению текста на форуме",
+    "url": "https://greasyfork.org/scripts/423017-hwm-forum-t-filter",
+    "code_url": "https://update.greasyfork.org/scripts/423017/hwm_forum_t_filter.user.js",
+    "code_size": 2117,
+    "license": null,
+    "version": "0.4.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421066,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-02T21:22:08.000Z",
+    "code_updated_at": "2021-02-02T21:31:46.000Z",
+    "namespace": "https://greasyfork.org/users/12821",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12821,
+        "name": "Клешнерукий",
+        "created_at": "2015-06-28T19:19:08.000Z",
+        "url": "https://greasyfork.org/users/12821-%D0%BA%D0%BB%D0%B5%D1%88%D0%BD%D0%B5%D1%80%D1%83%D0%BA%D0%B8%D0%B9"
+      }
+    ],
+    "name": "hwm_fray",
+    "description": "Рабы. Вы все рабы!",
+    "url": "https://greasyfork.org/scripts/421066-hwm-fray",
+    "code_url": "https://update.greasyfork.org/scripts/421066/hwm_fray.user.js",
+    "code_size": 8520,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417169,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-30T19:41:01.000Z",
+    "code_updated_at": "2020-11-30T20:06:16.000Z",
+    "namespace": "https://greasyfork.org/users/12821",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12821,
+        "name": "Клешнерукий",
+        "created_at": "2015-06-28T19:19:08.000Z",
+        "url": "https://greasyfork.org/users/12821-%D0%BA%D0%BB%D0%B5%D1%88%D0%BD%D0%B5%D1%80%D1%83%D0%BA%D0%B8%D0%B9"
+      }
+    ],
+    "name": "hwm_chat_mod",
+    "description": "Изменение стилей чата",
+    "url": "https://greasyfork.org/scripts/417169-hwm-chat-mod",
+    "code_url": "https://update.greasyfork.org/scripts/417169/hwm_chat_mod.user.js",
+    "code_size": 1929,
+    "license": null,
+    "version": "1.0.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416581,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-22T14:01:40.000Z",
+    "code_updated_at": "2024-04-20T12:30:17.000Z",
+    "namespace": "https://greasyfork.org/ru/users/170936",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12821,
+        "name": "Клешнерукий",
+        "created_at": "2015-06-28T19:19:08.000Z",
+        "url": "https://greasyfork.org/users/12821-%D0%BA%D0%BB%D0%B5%D1%88%D0%BD%D0%B5%D1%80%D1%83%D0%BA%D0%B8%D0%B9"
+      }
+    ],
+    "name": "hwm_chat_informer",
+    "description": "Оповещение о новых сообщениях чата",
+    "url": "https://greasyfork.org/scripts/416581-hwm-chat-informer",
+    "code_url": "https://update.greasyfork.org/scripts/416581/hwm_chat_informer.user.js",
+    "code_size": 1446,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

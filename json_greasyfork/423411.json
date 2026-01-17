@@ -1,0 +1,33 @@
+{
+  "id": 423411,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-17T10:47:21.000Z",
+  "code_updated_at": "2021-03-17T10:47:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 748269,
+      "name": "FELINA BOSS",
+      "created_at": "2021-03-17T10:40:46.000Z",
+      "url": "https://greasyfork.org/users/748269-felina-boss"
+    }
+  ],
+  "name": "FELINA MOD",
+  "description": "A not obainable mod in the pre alpha.",
+  "url": "https://greasyfork.org/scripts/423411-felina-mod",
+  "code_url": "https://update.greasyfork.org/scripts/423411/FELINA%20MOD.user.js",
+  "code_size": 1351,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 428747,
+  "daily_installs": 0,
+  "total_installs": 445,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-01T07:14:19.000Z",
+  "code_updated_at": "2021-07-27T08:49:59.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 789173,
+      "name": "wangjiafeng93",
+      "created_at": "2021-07-01T06:04:17.000Z",
+      "url": "https://greasyfork.org/users/789173-wangjiafeng93",
+      "scripts": [
+        {
+          "id": 428747,
+          "daily_installs": 0,
+          "total_installs": 445,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-07-01T07:14:19.000Z",
+          "code_updated_at": "2021-07-27T08:49:59.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "hao123-每日一新",
+          "description": "2021/7/1上午11:02:49 hao123去广告，背景图每日一换",
+          "url": "https://greasyfork.org/scripts/428747-hao123-%E6%AF%8F%E6%97%A5%E4%B8%80%E6%96%B0",
+          "code_url": "https://update.greasyfork.org/scripts/428747/hao123-%E6%AF%8F%E6%97%A5%E4%B8%80%E6%96%B0.user.js",
+          "code_size": 1790,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "hao123-每日一新",
+  "description": "2021/7/1上午11:02:49 hao123去广告，背景图每日一换",
+  "url": "https://greasyfork.org/scripts/428747-hao123-%E6%AF%8F%E6%97%A5%E4%B8%80%E6%96%B0",
+  "code_url": "https://update.greasyfork.org/scripts/428747/hao123-%E6%AF%8F%E6%97%A5%E4%B8%80%E6%96%B0.user.js",
+  "code_size": 1790,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

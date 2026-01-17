@@ -1,0 +1,34 @@
+{
+  "id": 491114,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-28T15:51:33.000Z",
+  "code_updated_at": "2024-03-28T16:16:47.000Z",
+  "namespace": "easy-farmer",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 429985,
+      "name": "l3mpik",
+      "created_at": "2019-12-30T16:05:47.000Z",
+      "url": "https://greasyfork.org/users/429985-l3mpik",
+      "scripts": []
+    }
+  ],
+  "name": "plemiona.pl easy-farmer by l3mpik",
+  "description": "Easy farmer by l3mpik",
+  "url": "https://greasyfork.org/scripts/491114-plemiona-pl-easy-farmer-by-l3mpik",
+  "code_url": "https://update.greasyfork.org/scripts/491114/plemionapl%20easy-farmer%20by%20l3mpik.user.js",
+  "code_size": 2874,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

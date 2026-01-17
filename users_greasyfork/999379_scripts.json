@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456763,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-18T07:47:46.000Z",
+    "code_updated_at": "2022-12-18T07:57:37.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 999379,
+        "name": "ViolentCat",
+        "created_at": "2022-12-18T07:37:38.000Z",
+        "url": "https://greasyfork.org/users/999379-violentcat"
+      }
+    ],
+    "name": "PtMovieHelper",
+    "description": "用OMDB补全pt(现在只有mt)站上缺失的东西",
+    "url": "https://greasyfork.org/scripts/456763-ptmoviehelper",
+    "code_url": "https://update.greasyfork.org/scripts/456763/PtMovieHelper.user.js",
+    "code_size": 3901,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

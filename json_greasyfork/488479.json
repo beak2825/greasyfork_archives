@@ -1,0 +1,34 @@
+{
+  "id": 488479,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-27T22:00:21.000Z",
+  "code_updated_at": "2024-02-27T22:10:16.000Z",
+  "namespace": "http://userstyles.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 946844,
+      "name": "Anu8i5",
+      "created_at": "2022-08-16T00:26:08.000Z",
+      "url": "https://greasyfork.org/users/946844-anu8i5",
+      "scripts": []
+    }
+  ],
+  "name": "Strong Font Rendering Like Safari (0-0-1)",
+  "description": "Wanted a darker effect so this is a tweaked version of original script and is based on ... Firefox Strong Font Rendering (Like Safari)  Since Firefox 3.5 Font rendering style http://userstyles.org/styles/20442 at userstyles.org got so huge success, I thought of refining the code of rendering in Firefox 3.6.9 and above...",
+  "url": "https://greasyfork.org/scripts/488479-strong-font-rendering-like-safari-0-0-1",
+  "code_url": "https://update.greasyfork.org/scripts/488479/Strong%20Font%20Rendering%20Like%20Safari%20%280-0-1%29.user.js",
+  "code_size": 1494,
+  "license": "no license",
+  "version": "0.20100926133214",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

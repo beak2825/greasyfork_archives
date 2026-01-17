@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479152,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-06T05:53:38.000Z",
+    "code_updated_at": "2023-11-06T05:53:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1211840,
+        "name": "又玄",
+        "created_at": "2023-11-06T05:50:00.000Z",
+        "url": "https://greasyfork.org/users/1211840-%E5%8F%88%E7%8E%84"
+      }
+    ],
+    "name": "boss直聘批量投递工具",
+    "description": "boss直聘批量投递",
+    "url": "https://greasyfork.org/scripts/479152-boss%E7%9B%B4%E8%81%98%E6%89%B9%E9%87%8F%E6%8A%95%E9%80%92%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/479152/boss%E7%9B%B4%E8%81%98%E6%89%B9%E9%87%8F%E6%8A%95%E9%80%92%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 3103,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

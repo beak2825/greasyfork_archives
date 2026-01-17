@@ -1,0 +1,33 @@
+{
+  "id": 414685,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-26T22:54:01.000Z",
+  "code_updated_at": "2021-05-06T00:37:56.000Z",
+  "namespace": "AtoZ",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 234817,
+      "name": "AlienZ",
+      "created_at": "2018-12-24T21:54:17.000Z",
+      "url": "https://greasyfork.org/users/234817-alienz"
+    }
+  ],
+  "name": "AtoZ Race Helper DEV",
+  "description": "Numbers race tracks to assist in choosing car. (For now)",
+  "url": "https://greasyfork.org/scripts/414685-atoz-race-helper-dev",
+  "code_url": "https://update.greasyfork.org/scripts/414685/AtoZ%20Race%20Helper%20DEV.user.js",
+  "code_size": 2635,
+  "license": null,
+  "version": "0.0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

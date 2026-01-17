@@ -30,6 +30,138 @@
     "version": "1.2.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488708,
+    "daily_installs": 0,
+    "total_installs": 137,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-01T13:12:03.000Z",
+    "code_updated_at": "2024-11-04T15:24:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949709,
+        "name": "Tokthree",
+        "created_at": "2022-08-23T03:39:27.000Z",
+        "url": "https://greasyfork.org/users/949709-tokthree"
+      }
+    ],
+    "name": "Rebekah's Buddy List Utilities",
+    "description": "Provides the ability to sort friends using custom categories and trade with them directly.",
+    "url": "https://greasyfork.org/scripts/488708-rebekah-s-buddy-list-utilities",
+    "code_url": "https://update.greasyfork.org/scripts/488708/Rebekah%27s%20Buddy%20List%20Utilities.user.js",
+    "code_size": 26687,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 480766,
+    "daily_installs": 0,
+    "total_installs": 183,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-25T17:44:37.000Z",
+    "code_updated_at": "2025-09-24T03:02:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949709,
+        "name": "Tokthree",
+        "created_at": "2022-08-23T03:39:27.000Z",
+        "url": "https://greasyfork.org/users/949709-tokthree"
+      }
+    ],
+    "name": "Market Search Utilities",
+    "description": "Adds various utilities to the marketplace",
+    "url": "https://greasyfork.org/scripts/480766-market-search-utilities",
+    "code_url": "https://update.greasyfork.org/scripts/480766/Market%20Search%20Utilities.user.js",
+    "code_size": 27674,
+    "license": null,
+    "version": "4.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463025,
+    "daily_installs": 0,
+    "total_installs": 256,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-01T04:09:20.000Z",
+    "code_updated_at": "2025-05-09T18:47:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949709,
+        "name": "Tokthree",
+        "created_at": "2022-08-23T03:39:27.000Z",
+        "url": "https://greasyfork.org/users/949709-tokthree"
+      }
+    ],
+    "name": "Rebekah's Calculator Suite",
+    "description": "Provides automatic calculators for damage, experience/h and boost values.",
+    "url": "https://greasyfork.org/scripts/463025-rebekah-s-calculator-suite",
+    "code_url": "https://update.greasyfork.org/scripts/463025/Rebekah%27s%20Calculator%20Suite.user.js",
+    "code_size": 78536,
+    "license": null,
+    "version": "1.6.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 450022,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-23T03:45:27.000Z",
+    "code_updated_at": "2022-08-23T11:03:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949709,
+        "name": "Tokthree",
+        "created_at": "2022-08-23T03:39:27.000Z",
+        "url": "https://greasyfork.org/users/949709-tokthree"
+      }
+    ],
+    "name": "Dead Frontier Ironman Script",
+    "description": "Stop being distracted by things you can't use.",
+    "url": "https://greasyfork.org/scripts/450022-dead-frontier-ironman-script",
+    "code_url": "https://update.greasyfork.org/scripts/450022/Dead%20Frontier%20Ironman%20Script.user.js",
+    "code_size": 2799,
+    "license": null,
+    "version": "0.2.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 469183,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-21T22:16:27.000Z",
+    "code_updated_at": "2025-11-29T10:38:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1108378,
+        "name": "Simeon Maxein",
+        "created_at": "2023-06-21T21:32:18.000Z",
+        "url": "https://greasyfork.org/users/1108378-simeon-maxein"
+      }
+    ],
+    "name": "Equestria Daily Slideshow",
+    "description": "Create a fullscreen slideshow for Equestria Daily Drawfriend posts",
+    "url": "https://greasyfork.org/scripts/469183-equestria-daily-slideshow",
+    "code_url": "https://update.greasyfork.org/scripts/469183/Equestria%20Daily%20Slideshow.user.js",
+    "code_size": 37365,
+    "license": "MPL v2.0",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

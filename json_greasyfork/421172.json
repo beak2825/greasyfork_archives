@@ -1,0 +1,59 @@
+{
+  "id": 421172,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-04T02:39:28.000Z",
+  "code_updated_at": "2021-02-04T02:39:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 724908,
+      "name": "ljybill",
+      "created_at": "2021-01-07T14:20:16.000Z",
+      "url": "https://greasyfork.org/users/724908-ljybill",
+      "scripts": [
+        {
+          "id": 419812,
+          "daily_installs": 0,
+          "total_installs": 199,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2021-01-07T14:21:08.000Z",
+          "code_updated_at": "2021-01-08T01:38:39.000Z",
+          "namespace": "ljybill",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "leetcode 增加英文讨论区按钮",
+          "description": "学算法要博众家之长,增加跳转到英文评论区按钮并阻止英文区自动跳转到国内站点 - 基于 @Aloxaf 大佬作品修改",
+          "url": "https://greasyfork.org/scripts/419812-leetcode-%E5%A2%9E%E5%8A%A0%E8%8B%B1%E6%96%87%E8%AE%A8%E8%AE%BA%E5%8C%BA%E6%8C%89%E9%92%AE",
+          "code_url": "https://update.greasyfork.org/scripts/419812/leetcode%20%E5%A2%9E%E5%8A%A0%E8%8B%B1%E6%96%87%E8%AE%A8%E8%AE%BA%E5%8C%BA%E6%8C%89%E9%92%AE.user.js",
+          "code_size": 3352,
+          "license": null,
+          "version": "1.0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "解析iid",
+  "description": "方便一点是一点",
+  "url": "https://greasyfork.org/scripts/421172-%E8%A7%A3%E6%9E%90iid",
+  "code_url": "https://update.greasyfork.org/scripts/421172/%E8%A7%A3%E6%9E%90iid.user.js",
+  "code_size": 1024,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

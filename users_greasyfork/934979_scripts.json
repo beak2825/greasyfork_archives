@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 447767,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-12T12:51:51.000Z",
+    "code_updated_at": "2022-09-04T08:44:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 934979,
+        "name": "JiuJieZhiXin",
+        "created_at": "2022-07-12T12:49:11.000Z",
+        "url": "https://greasyfork.org/users/934979-jiujiezhixin"
+      }
+    ],
+    "name": "FuckBilibiliSearchWord",
+    "description": "消灭B站评论区的关键词搜索",
+    "url": "https://greasyfork.org/scripts/447767-bilibilisearchword",
+    "code_url": "https://update.greasyfork.org/scripts/447767/FuckBilibiliSearchWord.user.js",
+    "code_size": 706,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

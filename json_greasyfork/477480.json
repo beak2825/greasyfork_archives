@@ -1,0 +1,33 @@
+{
+  "id": 477480,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-15T15:19:11.000Z",
+  "code_updated_at": "2023-10-25T14:44:10.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1183262,
+      "name": "Firestix",
+      "created_at": "2023-09-29T02:11:26.000Z",
+      "url": "https://greasyfork.org/users/1183262-firestix"
+    }
+  ],
+  "name": "FloatingWindow",
+  "description": "Adds FloatingWindow",
+  "url": "https://greasyfork.org/scripts/477480-floatingwindow",
+  "code_url": "https://update.greasyfork.org/scripts/477480/1270124/FloatingWindow.js",
+  "code_size": 4081,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

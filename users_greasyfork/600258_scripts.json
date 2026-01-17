@@ -1,0 +1,233 @@
+[
+  {
+    "id": 458315,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-16T07:03:31.000Z",
+    "code_updated_at": "2023-01-16T07:03:31.000Z",
+    "namespace": "mailto:azuzula.cz@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600258,
+        "name": "Zuzana “Azuzula” Nyiri",
+        "created_at": "2020-06-17T19:47:06.000Z",
+        "url": "https://greasyfork.org/users/600258-zuzana-azuzula-nyiri"
+      }
+    ],
+    "name": "Hide help button",
+    "description": "hide that uthing",
+    "url": "https://greasyfork.org/scripts/458315-hide-help-button",
+    "code_url": "https://update.greasyfork.org/scripts/458315/Hide%20help%20button.user.js",
+    "code_size": 499,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 452193,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-28T20:12:13.000Z",
+    "code_updated_at": "2022-10-03T19:50:44.000Z",
+    "namespace": "mailto:azuzula.cz@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600258,
+        "name": "Zuzana “Azuzula” Nyiri",
+        "created_at": "2020-06-17T19:47:06.000Z",
+        "url": "https://greasyfork.org/users/600258-zuzana-azuzula-nyiri"
+      }
+    ],
+    "name": "_Test",
+    "description": "test",
+    "url": "https://greasyfork.org/scripts/452193-test",
+    "code_url": "https://update.greasyfork.org/scripts/452193/_Test.user.js",
+    "code_size": 535,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451951,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-24T18:42:38.000Z",
+    "code_updated_at": "2025-01-07T22:43:23.000Z",
+    "namespace": "mailto:azuzula.cz@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600258,
+        "name": "Zuzana “Azuzula” Nyiri",
+        "created_at": "2020-06-17T19:47:06.000Z",
+        "url": "https://greasyfork.org/users/600258-zuzana-azuzula-nyiri"
+      }
+    ],
+    "name": "Shoptet zkratky beta",
+    "description": "Zkratky do Shoptetu",
+    "url": "https://greasyfork.org/scripts/451951-shoptet-zkratky-beta",
+    "code_url": "https://update.greasyfork.org/scripts/451951/Shoptet%20zkratky%20beta.user.js",
+    "code_size": 30630,
+    "license": "MIT License",
+    "version": "0.065b",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432040,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-07T07:21:14.000Z",
+    "code_updated_at": "2021-09-07T07:21:14.000Z",
+    "namespace": "mailto:azuzula.cz@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600258,
+        "name": "Zuzana “Azuzula” Nyiri",
+        "created_at": "2020-06-17T19:47:06.000Z",
+        "url": "https://greasyfork.org/users/600258-zuzana-azuzula-nyiri"
+      }
+    ],
+    "name": "Zásilkovna \"Označení všech rozpracovaných\"",
+    "description": "Označí rozpracované a ze seznamu hromadných akcí vybere možnost podat vybrané",
+    "url": "https://greasyfork.org/scripts/432040-z%C3%A1silkovna-ozna%C4%8Den%C3%AD-v%C5%A1ech-rozpracovan%C3%BDch",
+    "code_url": "https://update.greasyfork.org/scripts/432040/Z%C3%A1silkovna%20%22Ozna%C4%8Den%C3%AD%20v%C5%A1ech%20rozpracovan%C3%BDch%22.user.js",
+    "code_size": 888,
+    "license": null,
+    "version": "1.0",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422210,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-23T19:30:49.000Z",
+    "code_updated_at": "2022-09-22T07:28:52.000Z",
+    "namespace": "mailto:azuzula.cz@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600258,
+        "name": "Zuzana “Azuzula” Nyiri",
+        "created_at": "2020-06-17T19:47:06.000Z",
+        "url": "https://greasyfork.org/users/600258-zuzana-azuzula-nyiri"
+      }
+    ],
+    "name": "Shoptet \"Zvetseni fontu mnozstvi produktu 1\"",
+    "description": "Na stránce objednávky zvětší čísla množství produktů a podbarví pole, když je víc než 1ks",
+    "url": "https://greasyfork.org/scripts/422210-shoptet-zvetseni-fontu-mnozstvi-produktu-1",
+    "code_url": "https://update.greasyfork.org/scripts/422210/Shoptet%20%22Zvetseni%20fontu%20mnozstvi%20produktu%201%22.user.js",
+    "code_size": 899,
+    "license": null,
+    "version": "0.41",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 420582,
+    "daily_installs": 0,
+    "total_installs": 60,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-01-23T18:15:23.000Z",
+    "code_updated_at": "2025-01-07T22:27:08.000Z",
+    "namespace": "mailto:azuzula.cz@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600258,
+        "name": "Zuzana “Azuzula” Nyiri",
+        "created_at": "2020-06-17T19:47:06.000Z",
+        "url": "https://greasyfork.org/users/600258-zuzana-azuzula-nyiri"
+      }
+    ],
+    "name": "Shoptet \"Zvetseni fontu mnozstvi produktu\"",
+    "description": "Na stránce s kompletací objednávky zvětší čísla množství produktů a podbarví pole, když je víc než 1ks",
+    "url": "https://greasyfork.org/scripts/420582-shoptet-zvetseni-fontu-mnozstvi-produktu",
+    "code_url": "https://update.greasyfork.org/scripts/420582/Shoptet%20%22Zvetseni%20fontu%20mnozstvi%20produktu%22.user.js",
+    "code_size": 1427,
+    "license": null,
+    "version": "0.33",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420489,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-21T08:54:04.000Z",
+    "code_updated_at": "2023-06-09T07:12:41.000Z",
+    "namespace": "mailto:azuzula.cz@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600258,
+        "name": "Zuzana “Azuzula” Nyiri",
+        "created_at": "2020-06-17T19:47:06.000Z",
+        "url": "https://greasyfork.org/users/600258-zuzana-azuzula-nyiri"
+      }
+    ],
+    "name": "Shoptet \"Přesun ikony univerzity\"",
+    "description": "Prostě přesune tlačítko univerzity až na konec řádku",
+    "url": "https://greasyfork.org/scripts/420489-shoptet-p%C5%99esun-ikony-univerzity",
+    "code_url": "https://update.greasyfork.org/scripts/420489/Shoptet%20%22P%C5%99esun%20ikony%20univerzity%22.user.js",
+    "code_size": 529,
+    "license": null,
+    "version": "0.4",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 485006,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-16T19:35:07.000Z",
+  "code_updated_at": "2024-01-16T19:40:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 987735,
+      "name": "Pâmela Coutinho.",
+      "created_at": "2022-11-25T11:00:33.000Z",
+      "url": "https://greasyfork.org/users/987735-p%C3%A2mela-coutinho",
+      "scripts": []
+    }
+  ],
+  "name": "Modificar Limite Diário Gratuito em Poe",
+  "description": "Modifica o limite diário gratuito para 300 em Poe",
+  "url": "https://greasyfork.org/scripts/485006-modificar-limite-di%C3%A1rio-gratuito-em-poe",
+  "code_url": "https://update.greasyfork.org/scripts/485006/Modificar%20Limite%20Di%C3%A1rio%20Gratuito%20em%20Poe.user.js",
+  "code_size": 1594,
+  "license": null,
+  "version": "0.1",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 450260,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-27T02:19:21.000Z",
+    "code_updated_at": "2022-08-27T02:25:55.000Z",
+    "namespace": "tgies",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951209,
+        "name": "Tony Gies",
+        "created_at": "2022-08-27T02:11:32.000Z",
+        "url": "https://greasyfork.org/users/951209-tony-gies"
+      }
+    ],
+    "name": "youtube deshorter",
+    "description": "redirect youtube shorts to regular watch page",
+    "url": "https://greasyfork.org/scripts/450260-youtube-deshorter",
+    "code_url": "https://update.greasyfork.org/scripts/450260/youtube%20deshorter.user.js",
+    "code_size": 1169,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

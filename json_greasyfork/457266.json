@@ -1,0 +1,34 @@
+{
+  "id": 457266,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-28T16:39:48.000Z",
+  "code_updated_at": "2022-12-28T18:40:01.000Z",
+  "namespace": "SuperNova",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 875003,
+      "name": "Dodi Riyadi Saputra",
+      "created_at": "2022-02-10T12:50:09.000Z",
+      "url": "https://greasyfork.org/users/875003-dodi-riyadi-saputra",
+      "scripts": []
+    }
+  ],
+  "name": "Auto refresh adsyou",
+  "description": "Automatically refresh Adsyou",
+  "url": "https://greasyfork.org/scripts/457266-auto-refresh-adsyou",
+  "code_url": "https://update.greasyfork.org/scripts/457266/1132708/Auto%20refresh%20adsyou.js",
+  "code_size": 16278,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

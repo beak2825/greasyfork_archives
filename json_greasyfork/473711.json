@@ -1,0 +1,33 @@
+{
+  "id": 473711,
+  "daily_installs": 0,
+  "total_installs": 266,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-23T02:47:06.000Z",
+  "code_updated_at": "2023-11-01T21:48:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 860363,
+      "name": "Daniel Cardona",
+      "created_at": "2022-01-02T14:27:44.000Z",
+      "url": "https://greasyfork.org/users/860363-daniel-cardona"
+    }
+  ],
+  "name": "Limpiador",
+  "description": "Modifica la página de Criptológico y oculta elementos específicos.",
+  "url": "https://greasyfork.org/scripts/473711-limpiador",
+  "code_url": "https://update.greasyfork.org/scripts/473711/Limpiador.user.js",
+  "code_size": 3621,
+  "license": null,
+  "version": "0.32",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 421704,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-14T19:10:43.000Z",
+  "code_updated_at": "2021-02-15T05:38:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 551559,
+      "name": "lei123456",
+      "created_at": "2020-05-04T09:49:42.000Z",
+      "url": "https://greasyfork.org/users/551559-lei123456",
+      "scripts": []
+    }
+  ],
+  "name": "zt防360广告",
+  "description": "防辣鸡360的广告",
+  "url": "https://greasyfork.org/scripts/421704-zt%E9%98%B2360%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/421704/zt%E9%98%B2360%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 16816,
+  "license": null,
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

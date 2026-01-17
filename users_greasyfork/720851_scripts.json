@@ -1,0 +1,68 @@
+[
+  {
+    "id": 435894,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-22T11:37:26.000Z",
+    "code_updated_at": "2024-11-04T19:01:54.000Z",
+    "namespace": "https://damirscorner.com",
+    "support_url": "https://github.com/damirarh/GreasyForkScripts",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 720851,
+        "name": "Damir Arh",
+        "created_at": "2020-12-25T14:05:32.000Z",
+        "url": "https://greasyfork.org/users/720851-damir-arh"
+      }
+    ],
+    "name": "Copy recipes from leaneen.com",
+    "description": "Enables regular browser commands for web page interaction (mouse & keyboard) on leaneen.com to allow copying content.",
+    "url": "https://greasyfork.org/scripts/435894-copy-recipes-from-leaneen-com",
+    "code_url": "https://update.greasyfork.org/scripts/435894/Copy%20recipes%20from%20leaneencom.user.js",
+    "code_size": 2150,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419225,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-27T11:18:41.000Z",
+    "code_updated_at": "2021-05-23T09:25:37.000Z",
+    "namespace": "https://damirscorner.com",
+    "support_url": "https://github.com/damirarh/GreasyForkScripts",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 720851,
+        "name": "Damir Arh",
+        "created_at": "2020-12-25T14:05:32.000Z",
+        "url": "https://greasyfork.org/users/720851-damir-arh"
+      }
+    ],
+    "name": "Copy TrueGaming achievement list",
+    "description": "Copies the achievements/trophies from the True Achievements, TrueTrophies, and TrueSteamAchievements game page to clipboard as a table for further processing elsewhere.",
+    "url": "https://greasyfork.org/scripts/419225-copy-truegaming-achievement-list",
+    "code_url": "https://update.greasyfork.org/scripts/419225/Copy%20TrueGaming%20achievement%20list.user.js",
+    "code_size": 7778,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

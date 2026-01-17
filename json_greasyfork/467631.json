@@ -1,0 +1,33 @@
+{
+  "id": 467631,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-01T08:38:26.000Z",
+  "code_updated_at": "2023-09-29T13:42:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1087214,
+      "name": "Antoine Belot",
+      "created_at": "2023-05-30T09:53:00.000Z",
+      "url": "https://greasyfork.org/users/1087214-antoine-belot"
+    }
+  ],
+  "name": "Validation warning",
+  "description": "This script adds warning banners to MagnetALL tickets based on potential validation errors in them",
+  "url": "https://greasyfork.org/scripts/467631-validation-warning",
+  "code_url": "https://update.greasyfork.org/scripts/467631/Validation%20warning.user.js",
+  "code_size": 8378,
+  "license": "KIO",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 494135,
+    "daily_installs": 0,
+    "total_installs": 111,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-05T10:19:16.000Z",
+    "code_updated_at": "2025-07-13T14:42:49.000Z",
+    "namespace": "gitlab.com/frostime",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297180,
+        "name": "frostime",
+        "created_at": "2024-05-05T10:12:13.000Z",
+        "url": "https://greasyfork.org/users/1297180-frostime"
+      }
+    ],
+    "name": "GPT Input Dialog",
+    "description": "为一系列 GPT 类网站添加长文输入对话框 | Add a long text input dialog to a series of GPT-like platforms",
+    "url": "https://greasyfork.org/scripts/494135-gpt-input-dialog",
+    "code_url": "https://update.greasyfork.org/scripts/494135/GPT%20Input%20Dialog.user.js",
+    "code_size": 36005,
+    "license": "GNU Affero General Public License v3.0 only",
+    "version": "5.17.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

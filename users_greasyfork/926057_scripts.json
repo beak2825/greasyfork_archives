@@ -1,0 +1,200 @@
+[
+  {
+    "id": 453525,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-22T04:53:03.000Z",
+    "code_updated_at": "2022-10-22T06:07:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 926057,
+        "name": "bna5 maps",
+        "created_at": "2022-06-16T04:47:07.000Z",
+        "url": "https://greasyfork.org/users/926057-bna5-maps"
+      }
+    ],
+    "name": "Hide NCSLs",
+    "description": "Hides NCSLs for less clutter",
+    "url": "https://greasyfork.org/scripts/453525-hide-ncsls",
+    "code_url": "https://update.greasyfork.org/scripts/453525/Hide%20NCSLs.user.js",
+    "code_size": 6245,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453396,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-20T02:27:34.000Z",
+    "code_updated_at": "2022-10-20T02:27:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 926057,
+        "name": "bna5 maps",
+        "created_at": "2022-06-16T04:47:07.000Z",
+        "url": "https://greasyfork.org/users/926057-bna5-maps"
+      }
+    ],
+    "name": "QOL",
+    "description": "Quality of Life",
+    "url": "https://greasyfork.org/scripts/453396-qol",
+    "code_url": "https://update.greasyfork.org/scripts/453396/QOL.user.js",
+    "code_size": 2203,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 452315,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-01T04:49:39.000Z",
+    "code_updated_at": "2022-10-21T02:57:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 926057,
+        "name": "bna5 maps",
+        "created_at": "2022-06-16T04:47:07.000Z",
+        "url": "https://greasyfork.org/users/926057-bna5-maps"
+      }
+    ],
+    "name": "Barcodes",
+    "description": "Generates barcodes on outboundssp instead of new tab",
+    "url": "https://greasyfork.org/scripts/452315-barcodes",
+    "code_url": "https://update.greasyfork.org/scripts/452315/Barcodes.user.js",
+    "code_size": 72814,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451561,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-18T05:24:50.000Z",
+    "code_updated_at": "2022-10-02T02:38:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 926057,
+        "name": "bna5 maps",
+        "created_at": "2022-06-16T04:47:07.000Z",
+        "url": "https://greasyfork.org/users/926057-bna5-maps"
+      }
+    ],
+    "name": "Horseshoe",
+    "description": "Horseshoe Helper",
+    "url": "https://greasyfork.org/scripts/451561-horseshoe",
+    "code_url": "https://update.greasyfork.org/scripts/451561/Horseshoe.user.js",
+    "code_size": 11225,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 450960,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-08T07:10:25.000Z",
+    "code_updated_at": "2022-09-25T06:31:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 926057,
+        "name": "bna5 maps",
+        "created_at": "2022-06-16T04:47:07.000Z",
+        "url": "https://greasyfork.org/users/926057-bna5-maps"
+      }
+    ],
+    "name": "CPT Chaser",
+    "description": "CPT Chasing for operations",
+    "url": "https://greasyfork.org/scripts/450960-cpt-chaser",
+    "code_url": "https://update.greasyfork.org/scripts/450960/CPT%20Chaser.user.js",
+    "code_size": 13961,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 446550,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-16T04:50:50.000Z",
+    "code_updated_at": "2022-08-26T01:54:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 926057,
+        "name": "bna5 maps",
+        "created_at": "2022-06-16T04:47:07.000Z",
+        "url": "https://greasyfork.org/users/926057-bna5-maps"
+      }
+    ],
+    "name": "FMC Route Cloning",
+    "description": "Amazon Logistics Route Cloning",
+    "url": "https://greasyfork.org/scripts/446550-fmc-route-cloning",
+    "code_url": "https://update.greasyfork.org/scripts/446550/FMC%20Route%20Cloning.user.js",
+    "code_size": 10009,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 443541,
+    "daily_installs": 0,
+    "total_installs": 859,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-18T01:54:44.000Z",
+    "code_updated_at": "2022-04-18T01:54:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884763,
+        "name": "code1tech",
+        "created_at": "2022-03-09T04:41:20.000Z",
+        "url": "https://greasyfork.org/users/884763-code1tech"
+      }
+    ],
+    "name": "Roblox Avatar Halo",
+    "description": "Get a Halo on your avatar! (Only for main home screen)",
+    "url": "https://greasyfork.org/scripts/443541-roblox-avatar-halo",
+    "code_url": "https://update.greasyfork.org/scripts/443541/Roblox%20Avatar%20Halo.user.js",
+    "code_size": 1253,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441196,
+    "daily_installs": 0,
+    "total_installs": 841,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-03-09T04:53:11.000Z",
+    "code_updated_at": "2022-03-09T04:53:11.000Z",
+    "namespace": "https://replit.com/@Code1Tech",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884763,
+        "name": "code1tech",
+        "created_at": "2022-03-09T04:41:20.000Z",
+        "url": "https://greasyfork.org/users/884763-code1tech"
+      }
+    ],
+    "name": "RoPro Badge Changer",
+    "description": "Gives you a random badge on your profile everytime you refresh! Your badge will change in 6 seconds. (RoPro extension needed)",
+    "url": "https://greasyfork.org/scripts/441196-ropro-badge-changer",
+    "code_url": "https://update.greasyfork.org/scripts/441196/RoPro%20Badge%20Changer.user.js",
+    "code_size": 827,
+    "license": "Apache 2.0",
+    "version": "pre-alpha-0.9.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

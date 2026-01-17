@@ -1,0 +1,59 @@
+{
+  "id": 442971,
+  "daily_installs": 0,
+  "total_installs": 236,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-08T07:37:36.000Z",
+  "code_updated_at": "2022-04-08T07:37:36.000Z",
+  "namespace": "Q",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 899273,
+      "name": "死跑龙套的",
+      "created_at": "2022-04-08T06:32:21.000Z",
+      "url": "https://greasyfork.org/users/899273-%E6%AD%BB%E8%B7%91%E9%BE%99%E5%A5%97%E7%9A%84",
+      "scripts": [
+        {
+          "id": 442971,
+          "daily_installs": 0,
+          "total_installs": 236,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-08T07:37:36.000Z",
+          "code_updated_at": "2022-04-08T07:37:36.000Z",
+          "namespace": "Q",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "绅士仓库帖子隐藏",
+          "description": "用于绅士仓库，自定义隐藏指定用户的发帖，净化ghs环境",
+          "url": "https://greasyfork.org/scripts/442971-%E7%BB%85%E5%A3%AB%E4%BB%93%E5%BA%93%E5%B8%96%E5%AD%90%E9%9A%90%E8%97%8F",
+          "code_url": "https://update.greasyfork.org/scripts/442971/%E7%BB%85%E5%A3%AB%E4%BB%93%E5%BA%93%E5%B8%96%E5%AD%90%E9%9A%90%E8%97%8F.user.js",
+          "code_size": 1993,
+          "license": "Q",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "绅士仓库帖子隐藏",
+  "description": "用于绅士仓库，自定义隐藏指定用户的发帖，净化ghs环境",
+  "url": "https://greasyfork.org/scripts/442971-%E7%BB%85%E5%A3%AB%E4%BB%93%E5%BA%93%E5%B8%96%E5%AD%90%E9%9A%90%E8%97%8F",
+  "code_url": "https://update.greasyfork.org/scripts/442971/%E7%BB%85%E5%A3%AB%E4%BB%93%E5%BA%93%E5%B8%96%E5%AD%90%E9%9A%90%E8%97%8F.user.js",
+  "code_size": 1993,
+  "license": "Q",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

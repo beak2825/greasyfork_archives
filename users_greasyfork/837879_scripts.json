@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435418,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-12T21:08:28.000Z",
+    "code_updated_at": "2021-11-12T23:47:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 837879,
+        "name": "Kimen",
+        "created_at": "2021-11-12T20:57:50.000Z",
+        "url": "https://greasyfork.org/users/837879-kimen"
+      }
+    ],
+    "name": "Melvor Action Queue",
+    "description": "Adds an interface to queue up actions based on triggers you set",
+    "url": "https://greasyfork.org/scripts/435418-melvor-action-queue",
+    "code_url": "https://update.greasyfork.org/scripts/435418/Melvor%20Action%20Queue.user.js",
+    "code_size": 88682,
+    "license": null,
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

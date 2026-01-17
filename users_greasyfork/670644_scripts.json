@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415418,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-03T16:10:04.000Z",
+    "code_updated_at": "2020-11-03T16:10:03.000Z",
+    "namespace": "fl-detection-beta",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 670644,
+        "name": "ninesunsabiu",
+        "created_at": "2020-07-27T08:48:48.000Z",
+        "url": "https://greasyfork.org/users/670644-ninesunsabiu"
+      }
+    ],
+    "name": "返利链接检查beta",
+    "description": "豆瓣车组文章中对疑似推广返利链接进行识别的小工具，仅限在车组中使用。学习交流而已",
+    "url": "https://greasyfork.org/scripts/415418-%E8%BF%94%E5%88%A9%E9%93%BE%E6%8E%A5%E6%A3%80%E6%9F%A5beta",
+    "code_url": "https://update.greasyfork.org/scripts/415418/%E8%BF%94%E5%88%A9%E9%93%BE%E6%8E%A5%E6%A3%80%E6%9F%A5beta.user.js",
+    "code_size": 4280,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

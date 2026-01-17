@@ -1,0 +1,34 @@
+{
+  "id": 421932,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-18T09:51:30.000Z",
+  "code_updated_at": "2021-02-18T09:51:30.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 738548,
+      "name": "Ali Karakurt",
+      "created_at": "2021-02-18T09:38:14.000Z",
+      "url": "https://greasyfork.org/users/738548-ali-karakurt",
+      "scripts": []
+    }
+  ],
+  "name": "TGS Egitim Atlama",
+  "description": "07.12.2020 17:19:48",
+  "url": "https://greasyfork.org/scripts/421932-tgs-egitim-atlama",
+  "code_url": "https://update.greasyfork.org/scripts/421932/TGS%20Egitim%20Atlama.user.js",
+  "code_size": 1450,
+  "license": null,
+  "version": "0.1",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

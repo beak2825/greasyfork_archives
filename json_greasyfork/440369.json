@@ -1,0 +1,34 @@
+{
+  "id": 440369,
+  "daily_installs": 0,
+  "total_installs": 563,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-21T01:50:43.000Z",
+  "code_updated_at": "2023-06-21T06:57:01.000Z",
+  "namespace": "https://www.tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 878770,
+      "name": "充钱是不可能充钱的",
+      "created_at": "2022-02-21T00:42:06.000Z",
+      "url": "https://greasyfork.org/users/878770-%E5%85%85%E9%92%B1%E6%98%AF%E4%B8%8D%E5%8F%AF%E8%83%BD%E5%85%85%E9%92%B1%E7%9A%84",
+      "scripts": []
+    }
+  ],
+  "name": "全网VIP视频自动解析蓝光播放器(已适配苹果，安卓，PC端",
+  "description": "无需跳转新网址，打开官网直接看，蓝光 4k 无广告 随机去水印。支持：腾讯，爱奇艺，优酷，哔哩哔哩，咪咕，乐视，搜狐，芒果，西瓜，PPTV，1905电影网，华数。支持解析失败自动切换推荐解析源。适配各种浏览器。新增去广告功能去除浏览器搜索广告。",
+  "url": "https://greasyfork.org/scripts/440369-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E8%93%9D%E5%85%89%E6%92%AD%E6%94%BE%E5%99%A8-%E5%B7%B2%E9%80%82%E9%85%8D%E8%8B%B9%E6%9E%9C-%E5%AE%89%E5%8D%93-pc%E7%AB%AF",
+  "code_url": "https://update.greasyfork.org/scripts/440369/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E8%93%9D%E5%85%89%E6%92%AD%E6%94%BE%E5%99%A8%28%E5%B7%B2%E9%80%82%E9%85%8D%E8%8B%B9%E6%9E%9C%EF%BC%8C%E5%AE%89%E5%8D%93%EF%BC%8CPC%E7%AB%AF.user.js",
+  "code_size": 77166,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

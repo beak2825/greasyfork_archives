@@ -1,0 +1,59 @@
+{
+  "id": 485376,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-21T11:45:08.000Z",
+  "code_updated_at": "2024-01-21T11:45:08.000Z",
+  "namespace": "AzurLaneBwikiCommentViewer",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 49785,
+      "name": "TinyTitanPro",
+      "created_at": "2016-06-19T03:45:40.000Z",
+      "url": "https://greasyfork.org/users/49785-tinytitanpro",
+      "scripts": [
+        {
+          "id": 474845,
+          "daily_installs": 0,
+          "total_installs": 206,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-08T17:14:06.000Z",
+          "code_updated_at": "2023-09-11T08:48:13.000Z",
+          "namespace": "https://github.com/TinyTitanPro/Sensei_Helper_Importer/blob/main/Sensei_Helper_Importer.user.js",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Sensei Helper Importer",
+          "description": "Sensei Helper素材需求导入",
+          "url": "https://greasyfork.org/scripts/474845-sensei-helper-importer",
+          "code_url": "https://update.greasyfork.org/scripts/474845/Sensei%20Helper%20Importer.user.js",
+          "code_size": 3672,
+          "license": "MIT License",
+          "version": "0.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AzurLane Bwiki Comment Viewer",
+  "description": "碧蓝航线Bwiki评论查看工具",
+  "url": "https://greasyfork.org/scripts/485376-azurlane-bwiki-comment-viewer",
+  "code_url": "https://update.greasyfork.org/scripts/485376/AzurLane%20Bwiki%20Comment%20Viewer.user.js",
+  "code_size": 601,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 479453,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-10T13:32:36.000Z",
+  "code_updated_at": "2023-11-10T13:32:36.000Z",
+  "namespace": "http://monnef.eu/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1698,
+      "name": "monnef",
+      "created_at": "2014-05-20T07:30:37.000Z",
+      "url": "https://greasyfork.org/users/1698-monnef"
+    }
+  ],
+  "name": "SDWU - Custom hotkeys for Lobe Theme",
+  "description": "Press 'x' or 'e' to toggle visibility of the \"Extra Networks\" panel and 'q' to toggle the \"Quick Settings\" panel in Stable Diffusion WebUI with Lobe Theme",
+  "url": "https://greasyfork.org/scripts/479453-sdwu-custom-hotkeys-for-lobe-theme",
+  "code_url": "https://update.greasyfork.org/scripts/479453/SDWU%20-%20Custom%20hotkeys%20for%20Lobe%20Theme.user.js",
+  "code_size": 1382,
+  "license": "GPLv3",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 442889,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-06T16:44:36.000Z",
+  "code_updated_at": "2022-04-23T17:34:11.000Z",
+  "namespace": "渔",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896898,
+      "name": "渔",
+      "created_at": "2022-04-03T05:03:43.000Z",
+      "url": "https://greasyfork.org/users/896898-%E6%B8%94",
+      "scripts": []
+    }
+  ],
+  "name": "超星星答题",
+  "description": "开启即自动切换旧版，多服务器，题库高精准再度提升",
+  "url": "https://greasyfork.org/scripts/442889-%E8%B6%85%E6%98%9F%E6%98%9F%E7%AD%94%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/442889/%E8%B6%85%E6%98%9F%E6%98%9F%E7%AD%94%E9%A2%98.user.js",
+  "code_size": 43930,
+  "license": "https://qq2314766321.lanzoub.com/b00nwb6tc",
+  "version": "4.23",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

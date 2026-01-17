@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492364,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-12T15:42:40.000Z",
+    "code_updated_at": "2024-04-12T15:42:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1287454,
+        "name": "icoice",
+        "created_at": "2024-04-12T15:42:24.000Z",
+        "url": "https://greasyfork.org/users/1287454-icoice"
+      }
+    ],
+    "name": "Steam store wants_mature_content",
+    "description": "Steam Store (Turn on mature content in some region)",
+    "url": "https://greasyfork.org/scripts/492364-steam-store-wants-mature-content",
+    "code_url": "https://update.greasyfork.org/scripts/492364/Steam%20store%20wants_mature_content.user.js",
+    "code_size": 735,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 478930,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-03T07:42:50.000Z",
+  "code_updated_at": "2024-03-14T13:49:22.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 61331,
+      "name": "Anton Yablokov",
+      "created_at": "2016-08-20T09:26:47.000Z",
+      "url": "https://greasyfork.org/users/61331-anton-yablokov"
+    }
+  ],
+  "name": "Make links to Qt docs",
+  "description": "Make links to Qt docs for classes mentioned on https://wiki.qt.io/Qt_for_Python_Development_Notes",
+  "url": "https://greasyfork.org/scripts/478930-make-links-to-qt-docs",
+  "code_url": "https://update.greasyfork.org/scripts/478930/Make%20links%20to%20Qt%20docs.user.js",
+  "code_size": 2188,
+  "license": null,
+  "version": "1.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 430927,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-17T00:08:03.000Z",
+  "code_updated_at": "2021-08-17T00:08:03.000Z",
+  "namespace": "http://github.com/dufferzafar/Userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 156716,
+      "name": "Raj Preeth",
+      "created_at": "2017-10-22T03:33:20.000Z",
+      "url": "https://greasyfork.org/users/156716-raj-preeth",
+      "scripts": [
+        {
+          "id": 403056,
+          "daily_installs": 0,
+          "total_installs": 92,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-05-11T03:19:52.000Z",
+          "code_updated_at": "2022-04-23T12:32:00.000Z",
+          "namespace": "http://github.com/dufferzafar/Userscripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MusicBrainz: Import from iTunes",
+          "description": "Import releases from iTunes",
+          "url": "https://greasyfork.org/scripts/403056-musicbrainz-import-from-itunes",
+          "code_url": "https://update.greasyfork.org/scripts/403056/MusicBrainz%3A%20Import%20from%20iTunes.user.js",
+          "code_size": 8385,
+          "license": null,
+          "version": "2020.04.25.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MusicBrainz: Import from iTunes (fork)",
+  "description": "Import releases from iTunes",
+  "url": "https://greasyfork.org/scripts/430927-musicbrainz-import-from-itunes-fork",
+  "code_url": "https://update.greasyfork.org/scripts/430927/MusicBrainz%3A%20Import%20from%20iTunes%20%28fork%29.user.js",
+  "code_size": 9371,
+  "license": null,
+  "version": "2020.12.18",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

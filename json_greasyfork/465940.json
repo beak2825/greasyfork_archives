@@ -1,0 +1,59 @@
+{
+  "id": 465940,
+  "daily_installs": 0,
+  "total_installs": 68,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-10T15:01:05.000Z",
+  "code_updated_at": "2023-05-10T15:01:05.000Z",
+  "namespace": "https://greasyfork.org/en/users/1076715-meario",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076715,
+      "name": "meario",
+      "created_at": "2023-05-10T14:58:00.000Z",
+      "url": "https://greasyfork.org/users/1076715-meario",
+      "scripts": [
+        {
+          "id": 465940,
+          "daily_installs": 0,
+          "total_installs": 68,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-10T15:01:05.000Z",
+          "code_updated_at": "2023-05-10T15:01:05.000Z",
+          "namespace": "https://greasyfork.org/en/users/1076715-meario",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitch Drop Inventory Page Claimer",
+          "description": "Clicks the Claim Now Button",
+          "url": "https://greasyfork.org/scripts/465940-twitch-drop-inventory-page-claimer",
+          "code_url": "https://update.greasyfork.org/scripts/465940/Twitch%20Drop%20Inventory%20Page%20Claimer.user.js",
+          "code_size": 871,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitch Drop Inventory Page Claimer",
+  "description": "Clicks the Claim Now Button",
+  "url": "https://greasyfork.org/scripts/465940-twitch-drop-inventory-page-claimer",
+  "code_url": "https://update.greasyfork.org/scripts/465940/Twitch%20Drop%20Inventory%20Page%20Claimer.user.js",
+  "code_size": 871,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

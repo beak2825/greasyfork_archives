@@ -1,0 +1,59 @@
+{
+  "id": 452337,
+  "daily_installs": 0,
+  "total_installs": 417,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-01T13:28:11.000Z",
+  "code_updated_at": "2022-10-01T13:28:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 965403,
+      "name": "ignite",
+      "created_at": "2022-10-01T13:03:17.000Z",
+      "url": "https://greasyfork.org/users/965403-ignite",
+      "scripts": [
+        {
+          "id": 452337,
+          "daily_installs": 0,
+          "total_installs": 417,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-01T13:28:11.000Z",
+          "code_updated_at": "2022-10-01T13:28:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "安大雨课堂刷课",
+          "description": "123",
+          "url": "https://greasyfork.org/scripts/452337-%E5%AE%89%E5%A4%A7%E9%9B%A8%E8%AF%BE%E5%A0%82%E5%88%B7%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/452337/%E5%AE%89%E5%A4%A7%E9%9B%A8%E8%AF%BE%E5%A0%82%E5%88%B7%E8%AF%BE.user.js",
+          "code_size": 1127,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "安大雨课堂刷课",
+  "description": "123",
+  "url": "https://greasyfork.org/scripts/452337-%E5%AE%89%E5%A4%A7%E9%9B%A8%E8%AF%BE%E5%A0%82%E5%88%B7%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/452337/%E5%AE%89%E5%A4%A7%E9%9B%A8%E8%AF%BE%E5%A0%82%E5%88%B7%E8%AF%BE.user.js",
+  "code_size": 1127,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

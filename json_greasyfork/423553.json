@@ -1,0 +1,34 @@
+{
+  "id": 423553,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-19T06:30:08.000Z",
+  "code_updated_at": "2021-03-19T06:30:07.000Z",
+  "namespace": "https://greasyfork.org/users/166324",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 166324,
+      "name": "sleuthsloth",
+      "created_at": "2018-01-11T06:33:35.000Z",
+      "url": "https://greasyfork.org/users/166324-sleuthsloth",
+      "scripts": []
+    }
+  ],
+  "name": "Auto-Refresh",
+  "description": "Auto refresh page",
+  "url": "https://greasyfork.org/scripts/423553-auto-refresh",
+  "code_url": "https://update.greasyfork.org/scripts/423553/Auto-Refresh.user.js",
+  "code_size": 766,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

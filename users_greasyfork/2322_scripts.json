@@ -1,0 +1,68 @@
+[
+  {
+    "id": 476640,
+    "daily_installs": 1,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-03T20:50:02.000Z",
+    "code_updated_at": "2023-10-03T20:50:02.000Z",
+    "namespace": "selbi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2322,
+        "name": "Selbi",
+        "created_at": "2014-05-29T21:20:18.000Z",
+        "url": "https://greasyfork.org/users/2322-selbi"
+      }
+    ],
+    "name": "setlist.fm to Spotify Playlist one-click button",
+    "description": "A script to create playlists on Spotify from setlist.fm setlists using: https://github.com/Selbi182/SetlistFmToSpotifyPlaylist",
+    "url": "https://greasyfork.org/scripts/476640-setlist-fm-to-spotify-playlist-one-click-button",
+    "code_url": "https://update.greasyfork.org/scripts/476640/setlistfm%20to%20Spotify%20Playlist%20one-click%20button.user.js",
+    "code_size": 890,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416152,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-15T21:27:48.000Z",
+    "code_updated_at": "2020-11-15T21:27:48.000Z",
+    "namespace": "Selbi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2322,
+        "name": "Selbi",
+        "created_at": "2014-05-29T21:20:18.000Z",
+        "url": "https://greasyfork.org/users/2322-selbi"
+      }
+    ],
+    "name": "pr0gramm - Nav-Buttons",
+    "description": "Adds clickable left/right buttons for easy browsing (for those too lazy to use their keyboards)",
+    "url": "https://greasyfork.org/scripts/416152-pr0gramm-nav-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/416152/pr0gramm%20-%20Nav-Buttons.user.js",
+    "code_size": 1719,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

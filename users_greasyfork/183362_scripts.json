@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464028,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T20:10:52.000Z",
+    "code_updated_at": "2023-04-14T20:10:52.000Z",
+    "namespace": "https://arstechnica.com/civis/members/magus.53750/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 183362,
+        "name": "magus424",
+        "created_at": "2018-05-03T15:59:47.000Z",
+        "url": "https://greasyfork.org/users/183362-magus424"
+      }
+    ],
+    "name": "Ars Technica Latest Stories",
+    "description": "Parse FP RSS to create Latest Stories widget",
+    "url": "https://greasyfork.org/scripts/464028-ars-technica-latest-stories",
+    "code_url": "https://update.greasyfork.org/scripts/464028/Ars%20Technica%20Latest%20Stories.user.js",
+    "code_size": 4141,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

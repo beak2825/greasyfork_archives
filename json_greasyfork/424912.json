@@ -1,0 +1,59 @@
+{
+  "id": 424912,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-12T09:13:39.000Z",
+  "code_updated_at": "2021-04-12T09:16:09.000Z",
+  "namespace": "https://github.com/liuycy",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 733672,
+      "name": "liuycy",
+      "created_at": "2021-02-02T07:39:40.000Z",
+      "url": "https://greasyfork.org/users/733672-liuycy",
+      "scripts": [
+        {
+          "id": 424912,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-12T09:13:39.000Z",
+          "code_updated_at": "2021-04-12T09:16:09.000Z",
+          "namespace": "https://github.com/liuycy",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Swagger 文档自定义请求头",
+          "description": "匹配 swagger-ui.html 页面并为每个请求注入自定义 header",
+          "url": "https://greasyfork.org/scripts/424912-swagger-%E6%96%87%E6%A1%A3%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%B7%E6%B1%82%E5%A4%B4",
+          "code_url": "https://update.greasyfork.org/scripts/424912/Swagger%20%E6%96%87%E6%A1%A3%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%B7%E6%B1%82%E5%A4%B4.user.js",
+          "code_size": 5053,
+          "license": null,
+          "version": "2.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Swagger 文档自定义请求头",
+  "description": "匹配 swagger-ui.html 页面并为每个请求注入自定义 header",
+  "url": "https://greasyfork.org/scripts/424912-swagger-%E6%96%87%E6%A1%A3%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%B7%E6%B1%82%E5%A4%B4",
+  "code_url": "https://update.greasyfork.org/scripts/424912/Swagger%20%E6%96%87%E6%A1%A3%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%B7%E6%B1%82%E5%A4%B4.user.js",
+  "code_size": 5053,
+  "license": null,
+  "version": "2.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

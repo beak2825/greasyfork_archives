@@ -1,0 +1,33 @@
+{
+  "id": 444342,
+  "daily_installs": 0,
+  "total_installs": 1023,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-02T03:01:10.000Z",
+  "code_updated_at": "2024-03-14T05:48:49.000Z",
+  "namespace": "https://greasyfork.org/users/909394",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 909394,
+      "name": "lucienlugeek",
+      "created_at": "2022-05-02T02:44:31.000Z",
+      "url": "https://greasyfork.org/users/909394-lucienlugeek"
+    }
+  ],
+  "name": "zhihutime - 知乎时间跨度",
+  "description": "展示回答或者文章的发表时间距今的时间跨度",
+  "url": "https://greasyfork.org/scripts/444342-zhihutime-%E7%9F%A5%E4%B9%8E%E6%97%B6%E9%97%B4%E8%B7%A8%E5%BA%A6",
+  "code_url": "https://update.greasyfork.org/scripts/444342/zhihutime%20-%20%E7%9F%A5%E4%B9%8E%E6%97%B6%E9%97%B4%E8%B7%A8%E5%BA%A6.user.js",
+  "code_size": 8315,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

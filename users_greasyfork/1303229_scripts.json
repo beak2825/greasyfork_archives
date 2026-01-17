@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495296,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-17T15:50:03.000Z",
+    "code_updated_at": "2024-09-09T05:17:00.000Z",
+    "namespace": "https://greasyfork.org/users/1303229",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1303229,
+        "name": "Anuj Kavi",
+        "created_at": "2024-05-17T15:45:16.000Z",
+        "url": "https://greasyfork.org/users/1303229-anuj-kavi"
+      }
+    ],
+    "name": "Keyboard shortcuts for question navigation",
+    "description": "Navigate UWorld using z,x,m keys",
+    "url": "https://greasyfork.org/scripts/495296-keyboard-shortcuts-for-question-navigation",
+    "code_url": "https://update.greasyfork.org/scripts/495296/Keyboard%20shortcuts%20for%20question%20navigation.user.js",
+    "code_size": 2927,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

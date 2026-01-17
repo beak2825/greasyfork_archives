@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477612,
+    "daily_installs": 0,
+    "total_installs": 79,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-17T14:41:12.000Z",
+    "code_updated_at": "2024-10-17T11:13:45.000Z",
+    "namespace": "https://*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1046686,
+        "name": "hayratjan",
+        "created_at": "2023-03-23T11:13:40.000Z",
+        "url": "https://greasyfork.org/users/1046686-hayratjan"
+      }
+    ],
+    "name": "内网系统验证码自动识别脚本V4.3",
+    "description": "内网系统验证码自动识别脚本，后台自行部署django和ddddocr库",
+    "url": "https://greasyfork.org/scripts/477612-%E5%86%85%E7%BD%91%E7%B3%BB%E7%BB%9F%E9%AA%8C%E8%AF%81%E7%A0%81%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E8%84%9A%E6%9C%ACv4-3",
+    "code_url": "https://update.greasyfork.org/scripts/477612/%E5%86%85%E7%BD%91%E7%B3%BB%E7%BB%9F%E9%AA%8C%E8%AF%81%E7%A0%81%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E8%84%9A%E6%9C%ACV43.user.js",
+    "code_size": 7195,
+    "license": "haige",
+    "version": "4.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

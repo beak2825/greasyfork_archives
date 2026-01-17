@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480284,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-19T13:49:35.000Z",
+    "code_updated_at": "2023-11-19T13:49:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220226,
+        "name": "wjiec",
+        "created_at": "2023-11-19T13:46:59.000Z",
+        "url": "https://greasyfork.org/users/1220226-wjiec"
+      }
+    ],
+    "name": "训练营作业数据抓取",
+    "description": "训练营作业数据抓取 dddd",
+    "url": "https://greasyfork.org/scripts/480284-%E8%AE%AD%E7%BB%83%E8%90%A5%E4%BD%9C%E4%B8%9A%E6%95%B0%E6%8D%AE%E6%8A%93%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/480284/%E8%AE%AD%E7%BB%83%E8%90%A5%E4%BD%9C%E4%B8%9A%E6%95%B0%E6%8D%AE%E6%8A%93%E5%8F%96.user.js",
+    "code_size": 2704,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

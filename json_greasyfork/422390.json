@@ -1,0 +1,59 @@
+{
+  "id": 422390,
+  "daily_installs": 1,
+  "total_installs": 557,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-27T19:19:55.000Z",
+  "code_updated_at": "2021-06-22T20:00:59.000Z",
+  "namespace": "https://greasyfork.org/uk/users/741855",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 741855,
+      "name": "boboha",
+      "created_at": "2021-02-27T18:23:02.000Z",
+      "url": "https://greasyfork.org/users/741855-boboha",
+      "scripts": [
+        {
+          "id": 422390,
+          "daily_installs": 1,
+          "total_installs": 557,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-27T19:19:55.000Z",
+          "code_updated_at": "2021-06-22T20:00:59.000Z",
+          "namespace": "https://greasyfork.org/uk/users/741855",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YAAS (YouTube Ads Auto Skip)",
+          "description": "Automatically closes the banner ad or clicks the \"Skip ad\" button.",
+          "url": "https://greasyfork.org/scripts/422390-yaas-youtube-ads-auto-skip",
+          "code_url": "https://update.greasyfork.org/scripts/422390/YAAS%20%28YouTube%20Ads%20Auto%20Skip%29.user.js",
+          "code_size": 6782,
+          "license": null,
+          "version": "3.0.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YAAS (YouTube Ads Auto Skip)",
+  "description": "Automatically closes the banner ad or clicks the \"Skip ad\" button.",
+  "url": "https://greasyfork.org/scripts/422390-yaas-youtube-ads-auto-skip",
+  "code_url": "https://update.greasyfork.org/scripts/422390/YAAS%20%28YouTube%20Ads%20Auto%20Skip%29.user.js",
+  "code_size": 6782,
+  "license": null,
+  "version": "3.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

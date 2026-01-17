@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465176,
+    "daily_installs": 1,
+    "total_installs": 217489,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-30T07:51:47.000Z",
+    "code_updated_at": "2025-03-26T02:24:36.000Z",
+    "namespace": "https://codeforces.com/profile/tongwentao",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1070519,
+        "name": "tongwentao",
+        "created_at": "2023-04-30T07:26:26.000Z",
+        "url": "https://greasyfork.org/users/1070519-tongwentao"
+      }
+    ],
+    "name": "CF解题数据可视化",
+    "description": "显示某人Codeforces每个难度过了多少题，每个标签占比，喜欢用什么语言过题，有什么题试过了但是没有通过。",
+    "url": "https://greasyfork.org/scripts/465176-cf%E8%A7%A3%E9%A2%98%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/465176/CF%E8%A7%A3%E9%A2%98%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96.user.js",
+    "code_size": 17998,
+    "license": "MIT License",
+    "version": "1.7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

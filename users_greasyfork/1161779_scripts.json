@@ -30,6 +30,39 @@
     "version": "1.7",
     "locale": "ru",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474105,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-29T00:07:55.000Z",
+    "code_updated_at": "2024-08-19T09:52:07.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1161779,
+        "name": "Puaro",
+        "created_at": "2023-08-28T23:43:31.000Z",
+        "url": "https://greasyfork.org/users/1161779-puaro"
+      }
+    ],
+    "name": "КФ | E.Puaro",
+    "description": "Скрипт для рассмотрения жалоб на Black Russia.",
+    "url": "https://greasyfork.org/scripts/474105-%D0%BA%D1%84-e-puaro",
+    "code_url": "https://update.greasyfork.org/scripts/474105/%D0%9A%D0%A4%20%7C%20EPuaro.user.js",
+    "code_size": 115117,
+    "license": "MIT License",
+    "version": "3.3",
+    "locale": "ru",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

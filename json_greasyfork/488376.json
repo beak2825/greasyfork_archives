@@ -1,0 +1,59 @@
+{
+  "id": 488376,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-26T23:09:52.000Z",
+  "code_updated_at": "2024-09-22T21:29:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1264578,
+      "name": "TylerKimbell",
+      "created_at": "2024-02-21T02:09:58.000Z",
+      "url": "https://greasyfork.org/users/1264578-tylerkimbell",
+      "scripts": [
+        {
+          "id": 488376,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-26T23:09:52.000Z",
+          "code_updated_at": "2024-09-22T21:29:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Live RPH",
+          "description": "Calculate your RPH in toolbelt on a day to day basis rather than month to month.",
+          "url": "https://greasyfork.org/scripts/488376-live-rph",
+          "code_url": "https://update.greasyfork.org/scripts/488376/Live%20RPH.user.js",
+          "code_size": 25567,
+          "license": "MIT License",
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Live RPH",
+  "description": "Calculate your RPH in toolbelt on a day to day basis rather than month to month.",
+  "url": "https://greasyfork.org/scripts/488376-live-rph",
+  "code_url": "https://update.greasyfork.org/scripts/488376/Live%20RPH.user.js",
+  "code_size": 25567,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

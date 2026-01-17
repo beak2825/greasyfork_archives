@@ -1,0 +1,34 @@
+{
+  "id": 477768,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-19T10:24:30.000Z",
+  "code_updated_at": "2023-10-19T10:24:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 206789,
+      "name": "Stan Li2",
+      "created_at": "2018-08-22T13:52:26.000Z",
+      "url": "https://greasyfork.org/users/206789-stan-li2",
+      "scripts": []
+    }
+  ],
+  "name": "Auto-auth z3",
+  "description": "Script that allows you to skip entering code for auth",
+  "url": "https://greasyfork.org/scripts/477768-auto-auth-z3",
+  "code_url": "https://update.greasyfork.org/scripts/477768/Auto-auth%20z3.user.js",
+  "code_size": 35411,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

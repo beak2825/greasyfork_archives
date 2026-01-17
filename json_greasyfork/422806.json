@@ -1,0 +1,34 @@
+{
+  "id": 422806,
+  "daily_installs": 0,
+  "total_installs": 7636,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-07T08:26:20.000Z",
+  "code_updated_at": "2021-03-07T08:26:20.000Z",
+  "namespace": "https://github.com/syhyz1990/baiduyun",
+  "support_url": "https://github.com/syhyz1990/baiduyun",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 708059,
+      "name": "quanpwu",
+      "created_at": "2020-11-23T06:30:22.000Z",
+      "url": "https://greasyfork.org/users/708059-quanpwu",
+      "scripts": []
+    }
+  ],
+  "name": "百度网盘直链满速下载助手（全新版本）",
+  "description": "这大概是目前全网唯一可用的百度网盘极速下载的油猴脚本了，下载速度基本可以跑满你的带宽！本脚本一共支持三种下载方式，支持Windows，Mac，Linux，Android等多平台，每一种都能给你一种恐怖如斯的下载速度体验",
+  "url": "https://greasyfork.org/scripts/422806-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E6%BB%A1%E9%80%9F%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-%E5%85%A8%E6%96%B0%E7%89%88%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/422806/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E6%BB%A1%E9%80%9F%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%EF%BC%88%E5%85%A8%E6%96%B0%E7%89%88%E6%9C%AC%EF%BC%89.user.js",
+  "code_size": 53950,
+  "license": "AGPL",
+  "version": "4.4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

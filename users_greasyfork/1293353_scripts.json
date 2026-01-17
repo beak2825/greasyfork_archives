@@ -96,6 +96,72 @@
     "version": "1.0.2",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 494853,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-13T18:23:28.000Z",
+    "code_updated_at": "2025-09-18T08:31:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293353,
+        "name": "FlavTorn",
+        "created_at": "2024-04-26T09:48:27.000Z",
+        "url": "https://greasyfork.org/users/1293353-flavtorn"
+      }
+    ],
+    "name": "Torn - Poker Mug",
+    "description": "Torn - Poker Mug helper",
+    "url": "https://greasyfork.org/scripts/494853-torn-poker-mug",
+    "code_url": "https://update.greasyfork.org/scripts/494853/Torn%20-%20Poker%20Mug.user.js",
+    "code_size": 25816,
+    "license": null,
+    "version": "3.2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 493534,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-26T09:55:14.000Z",
+    "code_updated_at": "2024-12-29T19:47:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293353,
+        "name": "FlavTorn",
+        "created_at": "2024-04-26T09:48:27.000Z",
+        "url": "https://greasyfork.org/users/1293353-flavtorn"
+      }
+    ],
+    "name": "Torn - Russian Roulette Mug",
+    "description": "Loader for the Torn RR Helper script",
+    "url": "https://greasyfork.org/scripts/493534-torn-russian-roulette-mug",
+    "code_url": "https://update.greasyfork.org/scripts/493534/Torn%20-%20Russian%20Roulette%20Mug.user.js",
+    "code_size": 21802,
+    "license": null,
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

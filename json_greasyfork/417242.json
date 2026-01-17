@@ -1,0 +1,34 @@
+{
+  "id": 417242,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-01T07:32:06.000Z",
+  "code_updated_at": "2020-12-07T09:39:49.000Z",
+  "namespace": "com.hct.similar",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 398129,
+      "name": "xicun dong",
+      "created_at": "2019-11-15T08:35:18.000Z",
+      "url": "https://greasyfork.org/users/398129-xicun-dong",
+      "scripts": []
+    }
+  ],
+  "name": "Similar Picture",
+  "description": "upload image to same images",
+  "url": "https://greasyfork.org/scripts/417242-similar-picture",
+  "code_url": "https://update.greasyfork.org/scripts/417242/Similar%20Picture.user.js",
+  "code_size": 6052,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 490270,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-19T12:10:53.000Z",
+  "code_updated_at": "2024-03-19T12:10:53.000Z",
+  "namespace": "https://your.namespace.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1276564,
+      "name": "Jezsrel Brillo Treñas",
+      "created_at": "2024-03-19T12:03:01.000Z",
+      "url": "https://greasyfork.org/users/1276564-jezsrel-brillo-tre%C3%B1as",
+      "scripts": []
+    }
+  ],
+  "name": "TinamadBOT by Taru👑",
+  "description": "Adds a floating button to send automated messages on Telegram Web",
+  "url": "https://greasyfork.org/scripts/490270-tinamadbot-by-taru",
+  "code_url": "https://update.greasyfork.org/scripts/490270/TinamadBOT%20by%20Taru%F0%9F%91%91.user.js",
+  "code_size": 3645,
+  "license": "MIT License",
+  "version": "6.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

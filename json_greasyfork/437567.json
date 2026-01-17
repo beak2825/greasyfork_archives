@@ -1,0 +1,59 @@
+{
+  "id": 437567,
+  "daily_installs": 0,
+  "total_installs": 223,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-25T12:04:41.000Z",
+  "code_updated_at": "2022-01-08T14:18:59.000Z",
+  "namespace": "Better Google Search",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 857515,
+      "name": "kyosukyuu",
+      "created_at": "2021-12-25T11:17:49.000Z",
+      "url": "https://greasyfork.org/users/857515-kyosukyuu",
+      "scripts": [
+        {
+          "id": 437567,
+          "daily_installs": 0,
+          "total_installs": 223,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-25T12:04:41.000Z",
+          "code_updated_at": "2022-01-08T14:18:59.000Z",
+          "namespace": "Better Google Search",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Better Google Search",
+          "description": "Adds useful features for google searching. English support only. Tested on Brave Browser. Intended to work with light mode and dark mode. Doesn't work on mobile view.",
+          "url": "https://greasyfork.org/scripts/437567-better-google-search",
+          "code_url": "https://update.greasyfork.org/scripts/437567/Better%20Google%20Search.user.js",
+          "code_size": 50964,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Better Google Search",
+  "description": "Adds useful features for google searching. English support only. Tested on Brave Browser. Intended to work with light mode and dark mode. Doesn't work on mobile view.",
+  "url": "https://greasyfork.org/scripts/437567-better-google-search",
+  "code_url": "https://update.greasyfork.org/scripts/437567/Better%20Google%20Search.user.js",
+  "code_size": 50964,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

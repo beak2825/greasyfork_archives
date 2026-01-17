@@ -1,0 +1,59 @@
+{
+  "id": 415767,
+  "daily_installs": 0,
+  "total_installs": 145,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-08T23:37:07.000Z",
+  "code_updated_at": "2020-11-09T01:31:11.000Z",
+  "namespace": "https://greasyfork.org/users/702968",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 702968,
+      "name": "Chib By",
+      "created_at": "2020-11-08T23:33:41.000Z",
+      "url": "https://greasyfork.org/users/702968-chib-by",
+      "scripts": [
+        {
+          "id": 443838,
+          "daily_installs": 0,
+          "total_installs": 346,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-22T20:41:13.000Z",
+          "code_updated_at": "2022-04-23T05:39:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Real-debrid multi select link to download page [updated]",
+          "description": "Click on check box and \"Go to download page\" and all links checked will be debrided",
+          "url": "https://greasyfork.org/scripts/443838-real-debrid-multi-select-link-to-download-page-updated",
+          "code_url": "https://update.greasyfork.org/scripts/443838/Real-debrid%20multi%20select%20link%20to%20download%20page%20%5Bupdated%5D.user.js",
+          "code_size": 3165,
+          "license": null,
+          "version": "0.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitchls Button",
+  "description": "Adds a button to twitch pages to change to twitchls",
+  "url": "https://greasyfork.org/scripts/415767-twitchls-button",
+  "code_url": "https://update.greasyfork.org/scripts/415767/Twitchls%20Button.user.js",
+  "code_size": 1568,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

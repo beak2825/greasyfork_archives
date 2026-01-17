@@ -1,0 +1,68 @@
+[
+  {
+    "id": 475398,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-16T04:58:12.000Z",
+    "code_updated_at": "2023-12-28T10:32:13.000Z",
+    "namespace": "https://github.com/Freed-Wu",
+    "support_url": "https://github.com/Freed-Wu/fit-the-screen-consisting-of-two-monitors/issues",
+    "contribution_url": "https://github.com/Freed-Wu/fit-the-screen-consisting-of-two-monitors",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1008358,
+        "name": "Freed-Wu",
+        "created_at": "2023-01-07T08:15:22.000Z",
+        "url": "https://greasyfork.org/users/1008358-freed-wu"
+      }
+    ],
+    "name": "fit the screen consisting of two monitors",
+    "description": "adapt the position of content of web page to fit the screen consisting of two monitors",
+    "url": "https://greasyfork.org/scripts/475398-fit-the-screen-consisting-of-two-monitors",
+    "code_url": "https://update.greasyfork.org/scripts/475398/fit%20the%20screen%20consisting%20of%20two%20monitors.user.js",
+    "code_size": 2058,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457794,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-07T08:53:31.000Z",
+    "code_updated_at": "2023-01-07T09:09:07.000Z",
+    "namespace": "https://github.com/Freed-Wu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1008358,
+        "name": "Freed-Wu",
+        "created_at": "2023-01-07T08:15:22.000Z",
+        "url": "https://greasyfork.org/users/1008358-freed-wu"
+      }
+    ],
+    "name": "fast teaching evaluation of NJUST",
+    "description": "Evaluate teaching of NJUST.",
+    "url": "https://greasyfork.org/scripts/457794-fast-teaching-evaluation-of-njust",
+    "code_url": "https://update.greasyfork.org/scripts/457794/fast%20teaching%20evaluation%20of%20NJUST.user.js",
+    "code_size": 965,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

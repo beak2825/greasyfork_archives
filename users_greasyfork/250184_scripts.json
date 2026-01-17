@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479581,
+    "daily_installs": 0,
+    "total_installs": 1658,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-12T05:23:28.000Z",
+    "code_updated_at": "2024-05-05T14:13:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 250184,
+        "name": "wooi",
+        "created_at": "2019-02-27T00:59:50.000Z",
+        "url": "https://greasyfork.org/users/250184-wooi"
+      }
+    ],
+    "name": "【全自动】青书学堂挂课",
+    "description": "青书学堂 自动播放视频 自动挂课 自动下个视频 自动下个课程",
+    "url": "https://greasyfork.org/scripts/479581-%E5%85%A8%E8%87%AA%E5%8A%A8-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E6%8C%82%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/479581/%E3%80%90%E5%85%A8%E8%87%AA%E5%8A%A8%E3%80%91%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E6%8C%82%E8%AF%BE.user.js",
+    "code_size": 7260,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

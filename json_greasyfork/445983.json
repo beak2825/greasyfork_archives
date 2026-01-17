@@ -1,0 +1,33 @@
+{
+  "id": 445983,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-04T07:14:04.000Z",
+  "code_updated_at": "2022-06-05T22:36:41.000Z",
+  "namespace": "N/A",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 920695,
+      "name": "Rosa Lillirio",
+      "created_at": "2022-05-31T19:53:39.000Z",
+      "url": "https://greasyfork.org/users/920695-rosa-lillirio"
+    }
+  ],
+  "name": "AO3: [Wrangling] Random Bin Button!!",
+  "description": "because what wrangler doesn't need a lil fun in their lives ;)",
+  "url": "https://greasyfork.org/scripts/445983-ao3-wrangling-random-bin-button",
+  "code_url": "https://update.greasyfork.org/scripts/445983/AO3%3A%20%5BWrangling%5D%20Random%20Bin%20Button%21%21.user.js",
+  "code_size": 3614,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

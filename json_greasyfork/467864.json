@@ -1,0 +1,33 @@
+{
+  "id": 467864,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-04T08:36:56.000Z",
+  "code_updated_at": "2023-06-05T07:19:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 976874,
+      "name": "isaaxite",
+      "created_at": "2022-10-29T19:23:29.000Z",
+      "url": "https://greasyfork.org/users/976874-isaaxite"
+    }
+  ],
+  "name": "GushiwenDelads",
+  "description": "适用于古诗文网，tampermonkey的去广告脚本",
+  "url": "https://greasyfork.org/scripts/467864-gushiwendelads",
+  "code_url": "https://update.greasyfork.org/scripts/467864/GushiwenDelads.user.js",
+  "code_size": 1699,
+  "license": "https://github.com/isaaxite/tampermonkey-gusiwen_delads/blob/main/LICENSE",
+  "version": "1.0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

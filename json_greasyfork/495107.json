@@ -1,0 +1,59 @@
+{
+  "id": 495107,
+  "daily_installs": 0,
+  "total_installs": 124,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-16T03:04:38.000Z",
+  "code_updated_at": "2024-08-21T19:47:32.000Z",
+  "namespace": "cn.XYZliang.digit77Helper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1302274,
+      "name": "lgcyaxi",
+      "created_at": "2024-05-16T02:26:41.000Z",
+      "url": "https://greasyfork.org/users/1302274-lgcyaxi",
+      "scripts": [
+        {
+          "id": 495107,
+          "daily_installs": 0,
+          "total_installs": 124,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-16T03:04:38.000Z",
+          "code_updated_at": "2024-08-21T19:47:32.000Z",
+          "namespace": "cn.XYZliang.digit77Helper",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Digit77 Helper",
+          "description": "自动复制提取码，跳过ouo.io的三秒等待时间！",
+          "url": "https://greasyfork.org/scripts/495107-digit77-helper",
+          "code_url": "https://update.greasyfork.org/scripts/495107/Digit77%20Helper.user.js",
+          "code_size": 19060,
+          "license": "GNU General Public License v3.0",
+          "version": "2.4.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Digit77 Helper",
+  "description": "自动复制提取码，跳过ouo.io的三秒等待时间！",
+  "url": "https://greasyfork.org/scripts/495107-digit77-helper",
+  "code_url": "https://update.greasyfork.org/scripts/495107/Digit77%20Helper.user.js",
+  "code_size": 19060,
+  "license": "GNU General Public License v3.0",
+  "version": "2.4.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

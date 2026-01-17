@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 458444,
+    "daily_installs": 1,
+    "total_installs": 128,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-17T18:06:39.000Z",
+    "code_updated_at": "2023-01-17T18:06:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1005993,
+        "name": "Nukerboss",
+        "created_at": "2023-01-02T20:29:07.000Z",
+        "url": "https://greasyfork.org/users/1005993-nukerboss"
+      }
+    ],
+    "name": "FPS Increaser",
+    "description": "Increases FPS in game if your monitor can handle it. Do not use if you have a high refresh rate monitor (i.e. over 60hz)",
+    "url": "https://greasyfork.org/scripts/458444-fps-increaser",
+    "code_url": "https://update.greasyfork.org/scripts/458444/FPS%20Increaser.user.js",
+    "code_size": 475,
+    "license": null,
+    "version": "0.11111111",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457513,
+    "daily_installs": 0,
+    "total_installs": 230,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-02T20:46:04.000Z",
+    "code_updated_at": "2023-01-02T20:46:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1005993,
+        "name": "Nukerboss",
+        "created_at": "2023-01-02T20:29:07.000Z",
+        "url": "https://greasyfork.org/users/1005993-nukerboss"
+      }
+    ],
+    "name": "Mathletics Live Hack",
+    "description": "If this doesn't work, copy the code underneath \"console.inspect\" and paste it into inspect console tab! There are 2 codes btw, the first one is a quick, fast one, here are the README.MD instructions for usage! ;)              Once Countdown timer to the start of the game has finished, For Single Question Solve Press Up Arrow For Exactly 150 Question Solve Press Left Arrow For Solve Every 400 ~ 500ms (random) Press Down Arrow For As Fast As Possible Solve Press Right Arrow",
+    "url": "https://greasyfork.org/scripts/457513-mathletics-live-hack",
+    "code_url": "https://update.greasyfork.org/scripts/457513/Mathletics%20Live%20Hack.user.js",
+    "code_size": 5746,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

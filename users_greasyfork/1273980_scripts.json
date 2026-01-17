@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489718,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-13T10:42:04.000Z",
+    "code_updated_at": "2024-03-13T10:42:03.000Z",
+    "namespace": "ptc-fb",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1273980,
+        "name": "seegift00",
+        "created_at": "2024-03-13T10:40:24.000Z",
+        "url": "https://greasyfork.org/users/1273980-seegift00"
+      }
+    ],
+    "name": "ptc-fb",
+    "description": "product collect tool",
+    "url": "https://greasyfork.org/scripts/489718-ptc-fb",
+    "code_url": "https://update.greasyfork.org/scripts/489718/ptc-fb.user.js",
+    "code_size": 3645,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

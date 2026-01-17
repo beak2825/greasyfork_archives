@@ -1,0 +1,59 @@
+{
+  "id": 439242,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-27T17:02:33.000Z",
+  "code_updated_at": "2022-01-27T17:02:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 867334,
+      "name": "Void Ferry (Programming)",
+      "created_at": "2022-01-20T22:36:27.000Z",
+      "url": "https://greasyfork.org/users/867334-void-ferry-programming",
+      "scripts": [
+        {
+          "id": 439242,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-27T17:02:33.000Z",
+          "code_updated_at": "2022-01-27T17:02:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Autowin Wordle",
+          "description": "FULL CREDIT TO JSBITS",
+          "url": "https://greasyfork.org/scripts/439242-autowin-wordle",
+          "code_url": "https://update.greasyfork.org/scripts/439242/Autowin%20Wordle.user.js",
+          "code_size": 936,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Autowin Wordle",
+  "description": "FULL CREDIT TO JSBITS",
+  "url": "https://greasyfork.org/scripts/439242-autowin-wordle",
+  "code_url": "https://update.greasyfork.org/scripts/439242/Autowin%20Wordle.user.js",
+  "code_size": 936,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

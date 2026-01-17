@@ -1,0 +1,33 @@
+{
+  "id": 478931,
+  "daily_installs": 1,
+  "total_installs": 1444,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-03T07:57:16.000Z",
+  "code_updated_at": "2024-11-08T12:32:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 461153,
+      "name": "clerver-cirno",
+      "created_at": "2020-03-18T03:03:59.000Z",
+      "url": "https://greasyfork.org/users/461153-clerver-cirno"
+    }
+  ],
+  "name": "枝江拖拉机 独轮车+说书人整合优化版",
+  "description": "原脚本的[循环发送]修改为[说书人]功能，现在说书可以直接粘贴整段文字，不用自己手动分割弹幕",
+  "url": "https://greasyfork.org/scripts/478931-%E6%9E%9D%E6%B1%9F%E6%8B%96%E6%8B%89%E6%9C%BA-%E7%8B%AC%E8%BD%AE%E8%BD%A6-%E8%AF%B4%E4%B9%A6%E4%BA%BA%E6%95%B4%E5%90%88%E4%BC%98%E5%8C%96%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/478931/%E6%9E%9D%E6%B1%9F%E6%8B%96%E6%8B%89%E6%9C%BA%20%E7%8B%AC%E8%BD%AE%E8%BD%A6%2B%E8%AF%B4%E4%B9%A6%E4%BA%BA%E6%95%B4%E5%90%88%E4%BC%98%E5%8C%96%E7%89%88.user.js",
+  "code_size": 22074,
+  "license": "MIT License",
+  "version": "1.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

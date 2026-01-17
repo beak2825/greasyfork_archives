@@ -196,5 +196,38 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 478810,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-01T16:55:01.000Z",
+    "code_updated_at": "2025-10-29T22:57:17.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1079600,
+        "name": "Simpsons",
+        "created_at": "2023-05-15T14:58:07.000Z",
+        "url": "https://greasyfork.org/users/1079600-simpsons"
+      }
+    ],
+    "name": "Скрипт Для Кураторов Форума сервера SARATOV",
+    "description": "Версия для сервера SARATOV",
+    "url": "https://greasyfork.org/scripts/478810-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0-saratov",
+    "code_url": "https://update.greasyfork.org/scripts/478810/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%94%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0%20SARATOV.user.js",
+    "code_size": 160136,
+    "license": "MIT License",
+    "version": "3.18.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

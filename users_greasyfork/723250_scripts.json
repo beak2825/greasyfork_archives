@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419519,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-02T08:58:11.000Z",
+    "code_updated_at": "2026-01-05T04:15:55.000Z",
+    "namespace": "https://greasyfork.org/users/723250",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 723250,
+        "name": "シャルク",
+        "created_at": "2021-01-02T08:17:39.000Z",
+        "url": "https://greasyfork.org/users/723250-%E3%82%B7%E3%83%A3%E3%83%AB%E3%82%AF"
+      }
+    ],
+    "name": "小説家になろう戦国ふりがな",
+    "description": "「小説家になろう」「カクヨム」「アルファポリス」「ノベルアップ＋」の小説に戦国時代を中心とした歴史上の人物名・地名・寺社・官位・各種用語などにふりがなをつけるスクリプトです。",
+    "url": "https://greasyfork.org/scripts/419519-%E5%B0%8F%E8%AA%AC%E5%AE%B6%E3%81%AB%E3%81%AA%E3%82%8D%E3%81%86%E6%88%A6%E5%9B%BD%E3%81%B5%E3%82%8A%E3%81%8C%E3%81%AA",
+    "code_url": "https://update.greasyfork.org/scripts/419519/%E5%B0%8F%E8%AA%AC%E5%AE%B6%E3%81%AB%E3%81%AA%E3%82%8D%E3%81%86%E6%88%A6%E5%9B%BD%E3%81%B5%E3%82%8A%E3%81%8C%E3%81%AA.user.js",
+    "code_size": 927131,
+    "license": "MIT License",
+    "version": "9.20260104",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

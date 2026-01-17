@@ -1,0 +1,33 @@
+{
+  "id": 472055,
+  "daily_installs": 0,
+  "total_installs": 700,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-30T13:43:14.000Z",
+  "code_updated_at": "2023-07-30T13:43:14.000Z",
+  "namespace": "https://github.com/lcandy2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 541676,
+      "name": "Citron甜柠🍋",
+      "created_at": "2020-04-26T02:06:59.000Z",
+      "url": "https://greasyfork.org/users/541676-citron%E7%94%9C%E6%9F%A0"
+    }
+  ],
+  "name": "中国大学MOOC隐藏答案",
+  "description": "添加一个切换答案按钮，点击可显示/隐藏答案",
+  "url": "https://greasyfork.org/scripts/472055-%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6mooc%E9%9A%90%E8%97%8F%E7%AD%94%E6%A1%88",
+  "code_url": "https://update.greasyfork.org/scripts/472055/%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6MOOC%E9%9A%90%E8%97%8F%E7%AD%94%E6%A1%88.user.js",
+  "code_size": 2278,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

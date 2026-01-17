@@ -1,0 +1,33 @@
+{
+  "id": 475264,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-14T07:33:41.000Z",
+  "code_updated_at": "2023-09-14T08:32:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1172708,
+      "name": "StormerZSha",
+      "created_at": "2023-09-14T07:22:40.000Z",
+      "url": "https://greasyfork.org/users/1172708-stormerzsha"
+    }
+  ],
+  "name": "nga楼内关键字统计",
+  "description": "用于在nga论坛楼内关键字出现次数统计",
+  "url": "https://greasyfork.org/scripts/475264-nga%E6%A5%BC%E5%86%85%E5%85%B3%E9%94%AE%E5%AD%97%E7%BB%9F%E8%AE%A1",
+  "code_url": "https://update.greasyfork.org/scripts/475264/nga%E6%A5%BC%E5%86%85%E5%85%B3%E9%94%AE%E5%AD%97%E7%BB%9F%E8%AE%A1.user.js",
+  "code_size": 5214,
+  "license": "MIT License",
+  "version": "0.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

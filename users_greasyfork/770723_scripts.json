@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426291,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-11T00:22:32.000Z",
+    "code_updated_at": "2021-05-11T00:22:32.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770723,
+        "name": "DaniDipp",
+        "created_at": "2021-05-11T00:00:07.000Z",
+        "url": "https://greasyfork.org/users/770723-danidipp"
+      }
+    ],
+    "name": "Jill's Boyfriend",
+    "description": "Replaces every occurence of \"Jill's Boyfriend\" with \"Jill's Boyfriend\"",
+    "url": "https://greasyfork.org/scripts/426291-jill-s-boyfriend",
+    "code_url": "https://update.greasyfork.org/scripts/426291/Jill%27s%20Boyfriend.user.js",
+    "code_size": 864,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

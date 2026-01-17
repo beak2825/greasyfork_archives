@@ -1,0 +1,33 @@
+{
+  "id": 414948,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-29T04:16:21.000Z",
+  "code_updated_at": "2020-11-28T14:27:25.000Z",
+  "namespace": "없다",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 699296,
+      "name": "차정일",
+      "created_at": "2020-10-29T04:13:57.000Z",
+      "url": "https://greasyfork.org/users/699296-%EC%B0%A8%EC%A0%95%EC%9D%BC"
+    }
+  ],
+  "name": "보배드림 닉네임차단",
+  "description": "특정 닉네임의 게시글 색상변경 및 클릭시 물어보기 & 댓글차단 2.0 부터 버그 픽스는 맨마지막 버전을따름 중간버전은 기능 추가/업데이트",
+  "url": "https://greasyfork.org/scripts/414948-%EB%B3%B4%EB%B0%B0%EB%93%9C%EB%A6%BC-%EB%8B%89%EB%84%A4%EC%9E%84%EC%B0%A8%EB%8B%A8",
+  "code_url": "https://update.greasyfork.org/scripts/414948/%EB%B3%B4%EB%B0%B0%EB%93%9C%EB%A6%BC%20%EB%8B%89%EB%84%A4%EC%9E%84%EC%B0%A8%EB%8B%A8.user.js",
+  "code_size": 30771,
+  "license": null,
+  "version": "2.2.4",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

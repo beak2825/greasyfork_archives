@@ -30,6 +30,138 @@
     "version": "1.0.2",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 495075,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-15T20:35:16.000Z",
+    "code_updated_at": "2024-05-15T20:35:16.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 924927,
+        "name": "LabMember-001",
+        "created_at": "2022-06-12T14:49:55.000Z",
+        "url": "https://greasyfork.org/users/924927-labmember-001"
+      }
+    ],
+    "name": "NHK NEWS WEB EASY Hide Furigana Show on Hover Only",
+    "description": "There's no toggle I don't care just turn the script off if you don't like it. You should get yomitan configured anyways this is mainly to hide it.",
+    "url": "https://greasyfork.org/scripts/495075-nhk-news-web-easy-hide-furigana-show-on-hover-only",
+    "code_url": "https://update.greasyfork.org/scripts/495075/NHK%20NEWS%20WEB%20EASY%20Hide%20Furigana%20Show%20on%20Hover%20Only.user.js",
+    "code_size": 997,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 452561,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-06T13:48:51.000Z",
+    "code_updated_at": "2022-10-08T09:32:10.000Z",
+    "namespace": "betterteddit_userids",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 924927,
+        "name": "LabMember-001",
+        "created_at": "2022-06-12T14:49:55.000Z",
+        "url": "https://greasyfork.org/users/924927-labmember-001"
+      }
+    ],
+    "name": "BetterTeddit Extension - User IDs",
+    "description": "Requires BetterTeddit. Add IDs and optionally colorized IDs.",
+    "url": "https://greasyfork.org/scripts/452561-betterteddit-extension-user-ids",
+    "code_url": "https://update.greasyfork.org/scripts/452561/BetterTeddit%20Extension%20-%20User%20IDs.user.js",
+    "code_size": 5900,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 452560,
+    "daily_installs": 0,
+    "total_installs": 110,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-06T13:44:52.000Z",
+    "code_updated_at": "2023-01-21T12:12:54.000Z",
+    "namespace": "betterteddit",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 924927,
+        "name": "LabMember-001",
+        "created_at": "2022-06-12T14:49:55.000Z",
+        "url": "https://greasyfork.org/users/924927-labmember-001"
+      }
+    ],
+    "name": "BetterTeddit",
+    "description": "Extensible convenience extension for Teddit instances while keeping general JavaScript disabled.",
+    "url": "https://greasyfork.org/scripts/452560-betterteddit",
+    "code_url": "https://update.greasyfork.org/scripts/452560/BetterTeddit.user.js",
+    "code_size": 51603,
+    "license": "GPLv3",
+    "version": "1.6.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 446388,
+    "daily_installs": 0,
+    "total_installs": 441,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-12T15:55:21.000Z",
+    "code_updated_at": "2022-12-12T05:27:44.000Z",
+    "namespace": "LabMember-001",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 924927,
+        "name": "LabMember-001",
+        "created_at": "2022-06-12T14:49:55.000Z",
+        "url": "https://greasyfork.org/users/924927-labmember-001"
+      }
+    ],
+    "name": "4chan \\ IB Simple Web Media Player",
+    "description": "Simple Web Media Player for 4chan and other imageboards.",
+    "url": "https://greasyfork.org/scripts/446388-4chan-ib-simple-web-media-player",
+    "code_url": "https://update.greasyfork.org/scripts/446388/4chan%20%5C%20IB%20Simple%20Web%20Media%20Player.user.js",
+    "code_size": 91167,
+    "license": "GPLv3",
+    "version": "1.4.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

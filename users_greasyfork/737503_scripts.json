@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421715,
+    "daily_installs": 0,
+    "total_installs": 290,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-02-15T04:22:52.000Z",
+    "code_updated_at": "2021-02-15T04:35:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 737503,
+        "name": "Henri-J-Norden",
+        "created_at": "2021-02-15T04:20:19.000Z",
+        "url": "https://greasyfork.org/users/737503-henri-j-norden"
+      }
+    ],
+    "name": "Thingiverse allow adding things to multiple collections",
+    "description": "Enables the Collected button to be pressed to add an item to another collection - this additionally fixes the issue that the server does not update immediately once a thing has been removed from a collection, allowing you to immediately add to another one.",
+    "url": "https://greasyfork.org/scripts/421715-thingiverse-allow-adding-things-to-multiple-collections",
+    "code_url": "https://update.greasyfork.org/scripts/421715/Thingiverse%20allow%20adding%20things%20to%20multiple%20collections.user.js",
+    "code_size": 2459,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

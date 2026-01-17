@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420296,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-16T23:12:15.000Z",
+    "code_updated_at": "2021-01-16T23:53:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 728143,
+        "name": "DeeplyDiligent",
+        "created_at": "2021-01-16T23:11:27.000Z",
+        "url": "https://greasyfork.org/users/728143-deeplydiligent"
+      }
+    ],
+    "name": "Dynalist image pasting",
+    "description": "Paste into top left Input Box then paste again into the list in app and press enter",
+    "url": "https://greasyfork.org/scripts/420296-dynalist-image-pasting",
+    "code_url": "https://update.greasyfork.org/scripts/420296/Dynalist%20image%20pasting.user.js",
+    "code_size": 2043,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466324,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-15T07:59:19.000Z",
+    "code_updated_at": "2023-05-15T07:59:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1079391,
+        "name": "StarkL",
+        "created_at": "2023-05-15T07:42:39.000Z",
+        "url": "https://greasyfork.org/users/1079391-starkl"
+      }
+    ],
+    "name": "去简书网站的广告",
+    "description": "简书广告删除，网页加载后，每100ms查询一次广告DOM，自动删除，默认查到并删除后，或查询2000ms后停止",
+    "url": "https://greasyfork.org/scripts/466324-%E5%8E%BB%E7%AE%80%E4%B9%A6%E7%BD%91%E7%AB%99%E7%9A%84%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/466324/%E5%8E%BB%E7%AE%80%E4%B9%A6%E7%BD%91%E7%AB%99%E7%9A%84%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 2222,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

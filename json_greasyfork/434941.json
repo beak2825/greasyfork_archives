@@ -1,0 +1,34 @@
+{
+  "id": 434941,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-03T14:14:20.000Z",
+  "code_updated_at": "2021-11-04T01:20:09.000Z",
+  "namespace": "https://www.tiankong.info/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 831730,
+      "name": "jinglekang",
+      "created_at": "2021-11-03T14:10:58.000Z",
+      "url": "https://greasyfork.org/users/831730-jinglekang",
+      "scripts": []
+    }
+  ],
+  "name": "上应大自动答题插件",
+  "description": "上海应用技术大学继续教育学院自动答题插件，如果题库有答案则自动填充，否则需要手动提交一次然后刷新答案",
+  "url": "https://greasyfork.org/scripts/434941-%E4%B8%8A%E5%BA%94%E5%A4%A7%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/434941/%E4%B8%8A%E5%BA%94%E5%A4%A7%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 7673,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

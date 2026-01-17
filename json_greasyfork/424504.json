@@ -1,0 +1,33 @@
+{
+  "id": 424504,
+  "daily_installs": 0,
+  "total_installs": 124,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-05T02:34:31.000Z",
+  "code_updated_at": "2022-04-09T11:05:57.000Z",
+  "namespace": "https://github.com/invobzvr",
+  "support_url": "https://github.com/invobzvr/invotoys.js/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 754964,
+      "name": "invobzvr",
+      "created_at": "2021-04-05T01:24:44.000Z",
+      "url": "https://greasyfork.org/users/754964-invobzvr"
+    }
+  ],
+  "name": "Custom yz_tj",
+  "description": "研招网调剂增强",
+  "url": "https://greasyfork.org/scripts/424504-custom-yz-tj",
+  "code_url": "https://update.greasyfork.org/scripts/424504/Custom%20yz_tj.user.js",
+  "code_size": 5690,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

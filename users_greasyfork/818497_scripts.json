@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432875,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-24T06:29:04.000Z",
+    "code_updated_at": "2021-12-22T11:39:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 818497,
+        "name": "nyaxs",
+        "created_at": "2021-09-24T06:12:38.000Z",
+        "url": "https://greasyfork.org/users/818497-nyaxs"
+      }
+    ],
+    "name": "谷歌搜索结果居中,输入框扩大",
+    "description": "谷歌搜索结果居中，输入框扩大。body切换grid布局，内容居中，搜索框拉长",
+    "url": "https://greasyfork.org/scripts/432875-%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E5%B1%85%E4%B8%AD-%E8%BE%93%E5%85%A5%E6%A1%86%E6%89%A9%E5%A4%A7",
+    "code_url": "https://update.greasyfork.org/scripts/432875/%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E5%B1%85%E4%B8%AD%2C%E8%BE%93%E5%85%A5%E6%A1%86%E6%89%A9%E5%A4%A7.user.js",
+    "code_size": 784,
+    "license": "MIT License",
+    "version": "0.91",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

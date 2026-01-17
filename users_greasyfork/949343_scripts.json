@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449963,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-22T07:17:00.000Z",
+    "code_updated_at": "2023-05-19T07:43:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949343,
+        "name": "ma weitao",
+        "created_at": "2022-08-22T07:07:13.000Z",
+        "url": "https://greasyfork.org/users/949343-ma-weitao"
+      }
+    ],
+    "name": "Hd Gitlab Script",
+    "description": "For Hd Gitlab Commit -> 修改发布单conf文件路径",
+    "url": "https://greasyfork.org/scripts/449963-hd-gitlab-script",
+    "code_url": "https://update.greasyfork.org/scripts/449963/Hd%20Gitlab%20Script.user.js",
+    "code_size": 5040,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

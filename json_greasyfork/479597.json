@@ -1,0 +1,34 @@
+{
+  "id": 479597,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-12T08:35:25.000Z",
+  "code_updated_at": "2023-11-12T10:45:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1215960,
+      "name": "Chinyi Pam",
+      "created_at": "2023-11-12T08:20:32.000Z",
+      "url": "https://greasyfork.org/users/1215960-chinyi-pam",
+      "scripts": []
+    }
+  ],
+  "name": "Cyberbiz theme files download",
+  "description": "Download all files from the Cyberbiz theme to your local machine",
+  "url": "https://greasyfork.org/scripts/479597-cyberbiz-theme-files-download",
+  "code_url": "https://update.greasyfork.org/scripts/479597/Cyberbiz%20theme%20files%20download.user.js",
+  "code_size": 4619,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

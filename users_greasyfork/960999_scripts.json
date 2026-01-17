@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451611,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-19T04:47:44.000Z",
+    "code_updated_at": "2022-09-19T04:47:44.000Z",
+    "namespace": "https://greasyfork.org/users/960999",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 960999,
+        "name": "Lol2223",
+        "created_at": "2022-09-19T04:45:05.000Z",
+        "url": "https://greasyfork.org/users/960999-lol2223"
+      }
+    ],
+    "name": "PTP WEB Marker",
+    "description": "Marks WEB sourced torrents with WEB-DL/WEBRip distinction and source tag",
+    "url": "https://greasyfork.org/scripts/451611-ptp-web-marker",
+    "code_url": "https://update.greasyfork.org/scripts/451611/PTP%20WEB%20Marker.user.js",
+    "code_size": 6361,
+    "license": null,
+    "version": "1.5.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

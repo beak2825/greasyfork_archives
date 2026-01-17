@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442669,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-03T19:45:35.000Z",
+    "code_updated_at": "2022-04-03T19:45:34.000Z",
+    "namespace": "https://greastfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 897230,
+        "name": "EvaisaGiac",
+        "created_at": "2022-04-03T19:43:22.000Z",
+        "url": "https://greasyfork.org/users/897230-evaisagiac"
+      }
+    ],
+    "name": "Noita Ally Place Overlay",
+    "description": "Shows an overlay for Noita Allies. Might not be perfect due to changes.",
+    "url": "https://greasyfork.org/scripts/442669-noita-ally-place-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/442669/Noita%20Ally%20Place%20Overlay.user.js",
+    "code_size": 1031,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.32",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

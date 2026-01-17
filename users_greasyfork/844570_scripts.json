@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436097,
+    "daily_installs": 0,
+    "total_installs": 228,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-11-26T07:11:09.000Z",
+    "code_updated_at": "2023-07-24T01:56:15.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/436097-1-click-feed-maintenance",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 844570,
+        "name": "lwkjef",
+        "created_at": "2021-11-26T06:52:40.000Z",
+        "url": "https://greasyfork.org/users/844570-lwkjef"
+      }
+    ],
+    "name": "1-click feed maintenance",
+    "description": "Remove a video or channel from your homepage feed forever, even if you're not logged in to youtube.",
+    "url": "https://greasyfork.org/scripts/436097-1-click-feed-maintenance",
+    "code_url": "https://update.greasyfork.org/scripts/436097/1-click%20feed%20maintenance.user.js",
+    "code_size": 38192,
+    "license": "MIT License",
+    "version": "4.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

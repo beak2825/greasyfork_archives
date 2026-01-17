@@ -1,0 +1,34 @@
+{
+  "id": 429567,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-18T12:11:17.000Z",
+  "code_updated_at": "2023-06-21T07:44:03.000Z",
+  "namespace": "https://www.laiu8.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 767055,
+      "name": "三月飞絮",
+      "created_at": "2021-05-01T01:14:00.000Z",
+      "url": "https://greasyfork.org/users/767055-%E4%B8%89%E6%9C%88%E9%A3%9E%E7%B5%AE",
+      "scripts": []
+    }
+  ],
+  "name": "来游吧增强脚本",
+  "description": "来游吧布局改善",
+  "url": "https://greasyfork.org/scripts/429567-%E6%9D%A5%E6%B8%B8%E5%90%A7%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/429567/%E6%9D%A5%E6%B8%B8%E5%90%A7%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 7211,
+  "license": null,
+  "version": "230621",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

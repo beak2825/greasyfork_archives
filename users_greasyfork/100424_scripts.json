@@ -1,0 +1,68 @@
+[
+  {
+    "id": 470215,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-07-05T10:03:28.000Z",
+    "code_updated_at": "2024-11-26T07:16:07.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/470215",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 100424,
+        "name": "dokill",
+        "created_at": "2017-02-06T14:42:19.000Z",
+        "url": "https://greasyfork.org/users/100424-dokill"
+      }
+    ],
+    "name": "美丽得Buzzing",
+    "description": "支持拖拽排序,双击标题栏可置顶，双击底部栏可移至最后,版面高度可自己调节",
+    "url": "https://greasyfork.org/scripts/470215-%E7%BE%8E%E4%B8%BD%E5%BE%97buzzing",
+    "code_url": "https://update.greasyfork.org/scripts/470215/%E7%BE%8E%E4%B8%BD%E5%BE%97Buzzing.user.js",
+    "code_size": 8141,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462551,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-25T10:46:41.000Z",
+    "code_updated_at": "2025-02-06T15:44:56.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/462551",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 100424,
+        "name": "dokill",
+        "created_at": "2017-02-06T14:42:19.000Z",
+        "url": "https://greasyfork.org/users/100424-dokill"
+      }
+    ],
+    "name": "dxm",
+    "description": "统计当前订单件数 & 针对区域定价的报关金额进行批量填充",
+    "url": "https://greasyfork.org/scripts/462551-dxm",
+    "code_url": "https://update.greasyfork.org/scripts/462551/dxm.user.js",
+    "code_size": 12251,
+    "license": "MIT License",
+    "version": "2.64",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 439367,
+  "daily_installs": 0,
+  "total_installs": 849,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-30T11:45:05.000Z",
+  "code_updated_at": "2022-06-16T17:27:07.000Z",
+  "namespace": "https://paper-io.com/teams/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 870853,
+      "name": "Akkey57492",
+      "created_at": "2022-01-29T16:29:34.000Z",
+      "url": "https://greasyfork.org/users/870853-akkey57492",
+      "scripts": [
+        {
+          "id": 439367,
+          "daily_installs": 0,
+          "total_installs": 849,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-30T11:45:05.000Z",
+          "code_updated_at": "2022-06-16T17:27:07.000Z",
+          "namespace": "https://paper-io.com/teams/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PaperIO Simple Script",
+          "description": "Paper.io用のシンプルなHack用Script",
+          "url": "https://greasyfork.org/scripts/439367-paperio-simple-script",
+          "code_url": "https://update.greasyfork.org/scripts/439367/PaperIO%20Simple%20Script.user.js",
+          "code_size": 14347,
+          "license": "MIT License",
+          "version": "0.0.22222222222222222222222222",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PaperIO Simple Script",
+  "description": "Paper.io用のシンプルなHack用Script",
+  "url": "https://greasyfork.org/scripts/439367-paperio-simple-script",
+  "code_url": "https://update.greasyfork.org/scripts/439367/PaperIO%20Simple%20Script.user.js",
+  "code_size": 14347,
+  "license": "MIT License",
+  "version": "0.0.22222222222222222222222222",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

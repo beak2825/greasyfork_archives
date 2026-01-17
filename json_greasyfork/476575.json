@@ -1,0 +1,59 @@
+{
+  "id": 476575,
+  "daily_installs": 0,
+  "total_installs": 163,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-02T19:05:07.000Z",
+  "code_updated_at": "2023-11-21T13:15:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 228920,
+      "name": "Elsu YAZZIE",
+      "created_at": "2018-11-28T03:59:30.000Z",
+      "url": "https://greasyfork.org/users/228920-elsu-yazzie",
+      "scripts": [
+        {
+          "id": 476575,
+          "daily_installs": 0,
+          "total_installs": 163,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-02T19:05:07.000Z",
+          "code_updated_at": "2023-11-21T13:15:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "get-magnet",
+          "description": "query the web pages all magnet link",
+          "url": "https://greasyfork.org/scripts/476575-get-magnet",
+          "code_url": "https://update.greasyfork.org/scripts/476575/get-magnet.user.js",
+          "code_size": 10106,
+          "license": "GPL",
+          "version": "0.38.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "get-magnet",
+  "description": "query the web pages all magnet link",
+  "url": "https://greasyfork.org/scripts/476575-get-magnet",
+  "code_url": "https://update.greasyfork.org/scripts/476575/get-magnet.user.js",
+  "code_size": 10106,
+  "license": "GPL",
+  "version": "0.38.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

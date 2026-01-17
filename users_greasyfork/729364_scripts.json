@@ -1,0 +1,134 @@
+[
+  {
+    "id": 478910,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-03T02:19:57.000Z",
+    "code_updated_at": "2023-11-03T02:19:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729364,
+        "name": "KnIfER",
+        "created_at": "2021-01-20T10:56:32.000Z",
+        "url": "https://greasyfork.org/users/729364-knifer"
+      }
+    ],
+    "name": "Github Repository Name as Tab Title",
+    "description": "change tab title to : Repository Name / blabla",
+    "url": "https://greasyfork.org/scripts/478910-github-repository-name-as-tab-title",
+    "code_url": "https://update.greasyfork.org/scripts/478910/Github%20Repository%20Name%20as%20Tab%20Title.user.js",
+    "code_size": 884,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 478707,
+    "daily_installs": 1,
+    "total_installs": 148,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-31T08:25:07.000Z",
+    "code_updated_at": "2023-11-01T09:40:02.000Z",
+    "namespace": "https://gist.github.com/KnIfER",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729364,
+        "name": "KnIfER",
+        "created_at": "2021-01-20T10:56:32.000Z",
+        "url": "https://greasyfork.org/users/729364-knifer"
+      }
+    ],
+    "name": "SingleFile Pure - Pure html downloader",
+    "description": "将当前网页保存为一个纯文本的.html网页文件，不保存二进制",
+    "url": "https://greasyfork.org/scripts/478707-singlefile-pure-pure-html-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/478707/SingleFile%20Pure%20-%20Pure%20html%20downloader.user.js",
+    "code_size": 17283,
+    "license": "MIT License",
+    "version": "3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472978,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-13T10:47:55.000Z",
+    "code_updated_at": "2023-08-13T10:47:55.000Z",
+    "namespace": "https://gist.github.com/KnIfER",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729364,
+        "name": "KnIfER",
+        "created_at": "2021-01-20T10:56:32.000Z",
+        "url": "https://greasyfork.org/users/729364-knifer"
+      }
+    ],
+    "name": "掘金一键收藏",
+    "description": "右击收藏按钮一键收藏，左键单击仍为多文件夹。通过菜单设置一键收藏到哪些文件夹！",
+    "url": "https://greasyfork.org/scripts/472978-%E6%8E%98%E9%87%91%E4%B8%80%E9%94%AE%E6%94%B6%E8%97%8F",
+    "code_url": "https://update.greasyfork.org/scripts/472978/%E6%8E%98%E9%87%91%E4%B8%80%E9%94%AE%E6%94%B6%E8%97%8F.user.js",
+    "code_size": 3970,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420454,
+    "daily_installs": 0,
+    "total_installs": 60,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-20T11:51:07.000Z",
+    "code_updated_at": "2021-01-20T11:51:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729364,
+        "name": "KnIfER",
+        "created_at": "2021-01-20T10:56:32.000Z",
+        "url": "https://greasyfork.org/users/729364-knifer"
+      }
+    ],
+    "name": "Wikipedia Math-Editor Dialog",
+    "description": "A Simple Latex Editor Dialog!",
+    "url": "https://greasyfork.org/scripts/420454-wikipedia-math-editor-dialog",
+    "code_url": "https://update.greasyfork.org/scripts/420454/Wikipedia%20Math-Editor%20Dialog.user.js",
+    "code_size": 4933,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

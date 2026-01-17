@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452928,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-12T14:23:17.000Z",
+    "code_updated_at": "2022-10-12T14:29:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 969759,
+        "name": "Johan de Ridder",
+        "created_at": "2022-10-12T14:20:25.000Z",
+        "url": "https://greasyfork.org/users/969759-johan-de-ridder"
+      }
+    ],
+    "name": "Torn Temp Fix",
+    "description": "Fix torn lol",
+    "url": "https://greasyfork.org/scripts/452928-torn-temp-fix",
+    "code_url": "https://update.greasyfork.org/scripts/452928/Torn%20Temp%20Fix.user.js",
+    "code_size": 323,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

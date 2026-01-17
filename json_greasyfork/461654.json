@@ -1,0 +1,34 @@
+{
+  "id": 461654,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-11T20:16:32.000Z",
+  "code_updated_at": "2023-03-11T20:16:31.000Z",
+  "namespace": "https://t.me/uapixelbattlechat",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1039970,
+      "name": "cheykovsky",
+      "created_at": "2023-03-10T14:55:12.000Z",
+      "url": "https://greasyfork.org/users/1039970-cheykovsky",
+      "scripts": []
+    }
+  ],
+  "name": "Pixelbbatle",
+  "description": "Pixel battle",
+  "url": "https://greasyfork.org/scripts/461654-pixelbbatle",
+  "code_url": "https://update.greasyfork.org/scripts/461654/Pixelbbatle.user.js",
+  "code_size": 6411,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

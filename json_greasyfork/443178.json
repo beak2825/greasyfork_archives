@@ -1,0 +1,33 @@
+{
+  "id": 443178,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-11T10:04:11.000Z",
+  "code_updated_at": "2022-04-11T10:05:40.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 866015,
+      "name": "K Demir",
+      "created_at": "2022-01-17T13:34:39.000Z",
+      "url": "https://greasyfork.org/users/866015-k-demir"
+    }
+  ],
+  "name": "ÖSYM çıkan soruları ekrana sığdırma betiği - osym.gov.tr",
+  "description": "4/11/2022, 11:53:13 AM",
+  "url": "https://greasyfork.org/scripts/443178-%C3%B6sym-%C3%A7%C4%B1kan-sorular%C4%B1-ekrana-s%C4%B1%C4%9Fd%C4%B1rma-beti%C4%9Fi-osym-gov-tr",
+  "code_url": "https://update.greasyfork.org/scripts/443178/%C3%96SYM%20%C3%A7%C4%B1kan%20sorular%C4%B1%20ekrana%20s%C4%B1%C4%9Fd%C4%B1rma%20beti%C4%9Fi%20-%20osymgovtr.user.js",
+  "code_size": 900,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

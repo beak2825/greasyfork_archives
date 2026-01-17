@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436046,
+    "daily_installs": 0,
+    "total_installs": 271,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-11-25T08:53:42.000Z",
+    "code_updated_at": "2021-11-25T10:43:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 844004,
+        "name": "MeloGuo",
+        "created_at": "2021-11-25T08:34:26.000Z",
+        "url": "https://greasyfork.org/users/844004-meloguo"
+      }
+    ],
+    "name": "豆瓣图书跳转 ZLibrary",
+    "description": "在豆瓣图书页面增加直接跳转 ZLibrary 搜索结果页的选项",
+    "url": "https://greasyfork.org/scripts/436046-%E8%B1%86%E7%93%A3%E5%9B%BE%E4%B9%A6%E8%B7%B3%E8%BD%AC-zlibrary",
+    "code_url": "https://update.greasyfork.org/scripts/436046/%E8%B1%86%E7%93%A3%E5%9B%BE%E4%B9%A6%E8%B7%B3%E8%BD%AC%20ZLibrary.user.js",
+    "code_size": 3096,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

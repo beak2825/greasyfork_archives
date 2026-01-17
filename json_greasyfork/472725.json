@@ -1,0 +1,33 @@
+{
+  "id": 472725,
+  "daily_installs": 1,
+  "total_installs": 2577,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-08T15:44:33.000Z",
+  "code_updated_at": "2023-08-20T08:35:17.000Z",
+  "namespace": "douyin_video_downloader",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1147051,
+      "name": "尬尴的猫",
+      "created_at": "2023-08-08T15:29:41.000Z",
+      "url": "https://greasyfork.org/users/1147051-%E5%B0%AC%E5%B0%B4%E7%9A%84%E7%8C%AB"
+    }
+  ],
+  "name": "抖音无水印视频下载⭕豆豆",
+  "description": "抖音无水印视频下载⭕豆豆⭕持续更新。",
+  "url": "https://greasyfork.org/scripts/472725-%E6%8A%96%E9%9F%B3%E6%97%A0%E6%B0%B4%E5%8D%B0%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD-%E8%B1%86%E8%B1%86",
+  "code_url": "https://update.greasyfork.org/scripts/472725/%E6%8A%96%E9%9F%B3%E6%97%A0%E6%B0%B4%E5%8D%B0%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E2%AD%95%E8%B1%86%E8%B1%86.user.js",
+  "code_size": 5077,
+  "license": "ian-6.0-or-later",
+  "version": "0.0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

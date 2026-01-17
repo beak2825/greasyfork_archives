@@ -1,0 +1,59 @@
+{
+  "id": 444983,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-15T01:21:00.000Z",
+  "code_updated_at": "2025-06-09T17:14:01.000Z",
+  "namespace": "https://github.com/Pindelta/TagPro-Flair-Trails-and-Spin",
+  "support_url": "https://www.reddit.com/message/compose/?to=Pindelta",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 914324,
+      "name": "Pindelta",
+      "created_at": "2022-05-15T01:16:05.000Z",
+      "url": "https://greasyfork.org/users/914324-pindelta",
+      "scripts": [
+        {
+          "id": 444983,
+          "daily_installs": 0,
+          "total_installs": 46,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-15T01:21:00.000Z",
+          "code_updated_at": "2025-06-09T17:14:01.000Z",
+          "namespace": "https://github.com/Pindelta/TagPro-Flair-Trails-and-Spin",
+          "support_url": "https://www.reddit.com/message/compose/?to=Pindelta",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TagPro Flair Trails and Spin",
+          "description": "Have sick trails for all your flairs just like the arc reactor. (Without having to level up) But wait there's more. You can also have your flairs spin like the level 4 donor flair absolutely free.",
+          "url": "https://greasyfork.org/scripts/444983-tagpro-flair-trails-and-spin",
+          "code_url": "https://update.greasyfork.org/scripts/444983/TagPro%20Flair%20Trails%20and%20Spin.user.js",
+          "code_size": 11084,
+          "license": null,
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TagPro Flair Trails and Spin",
+  "description": "Have sick trails for all your flairs just like the arc reactor. (Without having to level up) But wait there's more. You can also have your flairs spin like the level 4 donor flair absolutely free.",
+  "url": "https://greasyfork.org/scripts/444983-tagpro-flair-trails-and-spin",
+  "code_url": "https://update.greasyfork.org/scripts/444983/TagPro%20Flair%20Trails%20and%20Spin.user.js",
+  "code_size": 11084,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

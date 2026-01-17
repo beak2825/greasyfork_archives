@@ -1,0 +1,59 @@
+{
+  "id": 444370,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-02T15:09:57.000Z",
+  "code_updated_at": "2022-05-02T15:09:56.000Z",
+  "namespace": "clesip",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 909618,
+      "name": "luanmenglei",
+      "created_at": "2022-05-02T14:00:08.000Z",
+      "url": "https://greasyfork.org/users/909618-luanmenglei",
+      "scripts": [
+        {
+          "id": 444370,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-02T15:09:57.000Z",
+          "code_updated_at": "2022-05-02T15:09:56.000Z",
+          "namespace": "clesip",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "EducationMinistryFucker",
+          "description": "real score getter",
+          "url": "https://greasyfork.org/scripts/444370-educationministry",
+          "code_url": "https://update.greasyfork.org/scripts/444370/EducationMinistryFucker.user.js",
+          "code_size": 4449,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "EducationMinistryFucker",
+  "description": "real score getter",
+  "url": "https://greasyfork.org/scripts/444370-educationministry",
+  "code_url": "https://update.greasyfork.org/scripts/444370/EducationMinistryFucker.user.js",
+  "code_size": 4449,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

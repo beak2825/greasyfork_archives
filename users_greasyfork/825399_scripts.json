@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433923,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-15T09:25:49.000Z",
+    "code_updated_at": "2021-10-16T12:46:53.000Z",
+    "namespace": "Kason",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 825399,
+        "name": "Kason",
+        "created_at": "2021-10-15T09:19:22.000Z",
+        "url": "https://greasyfork.org/users/825399-kason"
+      }
+    ],
+    "name": "自动做作业",
+    "description": "一切皆有可能!",
+    "url": "https://greasyfork.org/scripts/433923-%E8%87%AA%E5%8A%A8%E5%81%9A%E4%BD%9C%E4%B8%9A",
+    "code_url": "https://update.greasyfork.org/scripts/433923/%E8%87%AA%E5%8A%A8%E5%81%9A%E4%BD%9C%E4%B8%9A.user.js",
+    "code_size": 3015,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

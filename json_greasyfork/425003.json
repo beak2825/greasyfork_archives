@@ -1,0 +1,34 @@
+{
+  "id": 425003,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-14T03:13:09.000Z",
+  "code_updated_at": "2021-04-14T03:13:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 758830,
+      "name": "caohonghong",
+      "created_at": "2021-04-14T03:07:34.000Z",
+      "url": "https://greasyfork.org/users/758830-caohonghong",
+      "scripts": []
+    }
+  ],
+  "name": "myFirstScript",
+  "description": "self using script!",
+  "url": "https://greasyfork.org/scripts/425003-myfirstscript",
+  "code_url": "https://update.greasyfork.org/scripts/425003/myFirstScript.user.js",
+  "code_size": 4210,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

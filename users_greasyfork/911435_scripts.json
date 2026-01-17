@@ -1,0 +1,68 @@
+[
+  {
+    "id": 444613,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-07T11:35:59.000Z",
+    "code_updated_at": "2022-05-07T12:17:07.000Z",
+    "namespace": "https://blog.csdn.net/mukes",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 911435,
+        "name": "LiuChat",
+        "created_at": "2022-05-07T11:00:30.000Z",
+        "url": "https://greasyfork.org/users/911435-liuchat"
+      }
+    ],
+    "name": "csdn自动踩",
+    "description": "打开博文，点击自动踩+评论前提是已经登录 csdn 账户",
+    "url": "https://greasyfork.org/scripts/444613-csdn%E8%87%AA%E5%8A%A8%E8%B8%A9",
+    "code_url": "https://update.greasyfork.org/scripts/444613/csdn%E8%87%AA%E5%8A%A8%E8%B8%A9.user.js",
+    "code_size": 1843,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444612,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-07T11:15:28.000Z",
+    "code_updated_at": "2022-05-07T11:27:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 911435,
+        "name": "LiuChat",
+        "created_at": "2022-05-07T11:00:30.000Z",
+        "url": "https://greasyfork.org/users/911435-liuchat"
+      }
+    ],
+    "name": "使你的浏览器崩溃",
+    "description": "hi",
+    "url": "https://greasyfork.org/scripts/444612-%E4%BD%BF%E4%BD%A0%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B4%A9%E6%BA%83",
+    "code_url": "https://update.greasyfork.org/scripts/444612/%E4%BD%BF%E4%BD%A0%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B4%A9%E6%BA%83.user.js",
+    "code_size": 442,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

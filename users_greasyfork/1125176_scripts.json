@@ -196,5 +196,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 480076,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-16T22:22:53.000Z",
+    "code_updated_at": "2023-11-16T22:33:40.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1125176,
+        "name": "ZackiBoiz",
+        "created_at": "2023-07-13T01:11:46.000Z",
+        "url": "https://greasyfork.org/users/1125176-zackiboiz"
+      }
+    ],
+    "name": "Not Useless Userscript",
+    "description": "We all need this script, don't we.",
+    "url": "https://greasyfork.org/scripts/480076-not-useless-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/480076/Not%20Useless%20Userscript.user.js",
+    "code_size": 365,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

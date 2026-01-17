@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428864,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-03T17:49:28.000Z",
+    "code_updated_at": "2021-07-03T17:49:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790032,
+        "name": "kaililong",
+        "created_at": "2021-07-03T17:43:13.000Z",
+        "url": "https://greasyfork.org/users/790032-kaililong"
+      }
+    ],
+    "name": "海南大学教务系统自动评教",
+    "description": "开启脚本后点击评价会自动打分！！",
+    "url": "https://greasyfork.org/scripts/428864-%E6%B5%B7%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+    "code_url": "https://update.greasyfork.org/scripts/428864/%E6%B5%B7%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+    "code_size": 1721,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

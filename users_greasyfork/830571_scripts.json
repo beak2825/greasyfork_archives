@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434724,
+    "daily_installs": 0,
+    "total_installs": 454,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-31T08:36:10.000Z",
+    "code_updated_at": "2021-10-31T08:36:10.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 830571,
+        "name": "corentin cocoio64",
+        "created_at": "2021-10-31T08:33:49.000Z",
+        "url": "https://greasyfork.org/users/830571-corentin-cocoio64"
+      }
+    ],
+    "name": "4x Multibox by CyRuler copie",
+    "description": "For more info about 4x multibox go my channel https://youtube.com/CyRuler",
+    "url": "https://greasyfork.org/scripts/434724-4x-multibox-by-cyruler-copie",
+    "code_url": "https://update.greasyfork.org/scripts/434724/4x%20Multibox%20by%20CyRuler%20copie.user.js",
+    "code_size": 40197,
+    "license": null,
+    "version": "1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

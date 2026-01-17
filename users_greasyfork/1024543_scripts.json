@@ -1,0 +1,35 @@
+[
+  {
+    "id": 459739,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-09T21:48:11.000Z",
+    "code_updated_at": "2023-02-09T21:48:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1024543,
+        "name": "Bbbbb4263",
+        "created_at": "2023-02-09T21:46:08.000Z",
+        "url": "https://greasyfork.org/users/1024543-bbbbb4263"
+      }
+    ],
+    "name": "tiwar cave",
+    "description": "cave automatization",
+    "url": "https://greasyfork.org/scripts/459739-tiwar-cave",
+    "code_url": "https://update.greasyfork.org/scripts/459739/tiwar%20cave.user.js",
+    "code_size": 1104,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

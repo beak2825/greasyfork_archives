@@ -1,0 +1,59 @@
+{
+  "id": 445598,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-26T18:20:09.000Z",
+  "code_updated_at": "2022-06-23T16:15:15.000Z",
+  "namespace": "Backend",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 918927,
+      "name": "muhammed ahmed",
+      "created_at": "2022-05-26T18:15:10.000Z",
+      "url": "https://greasyfork.org/users/918927-muhammed-ahmed",
+      "scripts": [
+        {
+          "id": 445598,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-26T18:20:09.000Z",
+          "code_updated_at": "2022-06-23T16:15:15.000Z",
+          "namespace": "Backend",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "skip akoam short url",
+          "description": "Redirects directly to akoam",
+          "url": "https://greasyfork.org/scripts/445598-skip-akoam-short-url",
+          "code_url": "https://update.greasyfork.org/scripts/445598/skip%20akoam%20short%20url.user.js",
+          "code_size": 639,
+          "license": null,
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "skip akoam short url",
+  "description": "Redirects directly to akoam",
+  "url": "https://greasyfork.org/scripts/445598-skip-akoam-short-url",
+  "code_url": "https://update.greasyfork.org/scripts/445598/skip%20akoam%20short%20url.user.js",
+  "code_size": 639,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

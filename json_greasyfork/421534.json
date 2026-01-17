@@ -1,0 +1,59 @@
+{
+  "id": 421534,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-10T18:40:55.000Z",
+  "code_updated_at": "2021-02-10T18:41:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 97719,
+      "name": "Zbyszek Matuszewski",
+      "created_at": "2017-01-26T09:19:39.000Z",
+      "url": "https://greasyfork.org/users/97719-zbyszek-matuszewski",
+      "scripts": [
+        {
+          "id": 26848,
+          "daily_installs": 0,
+          "total_installs": 439,
+          "fan_score": "64.6",
+          "good_ratings": 7,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2017-01-26T09:25:50.000Z",
+          "code_updated_at": "2018-11-13T14:02:10.000Z",
+          "namespace": "https://www.facebook.com/zbyszek.matuszewski",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gmail - show full date and time in mail list",
+          "description": "Just show the full date and time on the list instead of only short date. Useful if you need to create a report and you base on your activity and it's timing. Or when you look at mails and want to find one visually by looking on times.",
+          "url": "https://greasyfork.org/scripts/26848-gmail-show-full-date-and-time-in-mail-list",
+          "code_url": "https://update.greasyfork.org/scripts/26848/Gmail%20-%20show%20full%20date%20and%20time%20in%20mail%20list.user.js",
+          "code_size": 1500,
+          "license": null,
+          "version": "0.3.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove \"Media bez wyboru\" z Fakt.pl",
+  "description": "like the title says",
+  "url": "https://greasyfork.org/scripts/421534-remove-media-bez-wyboru-z-fakt-pl",
+  "code_url": "https://update.greasyfork.org/scripts/421534/Remove%20%22Media%20bez%20wyboru%22%20z%20Faktpl.user.js",
+  "code_size": 411,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

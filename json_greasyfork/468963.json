@@ -1,0 +1,59 @@
+{
+  "id": 468963,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-19T01:50:26.000Z",
+  "code_updated_at": "2023-06-19T02:43:34.000Z",
+  "namespace": "https://gitlab.com/RunningDroid/userscripts",
+  "support_url": "https://gitlab.com/RunningDroid/userscripts/-/issues/?label_name%5B%5D=EMF%20Title%20Fixer",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1044445,
+      "name": "Runningdroid",
+      "created_at": "2023-03-18T22:37:28.000Z",
+      "url": "https://greasyfork.org/users/1044445-runningdroid",
+      "scripts": [
+        {
+          "id": 468963,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-19T01:50:26.000Z",
+          "code_updated_at": "2023-06-19T02:43:34.000Z",
+          "namespace": "https://gitlab.com/RunningDroid/userscripts",
+          "support_url": "https://gitlab.com/RunningDroid/userscripts/-/issues/?label_name%5B%5D=EMF%20Title%20Fixer",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "EMF-Title-Fixer",
+          "description": "Add song name and artist to the page title on Educational Media Foundation sites",
+          "url": "https://greasyfork.org/scripts/468963-emf-title-fixer",
+          "code_url": "https://update.greasyfork.org/scripts/468963/EMF-Title-Fixer.user.js",
+          "code_size": 4754,
+          "license": "MIT License",
+          "version": "1.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "EMF-Title-Fixer",
+  "description": "Add song name and artist to the page title on Educational Media Foundation sites",
+  "url": "https://greasyfork.org/scripts/468963-emf-title-fixer",
+  "code_url": "https://update.greasyfork.org/scripts/468963/EMF-Title-Fixer.user.js",
+  "code_size": 4754,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

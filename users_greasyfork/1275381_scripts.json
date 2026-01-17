@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490288,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-19T16:49:56.000Z",
+    "code_updated_at": "2024-04-03T09:11:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1275381,
+        "name": "ygdevgfmjj",
+        "created_at": "2024-03-16T15:22:36.000Z",
+        "url": "https://greasyfork.org/users/1275381-ygdevgfmjj"
+      }
+    ],
+    "name": "Linux.Do 清除左侧未读蓝点",
+    "description": "清除未读蓝点",
+    "url": "https://greasyfork.org/scripts/490288-linux-do-%E6%B8%85%E9%99%A4%E5%B7%A6%E4%BE%A7%E6%9C%AA%E8%AF%BB%E8%93%9D%E7%82%B9",
+    "code_url": "https://update.greasyfork.org/scripts/490288/LinuxDo%20%E6%B8%85%E9%99%A4%E5%B7%A6%E4%BE%A7%E6%9C%AA%E8%AF%BB%E8%93%9D%E7%82%B9.user.js",
+    "code_size": 2026,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

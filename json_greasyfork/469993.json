@@ -1,0 +1,33 @@
+{
+  "id": 469993,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-02T19:54:36.000Z",
+  "code_updated_at": "2023-07-02T19:54:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 475505,
+      "name": "TetteDev",
+      "created_at": "2020-04-05T12:50:22.000Z",
+      "url": "https://greasyfork.org/users/475505-tettedev"
+    }
+  ],
+  "name": "FunctionHooker.js",
+  "description": "Hook most functions on runtime via the function name",
+  "url": "https://greasyfork.org/scripts/469993-functionhooker-js",
+  "code_url": "https://update.greasyfork.org/scripts/469993/1214452/FunctionHookerjs.js",
+  "code_size": 3684,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

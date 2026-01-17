@@ -1,0 +1,233 @@
+[
+  {
+    "id": 423375,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-17T03:21:56.000Z",
+    "code_updated_at": "2021-03-17T03:21:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692916,
+        "name": "Natty_Boh",
+        "created_at": "2020-10-06T17:50:00.000Z",
+        "url": "https://greasyfork.org/users/692916-natty-boh"
+      }
+    ],
+    "name": "Trade expiring",
+    "description": "Notify when trade is expiring",
+    "url": "https://greasyfork.org/scripts/423375-trade-expiring",
+    "code_url": "https://update.greasyfork.org/scripts/423375/Trade%20expiring.user.js",
+    "code_size": 1664,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 421748,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-15T21:19:29.000Z",
+    "code_updated_at": "2021-02-16T01:26:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692916,
+        "name": "Natty_Boh",
+        "created_at": "2020-10-06T17:50:00.000Z",
+        "url": "https://greasyfork.org/users/692916-natty-boh"
+      }
+    ],
+    "name": "Scrape TornStats",
+    "description": "Scrapes data from torn stats",
+    "url": "https://greasyfork.org/scripts/421748-scrape-tornstats",
+    "code_url": "https://update.greasyfork.org/scripts/421748/Scrape%20TornStats.user.js",
+    "code_size": 1346,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 419458,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-31T18:25:58.000Z",
+    "code_updated_at": "2021-01-02T21:44:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692916,
+        "name": "Natty_Boh",
+        "created_at": "2020-10-06T17:50:00.000Z",
+        "url": "https://greasyfork.org/users/692916-natty-boh"
+      }
+    ],
+    "name": "Toggle Dislike Button",
+    "description": "To toggle the dislike button on Torn forum pages",
+    "url": "https://greasyfork.org/scripts/419458-toggle-dislike-button",
+    "code_url": "https://update.greasyfork.org/scripts/419458/Toggle%20Dislike%20Button.user.js",
+    "code_size": 1036,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 419411,
+    "daily_installs": 0,
+    "total_installs": 80,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-30T20:43:23.000Z",
+    "code_updated_at": "2021-01-06T23:31:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692916,
+        "name": "Natty_Boh",
+        "created_at": "2020-10-06T17:50:00.000Z",
+        "url": "https://greasyfork.org/users/692916-natty-boh"
+      }
+    ],
+    "name": "Final Earth Notifier",
+    "description": "Notify when various Final Earth Timers are over and for troop movements.",
+    "url": "https://greasyfork.org/scripts/419411-final-earth-notifier",
+    "code_url": "https://update.greasyfork.org/scripts/419411/Final%20Earth%20Notifier.user.js",
+    "code_size": 29668,
+    "license": null,
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418706,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-16T17:11:02.000Z",
+    "code_updated_at": "2020-12-16T17:11:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692916,
+        "name": "Natty_Boh",
+        "created_at": "2020-10-06T17:50:00.000Z",
+        "url": "https://greasyfork.org/users/692916-natty-boh"
+      }
+    ],
+    "name": "FE Chat Highlighter",
+    "description": "Highlight FE chat",
+    "url": "https://greasyfork.org/scripts/418706-fe-chat-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/418706/FE%20Chat%20Highlighter.user.js",
+    "code_size": 1909,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418477,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-11T04:10:47.000Z",
+    "code_updated_at": "2020-12-29T22:12:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692916,
+        "name": "Natty_Boh",
+        "created_at": "2020-10-06T17:50:00.000Z",
+        "url": "https://greasyfork.org/users/692916-natty-boh"
+      }
+    ],
+    "name": "FE War Timer Notifier",
+    "description": "Notify when war timer is up",
+    "url": "https://greasyfork.org/scripts/418477-fe-war-timer-notifier",
+    "code_url": "https://update.greasyfork.org/scripts/418477/FE%20War%20Timer%20Notifier.user.js",
+    "code_size": 2036,
+    "license": null,
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412591,
+    "daily_installs": 2,
+    "total_installs": 2091,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-06T17:52:43.000Z",
+    "code_updated_at": "2025-03-01T18:43:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692916,
+        "name": "Natty_Boh",
+        "created_at": "2020-10-06T17:50:00.000Z",
+        "url": "https://greasyfork.org/users/692916-natty-boh"
+      }
+    ],
+    "name": "Universal Healthcare Revives",
+    "description": "To request a revive from the Universal Healthcare Alliance",
+    "url": "https://greasyfork.org/scripts/412591-universal-healthcare-revives",
+    "code_url": "https://update.greasyfork.org/scripts/412591/Universal%20Healthcare%20Revives.user.js",
+    "code_size": 3399,
+    "license": null,
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

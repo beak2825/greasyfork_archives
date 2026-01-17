@@ -1,0 +1,59 @@
+{
+  "id": 434496,
+  "daily_installs": 0,
+  "total_installs": 48,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-26T06:01:50.000Z",
+  "code_updated_at": "2022-01-20T01:14:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 828717,
+      "name": "cogspace",
+      "created_at": "2021-10-25T22:04:49.000Z",
+      "url": "https://greasyfork.org/users/828717-cogspace",
+      "scripts": [
+        {
+          "id": 434496,
+          "daily_installs": 0,
+          "total_installs": 48,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-26T06:01:50.000Z",
+          "code_updated_at": "2022-01-20T01:14:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Roll20 Enhanced Keyboard Shortcuts",
+          "description": "Extends and enhances Roll20's keyboard shortcuts.",
+          "url": "https://greasyfork.org/scripts/434496-roll20-enhanced-keyboard-shortcuts",
+          "code_url": "https://update.greasyfork.org/scripts/434496/Roll20%20Enhanced%20Keyboard%20Shortcuts.user.js",
+          "code_size": 61892,
+          "license": "MIT License",
+          "version": "1.8.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Roll20 Enhanced Keyboard Shortcuts",
+  "description": "Extends and enhances Roll20's keyboard shortcuts.",
+  "url": "https://greasyfork.org/scripts/434496-roll20-enhanced-keyboard-shortcuts",
+  "code_url": "https://update.greasyfork.org/scripts/434496/Roll20%20Enhanced%20Keyboard%20Shortcuts.user.js",
+  "code_size": 61892,
+  "license": "MIT License",
+  "version": "1.8.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

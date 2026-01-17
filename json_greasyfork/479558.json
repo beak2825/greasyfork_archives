@@ -1,0 +1,33 @@
+{
+  "id": 479558,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-11T22:02:27.000Z",
+  "code_updated_at": "2023-11-12T03:44:05.000Z",
+  "namespace": "http://tampermonkey.net/weibo-purifier",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1215684,
+      "name": "TaihouKai",
+      "created_at": "2023-11-11T21:52:22.000Z",
+      "url": "https://greasyfork.org/users/1215684-taihoukai"
+    }
+  ],
+  "name": "Weibo Purifier",
+  "description": "Purify your Weibo",
+  "url": "https://greasyfork.org/scripts/479558-weibo-purifier",
+  "code_url": "https://update.greasyfork.org/scripts/479558/Weibo%20Purifier.user.js",
+  "code_size": 3060,
+  "license": "MIT License",
+  "version": "20231112",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 428166,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-19T07:08:26.000Z",
+  "code_updated_at": "2021-06-19T07:08:26.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 9440,
+      "name": "princomp",
+      "created_at": "2015-02-28T16:37:33.000Z",
+      "url": "https://greasyfork.org/users/9440-princomp",
+      "scripts": []
+    }
+  ],
+  "name": "Presto Fix",
+  "description": "*://192.168.1.182/*",
+  "url": "https://greasyfork.org/scripts/428166-presto-fix",
+  "code_url": "https://update.greasyfork.org/scripts/428166/Presto%20Fix.user.js",
+  "code_size": 1367,
+  "license": null,
+  "version": "0.0.1.20210619070826",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

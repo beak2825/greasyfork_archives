@@ -1,0 +1,34 @@
+{
+  "id": 452822,
+  "daily_installs": 0,
+  "total_installs": 19650,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-10T15:19:53.000Z",
+  "code_updated_at": "2023-03-03T07:30:59.000Z",
+  "namespace": "https://greasyfork.org/users/815641",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 815641,
+      "name": "shounksu",
+      "created_at": "2021-09-15T08:53:43.000Z",
+      "url": "https://greasyfork.org/users/815641-shounksu",
+      "scripts": []
+    }
+  ],
+  "name": "AI 이미지 EXIF 뷰어",
+  "description": "AI 이미지 메타데이터 보기",
+  "url": "https://greasyfork.org/scripts/452822-ai-%EC%9D%B4%EB%AF%B8%EC%A7%80-exif-%EB%B7%B0%EC%96%B4",
+  "code_url": "https://update.greasyfork.org/scripts/452822/AI%20%EC%9D%B4%EB%AF%B8%EC%A7%80%20EXIF%20%EB%B7%B0%EC%96%B4.user.js",
+  "code_size": 30470,
+  "license": "MIT License",
+  "version": "1.9.4",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

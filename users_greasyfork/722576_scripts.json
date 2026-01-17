@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466217,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-13T19:55:26.000Z",
+    "code_updated_at": "2023-05-13T19:55:26.000Z",
+    "namespace": "https://kurosakirei.dev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 722576,
+        "name": "KurosakiRei",
+        "created_at": "2020-12-30T19:03:13.000Z",
+        "url": "https://greasyfork.org/users/722576-kurosakirei"
+      }
+    ],
+    "name": "BiliBili剧集定位",
+    "description": "添加一个对正在播放的剧集进行定位的按钮到B站的番剧页面",
+    "url": "https://greasyfork.org/scripts/466217-bilibili%E5%89%A7%E9%9B%86%E5%AE%9A%E4%BD%8D",
+    "code_url": "https://update.greasyfork.org/scripts/466217/BiliBili%E5%89%A7%E9%9B%86%E5%AE%9A%E4%BD%8D.user.js",
+    "code_size": 2377,
+    "license": "MIT License",
+    "version": "0.5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

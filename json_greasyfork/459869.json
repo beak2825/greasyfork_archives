@@ -1,0 +1,34 @@
+{
+  "id": 459869,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-11T22:57:44.000Z",
+  "code_updated_at": "2023-02-11T23:30:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896390,
+      "name": "Hader Anício de Araújo",
+      "created_at": "2022-04-01T21:36:09.000Z",
+      "url": "https://greasyfork.org/users/896390-hader-an%C3%ADcio-de-ara%C3%BAjo",
+      "scripts": []
+    }
+  ],
+  "name": "greasyfork install",
+  "description": "code: greasyfork install",
+  "url": "https://greasyfork.org/scripts/459869-greasyfork-install",
+  "code_url": "https://update.greasyfork.org/scripts/459869/greasyfork%20install.user.js",
+  "code_size": 765,
+  "license": "MIT License",
+  "version": "0.03",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

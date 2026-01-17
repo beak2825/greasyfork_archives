@@ -1,0 +1,101 @@
+[
+  {
+    "id": 423894,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-24T07:11:21.000Z",
+    "code_updated_at": "2021-03-24T07:12:15.000Z",
+    "namespace": "(o˘◡˘o)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200190,
+        "name": "lzqgan",
+        "created_at": "2018-08-01T11:43:06.000Z",
+        "url": "https://greasyfork.org/users/200190-lzqgan"
+      }
+    ],
+    "name": "lzq觅影",
+    "description": "支持移动端；加速跳广告；VIP 视频解析；隐藏视频水印；快捷跳转搜索源；自定义解析和搜索源；豆瓣·选影视 净化",
+    "url": "https://greasyfork.org/scripts/423894-lzq%E8%A7%85%E5%BD%B1",
+    "code_url": "https://update.greasyfork.org/scripts/423894/lzq%E8%A7%85%E5%BD%B1.user.js",
+    "code_size": 101280,
+    "license": "GPL License",
+    "version": "20.8.11.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 413457,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-16T09:43:17.000Z",
+    "code_updated_at": "2020-10-16T09:43:39.000Z",
+    "namespace": "石头",
+    "support_url": "https://meta.appinn.net/t/14383",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200190,
+        "name": "lzqgan",
+        "created_at": "2018-08-01T11:43:06.000Z",
+        "url": "https://greasyfork.org/users/200190-lzqgan"
+      }
+    ],
+    "name": "石头自动展开全文",
+    "description": "自动展开网站内容而无需点击。当前约 59 个网站。【本脚本转为慢速更新，精力投入 Beta 版】， Beta 版地址： https://greasyfork.org/zh-CN/scripts/407956",
+    "url": "https://greasyfork.org/scripts/413457-%E7%9F%B3%E5%A4%B4%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E5%85%A8%E6%96%87",
+    "code_url": "https://update.greasyfork.org/scripts/413457/%E7%9F%B3%E5%A4%B4%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E5%85%A8%E6%96%87.user.js",
+    "code_size": 19889,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 413455,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-16T09:35:24.000Z",
+    "code_updated_at": "2020-10-16T09:39:36.000Z",
+    "namespace": "石头",
+    "support_url": "https://meta.appinn.com/t/7363",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200190,
+        "name": "lzqgan",
+        "created_at": "2018-08-01T11:43:06.000Z",
+        "url": "https://greasyfork.org/users/200190-lzqgan"
+      }
+    ],
+    "name": "链接地址洗白白",
+    "description": "把链接地址缩减至最短可用状态，并复制到剪切板，以方便分享。【在每个页面的底部中间，有一个小小的按钮，用来呼出面板】",
+    "url": "https://greasyfork.org/scripts/413455-%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%E6%B4%97%E7%99%BD%E7%99%BD",
+    "code_url": "https://update.greasyfork.org/scripts/413455/%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%E6%B4%97%E7%99%BD%E7%99%BD.user.js",
+    "code_size": 25080,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

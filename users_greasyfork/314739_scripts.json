@@ -1,0 +1,101 @@
+[
+  {
+    "id": 421256,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-05T16:56:49.000Z",
+    "code_updated_at": "2021-02-05T16:58:04.000Z",
+    "namespace": "fake-ga-object",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 314739,
+        "name": "kbird",
+        "created_at": "2019-07-01T19:34:23.000Z",
+        "url": "https://greasyfork.org/users/314739-kbird"
+      }
+    ],
+    "name": "Fake Google Analytics Object",
+    "description": "Replaces window.ga object with empty proxy. Prevent some website refusing to work due to missing Google Analytics",
+    "url": "https://greasyfork.org/scripts/421256-fake-google-analytics-object",
+    "code_url": "https://update.greasyfork.org/scripts/421256/Fake%20Google%20Analytics%20Object.user.js",
+    "code_size": 474,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421255,
+    "daily_installs": 0,
+    "total_installs": 309,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-05T16:51:38.000Z",
+    "code_updated_at": "2021-02-05T16:51:38.000Z",
+    "namespace": "disablewebglapi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 314739,
+        "name": "kbird",
+        "created_at": "2019-07-01T19:34:23.000Z",
+        "url": "https://greasyfork.org/users/314739-kbird"
+      }
+    ],
+    "name": "Disable WebGL API",
+    "description": "Disables WebGL support, keeping only basic 2D canvas. That reduces potential exploits via OpenGL and broken drivers but can break many websites requiring OpenGL. Some most common ones are excluded.",
+    "url": "https://greasyfork.org/scripts/421255-disable-webgl-api",
+    "code_url": "https://update.greasyfork.org/scripts/421255/Disable%20WebGL%20API.user.js",
+    "code_size": 1123,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421254,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-05T16:44:33.000Z",
+    "code_updated_at": "2021-02-05T16:44:33.000Z",
+    "namespace": "replbackgroundiwithimgtag",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 314739,
+        "name": "kbird",
+        "created_at": "2019-07-01T19:34:23.000Z",
+        "url": "https://greasyfork.org/users/314739-kbird"
+      }
+    ],
+    "name": "Replace background-images with <img> tag",
+    "description": "Replaces elements with \"background-image\" inline style with a separate img tag with src pointing to that image. That allows right-click on the image to copy URL & share conveniently.",
+    "url": "https://greasyfork.org/scripts/421254-replace-background-images-with-img-tag",
+    "code_url": "https://update.greasyfork.org/scripts/421254/Replace%20background-images%20with%20%3Cimg%3E%20tag.user.js",
+    "code_size": 2466,
+    "license": null,
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

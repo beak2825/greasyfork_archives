@@ -1,0 +1,59 @@
+{
+  "id": 477004,
+  "daily_installs": 0,
+  "total_installs": 2582,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-10-09T01:17:54.000Z",
+  "code_updated_at": "2023-10-13T09:53:42.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/477004",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1191571,
+      "name": "NPE",
+      "created_at": "2023-10-09T01:04:58.000Z",
+      "url": "https://greasyfork.org/users/1191571-npe",
+      "scripts": [
+        {
+          "id": 477004,
+          "daily_installs": 0,
+          "total_installs": 2582,
+          "fan_score": "31.0",
+          "good_ratings": 2,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2023-10-09T01:17:54.000Z",
+          "code_updated_at": "2023-10-13T09:53:42.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/477004",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "去除bilibili（B站）复制烦人的后缀 支持复制百度文库 去除 csdn 复制后缀",
+          "description": "去除bilibili（B站）复制后烦人的尾巴 例如 B站专栏的文章复制后会在最后添加“作者”、“出处”内容的小尾巴。 作者：ABCD https://www.bilibili.com/ 出处：bilibili 使用该脚本后 B站专栏的文章复制后会在最后添加“作者”、“出处”内容的小尾巴。 尾巴就会消失",
+          "url": "https://greasyfork.org/scripts/477004-%E5%8E%BB%E9%99%A4bilibili-b%E7%AB%99-%E5%A4%8D%E5%88%B6%E7%83%A6%E4%BA%BA%E7%9A%84%E5%90%8E%E7%BC%80-%E6%94%AF%E6%8C%81%E5%A4%8D%E5%88%B6%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93-%E5%8E%BB%E9%99%A4-csdn-%E5%A4%8D%E5%88%B6%E5%90%8E%E7%BC%80",
+          "code_url": "https://update.greasyfork.org/scripts/477004/%E5%8E%BB%E9%99%A4bilibili%EF%BC%88B%E7%AB%99%EF%BC%89%E5%A4%8D%E5%88%B6%E7%83%A6%E4%BA%BA%E7%9A%84%E5%90%8E%E7%BC%80%20%E6%94%AF%E6%8C%81%E5%A4%8D%E5%88%B6%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93%20%E5%8E%BB%E9%99%A4%20csdn%20%E5%A4%8D%E5%88%B6%E5%90%8E%E7%BC%80.user.js",
+          "code_size": 9153,
+          "license": "MIT License",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "去除bilibili（B站）复制烦人的后缀 支持复制百度文库 去除 csdn 复制后缀",
+  "description": "去除bilibili（B站）复制后烦人的尾巴 例如 B站专栏的文章复制后会在最后添加“作者”、“出处”内容的小尾巴。 作者：ABCD https://www.bilibili.com/ 出处：bilibili 使用该脚本后 B站专栏的文章复制后会在最后添加“作者”、“出处”内容的小尾巴。 尾巴就会消失",
+  "url": "https://greasyfork.org/scripts/477004-%E5%8E%BB%E9%99%A4bilibili-b%E7%AB%99-%E5%A4%8D%E5%88%B6%E7%83%A6%E4%BA%BA%E7%9A%84%E5%90%8E%E7%BC%80-%E6%94%AF%E6%8C%81%E5%A4%8D%E5%88%B6%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93-%E5%8E%BB%E9%99%A4-csdn-%E5%A4%8D%E5%88%B6%E5%90%8E%E7%BC%80",
+  "code_url": "https://update.greasyfork.org/scripts/477004/%E5%8E%BB%E9%99%A4bilibili%EF%BC%88B%E7%AB%99%EF%BC%89%E5%A4%8D%E5%88%B6%E7%83%A6%E4%BA%BA%E7%9A%84%E5%90%8E%E7%BC%80%20%E6%94%AF%E6%8C%81%E5%A4%8D%E5%88%B6%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93%20%E5%8E%BB%E9%99%A4%20csdn%20%E5%A4%8D%E5%88%B6%E5%90%8E%E7%BC%80.user.js",
+  "code_size": 9153,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

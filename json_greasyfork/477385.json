@@ -1,0 +1,33 @@
+{
+  "id": 477385,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-13T20:26:58.000Z",
+  "code_updated_at": "2023-10-13T21:44:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1195475,
+      "name": "wzfxr",
+      "created_at": "2023-10-13T20:26:32.000Z",
+      "url": "https://greasyfork.org/users/1195475-wzfxr"
+    }
+  ],
+  "name": "Characters horizontal images support",
+  "description": "Makes horizontal images display as horizontal images instead of a squished image. Collage not supported.",
+  "url": "https://greasyfork.org/scripts/477385-characters-horizontal-images-support",
+  "code_url": "https://update.greasyfork.org/scripts/477385/Characters%20horizontal%20images%20support.user.js",
+  "code_size": 1931,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

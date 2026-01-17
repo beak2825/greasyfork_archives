@@ -1,0 +1,59 @@
+{
+  "id": 437879,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-01T01:35:55.000Z",
+  "code_updated_at": "2022-01-01T01:46:20.000Z",
+  "namespace": "https://www.wanikani.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 859803,
+      "name": "DevinSchaffer",
+      "created_at": "2022-01-01T01:31:45.000Z",
+      "url": "https://greasyfork.org/users/859803-devinschaffer",
+      "scripts": [
+        {
+          "id": 437879,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-01T01:35:55.000Z",
+          "code_updated_at": "2022-01-01T01:46:20.000Z",
+          "namespace": "https://www.wanikani.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Always Show Top Lesson and Review buttons",
+          "description": "Always show the lesson and review buttons in the top bar without having to scroll below the giant buttons.",
+          "url": "https://greasyfork.org/scripts/437879-always-show-top-lesson-and-review-buttons",
+          "code_url": "https://update.greasyfork.org/scripts/437879/Always%20Show%20Top%20Lesson%20and%20Review%20buttons.user.js",
+          "code_size": 1003,
+          "license": "GNU-3.0",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Always Show Top Lesson and Review buttons",
+  "description": "Always show the lesson and review buttons in the top bar without having to scroll below the giant buttons.",
+  "url": "https://greasyfork.org/scripts/437879-always-show-top-lesson-and-review-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/437879/Always%20Show%20Top%20Lesson%20and%20Review%20buttons.user.js",
+  "code_size": 1003,
+  "license": "GNU-3.0",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

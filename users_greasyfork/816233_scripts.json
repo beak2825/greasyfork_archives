@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432526,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-17T04:38:19.000Z",
+    "code_updated_at": "2022-10-24T00:49:00.000Z",
+    "namespace": "https://akakanch.com/hmmc/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 816233,
+        "name": "dwtehf",
+        "created_at": "2021-09-17T04:31:39.000Z",
+        "url": "https://greasyfork.org/users/816233-dwtehf"
+      }
+    ],
+    "name": "香港出生证明样本，制作香港出生证明公证",
+    "description": "香港出生证明样本✅𝟴𝟯𝟰ˎ筘ˎ𝟱𝟴𝟲ˎ筘ˎ𝟵𝟲𝟬✅制作香港出生证明公证，婴儿在香港出生，享有香港籍，其父母是什么籍不受影响。不同地区的用途有所区别m,在当地需要的话，直接出示证明即可，在内地使用，因为都不熟悉，无从识别真伪，网络上也看不到数据，一般情况需要律师的公证。内地家庭小孩为香港籍的情况常见，香港的出生证明内容里有婴儿父母亲信息，可以反映之间的关系，在内地需要用到时用它来作为亲属关系依据，证明要办理的公证取决于当事人的情况。申请人可在出生登记处办理相符的说明来证实孩子在香港出生的事实。也可以选择办理《香港出生证明》来证实事人之间的父母子女关系。也可以作为公证附件，不需要单独出具原件与复印本。近年来香港出生的儿童在内地入读小学的情况不少，有的内地学校需要家长提供父母与子女的亲属关系公证，香港出世纸是此公证书的的申请文件，家长应提前在香港为子女办理明书，满足孩子就读要求。",
+    "url": "https://greasyfork.org/scripts/432526-%E9%A6%99%E6%B8%AF%E5%87%BA%E7%94%9F%E8%AF%81%E6%98%8E%E6%A0%B7%E6%9C%AC-%E5%88%B6%E4%BD%9C%E9%A6%99%E6%B8%AF%E5%87%BA%E7%94%9F%E8%AF%81%E6%98%8E%E5%85%AC%E8%AF%81",
+    "code_url": "https://update.greasyfork.org/scripts/432526/%E9%A6%99%E6%B8%AF%E5%87%BA%E7%94%9F%E8%AF%81%E6%98%8E%E6%A0%B7%E6%9C%AC%EF%BC%8C%E5%88%B6%E4%BD%9C%E9%A6%99%E6%B8%AF%E5%87%BA%E7%94%9F%E8%AF%81%E6%98%8E%E5%85%AC%E8%AF%81.user.js",
+    "code_size": 4436,
+    "license": null,
+    "version": "0.7",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

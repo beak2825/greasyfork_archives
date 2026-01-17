@@ -1,0 +1,59 @@
+{
+  "id": 471781,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-26T17:47:15.000Z",
+  "code_updated_at": "2023-07-26T17:47:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 579407,
+      "name": "writey",
+      "created_at": "2020-06-03T14:49:26.000Z",
+      "url": "https://greasyfork.org/users/579407-writey",
+      "scripts": [
+        {
+          "id": 471781,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-26T17:47:15.000Z",
+          "code_updated_at": "2023-07-26T17:47:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "谷歌翻译快捷键 Google translate hot key",
+          "description": "按下Alt+s 焦点跳转至输入框，按下Alt+w播放音频。Press Alt+s to focus input, Press Alt+w to play audio",
+          "url": "https://greasyfork.org/scripts/471781-%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E5%BF%AB%E6%8D%B7%E9%94%AE-google-translate-hot-key",
+          "code_url": "https://update.greasyfork.org/scripts/471781/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E5%BF%AB%E6%8D%B7%E9%94%AE%20Google%20translate%20hot%20key.user.js",
+          "code_size": 1204,
+          "license": "none",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "谷歌翻译快捷键 Google translate hot key",
+  "description": "按下Alt+s 焦点跳转至输入框，按下Alt+w播放音频。Press Alt+s to focus input, Press Alt+w to play audio",
+  "url": "https://greasyfork.org/scripts/471781-%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E5%BF%AB%E6%8D%B7%E9%94%AE-google-translate-hot-key",
+  "code_url": "https://update.greasyfork.org/scripts/471781/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E5%BF%AB%E6%8D%B7%E9%94%AE%20Google%20translate%20hot%20key.user.js",
+  "code_size": 1204,
+  "license": "none",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

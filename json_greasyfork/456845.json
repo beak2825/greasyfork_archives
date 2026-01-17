@@ -1,0 +1,59 @@
+{
+  "id": 456845,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-20T00:24:23.000Z",
+  "code_updated_at": "2023-05-23T14:29:50.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/456845-bipt%E5%8C%97%E7%9F%B3%E5%8C%96%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E8%84%9A%E6%9C%AC",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1000104,
+      "name": "chicken-ivit",
+      "created_at": "2022-12-19T22:13:26.000Z",
+      "url": "https://greasyfork.org/users/1000104-chicken-ivit",
+      "scripts": [
+        {
+          "id": 456845,
+          "daily_installs": 0,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-20T00:24:23.000Z",
+          "code_updated_at": "2023-05-23T14:29:50.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/456845-bipt%E5%8C%97%E7%9F%B3%E5%8C%96%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E8%84%9A%E6%9C%AC",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bipt北石化教学评价脚本",
+          "description": "自动填写教学评价（默认好评）。填写后需要手动提交（目的是 可以根据自己需求修改评价）",
+          "url": "https://greasyfork.org/scripts/456845-bipt%E5%8C%97%E7%9F%B3%E5%8C%96%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/456845/bipt%E5%8C%97%E7%9F%B3%E5%8C%96%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 1470,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bipt北石化教学评价脚本",
+  "description": "自动填写教学评价（默认好评）。填写后需要手动提交（目的是 可以根据自己需求修改评价）",
+  "url": "https://greasyfork.org/scripts/456845-bipt%E5%8C%97%E7%9F%B3%E5%8C%96%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/456845/bipt%E5%8C%97%E7%9F%B3%E5%8C%96%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 1470,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

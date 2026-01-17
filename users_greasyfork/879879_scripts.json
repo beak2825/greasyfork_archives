@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440516,
+    "daily_installs": 0,
+    "total_installs": 1383,
+    "fan_score": "2.7",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2022-02-23T21:55:49.000Z",
+    "code_updated_at": "2022-02-23T21:55:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 879879,
+        "name": "DolGamerYTContact Official",
+        "created_at": "2022-02-23T21:16:49.000Z",
+        "url": "https://greasyfork.org/users/879879-dolgamerytcontact-official"
+      }
+    ],
+    "name": "High Performance Mode For Moomoo",
+    "description": "Anti Lag For Moomoo",
+    "url": "https://greasyfork.org/scripts/440516-high-performance-mode-for-moomoo",
+    "code_url": "https://update.greasyfork.org/scripts/440516/High%20Performance%20Mode%20For%20Moomoo.user.js",
+    "code_size": 4581,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

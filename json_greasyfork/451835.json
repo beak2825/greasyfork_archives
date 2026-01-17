@@ -1,0 +1,33 @@
+{
+  "id": 451835,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-22T23:38:39.000Z",
+  "code_updated_at": "2024-10-25T20:24:39.000Z",
+  "namespace": "forum_html_it_toolset",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 873547,
+      "name": "OpenDec",
+      "created_at": "2022-02-06T23:03:28.000Z",
+      "url": "https://greasyfork.org/users/873547-opendec"
+    }
+  ],
+  "name": "Forum HTML.it Toolset",
+  "description": "Funzionalità aggiuntive e ottimizzazione layout per le pagine del Forum HTML.it",
+  "url": "https://greasyfork.org/scripts/451835-forum-html-it-toolset",
+  "code_url": "https://update.greasyfork.org/scripts/451835/Forum%20HTMLit%20Toolset.user.js",
+  "code_size": 238906,
+  "license": "MIT License",
+  "version": "1.3.1",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

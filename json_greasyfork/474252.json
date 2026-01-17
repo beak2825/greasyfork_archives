@@ -1,0 +1,59 @@
+{
+  "id": 474252,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-30T21:47:11.000Z",
+  "code_updated_at": "2023-08-30T21:47:11.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1163164,
+      "name": "Misha3434",
+      "created_at": "2023-08-30T20:09:41.000Z",
+      "url": "https://greasyfork.org/users/1163164-misha3434",
+      "scripts": [
+        {
+          "id": 474252,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-30T21:47:11.000Z",
+          "code_updated_at": "2023-08-30T21:47:11.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ARZAMAS  | Скрипт для КФ [by M.Perojkov]",
+          "description": "По вопросам обратная связь в Вк: https://vk.com/mikhail_wertin",
+          "url": "https://greasyfork.org/scripts/474252-arzamas-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%84-by-m-perojkov",
+          "code_url": "https://update.greasyfork.org/scripts/474252/ARZAMAS%20%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D0%A4%20%5Bby%20MPerojkov%5D.user.js",
+          "code_size": 105214,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ARZAMAS  | Скрипт для КФ [by M.Perojkov]",
+  "description": "По вопросам обратная связь в Вк: https://vk.com/mikhail_wertin",
+  "url": "https://greasyfork.org/scripts/474252-arzamas-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%84-by-m-perojkov",
+  "code_url": "https://update.greasyfork.org/scripts/474252/ARZAMAS%20%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D0%A4%20%5Bby%20MPerojkov%5D.user.js",
+  "code_size": 105214,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

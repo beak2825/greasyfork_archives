@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486929,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-08T22:37:01.000Z",
+    "code_updated_at": "2024-04-04T17:10:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1259184,
+        "name": "Bznkxs",
+        "created_at": "2024-02-08T22:34:02.000Z",
+        "url": "https://greasyfork.org/users/1259184-bznkxs"
+      }
+    ],
+    "name": "PLGradingHelper",
+    "description": "Usage: This script makes copying rubrics easier. Navigate to the grading page containing your desired rubric. In the Rubric dialog, click on \"Copy Rubric\" to copy the rubric. Navigate to the grading page where you wish to apply the rubric. In the Rubric dialog, press \"Ctrl+V\" to paste the rubric. Don't forget to click \"Save rubric\".",
+    "url": "https://greasyfork.org/scripts/486929-plgradinghelper",
+    "code_url": "https://update.greasyfork.org/scripts/486929/PLGradingHelper.user.js",
+    "code_size": 27080,
+    "license": "MIT License",
+    "version": "2024-04-04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

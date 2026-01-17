@@ -1,0 +1,33 @@
+{
+  "id": 439710,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-08T12:11:23.000Z",
+  "code_updated_at": "2022-02-09T18:55:45.000Z",
+  "namespace": "http://userstyles.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 22755,
+      "name": "636 597",
+      "created_at": "2015-12-10T22:33:10.000Z",
+      "url": "https://greasyfork.org/users/22755-636-597"
+    }
+  ],
+  "name": "Reddit Hide Comment Vote Score Count",
+  "description": "Hides Comment Vote Score Count on reddit.com",
+  "url": "https://greasyfork.org/scripts/439710-reddit-hide-comment-vote-score-count",
+  "code_url": "https://update.greasyfork.org/scripts/439710/Reddit%20Hide%20Comment%20Vote%20Score%20Count.user.js",
+  "code_size": 727,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

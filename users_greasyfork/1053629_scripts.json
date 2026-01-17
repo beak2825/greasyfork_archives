@@ -1,0 +1,167 @@
+[
+  {
+    "id": 477522,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-16T10:50:22.000Z",
+    "code_updated_at": "2023-10-16T10:50:22.000Z",
+    "namespace": "https://greasyfork.org/users/1053629",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1053629,
+        "name": "George Geo",
+        "created_at": "2023-04-05T11:35:53.000Z",
+        "url": "https://greasyfork.org/users/1053629-george-geo"
+      }
+    ],
+    "name": "Noapte si zi",
+    "description": "Modificarea luminozitatii",
+    "url": "https://greasyfork.org/scripts/477522-noapte-si-zi",
+    "code_url": "https://update.greasyfork.org/scripts/477522/Noapte%20si%20zi.user.js",
+    "code_size": 679,
+    "license": "xD3MEnTu Ro1",
+    "version": "1.00",
+    "locale": "ro",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477481,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-15T15:28:04.000Z",
+    "code_updated_at": "2023-10-15T15:28:04.000Z",
+    "namespace": "https://greasyfork.org/users/1053629",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1053629,
+        "name": "George Geo",
+        "created_at": "2023-04-05T11:35:53.000Z",
+        "url": "https://greasyfork.org/users/1053629-george-geo"
+      }
+    ],
+    "name": "Noapte si zi",
+    "description": "Noapte",
+    "url": "https://greasyfork.org/scripts/477481-noapte-si-zi",
+    "code_url": "https://update.greasyfork.org/scripts/477481/Noapte%20si%20zi.user.js",
+    "code_size": 4982,
+    "license": null,
+    "version": "1.00",
+    "locale": "ro",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469355,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-24T10:15:25.000Z",
+    "code_updated_at": "2023-10-16T16:57:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1053629,
+        "name": "George Geo",
+        "created_at": "2023-04-05T11:35:53.000Z",
+        "url": "https://greasyfork.org/users/1053629-george-geo"
+      }
+    ],
+    "name": "OLD GAME Duel",
+    "description": "OLD GAME SCRIPT",
+    "url": "https://greasyfork.org/scripts/469355-old-game-duel",
+    "code_url": "https://update.greasyfork.org/scripts/469355/OLD%20GAME%20Duel.user.js",
+    "code_size": 3111,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469353,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-24T10:00:13.000Z",
+    "code_updated_at": "2023-06-24T10:00:12.000Z",
+    "namespace": "https://greasyfork.org/cs/users/153384/",
+    "support_url": "https://github.com/taurascript/TWIR/issues",
+    "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=taurascript_public%40protonmail.com&item_name=TW+script&currency_code=EUR&source=url",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1053629,
+        "name": "George Geo",
+        "created_at": "2023-04-05T11:35:53.000Z",
+        "url": "https://greasyfork.org/users/1053629-george-geo"
+      }
+    ],
+    "name": "TW Inventory PanaLa250",
+    "description": "Better Inventory and tools for The West!",
+    "url": "https://greasyfork.org/scripts/469353-tw-inventory-panala250",
+    "code_url": "https://update.greasyfork.org/scripts/469353/TW%20Inventory%20PanaLa250.user.js",
+    "code_size": 1238069,
+    "license": "GPL-3.0 http://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "2.203.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 466123,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-12T08:26:12.000Z",
+    "code_updated_at": "2024-10-17T08:35:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1053629,
+        "name": "George Geo",
+        "created_at": "2023-04-05T11:35:53.000Z",
+        "url": "https://greasyfork.org/users/1053629-george-geo"
+      }
+    ],
+    "name": "TW SCRIPT OLD Word v2",
+    "description": "TW SCRIPT OLD WORD",
+    "url": "https://greasyfork.org/scripts/466123-tw-script-old-word-v2",
+    "code_url": "https://update.greasyfork.org/scripts/466123/TW%20SCRIPT%20OLD%20Word%20v2.user.js",
+    "code_size": 75718,
+    "license": null,
+    "version": "1.50",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

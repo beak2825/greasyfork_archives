@@ -1,0 +1,33 @@
+{
+  "id": 443048,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-09T09:50:54.000Z",
+  "code_updated_at": "2022-04-09T09:50:53.000Z",
+  "namespace": "https://github.com/y-muen",
+  "support_url": "https://gist.github.com/y-muen/8e94feee3234ed67556a82e1d26ff55e",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 899801,
+      "name": "y-mamanaranu",
+      "created_at": "2022-04-09T09:20:07.000Z",
+      "url": "https://greasyfork.org/users/899801-y-mamanaranu"
+    }
+  ],
+  "name": "小説家になろう - ブックマークフィルター",
+  "description": "小説家になろうでブックマークを未読のみにフィルターする。",
+  "url": "https://greasyfork.org/scripts/443048-%E5%B0%8F%E8%AA%AC%E5%AE%B6%E3%81%AB%E3%81%AA%E3%82%8D%E3%81%86-%E3%83%96%E3%83%83%E3%82%AF%E3%83%9E%E3%83%BC%E3%82%AF%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF%E3%83%BC",
+  "code_url": "https://update.greasyfork.org/scripts/443048/%E5%B0%8F%E8%AA%AC%E5%AE%B6%E3%81%AB%E3%81%AA%E3%82%8D%E3%81%86%20-%20%E3%83%96%E3%83%83%E3%82%AF%E3%83%9E%E3%83%BC%E3%82%AF%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF%E3%83%BC.user.js",
+  "code_size": 5189,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

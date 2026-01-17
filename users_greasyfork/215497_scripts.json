@@ -1,0 +1,101 @@
+[
+  {
+    "id": 464819,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-25T12:08:14.000Z",
+    "code_updated_at": "2023-04-25T12:08:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 215497,
+        "name": "ytbd",
+        "created_at": "2018-09-26T07:29:21.000Z",
+        "url": "https://greasyfork.org/users/215497-ytbd"
+      }
+    ],
+    "name": "edgarcayce fix",
+    "description": "解决凯西中文网文章末尾被遮挡的问题",
+    "url": "https://greasyfork.org/scripts/464819-edgarcayce-fix",
+    "code_url": "https://update.greasyfork.org/scripts/464819/edgarcayce%20fix.user.js",
+    "code_size": 611,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441956,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-23T10:48:49.000Z",
+    "code_updated_at": "2022-03-23T17:51:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 215497,
+        "name": "ytbd",
+        "created_at": "2018-09-26T07:29:21.000Z",
+        "url": "https://greasyfork.org/users/215497-ytbd"
+      }
+    ],
+    "name": "inoreader full",
+    "description": "inoreader full content in iframe(需要配合辅助插件修改响应头,允许跨域iframe展示,例如 ignore-x-frame-headers 在tagArr,数组添加想要注入脚本文件夹名",
+    "url": "https://greasyfork.org/scripts/441956-inoreader-full",
+    "code_url": "https://update.greasyfork.org/scripts/441956/inoreader%20full.user.js",
+    "code_size": 5265,
+    "license": "Apache License 2.0",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429827,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-25T05:47:23.000Z",
+    "code_updated_at": "2021-07-25T05:47:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 215497,
+        "name": "ytbd",
+        "created_at": "2018-09-26T07:29:21.000Z",
+        "url": "https://greasyfork.org/users/215497-ytbd"
+      }
+    ],
+    "name": "reabble 过滤文章",
+    "description": "过滤文章",
+    "url": "https://greasyfork.org/scripts/429827-reabble-%E8%BF%87%E6%BB%A4%E6%96%87%E7%AB%A0",
+    "code_url": "https://update.greasyfork.org/scripts/429827/reabble%20%E8%BF%87%E6%BB%A4%E6%96%87%E7%AB%A0.user.js",
+    "code_size": 1931,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494326,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-07T15:55:15.000Z",
+    "code_updated_at": "2024-05-21T20:56:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1298135,
+        "name": "Wierius",
+        "created_at": "2024-05-07T15:04:31.000Z",
+        "url": "https://greasyfork.org/users/1298135-wierius"
+      }
+    ],
+    "name": "StackEdit.io - Distractionless Mode",
+    "description": "Simplified UI and live status updates for StackEdit.io.",
+    "url": "https://greasyfork.org/scripts/494326-stackedit-io-distractionless-mode",
+    "code_url": "https://update.greasyfork.org/scripts/494326/StackEditio%20-%20Distractionless%20Mode.user.js",
+    "code_size": 5090,
+    "license": "CC BY-NC-ND 4.0; https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "version": "2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

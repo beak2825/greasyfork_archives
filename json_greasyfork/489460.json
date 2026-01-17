@@ -1,0 +1,33 @@
+{
+  "id": 489460,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-10T07:37:55.000Z",
+  "code_updated_at": "2024-03-10T07:38:10.000Z",
+  "namespace": "https://greasyfork.org/scripts/489460",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 316903,
+      "name": "fmnijk",
+      "created_at": "2019-07-11T00:19:12.000Z",
+      "url": "https://greasyfork.org/users/316903-fmnijk"
+    }
+  ],
+  "name": "SauceNAO 永遠顯示搜尋結果",
+  "description": "SauceNAO 永遠顯示搜尋結果 不管相似度如何",
+  "url": "https://greasyfork.org/scripts/489460-saucenao-%E6%B0%B8%E9%81%A0%E9%A1%AF%E7%A4%BA%E6%90%9C%E5%B0%8B%E7%B5%90%E6%9E%9C",
+  "code_url": "https://update.greasyfork.org/scripts/489460/SauceNAO%20%E6%B0%B8%E9%81%A0%E9%A1%AF%E7%A4%BA%E6%90%9C%E5%B0%8B%E7%B5%90%E6%9E%9C.user.js",
+  "code_size": 906,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

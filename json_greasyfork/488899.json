@@ -1,0 +1,59 @@
+{
+  "id": 488899,
+  "daily_installs": 0,
+  "total_installs": 225,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-03T16:15:39.000Z",
+  "code_updated_at": "2024-03-03T16:15:38.000Z",
+  "namespace": "BEST MOD FOR MOOMOO.IO EVER 2021-2029 NEW BEST NO SKID BEST EVER MOD FOR PRO AUTO HEAL. V FOR SPIKE. F FOR TRAP. Z FOR MILS.",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1269434,
+      "name": "dZZ9Np8d.z$7Qg)bl",
+      "created_at": "2024-03-02T16:40:21.000Z",
+      "url": "https://greasyfork.org/users/1269434-dzz9np8d-z-7qg-bl",
+      "scripts": [
+        {
+          "id": 488899,
+          "daily_installs": 0,
+          "total_installs": 225,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-03T16:15:39.000Z",
+          "code_updated_at": "2024-03-03T16:15:38.000Z",
+          "namespace": "BEST MOD FOR MOOMOO.IO EVER 2021-2029 NEW BEST NO SKID BEST EVER MOD FOR PRO AUTO HEAL. V FOR SPIKE. F FOR TRAP. Z FOR MILS.",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MOOMOO.IO BEST MOD EVER 2021-2029 NO SKID",
+          "description": "None",
+          "url": "https://greasyfork.org/scripts/488899-moomoo-io-best-mod-ever-2021-2029-no-skid",
+          "code_url": "https://update.greasyfork.org/scripts/488899/MOOMOOIO%20BEST%20MOD%20EVER%202021-2029%20NO%20SKID.user.js",
+          "code_size": 742484,
+          "license": "MIT License",
+          "version": "v1.66666",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MOOMOO.IO BEST MOD EVER 2021-2029 NO SKID",
+  "description": "None",
+  "url": "https://greasyfork.org/scripts/488899-moomoo-io-best-mod-ever-2021-2029-no-skid",
+  "code_url": "https://update.greasyfork.org/scripts/488899/MOOMOOIO%20BEST%20MOD%20EVER%202021-2029%20NO%20SKID.user.js",
+  "code_size": 742484,
+  "license": "MIT License",
+  "version": "v1.66666",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

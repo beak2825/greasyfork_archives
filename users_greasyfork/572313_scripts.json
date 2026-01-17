@@ -129,6 +129,39 @@
     "version": "0.2.3",
     "locale": "pl",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463866,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-12T21:51:06.000Z",
+    "code_updated_at": "2025-11-19T11:27:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 572313,
+        "name": "Tomasz Kot",
+        "created_at": "2020-05-25T19:33:28.000Z",
+        "url": "https://greasyfork.org/users/572313-tomasz-kot"
+      }
+    ],
+    "name": "Licytacje BW z automatem",
+    "description": "Koloruje odpowiednio wiersze podczas aukcji itemów które są więcej warte jako \"złom\" :D",
+    "url": "https://greasyfork.org/scripts/463866-licytacje-bw-z-automatem",
+    "code_url": "https://update.greasyfork.org/scripts/463866/Licytacje%20BW%20z%20automatem.user.js",
+    "code_size": 16329,
+    "license": "MIT License",
+    "version": "0.1.13",
+    "locale": "pl",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

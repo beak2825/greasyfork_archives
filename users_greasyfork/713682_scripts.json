@@ -97,5 +97,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 423060,
+    "daily_installs": 0,
+    "total_installs": 400,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-11T10:05:06.000Z",
+    "code_updated_at": "2021-03-11T10:05:06.000Z",
+    "namespace": "Scriptz (https://github.com/d3ward/scriptz)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713682,
+        "name": "insta/@WaterDustLab",
+        "created_at": "2020-12-06T11:10:00.000Z",
+        "url": "https://greasyfork.org/users/713682-insta-waterdustlab"
+      }
+    ],
+    "name": "AutoFullScreen or immerse mode mode on browser (recommended for kiwibrowser) n",
+    "description": "Script to auto switch to full screen mode",
+    "url": "https://greasyfork.org/scripts/423060-autofullscreen-or-immerse-mode-mode-on-browser-recommended-for-kiwibrowser-n",
+    "code_url": "https://update.greasyfork.org/scripts/423060/AutoFullScreen%20or%20immerse%20mode%20mode%20on%20browser%20%28recommended%20for%20kiwibrowser%29%20n.user.js",
+    "code_size": 3278,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420444,
+    "daily_installs": 0,
+    "total_installs": 87,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-20T09:03:34.000Z",
+    "code_updated_at": "2021-01-20T09:03:34.000Z",
+    "namespace": "Scriptz (https://github.com/d3ward/scriptz)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713682,
+        "name": "insta/@WaterDustLab",
+        "created_at": "2020-12-06T11:10:00.000Z",
+        "url": "https://greasyfork.org/users/713682-insta-waterdustlab"
+      }
+    ],
+    "name": "repoDownload",
+    "description": "Script that add a button to download a github repository",
+    "url": "https://greasyfork.org/scripts/420444-repodownload",
+    "code_url": "https://update.greasyfork.org/scripts/420444/repoDownload.user.js",
+    "code_size": 1533,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

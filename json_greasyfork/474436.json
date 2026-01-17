@@ -1,0 +1,33 @@
+{
+  "id": 474436,
+  "daily_installs": 0,
+  "total_installs": 673,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-03T02:37:26.000Z",
+  "code_updated_at": "2023-09-03T02:37:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1165176,
+      "name": "Mortal boy",
+      "created_at": "2023-09-03T02:24:37.000Z",
+      "url": "https://greasyfork.org/users/1165176-mortal-boy"
+    }
+  ],
+  "name": "全网VIP视频免费看",
+  "description": "全网VIP视频免费看 支持：腾讯、爱奇艺、优酷、芒果、Bilibili、pptv、乐视等其它网站；",
+  "url": "https://greasyfork.org/scripts/474436-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%9C%8B",
+  "code_url": "https://update.greasyfork.org/scripts/474436/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%9C%8B.user.js",
+  "code_size": 25078,
+  "license": "GPL License",
+  "version": "7.6.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

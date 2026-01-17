@@ -1,0 +1,68 @@
+[
+  {
+    "id": 425185,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-18T02:03:10.000Z",
+    "code_updated_at": "2021-04-18T02:03:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 761496,
+        "name": "greasyforku",
+        "created_at": "2021-04-18T01:59:47.000Z",
+        "url": "https://greasyfork.org/users/761496-greasyforku"
+      }
+    ],
+    "name": "Redirect arxiv.org to in.arxiv.org/pdf",
+    "description": "将任何网页内指向arxiv.org的pdf链接重定向到in.arxiv.org",
+    "url": "https://greasyfork.org/scripts/425185-redirect-arxiv-org-to-in-arxiv-org-pdf",
+    "code_url": "https://update.greasyfork.org/scripts/425185/Redirect%20arxivorg%20to%20inarxivorgpdf.user.js",
+    "code_size": 1127,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425184,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-18T02:01:01.000Z",
+    "code_updated_at": "2021-04-18T02:01:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 761496,
+        "name": "greasyforku",
+        "created_at": "2021-04-18T01:59:47.000Z",
+        "url": "https://greasyfork.org/users/761496-greasyforku"
+      }
+    ],
+    "name": "Redirect arxiv.org to in.arxiv.org/pdf",
+    "description": "将任何网页内指向arxiv.org的pdf链接重定向到in.arxiv.org",
+    "url": "https://greasyfork.org/scripts/425184-redirect-arxiv-org-to-in-arxiv-org-pdf",
+    "code_url": "https://update.greasyfork.org/scripts/425184/Redirect%20arxivorg%20to%20inarxivorgpdf.user.js",
+    "code_size": 1128,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

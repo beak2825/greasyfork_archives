@@ -1,0 +1,68 @@
+[
+  {
+    "id": 453010,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-14T00:26:09.000Z",
+    "code_updated_at": "2022-10-14T00:33:29.000Z",
+    "namespace": "blacktide",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 786379,
+        "name": "blacktide",
+        "created_at": "2021-06-23T02:42:19.000Z",
+        "url": "https://greasyfork.org/users/786379-blacktide"
+      }
+    ],
+    "name": "Wanikani Breeze Dark",
+    "description": "Wanikani Breeze Dark CSS theme enabled via Greasy Fork",
+    "url": "https://greasyfork.org/scripts/453010-wanikani-breeze-dark",
+    "code_url": "https://update.greasyfork.org/scripts/453010/Wanikani%20Breeze%20Dark.user.js",
+    "code_size": 710,
+    "license": "MIT License",
+    "version": "1.3.18",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 447930,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-16T01:29:13.000Z",
+    "code_updated_at": "2022-07-16T02:15:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 786379,
+        "name": "blacktide",
+        "created_at": "2021-06-23T02:42:19.000Z",
+        "url": "https://greasyfork.org/users/786379-blacktide"
+      }
+    ],
+    "name": "Bunpro - Slower Audio During Reviews",
+    "description": "This will slow down the audio during Bunpro reviews to 75% of the normal speed",
+    "url": "https://greasyfork.org/scripts/447930-bunpro-slower-audio-during-reviews",
+    "code_url": "https://update.greasyfork.org/scripts/447930/Bunpro%20-%20Slower%20Audio%20During%20Reviews.user.js",
+    "code_size": 871,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

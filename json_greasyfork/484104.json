@@ -1,0 +1,59 @@
+{
+  "id": 484104,
+  "daily_installs": 0,
+  "total_installs": 390,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-01-07T05:49:13.000Z",
+  "code_updated_at": "2024-01-07T05:49:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1238772,
+      "name": "Mathiasbbbb",
+      "created_at": "2023-12-24T18:47:39.000Z",
+      "url": "https://greasyfork.org/users/1238772-mathiasbbbb",
+      "scripts": [
+        {
+          "id": 484104,
+          "daily_installs": 0,
+          "total_installs": 390,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-01-07T05:49:13.000Z",
+          "code_updated_at": "2024-01-07T05:49:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Voxiom.io Enhanced Experience",
+          "description": "Enhance your Voxiom.io experience",
+          "url": "https://greasyfork.org/scripts/484104-voxiom-io-enhanced-experience",
+          "code_url": "https://update.greasyfork.org/scripts/484104/Voxiomio%20Enhanced%20Experience.user.js",
+          "code_size": 1029,
+          "license": "none",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Voxiom.io Enhanced Experience",
+  "description": "Enhance your Voxiom.io experience",
+  "url": "https://greasyfork.org/scripts/484104-voxiom-io-enhanced-experience",
+  "code_url": "https://update.greasyfork.org/scripts/484104/Voxiomio%20Enhanced%20Experience.user.js",
+  "code_size": 1029,
+  "license": "none",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

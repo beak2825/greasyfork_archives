@@ -1,0 +1,33 @@
+{
+  "id": 432336,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-13T09:08:53.000Z",
+  "code_updated_at": "2021-09-13T09:08:53.000Z",
+  "namespace": "https://lezpopkek.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 5556,
+      "name": "Hasan Köroğlu",
+      "created_at": "2014-09-23T06:33:36.000Z",
+      "url": "https://greasyfork.org/users/5556-hasan-k%C3%B6ro%C4%9Flu"
+    }
+  ],
+  "name": "LezPop AdBlock Block",
+  "description": "LezPop AdBlock Block Script",
+  "url": "https://greasyfork.org/scripts/432336-lezpop-adblock-block",
+  "code_url": "https://update.greasyfork.org/scripts/432336/LezPop%20AdBlock%20Block.user.js",
+  "code_size": 940,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

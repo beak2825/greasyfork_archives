@@ -1,0 +1,68 @@
+[
+  {
+    "id": 488951,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-04T06:37:40.000Z",
+    "code_updated_at": "2024-03-04T06:37:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1207417,
+        "name": "Merc",
+        "created_at": "2023-10-30T12:55:59.000Z",
+        "url": "https://greasyfork.org/users/1207417-merc"
+      }
+    ],
+    "name": "POD Overnight Ball - Enhanced Functionality",
+    "description": "Add functionality to POD - Enhanced with Tennis Switch and Copy Bet Button",
+    "url": "https://greasyfork.org/scripts/488951-pod-overnight-ball-enhanced-functionality",
+    "code_url": "https://update.greasyfork.org/scripts/488951/POD%20Overnight%20Ball%20-%20Enhanced%20Functionality.user.js",
+    "code_size": 10150,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478624,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-30T13:00:07.000Z",
+    "code_updated_at": "2023-11-01T22:00:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1207417,
+        "name": "Merc",
+        "created_at": "2023-10-30T12:55:59.000Z",
+        "url": "https://greasyfork.org/users/1207417-merc"
+      }
+    ],
+    "name": "POD - Decimal to American V3.5",
+    "description": "Converts decimal odds to American odds and adds copy text and search buttons.",
+    "url": "https://greasyfork.org/scripts/478624-pod-decimal-to-american-v3-5",
+    "code_url": "https://update.greasyfork.org/scripts/478624/POD%20-%20Decimal%20to%20American%20V35.user.js",
+    "code_size": 7459,
+    "license": null,
+    "version": "3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

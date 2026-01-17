@@ -1,0 +1,33 @@
+{
+  "id": 448043,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-18T08:43:09.000Z",
+  "code_updated_at": "2022-08-11T07:40:48.000Z",
+  "namespace": "http://www.sumit.co.il/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 870986,
+      "name": "Effy Teva",
+      "created_at": "2022-01-30T05:56:19.000Z",
+      "url": "https://greasyfork.org/users/870986-effy-teva"
+    }
+  ],
+  "name": "Set Pipedrive minimum stage width + RTL",
+  "description": "Set minimum pipedrive stage width to 200px (default is 0px), and RTLs all deals.",
+  "url": "https://greasyfork.org/scripts/448043-set-pipedrive-minimum-stage-width-rtl",
+  "code_url": "https://update.greasyfork.org/scripts/448043/Set%20Pipedrive%20minimum%20stage%20width%20%2B%20RTL.user.js",
+  "code_size": 1449,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 487105,
+    "daily_installs": 0,
+    "total_installs": 405,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-11T16:40:41.000Z",
+    "code_updated_at": "2024-02-11T16:40:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1247134,
+        "name": "its_courrupted",
+        "created_at": "2024-01-12T21:42:49.000Z",
+        "url": "https://greasyfork.org/users/1247134-its-courrupted"
+      }
+    ],
+    "name": "Bedless noob crosshair",
+    "description": "Custom Bloxd Cursor",
+    "url": "https://greasyfork.org/scripts/487105-bedless-noob-crosshair",
+    "code_url": "https://update.greasyfork.org/scripts/487105/Bedless%20noob%20crosshair.user.js",
+    "code_size": 831,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486913,
+    "daily_installs": 0,
+    "total_installs": 104,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-08T15:44:11.000Z",
+    "code_updated_at": "2024-02-08T15:44:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1247134,
+        "name": "its_courrupted",
+        "created_at": "2024-01-12T21:42:49.000Z",
+        "url": "https://greasyfork.org/users/1247134-its-courrupted"
+      }
+    ],
+    "name": "Bloxd UI Hide/Show",
+    "description": "A Bloxd Feature",
+    "url": "https://greasyfork.org/scripts/486913-bloxd-ui-hide-show",
+    "code_url": "https://update.greasyfork.org/scripts/486913/Bloxd%20UI%20HideShow.user.js",
+    "code_size": 1296,
+    "license": "GNU GPLv3",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486006,
+    "daily_installs": 0,
+    "total_installs": 98,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-29T21:04:47.000Z",
+    "code_updated_at": "2024-01-29T21:04:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1247134,
+        "name": "its_courrupted",
+        "created_at": "2024-01-12T21:42:49.000Z",
+        "url": "https://greasyfork.org/users/1247134-its-courrupted"
+      }
+    ],
+    "name": "custum cursur for misesorsa",
+    "description": "Custom Bloxd Cursor",
+    "url": "https://greasyfork.org/scripts/486006-custum-cursur-for-misesorsa",
+    "code_url": "https://update.greasyfork.org/scripts/486006/custum%20cursur%20for%20misesorsa.user.js",
+    "code_size": 1047,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485993,
+    "daily_installs": 0,
+    "total_installs": 107,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-29T17:37:04.000Z",
+    "code_updated_at": "2024-01-29T17:38:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1247134,
+        "name": "its_courrupted",
+        "created_at": "2024-01-12T21:42:49.000Z",
+        "url": "https://greasyfork.org/users/1247134-its-courrupted"
+      }
+    ],
+    "name": "custum cursur for POWQ",
+    "description": "Custom Bloxd Cursor",
+    "url": "https://greasyfork.org/scripts/485993-custum-cursur-for-powq",
+    "code_url": "https://update.greasyfork.org/scripts/485993/custum%20cursur%20for%20POWQ.user.js",
+    "code_size": 1042,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

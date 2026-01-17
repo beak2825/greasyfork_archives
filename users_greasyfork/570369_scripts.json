@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427674,
+    "daily_installs": 0,
+    "total_installs": 1216,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-08T13:41:21.000Z",
+    "code_updated_at": "2021-06-08T13:41:21.000Z",
+    "namespace": "victotyhilling",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570369,
+        "name": "aaa11",
+        "created_at": "2020-05-22T04:38:57.000Z",
+        "url": "https://greasyfork.org/users/570369-aaa11"
+      }
+    ],
+    "name": "党课学习",
+    "description": "自动播放党课",
+    "url": "https://greasyfork.org/scripts/427674-%E5%85%9A%E8%AF%BE%E5%AD%A6%E4%B9%A0",
+    "code_url": "https://update.greasyfork.org/scripts/427674/%E5%85%9A%E8%AF%BE%E5%AD%A6%E4%B9%A0.user.js",
+    "code_size": 3547,
+    "license": null,
+    "version": "0.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

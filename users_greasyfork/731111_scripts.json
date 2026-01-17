@@ -1,0 +1,68 @@
+[
+  {
+    "id": 420649,
+    "daily_installs": 1,
+    "total_installs": 9527,
+    "fan_score": "80.5",
+    "good_ratings": 23,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2021-01-25T11:15:51.000Z",
+    "code_updated_at": "2021-12-08T02:49:17.000Z",
+    "namespace": "butaixianran",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731111,
+        "name": "butaixianran",
+        "created_at": "2021-01-25T09:22:58.000Z",
+        "url": "https://greasyfork.org/users/731111-butaixianran"
+      }
+    ],
+    "name": "AI翻译和搜索",
+    "description": "划词AI翻译+搜索。AI翻译按质量排序。调用：金山词霸，阿里翻译，百度翻译，搜狗翻译，腾讯翻译，彩云小译，DeepL，沪江日语词典等。搜索包含：知乎，b站，百科，youtube，twitter等。去掉了原作者提供的大量不常用词典。",
+    "url": "https://greasyfork.org/scripts/420649-ai%E7%BF%BB%E8%AF%91%E5%92%8C%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/420649/AI%E7%BF%BB%E8%AF%91%E5%92%8C%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 132256,
+    "license": null,
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420646,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-25T09:33:30.000Z",
+    "code_updated_at": "2021-01-25T09:33:30.000Z",
+    "namespace": "butaixianran",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731111,
+        "name": "butaixianran",
+        "created_at": "2021-01-25T09:22:58.000Z",
+        "url": "https://greasyfork.org/users/731111-butaixianran"
+      }
+    ],
+    "name": "LeftRightArrowForVideo",
+    "description": "Add left/right arrow hotkey to backward/forward 5 seconds for chrome's default video player. For example, videos on twitter or personal site",
+    "url": "https://greasyfork.org/scripts/420646-leftrightarrowforvideo",
+    "code_url": "https://update.greasyfork.org/scripts/420646/LeftRightArrowForVideo.user.js",
+    "code_size": 3036,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

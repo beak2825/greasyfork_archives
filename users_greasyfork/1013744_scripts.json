@@ -63,6 +63,72 @@
     "version": "2.11.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 482824,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-21T13:09:40.000Z",
+    "code_updated_at": "2025-03-19T10:35:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1013744,
+        "name": "StvnMrtns",
+        "created_at": "2023-01-18T08:48:18.000Z",
+        "url": "https://greasyfork.org/users/1013744-stvnmrtns"
+      }
+    ],
+    "name": "Logitech Sync Plus",
+    "description": "Logitec Sync optimizations",
+    "url": "https://greasyfork.org/scripts/482824-logitech-sync-plus",
+    "code_url": "https://update.greasyfork.org/scripts/482824/Logitech%20Sync%20Plus.user.js",
+    "code_size": 46330,
+    "license": "MIT License",
+    "version": "2.13.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459185,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-31T10:47:23.000Z",
+    "code_updated_at": "2025-12-11T04:49:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1013744,
+        "name": "StvnMrtns",
+        "created_at": "2023-01-18T08:48:18.000Z",
+        "url": "https://greasyfork.org/users/1013744-stvnmrtns"
+      }
+    ],
+    "name": "GLPI Plus",
+    "description": "GLPI optimizations for layout and dark modes",
+    "url": "https://greasyfork.org/scripts/459185-glpi-plus",
+    "code_url": "https://update.greasyfork.org/scripts/459185/GLPI%20Plus.user.js",
+    "code_size": 179053,
+    "license": "MIT License",
+    "version": "1.10.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

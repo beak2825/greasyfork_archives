@@ -1,0 +1,33 @@
+{
+  "id": 480450,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-21T12:56:58.000Z",
+  "code_updated_at": "2023-11-21T12:56:58.000Z",
+  "namespace": "https://frenpet.xyz",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1221199,
+      "name": "0xcola",
+      "created_at": "2023-11-21T12:55:11.000Z",
+      "url": "https://greasyfork.org/users/1221199-0xcola"
+    }
+  ],
+  "name": "Frenpet PC",
+  "description": "Frenpet",
+  "url": "https://greasyfork.org/scripts/480450-frenpet-pc",
+  "code_url": "https://update.greasyfork.org/scripts/480450/Frenpet%20PC.user.js",
+  "code_size": 2095,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

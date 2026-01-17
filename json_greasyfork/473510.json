@@ -1,0 +1,59 @@
+{
+  "id": 473510,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-20T14:37:42.000Z",
+  "code_updated_at": "2023-08-21T20:45:01.000Z",
+  "namespace": "https://github.com/2zzly/GMX-Mail-deref-decoder",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1155643,
+      "name": "1Deref",
+      "created_at": "2023-08-20T14:34:31.000Z",
+      "url": "https://greasyfork.org/users/1155643-1deref",
+      "scripts": [
+        {
+          "id": 473510,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-20T14:37:42.000Z",
+          "code_updated_at": "2023-08-21T20:45:01.000Z",
+          "namespace": "https://github.com/2zzly/GMX-Mail-deref-decoder",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GMX/Mail.com Outgoing URL Decoder",
+          "description": "Decodes and rewrites external URLs. Stops URL tracking/analytics",
+          "url": "https://greasyfork.org/scripts/473510-gmx-mail-com-outgoing-url-decoder",
+          "code_url": "https://update.greasyfork.org/scripts/473510/GMXMailcom%20Outgoing%20URL%20Decoder.user.js",
+          "code_size": 2190,
+          "license": "MIT License",
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GMX/Mail.com Outgoing URL Decoder",
+  "description": "Decodes and rewrites external URLs. Stops URL tracking/analytics",
+  "url": "https://greasyfork.org/scripts/473510-gmx-mail-com-outgoing-url-decoder",
+  "code_url": "https://update.greasyfork.org/scripts/473510/GMXMailcom%20Outgoing%20URL%20Decoder.user.js",
+  "code_size": 2190,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

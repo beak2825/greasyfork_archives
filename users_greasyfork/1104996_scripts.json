@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468938,
+    "daily_installs": 0,
+    "total_installs": 156,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-06-18T16:26:22.000Z",
+    "code_updated_at": "2023-06-19T05:16:55.000Z",
+    "namespace": "https://github.com/aclist/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1104996,
+        "name": "RuU3ske7bEIe15Fo2j",
+        "created_at": "2023-06-18T16:20:20.000Z",
+        "url": "https://greasyfork.org/users/1104996-ruu3ske7beie15fo2j"
+      }
+    ],
+    "name": "kbin-unsquash",
+    "description": "unsquash inline images in comments",
+    "url": "https://greasyfork.org/scripts/468938-kbin-unsquash",
+    "code_url": "https://update.greasyfork.org/scripts/468938/kbin-unsquash.user.js",
+    "code_size": 1302,
+    "license": "MIT License",
+    "version": "0.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

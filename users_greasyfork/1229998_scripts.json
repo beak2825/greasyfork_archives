@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481627,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-07T16:29:57.000Z",
+    "code_updated_at": "2023-12-07T16:30:49.000Z",
+    "namespace": "https://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229998,
+        "name": "dragonloving",
+        "created_at": "2023-12-07T16:25:44.000Z",
+        "url": "https://greasyfork.org/users/1229998-dragonloving"
+      }
+    ],
+    "name": "Baldwin's Cheatsheet",
+    "description": "Adds a quick reference box to the Transmute page so you can see what type of item transmutes to what type of compound without leaving the page. Now with white background for easy reading. Original version by Fiofiofio.",
+    "url": "https://greasyfork.org/scripts/481627-baldwin-s-cheatsheet",
+    "code_url": "https://update.greasyfork.org/scripts/481627/Baldwin%27s%20Cheatsheet.user.js",
+    "code_size": 3031,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

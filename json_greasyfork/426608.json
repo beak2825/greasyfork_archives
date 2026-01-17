@@ -1,0 +1,34 @@
+{
+  "id": 426608,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-17T07:39:26.000Z",
+  "code_updated_at": "2021-05-18T08:25:23.000Z",
+  "namespace": "https://greasyfork.org/uk/scripts/426608-btcb",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 773015,
+      "name": "OleksandrTitov",
+      "created_at": "2021-05-17T07:27:25.000Z",
+      "url": "https://greasyfork.org/users/773015-oleksandrtitov",
+      "scripts": []
+    }
+  ],
+  "name": "BTCB",
+  "description": "Simple Clever",
+  "url": "https://greasyfork.org/scripts/426608-btcb",
+  "code_url": "https://update.greasyfork.org/scripts/426608/BTCB.user.js",
+  "code_size": 8993,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

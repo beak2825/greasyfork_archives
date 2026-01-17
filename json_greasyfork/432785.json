@@ -1,0 +1,33 @@
+{
+  "id": 432785,
+  "daily_installs": 0,
+  "total_installs": 1749,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-22T06:50:35.000Z",
+  "code_updated_at": "2022-08-17T03:55:08.000Z",
+  "namespace": "https://greasyfork.org/users/670174",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670174,
+      "name": "踢踢打踢踢",
+      "created_at": "2020-07-25T17:46:33.000Z",
+      "url": "https://greasyfork.org/users/670174-%E8%B8%A2%E8%B8%A2%E6%89%93%E8%B8%A2%E8%B8%A2"
+    }
+  ],
+  "name": "新浪腾讯新闻查看全文+微博长文不关注看全文",
+  "description": "让新浪新闻、腾讯新闻、it1352不需要展开或者下载APP直接看全文，微博长文不需要点击关注即可阅读全文，陆续支持更多网站中...",
+  "url": "https://greasyfork.org/scripts/432785-%E6%96%B0%E6%B5%AA%E8%85%BE%E8%AE%AF%E6%96%B0%E9%97%BB%E6%9F%A5%E7%9C%8B%E5%85%A8%E6%96%87-%E5%BE%AE%E5%8D%9A%E9%95%BF%E6%96%87%E4%B8%8D%E5%85%B3%E6%B3%A8%E7%9C%8B%E5%85%A8%E6%96%87",
+  "code_url": "https://update.greasyfork.org/scripts/432785/%E6%96%B0%E6%B5%AA%E8%85%BE%E8%AE%AF%E6%96%B0%E9%97%BB%E6%9F%A5%E7%9C%8B%E5%85%A8%E6%96%87%2B%E5%BE%AE%E5%8D%9A%E9%95%BF%E6%96%87%E4%B8%8D%E5%85%B3%E6%B3%A8%E7%9C%8B%E5%85%A8%E6%96%87.user.js",
+  "code_size": 2053,
+  "license": "MIT License",
+  "version": "0.2.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

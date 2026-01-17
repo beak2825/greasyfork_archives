@@ -1,0 +1,59 @@
+{
+  "id": 494175,
+  "daily_installs": 0,
+  "total_installs": 108,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-05T19:44:03.000Z",
+  "code_updated_at": "2024-05-05T19:44:03.000Z",
+  "namespace": "http://your.domain.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1297374,
+      "name": "Ionu",
+      "created_at": "2024-05-05T19:30:05.000Z",
+      "url": "https://greasyfork.org/users/1297374-ionu",
+      "scripts": [
+        {
+          "id": 494175,
+          "daily_installs": 0,
+          "total_installs": 108,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-05T19:44:03.000Z",
+          "code_updated_at": "2024-05-05T19:44:03.000Z",
+          "namespace": "http://your.domain.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Codex Auto Verify",
+          "description": "Automatically verifies Codex entries on Greasy Fork.",
+          "url": "https://greasyfork.org/scripts/494175-codex-auto-verify",
+          "code_url": "https://update.greasyfork.org/scripts/494175/Codex%20Auto%20Verify.user.js",
+          "code_size": 1071,
+          "license": null,
+          "version": "0.1",
+          "locale": "fj",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Codex Auto Verify",
+  "description": "Automatically verifies Codex entries on Greasy Fork.",
+  "url": "https://greasyfork.org/scripts/494175-codex-auto-verify",
+  "code_url": "https://update.greasyfork.org/scripts/494175/Codex%20Auto%20Verify.user.js",
+  "code_size": 1071,
+  "license": null,
+  "version": "0.1",
+  "locale": "fj",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 460428,
+  "daily_installs": 1,
+  "total_installs": 104759,
+  "fan_score": "55.2",
+  "good_ratings": 10,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2023-02-21T04:41:16.000Z",
+  "code_updated_at": "2023-02-23T01:53:47.000Z",
+  "namespace": "https://greasyfork.org/users/1030542",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1030542,
+      "name": "2444349169",
+      "created_at": "2023-02-21T04:40:00.000Z",
+      "url": "https://greasyfork.org/users/1030542-2444349169",
+      "scripts": [
+        {
+          "id": 460428,
+          "daily_installs": 1,
+          "total_installs": 104759,
+          "fan_score": "55.2",
+          "good_ratings": 10,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2023-02-21T04:41:16.000Z",
+          "code_updated_at": "2023-02-23T01:53:47.000Z",
+          "namespace": "https://greasyfork.org/users/1030542",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "【万能视频自动刷课时播放加速答题考试脚本】各类专业技术人员，教师，会计，医学继续教育公需课专业课·····",
+          "description": "【弘成教育学起plus】【国开在线】【各类继续教育】【各类教师培训】【各类会计】【Q2444349169】。",
+          "url": "https://greasyfork.org/scripts/460428-%E4%B8%87%E8%83%BD%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%E6%97%B6%E6%92%AD%E6%94%BE%E5%8A%A0%E9%80%9F%E7%AD%94%E9%A2%98%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC-%E5%90%84%E7%B1%BB%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98-%E6%95%99%E5%B8%88-%E4%BC%9A%E8%AE%A1-%E5%8C%BB%E5%AD%A6%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%85%AC%E9%9C%80%E8%AF%BE%E4%B8%93%E4%B8%9A%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/460428/%E3%80%90%E4%B8%87%E8%83%BD%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%E6%97%B6%E6%92%AD%E6%94%BE%E5%8A%A0%E9%80%9F%E7%AD%94%E9%A2%98%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC%E3%80%91%E5%90%84%E7%B1%BB%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%EF%BC%8C%E6%95%99%E5%B8%88%EF%BC%8C%E4%BC%9A%E8%AE%A1%EF%BC%8C%E5%8C%BB%E5%AD%A6%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%85%AC%E9%9C%80%E8%AF%BE%E4%B8%93%E4%B8%9A%E8%AF%BE%C2%B7%C2%B7%C2%B7%C2%B7%C2%B7.user.js",
+          "code_size": 2510,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "【万能视频自动刷课时播放加速答题考试脚本】各类专业技术人员，教师，会计，医学继续教育公需课专业课·····",
+  "description": "【弘成教育学起plus】【国开在线】【各类继续教育】【各类教师培训】【各类会计】【Q2444349169】。",
+  "url": "https://greasyfork.org/scripts/460428-%E4%B8%87%E8%83%BD%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%E6%97%B6%E6%92%AD%E6%94%BE%E5%8A%A0%E9%80%9F%E7%AD%94%E9%A2%98%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC-%E5%90%84%E7%B1%BB%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98-%E6%95%99%E5%B8%88-%E4%BC%9A%E8%AE%A1-%E5%8C%BB%E5%AD%A6%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%85%AC%E9%9C%80%E8%AF%BE%E4%B8%93%E4%B8%9A%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/460428/%E3%80%90%E4%B8%87%E8%83%BD%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%E6%97%B6%E6%92%AD%E6%94%BE%E5%8A%A0%E9%80%9F%E7%AD%94%E9%A2%98%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC%E3%80%91%E5%90%84%E7%B1%BB%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%EF%BC%8C%E6%95%99%E5%B8%88%EF%BC%8C%E4%BC%9A%E8%AE%A1%EF%BC%8C%E5%8C%BB%E5%AD%A6%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%85%AC%E9%9C%80%E8%AF%BE%E4%B8%93%E4%B8%9A%E8%AF%BE%C2%B7%C2%B7%C2%B7%C2%B7%C2%B7.user.js",
+  "code_size": 2510,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

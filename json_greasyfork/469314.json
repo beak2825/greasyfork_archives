@@ -1,0 +1,59 @@
+{
+  "id": 469314,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-23T16:41:19.000Z",
+  "code_updated_at": "2023-06-23T16:41:19.000Z",
+  "namespace": "http://example.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 832623,
+      "name": "GamerOwen",
+      "created_at": "2021-11-05T23:45:04.000Z",
+      "url": "https://greasyfork.org/users/832623-gamerowen",
+      "scripts": [
+        {
+          "id": 469314,
+          "daily_installs": 0,
+          "total_installs": 41,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-23T16:41:19.000Z",
+          "code_updated_at": "2023-06-23T16:41:19.000Z",
+          "namespace": "http://example.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT's Ball",
+          "description": "Displays a bouncing ball with a smiley face on ChatGPT screen",
+          "url": "https://greasyfork.org/scripts/469314-chatgpt-s-ball",
+          "code_url": "https://update.greasyfork.org/scripts/469314/ChatGPT%27s%20Ball.user.js",
+          "code_size": 1753,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT's Ball",
+  "description": "Displays a bouncing ball with a smiley face on ChatGPT screen",
+  "url": "https://greasyfork.org/scripts/469314-chatgpt-s-ball",
+  "code_url": "https://update.greasyfork.org/scripts/469314/ChatGPT%27s%20Ball.user.js",
+  "code_size": 1753,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

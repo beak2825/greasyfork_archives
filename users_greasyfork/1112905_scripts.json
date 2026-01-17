@@ -1,0 +1,167 @@
+[
+  {
+    "id": 470618,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-11T17:27:48.000Z",
+    "code_updated_at": "2025-12-18T02:28:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1112905,
+        "name": "Mikill",
+        "created_at": "2023-06-26T19:09:08.000Z",
+        "url": "https://greasyfork.org/users/1112905-mikill"
+      }
+    ],
+    "name": "FireDeluxe",
+    "description": "Userscript para o site https://animefire.plus/",
+    "url": "https://greasyfork.org/scripts/470618-firedeluxe",
+    "code_url": "https://update.greasyfork.org/scripts/470618/FireDeluxe.user.js",
+    "code_size": 28040,
+    "license": null,
+    "version": "2.23",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470229,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-05T13:44:11.000Z",
+    "code_updated_at": "2023-07-05T13:44:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1112905,
+        "name": "Mikill",
+        "created_at": "2023-06-26T19:09:08.000Z",
+        "url": "https://greasyfork.org/users/1112905-mikill"
+      }
+    ],
+    "name": "cVerificação",
+    "description": "Impede um erro de acontecer, é extremamente necessário que isso seja executado!",
+    "url": "https://greasyfork.org/scripts/470229-cverifica%C3%A7%C3%A3o",
+    "code_url": "https://update.greasyfork.org/scripts/470229/cVerifica%C3%A7%C3%A3o.user.js",
+    "code_size": 1142,
+    "license": null,
+    "version": "0.3",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469813,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-30T03:33:29.000Z",
+    "code_updated_at": "2023-07-05T13:57:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1112905,
+        "name": "Mikill",
+        "created_at": "2023-06-26T19:09:08.000Z",
+        "url": "https://greasyfork.org/users/1112905-mikill"
+      }
+    ],
+    "name": "gP0rnBlocker",
+    "description": "Bloqueia certos perfis que postam pornografia, adicione mais perfis no discord, atualiza a cada 20 segundos!",
+    "url": "https://greasyfork.org/scripts/469813-gp0rnblocker",
+    "code_url": "https://update.greasyfork.org/scripts/469813/gP0rnBlocker.user.js",
+    "code_size": 3036,
+    "license": null,
+    "version": "0.3",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469811,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-30T03:29:57.000Z",
+    "code_updated_at": "2023-07-05T13:54:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1112905,
+        "name": "Mikill",
+        "created_at": "2023-06-26T19:09:08.000Z",
+        "url": "https://greasyfork.org/users/1112905-mikill"
+      }
+    ],
+    "name": "fCarregador de imagem do chat",
+    "description": "Carrega imagens do chat automaticamente",
+    "url": "https://greasyfork.org/scripts/469811-fcarregador-de-imagem-do-chat",
+    "code_url": "https://update.greasyfork.org/scripts/469811/fCarregador%20de%20imagem%20do%20chat.user.js",
+    "code_size": 2148,
+    "license": null,
+    "version": "0.3",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469761,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-29T13:44:25.000Z",
+    "code_updated_at": "2023-07-05T13:46:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1112905,
+        "name": "Mikill",
+        "created_at": "2023-06-26T19:09:08.000Z",
+        "url": "https://greasyfork.org/users/1112905-mikill"
+      }
+    ],
+    "name": "dSenhas",
+    "description": "Sistema de senha",
+    "url": "https://greasyfork.org/scripts/469761-dsenhas",
+    "code_url": "https://update.greasyfork.org/scripts/469761/dSenhas.user.js",
+    "code_size": 2553,
+    "license": null,
+    "version": "0.3",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

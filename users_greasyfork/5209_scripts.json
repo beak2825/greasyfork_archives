@@ -1,0 +1,101 @@
+[
+  {
+    "id": 493562,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-26T19:06:49.000Z",
+    "code_updated_at": "2024-04-26T19:10:03.000Z",
+    "namespace": "https://greasyfork.org/users/5209",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5209,
+        "name": "conquerist2@gmail.com",
+        "created_at": "2014-09-10T21:49:27.000Z",
+        "url": "https://greasyfork.org/users/5209-conquerist2-gmail-com"
+      }
+    ],
+    "name": "Plötzblog paywall remover",
+    "description": "remove paywall on www.ploetzblog.de",
+    "url": "https://greasyfork.org/scripts/493562-pl%C3%B6tzblog-paywall-remover",
+    "code_url": "https://update.greasyfork.org/scripts/493562/Pl%C3%B6tzblog%20paywall%20remover.user.js",
+    "code_size": 604,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469850,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-30T10:08:32.000Z",
+    "code_updated_at": "2023-06-30T10:08:32.000Z",
+    "namespace": "conquerist2@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5209,
+        "name": "conquerist2@gmail.com",
+        "created_at": "2014-09-10T21:49:27.000Z",
+        "url": "https://greasyfork.org/users/5209-conquerist2-gmail-com"
+      }
+    ],
+    "name": "NHK Web copy",
+    "description": "NHK Web News - Copy Article text",
+    "url": "https://greasyfork.org/scripts/469850-nhk-web-copy",
+    "code_url": "https://update.greasyfork.org/scripts/469850/NHK%20Web%20copy.user.js",
+    "code_size": 790,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 468933,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-18T14:06:04.000Z",
+    "code_updated_at": "2023-06-30T09:52:27.000Z",
+    "namespace": "conquerist2@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5209,
+        "name": "conquerist2@gmail.com",
+        "created_at": "2014-09-10T21:49:27.000Z",
+        "url": "https://greasyfork.org/users/5209-conquerist2-gmail-com"
+      }
+    ],
+    "name": "kanshudo - check if primary is in srs",
+    "description": "kanshudo - notify if a card is only stored in a non-primary form",
+    "url": "https://greasyfork.org/scripts/468933-kanshudo-check-if-primary-is-in-srs",
+    "code_url": "https://update.greasyfork.org/scripts/468933/kanshudo%20-%20check%20if%20primary%20is%20in%20srs.user.js",
+    "code_size": 6026,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

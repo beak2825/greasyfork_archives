@@ -1,0 +1,34 @@
+{
+  "id": 427325,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-31T23:09:08.000Z",
+  "code_updated_at": "2021-05-31T23:09:08.000Z",
+  "namespace": "https://greasyfork.org/users/778355",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 778355,
+      "name": "Zharfan Nugroho",
+      "created_at": "2021-05-31T23:06:16.000Z",
+      "url": "https://greasyfork.org/users/778355-zharfan-nugroho",
+      "scripts": []
+    }
+  ],
+  "name": "Auto GCP - 1 Accept",
+  "description": "Part of Auto GCP Script",
+  "url": "https://greasyfork.org/scripts/427325-auto-gcp-1-accept",
+  "code_url": "https://update.greasyfork.org/scripts/427325/Auto%20GCP%20-%201%20Accept.user.js",
+  "code_size": 2137,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

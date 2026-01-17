@@ -1,0 +1,33 @@
+{
+  "id": 457404,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-31T17:03:51.000Z",
+  "code_updated_at": "2023-02-25T18:09:57.000Z",
+  "namespace": "font_android_test",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 956157,
+      "name": "ResplendentFervor",
+      "created_at": "2022-09-08T13:31:48.000Z",
+      "url": "https://greasyfork.org/users/956157-resplendentfervor"
+    }
+  ],
+  "name": "font-family noto android test",
+  "description": "test only",
+  "url": "https://greasyfork.org/scripts/457404-font-family-noto-android-test",
+  "code_url": "https://update.greasyfork.org/scripts/457404/font-family%20noto%20android%20test.user.js",
+  "code_size": 3583,
+  "license": "MIT License",
+  "version": "1.0.3.7",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

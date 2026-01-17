@@ -1,0 +1,34 @@
+{
+  "id": 431479,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-27T12:28:37.000Z",
+  "code_updated_at": "2021-08-30T15:19:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 738344,
+      "name": "67373fafa",
+      "created_at": "2021-02-17T17:24:42.000Z",
+      "url": "https://greasyfork.org/users/738344-67373fafa",
+      "scripts": []
+    }
+  ],
+  "name": "PT-Offer-Vote",
+  "description": "主要用于PT站的候选投票",
+  "url": "https://greasyfork.org/scripts/431479-pt-offer-vote",
+  "code_url": "https://update.greasyfork.org/scripts/431479/PT-Offer-Vote.user.js",
+  "code_size": 2109,
+  "license": null,
+  "version": "0.4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

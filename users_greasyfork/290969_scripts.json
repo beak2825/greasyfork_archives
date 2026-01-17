@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491645,
+    "daily_installs": 0,
+    "total_installs": 159,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-04T15:07:32.000Z",
+    "code_updated_at": "2025-08-04T14:58:34.000Z",
+    "namespace": "DeleteTVTropesAdblockWarning",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 290969,
+        "name": "dpk9",
+        "created_at": "2019-04-10T17:16:57.000Z",
+        "url": "https://greasyfork.org/users/290969-dpk9"
+      }
+    ],
+    "name": "Delete TVTropes Adblock Warning",
+    "description": "Deletes the TV Tropes anti-adblock popup that shows on every page",
+    "url": "https://greasyfork.org/scripts/491645-delete-tvtropes-adblock-warning",
+    "code_url": "https://update.greasyfork.org/scripts/491645/Delete%20TVTropes%20Adblock%20Warning.user.js",
+    "code_size": 805,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

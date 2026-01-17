@@ -1,0 +1,33 @@
+{
+  "id": 439857,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-11T05:58:11.000Z",
+  "code_updated_at": "2022-02-11T05:58:11.000Z",
+  "namespace": "ikariam",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 875280,
+      "name": "Теодор Гельевич",
+      "created_at": "2022-02-11T05:51:38.000Z",
+      "url": "https://greasyfork.org/users/875280-%D1%82%D0%B5%D0%BE%D0%B4%D0%BE%D1%80-%D0%B3%D0%B5%D0%BB%D1%8C%D0%B5%D0%B2%D0%B8%D1%87"
+    }
+  ],
+  "name": "Ikariam Auto Piracy",
+  "description": "Automatically click capture button, though you need to input verification code from time to time. Please note the beta versions are still not functioning!",
+  "url": "https://greasyfork.org/scripts/439857-ikariam-auto-piracy",
+  "code_url": "https://update.greasyfork.org/scripts/439857/Ikariam%20Auto%20Piracy.user.js",
+  "code_size": 1427,
+  "license": null,
+  "version": "beta 0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

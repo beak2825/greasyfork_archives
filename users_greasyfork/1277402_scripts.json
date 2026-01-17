@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490445,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-21T10:17:34.000Z",
+    "code_updated_at": "2024-03-21T10:23:52.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/490445",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1277402,
+        "name": "joytome",
+        "created_at": "2024-03-21T10:03:56.000Z",
+        "url": "https://greasyfork.org/users/1277402-joytome"
+      }
+    ],
+    "name": "神藏小说网黑色主题",
+    "description": "神藏小说网站的黑色主题脚本",
+    "url": "https://greasyfork.org/scripts/490445-%E7%A5%9E%E8%97%8F%E5%B0%8F%E8%AF%B4%E7%BD%91%E9%BB%91%E8%89%B2%E4%B8%BB%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/490445/%E7%A5%9E%E8%97%8F%E5%B0%8F%E8%AF%B4%E7%BD%91%E9%BB%91%E8%89%B2%E4%B8%BB%E9%A2%98.user.js",
+    "code_size": 1957,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 473640,
+    "daily_installs": 0,
+    "total_installs": 131,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-22T03:42:35.000Z",
+    "code_updated_at": "2024-03-07T12:51:27.000Z",
+    "namespace": "https://chentao1006.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239644,
+        "name": "chentao1006",
+        "created_at": "2019-01-15T02:43:47.000Z",
+        "url": "https://greasyfork.org/users/239644-chentao1006"
+      }
+    ],
+    "name": "生成二维码图标",
+    "description": "在页面左下角添加一个图标，点击后生成当前页面地址二维码",
+    "url": "https://greasyfork.org/scripts/473640-%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%9B%BE%E6%A0%87",
+    "code_url": "https://update.greasyfork.org/scripts/473640/%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%9B%BE%E6%A0%87.user.js",
+    "code_size": 1648,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

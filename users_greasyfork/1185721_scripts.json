@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476558,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-02T13:02:01.000Z",
+    "code_updated_at": "2024-11-25T10:44:19.000Z",
+    "namespace": "浙江交工金筑交通建设有限公司",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1185721,
+        "name": "精易科技",
+        "created_at": "2023-10-02T04:20:13.000Z",
+        "url": "https://greasyfork.org/users/1185721-%E7%B2%BE%E6%98%93%E7%A7%91%E6%8A%80"
+      }
+    ],
+    "name": "信誉加分系统",
+    "description": "网页数据采集",
+    "url": "https://greasyfork.org/scripts/476558-%E4%BF%A1%E8%AA%89%E5%8A%A0%E5%88%86%E7%B3%BB%E7%BB%9F",
+    "code_url": "https://update.greasyfork.org/scripts/476558/%E4%BF%A1%E8%AA%89%E5%8A%A0%E5%88%86%E7%B3%BB%E7%BB%9F.user.js",
+    "code_size": 16813,
+    "license": "JingYiKeJI",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

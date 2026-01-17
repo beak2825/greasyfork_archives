@@ -1,0 +1,34 @@
+{
+  "id": 469908,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-01T13:04:17.000Z",
+  "code_updated_at": "2023-09-18T16:31:32.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 258372,
+      "name": "sally2022",
+      "created_at": "2019-03-10T14:38:20.000Z",
+      "url": "https://greasyfork.org/users/258372-sally2022",
+      "scripts": []
+    }
+  ],
+  "name": "①▶▶lua卡密验证==验证通过==跳到烟草导航主页(www.yzyhq.cc)==依ip地域跳到相应平台",
+  "description": "用于登录授权",
+  "url": "https://greasyfork.org/scripts/469908-lua%E5%8D%A1%E5%AF%86%E9%AA%8C%E8%AF%81-%E9%AA%8C%E8%AF%81%E9%80%9A%E8%BF%87-%E8%B7%B3%E5%88%B0%E7%83%9F%E8%8D%89%E5%AF%BC%E8%88%AA%E4%B8%BB%E9%A1%B5-www-yzyhq-cc-%E4%BE%9Dip%E5%9C%B0%E5%9F%9F%E8%B7%B3%E5%88%B0%E7%9B%B8%E5%BA%94%E5%B9%B3%E5%8F%B0",
+  "code_url": "https://update.greasyfork.org/scripts/469908/%E2%91%A0%E2%96%B6%E2%96%B6lua%E5%8D%A1%E5%AF%86%E9%AA%8C%E8%AF%81%3D%3D%E9%AA%8C%E8%AF%81%E9%80%9A%E8%BF%87%3D%3D%E8%B7%B3%E5%88%B0%E7%83%9F%E8%8D%89%E5%AF%BC%E8%88%AA%E4%B8%BB%E9%A1%B5%28wwwyzyhqcc%29%3D%3D%E4%BE%9Dip%E5%9C%B0%E5%9F%9F%E8%B7%B3%E5%88%B0%E7%9B%B8%E5%BA%94%E5%B9%B3%E5%8F%B0.user.js",
+  "code_size": 19712,
+  "license": null,
+  "version": "23.9.19",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

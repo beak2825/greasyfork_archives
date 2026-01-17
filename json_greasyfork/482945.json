@@ -1,0 +1,59 @@
+{
+  "id": 482945,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-23T16:01:08.000Z",
+  "code_updated_at": "2023-12-23T16:18:10.000Z",
+  "namespace": "https://codeberg.org/proton-penguin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1238316,
+      "name": "proton-penguin",
+      "created_at": "2023-12-23T15:47:15.000Z",
+      "url": "https://greasyfork.org/users/1238316-proton-penguin",
+      "scripts": [
+        {
+          "id": 482945,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-23T16:01:08.000Z",
+          "code_updated_at": "2023-12-23T16:18:10.000Z",
+          "namespace": "https://codeberg.org/proton-penguin",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "以學號取得北科大課表",
+          "description": "登入校園入口後可使用學號查詢預設課表，加退選的課程可能不會顯示。",
+          "url": "https://greasyfork.org/scripts/482945-%E4%BB%A5%E5%AD%B8%E8%99%9F%E5%8F%96%E5%BE%97%E5%8C%97%E7%A7%91%E5%A4%A7%E8%AA%B2%E8%A1%A8",
+          "code_url": "https://update.greasyfork.org/scripts/482945/%E4%BB%A5%E5%AD%B8%E8%99%9F%E5%8F%96%E5%BE%97%E5%8C%97%E7%A7%91%E5%A4%A7%E8%AA%B2%E8%A1%A8.user.js",
+          "code_size": 1485,
+          "license": "GPL 3.0",
+          "version": "20231224.1",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "以學號取得北科大課表",
+  "description": "登入校園入口後可使用學號查詢預設課表，加退選的課程可能不會顯示。",
+  "url": "https://greasyfork.org/scripts/482945-%E4%BB%A5%E5%AD%B8%E8%99%9F%E5%8F%96%E5%BE%97%E5%8C%97%E7%A7%91%E5%A4%A7%E8%AA%B2%E8%A1%A8",
+  "code_url": "https://update.greasyfork.org/scripts/482945/%E4%BB%A5%E5%AD%B8%E8%99%9F%E5%8F%96%E5%BE%97%E5%8C%97%E7%A7%91%E5%A4%A7%E8%AA%B2%E8%A1%A8.user.js",
+  "code_size": 1485,
+  "license": "GPL 3.0",
+  "version": "20231224.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

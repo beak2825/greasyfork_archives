@@ -1,0 +1,59 @@
+{
+  "id": 477405,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-14T10:23:06.000Z",
+  "code_updated_at": "2023-10-15T03:02:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1121444,
+      "name": "czt99987",
+      "created_at": "2023-07-08T04:31:05.000Z",
+      "url": "https://greasyfork.org/users/1121444-czt99987",
+      "scripts": [
+        {
+          "id": 477405,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-14T10:23:06.000Z",
+          "code_updated_at": "2023-10-15T03:02:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "sbi",
+          "description": "这个是公司内容方便员工使用的一个脚本，不涉及任何其他人信息，只是一个方便自己公司同事操作的一个脚本，自动化点击操作",
+          "url": "https://greasyfork.org/scripts/477405-sbi",
+          "code_url": "https://update.greasyfork.org/scripts/477405/sbi.user.js",
+          "code_size": 10346,
+          "license": "GNU Affero General Public License v3.0",
+          "version": "0.31",
+          "locale": "sl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "sbi",
+  "description": "这个是公司内容方便员工使用的一个脚本，不涉及任何其他人信息，只是一个方便自己公司同事操作的一个脚本，自动化点击操作",
+  "url": "https://greasyfork.org/scripts/477405-sbi",
+  "code_url": "https://update.greasyfork.org/scripts/477405/sbi.user.js",
+  "code_size": 10346,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "0.31",
+  "locale": "sl",
+  "deleted": false,
+  "visibility": "public"
+}

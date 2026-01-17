@@ -1,0 +1,33 @@
+{
+  "id": 444428,
+  "daily_installs": 0,
+  "total_installs": 1019,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-03T17:39:18.000Z",
+  "code_updated_at": "2025-02-17T17:40:17.000Z",
+  "namespace": "https://github.com/BNDou/getCnkiLiteratureBibTex",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 883089,
+      "name": "BNDou",
+      "created_at": "2022-03-05T04:51:12.000Z",
+      "url": "https://greasyfork.org/users/883089-bndou"
+    }
+  ],
+  "name": "知网-文献-bibtex提取",
+  "description": "从知网文献中直接复制引文，支持多种引文格式：BibTeX、GB/T 7714-2015、知网研学、CAJ-CD、MLA、APA、Refworks、EndNote、NoteExpress、NodeFirst",
+  "url": "https://greasyfork.org/scripts/444428-%E7%9F%A5%E7%BD%91-%E6%96%87%E7%8C%AE-bibtex%E6%8F%90%E5%8F%96",
+  "code_url": "https://update.greasyfork.org/scripts/444428/%E7%9F%A5%E7%BD%91-%E6%96%87%E7%8C%AE-bibtex%E6%8F%90%E5%8F%96.user.js",
+  "code_size": 17352,
+  "license": "AGPL License",
+  "version": "4.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 445137,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-17T22:08:27.000Z",
+  "code_updated_at": "2022-05-17T22:08:27.000Z",
+  "namespace": "https://coding.net/u/sffxzzp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 807927,
+      "name": "lessons as dispensable",
+      "created_at": "2021-08-24T00:52:05.000Z",
+      "url": "https://greasyfork.org/users/807927-lessons-as-dispensable",
+      "scripts": []
+    }
+  ],
+  "name": "CSGO Market Tool",
+  "description": "【需要升级GM.js至0.3】 CSGO市场查询枪支磨损值、印花图案。【需要启用Steam社区加速】",
+  "url": "https://greasyfork.org/scripts/445137-csgo-market-tool",
+  "code_url": "https://update.greasyfork.org/scripts/445137/CSGO%20Market%20Tool.user.js",
+  "code_size": 21753,
+  "license": null,
+  "version": "2.41",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

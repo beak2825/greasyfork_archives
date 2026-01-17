@@ -1,0 +1,59 @@
+{
+  "id": 478451,
+  "daily_installs": 0,
+  "total_installs": 409,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-28T07:17:07.000Z",
+  "code_updated_at": "2023-10-28T07:18:30.000Z",
+  "namespace": "https://gitee.com/HGJing/everthing-hook/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076329,
+      "name": "3452491731@qq.com",
+      "created_at": "2023-05-10T01:41:44.000Z",
+      "url": "https://greasyfork.org/users/1076329-3452491731-qq-com",
+      "scripts": [
+        {
+          "id": 478451,
+          "daily_installs": 0,
+          "total_installs": 409,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-28T07:17:07.000Z",
+          "code_updated_at": "2023-10-28T07:18:30.000Z",
+          "namespace": "https://gitee.com/HGJing/everthing-hook/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "就想着白嫖的cmm",
+          "description": "控制网页计时器速度|加速跳过页面计时广告|视频快进（慢放）|跳过广告|支持几乎所有网页.",
+          "url": "https://greasyfork.org/scripts/478451-%E5%B0%B1%E6%83%B3%E7%9D%80%E7%99%BD%E5%AB%96%E7%9A%84cmm",
+          "code_url": "https://update.greasyfork.org/scripts/478451/%E5%B0%B1%E6%83%B3%E7%9D%80%E7%99%BD%E5%AB%96%E7%9A%84cmm.user.js",
+          "code_size": 55225,
+          "license": null,
+          "version": "2.0.11",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "就想着白嫖的cmm",
+  "description": "控制网页计时器速度|加速跳过页面计时广告|视频快进（慢放）|跳过广告|支持几乎所有网页.",
+  "url": "https://greasyfork.org/scripts/478451-%E5%B0%B1%E6%83%B3%E7%9D%80%E7%99%BD%E5%AB%96%E7%9A%84cmm",
+  "code_url": "https://update.greasyfork.org/scripts/478451/%E5%B0%B1%E6%83%B3%E7%9D%80%E7%99%BD%E5%AB%96%E7%9A%84cmm.user.js",
+  "code_size": 55225,
+  "license": null,
+  "version": "2.0.11",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 481307,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-03T11:57:51.000Z",
+  "code_updated_at": "2023-12-03T11:57:51.000Z",
+  "namespace": "numeroseiflutuantenaarvore",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1227458,
+      "name": "Jairo Magalhães",
+      "created_at": "2023-12-03T11:43:13.000Z",
+      "url": "https://greasyfork.org/users/1227458-jairo-magalh%C3%A3es",
+      "scripts": [
+        {
+          "id": 481307,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-03T11:57:51.000Z",
+          "code_updated_at": "2023-12-03T11:57:51.000Z",
+          "namespace": "numeroseiflutuantenaarvore",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Exibir Número do Processo do SEI na árvore",
+          "description": "Exibe o número do processo SEI em uma janela flutuante no canto inferior direito da árvore e copia ao clicar. Ajuda usuários que não conseguem visualizar o número em razão da extensão do Trello que exibe os cartões em versões do SEI acima da 4.0.",
+          "url": "https://greasyfork.org/scripts/481307-exibir-n%C3%BAmero-do-processo-do-sei-na-%C3%A1rvore",
+          "code_url": "https://update.greasyfork.org/scripts/481307/Exibir%20N%C3%BAmero%20do%20Processo%20do%20SEI%20na%20%C3%A1rvore.user.js",
+          "code_size": 2318,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "pt-BR",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Exibir Número do Processo do SEI na árvore",
+  "description": "Exibe o número do processo SEI em uma janela flutuante no canto inferior direito da árvore e copia ao clicar. Ajuda usuários que não conseguem visualizar o número em razão da extensão do Trello que exibe os cartões em versões do SEI acima da 4.0.",
+  "url": "https://greasyfork.org/scripts/481307-exibir-n%C3%BAmero-do-processo-do-sei-na-%C3%A1rvore",
+  "code_url": "https://update.greasyfork.org/scripts/481307/Exibir%20N%C3%BAmero%20do%20Processo%20do%20SEI%20na%20%C3%A1rvore.user.js",
+  "code_size": 2318,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

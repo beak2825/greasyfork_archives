@@ -1,0 +1,33 @@
+{
+  "id": 456562,
+  "daily_installs": 0,
+  "total_installs": 1304,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-14T05:51:00.000Z",
+  "code_updated_at": "2022-12-14T05:51:00.000Z",
+  "namespace": "Alpha",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 997356,
+      "name": "Lara Krunze",
+      "created_at": "2022-12-14T05:42:21.000Z",
+      "url": "https://greasyfork.org/users/997356-lara-krunze"
+    }
+  ],
+  "name": "Swordz.io Fast teleport",
+  "description": "Support extension for SwOrDz.Io",
+  "url": "https://greasyfork.org/scripts/456562-swordz-io-fast-teleport",
+  "code_url": "https://update.greasyfork.org/scripts/456562/Swordzio%20Fast%20teleport.user.js",
+  "code_size": 1171,
+  "license": null,
+  "version": "1.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

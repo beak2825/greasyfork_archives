@@ -1,0 +1,59 @@
+{
+  "id": 461596,
+  "daily_installs": 0,
+  "total_installs": 53,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-10T18:28:08.000Z",
+  "code_updated_at": "2023-03-10T23:06:22.000Z",
+  "namespace": "敲掉我不想看到的部分",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 302687,
+      "name": "Bar Food",
+      "created_at": "2019-05-17T15:30:22.000Z",
+      "url": "https://greasyfork.org/users/302687-bar-food",
+      "scripts": [
+        {
+          "id": 461596,
+          "daily_installs": 0,
+          "total_installs": 53,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-10T18:28:08.000Z",
+          "code_updated_at": "2023-03-10T23:06:22.000Z",
+          "namespace": "敲掉我不想看到的部分",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "虎扑屏蔽用",
+          "description": "Bonk!",
+          "url": "https://greasyfork.org/scripts/461596-%E8%99%8E%E6%89%91%E5%B1%8F%E8%94%BD%E7%94%A8",
+          "code_url": "https://update.greasyfork.org/scripts/461596/%E8%99%8E%E6%89%91%E5%B1%8F%E8%94%BD%E7%94%A8.user.js",
+          "code_size": 2197,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "虎扑屏蔽用",
+  "description": "Bonk!",
+  "url": "https://greasyfork.org/scripts/461596-%E8%99%8E%E6%89%91%E5%B1%8F%E8%94%BD%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/461596/%E8%99%8E%E6%89%91%E5%B1%8F%E8%94%BD%E7%94%A8.user.js",
+  "code_size": 2197,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

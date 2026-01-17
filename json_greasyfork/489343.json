@@ -1,0 +1,59 @@
+{
+  "id": 489343,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-09T01:08:12.000Z",
+  "code_updated_at": "2024-03-09T01:08:12.000Z",
+  "namespace": "https://reddit.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1271995,
+      "name": "andrewbeaton",
+      "created_at": "2024-03-09T00:57:45.000Z",
+      "url": "https://greasyfork.org/users/1271995-andrewbeaton",
+      "scripts": [
+        {
+          "id": 489343,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-09T01:08:12.000Z",
+          "code_updated_at": "2024-03-09T01:08:12.000Z",
+          "namespace": "https://reddit.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove Cookie Banner from Beta Reddit",
+          "description": "Remove cookie banner from Beta Reddit",
+          "url": "https://greasyfork.org/scripts/489343-remove-cookie-banner-from-beta-reddit",
+          "code_url": "https://update.greasyfork.org/scripts/489343/Remove%20Cookie%20Banner%20from%20Beta%20Reddit.user.js",
+          "code_size": 506,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove Cookie Banner from Beta Reddit",
+  "description": "Remove cookie banner from Beta Reddit",
+  "url": "https://greasyfork.org/scripts/489343-remove-cookie-banner-from-beta-reddit",
+  "code_url": "https://update.greasyfork.org/scripts/489343/Remove%20Cookie%20Banner%20from%20Beta%20Reddit.user.js",
+  "code_size": 506,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

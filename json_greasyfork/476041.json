@@ -1,0 +1,34 @@
+{
+  "id": 476041,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-25T05:44:28.000Z",
+  "code_updated_at": "2024-07-07T07:18:29.000Z",
+  "namespace": "https://github.com/AlterTobi/WFES/",
+  "support_url": "https://github.com/AlterTobi/Wayfarer-Extension-Scripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 912932,
+      "name": "SA1FUL23",
+      "created_at": "2022-05-11T05:21:52.000Z",
+      "url": "https://greasyfork.org/users/912932-sa1ful23",
+      "scripts": []
+    }
+  ],
+  "name": "WFES - AutoReleaseHold",
+  "description": "Release nomination from HOLD when this plugin is active",
+  "url": "https://greasyfork.org/scripts/476041-wfes-autoreleasehold",
+  "code_url": "https://update.greasyfork.org/scripts/476041/WFES%20-%20AutoReleaseHold.user.js",
+  "code_size": 4729,
+  "license": null,
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

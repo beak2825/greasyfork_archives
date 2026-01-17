@@ -1,0 +1,34 @@
+{
+  "id": 462699,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-27T12:29:09.000Z",
+  "code_updated_at": "2023-03-27T12:29:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 804215,
+      "name": "Nex01",
+      "created_at": "2021-08-13T11:19:12.000Z",
+      "url": "https://greasyfork.org/users/804215-nex01",
+      "scripts": []
+    }
+  ],
+  "name": "短答案正式标注1123",
+  "description": "短答案项目脚本",
+  "url": "https://greasyfork.org/scripts/462699-%E7%9F%AD%E7%AD%94%E6%A1%88%E6%AD%A3%E5%BC%8F%E6%A0%87%E6%B3%A81123",
+  "code_url": "https://update.greasyfork.org/scripts/462699/%E7%9F%AD%E7%AD%94%E6%A1%88%E6%AD%A3%E5%BC%8F%E6%A0%87%E6%B3%A81123.user.js",
+  "code_size": 4476,
+  "license": "Nex",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

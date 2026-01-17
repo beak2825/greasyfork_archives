@@ -1,0 +1,59 @@
+{
+  "id": 438569,
+  "daily_installs": 0,
+  "total_installs": 722,
+  "fan_score": "30.0",
+  "good_ratings": 3,
+  "ok_ratings": 2,
+  "bad_ratings": 1,
+  "created_at": "2022-01-15T05:06:45.000Z",
+  "code_updated_at": "2022-01-15T05:06:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 865064,
+      "name": "yeggog",
+      "created_at": "2022-01-15T04:46:45.000Z",
+      "url": "https://greasyfork.org/users/865064-yeggog",
+      "scripts": [
+        {
+          "id": 438569,
+          "daily_installs": 0,
+          "total_installs": 722,
+          "fan_score": "30.0",
+          "good_ratings": 3,
+          "ok_ratings": 2,
+          "bad_ratings": 1,
+          "created_at": "2022-01-15T05:06:45.000Z",
+          "code_updated_at": "2022-01-15T05:06:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube - Disable Inline Playback (\"Keep hovering to play\")",
+          "description": "Disable the Inline Playback feature (\"keep hovering to play\") on YouTube even when logged out",
+          "url": "https://greasyfork.org/scripts/438569-youtube-disable-inline-playback-keep-hovering-to-play",
+          "code_url": "https://update.greasyfork.org/scripts/438569/YouTube%20-%20Disable%20Inline%20Playback%20%28%22Keep%20hovering%20to%20play%22%29.user.js",
+          "code_size": 645,
+          "license": "MIT License",
+          "version": "0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube - Disable Inline Playback (\"Keep hovering to play\")",
+  "description": "Disable the Inline Playback feature (\"keep hovering to play\") on YouTube even when logged out",
+  "url": "https://greasyfork.org/scripts/438569-youtube-disable-inline-playback-keep-hovering-to-play",
+  "code_url": "https://update.greasyfork.org/scripts/438569/YouTube%20-%20Disable%20Inline%20Playback%20%28%22Keep%20hovering%20to%20play%22%29.user.js",
+  "code_size": 645,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 424430,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-03T12:08:58.000Z",
+  "code_updated_at": "2022-03-28T14:59:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 671146,
+      "name": "drc5521",
+      "created_at": "2020-07-29T01:37:29.000Z",
+      "url": "https://greasyfork.org/users/671146-drc5521",
+      "scripts": [
+        {
+          "id": 419996,
+          "daily_installs": 0,
+          "total_installs": 1207,
+          "fan_score": "78.5",
+          "good_ratings": 14,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-11T06:34:39.000Z",
+          "code_updated_at": "2022-06-16T07:11:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "扇贝单词小助手",
+          "description": "新增翻译小助手，快捷查询中文对应的英文单词。数字小键盘快捷键，数字键3：US发音，数字键4：UK发音，数字5：扇贝单词与柯林斯词典的切换，数字6：例句发音，数字7：真题例句发音，数字0：隐藏展示柯林斯词典中的英文，专注模式，让你更专注背单词，黑暗模式，更护眼。显示/隐藏扇贝例句和柯林斯例句中文翻译的按钮，并关联数字键8，更多快捷键请查看面板或者更新日志与使用说明",
+          "url": "https://greasyfork.org/scripts/419996-%E6%89%87%E8%B4%9D%E5%8D%95%E8%AF%8D%E5%B0%8F%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/419996/%E6%89%87%E8%B4%9D%E5%8D%95%E8%AF%8D%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 65849,
+          "license": null,
+          "version": "1.9.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "花瓣/腰果商店小助手",
+  "description": "全新9.0版本，花瓣/腰果商店小助手，9.0新版本上线，新版本更新了页面显示，更漂亮了，直接0秒抢，不再让你手速慢人一拍",
+  "url": "https://greasyfork.org/scripts/424430-%E8%8A%B1%E7%93%A3-%E8%85%B0%E6%9E%9C%E5%95%86%E5%BA%97%E5%B0%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/424430/%E8%8A%B1%E7%93%A3%E8%85%B0%E6%9E%9C%E5%95%86%E5%BA%97%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 226599,
+  "license": null,
+  "version": "9.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

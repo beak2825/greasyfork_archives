@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457069,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-23T20:29:16.000Z",
+    "code_updated_at": "2022-12-23T22:52:32.000Z",
+    "namespace": "https://www.tampermonkey.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1001937,
+        "name": "EvPix",
+        "created_at": "2022-12-23T17:35:35.000Z",
+        "url": "https://greasyfork.org/users/1001937-evpix"
+      }
+    ],
+    "name": "Steam - Наличие русского языка",
+    "description": "Показывает наличие русского языка в игре/программе возле постера",
+    "url": "https://greasyfork.org/scripts/457069-steam-%D0%BD%D0%B0%D0%BB%D0%B8%D1%87%D0%B8%D0%B5-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%B3%D0%BE-%D1%8F%D0%B7%D1%8B%D0%BA%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/457069/Steam%20-%20%D0%9D%D0%B0%D0%BB%D0%B8%D1%87%D0%B8%D0%B5%20%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%B3%D0%BE%20%D1%8F%D0%B7%D1%8B%D0%BA%D0%B0.user.js",
+    "code_size": 2639,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

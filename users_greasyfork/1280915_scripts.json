@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491137,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-29T02:51:54.000Z",
+    "code_updated_at": "2024-03-29T02:53:58.000Z",
+    "namespace": "oggvorbis.net/dgnwidescreen",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1280915,
+        "name": "Ogg-Vorbis",
+        "created_at": "2024-03-29T02:36:51.000Z",
+        "url": "https://greasyfork.org/users/1280915-ogg-vorbis"
+      }
+    ],
+    "name": "DGN Widescreen",
+    "description": "Provides the ability to stretch the Disc Golf Network video players across the entire screen, without going into full screen mode.",
+    "url": "https://greasyfork.org/scripts/491137-dgn-widescreen",
+    "code_url": "https://update.greasyfork.org/scripts/491137/DGN%20Widescreen.user.js",
+    "code_size": 5263,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

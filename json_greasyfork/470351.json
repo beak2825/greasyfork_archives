@@ -1,0 +1,59 @@
+{
+  "id": 470351,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-07T14:01:13.000Z",
+  "code_updated_at": "2023-07-18T04:26:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1121056,
+      "name": "winner32",
+      "created_at": "2023-07-07T13:44:15.000Z",
+      "url": "https://greasyfork.org/users/1121056-winner32",
+      "scripts": [
+        {
+          "id": 470351,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-07T14:01:13.000Z",
+          "code_updated_at": "2023-07-18T04:26:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mcbbs茶馆帖子过滤",
+          "description": "以标题关键词过滤为主, 过滤茶馆帖子",
+          "url": "https://greasyfork.org/scripts/470351-mcbbs%E8%8C%B6%E9%A6%86%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4",
+          "code_url": "https://update.greasyfork.org/scripts/470351/Mcbbs%E8%8C%B6%E9%A6%86%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4.user.js",
+          "code_size": 11588,
+          "license": "MIT License",
+          "version": "0.4.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mcbbs茶馆帖子过滤",
+  "description": "以标题关键词过滤为主, 过滤茶馆帖子",
+  "url": "https://greasyfork.org/scripts/470351-mcbbs%E8%8C%B6%E9%A6%86%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4",
+  "code_url": "https://update.greasyfork.org/scripts/470351/Mcbbs%E8%8C%B6%E9%A6%86%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4.user.js",
+  "code_size": 11588,
+  "license": "MIT License",
+  "version": "0.4.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

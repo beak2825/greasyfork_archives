@@ -1,0 +1,59 @@
+{
+  "id": 492151,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-10T11:33:57.000Z",
+  "code_updated_at": "2024-04-10T12:30:59.000Z",
+  "namespace": "https://greasyfork.org/users/1079332",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286408,
+      "name": "Mr.KiNgS",
+      "created_at": "2024-04-10T11:03:52.000Z",
+      "url": "https://greasyfork.org/users/1286408-mr-kings",
+      "scripts": [
+        {
+          "id": 492151,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-10T11:33:57.000Z",
+          "code_updated_at": "2024-04-10T12:30:59.000Z",
+          "namespace": "https://greasyfork.org/users/1079332",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "30W脚本",
+          "description": "使用教程：https://www.bilibili.com/video/BV19c411w7qK   有疑问请加qq群咨询：774326264 || 427847187；不要因为安装量少就不安装啊！我是23年5月新出的脚本，而且还在不断更新中！（2023.8.27）作者很自信这是GF网站上最好用的脚本之一",
+          "url": "https://greasyfork.org/scripts/492151-30w%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/492151/30W%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 15296,
+          "license": null,
+          "version": "4.12",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "30W脚本",
+  "description": "使用教程：https://www.bilibili.com/video/BV19c411w7qK   有疑问请加qq群咨询：774326264 || 427847187；不要因为安装量少就不安装啊！我是23年5月新出的脚本，而且还在不断更新中！（2023.8.27）作者很自信这是GF网站上最好用的脚本之一",
+  "url": "https://greasyfork.org/scripts/492151-30w%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/492151/30W%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 15296,
+  "license": null,
+  "version": "4.12",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

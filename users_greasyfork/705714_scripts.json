@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416210,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-16T15:10:31.000Z",
+    "code_updated_at": "2020-11-16T15:10:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 705714,
+        "name": "YunosukeY",
+        "created_at": "2020-11-16T15:07:17.000Z",
+        "url": "https://greasyfork.org/users/705714-yunosukey"
+      }
+    ],
+    "name": "Connpass nnap",
+    "description": "1. 昨日以前のイベント背景を暗くする．2. ランキングページなどで参加済みイベントでタグを描画．",
+    "url": "https://greasyfork.org/scripts/416210-connpass-nnap",
+    "code_url": "https://update.greasyfork.org/scripts/416210/Connpass%20nnap.user.js",
+    "code_size": 3642,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

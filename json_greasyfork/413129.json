@@ -1,0 +1,59 @@
+{
+  "id": 413129,
+  "daily_installs": 0,
+  "total_installs": 254,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-10-13T23:45:18.000Z",
+  "code_updated_at": "2022-04-22T18:48:09.000Z",
+  "namespace": "https://github.com/Milled/dullOP/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 694805,
+      "name": "Milled",
+      "created_at": "2020-10-13T23:13:46.000Z",
+      "url": "https://greasyfork.org/users/694805-milled",
+      "scripts": [
+        {
+          "id": 413129,
+          "daily_installs": 0,
+          "total_installs": 254,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-10-13T23:45:18.000Z",
+          "code_updated_at": "2022-04-22T18:48:09.000Z",
+          "namespace": "https://github.com/Milled/dullOP/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili(B站)跳过视频任意时长",
+          "description": "使用J与K键分别跳过任意时长的B站番剧/视频",
+          "url": "https://greasyfork.org/scripts/413129-bilibili-b%E7%AB%99-%E8%B7%B3%E8%BF%87%E8%A7%86%E9%A2%91%E4%BB%BB%E6%84%8F%E6%97%B6%E9%95%BF",
+          "code_url": "https://update.greasyfork.org/scripts/413129/Bilibili%28B%E7%AB%99%29%E8%B7%B3%E8%BF%87%E8%A7%86%E9%A2%91%E4%BB%BB%E6%84%8F%E6%97%B6%E9%95%BF.user.js",
+          "code_size": 4592,
+          "license": "AGPL License",
+          "version": "0.2.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili(B站)跳过视频任意时长",
+  "description": "使用J与K键分别跳过任意时长的B站番剧/视频",
+  "url": "https://greasyfork.org/scripts/413129-bilibili-b%E7%AB%99-%E8%B7%B3%E8%BF%87%E8%A7%86%E9%A2%91%E4%BB%BB%E6%84%8F%E6%97%B6%E9%95%BF",
+  "code_url": "https://update.greasyfork.org/scripts/413129/Bilibili%28B%E7%AB%99%29%E8%B7%B3%E8%BF%87%E8%A7%86%E9%A2%91%E4%BB%BB%E6%84%8F%E6%97%B6%E9%95%BF.user.js",
+  "code_size": 4592,
+  "license": "AGPL License",
+  "version": "0.2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

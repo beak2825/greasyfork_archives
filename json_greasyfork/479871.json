@@ -1,0 +1,33 @@
+{
+  "id": 479871,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-14T15:11:04.000Z",
+  "code_updated_at": "2024-04-05T12:21:32.000Z",
+  "namespace": "pamasich-kbin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1217369,
+      "name": "Pamasich",
+      "created_at": "2023-11-14T14:57:57.000Z",
+      "url": "https://greasyfork.org/users/1217369-pamasich"
+    }
+  ],
+  "name": "Fix kbin Code Blocks",
+  "description": "Fix for kbin code blocks federated from Lemmy. Strips out the weird <span> tags on each line.",
+  "url": "https://greasyfork.org/scripts/479871-fix-kbin-code-blocks",
+  "code_url": "https://update.greasyfork.org/scripts/479871/Fix%20kbin%20Code%20Blocks.user.js",
+  "code_size": 2755,
+  "license": "MIT License",
+  "version": "2.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

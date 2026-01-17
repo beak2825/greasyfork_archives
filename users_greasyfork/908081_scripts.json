@@ -1,0 +1,68 @@
+[
+  {
+    "id": 467401,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-29T13:41:33.000Z",
+    "code_updated_at": "2023-05-29T13:41:33.000Z",
+    "namespace": "https://su8ru.dev",
+    "support_url": "https://twitter.com/su8ru_",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 908081,
+        "name": "su8ru",
+        "created_at": "2022-04-28T11:08:42.000Z",
+        "url": "https://greasyfork.org/users/908081-su8ru"
+      }
+    ],
+    "name": "ac-register-checker",
+    "description": "AtCoder における企業コンテストの登録フォームにて、日本在住になっていない場合に警告を表示します。",
+    "url": "https://greasyfork.org/scripts/467401-ac-register-checker",
+    "code_url": "https://update.greasyfork.org/scripts/467401/ac-register-checker.user.js",
+    "code_size": 1548,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444140,
+    "daily_installs": 0,
+    "total_installs": 733,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-28T11:43:41.000Z",
+    "code_updated_at": "2022-05-08T08:36:47.000Z",
+    "namespace": "https://su8ru.dev/",
+    "support_url": "https://github.com/su8ru/ac-rating-icon/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 908081,
+        "name": "su8ru",
+        "created_at": "2022-04-28T11:08:42.000Z",
+        "url": "https://greasyfork.org/users/908081-su8ru"
+      }
+    ],
+    "name": "ac-rating-icon",
+    "description": "Add icons to the AtCoder standings table according to ratings.",
+    "url": "https://greasyfork.org/scripts/444140-ac-rating-icon",
+    "code_url": "https://update.greasyfork.org/scripts/444140/ac-rating-icon.user.js",
+    "code_size": 9681,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

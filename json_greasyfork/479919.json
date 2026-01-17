@@ -1,0 +1,59 @@
+{
+  "id": 479919,
+  "daily_installs": 0,
+  "total_installs": 102,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-15T05:00:44.000Z",
+  "code_updated_at": "2024-12-04T12:11:29.000Z",
+  "namespace": "https://github.com/PeterYRZ",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1217592,
+      "name": "PeterYRZ",
+      "created_at": "2023-11-15T03:50:40.000Z",
+      "url": "https://greasyfork.org/users/1217592-peteryrz",
+      "scripts": [
+        {
+          "id": 479919,
+          "daily_installs": 0,
+          "total_installs": 102,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-15T05:00:44.000Z",
+          "code_updated_at": "2024-12-04T12:11:29.000Z",
+          "namespace": "https://github.com/PeterYRZ",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BiliBili网站AI总结夜间模式样式修复",
+          "description": "修正了插件Bilibili Evolved提供的夜间模式导致的新功能“AI视频总结”样式显示问题",
+          "url": "https://greasyfork.org/scripts/479919-bilibili%E7%BD%91%E7%AB%99ai%E6%80%BB%E7%BB%93%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E6%A0%B7%E5%BC%8F%E4%BF%AE%E5%A4%8D",
+          "code_url": "https://update.greasyfork.org/scripts/479919/BiliBili%E7%BD%91%E7%AB%99AI%E6%80%BB%E7%BB%93%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E6%A0%B7%E5%BC%8F%E4%BF%AE%E5%A4%8D.user.js",
+          "code_size": 2452,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BiliBili网站AI总结夜间模式样式修复",
+  "description": "修正了插件Bilibili Evolved提供的夜间模式导致的新功能“AI视频总结”样式显示问题",
+  "url": "https://greasyfork.org/scripts/479919-bilibili%E7%BD%91%E7%AB%99ai%E6%80%BB%E7%BB%93%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E6%A0%B7%E5%BC%8F%E4%BF%AE%E5%A4%8D",
+  "code_url": "https://update.greasyfork.org/scripts/479919/BiliBili%E7%BD%91%E7%AB%99AI%E6%80%BB%E7%BB%93%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E6%A0%B7%E5%BC%8F%E4%BF%AE%E5%A4%8D.user.js",
+  "code_size": 2452,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

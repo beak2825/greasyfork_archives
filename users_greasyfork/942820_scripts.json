@@ -1,0 +1,167 @@
+[
+  {
+    "id": 481279,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-03T03:15:18.000Z",
+    "code_updated_at": "2023-12-03T03:15:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942820,
+        "name": "Percy Sky",
+        "created_at": "2022-08-04T02:14:18.000Z",
+        "url": "https://greasyfork.org/users/942820-percy-sky"
+      }
+    ],
+    "name": "Colors For Columns Dark Mode",
+    "description": "Gives colors to the columns, matches my scene kid & 90s kid theme",
+    "url": "https://greasyfork.org/scripts/481279-colors-for-columns-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/481279/Colors%20For%20Columns%20Dark%20Mode.user.js",
+    "code_size": 2762,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 481278,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-03T03:12:30.000Z",
+    "code_updated_at": "2023-12-03T03:12:30.000Z",
+    "namespace": "http://userstyles.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942820,
+        "name": "Percy Sky",
+        "created_at": "2022-08-04T02:14:18.000Z",
+        "url": "https://greasyfork.org/users/942820-percy-sky"
+      }
+    ],
+    "name": "Goatlings - Larger Next Page Buttons Dark Mode",
+    "description": "This increases the size of the buttons that let you page through the forums, storage, item archive and appearance doll archive. It also adds a border and some padding to give them a wider breadth and make them easier to click on.",
+    "url": "https://greasyfork.org/scripts/481278-goatlings-larger-next-page-buttons-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/481278/Goatlings%20-%20Larger%20Next%20Page%20Buttons%20Dark%20Mode.user.js",
+    "code_size": 7668,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 481277,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-03T03:10:36.000Z",
+    "code_updated_at": "2023-12-03T03:10:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942820,
+        "name": "Percy Sky",
+        "created_at": "2022-08-04T02:14:18.000Z",
+        "url": "https://greasyfork.org/users/942820-percy-sky"
+      }
+    ],
+    "name": "Goatlings - Scene Kid and 90s Kid Theme",
+    "description": "theme based on a banner i made",
+    "url": "https://greasyfork.org/scripts/481277-goatlings-scene-kid-and-90s-kid-theme",
+    "code_url": "https://update.greasyfork.org/scripts/481277/Goatlings%20-%20Scene%20Kid%20and%2090s%20Kid%20Theme.user.js",
+    "code_size": 18981,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458648,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-21T18:59:03.000Z",
+    "code_updated_at": "2024-02-23T03:15:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942820,
+        "name": "Percy Sky",
+        "created_at": "2022-08-04T02:14:18.000Z",
+        "url": "https://greasyfork.org/users/942820-percy-sky"
+      }
+    ],
+    "name": "Goatlings Better Explore Icons",
+    "description": "Replaces the Explore Icons with edited icons for better contrast against dark backgrounds",
+    "url": "https://greasyfork.org/scripts/458648-goatlings-better-explore-icons",
+    "code_url": "https://update.greasyfork.org/scripts/458648/Goatlings%20Better%20Explore%20Icons.user.js",
+    "code_size": 12980,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 448896,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-04T02:19:03.000Z",
+    "code_updated_at": "2022-08-05T00:36:22.000Z",
+    "namespace": "http://userstyles.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942820,
+        "name": "Percy Sky",
+        "created_at": "2022-08-04T02:14:18.000Z",
+        "url": "https://greasyfork.org/users/942820-percy-sky"
+      }
+    ],
+    "name": "Goatlings - Larger Next Page Buttons",
+    "description": "This increases the size of the buttons that let you page through the usershop, safety box, gallery, item archive and appearance doll archive. It also adds a border and some padding to give them a wider breadth and make them easier to click on.",
+    "url": "https://greasyfork.org/scripts/448896-goatlings-larger-next-page-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/448896/Goatlings%20-%20Larger%20Next%20Page%20Buttons.user.js",
+    "code_size": 7786,
+    "license": null,
+    "version": "0.20170308124244",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

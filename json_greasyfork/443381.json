@@ -1,0 +1,33 @@
+{
+  "id": 443381,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-14T14:53:47.000Z",
+  "code_updated_at": "2022-04-16T07:33:16.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 902213,
+      "name": "东离",
+      "created_at": "2022-04-14T14:52:34.000Z",
+      "url": "https://greasyfork.org/users/902213-%E4%B8%9C%E7%A6%BB"
+    }
+  ],
+  "name": "探针去广告",
+  "description": "2022/4/14 22:30:25",
+  "url": "https://greasyfork.org/scripts/443381-%E6%8E%A2%E9%92%88%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/443381/%E6%8E%A2%E9%92%88%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 435,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

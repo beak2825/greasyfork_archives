@@ -1,0 +1,68 @@
+[
+  {
+    "id": 453946,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-29T15:17:44.000Z",
+    "code_updated_at": "2022-10-30T03:23:02.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 48,
+        "name": "Gerald",
+        "created_at": "2014-03-05T04:02:21.000Z",
+        "url": "https://greasyfork.org/users/48-gerald"
+      }
+    ],
+    "name": "微博终结者",
+    "description": "10/29/2022, 10:24:16 PM",
+    "url": "https://greasyfork.org/scripts/453946-%E5%BE%AE%E5%8D%9A%E7%BB%88%E7%BB%93%E8%80%85",
+    "code_url": "https://update.greasyfork.org/scripts/453946/%E5%BE%AE%E5%8D%9A%E7%BB%88%E7%BB%93%E8%80%85.user.js",
+    "code_size": 2657,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422921,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-09T07:33:11.000Z",
+    "code_updated_at": "2023-01-07T17:42:22.000Z",
+    "namespace": "https://gera2ld.space/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 48,
+        "name": "Gerald",
+        "created_at": "2014-03-05T04:02:21.000Z",
+        "url": "https://greasyfork.org/users/48-gerald"
+      }
+    ],
+    "name": "Tarball viewer",
+    "description": "View content of tarballs without download them.",
+    "url": "https://greasyfork.org/scripts/422921-tarball-viewer",
+    "code_url": "https://update.greasyfork.org/scripts/422921/Tarball%20viewer.user.js",
+    "code_size": 945,
+    "license": null,
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

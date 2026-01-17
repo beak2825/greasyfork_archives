@@ -1,0 +1,33 @@
+{
+  "id": 485788,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-27T06:02:18.000Z",
+  "code_updated_at": "2024-03-11T09:03:47.000Z",
+  "namespace": "english",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1056895,
+      "name": "chaoscreater",
+      "created_at": "2023-04-09T12:57:18.000Z",
+      "url": "https://greasyfork.org/users/1056895-chaoscreater"
+    }
+  ],
+  "name": "Outlook 365 change colour of mouse-hover email and selected email",
+  "description": "Changes the colour of the email that your mouse cursor is hovering over, as well as the colour of a selected email",
+  "url": "https://greasyfork.org/scripts/485788-outlook-365-change-colour-of-mouse-hover-email-and-selected-email",
+  "code_url": "https://update.greasyfork.org/scripts/485788/Outlook%20365%20change%20colour%20of%20mouse-hover%20email%20and%20selected%20email.user.js",
+  "code_size": 2937,
+  "license": null,
+  "version": "1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

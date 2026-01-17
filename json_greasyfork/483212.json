@@ -1,0 +1,59 @@
+{
+  "id": 483212,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-27T08:22:12.000Z",
+  "code_updated_at": "2023-12-27T08:22:12.000Z",
+  "namespace": "https://github.com/hamano0813",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1017456,
+      "name": "hamano0813",
+      "created_at": "2023-01-27T14:38:51.000Z",
+      "url": "https://greasyfork.org/users/1017456-hamano0813",
+      "scripts": [
+        {
+          "id": 483212,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-27T08:22:12.000Z",
+          "code_updated_at": "2023-12-27T08:22:12.000Z",
+          "namespace": "https://github.com/hamano0813",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CBA COPY",
+          "description": "使得CBA数据网站的数据可以选中和复制",
+          "url": "https://greasyfork.org/scripts/483212-cba-copy",
+          "code_url": "https://update.greasyfork.org/scripts/483212/CBA%20COPY.user.js",
+          "code_size": 1170,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CBA COPY",
+  "description": "使得CBA数据网站的数据可以选中和复制",
+  "url": "https://greasyfork.org/scripts/483212-cba-copy",
+  "code_url": "https://update.greasyfork.org/scripts/483212/CBA%20COPY.user.js",
+  "code_size": 1170,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 442567,
+  "daily_installs": 0,
+  "total_installs": 106,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-02T18:29:31.000Z",
+  "code_updated_at": "2022-04-02T18:29:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896576,
+      "name": "Adon-Sol Davison",
+      "created_at": "2022-04-02T09:20:38.000Z",
+      "url": "https://greasyfork.org/users/896576-adon-sol-davison"
+    }
+  ],
+  "name": "wags edited shit :D",
+  "description": "try to take over the canvas!",
+  "url": "https://greasyfork.org/scripts/442567-wags-edited-d",
+  "code_url": "https://update.greasyfork.org/scripts/442567/wags%20edited%20shit%20%3AD.user.js",
+  "code_size": 957,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 484061,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-06T15:59:26.000Z",
+    "code_updated_at": "2024-01-09T07:04:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1057518,
+        "name": "yevhenii-sir",
+        "created_at": "2023-04-10T12:56:50.000Z",
+        "url": "https://greasyfork.org/users/1057518-yevhenii-sir"
+      }
+    ],
+    "name": "Duplicate App Data AppstoreConnect",
+    "description": "Duplicate Data Appstore Connect",
+    "url": "https://greasyfork.org/scripts/484061-duplicate-app-data-appstoreconnect",
+    "code_url": "https://update.greasyfork.org/scripts/484061/Duplicate%20App%20Data%20AppstoreConnect.user.js",
+    "code_size": 10038,
+    "license": "All Rights Reserved",
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463700,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-10T18:28:07.000Z",
+    "code_updated_at": "2025-05-21T05:52:46.000Z",
+    "namespace": "idk, idc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1057518,
+        "name": "yevhenii-sir",
+        "created_at": "2023-04-10T12:56:50.000Z",
+        "url": "https://greasyfork.org/users/1057518-yevhenii-sir"
+      }
+    ],
+    "name": "ЗП",
+    "description": "Подсчет ЗП",
+    "url": "https://greasyfork.org/scripts/463700-%D0%B7%D0%BF",
+    "code_url": "https://update.greasyfork.org/scripts/463700/%D0%97%D0%9F.user.js",
+    "code_size": 5463,
+    "license": "All Rights Reserved",
+    "version": "3.5",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492216,
+    "daily_installs": 1,
+    "total_installs": 74,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-11T07:27:09.000Z",
+    "code_updated_at": "2024-07-05T12:11:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 339543,
+        "name": "akira0245",
+        "created_at": "2019-08-26T03:42:17.000Z",
+        "url": "https://greasyfork.org/users/339543-akira0245"
+      }
+    ],
+    "name": "LMSYS Chat History Downloader",
+    "description": "Download LMSYS Arena chat history as text file",
+    "url": "https://greasyfork.org/scripts/492216-lmsys-chat-history-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/492216/LMSYS%20Chat%20History%20Downloader.user.js",
+    "code_size": 6202,
+    "license": "GPLv3",
+    "version": "1.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461636,
+    "daily_installs": 0,
+    "total_installs": 266,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-11T14:37:35.000Z",
+    "code_updated_at": "2025-09-10T13:59:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 339543,
+        "name": "akira0245",
+        "created_at": "2019-08-26T03:42:17.000Z",
+        "url": "https://greasyfork.org/users/339543-akira0245"
+      }
+    ],
+    "name": "Manhuagui 阅读增强 · 全量加载/沉浸式双页排版/自动跨页显示",
+    "description": "漫画柜双页浏览，全屏显示，从右到左显示。横图跨页；点击半屏翻页；记忆进度；",
+    "url": "https://greasyfork.org/scripts/461636-manhuagui-%E9%98%85%E8%AF%BB%E5%A2%9E%E5%BC%BA-%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BD%BD-%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%8F%8C%E9%A1%B5%E6%8E%92%E7%89%88-%E8%87%AA%E5%8A%A8%E8%B7%A8%E9%A1%B5%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/461636/Manhuagui%20%E9%98%85%E8%AF%BB%E5%A2%9E%E5%BC%BA%20%C2%B7%20%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BD%BD%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%8F%8C%E9%A1%B5%E6%8E%92%E7%89%88%E8%87%AA%E5%8A%A8%E8%B7%A8%E9%A1%B5%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 52159,
+    "license": "GPLv3",
+    "version": "4.7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479084,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-05T10:46:36.000Z",
+    "code_updated_at": "2023-11-05T10:48:10.000Z",
+    "namespace": "https://greasyfork.org/pl/users/1211348",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1211348,
+        "name": "Filip Król",
+        "created_at": "2023-11-05T10:43:31.000Z",
+        "url": "https://greasyfork.org/users/1211348-filip-kr%C3%B3l"
+      }
+    ],
+    "name": "Library Tab But Look Like A You Tab",
+    "description": "This is the for user which have still old layout",
+    "url": "https://greasyfork.org/scripts/479084-library-tab-but-look-like-a-you-tab",
+    "code_url": "https://update.greasyfork.org/scripts/479084/Library%20Tab%20But%20Look%20Like%20A%20You%20Tab.user.js",
+    "code_size": 928,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,233 @@
+[
+  {
+    "id": 494225,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-06T08:58:37.000Z",
+    "code_updated_at": "2024-05-06T08:58:37.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 801581,
+        "name": "leenox_Uzer",
+        "created_at": "2021-08-07T12:08:04.000Z",
+        "url": "https://greasyfork.org/users/801581-leenox-uzer"
+      }
+    ],
+    "name": "Feyorra, Earn-pep3, etc. (Autofaucet)",
+    "description": "4/20/2024, 1:35:42 PM",
+    "url": "https://greasyfork.org/scripts/494225-feyorra-earn-pep3-etc-autofaucet",
+    "code_url": "https://update.greasyfork.org/scripts/494225/Feyorra%2C%20Earn-pep3%2C%20etc%20%28Autofaucet%29.user.js",
+    "code_size": 2581,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 493447,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T09:12:48.000Z",
+    "code_updated_at": "2024-04-25T09:12:47.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 801581,
+        "name": "leenox_Uzer",
+        "created_at": "2021-08-07T12:08:04.000Z",
+        "url": "https://greasyfork.org/users/801581-leenox-uzer"
+      }
+    ],
+    "name": "Viefaucet Auto Shortlinks",
+    "description": "4/22/2024, 9:42:15 AM",
+    "url": "https://greasyfork.org/scripts/493447-viefaucet-auto-shortlinks",
+    "code_url": "https://update.greasyfork.org/scripts/493447/Viefaucet%20Auto%20Shortlinks.user.js",
+    "code_size": 2840,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492727,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-17T06:16:49.000Z",
+    "code_updated_at": "2024-04-17T06:16:49.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 801581,
+        "name": "leenox_Uzer",
+        "created_at": "2021-08-07T12:08:04.000Z",
+        "url": "https://greasyfork.org/users/801581-leenox-uzer"
+      }
+    ],
+    "name": "Revcut, Nightfaucet, Inlinks ~ Automatic",
+    "description": "4/16/2024, 3:30:23 PM",
+    "url": "https://greasyfork.org/scripts/492727-revcut-nightfaucet-inlinks-automatic",
+    "code_url": "https://update.greasyfork.org/scripts/492727/Revcut%2C%20Nightfaucet%2C%20Inlinks%20~%20Automatic.user.js",
+    "code_size": 2288,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492726,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-17T06:16:18.000Z",
+    "code_updated_at": "2024-04-17T06:16:18.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 801581,
+        "name": "leenox_Uzer",
+        "created_at": "2021-08-07T12:08:04.000Z",
+        "url": "https://greasyfork.org/users/801581-leenox-uzer"
+      }
+    ],
+    "name": "Adlink ~ Automatic Bypass",
+    "description": "4/15/2024, 3:05:56 PM",
+    "url": "https://greasyfork.org/scripts/492726-adlink-automatic-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/492726/Adlink%20~%20Automatic%20Bypass.user.js",
+    "code_size": 702,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492725,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-17T06:14:18.000Z",
+    "code_updated_at": "2024-04-17T06:14:18.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 801581,
+        "name": "leenox_Uzer",
+        "created_at": "2021-08-07T12:08:04.000Z",
+        "url": "https://greasyfork.org/users/801581-leenox-uzer"
+      }
+    ],
+    "name": "Advertisingexcel ~ Automatic",
+    "description": "4/14/2024, 7:41:43 PM",
+    "url": "https://greasyfork.org/scripts/492725-advertisingexcel-automatic",
+    "code_url": "https://update.greasyfork.org/scripts/492725/Advertisingexcel%20~%20Automatic.user.js",
+    "code_size": 482,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492724,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-17T06:13:31.000Z",
+    "code_updated_at": "2024-04-30T06:24:17.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 801581,
+        "name": "leenox_Uzer",
+        "created_at": "2021-08-07T12:08:04.000Z",
+        "url": "https://greasyfork.org/users/801581-leenox-uzer"
+      }
+    ],
+    "name": "Shortlinks",
+    "description": "3/24/2024, 3:11:02 AM",
+    "url": "https://greasyfork.org/scripts/492724-shortlinks",
+    "code_url": "https://update.greasyfork.org/scripts/492724/Shortlinks.user.js",
+    "code_size": 12070,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 430457,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-07T12:46:12.000Z",
+    "code_updated_at": "2021-08-07T13:05:39.000Z",
+    "namespace": "Backend",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 801581,
+        "name": "leenox_Uzer",
+        "created_at": "2021-08-07T12:08:04.000Z",
+        "url": "https://greasyfork.org/users/801581-leenox-uzer"
+      }
+    ],
+    "name": "Invidiously",
+    "description": "Redirect all Youtube links to an Invidious instance, for Palemoon-browser",
+    "url": "https://greasyfork.org/scripts/430457-invidiously",
+    "code_url": "https://update.greasyfork.org/scripts/430457/Invidiously.user.js",
+    "code_size": 1014,
+    "license": "GPL v3.0",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

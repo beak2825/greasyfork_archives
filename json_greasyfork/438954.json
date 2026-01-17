@@ -1,0 +1,59 @@
+{
+  "id": 438954,
+  "daily_installs": 0,
+  "total_installs": 232,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-22T03:34:49.000Z",
+  "code_updated_at": "2022-01-22T03:34:49.000Z",
+  "namespace": "https://greasyfork.org/users/867680",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 867680,
+      "name": "o4dev",
+      "created_at": "2022-01-21T22:20:14.000Z",
+      "url": "https://greasyfork.org/users/867680-o4dev",
+      "scripts": [
+        {
+          "id": 438954,
+          "daily_installs": 0,
+          "total_installs": 232,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-22T03:34:49.000Z",
+          "code_updated_at": "2022-01-22T03:34:49.000Z",
+          "namespace": "https://greasyfork.org/users/867680",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Change Google Colab Font",
+          "description": "Changes the editor, output and markdown render font in Google's Colab.",
+          "url": "https://greasyfork.org/scripts/438954-change-google-colab-font",
+          "code_url": "https://update.greasyfork.org/scripts/438954/Change%20Google%20Colab%20Font.user.js",
+          "code_size": 974,
+          "license": "BSD-3",
+          "version": "0.0.1.20220122033449",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Change Google Colab Font",
+  "description": "Changes the editor, output and markdown render font in Google's Colab.",
+  "url": "https://greasyfork.org/scripts/438954-change-google-colab-font",
+  "code_url": "https://update.greasyfork.org/scripts/438954/Change%20Google%20Colab%20Font.user.js",
+  "code_size": 974,
+  "license": "BSD-3",
+  "version": "0.0.1.20220122033449",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

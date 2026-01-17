@@ -1,0 +1,33 @@
+{
+  "id": 423432,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-17T15:56:01.000Z",
+  "code_updated_at": "2021-03-17T15:56:00.000Z",
+  "namespace": "http://github.com/exterrestris",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 700107,
+      "name": "exterrestris",
+      "created_at": "2020-10-31T20:29:09.000Z",
+      "url": "https://greasyfork.org/users/700107-exterrestris"
+    }
+  ],
+  "name": "Misc Tweaks for Todoist",
+  "description": "Assorted tweaks for Todoist",
+  "url": "https://greasyfork.org/scripts/423432-misc-tweaks-for-todoist",
+  "code_url": "https://update.greasyfork.org/scripts/423432/Misc%20Tweaks%20for%20Todoist.user.css",
+  "code_size": 319,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

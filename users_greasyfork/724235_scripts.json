@@ -1,0 +1,68 @@
+[
+  {
+    "id": 455131,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-20T08:12:16.000Z",
+    "code_updated_at": "2024-03-09T13:28:45.000Z",
+    "namespace": "Syndamia",
+    "support_url": "https://gitlab.com/Syndamia/userscripts/-/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 724235,
+        "name": "Syndamia",
+        "created_at": "2021-01-05T14:20:55.000Z",
+        "url": "https://greasyfork.org/users/724235-syndamia"
+      }
+    ],
+    "name": "GitLab old dark colors",
+    "description": "Brings back the old warmer dark colors of GitLab, from before commit https://gitlab.com/gitlab-org/gitlab/-/commit/a4ec234db9eb72466dba55caaac79fbca1763163 (merge request https://gitlab.com/gitlab-org/gitlab/-/merge_requests/103040)",
+    "url": "https://greasyfork.org/scripts/455131-gitlab-old-dark-colors",
+    "code_url": "https://update.greasyfork.org/scripts/455131/GitLab%20old%20dark%20colors.user.js",
+    "code_size": 833748,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419701,
+    "daily_installs": 0,
+    "total_installs": 310,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-05T14:36:07.000Z",
+    "code_updated_at": "2022-10-28T12:18:54.000Z",
+    "namespace": "Syndamia",
+    "support_url": "https://github.com/Syndamia/min-youtube-element-blocker/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 724235,
+        "name": "Syndamia",
+        "created_at": "2021-01-05T14:20:55.000Z",
+        "url": "https://greasyfork.org/users/724235-syndamia"
+      }
+    ],
+    "name": "YouTube element blocker",
+    "description": "Block specific elements of YouTube, like the Feed, Comments, Subscriptions bar and more",
+    "url": "https://greasyfork.org/scripts/419701-youtube-element-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/419701/YouTube%20element%20blocker.user.js",
+    "code_size": 6646,
+    "license": "MIT License",
+    "version": "1.5.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

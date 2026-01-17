@@ -1,0 +1,34 @@
+{
+  "id": 470724,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-13T06:18:18.000Z",
+  "code_updated_at": "2023-07-14T05:02:40.000Z",
+  "namespace": "your-namespace",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1125314,
+      "name": "Lee.yong",
+      "created_at": "2023-07-13T05:16:36.000Z",
+      "url": "https://greasyfork.org/users/1125314-lee-yong",
+      "scripts": []
+    }
+  ],
+  "name": "黄黑警示条",
+  "description": "将指定页面背景修改为黄黑警示条效果",
+  "url": "https://greasyfork.org/scripts/470724-%E9%BB%84%E9%BB%91%E8%AD%A6%E7%A4%BA%E6%9D%A1",
+  "code_url": "https://update.greasyfork.org/scripts/470724/%E9%BB%84%E9%BB%91%E8%AD%A6%E7%A4%BA%E6%9D%A1.user.js",
+  "code_size": 1057,
+  "license": "GPL License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 437706,
+  "daily_installs": 0,
+  "total_installs": 855,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-28T21:07:42.000Z",
+  "code_updated_at": "2021-12-28T21:26:43.000Z",
+  "namespace": "https://greasyfork.org/users/858653",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 858653,
+      "name": "CryptClick",
+      "created_at": "2021-12-28T20:43:57.000Z",
+      "url": "https://greasyfork.org/users/858653-cryptclick",
+      "scripts": [
+        {
+          "id": 437706,
+          "daily_installs": 0,
+          "total_installs": 855,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-28T21:07:42.000Z",
+          "code_updated_at": "2021-12-28T21:26:43.000Z",
+          "namespace": "https://greasyfork.org/users/858653",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Freebitco.in Simple Auto-roll Delayed to work with captcha solvers",
+          "description": "Auto roll",
+          "url": "https://greasyfork.org/scripts/437706-freebitco-in-simple-auto-roll-delayed-to-work-with-captcha-solvers",
+          "code_url": "https://update.greasyfork.org/scripts/437706/Freebitcoin%20Simple%20Auto-roll%20Delayed%20to%20work%20with%20captcha%20solvers.user.js",
+          "code_size": 1212,
+          "license": null,
+          "version": "0.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Freebitco.in Simple Auto-roll Delayed to work with captcha solvers",
+  "description": "Auto roll",
+  "url": "https://greasyfork.org/scripts/437706-freebitco-in-simple-auto-roll-delayed-to-work-with-captcha-solvers",
+  "code_url": "https://update.greasyfork.org/scripts/437706/Freebitcoin%20Simple%20Auto-roll%20Delayed%20to%20work%20with%20captcha%20solvers.user.js",
+  "code_size": 1212,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

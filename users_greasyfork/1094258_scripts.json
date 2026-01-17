@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485398,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-21T22:40:46.000Z",
+    "code_updated_at": "2024-01-23T16:39:49.000Z",
+    "namespace": "monkey-plugin-starter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1094258,
+        "name": "orangelckc",
+        "created_at": "2023-06-08T17:37:10.000Z",
+        "url": "https://greasyfork.org/users/1094258-orangelckc"
+      }
+    ],
+    "name": "网易云歌单——>Bilibili视频快速匹配",
+    "description": "快速拉取网易云歌单列表，用于匹配哔哩哔哩原版歌曲",
+    "url": "https://greasyfork.org/scripts/485398-%E7%BD%91%E6%98%93%E4%BA%91%E6%AD%8C%E5%8D%95-bilibili%E8%A7%86%E9%A2%91%E5%BF%AB%E9%80%9F%E5%8C%B9%E9%85%8D",
+    "code_url": "https://update.greasyfork.org/scripts/485398/%E7%BD%91%E6%98%93%E4%BA%91%E6%AD%8C%E5%8D%95%E2%80%94%E2%80%94%3EBilibili%E8%A7%86%E9%A2%91%E5%BF%AB%E9%80%9F%E5%8C%B9%E9%85%8D.user.js",
+    "code_size": 103551,
+    "license": "MIT License",
+    "version": "0.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

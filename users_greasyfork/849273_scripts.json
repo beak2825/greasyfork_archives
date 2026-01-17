@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436616,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-06T08:16:54.000Z",
+    "code_updated_at": "2021-12-06T08:16:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 849273,
+        "name": "Elhanan Ilani",
+        "created_at": "2021-12-06T08:12:08.000Z",
+        "url": "https://greasyfork.org/users/849273-elhanan-ilani"
+      }
+    ],
+    "name": "jira-impl",
+    "description": "remove banner in impl-jira",
+    "url": "https://greasyfork.org/scripts/436616-jira-impl",
+    "code_url": "https://update.greasyfork.org/scripts/436616/jira-impl.user.js",
+    "code_size": 856,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

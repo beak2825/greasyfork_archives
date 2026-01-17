@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473117,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-15T09:37:57.000Z",
+    "code_updated_at": "2023-08-15T09:37:57.000Z",
+    "namespace": "maven2aliyun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1151922,
+        "name": "icefairy",
+        "created_at": "2023-08-15T09:13:42.000Z",
+        "url": "https://greasyfork.org/users/1151922-icefairy"
+      }
+    ],
+    "name": "maven2aliyun",
+    "description": "替换maven中的下载地址为阿里云的地址",
+    "url": "https://greasyfork.org/scripts/473117-maven2aliyun",
+    "code_url": "https://update.greasyfork.org/scripts/473117/maven2aliyun.user.js",
+    "code_size": 825,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 453999,
+  "daily_installs": 0,
+  "total_installs": 123,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-10-30T21:50:41.000Z",
+  "code_updated_at": "2022-10-30T21:50:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 977320,
+      "name": "petajoega",
+      "created_at": "2022-10-30T21:48:35.000Z",
+      "url": "https://greasyfork.org/users/977320-petajoega",
+      "scripts": [
+        {
+          "id": 453999,
+          "daily_installs": 0,
+          "total_installs": 123,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2022-10-30T21:50:41.000Z",
+          "code_updated_at": "2022-10-30T21:50:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "\"Avatar Shop\" to \"Catalog\"",
+          "description": "A simple thing that replaces \"avatar shop\" with \"Catalog\" because its annoying",
+          "url": "https://greasyfork.org/scripts/453999-avatar-shop-to-catalog",
+          "code_url": "https://update.greasyfork.org/scripts/453999/%22Avatar%20Shop%22%20to%20%22Catalog%22.user.js",
+          "code_size": 505,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "\"Avatar Shop\" to \"Catalog\"",
+  "description": "A simple thing that replaces \"avatar shop\" with \"Catalog\" because its annoying",
+  "url": "https://greasyfork.org/scripts/453999-avatar-shop-to-catalog",
+  "code_url": "https://update.greasyfork.org/scripts/453999/%22Avatar%20Shop%22%20to%20%22Catalog%22.user.js",
+  "code_size": 505,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

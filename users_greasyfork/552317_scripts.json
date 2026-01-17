@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441666,
+    "daily_installs": 0,
+    "total_installs": 113,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-17T17:15:59.000Z",
+    "code_updated_at": "2022-06-26T09:51:44.000Z",
+    "namespace": "figma-backup",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 552317,
+        "name": "loo2k",
+        "created_at": "2020-05-05T14:26:13.000Z",
+        "url": "https://greasyfork.org/users/552317-loo2k"
+      }
+    ],
+    "name": "保住肥姑妈（Figma 源文件备份）",
+    "description": "Figma 源文件备份",
+    "url": "https://greasyfork.org/scripts/441666-%E4%BF%9D%E4%BD%8F%E8%82%A5%E5%A7%91%E5%A6%88-figma-%E6%BA%90%E6%96%87%E4%BB%B6%E5%A4%87%E4%BB%BD",
+    "code_url": "https://update.greasyfork.org/scripts/441666/%E4%BF%9D%E4%BD%8F%E8%82%A5%E5%A7%91%E5%A6%88%EF%BC%88Figma%20%E6%BA%90%E6%96%87%E4%BB%B6%E5%A4%87%E4%BB%BD%EF%BC%89.user.js",
+    "code_size": 339527,
+    "license": null,
+    "version": "0.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474912,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-09T17:11:03.000Z",
+    "code_updated_at": "2023-09-09T17:22:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1167566,
+        "name": "antisan ki",
+        "created_at": "2023-09-06T16:09:33.000Z",
+        "url": "https://greasyfork.org/users/1167566-antisan-ki"
+      }
+    ],
+    "name": "arca-simya-helper",
+    "description": "아카라이브 심야식당 헬퍼",
+    "url": "https://greasyfork.org/scripts/474912-arca-simya-helper",
+    "code_url": "https://update.greasyfork.org/scripts/474912/arca-simya-helper.user.js",
+    "code_size": 12769,
+    "license": "MIT License",
+    "version": "0.14",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442100,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-26T06:19:10.000Z",
+    "code_updated_at": "2022-03-27T02:21:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 891895,
+        "name": "chengpiaopiao",
+        "created_at": "2022-03-24T14:29:54.000Z",
+        "url": "https://greasyfork.org/users/891895-chengpiaopiao"
+      }
+    ],
+    "name": "西瓜视频自动点赞回复评论",
+    "description": "自动回复西瓜视频的评论",
+    "url": "https://greasyfork.org/scripts/442100-%E8%A5%BF%E7%93%9C%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E7%82%B9%E8%B5%9E%E5%9B%9E%E5%A4%8D%E8%AF%84%E8%AE%BA",
+    "code_url": "https://update.greasyfork.org/scripts/442100/%E8%A5%BF%E7%93%9C%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E7%82%B9%E8%B5%9E%E5%9B%9E%E5%A4%8D%E8%AF%84%E8%AE%BA.user.js",
+    "code_size": 7533,
+    "license": "MIT License",
+    "version": "0.87",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 494921,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-14T11:45:00.000Z",
+  "code_updated_at": "2024-05-14T11:48:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1301478,
+      "name": "SaSh0o0k",
+      "created_at": "2024-05-14T11:44:09.000Z",
+      "url": "https://greasyfork.org/users/1301478-sash0o0k",
+      "scripts": [
+        {
+          "id": 494921,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-14T11:45:00.000Z",
+          "code_updated_at": "2024-05-14T11:48:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "jut.su Player Ads",
+          "description": "Remove Player Ads",
+          "url": "https://greasyfork.org/scripts/494921-jut-su-player-ads",
+          "code_url": "https://update.greasyfork.org/scripts/494921/jutsu%20Player%20Ads.user.js",
+          "code_size": 1190,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "jut.su Player Ads",
+  "description": "Remove Player Ads",
+  "url": "https://greasyfork.org/scripts/494921-jut-su-player-ads",
+  "code_url": "https://update.greasyfork.org/scripts/494921/jutsu%20Player%20Ads.user.js",
+  "code_size": 1190,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

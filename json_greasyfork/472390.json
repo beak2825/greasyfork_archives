@@ -1,0 +1,34 @@
+{
+  "id": 472390,
+  "daily_installs": 0,
+  "total_installs": 63,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-04T06:06:49.000Z",
+  "code_updated_at": "2023-08-04T06:06:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1141968,
+      "name": "白山茶.",
+      "created_at": "2023-08-02T10:26:06.000Z",
+      "url": "https://greasyfork.org/users/1141968-%E7%99%BD%E5%B1%B1%E8%8C%B6",
+      "scripts": []
+    }
+  ],
+  "name": "🥇优学院小助手[改]（APP专版）|自动搜索|稳定维护|用过都说好",
+  "description": "🆕上次更新：2023.08.04 优学院小助手[改]，目前用于仅限APP的试题搜索(非自动答题)，功能逐步完善中。",
+  "url": "https://greasyfork.org/scripts/472390-%E4%BC%98%E5%AD%A6%E9%99%A2%E5%B0%8F%E5%8A%A9%E6%89%8B-%E6%94%B9-app%E4%B8%93%E7%89%88-%E8%87%AA%E5%8A%A8%E6%90%9C%E7%B4%A2-%E7%A8%B3%E5%AE%9A%E7%BB%B4%E6%8A%A4-%E7%94%A8%E8%BF%87%E9%83%BD%E8%AF%B4%E5%A5%BD",
+  "code_url": "https://update.greasyfork.org/scripts/472390/%F0%9F%A5%87%E4%BC%98%E5%AD%A6%E9%99%A2%E5%B0%8F%E5%8A%A9%E6%89%8B%5B%E6%94%B9%5D%EF%BC%88APP%E4%B8%93%E7%89%88%EF%BC%89%7C%E8%87%AA%E5%8A%A8%E6%90%9C%E7%B4%A2%7C%E7%A8%B3%E5%AE%9A%E7%BB%B4%E6%8A%A4%7C%E7%94%A8%E8%BF%87%E9%83%BD%E8%AF%B4%E5%A5%BD.user.js",
+  "code_size": 14362,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 412857,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-10T15:39:17.000Z",
+  "code_updated_at": "2020-10-10T15:39:16.000Z",
+  "namespace": "https://github.com/jinhucheung",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 693969,
+      "name": "jinhucheung",
+      "created_at": "2020-10-10T15:38:08.000Z",
+      "url": "https://greasyfork.org/users/693969-jinhucheung"
+    }
+  ],
+  "name": "GitHub Pages Link",
+  "description": "A userscript that adds pages link to repository",
+  "url": "https://greasyfork.org/scripts/412857-github-pages-link",
+  "code_url": "https://update.greasyfork.org/scripts/412857/GitHub%20Pages%20Link.user.js",
+  "code_size": 3866,
+  "license": "MIT License",
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

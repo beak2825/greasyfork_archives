@@ -1,0 +1,59 @@
+{
+  "id": 494427,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-08T18:06:48.000Z",
+  "code_updated_at": "2025-01-07T15:24:22.000Z",
+  "namespace": "QTools.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 867048,
+      "name": "jr q",
+      "created_at": "2022-01-20T06:25:57.000Z",
+      "url": "https://greasyfork.org/users/867048-jr-q",
+      "scripts": [
+        {
+          "id": 560198,
+          "daily_installs": 2,
+          "total_installs": 98,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-25T13:47:26.000Z",
+          "code_updated_at": "2026-01-09T19:44:48.000Z",
+          "namespace": "duang_duang",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "98助手",
+          "description": "98tang 隐藏已访问链接，支持拖拽UI、隐藏/透明度/显示切换",
+          "url": "https://greasyfork.org/scripts/560198-98%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/560198/98%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 18118,
+          "license": "MIT License",
+          "version": "2.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动注册openai-1",
+  "description": "自动注册openai",
+  "url": "https://greasyfork.org/scripts/494427-%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8Copenai-1",
+  "code_url": "https://update.greasyfork.org/scripts/494427/%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8Copenai-1.user.js",
+  "code_size": 3145,
+  "license": "MIT License",
+  "version": "5.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

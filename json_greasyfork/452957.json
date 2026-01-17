@@ -1,0 +1,59 @@
+{
+  "id": 452957,
+  "daily_installs": 0,
+  "total_installs": 2504,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-13T05:34:20.000Z",
+  "code_updated_at": "2022-10-13T05:34:20.000Z",
+  "namespace": "https://greasyfork.org/users/269350",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 269350,
+      "name": "blackmady",
+      "created_at": "2019-03-13T03:06:40.000Z",
+      "url": "https://greasyfork.org/users/269350-blackmady",
+      "scripts": [
+        {
+          "id": 452957,
+          "daily_installs": 0,
+          "total_installs": 2504,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-13T05:34:20.000Z",
+          "code_updated_at": "2022-10-13T05:34:20.000Z",
+          "namespace": "https://greasyfork.org/users/269350",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "奇讯视频解析-免费看全网VIP视频及付费电影破解去广告,支持直接搜索。",
+          "description": "腾讯、爱奇艺、优酷、芒果、乐视、土豆、AcFun、搜狐、PPTV、音悦Tai、bilibili、暴风影音等全网VIP视频付费电影破解去广告.",
+          "url": "https://greasyfork.org/scripts/452957-%E5%A5%87%E8%AE%AF%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90-%E5%85%8D%E8%B4%B9%E7%9C%8B%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E5%8F%8A%E4%BB%98%E8%B4%B9%E7%94%B5%E5%BD%B1%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A-%E6%94%AF%E6%8C%81%E7%9B%B4%E6%8E%A5%E6%90%9C%E7%B4%A2",
+          "code_url": "https://update.greasyfork.org/scripts/452957/%E5%A5%87%E8%AE%AF%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90-%E5%85%8D%E8%B4%B9%E7%9C%8B%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%8F%8A%E4%BB%98%E8%B4%B9%E7%94%B5%E5%BD%B1%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A%2C%E6%94%AF%E6%8C%81%E7%9B%B4%E6%8E%A5%E6%90%9C%E7%B4%A2%E3%80%82.user.js",
+          "code_size": 8307,
+          "license": "MIT License",
+          "version": "1.4.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "奇讯视频解析-免费看全网VIP视频及付费电影破解去广告,支持直接搜索。",
+  "description": "腾讯、爱奇艺、优酷、芒果、乐视、土豆、AcFun、搜狐、PPTV、音悦Tai、bilibili、暴风影音等全网VIP视频付费电影破解去广告.",
+  "url": "https://greasyfork.org/scripts/452957-%E5%A5%87%E8%AE%AF%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90-%E5%85%8D%E8%B4%B9%E7%9C%8B%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E5%8F%8A%E4%BB%98%E8%B4%B9%E7%94%B5%E5%BD%B1%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A-%E6%94%AF%E6%8C%81%E7%9B%B4%E6%8E%A5%E6%90%9C%E7%B4%A2",
+  "code_url": "https://update.greasyfork.org/scripts/452957/%E5%A5%87%E8%AE%AF%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90-%E5%85%8D%E8%B4%B9%E7%9C%8B%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%8F%8A%E4%BB%98%E8%B4%B9%E7%94%B5%E5%BD%B1%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A%2C%E6%94%AF%E6%8C%81%E7%9B%B4%E6%8E%A5%E6%90%9C%E7%B4%A2%E3%80%82.user.js",
+  "code_size": 8307,
+  "license": "MIT License",
+  "version": "1.4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

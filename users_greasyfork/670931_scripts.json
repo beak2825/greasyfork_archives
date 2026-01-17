@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423488,
+    "daily_installs": 0,
+    "total_installs": 2164,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-18T11:37:31.000Z",
+    "code_updated_at": "2024-03-12T12:42:09.000Z",
+    "namespace": "https://github.com/du33169/gh-proxy-buttons",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 670931,
+        "name": "du33169",
+        "created_at": "2020-07-28T07:20:47.000Z",
+        "url": "https://greasyfork.org/users/670931-du33169"
+      }
+    ],
+    "name": "gh-proxy-buttons",
+    "description": "add a button beside github link(releases,files and repository url), click to get alternative url according to previously specified proxy.",
+    "url": "https://greasyfork.org/scripts/423488-gh-proxy-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/423488/gh-proxy-buttons.user.js",
+    "code_size": 8241,
+    "license": "Mozilla Public License 2.0",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

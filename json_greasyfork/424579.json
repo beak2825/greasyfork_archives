@@ -1,0 +1,33 @@
+{
+  "id": 424579,
+  "daily_installs": 0,
+  "total_installs": 73,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-06T13:46:26.000Z",
+  "code_updated_at": "2021-04-06T13:49:29.000Z",
+  "namespace": "https://greasyfork.org/users/755612",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 755612,
+      "name": "Nick's scripts",
+      "created_at": "2021-04-06T13:43:26.000Z",
+      "url": "https://greasyfork.org/users/755612-nick-s-scripts"
+    }
+  ],
+  "name": "Youtube not loading comments Fix.",
+  "description": "Fixes the issue where comments wouldn't load after blocking the cookies from \"consent.youtube.com\".",
+  "url": "https://greasyfork.org/scripts/424579-youtube-not-loading-comments-fix",
+  "code_url": "https://update.greasyfork.org/scripts/424579/Youtube%20not%20loading%20comments%20Fix.user.js",
+  "code_size": 662,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

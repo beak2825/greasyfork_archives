@@ -1,0 +1,59 @@
+{
+  "id": 436955,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-12T14:44:11.000Z",
+  "code_updated_at": "2021-12-12T14:44:10.000Z",
+  "namespace": "http://tech.picnic/gmscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 852342,
+      "name": "Luis Santos",
+      "created_at": "2021-12-12T14:43:36.000Z",
+      "url": "https://greasyfork.org/users/852342-luis-santos",
+      "scripts": [
+        {
+          "id": 436955,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-12T14:44:11.000Z",
+          "code_updated_at": "2021-12-12T14:44:10.000Z",
+          "namespace": "http://tech.picnic/gmscripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Scalyr bigger event dialogs",
+          "description": "Increases the size of the scalyr event dialog",
+          "url": "https://greasyfork.org/scripts/436955-scalyr-bigger-event-dialogs",
+          "code_url": "https://update.greasyfork.org/scripts/436955/Scalyr%20bigger%20event%20dialogs.user.js",
+          "code_size": 668,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Scalyr bigger event dialogs",
+  "description": "Increases the size of the scalyr event dialog",
+  "url": "https://greasyfork.org/scripts/436955-scalyr-bigger-event-dialogs",
+  "code_url": "https://update.greasyfork.org/scripts/436955/Scalyr%20bigger%20event%20dialogs.user.js",
+  "code_size": 668,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

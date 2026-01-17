@@ -1,0 +1,200 @@
+[
+  {
+    "id": 466007,
+    "daily_installs": 0,
+    "total_installs": 296,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-11T06:22:32.000Z",
+    "code_updated_at": "2024-05-13T10:17:47.000Z",
+    "namespace": "DisableYouTubeChannelUserHomePageVideoAutoPlayFork",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050079,
+        "name": "ytg22",
+        "created_at": "2023-03-29T16:58:50.000Z",
+        "url": "https://greasyfork.org/users/1050079-ytg22"
+      }
+    ],
+    "name": "s Disable YouTube Channel / User Home Page Video AutoPlay 2024 May",
+    "description": "Disable the video autoplay at YouTube channel/user home page",
+    "url": "https://greasyfork.org/scripts/466007-s-disable-youtube-channel-user-home-page-video-autoplay-2024-may",
+    "code_url": "https://update.greasyfork.org/scripts/466007/s%20Disable%20YouTube%20Channel%20%20User%20Home%20Page%20Video%20AutoPlay%202024%20May.user.js",
+    "code_size": 865,
+    "license": "Public domain",
+    "version": "3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466003,
+    "daily_installs": 0,
+    "total_installs": 103,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-11T05:47:51.000Z",
+    "code_updated_at": "2023-10-27T05:14:58.000Z",
+    "namespace": "ytchannellatest",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050079,
+        "name": "ytg22",
+        "created_at": "2023-03-29T16:58:50.000Z",
+        "url": "https://greasyfork.org/users/1050079-ytg22"
+      }
+    ],
+    "name": "e Youtube Channel Page Auto Click \"Video\" and \"Latest\" Oct 2023",
+    "description": "Emulate mouse click on buttons",
+    "url": "https://greasyfork.org/scripts/466003-e-youtube-channel-page-auto-click-video-and-latest-oct-2023",
+    "code_url": "https://update.greasyfork.org/scripts/466003/e%20Youtube%20Channel%20Page%20Auto%20Click%20%22Video%22%20and%20%22Latest%22%20Oct%202023.user.js",
+    "code_size": 1296,
+    "license": "public domain",
+    "version": "3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465834,
+    "daily_installs": 0,
+    "total_installs": 143,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-09T04:09:43.000Z",
+    "code_updated_at": "2023-05-11T09:34:21.000Z",
+    "namespace": "itchiohidevn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050079,
+        "name": "ytg22",
+        "created_at": "2023-03-29T16:58:50.000Z",
+        "url": "https://greasyfork.org/users/1050079-ytg22"
+      }
+    ],
+    "name": "e itch.io exclude tag May 2023 fork VN KN",
+    "description": "Fork of https://greasyfork.org/en/scripts/464588-e-itch-io-exclude-tag-may-2023 . Hide games tagged Visual Novel and Kinetic Novel",
+    "url": "https://greasyfork.org/scripts/465834-e-itch-io-exclude-tag-may-2023-fork-vn-kn",
+    "code_url": "https://update.greasyfork.org/scripts/465834/e%20itchio%20exclude%20tag%20May%202023%20fork%20VN%20KN.user.js",
+    "code_size": 21704,
+    "license": "public domain",
+    "version": "6.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465214,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-30T21:32:51.000Z",
+    "code_updated_at": "2023-04-30T21:37:45.000Z",
+    "namespace": "tmnmsssc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050079,
+        "name": "ytg22",
+        "created_at": "2023-03-29T16:58:50.000Z",
+        "url": "https://greasyfork.org/users/1050079-ytg22"
+      }
+    ],
+    "name": "e musipedia melody search sound fix",
+    "description": "piano hover sound fix for the melody search page, using S. Christian Collins GeneralUser GS soundfont and surikov's WebAudioFont library",
+    "url": "https://greasyfork.org/scripts/465214-e-musipedia-melody-search-sound-fix",
+    "code_url": "https://update.greasyfork.org/scripts/465214/e%20musipedia%20melody%20search%20sound%20fix.user.js",
+    "code_size": 108342,
+    "license": "GPLv3",
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 464588,
+    "daily_installs": 0,
+    "total_installs": 341,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-04-21T22:06:08.000Z",
+    "code_updated_at": "2023-05-11T09:31:57.000Z",
+    "namespace": "itchiohide",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050079,
+        "name": "ytg22",
+        "created_at": "2023-03-29T16:58:50.000Z",
+        "url": "https://greasyfork.org/users/1050079-ytg22"
+      }
+    ],
+    "name": "e itch.io exclude tag May 2023",
+    "description": "Hide games tagged horror and horrible, and more",
+    "url": "https://greasyfork.org/scripts/464588-e-itch-io-exclude-tag-may-2023",
+    "code_url": "https://update.greasyfork.org/scripts/464588/e%20itchio%20exclude%20tag%20May%202023.user.js",
+    "code_size": 21569,
+    "license": "public domain",
+    "version": "6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463204,
+    "daily_installs": 0,
+    "total_installs": 335,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-04T03:19:20.000Z",
+    "code_updated_at": "2023-07-30T23:03:18.000Z",
+    "namespace": "YouTubePlayerControlsEdited",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050079,
+        "name": "ytg22",
+        "created_at": "2023-03-29T16:58:50.000Z",
+        "url": "https://greasyfork.org/users/1050079-ytg22"
+      }
+    ],
+    "name": "YouTube Player Controls 1.3.3 fork July 2023 set video quality / resolution bugfix",
+    "description": "Fork of YouTube Player Controls 1.3.3 by Costas https://greasyfork.org/en/scripts/16323-youtube-player-controls . Fill window, stretch video, float video, set HD 4K 8K resolution, click skip ads, click show more, hide ads and annotations, loop, pause at start/end",
+    "url": "https://greasyfork.org/scripts/463204-youtube-player-controls-1-3-3-fork-july-2023-set-video-quality-resolution-bugfix",
+    "code_url": "https://update.greasyfork.org/scripts/463204/YouTube%20Player%20Controls%20133%20fork%20July%202023%20set%20video%20quality%20%20resolution%20bugfix.user.js",
+    "code_size": 35071,
+    "license": "MIT License",
+    "version": "1.3.3.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

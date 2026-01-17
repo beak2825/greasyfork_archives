@@ -1,0 +1,59 @@
+{
+  "id": 461341,
+  "daily_installs": 0,
+  "total_installs": 1221,
+  "fan_score": "67.6",
+  "good_ratings": 8,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-07T01:43:13.000Z",
+  "code_updated_at": "2025-10-31T07:16:37.000Z",
+  "namespace": "https://github.com/ion1/userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1037761,
+      "name": "ion1",
+      "created_at": "2023-03-07T00:25:18.000Z",
+      "url": "https://greasyfork.org/users/1037761-ion1",
+      "scripts": [
+        {
+          "id": 461341,
+          "daily_installs": 0,
+          "total_installs": 1221,
+          "fan_score": "67.6",
+          "good_ratings": 8,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-07T01:43:13.000Z",
+          "code_updated_at": "2025-10-31T07:16:37.000Z",
+          "namespace": "https://github.com/ion1/userscripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Mute and Skip Ads",
+          "description": "Mutes, blurs and skips ads on YouTube. Speeds up ad playback. Clicks \"yes\" on \"are you there?\" on YouTube Music.",
+          "url": "https://greasyfork.org/scripts/461341-youtube-mute-and-skip-ads",
+          "code_url": "https://update.greasyfork.org/scripts/461341/YouTube%20Mute%20and%20Skip%20Ads.user.js",
+          "code_size": 28768,
+          "license": "MIT License",
+          "version": "31",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Mute and Skip Ads",
+  "description": "Mutes, blurs and skips ads on YouTube. Speeds up ad playback. Clicks \"yes\" on \"are you there?\" on YouTube Music.",
+  "url": "https://greasyfork.org/scripts/461341-youtube-mute-and-skip-ads",
+  "code_url": "https://update.greasyfork.org/scripts/461341/YouTube%20Mute%20and%20Skip%20Ads.user.js",
+  "code_size": 28768,
+  "license": "MIT License",
+  "version": "31",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

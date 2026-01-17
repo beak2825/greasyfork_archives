@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490310,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-20T03:04:29.000Z",
+    "code_updated_at": "2024-03-20T03:43:35.000Z",
+    "namespace": "ATGT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165635,
+        "name": "StrongOp",
+        "created_at": "2018-01-05T13:04:19.000Z",
+        "url": "https://greasyfork.org/users/165635-strongop"
+      }
+    ],
+    "name": "Bilibili Tune",
+    "description": "Bilibili Tune: longer and wider video list, ...",
+    "url": "https://greasyfork.org/scripts/490310-bilibili-tune",
+    "code_url": "https://update.greasyfork.org/scripts/490310/Bilibili%20Tune.user.js",
+    "code_size": 1377,
+    "license": "MIT License",
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

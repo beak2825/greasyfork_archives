@@ -1,0 +1,33 @@
+{
+  "id": 463496,
+  "daily_installs": 0,
+  "total_installs": 105,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-07T20:29:00.000Z",
+  "code_updated_at": "2024-04-10T14:23:37.000Z",
+  "namespace": "lbtechnology.info",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1030473,
+      "name": "Lux-Ferre",
+      "created_at": "2023-02-21T00:58:10.000Z",
+      "url": "https://greasyfork.org/users/1030473-lux-ferre"
+    }
+  ],
+  "name": "IdlePixel Easter 2023 Tracker",
+  "description": "Tracks which eggs have been crafted & notifies for bunny",
+  "url": "https://greasyfork.org/scripts/463496-idlepixel-easter-2023-tracker",
+  "code_url": "https://update.greasyfork.org/scripts/463496/IdlePixel%20Easter%202023%20Tracker.user.js",
+  "code_size": 4641,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

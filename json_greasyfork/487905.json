@@ -1,0 +1,34 @@
+{
+  "id": 487905,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-21T05:19:22.000Z",
+  "code_updated_at": "2024-02-22T06:25:02.000Z",
+  "namespace": "NoNameGMM",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1264658,
+      "name": "darkblue0622",
+      "created_at": "2024-02-21T05:14:28.000Z",
+      "url": "https://greasyfork.org/users/1264658-darkblue0622",
+      "scripts": []
+    }
+  ],
+  "name": "VC自动抢鸡",
+  "description": "VC自动抢鸡脚本",
+  "url": "https://greasyfork.org/scripts/487905-vc%E8%87%AA%E5%8A%A8%E6%8A%A2%E9%B8%A1",
+  "code_url": "https://update.greasyfork.org/scripts/487905/VC%E8%87%AA%E5%8A%A8%E6%8A%A2%E9%B8%A1.user.js",
+  "code_size": 1581,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

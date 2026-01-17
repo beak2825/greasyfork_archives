@@ -1,0 +1,33 @@
+{
+  "id": 477122,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-10T18:13:37.000Z",
+  "code_updated_at": "2023-10-10T18:13:37.000Z",
+  "namespace": "http://tampermonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1192984,
+      "name": "consumin-helium",
+      "created_at": "2023-10-10T18:11:17.000Z",
+      "url": "https://greasyfork.org/users/1192984-consumin-helium"
+    }
+  ],
+  "name": "Passphrase Generator",
+  "description": "Generates a passphrase for input fields using hardcoded wordlist from EFF 2016",
+  "url": "https://greasyfork.org/scripts/477122-passphrase-generator",
+  "code_url": "https://update.greasyfork.org/scripts/477122/Passphrase%20Generator.user.js",
+  "code_size": 87161,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

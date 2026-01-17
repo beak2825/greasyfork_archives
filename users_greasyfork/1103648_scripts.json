@@ -1,0 +1,233 @@
+[
+  {
+    "id": 488455,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-27T15:00:11.000Z",
+    "code_updated_at": "2024-03-26T04:02:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1103648,
+        "name": "c13891089",
+        "created_at": "2023-06-18T02:48:44.000Z",
+        "url": "https://greasyfork.org/users/1103648-c13891089"
+      }
+    ],
+    "name": "Sword Gale Online 磚頭屁眼派對",
+    "description": "優化界面",
+    "url": "https://greasyfork.org/scripts/488455-sword-gale-online-%E7%A3%9A%E9%A0%AD%E5%B1%81%E7%9C%BC%E6%B4%BE%E5%B0%8D",
+    "code_url": "https://update.greasyfork.org/scripts/488455/Sword%20Gale%20Online%20%E7%A3%9A%E9%A0%AD%E5%B1%81%E7%9C%BC%E6%B4%BE%E5%B0%8D.user.js",
+    "code_size": 103080,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479669,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-13T00:57:49.000Z",
+    "code_updated_at": "2023-11-13T00:57:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1103648,
+        "name": "c13891089",
+        "created_at": "2023-06-18T02:48:44.000Z",
+        "url": "https://greasyfork.org/users/1103648-c13891089"
+      }
+    ],
+    "name": "Sword Gale Online 介面優化",
+    "description": "優化界面",
+    "url": "https://greasyfork.org/scripts/479669-sword-gale-online-%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/479669/Sword%20Gale%20Online%20%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96.user.js",
+    "code_size": 102825,
+    "license": "MIT License",
+    "version": "1.37.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479344,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-09T02:51:26.000Z",
+    "code_updated_at": "2023-11-09T02:51:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1103648,
+        "name": "c13891089",
+        "created_at": "2023-06-18T02:48:44.000Z",
+        "url": "https://greasyfork.org/users/1103648-c13891089"
+      }
+    ],
+    "name": "Sword Gale Online 介面優化",
+    "description": "優化界面",
+    "url": "https://greasyfork.org/scripts/479344-sword-gale-online-%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/479344/Sword%20Gale%20Online%20%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96.user.js",
+    "code_size": 102467,
+    "license": "MIT License",
+    "version": "1.37.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479342,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-09T02:50:57.000Z",
+    "code_updated_at": "2023-11-09T02:50:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1103648,
+        "name": "c13891089",
+        "created_at": "2023-06-18T02:48:44.000Z",
+        "url": "https://greasyfork.org/users/1103648-c13891089"
+      }
+    ],
+    "name": "Sword Gale Online 介面優化",
+    "description": "優化界面",
+    "url": "https://greasyfork.org/scripts/479342-sword-gale-online-%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/479342/Sword%20Gale%20Online%20%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96.user.js",
+    "code_size": 102467,
+    "license": "MIT License",
+    "version": "1.37.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479097,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-05T14:11:08.000Z",
+    "code_updated_at": "2023-11-05T14:11:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1103648,
+        "name": "c13891089",
+        "created_at": "2023-06-18T02:48:44.000Z",
+        "url": "https://greasyfork.org/users/1103648-c13891089"
+      }
+    ],
+    "name": "Sword Gale Online 介面優化",
+    "description": "優化界面",
+    "url": "https://greasyfork.org/scripts/479097-sword-gale-online-%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/479097/Sword%20Gale%20Online%20%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96.user.js",
+    "code_size": 102467,
+    "license": "MIT License",
+    "version": "1.37.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 476056,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-25T09:37:49.000Z",
+    "code_updated_at": "2023-09-25T09:37:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1103648,
+        "name": "c13891089",
+        "created_at": "2023-06-18T02:48:44.000Z",
+        "url": "https://greasyfork.org/users/1103648-c13891089"
+      }
+    ],
+    "name": "Sword Gale Online 介面優化",
+    "description": "優化界面",
+    "url": "https://greasyfork.org/scripts/476056-sword-gale-online-%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/476056/Sword%20Gale%20Online%20%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96.user.js",
+    "code_size": 102091,
+    "license": "MIT License",
+    "version": "1.37.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 476024,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-24T15:11:52.000Z",
+    "code_updated_at": "2023-09-24T15:11:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1103648,
+        "name": "c13891089",
+        "created_at": "2023-06-18T02:48:44.000Z",
+        "url": "https://greasyfork.org/users/1103648-c13891089"
+      }
+    ],
+    "name": "Sword Gale Online 介面優化",
+    "description": "優化界面",
+    "url": "https://greasyfork.org/scripts/476024-sword-gale-online-%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/476024/Sword%20Gale%20Online%20%E4%BB%8B%E9%9D%A2%E5%84%AA%E5%8C%96.user.js",
+    "code_size": 101904,
+    "license": "MIT License",
+    "version": "1.37.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

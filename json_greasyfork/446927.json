@@ -1,0 +1,34 @@
+{
+  "id": 446927,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-23T18:16:08.000Z",
+  "code_updated_at": "2022-06-23T18:16:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 836889,
+      "name": "硕德",
+      "created_at": "2021-11-10T20:49:27.000Z",
+      "url": "https://greasyfork.org/users/836889-%E7%A1%95%E5%BE%B7",
+      "scripts": []
+    }
+  ],
+  "name": "PSChina Server Translation",
+  "description": "PSChina Server Translation剑盾DLC2汉化脚本",
+  "url": "https://greasyfork.org/scripts/446927-pschina-server-translation",
+  "code_url": "https://update.greasyfork.org/scripts/446927/PSChina%20Server%20Translation.user.js",
+  "code_size": 362827,
+  "license": "MIT  Northumberland",
+  "version": "1.5.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

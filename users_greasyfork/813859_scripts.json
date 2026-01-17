@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432158,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-09T18:11:45.000Z",
+    "code_updated_at": "2021-12-27T11:46:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813859,
+        "name": "kristjanvariksoo",
+        "created_at": "2021-09-09T18:10:48.000Z",
+        "url": "https://greasyfork.org/users/813859-kristjanvariksoo"
+      }
+    ],
+    "name": "Elron calendar event link",
+    "description": "Add google calendar event creation links to all trips on the elron website",
+    "url": "https://greasyfork.org/scripts/432158-elron-calendar-event-link",
+    "code_url": "https://update.greasyfork.org/scripts/432158/Elron%20calendar%20event%20link.user.js",
+    "code_size": 2361,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

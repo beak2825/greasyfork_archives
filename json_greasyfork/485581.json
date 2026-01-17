@@ -1,0 +1,34 @@
+{
+  "id": 485581,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-24T12:40:59.000Z",
+  "code_updated_at": "2024-01-26T14:54:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1252618,
+      "name": "ian902792",
+      "created_at": "2024-01-24T12:35:57.000Z",
+      "url": "https://greasyfork.org/users/1252618-ian902792",
+      "scripts": []
+    }
+  ],
+  "name": "Merge Request Insert Checklist",
+  "description": "Add checklist to merge request description",
+  "url": "https://greasyfork.org/scripts/485581-merge-request-insert-checklist",
+  "code_url": "https://update.greasyfork.org/scripts/485581/Merge%20Request%20Insert%20Checklist.user.js",
+  "code_size": 1489,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

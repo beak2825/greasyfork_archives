@@ -1,0 +1,68 @@
+[
+  {
+    "id": 433829,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-13T10:14:08.000Z",
+    "code_updated_at": "2021-10-13T10:14:08.000Z",
+    "namespace": "https://greasyfork.org/users/824736",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824736,
+        "name": "djkskdkeoekwkskskke",
+        "created_at": "2021-10-13T10:06:47.000Z",
+        "url": "https://greasyfork.org/users/824736-djkskdkeoekwkskskke"
+      }
+    ],
+    "name": "nur silber - GRCR",
+    "description": "Grepolis Report Converter Revolution Tools",
+    "url": "https://greasyfork.org/scripts/433829-nur-silber-grcr",
+    "code_url": "https://update.greasyfork.org/scripts/433829/nur%20silber%20-%20GRCR.user.js",
+    "code_size": 577284,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "5.0.9",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433827,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-13T10:11:08.000Z",
+    "code_updated_at": "2021-10-13T10:11:07.000Z",
+    "namespace": "https://greasyfork.org/users/824736",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824736,
+        "name": "djkskdkeoekwkskskke",
+        "created_at": "2021-10-13T10:06:47.000Z",
+        "url": "https://greasyfork.org/users/824736-djkskdkeoekwkskskke"
+      }
+    ],
+    "name": "nur stein - GRCR",
+    "description": "Grepolis Report Converter Revolution Tools",
+    "url": "https://greasyfork.org/scripts/433827-nur-stein-grcr",
+    "code_url": "https://update.greasyfork.org/scripts/433827/nur%20stein%20-%20GRCR.user.js",
+    "code_size": 577284,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "5.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

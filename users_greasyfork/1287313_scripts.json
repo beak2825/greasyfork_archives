@@ -30,6 +30,39 @@
     "version": "2024-05-01",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492335,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-12T10:42:48.000Z",
+    "code_updated_at": "2024-05-22T09:36:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1287313,
+        "name": "thereminedwarf",
+        "created_at": "2024-04-12T10:41:36.000Z",
+        "url": "https://greasyfork.org/users/1287313-thereminedwarf"
+      }
+    ],
+    "name": "Cisco U answers reveal",
+    "description": "Tells you if your previous answer was correct in post and pre-assessments",
+    "url": "https://greasyfork.org/scripts/492335-cisco-u-answers-reveal",
+    "code_url": "https://update.greasyfork.org/scripts/492335/Cisco%20U%20answers%20reveal.user.js",
+    "code_size": 5303,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

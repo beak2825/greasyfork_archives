@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441840,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-21T04:52:56.000Z",
+    "code_updated_at": "2022-03-21T04:52:56.000Z",
+    "namespace": "https://www.pornhub.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890167,
+        "name": "ambiguouscyborg",
+        "created_at": "2022-03-21T04:48:41.000Z",
+        "url": "https://greasyfork.org/users/890167-ambiguouscyborg"
+      }
+    ],
+    "name": "Test 1",
+    "description": "Eats your firstborn.",
+    "url": "https://greasyfork.org/scripts/441840-test-1",
+    "code_url": "https://update.greasyfork.org/scripts/441840/Test%201.user.js",
+    "code_size": 463,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

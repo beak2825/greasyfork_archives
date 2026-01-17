@@ -30,6 +30,171 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489758,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-14T00:44:22.000Z",
+    "code_updated_at": "2024-03-18T23:14:37.000Z",
+    "namespace": "https://greasyfork.org/users/1019668",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1019668,
+        "name": "uhpueirt",
+        "created_at": "2023-01-31T22:36:15.000Z",
+        "url": "https://greasyfork.org/users/1019668-uhpueirt"
+      }
+    ],
+    "name": "Add Back and Next Button to Bytes.dev",
+    "description": "Add Back and Next Button to Bytes.dev Articles",
+    "url": "https://greasyfork.org/scripts/489758-add-back-and-next-button-to-bytes-dev",
+    "code_url": "https://update.greasyfork.org/scripts/489758/Add%20Back%20and%20Next%20Button%20to%20Bytesdev.user.js",
+    "code_size": 2292,
+    "license": null,
+    "version": "0.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471955,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T20:50:22.000Z",
+    "code_updated_at": "2023-07-28T20:50:22.000Z",
+    "namespace": "http://www.greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1019668,
+        "name": "uhpueirt",
+        "created_at": "2023-01-31T22:36:15.000Z",
+        "url": "https://greasyfork.org/users/1019668-uhpueirt"
+      }
+    ],
+    "name": "ZR-Stage Password",
+    "description": "Automatically input password for ZR Stage",
+    "url": "https://greasyfork.org/scripts/471955-zr-stage-password",
+    "code_url": "https://update.greasyfork.org/scripts/471955/ZR-Stage%20Password.user.js",
+    "code_size": 504,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471953,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T20:28:48.000Z",
+    "code_updated_at": "2023-07-28T20:28:48.000Z",
+    "namespace": "https://greasyfork.org/users/1019668",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1019668,
+        "name": "uhpueirt",
+        "created_at": "2023-01-31T22:36:15.000Z",
+        "url": "https://greasyfork.org/users/1019668-uhpueirt"
+      }
+    ],
+    "name": "Bypass DiffChecker Limit",
+    "description": "Automatically input stage password",
+    "url": "https://greasyfork.org/scripts/471953-bypass-diffchecker-limit",
+    "code_url": "https://update.greasyfork.org/scripts/471953/Bypass%20DiffChecker%20Limit.user.js",
+    "code_size": 605,
+    "license": null,
+    "version": "0.0.1.20230314171527",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 461816,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-14T16:52:02.000Z",
+    "code_updated_at": "2023-03-14T17:56:27.000Z",
+    "namespace": "http://www.greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1019668,
+        "name": "uhpueirt",
+        "created_at": "2023-01-31T22:36:15.000Z",
+        "url": "https://greasyfork.org/users/1019668-uhpueirt"
+      }
+    ],
+    "name": "Remove Glassdoor Paywall",
+    "description": "Hide Glasdoor paywall belt from page navigation and reenable scroll.",
+    "url": "https://greasyfork.org/scripts/461816-remove-glassdoor-paywall",
+    "code_url": "https://update.greasyfork.org/scripts/461816/Remove%20Glassdoor%20Paywall.user.js",
+    "code_size": 1080,
+    "license": null,
+    "version": "1.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459220,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-31T22:54:16.000Z",
+    "code_updated_at": "2023-10-04T23:13:42.000Z",
+    "namespace": "https://greasyfork.org/users/1019668",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1019668,
+        "name": "uhpueirt",
+        "created_at": "2023-01-31T22:36:15.000Z",
+        "url": "https://greasyfork.org/users/1019668-uhpueirt"
+      }
+    ],
+    "name": "Bypass DiffChecker Limit",
+    "description": "Bypass DiffCheckers merge limit",
+    "url": "https://greasyfork.org/scripts/459220-bypass-diffchecker-limit",
+    "code_url": "https://update.greasyfork.org/scripts/459220/Bypass%20DiffChecker%20Limit.user.js",
+    "code_size": 692,
+    "license": null,
+    "version": "0.0.1.20231004231342",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

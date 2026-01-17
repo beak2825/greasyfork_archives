@@ -1,0 +1,34 @@
+{
+  "id": 463357,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-05T17:39:23.000Z",
+  "code_updated_at": "2025-05-15T14:07:16.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/463357-1_duckduckgo-mobile",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906522,
+      "name": "sports_wook",
+      "created_at": "2022-04-25T00:32:15.000Z",
+      "url": "https://greasyfork.org/users/906522-sports-wook",
+      "scripts": []
+    }
+  ],
+  "name": "1_DuckDuckGo-mobile",
+  "description": "Custom dark mode & optimized layout",
+  "url": "https://greasyfork.org/scripts/463357-1-duckduckgo-mobile",
+  "code_url": "https://update.greasyfork.org/scripts/463357/1_DuckDuckGo-mobile.user.js",
+  "code_size": 4691,
+  "license": null,
+  "version": "2025.05.15",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

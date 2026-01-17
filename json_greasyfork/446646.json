@@ -1,0 +1,59 @@
+{
+  "id": 446646,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-18T07:11:29.000Z",
+  "code_updated_at": "2022-06-22T05:10:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 926764,
+      "name": "code200",
+      "created_at": "2022-06-18T06:42:38.000Z",
+      "url": "https://greasyfork.org/users/926764-code200",
+      "scripts": [
+        {
+          "id": 446646,
+          "daily_installs": 0,
+          "total_installs": 57,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-18T07:11:29.000Z",
+          "code_updated_at": "2022-06-22T05:10:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "链接转换transformation to links",
+          "description": "将网页内容中的链接转换为可点击跳转，免去手动复制",
+          "url": "https://greasyfork.org/scripts/446646-%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2transformation-to-links",
+          "code_url": "https://update.greasyfork.org/scripts/446646/%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2transformation%20to%20links.user.js",
+          "code_size": 3025,
+          "license": "GPL License",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "链接转换transformation to links",
+  "description": "将网页内容中的链接转换为可点击跳转，免去手动复制",
+  "url": "https://greasyfork.org/scripts/446646-%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2transformation-to-links",
+  "code_url": "https://update.greasyfork.org/scripts/446646/%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2transformation%20to%20links.user.js",
+  "code_size": 3025,
+  "license": "GPL License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

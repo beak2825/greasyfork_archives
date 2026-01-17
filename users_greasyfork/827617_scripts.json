@@ -1,0 +1,41 @@
+[
+  {
+    "id": 424953,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-13T08:19:59.000Z",
+    "code_updated_at": "2023-10-23T07:24:16.000Z",
+    "namespace": "com.epoint.ga.se",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 758459,
+        "name": "lideming0815",
+        "created_at": "2021-04-13T07:53:42.000Z",
+        "url": "https://greasyfork.org/users/758459-lideming0815"
+      },
+      {
+        "id": 827617,
+        "name": "wyjun",
+        "created_at": "2021-10-22T08:44:24.000Z",
+        "url": "https://greasyfork.org/users/827617-wyjun"
+      }
+    ],
+    "name": "SE-设计评审工具",
+    "description": "新点软件公共安全条线设计评审外附工具",
+    "url": "https://greasyfork.org/scripts/424953-se-%E8%AE%BE%E8%AE%A1%E8%AF%84%E5%AE%A1%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/424953/SE-%E8%AE%BE%E8%AE%A1%E8%AF%84%E5%AE%A1%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 42090,
+    "license": null,
+    "version": "2.62",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

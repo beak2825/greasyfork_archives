@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474109,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-29T01:09:48.000Z",
+    "code_updated_at": "2023-08-29T01:09:48.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1158055,
+        "name": "f4bio",
+        "created_at": "2023-08-24T06:45:44.000Z",
+        "url": "https://greasyfork.org/users/1158055-f4bio"
+      }
+    ],
+    "name": "Jira Tweaks",
+    "description": "Userscript adding some jira tweaks (for devs?)",
+    "url": "https://greasyfork.org/scripts/474109-jira-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/474109/Jira%20Tweaks.user.js",
+    "code_size": 4312,
+    "license": "AGPL-3",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

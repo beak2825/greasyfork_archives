@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476312,
+    "daily_installs": 0,
+    "total_installs": 34881,
+    "fan_score": "67.9",
+    "good_ratings": 10,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-09-29T06:26:18.000Z",
+    "code_updated_at": "2025-11-07T05:17:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1172715,
+        "name": "视频学习助手",
+        "created_at": "2023-09-14T07:28:18.000Z",
+        "url": "https://greasyfork.org/users/1172715-%E8%A7%86%E9%A2%91%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B"
+      }
+    ],
+    "name": "网课视频辅助学习助手",
+    "description": "支持:重庆大学网络教育学院·重庆经贸职业学院·平凉市教育培训·广东医科大学·贵州省级专业技术·德州市·新疆职业健康培训系统·西南大学·长沙理工·丝路数字·河北药师网·湖南师范大学·新疆继续教育·成都市中小学·湖北第二师范·高等学历·电子科技大学·华东师范大学教师研修平台·企安全·夏邑县小学教师·贵州省党员干部网络学院·湖南大学·江西专技学习网·浙江省建设人才远程继续教育平台·云南省执业药师协会·河南教师培训网·浙里学习·石家庄铁道大学·宁夏专业技术人员继续教育在线培训平台·河南华夏基础教育学院·师学通·河南专技在线·上海开放大学·国家开放大学·兰州理工大学·兰州大学·北京教师学习网·青岛市专业技术人员·兰州资源环境职业技术大学·漯河学院·华北电力大学·河南省新闻出版学校·东奥会计·梦想在线·广东远程职业培训平台·黑龙江省网络助学平台·S云课堂网校·河北机电职业技术学院·贵州省专业技术人员继续教育平台·和学在线·河南华夏基础·职教云·河北教师教育网·山东干部网络学院·克拉玛依开放大学继续教育网·教师专业发展培训网·广州市干部·西南交通大学·甘肃干部网络学院·广州新教师·好医生·蕴瑜课堂等",
+    "url": "https://greasyfork.org/scripts/476312-%E7%BD%91%E8%AF%BE%E8%A7%86%E9%A2%91%E8%BE%85%E5%8A%A9%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/476312/%E7%BD%91%E8%AF%BE%E8%A7%86%E9%A2%91%E8%BE%85%E5%8A%A9%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 291642,
+    "license": "MIT License",
+    "version": "2.3.7.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

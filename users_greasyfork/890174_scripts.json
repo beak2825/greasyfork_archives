@@ -30,6 +30,105 @@
     "version": "2024-07-29",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458109,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-12T14:23:11.000Z",
+    "code_updated_at": "2023-01-13T08:35:42.000Z",
+    "namespace": "https://greasyfork.org/users/890174",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890174,
+        "name": "Charlie-zzy",
+        "created_at": "2022-03-21T05:04:58.000Z",
+        "url": "https://greasyfork.org/users/890174-charlie-zzy"
+      }
+    ],
+    "name": "Charlie's Gua - demo version",
+    "description": "try to take over the wtfgame!",
+    "url": "https://greasyfork.org/scripts/458109-charlie-s-gua-demo-version",
+    "code_url": "https://update.greasyfork.org/scripts/458109/Charlie%27s%20Gua%20-%20demo%20version.user.js",
+    "code_size": 9157,
+    "license": null,
+    "version": "0.9999",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453338,
+    "daily_installs": 4,
+    "total_installs": 9043,
+    "fan_score": "30.6",
+    "good_ratings": 4,
+    "ok_ratings": 2,
+    "bad_ratings": 2,
+    "created_at": "2022-10-19T07:32:24.000Z",
+    "code_updated_at": "2023-06-24T10:04:42.000Z",
+    "namespace": "https://greasyfork.org/users/890174",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890174,
+        "name": "Charlie-zzy",
+        "created_at": "2022-03-21T05:04:58.000Z",
+        "url": "https://greasyfork.org/users/890174-charlie-zzy"
+      }
+    ],
+    "name": "Musescore Downloader",
+    "description": "download pdf or print any sheets!",
+    "url": "https://greasyfork.org/scripts/453338-musescore-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/453338/Musescore%20Downloader.user.js",
+    "code_size": 9455,
+    "license": null,
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441853,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-21T09:32:34.000Z",
+    "code_updated_at": "2022-09-01T00:39:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890174,
+        "name": "Charlie-zzy",
+        "created_at": "2022-03-21T05:04:58.000Z",
+        "url": "https://greasyfork.org/users/890174-charlie-zzy"
+      }
+    ],
+    "name": "Bilibili成分标记",
+    "description": "用户成分标记系统，让您省去查成分的烦恼！",
+    "url": "https://greasyfork.org/scripts/441853-bilibili%E6%88%90%E5%88%86%E6%A0%87%E8%AE%B0",
+    "code_url": "https://update.greasyfork.org/scripts/441853/Bilibili%E6%88%90%E5%88%86%E6%A0%87%E8%AE%B0.user.js",
+    "code_size": 6327,
+    "license": "MIT License",
+    "version": "1.4.1",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

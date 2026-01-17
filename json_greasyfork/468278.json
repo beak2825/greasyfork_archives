@@ -1,0 +1,33 @@
+{
+  "id": 468278,
+  "daily_installs": 0,
+  "total_installs": 676,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-09T08:33:11.000Z",
+  "code_updated_at": "2023-08-19T05:38:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1094587,
+      "name": "水母",
+      "created_at": "2023-06-09T07:41:11.000Z",
+      "url": "https://greasyfork.org/users/1094587-%E6%B0%B4%E6%AF%8D"
+    }
+  ],
+  "name": "For Imhentai",
+  "description": "不翻墙下，更快加载 imhentai.xxx 的图片，并提供打包下载",
+  "url": "https://greasyfork.org/scripts/468278-for-imhentai",
+  "code_url": "https://update.greasyfork.org/scripts/468278/For%20Imhentai.user.js",
+  "code_size": 30112,
+  "license": "MIT License",
+  "version": "2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

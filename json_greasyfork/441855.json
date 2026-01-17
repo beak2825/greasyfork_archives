@@ -1,0 +1,34 @@
+{
+  "id": 441855,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-21T10:15:07.000Z",
+  "code_updated_at": "2022-04-15T08:33:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 453062,
+      "name": "Darxeal",
+      "created_at": "2020-03-02T20:04:12.000Z",
+      "url": "https://greasyfork.org/users/453062-darxeal",
+      "scripts": []
+    }
+  ],
+  "name": "Captcha Alert",
+  "description": "Začne zvonit když se objeví Captcha.",
+  "url": "https://greasyfork.org/scripts/441855-captcha-alert",
+  "code_url": "https://update.greasyfork.org/scripts/441855/Captcha%20Alert.user.js",
+  "code_size": 863,
+  "license": null,
+  "version": "0.3",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

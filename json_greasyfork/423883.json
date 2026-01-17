@@ -1,0 +1,59 @@
+{
+  "id": 423883,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-24T04:58:04.000Z",
+  "code_updated_at": "2021-03-24T04:58:03.000Z",
+  "namespace": "H 336's teleportation",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 750667,
+      "name": "Blue Carpet",
+      "created_at": "2021-03-23T21:25:07.000Z",
+      "url": "https://greasyfork.org/users/750667-blue-carpet",
+      "scripts": [
+        {
+          "id": 423867,
+          "daily_installs": 0,
+          "total_installs": 139,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-23T23:56:50.000Z",
+          "code_updated_at": "2021-03-23T23:56:49.000Z",
+          "namespace": "Float Hack Brofist Sandbox",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Float Hack Brofist Sandbox",
+          "description": "for GDL: pg up for hover pg dn for see through",
+          "url": "https://greasyfork.org/scripts/423867-float-hack-brofist-sandbox",
+          "code_url": "https://update.greasyfork.org/scripts/423867/Float%20Hack%20Brofist%20Sandbox.user.js",
+          "code_size": 667,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "H 336's teleportation",
+  "description": "for myself only, teleportation",
+  "url": "https://greasyfork.org/scripts/423883-h-336-s-teleportation",
+  "code_url": "https://update.greasyfork.org/scripts/423883/H%20336%27s%20teleportation.user.js",
+  "code_size": 1645,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

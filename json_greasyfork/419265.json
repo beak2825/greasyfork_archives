@@ -1,0 +1,33 @@
+{
+  "id": 419265,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-28T08:44:21.000Z",
+  "code_updated_at": "2021-05-14T23:01:48.000Z",
+  "namespace": "https://greasyfork.org/users/547396",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 547396,
+      "name": "zombae",
+      "created_at": "2020-04-30T23:00:49.000Z",
+      "url": "https://greasyfork.org/users/547396-zombae"
+    }
+  ],
+  "name": "Necra's Dragon Poster Tool",
+  "description": "A tool to grab specific data (id, name, image url) from dragon bios to handle/parse elsewhere. Uses localStorage to retain information between dragons. Requires scry image in bio.",
+  "url": "https://greasyfork.org/scripts/419265-necra-s-dragon-poster-tool",
+  "code_url": "https://update.greasyfork.org/scripts/419265/Necra%27s%20Dragon%20Poster%20Tool.user.js",
+  "code_size": 10296,
+  "license": null,
+  "version": "0.20",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

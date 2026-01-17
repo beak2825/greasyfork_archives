@@ -1,0 +1,33 @@
+{
+  "id": 447279,
+  "daily_installs": 2,
+  "total_installs": 5944,
+  "fan_score": "50.7",
+  "good_ratings": 6,
+  "ok_ratings": 3,
+  "bad_ratings": 0,
+  "created_at": "2022-06-30T21:36:17.000Z",
+  "code_updated_at": "2025-11-24T21:14:18.000Z",
+  "namespace": "https://greasyfork.org/users/919633",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 919633,
+      "name": "Murka007",
+      "created_at": "2022-05-28T21:32:53.000Z",
+      "url": "https://greasyfork.org/users/919633-murka007"
+    }
+  ],
+  "name": "Sploop.io Hat Hotkeys",
+  "description": "Allows to equip hats by pressing keys!",
+  "url": "https://greasyfork.org/scripts/447279-sploop-io-hat-hotkeys",
+  "code_url": "https://update.greasyfork.org/scripts/447279/Sploopio%20Hat%20Hotkeys.user.js",
+  "code_size": 4098,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

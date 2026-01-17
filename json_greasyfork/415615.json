@@ -1,0 +1,33 @@
+{
+  "id": 415615,
+  "daily_installs": 0,
+  "total_installs": 231,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-06T11:51:54.000Z",
+  "code_updated_at": "2020-12-04T14:43:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 702279,
+      "name": "leavlzi",
+      "created_at": "2020-11-06T11:50:09.000Z",
+      "url": "https://greasyfork.org/users/702279-leavlzi"
+    }
+  ],
+  "name": "Change My Alibaba Page Title",
+  "description": "Change Alibaba title!",
+  "url": "https://greasyfork.org/scripts/415615-change-my-alibaba-page-title",
+  "code_url": "https://update.greasyfork.org/scripts/415615/Change%20My%20Alibaba%20Page%20Title.user.js",
+  "code_size": 1563,
+  "license": null,
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

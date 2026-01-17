@@ -1,0 +1,59 @@
+{
+  "id": 452931,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-12T15:20:14.000Z",
+  "code_updated_at": "2022-10-12T15:22:09.000Z",
+  "namespace": "shushoujiu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 969783,
+      "name": "2022mks",
+      "created_at": "2022-10-12T15:03:51.000Z",
+      "url": "https://greasyfork.org/users/969783-2022mks",
+      "scripts": [
+        {
+          "id": 452931,
+          "daily_installs": 0,
+          "total_installs": 23,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-12T15:20:14.000Z",
+          "code_updated_at": "2022-10-12T15:22:09.000Z",
+          "namespace": "shushoujiu",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "“卡尔·马克思杯”【安装前查看附加信息】",
+          "description": "安装前查看附加信息",
+          "url": "https://greasyfork.org/scripts/452931-%E5%8D%A1%E5%B0%94-%E9%A9%AC%E5%85%8B%E6%80%9D%E6%9D%AF-%E5%AE%89%E8%A3%85%E5%89%8D%E6%9F%A5%E7%9C%8B%E9%99%84%E5%8A%A0%E4%BF%A1%E6%81%AF",
+          "code_url": "https://update.greasyfork.org/scripts/452931/%E2%80%9C%E5%8D%A1%E5%B0%94%C2%B7%E9%A9%AC%E5%85%8B%E6%80%9D%E6%9D%AF%E2%80%9D%E3%80%90%E5%AE%89%E8%A3%85%E5%89%8D%E6%9F%A5%E7%9C%8B%E9%99%84%E5%8A%A0%E4%BF%A1%E6%81%AF%E3%80%91.user.js",
+          "code_size": 354,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "“卡尔·马克思杯”【安装前查看附加信息】",
+  "description": "安装前查看附加信息",
+  "url": "https://greasyfork.org/scripts/452931-%E5%8D%A1%E5%B0%94-%E9%A9%AC%E5%85%8B%E6%80%9D%E6%9D%AF-%E5%AE%89%E8%A3%85%E5%89%8D%E6%9F%A5%E7%9C%8B%E9%99%84%E5%8A%A0%E4%BF%A1%E6%81%AF",
+  "code_url": "https://update.greasyfork.org/scripts/452931/%E2%80%9C%E5%8D%A1%E5%B0%94%C2%B7%E9%A9%AC%E5%85%8B%E6%80%9D%E6%9D%AF%E2%80%9D%E3%80%90%E5%AE%89%E8%A3%85%E5%89%8D%E6%9F%A5%E7%9C%8B%E9%99%84%E5%8A%A0%E4%BF%A1%E6%81%AF%E3%80%91.user.js",
+  "code_size": 354,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 475205,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-13T11:10:49.000Z",
+  "code_updated_at": "2023-09-13T11:25:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1172192,
+      "name": "李育論",
+      "created_at": "2023-09-13T11:09:48.000Z",
+      "url": "https://greasyfork.org/users/1172192-%E6%9D%8E%E8%82%B2%E8%AB%96"
+    }
+  ],
+  "name": "tg888jp",
+  "description": "Description of your extension",
+  "url": "https://greasyfork.org/scripts/475205-tg888jp",
+  "code_url": "https://update.greasyfork.org/scripts/475205/tg888jp.user.js",
+  "code_size": 5976,
+  "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

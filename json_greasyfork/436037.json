@@ -1,0 +1,33 @@
+{
+  "id": 436037,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-25T06:24:02.000Z",
+  "code_updated_at": "2021-11-25T06:24:01.000Z",
+  "namespace": "132866686@qq.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 843932,
+      "name": "DonTn",
+      "created_at": "2021-11-25T06:16:23.000Z",
+      "url": "https://greasyfork.org/users/843932-dontn"
+    }
+  ],
+  "name": "知乎黑夜",
+  "description": "网页版知乎护眼模式",
+  "url": "https://greasyfork.org/scripts/436037-%E7%9F%A5%E4%B9%8E%E9%BB%91%E5%A4%9C",
+  "code_url": "https://update.greasyfork.org/scripts/436037/%E7%9F%A5%E4%B9%8E%E9%BB%91%E5%A4%9C.user.js",
+  "code_size": 681,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

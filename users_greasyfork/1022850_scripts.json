@@ -1,0 +1,68 @@
+[
+  {
+    "id": 466207,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-13T16:34:14.000Z",
+    "code_updated_at": "2023-05-13T16:34:14.000Z",
+    "namespace": "https://greasyfork.org/users/1022850",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1022850,
+        "name": "rico-vz",
+        "created_at": "2023-02-06T21:54:03.000Z",
+        "url": "https://greasyfork.org/users/1022850-rico-vz"
+      }
+    ],
+    "name": "Twitter: Fix Emoji 15.0",
+    "description": "Twemoji is not up-to-date with Emoji 15.0 (Unicode 15.0). This script replaces some Emoji 15.0 with working URLs on Twitter.",
+    "url": "https://greasyfork.org/scripts/466207-twitter-fix-emoji-15-0",
+    "code_url": "https://update.greasyfork.org/scripts/466207/Twitter%3A%20Fix%20Emoji%20150.user.js",
+    "code_size": 189595,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 459552,
+    "daily_installs": 0,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-06T21:55:03.000Z",
+    "code_updated_at": "2023-02-06T21:55:03.000Z",
+    "namespace": "https://greasyfork.org/users/1022850",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1022850,
+        "name": "rico-vz",
+        "created_at": "2023-02-06T21:54:03.000Z",
+        "url": "https://greasyfork.org/users/1022850-rico-vz"
+      }
+    ],
+    "name": "Twitter - No more for you",
+    "description": "Stay on your Following instead of the promoted algorithm \"For you\" page",
+    "url": "https://greasyfork.org/scripts/459552-twitter-no-more-for-you",
+    "code_url": "https://update.greasyfork.org/scripts/459552/Twitter%20-%20No%20more%20for%20you.user.js",
+    "code_size": 1447,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 438895,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-21T00:58:39.000Z",
+  "code_updated_at": "2022-01-25T03:26:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 867349,
+      "name": "dougswallow",
+      "created_at": "2022-01-21T00:52:05.000Z",
+      "url": "https://greasyfork.org/users/867349-dougswallow",
+      "scripts": [
+        {
+          "id": 438893,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-21T00:55:02.000Z",
+          "code_updated_at": "2023-02-02T16:06:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Casino Royale Offer Lookup",
+          "description": "Improve accessibility of PDF itineraries",
+          "url": "https://greasyfork.org/scripts/438893-casino-royale-offer-lookup",
+          "code_url": "https://update.greasyfork.org/scripts/438893/Casino%20Royale%20Offer%20Lookup.user.js",
+          "code_size": 12335,
+          "license": "MIT License",
+          "version": "0.12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TCF 2022 Mods",
+  "description": "Restore some links/looks from the old TCF",
+  "url": "https://greasyfork.org/scripts/438895-tcf-2022-mods",
+  "code_url": "https://update.greasyfork.org/scripts/438895/TCF%202022%20Mods.user.js",
+  "code_size": 13155,
+  "license": "MIT License",
+  "version": "0.1.44",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

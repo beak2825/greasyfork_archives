@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444147,
+    "daily_installs": 0,
+    "total_installs": 395,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-04-28T13:30:07.000Z",
+    "code_updated_at": "2022-08-01T02:16:30.000Z",
+    "namespace": "glasscp@163.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104725,
+        "name": "kerry_cheng",
+        "created_at": "2017-02-22T03:47:41.000Z",
+        "url": "https://greasyfork.org/users/104725-kerry-cheng"
+      }
+    ],
+    "name": "重庆网上房地产-房源信息查询助手",
+    "description": "重庆网上房地产-房源信息查询助手(仅供个人学习研究使用,任何公司或个人不得利用其从事违法经营活动)",
+    "url": "https://greasyfork.org/scripts/444147-%E9%87%8D%E5%BA%86%E7%BD%91%E4%B8%8A%E6%88%BF%E5%9C%B0%E4%BA%A7-%E6%88%BF%E6%BA%90%E4%BF%A1%E6%81%AF%E6%9F%A5%E8%AF%A2%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/444147/%E9%87%8D%E5%BA%86%E7%BD%91%E4%B8%8A%E6%88%BF%E5%9C%B0%E4%BA%A7-%E6%88%BF%E6%BA%90%E4%BF%A1%E6%81%AF%E6%9F%A5%E8%AF%A2%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 55967,
+    "license": "MIT License",
+    "version": "0.1.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

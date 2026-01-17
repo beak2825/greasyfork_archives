@@ -1,0 +1,34 @@
+{
+  "id": 451731,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-21T02:09:10.000Z",
+  "code_updated_at": "2022-09-21T02:09:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 537797,
+      "name": "Davin Chua",
+      "created_at": "2020-04-23T02:34:45.000Z",
+      "url": "https://greasyfork.org/users/537797-davin-chua",
+      "scripts": []
+    }
+  ],
+  "name": "Brift Assistant",
+  "description": ":okayge:",
+  "url": "https://greasyfork.org/scripts/451731-brift-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/451731/Brift%20Assistant.user.js",
+  "code_size": 1313,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 465173,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-30T06:59:00.000Z",
+    "code_updated_at": "2023-04-30T06:59:00.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989130,
+        "name": "Bakdaulet Khanov",
+        "created_at": "2022-11-28T09:23:14.000Z",
+        "url": "https://greasyfork.org/users/989130-bakdaulet-khanov"
+      }
+    ],
+    "name": "BELGOROD | Скрипт для кураторов форума",
+    "description": "Специально для BlackRussia || BELGOROD by Bakdaulet_Empower",
+    "url": "https://greasyfork.org/scripts/465173-belgorod-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/465173/BELGOROD%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 152560,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 455538,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-28T12:55:04.000Z",
+    "code_updated_at": "2022-11-28T12:55:03.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989130,
+        "name": "Bakdaulet Khanov",
+        "created_at": "2022-11-28T09:23:14.000Z",
+        "url": "https://greasyfork.org/users/989130-bakdaulet-khanov"
+      }
+    ],
+    "name": "GROZNY | Скрипт для кураторов форума 0.1 версия",
+    "description": "Специально для BlackRussia || GROZNY by Bakdaulet_Ryan",
+    "url": "https://greasyfork.org/scripts/455538-grozny-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-0-1-%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/455538/GROZNY%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%2001%20%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F.user.js",
+    "code_size": 152459,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

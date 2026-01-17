@@ -1,0 +1,68 @@
+[
+  {
+    "id": 442850,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-06T07:15:36.000Z",
+    "code_updated_at": "2022-04-06T07:15:36.000Z",
+    "namespace": "https://lanhuapp.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810115,
+        "name": "TestSmirk",
+        "created_at": "2021-08-30T02:59:40.000Z",
+        "url": "https://greasyfork.org/users/810115-testsmirk"
+      }
+    ],
+    "name": "蓝湖前端UI对比",
+    "description": "蓝湖前端UI对比 通过scheme打开桌面app",
+    "url": "https://greasyfork.org/scripts/442850-%E8%93%9D%E6%B9%96%E5%89%8D%E7%AB%AFui%E5%AF%B9%E6%AF%94",
+    "code_url": "https://update.greasyfork.org/scripts/442850/%E8%93%9D%E6%B9%96%E5%89%8D%E7%AB%AFUI%E5%AF%B9%E6%AF%94.user.js",
+    "code_size": 975,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431606,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-30T03:46:37.000Z",
+    "code_updated_at": "2021-08-30T03:46:36.000Z",
+    "namespace": "http://www.kaixg.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810115,
+        "name": "TestSmirk",
+        "created_at": "2021-08-30T02:59:40.000Z",
+        "url": "https://greasyfork.org/users/810115-testsmirk"
+      }
+    ],
+    "name": "开心过英语vip",
+    "description": "开启vip",
+    "url": "https://greasyfork.org/scripts/431606-%E5%BC%80%E5%BF%83%E8%BF%87%E8%8B%B1%E8%AF%ADvip",
+    "code_url": "https://update.greasyfork.org/scripts/431606/%E5%BC%80%E5%BF%83%E8%BF%87%E8%8B%B1%E8%AF%ADvip.user.js",
+    "code_size": 713,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

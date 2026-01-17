@@ -1,0 +1,33 @@
+{
+  "id": 432887,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-24T10:58:48.000Z",
+  "code_updated_at": "2021-09-24T11:17:27.000Z",
+  "namespace": "26745896786",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 818586,
+      "name": "Qnehihi",
+      "created_at": "2021-09-24T10:54:24.000Z",
+      "url": "https://greasyfork.org/users/818586-qnehihi"
+    }
+  ],
+  "name": "Dmax001",
+  "description": "pepe run progress bar.",
+  "url": "https://greasyfork.org/scripts/432887-dmax001",
+  "code_url": "https://update.greasyfork.org/scripts/432887/Dmax001.user.js",
+  "code_size": 11680,
+  "license": null,
+  "version": "0.11",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

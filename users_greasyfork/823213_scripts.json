@@ -1,0 +1,68 @@
+[
+  {
+    "id": 483310,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-28T11:50:47.000Z",
+    "code_updated_at": "2025-12-13T05:28:49.000Z",
+    "namespace": "https://github.com/refatK",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 823213,
+        "name": "refatK",
+        "created_at": "2021-10-09T00:51:34.000Z",
+        "url": "https://greasyfork.org/users/823213-refatk"
+      }
+    ],
+    "name": "HLTB Rank Games",
+    "description": "Organize games by rating for completion page grid view",
+    "url": "https://greasyfork.org/scripts/483310-hltb-rank-games",
+    "code_url": "https://update.greasyfork.org/scripts/483310/HLTB%20Rank%20Games.user.js",
+    "code_size": 5860,
+    "license": "MIT License",
+    "version": "0.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433692,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-10T21:44:00.000Z",
+    "code_updated_at": "2021-10-12T00:58:27.000Z",
+    "namespace": "https://github.com/refatK",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 823213,
+        "name": "refatK",
+        "created_at": "2021-10-09T00:51:34.000Z",
+        "url": "https://greasyfork.org/users/823213-refatk"
+      }
+    ],
+    "name": "Itch.io Simple Remove from Collection",
+    "description": "Easily remove games from your itch.io collections from within the \"Add to Collection\" modal of a game.",
+    "url": "https://greasyfork.org/scripts/433692-itch-io-simple-remove-from-collection",
+    "code_url": "https://update.greasyfork.org/scripts/433692/Itchio%20Simple%20Remove%20from%20Collection.user.js",
+    "code_size": 5699,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

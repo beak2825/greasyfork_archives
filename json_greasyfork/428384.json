@@ -1,0 +1,59 @@
+{
+  "id": 428384,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-24T06:59:59.000Z",
+  "code_updated_at": "2021-06-24T06:59:58.000Z",
+  "namespace": "Nobitext",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 764928,
+      "name": "Amir Mahdi",
+      "created_at": "2021-04-26T00:54:00.000Z",
+      "url": "https://greasyfork.org/users/764928-amir-mahdi",
+      "scripts": [
+        {
+          "id": 446464,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-14T11:14:48.000Z",
+          "code_updated_at": "2022-06-14T11:14:47.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Amuzeshyar",
+          "description": "Amuzeshyar Arzeshyabi Ostad!",
+          "url": "https://greasyfork.org/scripts/446464-amuzeshyar",
+          "code_url": "https://update.greasyfork.org/scripts/446464/Amuzeshyar.user.js",
+          "code_size": 1139,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Nobitext USDT Title",
+  "description": "Nobitex!",
+  "url": "https://greasyfork.org/scripts/428384-nobitext-usdt-title",
+  "code_url": "https://update.greasyfork.org/scripts/428384/Nobitext%20USDT%20Title.user.js",
+  "code_size": 807,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

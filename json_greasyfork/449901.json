@@ -1,0 +1,59 @@
+{
+  "id": 449901,
+  "daily_installs": 0,
+  "total_installs": 105,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-21T04:09:00.000Z",
+  "code_updated_at": "2022-08-21T04:09:00.000Z",
+  "namespace": "http://lf127.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 948876,
+      "name": "cnbeining",
+      "created_at": "2022-08-21T04:02:46.000Z",
+      "url": "https://greasyfork.org/users/948876-cnbeining",
+      "scripts": [
+        {
+          "id": 449901,
+          "daily_installs": 0,
+          "total_installs": 105,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-21T04:09:00.000Z",
+          "code_updated_at": "2022-08-21T04:09:00.000Z",
+          "namespace": "http://lf127.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Lofter origin",
+          "description": "Redirect to origin version without watermark when opening images in Lofter.",
+          "url": "https://greasyfork.org/scripts/449901-lofter-origin",
+          "code_url": "https://update.greasyfork.org/scripts/449901/Lofter%20origin.user.js",
+          "code_size": 684,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Lofter origin",
+  "description": "Redirect to origin version without watermark when opening images in Lofter.",
+  "url": "https://greasyfork.org/scripts/449901-lofter-origin",
+  "code_url": "https://update.greasyfork.org/scripts/449901/Lofter%20origin.user.js",
+  "code_size": 684,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

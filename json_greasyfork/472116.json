@@ -1,0 +1,59 @@
+{
+  "id": 472116,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-31T09:46:21.000Z",
+  "code_updated_at": "2023-07-31T09:52:48.000Z",
+  "namespace": "YouTube-yewtube",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1140326,
+      "name": "Birger",
+      "created_at": "2023-07-31T09:44:23.000Z",
+      "url": "https://greasyfork.org/users/1140326-birger",
+      "scripts": [
+        {
+          "id": 476707,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-04T19:24:37.000Z",
+          "code_updated_at": "2023-10-04T19:24:37.000Z",
+          "namespace": "Auto-reject-yahoo-OK",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto reject yahoo consent screen",
+          "description": "Reject yahoo cookies/tracking for sites like techcrunch and others.",
+          "url": "https://greasyfork.org/scripts/476707-auto-reject-yahoo-consent-screen",
+          "code_url": "https://update.greasyfork.org/scripts/476707/Auto%20reject%20yahoo%20consent%20screen.user.js",
+          "code_size": 494,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube to yewtu.be",
+  "description": "Redirects all youtube videos Invidious instances",
+  "url": "https://greasyfork.org/scripts/472116-youtube-to-yewtu-be",
+  "code_url": "https://update.greasyfork.org/scripts/472116/YouTube%20to%20yewtube.user.js",
+  "code_size": 665,
+  "license": "MIT License",
+  "version": "0.2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 418597,
+  "daily_installs": 0,
+  "total_installs": 270,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-13T17:08:10.000Z",
+  "code_updated_at": "2024-01-15T15:20:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 472487,
+      "name": "AN drew",
+      "created_at": "2020-03-31T12:06:42.000Z",
+      "url": "https://greasyfork.org/users/472487-an-drew"
+    }
+  ],
+  "name": "网易美化",
+  "description": "隐藏网易邮箱广告，隐藏网易新闻推荐、新闻内容居中显示",
+  "url": "https://greasyfork.org/scripts/418597-%E7%BD%91%E6%98%93%E7%BE%8E%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/418597/%E7%BD%91%E6%98%93%E7%BE%8E%E5%8C%96.user.js",
+  "code_size": 5844,
+  "license": null,
+  "version": "0.4.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

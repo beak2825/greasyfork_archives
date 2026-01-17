@@ -1,0 +1,34 @@
+{
+  "id": 423830,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-23T08:42:43.000Z",
+  "code_updated_at": "2021-03-23T09:00:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 750455,
+      "name": "Wambo64",
+      "created_at": "2021-03-23T08:41:02.000Z",
+      "url": "https://greasyfork.org/users/750455-wambo64",
+      "scripts": []
+    }
+  ],
+  "name": "Kill Reddit",
+  "description": "Disables Reddit",
+  "url": "https://greasyfork.org/scripts/423830-kill-reddit",
+  "code_url": "https://update.greasyfork.org/scripts/423830/Kill%20Reddit.user.js",
+  "code_size": 432,
+  "license": null,
+  "version": "0.3",
+  "locale": "ts",
+  "deleted": false,
+  "visibility": "public"
+}

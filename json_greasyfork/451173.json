@@ -1,0 +1,59 @@
+{
+  "id": 451173,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-11T14:47:11.000Z",
+  "code_updated_at": "2022-09-11T14:47:11.000Z",
+  "namespace": "https://greasyfork.org/users/957551",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 957551,
+      "name": "Null07",
+      "created_at": "2022-09-11T14:42:18.000Z",
+      "url": "https://greasyfork.org/users/957551-null07",
+      "scripts": [
+        {
+          "id": 451173,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-11T14:47:11.000Z",
+          "code_updated_at": "2022-09-11T14:47:11.000Z",
+          "namespace": "https://greasyfork.org/users/957551",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Queen Pegman",
+          "description": "Sets Google Streetview the queen",
+          "url": "https://greasyfork.org/scripts/451173-queen-pegman",
+          "code_url": "https://update.greasyfork.org/scripts/451173/Queen%20Pegman.user.js",
+          "code_size": 625,
+          "license": "MIT License",
+          "version": "0.0.1.20220911144711",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Queen Pegman",
+  "description": "Sets Google Streetview the queen",
+  "url": "https://greasyfork.org/scripts/451173-queen-pegman",
+  "code_url": "https://update.greasyfork.org/scripts/451173/Queen%20Pegman.user.js",
+  "code_size": 625,
+  "license": "MIT License",
+  "version": "0.0.1.20220911144711",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

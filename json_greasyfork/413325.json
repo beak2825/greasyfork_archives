@@ -1,0 +1,59 @@
+{
+  "id": 413325,
+  "daily_installs": 0,
+  "total_installs": 424,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-15T13:32:58.000Z",
+  "code_updated_at": "2020-10-19T11:45:47.000Z",
+  "namespace": "https://www.flashexpress.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 695288,
+      "name": "yangmiao",
+      "created_at": "2020-10-15T13:31:39.000Z",
+      "url": "https://greasyfork.org/users/695288-yangmiao",
+      "scripts": [
+        {
+          "id": 413325,
+          "daily_installs": 0,
+          "total_installs": 424,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-15T13:32:58.000Z",
+          "code_updated_at": "2020-10-19T11:45:47.000Z",
+          "namespace": "https://www.flashexpress.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "flash-swagger",
+          "description": "swagger 快捷插件",
+          "url": "https://greasyfork.org/scripts/413325-flash-swagger",
+          "code_url": "https://update.greasyfork.org/scripts/413325/flash-swagger.user.js",
+          "code_size": 2717,
+          "license": null,
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "flash-swagger",
+  "description": "swagger 快捷插件",
+  "url": "https://greasyfork.org/scripts/413325-flash-swagger",
+  "code_url": "https://update.greasyfork.org/scripts/413325/flash-swagger.user.js",
+  "code_size": 2717,
+  "license": null,
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

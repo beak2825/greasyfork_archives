@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431462,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-27T04:26:06.000Z",
+    "code_updated_at": "2021-09-04T08:53:57.000Z",
+    "namespace": "https://www.claudinec.net/",
+    "support_url": "https://github.com/claudinec/cc-userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 809047,
+        "name": "claudinec",
+        "created_at": "2021-08-27T04:23:44.000Z",
+        "url": "https://greasyfork.org/users/809047-claudinec"
+      }
+    ],
+    "name": "Victorian Covid-19 exposure site highlighter",
+    "description": "Finds and highlights suburbs of interest in the Victorian Government table of Covid-19 exposure sites. Highlight colour matches exposure tier (1-3).",
+    "url": "https://greasyfork.org/scripts/431462-victorian-covid-19-exposure-site-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/431462/Victorian%20Covid-19%20exposure%20site%20highlighter.user.js",
+    "code_size": 3719,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "0.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

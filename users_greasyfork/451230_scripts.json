@@ -1,0 +1,101 @@
+[
+  {
+    "id": 488212,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-02-24T21:54:33.000Z",
+    "code_updated_at": "2024-02-24T21:54:33.000Z",
+    "namespace": "V.L",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 451230,
+        "name": "ValerioLyndon",
+        "created_at": "2020-02-28T08:40:17.000Z",
+        "url": "https://greasyfork.org/users/451230-valeriolyndon"
+      }
+    ],
+    "name": "DLSite Hide Owned",
+    "description": "Allows hiding owned items from search results.",
+    "url": "https://greasyfork.org/scripts/488212-dlsite-hide-owned",
+    "code_url": "https://update.greasyfork.org/scripts/488212/DLSite%20Hide%20Owned.user.js",
+    "code_size": 3022,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 476578,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-02T20:17:36.000Z",
+    "code_updated_at": "2023-12-28T06:05:01.000Z",
+    "namespace": "V.L",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 451230,
+        "name": "ValerioLyndon",
+        "created_at": "2020-02-28T08:40:17.000Z",
+        "url": "https://greasyfork.org/users/451230-valeriolyndon"
+      }
+    ],
+    "name": "Bandcamp Helper",
+    "description": "Improve downloading of discographies with the addition of an item count and total size.",
+    "url": "https://greasyfork.org/scripts/476578-bandcamp-helper",
+    "code_url": "https://update.greasyfork.org/scripts/476578/Bandcamp%20Helper.user.js",
+    "code_size": 6408,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 468467,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-12T01:31:49.000Z",
+    "code_updated_at": "2023-07-02T21:02:09.000Z",
+    "namespace": "V.L",
+    "support_url": "https://github.com/ValerioLyndon/MyAnimeList-Tools/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 451230,
+        "name": "ValerioLyndon",
+        "created_at": "2020-02-28T08:40:17.000Z",
+        "url": "https://greasyfork.org/users/451230-valeriolyndon"
+      }
+    ],
+    "name": "List Tools",
+    "description": "Provides tools for managing your list's tags, CSS, and more.",
+    "url": "https://greasyfork.org/scripts/468467-list-tools",
+    "code_url": "https://update.greasyfork.org/scripts/468467/List%20Tools.user.js",
+    "code_size": 79173,
+    "license": "GNU General Public License v3.0 only",
+    "version": "10.2_a0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

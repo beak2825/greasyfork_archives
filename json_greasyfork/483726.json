@@ -1,0 +1,59 @@
+{
+  "id": 483726,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-03T00:53:16.000Z",
+  "code_updated_at": "2024-01-03T00:53:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1242469,
+      "name": "srijan-sunai",
+      "created_at": "2024-01-03T00:49:18.000Z",
+      "url": "https://greasyfork.org/users/1242469-srijan-sunai",
+      "scripts": [
+        {
+          "id": 483726,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-03T00:53:16.000Z",
+          "code_updated_at": "2024-01-03T00:53:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Foodmandu Scraper",
+          "description": "A usercript to scrape Food Menu from Foodmandu!",
+          "url": "https://greasyfork.org/scripts/483726-foodmandu-scraper",
+          "code_url": "https://update.greasyfork.org/scripts/483726/Foodmandu%20Scraper.user.js",
+          "code_size": 4591,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Foodmandu Scraper",
+  "description": "A usercript to scrape Food Menu from Foodmandu!",
+  "url": "https://greasyfork.org/scripts/483726-foodmandu-scraper",
+  "code_url": "https://update.greasyfork.org/scripts/483726/Foodmandu%20Scraper.user.js",
+  "code_size": 4591,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

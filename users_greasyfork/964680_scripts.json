@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 452916,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-12T11:33:36.000Z",
+    "code_updated_at": "2024-12-12T01:39:08.000Z",
+    "namespace": "https://lemon399-bitbucket-io.vercel.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964680,
+        "name": "Lemon399",
+        "created_at": "2022-09-29T09:31:24.000Z",
+        "url": "https://greasyfork.org/users/964680-lemon399"
+      }
+    ],
+    "name": "AdBlock Script for WebView Debug",
+    "description": "Parse ABP Cosmetic rules to CSS and apply it.",
+    "url": "https://greasyfork.org/scripts/452916-adblock-script-for-webview-debug",
+    "code_url": "https://update.greasyfork.org/scripts/452916/AdBlock%20Script%20for%20WebView%20Debug.user.js",
+    "code_size": 313368,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.8.6c",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 452314,
+    "daily_installs": 2,
+    "total_installs": 19273,
+    "fan_score": "57.8",
+    "good_ratings": 10,
+    "ok_ratings": 2,
+    "bad_ratings": 1,
+    "created_at": "2022-10-01T04:27:45.000Z",
+    "code_updated_at": "2025-08-11T09:04:32.000Z",
+    "namespace": "https://lemon399-bitbucket-io.vercel.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964680,
+        "name": "Lemon399",
+        "created_at": "2022-09-29T09:31:24.000Z",
+        "url": "https://greasyfork.org/users/964680-lemon399"
+      }
+    ],
+    "name": "AdBlock Script for WebView",
+    "description": "Parse ABP Cosmetic rules to CSS and apply it.",
+    "url": "https://greasyfork.org/scripts/452314-adblock-script-for-webview",
+    "code_url": "https://update.greasyfork.org/scripts/452314/AdBlock%20Script%20for%20WebView.user.js",
+    "code_size": 301637,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.8.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 443747,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-21T10:41:21.000Z",
+  "code_updated_at": "2022-04-21T10:43:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 867990,
+      "name": "Verjigorm",
+      "created_at": "2022-01-22T17:41:48.000Z",
+      "url": "https://greasyfork.org/users/867990-verjigorm",
+      "scripts": []
+    }
+  ],
+  "name": "ic.byteglow.com/champions - Item-Levels",
+  "description": "Item-Levels and more for ic.byteglow.com/champions",
+  "url": "https://greasyfork.org/scripts/443747-ic-byteglow-com-champions-item-levels",
+  "code_url": "https://update.greasyfork.org/scripts/443747/icbyteglowcomchampions%20-%20Item-Levels.user.js",
+  "code_size": 5906,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 425890,
+    "daily_installs": 0,
+    "total_installs": 99,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-03T22:15:11.000Z",
+    "code_updated_at": "2021-05-03T22:28:55.000Z",
+    "namespace": "https://greasyfork.org/users/10802",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10802,
+        "name": "Morten Møller",
+        "created_at": "2015-04-23T21:51:34.000Z",
+        "url": "https://greasyfork.org/users/10802-morten-m%C3%B8ller"
+      }
+    ],
+    "name": "Redirect AliExpress to correct domain",
+    "description": "Automatically redirects you back to your favorite AliExpress domain as well as changes any bad URLs",
+    "url": "https://greasyfork.org/scripts/425890-redirect-aliexpress-to-correct-domain",
+    "code_url": "https://update.greasyfork.org/scripts/425890/Redirect%20AliExpress%20to%20correct%20domain.user.js",
+    "code_size": 927,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

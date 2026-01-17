@@ -1,0 +1,59 @@
+{
+  "id": 418931,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-21T06:51:02.000Z",
+  "code_updated_at": "2020-12-21T06:54:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 719271,
+      "name": "Dekon Lee",
+      "created_at": "2020-12-21T06:48:56.000Z",
+      "url": "https://greasyfork.org/users/719271-dekon-lee",
+      "scripts": [
+        {
+          "id": 418931,
+          "daily_installs": 0,
+          "total_installs": 40,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-12-21T06:51:02.000Z",
+          "code_updated_at": "2020-12-21T06:54:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "知乎标题隐藏",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/418931-%E7%9F%A5%E4%B9%8E%E6%A0%87%E9%A2%98%E9%9A%90%E8%97%8F",
+          "code_url": "https://update.greasyfork.org/scripts/418931/%E7%9F%A5%E4%B9%8E%E6%A0%87%E9%A2%98%E9%9A%90%E8%97%8F.user.js",
+          "code_size": 1593,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "知乎标题隐藏",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/418931-%E7%9F%A5%E4%B9%8E%E6%A0%87%E9%A2%98%E9%9A%90%E8%97%8F",
+  "code_url": "https://update.greasyfork.org/scripts/418931/%E7%9F%A5%E4%B9%8E%E6%A0%87%E9%A2%98%E9%9A%90%E8%97%8F.user.js",
+  "code_size": 1593,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

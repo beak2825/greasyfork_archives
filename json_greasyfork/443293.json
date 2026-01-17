@@ -1,0 +1,34 @@
+{
+  "id": 443293,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-13T02:05:00.000Z",
+  "code_updated_at": "2022-04-13T02:05:00.000Z",
+  "namespace": "book.ucdrs",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 901438,
+      "name": "d TIe",
+      "created_at": "2022-04-13T01:49:11.000Z",
+      "url": "https://greasyfork.org/users/901438-d-tie",
+      "scripts": []
+    }
+  ],
+  "name": "秀读图书互助",
+  "description": "查询全国图书馆参考咨询联盟、读秀、超星、龙岩是否有书互助,自动获取435w无重全文PDF,（全网独家）不需要某度会员高速下载PDF！另（独家）全程免注册、免脚本、手机即可搜,下,看，复制浏览器打开：   http://172.247.14.184/",
+  "url": "https://greasyfork.org/scripts/443293-%E7%A7%80%E8%AF%BB%E5%9B%BE%E4%B9%A6%E4%BA%92%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/443293/%E7%A7%80%E8%AF%BB%E5%9B%BE%E4%B9%A6%E4%BA%92%E5%8A%A9.user.js",
+  "code_size": 2587,
+  "license": null,
+  "version": "1.2.10",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

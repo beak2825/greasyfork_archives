@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 468908,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-18T05:32:08.000Z",
+    "code_updated_at": "2023-06-18T05:32:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 849260,
+        "name": "Tanphoon",
+        "created_at": "2021-12-06T07:36:05.000Z",
+        "url": "https://greasyfork.org/users/849260-tanphoon"
+      }
+    ],
+    "name": "Codeforces show contestId",
+    "description": "在每场比赛名称的前面添加一个比赛Id的超链接，指向这场比赛。",
+    "url": "https://greasyfork.org/scripts/468908-codeforces-show-contestid",
+    "code_url": "https://update.greasyfork.org/scripts/468908/Codeforces%20show%20contestId.user.js",
+    "code_size": 1402,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

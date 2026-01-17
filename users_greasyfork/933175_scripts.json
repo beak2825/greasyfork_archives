@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447530,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-07T01:59:22.000Z",
+    "code_updated_at": "2024-02-21T02:04:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 933175,
+        "name": "z404p",
+        "created_at": "2022-07-07T01:46:47.000Z",
+        "url": "https://greasyfork.org/users/933175-z404p"
+      }
+    ],
+    "name": "H3C eos日志格式",
+    "description": "修改H3C的eos日志字体为等宽字体",
+    "url": "https://greasyfork.org/scripts/447530-h3c-eos%E6%97%A5%E5%BF%97%E6%A0%BC%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/447530/H3C%20eos%E6%97%A5%E5%BF%97%E6%A0%BC%E5%BC%8F.user.js",
+    "code_size": 1780,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

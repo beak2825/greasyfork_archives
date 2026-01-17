@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426498,
+    "daily_installs": 0,
+    "total_installs": 533,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-15T03:36:29.000Z",
+    "code_updated_at": "2021-05-15T03:39:42.000Z",
+    "namespace": "https://greasyfork.org/pt-BR/scripts/426498-minimap",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 772206,
+        "name": "M4rc3lo",
+        "created_at": "2021-05-15T03:25:58.000Z",
+        "url": "https://greasyfork.org/users/772206-m4rc3lo"
+      }
+    ],
+    "name": "minimap",
+    "description": "minimap script for agar.io",
+    "url": "https://greasyfork.org/scripts/426498-minimap",
+    "code_url": "https://update.greasyfork.org/scripts/426498/minimap.user.js",
+    "code_size": 493,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

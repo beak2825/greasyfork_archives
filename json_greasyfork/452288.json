@@ -1,0 +1,33 @@
+{
+  "id": 452288,
+  "daily_installs": 0,
+  "total_installs": 147,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-30T12:46:25.000Z",
+  "code_updated_at": "2022-09-30T12:46:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 964805,
+      "name": "ElSopo",
+      "created_at": "2022-09-29T17:38:55.000Z",
+      "url": "https://greasyfork.org/users/964805-elsopo"
+    }
+  ],
+  "name": "FreeGOGPcGames timer bypass",
+  "description": "Script to bypass the timer on the FreeGogPcGames website.",
+  "url": "https://greasyfork.org/scripts/452288-freegogpcgames-timer-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/452288/FreeGOGPcGames%20timer%20bypass.user.js",
+  "code_size": 935,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

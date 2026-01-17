@@ -1,0 +1,34 @@
+{
+  "id": 472094,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-30T22:02:22.000Z",
+  "code_updated_at": "2023-07-30T22:27:15.000Z",
+  "namespace": "http://leaked.wiki",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1138492,
+      "name": "Beckendorf7",
+      "created_at": "2023-07-29T04:30:06.000Z",
+      "url": "https://greasyfork.org/users/1138492-beckendorf7",
+      "scripts": []
+    }
+  ],
+  "name": "Auto-resize textarea",
+  "description": "Auto resize a textarea based on the number of input characters up to 28,000",
+  "url": "https://greasyfork.org/scripts/472094-auto-resize-textarea",
+  "code_url": "https://update.greasyfork.org/scripts/472094/Auto-resize%20textarea.user.js",
+  "code_size": 1128,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

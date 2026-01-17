@@ -1,0 +1,33 @@
+{
+  "id": 414632,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-25T16:13:39.000Z",
+  "code_updated_at": "2020-10-25T16:13:39.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 651064,
+      "name": "AstroVD",
+      "created_at": "2020-06-25T12:37:48.000Z",
+      "url": "https://greasyfork.org/users/651064-astrovd"
+    }
+  ],
+  "name": "AdditionalButtons",
+  "description": "Add buttons to movies/games/softwares pages",
+  "url": "https://greasyfork.org/scripts/414632-additionalbuttons",
+  "code_url": "https://update.greasyfork.org/scripts/414632/AdditionalButtons.user.js",
+  "code_size": 4780,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

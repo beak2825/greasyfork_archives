@@ -1,0 +1,33 @@
+{
+  "id": 481867,
+  "daily_installs": 0,
+  "total_installs": 52,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-10T11:17:57.000Z",
+  "code_updated_at": "2023-12-10T11:17:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 696905,
+      "name": "家守カホウ",
+      "created_at": "2020-10-21T05:01:00.000Z",
+      "url": "https://greasyfork.org/users/696905-%E5%AE%B6%E5%AE%88%E3%82%AB%E3%83%9B%E3%82%A6"
+    }
+  ],
+  "name": "twitter media chain",
+  "description": "Twitterのスレッド、メディア欄を左右キーで連続して閲覧するやつ",
+  "url": "https://greasyfork.org/scripts/481867-twitter-media-chain",
+  "code_url": "https://update.greasyfork.org/scripts/481867/twitter%20media%20chain.user.js",
+  "code_size": 4771,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

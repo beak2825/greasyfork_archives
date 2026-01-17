@@ -1,0 +1,34 @@
+{
+  "id": 452220,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-29T11:19:53.000Z",
+  "code_updated_at": "2022-11-18T01:15:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 964698,
+      "name": "lpmasser",
+      "created_at": "2022-09-29T11:07:53.000Z",
+      "url": "https://greasyfork.org/users/964698-lpmasser",
+      "scripts": []
+    }
+  ],
+  "name": "北工大每日打卡（校内）",
+  "description": "打开网页等待几秒之后自动完成打卡，可以配合快捷指令及safari扩展userscript食用",
+  "url": "https://greasyfork.org/scripts/452220-%E5%8C%97%E5%B7%A5%E5%A4%A7%E6%AF%8F%E6%97%A5%E6%89%93%E5%8D%A1-%E6%A0%A1%E5%86%85",
+  "code_url": "https://update.greasyfork.org/scripts/452220/%E5%8C%97%E5%B7%A5%E5%A4%A7%E6%AF%8F%E6%97%A5%E6%89%93%E5%8D%A1%EF%BC%88%E6%A0%A1%E5%86%85%EF%BC%89.user.js",
+  "code_size": 3392,
+  "license": "MIT License",
+  "version": "2.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

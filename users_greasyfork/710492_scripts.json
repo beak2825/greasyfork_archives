@@ -1,0 +1,35 @@
+[
+  {
+    "id": 417127,
+    "daily_installs": 0,
+    "total_installs": 467,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-30T08:40:52.000Z",
+    "code_updated_at": "2020-12-04T02:49:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 710492,
+        "name": "thyxsl",
+        "created_at": "2020-11-30T08:39:38.000Z",
+        "url": "https://greasyfork.org/users/710492-thyxsl"
+      }
+    ],
+    "name": "就是不登录知乎",
+    "description": "拒绝登录知乎",
+    "url": "https://greasyfork.org/scripts/417127-%E5%B0%B1%E6%98%AF%E4%B8%8D%E7%99%BB%E5%BD%95%E7%9F%A5%E4%B9%8E",
+    "code_url": "https://update.greasyfork.org/scripts/417127/%E5%B0%B1%E6%98%AF%E4%B8%8D%E7%99%BB%E5%BD%95%E7%9F%A5%E4%B9%8E.user.js",
+    "code_size": 1047,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 450376,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-29T05:46:58.000Z",
+    "code_updated_at": "2022-08-29T05:46:58.000Z",
+    "namespace": "https://greasyfork.org/users/210993",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 210993,
+        "name": "小龙虾蓝色",
+        "created_at": "2018-09-07T09:06:17.000Z",
+        "url": "https://greasyfork.org/users/210993-%E5%B0%8F%E9%BE%99%E8%99%BE%E8%93%9D%E8%89%B2"
+      }
+    ],
+    "name": "LeetCode 英文站跳转中文站",
+    "description": "leetcode swith en and cn site",
+    "url": "https://greasyfork.org/scripts/450376-leetcode-%E8%8B%B1%E6%96%87%E7%AB%99%E8%B7%B3%E8%BD%AC%E4%B8%AD%E6%96%87%E7%AB%99",
+    "code_url": "https://update.greasyfork.org/scripts/450376/LeetCode%20%E8%8B%B1%E6%96%87%E7%AB%99%E8%B7%B3%E8%BD%AC%E4%B8%AD%E6%96%87%E7%AB%99.user.js",
+    "code_size": 560,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

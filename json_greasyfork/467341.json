@@ -1,0 +1,34 @@
+{
+  "id": 467341,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-28T23:27:48.000Z",
+  "code_updated_at": "2023-06-03T05:45:35.000Z",
+  "namespace": "https://greasyfork.org/users/410740",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 683529,
+      "name": "Melissa Clarke",
+      "created_at": "2020-08-28T23:29:40.000Z",
+      "url": "https://greasyfork.org/users/683529-melissa-clarke",
+      "scripts": []
+    }
+  ],
+  "name": "AO3 Userscript Data Sync",
+  "description": "Sync AO3 userscript data between clients via Google Drive API.",
+  "url": "https://greasyfork.org/scripts/467341-ao3-userscript-data-sync",
+  "code_url": "https://update.greasyfork.org/scripts/467341/AO3%20Userscript%20Data%20Sync.user.js",
+  "code_size": 23492,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

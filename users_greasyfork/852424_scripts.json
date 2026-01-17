@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437100,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-15T13:45:09.000Z",
+    "code_updated_at": "2021-12-15T13:45:08.000Z",
+    "namespace": "https://kemsan.xyz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 852424,
+        "name": "Kemsan",
+        "created_at": "2021-12-12T18:36:03.000Z",
+        "url": "https://greasyfork.org/users/852424-kemsan"
+      }
+    ],
+    "name": "Gladiatus scrolls highlighter",
+    "description": "Gladiatus+",
+    "url": "https://greasyfork.org/scripts/437100-gladiatus-scrolls-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/437100/Gladiatus%20scrolls%20highlighter.user.js",
+    "code_size": 1484,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

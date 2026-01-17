@@ -1,0 +1,59 @@
+{
+  "id": 476928,
+  "daily_installs": 0,
+  "total_installs": 62,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-08T06:13:31.000Z",
+  "code_updated_at": "2023-10-08T06:51:38.000Z",
+  "namespace": "ocha98-virtual-timer",
+  "support_url": "https://github.com/ocha98/AtCoderVirtualTimer/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1190639,
+      "name": "Ocha98",
+      "created_at": "2023-10-08T00:29:36.000Z",
+      "url": "https://greasyfork.org/users/1190639-ocha98",
+      "scripts": [
+        {
+          "id": 476928,
+          "daily_installs": 0,
+          "total_installs": 62,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-08T06:13:31.000Z",
+          "code_updated_at": "2023-10-08T06:51:38.000Z",
+          "namespace": "ocha98-virtual-timer",
+          "support_url": "https://github.com/ocha98/AtCoderVirtualTimer/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AtCoderVirtualTimer",
+          "description": "バーチャルの開始までの時間、残り時間をコンテストと同じように表示します",
+          "url": "https://greasyfork.org/scripts/476928-atcodervirtualtimer",
+          "code_url": "https://update.greasyfork.org/scripts/476928/AtCoderVirtualTimer.user.js",
+          "code_size": 7132,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AtCoderVirtualTimer",
+  "description": "バーチャルの開始までの時間、残り時間をコンテストと同じように表示します",
+  "url": "https://greasyfork.org/scripts/476928-atcodervirtualtimer",
+  "code_url": "https://update.greasyfork.org/scripts/476928/AtCoderVirtualTimer.user.js",
+  "code_size": 7132,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

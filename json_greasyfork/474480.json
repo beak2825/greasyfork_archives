@@ -1,0 +1,33 @@
+{
+  "id": 474480,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-03T20:24:04.000Z",
+  "code_updated_at": "2023-09-03T20:24:03.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1165723,
+      "name": "Zhenya Kuklenkoo",
+      "created_at": "2023-09-03T20:19:16.000Z",
+      "url": "https://greasyfork.org/users/1165723-zhenya-kuklenkoo"
+    }
+  ],
+  "name": "Скрипт для ГСХ/ЗГСХ/СХ",
+  "description": "Специально для BlackRussia || Moscow by.Kuklenkoo",
+  "url": "https://greasyfork.org/scripts/474480-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B3%D1%81%D1%85-%D0%B7%D0%B3%D1%81%D1%85-%D1%81%D1%85",
+  "code_url": "https://update.greasyfork.org/scripts/474480/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%93%D0%A1%D0%A5%D0%97%D0%93%D0%A1%D0%A5%D0%A1%D0%A5.user.js",
+  "code_size": 29965,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

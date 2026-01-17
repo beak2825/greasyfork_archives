@@ -1,0 +1,59 @@
+{
+  "id": 493388,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-24T18:25:58.000Z",
+  "code_updated_at": "2024-04-24T18:25:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1290951,
+      "name": "matto",
+      "created_at": "2024-04-20T16:25:21.000Z",
+      "url": "https://greasyfork.org/users/1290951-matto",
+      "scripts": [
+        {
+          "id": 493282,
+          "daily_installs": 0,
+          "total_installs": 70,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-23T19:03:38.000Z",
+          "code_updated_at": "2024-04-23T19:03:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Majic_Hex_Shellshockers_theme",
+          "description": "Blue_hex_theme",
+          "url": "https://greasyfork.org/scripts/493282-majic-hex-shellshockers-theme",
+          "code_url": "https://update.greasyfork.org/scripts/493282/Majic_Hex_Shellshockers_theme.user.js",
+          "code_size": 3120,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Matthews Shell shockers Theme",
+  "description": "Simple SS Theme using CSS Variables",
+  "url": "https://greasyfork.org/scripts/493388-matthews-shell-shockers-theme",
+  "code_url": "https://update.greasyfork.org/scripts/493388/Matthews%20Shell%20shockers%20Theme.user.js",
+  "code_size": 9764,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 461950,
+  "daily_installs": 0,
+  "total_installs": 360,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-16T12:26:15.000Z",
+  "code_updated_at": "2023-03-16T12:26:15.000Z",
+  "namespace": "dead.tk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1043119,
+      "name": "mq\\",
+      "created_at": "2023-03-16T12:21:59.000Z",
+      "url": "https://greasyfork.org/users/1043119-mq"
+    }
+  ],
+  "name": "Nitrotype Captcha Bypass",
+  "description": "This script bypasses the captcha on nitro type and allows you to race without any interruptions.",
+  "url": "https://greasyfork.org/scripts/461950-nitrotype-captcha-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/461950/Nitrotype%20Captcha%20Bypass.user.js",
+  "code_size": 407,
+  "license": "mq",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

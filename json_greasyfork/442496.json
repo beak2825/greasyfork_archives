@@ -1,0 +1,34 @@
+{
+  "id": 442496,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-01T21:40:43.000Z",
+  "code_updated_at": "2022-04-06T18:48:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896390,
+      "name": "Hader Anício de Araújo",
+      "created_at": "2022-04-01T21:36:09.000Z",
+      "url": "https://greasyfork.org/users/896390-hader-an%C3%ADcio-de-ara%C3%BAjo",
+      "scripts": []
+    }
+  ],
+  "name": "Pegaxy Rent Bot",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/442496-pegaxy-rent-bot",
+  "code_url": "https://update.greasyfork.org/scripts/442496/Pegaxy%20Rent%20Bot.user.js",
+  "code_size": 5314,
+  "license": "MIT License",
+  "version": "0.190",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

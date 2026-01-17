@@ -1,0 +1,101 @@
+[
+  {
+    "id": 460005,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-14T09:58:12.000Z",
+    "code_updated_at": "2023-02-15T09:37:06.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/460005-%E7%99%BE%E5%BA%A6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%88%91%E7%9A%84%E5%85%B3%E6%B3%A8",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 689546,
+        "name": "haukxie",
+        "created_at": "2020-09-22T03:56:35.000Z",
+        "url": "https://greasyfork.org/users/689546-haukxie"
+      }
+    ],
+    "name": "百度默认打开我的关注",
+    "description": "百度默认打开我的关注而不是推荐",
+    "url": "https://greasyfork.org/scripts/460005-%E7%99%BE%E5%BA%A6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%88%91%E7%9A%84%E5%85%B3%E6%B3%A8",
+    "code_url": "https://update.greasyfork.org/scripts/460005/%E7%99%BE%E5%BA%A6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%88%91%E7%9A%84%E5%85%B3%E6%B3%A8.user.js",
+    "code_size": 687,
+    "license": "GPLv3",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444927,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-13T14:45:16.000Z",
+    "code_updated_at": "2022-05-18T05:15:49.000Z",
+    "namespace": "https://ks.wjx.top/vm/YbwYHkw.aspx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 689546,
+        "name": "haukxie",
+        "created_at": "2020-09-22T03:56:35.000Z",
+        "url": "https://greasyfork.org/users/689546-haukxie"
+      }
+    ],
+    "name": "问卷星题库",
+    "description": "问卷星题库收集",
+    "url": "https://greasyfork.org/scripts/444927-%E9%97%AE%E5%8D%B7%E6%98%9F%E9%A2%98%E5%BA%93",
+    "code_url": "https://update.greasyfork.org/scripts/444927/%E9%97%AE%E5%8D%B7%E6%98%9F%E9%A2%98%E5%BA%93.user.js",
+    "code_size": 15600,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 444766,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-10T02:35:42.000Z",
+    "code_updated_at": "2022-07-04T13:04:39.000Z",
+    "namespace": "http://zjt.st.zakww.com/gxslExam/api.do?pa=examinee.index.forward",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 689546,
+        "name": "haukxie",
+        "created_at": "2020-09-22T03:56:35.000Z",
+        "url": "https://greasyfork.org/users/689546-haukxie"
+      }
+    ],
+    "name": "广西三类人员学习辅助",
+    "description": "广西三类人员答题辅助将三类人员题库变成可答题模式，如果觉得好用请打赏鼓励，谢谢!",
+    "url": "https://greasyfork.org/scripts/444766-%E5%B9%BF%E8%A5%BF%E4%B8%89%E7%B1%BB%E4%BA%BA%E5%91%98%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/444766/%E5%B9%BF%E8%A5%BF%E4%B8%89%E7%B1%BB%E4%BA%BA%E5%91%98%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9.user.js",
+    "code_size": 331844,
+    "license": "GPLv3",
+    "version": "3.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

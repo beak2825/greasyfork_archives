@@ -1,0 +1,33 @@
+{
+  "id": 458363,
+  "daily_installs": 0,
+  "total_installs": 96,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-16T20:19:56.000Z",
+  "code_updated_at": "2023-01-19T23:25:51.000Z",
+  "namespace": "https://greasyfork.org/en/users/954974-crill0",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 954974,
+      "name": "Crill0",
+      "created_at": "2022-09-05T15:48:37.000Z",
+      "url": "https://greasyfork.org/users/954974-crill0"
+    }
+  ],
+  "name": "YouTube shorts seek forward/backward shortcut",
+  "description": "Adds seek forward/backward shortcut buttons to shorts similair to how the default video player works. Additionaly also adds a shortcut to open the short in the default player.",
+  "url": "https://greasyfork.org/scripts/458363-youtube-shorts-seek-forward-backward-shortcut",
+  "code_url": "https://update.greasyfork.org/scripts/458363/YouTube%20shorts%20seek%20forwardbackward%20shortcut.user.js",
+  "code_size": 2454,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

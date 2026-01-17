@@ -1,0 +1,34 @@
+{
+  "id": 491643,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-04T14:58:30.000Z",
+  "code_updated_at": "2024-04-04T14:58:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "Rusko a Bělorusko - Basketbal",
+  "description": "Skripta pro Ruské a Běloruské basketbaly",
+  "url": "https://greasyfork.org/scripts/491643-rusko-a-b%C4%9Blorusko-basketbal",
+  "code_url": "https://update.greasyfork.org/scripts/491643/Rusko%20a%20B%C4%9Blorusko%20-%20Basketbal.user.js",
+  "code_size": 3193,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

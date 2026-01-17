@@ -1,0 +1,167 @@
+[
+  {
+    "id": 416218,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-16T18:54:00.000Z",
+    "code_updated_at": "2020-11-19T10:39:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 64239,
+        "name": "Julien Huriez",
+        "created_at": "2016-09-05T11:53:44.000Z",
+        "url": "https://greasyfork.org/users/64239-julien-huriez"
+      }
+    ],
+    "name": "FUT 21 Autobuyer Menu with TamperMonkey (Syntax Edit 2) - DEV",
+    "description": "FUT Snipping Tool",
+    "url": "https://greasyfork.org/scripts/416218-fut-21-autobuyer-menu-with-tampermonkey-syntax-edit-2-dev",
+    "code_url": "https://update.greasyfork.org/scripts/416218/FUT%2021%20Autobuyer%20Menu%20with%20TamperMonkey%20%28Syntax%20Edit%202%29%20-%20DEV.user.js",
+    "code_size": 124919,
+    "license": null,
+    "version": "3.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 416010,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-12T17:29:05.000Z",
+    "code_updated_at": "2020-11-19T10:40:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 64239,
+        "name": "Julien Huriez",
+        "created_at": "2016-09-05T11:53:44.000Z",
+        "url": "https://greasyfork.org/users/64239-julien-huriez"
+      }
+    ],
+    "name": "FUT 21 Autobuyer Menu with TamperMonkey (Syntax Edit 2)",
+    "description": "FUT Snipping Tool",
+    "url": "https://greasyfork.org/scripts/416010-fut-21-autobuyer-menu-with-tampermonkey-syntax-edit-2",
+    "code_url": "https://update.greasyfork.org/scripts/416010/FUT%2021%20Autobuyer%20Menu%20with%20TamperMonkey%20%28Syntax%20Edit%202%29.user.js",
+    "code_size": 124913,
+    "license": null,
+    "version": "3.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 415829,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-09T20:42:44.000Z",
+    "code_updated_at": "2020-11-09T20:42:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 64239,
+        "name": "Julien Huriez",
+        "created_at": "2016-09-05T11:53:44.000Z",
+        "url": "https://greasyfork.org/users/64239-julien-huriez"
+      }
+    ],
+    "name": "FUT 21 Autobuyer Menu with TamperMonkey (Syntax Edit)",
+    "description": "FUT Snipping Tool",
+    "url": "https://greasyfork.org/scripts/415829-fut-21-autobuyer-menu-with-tampermonkey-syntax-edit",
+    "code_url": "https://update.greasyfork.org/scripts/415829/FUT%2021%20Autobuyer%20Menu%20with%20TamperMonkey%20%28Syntax%20Edit%29.user.js",
+    "code_size": 85762,
+    "license": null,
+    "version": "2.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412556,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-06T07:17:35.000Z",
+    "code_updated_at": "2020-10-06T07:17:35.000Z",
+    "namespace": "Syntaxlb",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 64239,
+        "name": "Julien Huriez",
+        "created_at": "2016-09-05T11:53:44.000Z",
+        "url": "https://greasyfork.org/users/64239-julien-huriez"
+      }
+    ],
+    "name": "FUT21 Autobuyer",
+    "description": "FUT21 AB",
+    "url": "https://greasyfork.org/scripts/412556-fut21-autobuyer",
+    "code_url": "https://update.greasyfork.org/scripts/412556/FUT21%20Autobuyer.user.js",
+    "code_size": 27520,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412485,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-05T11:19:23.000Z",
+    "code_updated_at": "2020-10-05T11:20:31.000Z",
+    "namespace": "https://github.com/Mardaneus86",
+    "support_url": "https://github.com/Mardaneus86/futwebapp-tampermonkey/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 64239,
+        "name": "Julien Huriez",
+        "created_at": "2016-09-05T11:53:44.000Z",
+        "url": "https://greasyfork.org/users/64239-julien-huriez"
+      }
+    ],
+    "name": "FUT Enhancer (modifié FIFA 21)",
+    "description": "Enhances the FIFA Ultimate Team 21 Web app. Includes Futbin integration and other useful tools",
+    "url": "https://greasyfork.org/scripts/412485-fut-enhancer-modifi%C3%A9-fifa-21",
+    "code_url": "https://update.greasyfork.org/scripts/412485/FUT%20Enhancer%20%28modifi%C3%A9%20FIFA%2021%29.user.js",
+    "code_size": 487850,
+    "license": "MIT License",
+    "version": "1.6.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

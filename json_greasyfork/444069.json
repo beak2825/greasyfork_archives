@@ -1,0 +1,59 @@
+{
+  "id": 444069,
+  "daily_installs": 0,
+  "total_installs": 6053,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-04-27T03:33:16.000Z",
+  "code_updated_at": "2023-08-12T22:47:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 907393,
+      "name": "misteregis",
+      "created_at": "2022-04-27T01:15:43.000Z",
+      "url": "https://greasyfork.org/users/907393-misteregis",
+      "scripts": [
+        {
+          "id": 444069,
+          "daily_installs": 0,
+          "total_installs": 6053,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2022-04-27T03:33:16.000Z",
+          "code_updated_at": "2023-08-12T22:47:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Youtube Video Downloader | MP3,MP4",
+          "description": "A basic youtube video downloader using y2mate, faster, a single click!",
+          "url": "https://greasyfork.org/scripts/444069-youtube-video-downloader-mp3-mp4",
+          "code_url": "https://update.greasyfork.org/scripts/444069/Youtube%20Video%20Downloader%20%7C%20MP3%2CMP4.user.js",
+          "code_size": 4578,
+          "license": "MIT License",
+          "version": "2022.08.12.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Youtube Video Downloader | MP3,MP4",
+  "description": "A basic youtube video downloader using y2mate, faster, a single click!",
+  "url": "https://greasyfork.org/scripts/444069-youtube-video-downloader-mp3-mp4",
+  "code_url": "https://update.greasyfork.org/scripts/444069/Youtube%20Video%20Downloader%20%7C%20MP3%2CMP4.user.js",
+  "code_size": 4578,
+  "license": "MIT License",
+  "version": "2022.08.12.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

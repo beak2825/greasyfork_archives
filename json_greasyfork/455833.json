@@ -1,0 +1,33 @@
+{
+  "id": 455833,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-02T05:16:11.000Z",
+  "code_updated_at": "2022-12-02T07:41:28.000Z",
+  "namespace": "https://github.com/jnc-explosion",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 991055,
+      "name": "jnc-explosion",
+      "created_at": "2022-12-02T04:08:40.000Z",
+      "url": "https://greasyfork.org/users/991055-jnc-explosion"
+    }
+  ],
+  "name": "AtCoder TLE to JR",
+  "description": "atcoder上で「TLE」が「JR」になる。コンテスト駅でのコード事故のため、実行時間に遅れが発生しています。",
+  "url": "https://greasyfork.org/scripts/455833-atcoder-tle-to-jr",
+  "code_url": "https://update.greasyfork.org/scripts/455833/AtCoder%20TLE%20to%20JR.user.js",
+  "code_size": 636,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 472065,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-30T15:01:22.000Z",
+    "code_updated_at": "2023-08-09T15:10:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1003602,
+        "name": "Ilija Dončić",
+        "created_at": "2022-12-27T16:14:03.000Z",
+        "url": "https://greasyfork.org/users/1003602-ilija-don%C4%8Di%C4%87"
+      }
+    ],
+    "name": "Reserve Free Spots",
+    "description": "Reserve the spots on the UK gov website when found",
+    "url": "https://greasyfork.org/scripts/472065-reserve-free-spots",
+    "code_url": "https://update.greasyfork.org/scripts/472065/Reserve%20Free%20Spots.user.js",
+    "code_size": 2459,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 472064,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-30T15:01:08.000Z",
+    "code_updated_at": "2023-08-09T15:53:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1003602,
+        "name": "Ilija Dončić",
+        "created_at": "2022-12-27T16:14:03.000Z",
+        "url": "https://greasyfork.org/users/1003602-ilija-don%C4%8Di%C4%87"
+      }
+    ],
+    "name": "Find Free Spots",
+    "description": "Find all of the available space on the UK gov website when found",
+    "url": "https://greasyfork.org/scripts/472064-find-free-spots",
+    "code_url": "https://update.greasyfork.org/scripts/472064/Find%20Free%20Spots.user.js",
+    "code_size": 5055,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458039,
+    "daily_installs": 0,
+    "total_installs": 151,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-11T15:06:33.000Z",
+    "code_updated_at": "2023-05-10T16:33:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1003602,
+        "name": "Ilija Dončić",
+        "created_at": "2022-12-27T16:14:03.000Z",
+        "url": "https://greasyfork.org/users/1003602-ilija-don%C4%8Di%C4%87"
+      }
+    ],
+    "name": "Facebook Search Data Automation",
+    "description": "Extract Data that match the criteria from Facebook Search Page",
+    "url": "https://greasyfork.org/scripts/458039-facebook-search-data-automation",
+    "code_url": "https://update.greasyfork.org/scripts/458039/Facebook%20Search%20Data%20Automation.user.js",
+    "code_size": 14609,
+    "license": null,
+    "version": "2.65",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

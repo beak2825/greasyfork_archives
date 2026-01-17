@@ -1,0 +1,59 @@
+{
+  "id": 432589,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-18T07:29:43.000Z",
+  "code_updated_at": "2022-03-01T04:52:50.000Z",
+  "namespace": "greasyfork.org/zh-CN/users/816568-chichow5",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816568,
+      "name": "chichow5",
+      "created_at": "2021-09-18T07:02:44.000Z",
+      "url": "https://greasyfork.org/users/816568-chichow5",
+      "scripts": [
+        {
+          "id": 432589,
+          "daily_installs": 0,
+          "total_installs": 35,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-18T07:29:43.000Z",
+          "code_updated_at": "2022-03-01T04:52:50.000Z",
+          "namespace": "greasyfork.org/zh-CN/users/816568-chichow5",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HEU课表生成器",
+          "description": "哈尔滨工程大学 / HEU course iCalendar generator/ HEU ics格式课表生成器",
+          "url": "https://greasyfork.org/scripts/432589-heu%E8%AF%BE%E8%A1%A8%E7%94%9F%E6%88%90%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/432589/HEU%E8%AF%BE%E8%A1%A8%E7%94%9F%E6%88%90%E5%99%A8.user.js",
+          "code_size": 14621,
+          "license": null,
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HEU课表生成器",
+  "description": "哈尔滨工程大学 / HEU course iCalendar generator/ HEU ics格式课表生成器",
+  "url": "https://greasyfork.org/scripts/432589-heu%E8%AF%BE%E8%A1%A8%E7%94%9F%E6%88%90%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/432589/HEU%E8%AF%BE%E8%A1%A8%E7%94%9F%E6%88%90%E5%99%A8.user.js",
+  "code_size": 14621,
+  "license": null,
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

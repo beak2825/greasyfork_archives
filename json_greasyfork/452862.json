@@ -1,0 +1,34 @@
+{
+  "id": 452862,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-11T09:12:25.000Z",
+  "code_updated_at": "2022-10-11T09:24:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 968316,
+      "name": "putaoshu",
+      "created_at": "2022-10-09T09:47:48.000Z",
+      "url": "https://greasyfork.org/users/968316-putaoshu",
+      "scripts": []
+    }
+  ],
+  "name": "Confluence Text checking",
+  "description": "Atlassian Confluence Text checking",
+  "url": "https://greasyfork.org/scripts/452862-confluence-text-checking",
+  "code_url": "https://update.greasyfork.org/scripts/452862/Confluence%20Text%20checking.user.js",
+  "code_size": 459,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

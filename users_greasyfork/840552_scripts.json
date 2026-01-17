@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436595,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-05T15:31:49.000Z",
+    "code_updated_at": "2021-12-27T07:28:55.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/840552",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 840552,
+        "name": "zccst",
+        "created_at": "2021-11-18T10:35:28.000Z",
+        "url": "https://greasyfork.org/users/840552-zccst"
+      }
+    ],
+    "name": "在etherscan.io和blockstream.info给oklink导流，在百度搜索页添加okex, oklink跳转按钮",
+    "description": "在etherscan.io和blockstream.info给oklink导流。给百度搜索页加入Google，OKLink，OKEx按钮，一键跳转到Google搜索进行相应的检索，一键跳转到OKLink，OKEx；在google搜索页添加百度按钮，一键跳转到百度搜索进行相应的检索。支持去除百度结果页面的广告和右边栏。",
+    "url": "https://greasyfork.org/scripts/436595-%E5%9C%A8etherscan-io%E5%92%8Cblockstream-info%E7%BB%99oklink%E5%AF%BC%E6%B5%81-%E5%9C%A8%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E9%A1%B5%E6%B7%BB%E5%8A%A0okex-oklink%E8%B7%B3%E8%BD%AC%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/436595/%E5%9C%A8etherscanio%E5%92%8Cblockstreaminfo%E7%BB%99oklink%E5%AF%BC%E6%B5%81%EF%BC%8C%E5%9C%A8%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E9%A1%B5%E6%B7%BB%E5%8A%A0okex%2C%20oklink%E8%B7%B3%E8%BD%AC%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 8438,
+    "license": "MIT License",
+    "version": "1.20",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

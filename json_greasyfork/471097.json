@@ -1,0 +1,59 @@
+{
+  "id": 471097,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-18T05:34:50.000Z",
+  "code_updated_at": "2023-07-18T05:38:33.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 141230,
+      "name": "zhengwulin",
+      "created_at": "2017-07-16T08:02:01.000Z",
+      "url": "https://greasyfork.org/users/141230-zhengwulin",
+      "scripts": [
+        {
+          "id": 471096,
+          "daily_installs": 0,
+          "total_installs": 114,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-18T05:26:40.000Z",
+          "code_updated_at": "2023-07-18T05:52:31.000Z",
+          "namespace": "https://github.com/zhengwulin/anidb-i18n-plugin",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "anidb Internationalization",
+          "description": "Translate anidb.net",
+          "url": "https://greasyfork.org/scripts/471096-anidb-internationalization",
+          "code_url": "https://update.greasyfork.org/scripts/471096/anidb%20Internationalization.user.js",
+          "code_size": 7757,
+          "license": "MIT License",
+          "version": "0.001",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "anidb-i18n-plugin-locales-zh-CN",
+  "description": "anidb-i18n-plugin zh-CN locales",
+  "url": "https://greasyfork.org/scripts/471097-anidb-i18n-plugin-locales-zh-cn",
+  "code_url": "https://update.greasyfork.org/scripts/471097/1221657/anidb-i18n-plugin-locales-zh-CN.js",
+  "code_size": 9637,
+  "license": null,
+  "version": "0.0.1.20230718053833",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

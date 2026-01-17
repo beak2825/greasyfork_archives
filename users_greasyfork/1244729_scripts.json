@@ -64,5 +64,104 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 490475,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-21T15:37:25.000Z",
+    "code_updated_at": "2024-03-21T18:58:21.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": "https://vk.com/procto_pashka",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244729,
+        "name": "Maxim Makarevich",
+        "created_at": "2024-01-07T20:47:57.000Z",
+        "url": "https://greasyfork.org/users/1244729-maxim-makarevich"
+      }
+    ],
+    "name": "SPB | Кураторы Форума",
+    "description": "Специально для BlackRussia || SPB by M.Woody/D.Flyweather",
+    "url": "https://greasyfork.org/scripts/490475-spb-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/490475/SPB%20%7C%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 87219,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489966,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-16T11:59:52.000Z",
+    "code_updated_at": "2024-03-17T16:13:32.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": "https://vk.com/procto_pashka",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244729,
+        "name": "Maxim Makarevich",
+        "created_at": "2024-01-07T20:47:57.000Z",
+        "url": "https://greasyfork.org/users/1244729-maxim-makarevich"
+      }
+    ],
+    "name": "SPB || Кураторы форума",
+    "description": "Специально для BlackRussia",
+    "url": "https://greasyfork.org/scripts/489966-spb-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/489966/SPB%20%7C%7C%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 12223,
+    "license": "MIT License",
+    "version": "1.0.1.5",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489858,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-15T07:10:32.000Z",
+    "code_updated_at": "2024-03-15T07:19:27.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": "https://vk.com/procto_pashka",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244729,
+        "name": "Maxim Makarevich",
+        "created_at": "2024-01-07T20:47:57.000Z",
+        "url": "https://greasyfork.org/users/1244729-maxim-makarevich"
+      }
+    ],
+    "name": "SPB | Кураторы форума",
+    "description": "Специально для BlackRussia",
+    "url": "https://greasyfork.org/scripts/489858-spb-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/489858/SPB%20%7C%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 125441,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

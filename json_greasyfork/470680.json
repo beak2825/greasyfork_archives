@@ -1,0 +1,59 @@
+{
+  "id": 470680,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-12T16:57:56.000Z",
+  "code_updated_at": "2023-07-12T16:57:55.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1125044,
+      "name": "starlingfire",
+      "created_at": "2023-07-12T16:55:15.000Z",
+      "url": "https://greasyfork.org/users/1125044-starlingfire",
+      "scripts": [
+        {
+          "id": 470680,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-12T16:57:56.000Z",
+          "code_updated_at": "2023-07-12T16:57:55.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bricklink - Add Brickset instructions link",
+          "description": "7/12/2023, 11:51:54 AM",
+          "url": "https://greasyfork.org/scripts/470680-bricklink-add-brickset-instructions-link",
+          "code_url": "https://update.greasyfork.org/scripts/470680/Bricklink%20-%20Add%20Brickset%20instructions%20link.user.js",
+          "code_size": 971,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bricklink - Add Brickset instructions link",
+  "description": "7/12/2023, 11:51:54 AM",
+  "url": "https://greasyfork.org/scripts/470680-bricklink-add-brickset-instructions-link",
+  "code_url": "https://update.greasyfork.org/scripts/470680/Bricklink%20-%20Add%20Brickset%20instructions%20link.user.js",
+  "code_size": 971,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

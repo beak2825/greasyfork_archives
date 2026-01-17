@@ -1,0 +1,68 @@
+[
+  {
+    "id": 482542,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-18T09:55:44.000Z",
+    "code_updated_at": "2023-12-18T09:55:44.000Z",
+    "namespace": "https://greasyfork.org/users/824858",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1224395,
+        "name": "ArdaG",
+        "created_at": "2023-11-27T15:31:31.000Z",
+        "url": "https://greasyfork.org/users/1224395-ardag"
+      }
+    ],
+    "name": "Just Click",
+    "description": "Sadece Butona basar",
+    "url": "https://greasyfork.org/scripts/482542-just-click",
+    "code_url": "https://update.greasyfork.org/scripts/482542/Just%20Click.user.js",
+    "code_size": 585,
+    "license": null,
+    "version": "v1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 480896,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-27T15:43:29.000Z",
+    "code_updated_at": "2023-11-27T15:43:29.000Z",
+    "namespace": "https://greasyfork.org/users/1224395",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1224395,
+        "name": "ArdaG",
+        "created_at": "2023-11-27T15:31:31.000Z",
+        "url": "https://greasyfork.org/users/1224395-ardag"
+      }
+    ],
+    "name": "Telegram Deneme",
+    "description": "Automatic reloads every 10 minutes. updated for latest Stake website. Will work forever!",
+    "url": "https://greasyfork.org/scripts/480896-telegram-deneme",
+    "code_url": "https://update.greasyfork.org/scripts/480896/Telegram%20Deneme.user.js",
+    "code_size": 594,
+    "license": null,
+    "version": "2023.11.27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

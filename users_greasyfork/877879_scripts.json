@@ -1,0 +1,68 @@
+[
+  {
+    "id": 488692,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-01T10:10:20.000Z",
+    "code_updated_at": "2025-03-05T09:34:44.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 877879,
+        "name": "jerry.qin@youniverse.cc",
+        "created_at": "2022-02-18T10:15:15.000Z",
+        "url": "https://greasyfork.org/users/877879-jerry-qin-youniverse-cc"
+      }
+    ],
+    "name": "Satisfaction gorgias.com",
+    "description": "2024/2/29 17:59:07",
+    "url": "https://greasyfork.org/scripts/488692-satisfaction-gorgias-com",
+    "code_url": "https://update.greasyfork.org/scripts/488692/Satisfaction%20gorgiascom.user.js",
+    "code_size": 3825,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440887,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-04T07:05:52.000Z",
+    "code_updated_at": "2022-09-30T05:59:55.000Z",
+    "namespace": "gorgias add",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 877879,
+        "name": "jerry.qin@youniverse.cc",
+        "created_at": "2022-02-18T10:15:15.000Z",
+        "url": "https://greasyfork.org/users/877879-jerry-qin-youniverse-cc"
+      }
+    ],
+    "name": "test 不要下载",
+    "description": "gorgias 增加基本信息 易仓补发",
+    "url": "https://greasyfork.org/scripts/440887-test-%E4%B8%8D%E8%A6%81%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/440887/test%20%E4%B8%8D%E8%A6%81%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 4516,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

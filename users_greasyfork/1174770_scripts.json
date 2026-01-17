@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 475474,
+    "daily_installs": 1,
+    "total_installs": 336,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-17T03:50:05.000Z",
+    "code_updated_at": "2024-08-28T05:41:48.000Z",
+    "namespace": "https://space.bilibili.com/314017356",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1174770,
+        "name": "清遥",
+        "created_at": "2023-09-17T03:41:05.000Z",
+        "url": "https://greasyfork.org/users/1174770-%E6%B8%85%E9%81%A5"
+      }
+    ],
+    "name": "电子课本pdf下载",
+    "description": "从国家中小学智慧教育平台下载pdf课本",
+    "url": "https://greasyfork.org/scripts/475474-%E7%94%B5%E5%AD%90%E8%AF%BE%E6%9C%ACpdf%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/475474/%E7%94%B5%E5%AD%90%E8%AF%BE%E6%9C%ACpdf%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 1808,
+    "license": "CC BY-NC-SA",
+    "version": "1.8.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

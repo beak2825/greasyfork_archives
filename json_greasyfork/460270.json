@@ -1,0 +1,59 @@
+{
+  "id": 460270,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-19T03:25:08.000Z",
+  "code_updated_at": "2023-02-19T05:12:35.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/460270-%E6%BC%AB%E7%94%BB%E6%9F%9C%E6%BC%AB%E7%94%BB%E5%88%97%E8%A1%A8%E7%AD%9B%E9%80%89%E6%A0%87%E8%AE%B0%E5%B7%A5%E5%85%B7",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1029578,
+      "name": "Shawn V",
+      "created_at": "2023-02-19T03:23:50.000Z",
+      "url": "https://greasyfork.org/users/1029578-shawn-v",
+      "scripts": [
+        {
+          "id": 460270,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-19T03:25:08.000Z",
+          "code_updated_at": "2023-02-19T05:12:35.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/460270-%E6%BC%AB%E7%94%BB%E6%9F%9C%E6%BC%AB%E7%94%BB%E5%88%97%E8%A1%A8%E7%AD%9B%E9%80%89%E6%A0%87%E8%AE%B0%E5%B7%A5%E5%85%B7",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "漫画柜漫画列表筛选标记工具",
+          "description": "标记一下哪些是看过的，哪些是不想看的。",
+          "url": "https://greasyfork.org/scripts/460270-%E6%BC%AB%E7%94%BB%E6%9F%9C%E6%BC%AB%E7%94%BB%E5%88%97%E8%A1%A8%E7%AD%9B%E9%80%89%E6%A0%87%E8%AE%B0%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/460270/%E6%BC%AB%E7%94%BB%E6%9F%9C%E6%BC%AB%E7%94%BB%E5%88%97%E8%A1%A8%E7%AD%9B%E9%80%89%E6%A0%87%E8%AE%B0%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 11075,
+          "license": "MIT License",
+          "version": "0.0.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "漫画柜漫画列表筛选标记工具",
+  "description": "标记一下哪些是看过的，哪些是不想看的。",
+  "url": "https://greasyfork.org/scripts/460270-%E6%BC%AB%E7%94%BB%E6%9F%9C%E6%BC%AB%E7%94%BB%E5%88%97%E8%A1%A8%E7%AD%9B%E9%80%89%E6%A0%87%E8%AE%B0%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/460270/%E6%BC%AB%E7%94%BB%E6%9F%9C%E6%BC%AB%E7%94%BB%E5%88%97%E8%A1%A8%E7%AD%9B%E9%80%89%E6%A0%87%E8%AE%B0%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 11075,
+  "license": "MIT License",
+  "version": "0.0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

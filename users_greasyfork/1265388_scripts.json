@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488022,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-22T14:15:16.000Z",
+    "code_updated_at": "2024-04-17T17:29:12.000Z",
+    "namespace": "https://github.com/cuiko/codeblock-icon-enhance",
+    "support_url": "https://github.com/cuiko/codeblock-icon-enhance/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265388,
+        "name": "cuiko",
+        "created_at": "2024-02-22T12:13:00.000Z",
+        "url": "https://greasyfork.org/users/1265388-cuiko"
+      }
+    ],
+    "name": "GitHub CodeBlock Icon Enhance PowerBy NerdFont",
+    "description": "Display more icons by setting NerdFont for GitHub's code block.",
+    "url": "https://greasyfork.org/scripts/488022-github-codeblock-icon-enhance-powerby-nerdfont",
+    "code_url": "https://update.greasyfork.org/scripts/488022/GitHub%20%E4%BB%A3%E7%A0%81%E5%9D%97%E5%9B%BE%E6%A0%87%E5%A2%9E%E5%BC%BA%EF%BC%88%E5%9F%BA%E4%BA%8E%20NerdFont%EF%BC%89.user.js",
+    "code_size": 4556,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

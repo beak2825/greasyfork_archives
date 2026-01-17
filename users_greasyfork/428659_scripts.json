@@ -96,6 +96,39 @@
     "version": "0.4",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 426061,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-06T16:14:46.000Z",
+    "code_updated_at": "2021-05-06T16:14:45.000Z",
+    "namespace": "el_professor_london_recruits",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428659,
+        "name": "El Profesor",
+        "created_at": "2019-12-26T10:17:19.000Z",
+        "url": "https://greasyfork.org/users/428659-el-profesor"
+      }
+    ],
+    "name": "London Recruits",
+    "description": "Import recruits",
+    "url": "https://greasyfork.org/scripts/426061-london-recruits",
+    "code_url": "https://update.greasyfork.org/scripts/426061/London%20Recruits.user.js",
+    "code_size": 1423,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

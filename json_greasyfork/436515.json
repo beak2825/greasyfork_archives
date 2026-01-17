@@ -1,0 +1,59 @@
+{
+  "id": 436515,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-03T22:11:30.000Z",
+  "code_updated_at": "2022-01-13T22:14:58.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 847689,
+      "name": "crspl",
+      "created_at": "2021-12-02T14:39:26.000Z",
+      "url": "https://greasyfork.org/users/847689-crspl",
+      "scripts": [
+        {
+          "id": 436515,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-03T22:11:30.000Z",
+          "code_updated_at": "2022-01-13T22:14:58.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "toodledo.com - extra features",
+          "description": "1/13/2022, 11:00:00 PM",
+          "url": "https://greasyfork.org/scripts/436515-toodledo-com-extra-features",
+          "code_url": "https://update.greasyfork.org/scripts/436515/toodledocom%20-%20extra%20features.user.js",
+          "code_size": 8687,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "toodledo.com - extra features",
+  "description": "1/13/2022, 11:00:00 PM",
+  "url": "https://greasyfork.org/scripts/436515-toodledo-com-extra-features",
+  "code_url": "https://update.greasyfork.org/scripts/436515/toodledocom%20-%20extra%20features.user.js",
+  "code_size": 8687,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

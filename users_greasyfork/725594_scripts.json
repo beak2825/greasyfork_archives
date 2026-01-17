@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419954,
+    "daily_installs": 1,
+    "total_installs": 2712,
+    "fan_score": "51.7",
+    "good_ratings": 5,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-01-10T04:12:09.000Z",
+    "code_updated_at": "2021-01-10T04:14:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725594,
+        "name": "meTsa",
+        "created_at": "2021-01-10T04:02:24.000Z",
+        "url": "https://greasyfork.org/users/725594-metsa"
+      }
+    ],
+    "name": "微信读书网页版修改字体、背景颜色",
+    "description": "模仿移动端表现，书籍内容字体修改为苍耳今楷，修改标题等字体，更改背景颜色，更改字体颜色。",
+    "url": "https://greasyfork.org/scripts/419954-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%89%88%E4%BF%AE%E6%94%B9%E5%AD%97%E4%BD%93-%E8%83%8C%E6%99%AF%E9%A2%9C%E8%89%B2",
+    "code_url": "https://update.greasyfork.org/scripts/419954/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%89%88%E4%BF%AE%E6%94%B9%E5%AD%97%E4%BD%93%E3%80%81%E8%83%8C%E6%99%AF%E9%A2%9C%E8%89%B2.user.js",
+    "code_size": 1583,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 476627,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-03T15:05:00.000Z",
+    "code_updated_at": "2023-10-03T15:05:00.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 967309,
+        "name": "Calel Melgarejo",
+        "created_at": "2022-10-06T17:28:44.000Z",
+        "url": "https://greasyfork.org/users/967309-calel-melgarejo"
+      }
+    ],
+    "name": "Anti Lag Hecho Por Ego Dark Bds :D",
+    "description": "Saca el Lag COmencemos :D",
+    "url": "https://greasyfork.org/scripts/476627-anti-lag-hecho-por-ego-dark-bds-d",
+    "code_url": "https://update.greasyfork.org/scripts/476627/Anti%20Lag%20Hecho%20Por%20Ego%20Dark%20Bds%20%3AD.user.js",
+    "code_size": 523,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 461120,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-03T18:03:10.000Z",
+    "code_updated_at": "2023-03-03T18:03:09.000Z",
+    "namespace": "https://greasyfork.org/users/919633",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 967309,
+        "name": "Calel Melgarejo",
+        "created_at": "2022-10-06T17:28:44.000Z",
+        "url": "https://greasyfork.org/users/967309-calel-melgarejo"
+      }
+    ],
+    "name": "WebGames Client [Sploop.io]",
+    "description": "The most advanced hack for sploop.io",
+    "url": "https://greasyfork.org/scripts/461120-webgames-client-sploop-io",
+    "code_url": "https://update.greasyfork.org/scripts/461120/WebGames%20Client%20%5BSploopio%5D.user.js",
+    "code_size": 225823,
+    "license": "MIT License",
+    "version": "3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459523,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-06T12:59:36.000Z",
+    "code_updated_at": "2023-02-28T21:44:03.000Z",
+    "namespace": "https://greasyfork.org/users/919633",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 967309,
+        "name": "Calel Melgarejo",
+        "created_at": "2022-10-06T17:28:44.000Z",
+        "url": "https://greasyfork.org/users/967309-calel-melgarejo"
+      }
+    ],
+    "name": "Bds Mod[Sploop.io]",
+    "description": "The most advanced hack for sploop.io",
+    "url": "https://greasyfork.org/scripts/459523-bds-mod-sploop-io",
+    "code_url": "https://update.greasyfork.org/scripts/459523/Bds%20Mod%5BSploopio%5D.user.js",
+    "code_size": 238594,
+    "license": "MIT License",
+    "version": "1.0.26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

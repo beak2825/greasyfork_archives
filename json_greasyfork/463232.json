@@ -1,0 +1,59 @@
+{
+  "id": 463232,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-04T09:40:10.000Z",
+  "code_updated_at": "2023-04-04T09:41:35.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1052860,
+      "name": "Neon Gan",
+      "created_at": "2023-04-04T09:17:32.000Z",
+      "url": "https://greasyfork.org/users/1052860-neon-gan",
+      "scripts": [
+        {
+          "id": 463234,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-04T09:47:17.000Z",
+          "code_updated_at": "2023-04-04T09:52:30.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Кураторы форума YELLOW",
+          "description": "Специально для кураторов форума за жалобами игроков сервера yellow",
+          "url": "https://greasyfork.org/scripts/463234-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-yellow",
+          "code_url": "https://update.greasyfork.org/scripts/463234/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20YELLOW.user.js",
+          "code_size": 267884,
+          "license": "MIT License",
+          "version": "1.0.4.",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Script for Forum YELLOW",
+  "description": "forward-only!",
+  "url": "https://greasyfork.org/scripts/463232-script-for-forum-yellow",
+  "code_url": "https://update.greasyfork.org/scripts/463232/Script%20for%20Forum%20YELLOW.user.js",
+  "code_size": 75346,
+  "license": "MIT License",
+  "version": "5.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

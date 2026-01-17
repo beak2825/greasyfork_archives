@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 479008,
+    "daily_installs": 0,
+    "total_installs": 206,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-04T10:28:51.000Z",
+    "code_updated_at": "2023-11-04T10:36:21.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1180893,
+        "name": "Björn Trier",
+        "created_at": "2023-09-25T16:54:29.000Z",
+        "url": "https://greasyfork.org/users/1180893-bj%C3%B6rn-trier"
+      }
+    ],
+    "name": "YouTube Ad Blocker Bypass",
+    "description": "4.11.2023, 11:12:13",
+    "url": "https://greasyfork.org/scripts/479008-youtube-ad-blocker-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/479008/YouTube%20Ad%20Blocker%20Bypass.user.js",
+    "code_size": 1109,
+    "license": "MIT License",
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

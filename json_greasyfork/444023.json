@@ -1,0 +1,34 @@
+{
+  "id": 444023,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-26T09:36:21.000Z",
+  "code_updated_at": "2023-04-06T09:26:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906700,
+      "name": "witcher",
+      "created_at": "2022-04-25T09:11:56.000Z",
+      "url": "https://greasyfork.org/users/906700-witcher",
+      "scripts": []
+    }
+  ],
+  "name": "获取selenium选择元素代码",
+  "description": "用来获取selenium格式选择html元素的代码，将鼠标放到元素位置，快捷键alt+a就可以将代码复制到剪切板。",
+  "url": "https://greasyfork.org/scripts/444023-%E8%8E%B7%E5%8F%96selenium%E9%80%89%E6%8B%A9%E5%85%83%E7%B4%A0%E4%BB%A3%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/444023/%E8%8E%B7%E5%8F%96selenium%E9%80%89%E6%8B%A9%E5%85%83%E7%B4%A0%E4%BB%A3%E7%A0%81.user.js",
+  "code_size": 5771,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

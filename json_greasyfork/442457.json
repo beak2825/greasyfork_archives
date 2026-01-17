@@ -1,0 +1,34 @@
+{
+  "id": 442457,
+  "daily_installs": 1,
+  "total_installs": 150,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-01T09:57:33.000Z",
+  "code_updated_at": "2025-12-11T08:25:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896184,
+      "name": "Stavrapid",
+      "created_at": "2022-04-01T09:51:09.000Z",
+      "url": "https://greasyfork.org/users/896184-stavrapid",
+      "scripts": []
+    }
+  ],
+  "name": "Тёмная сторона",
+  "description": "Выбери свою сторону!",
+  "url": "https://greasyfork.org/scripts/442457-%D1%82%D1%91%D0%BC%D0%BD%D0%B0%D1%8F-%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%BD%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/442457/%D0%A2%D1%91%D0%BC%D0%BD%D0%B0%D1%8F%20%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%BD%D0%B0.user.js",
+  "code_size": 368973,
+  "license": "GNU GPLv3",
+  "version": "2.7.6",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442063,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-25T05:43:45.000Z",
+    "code_updated_at": "2022-03-25T11:49:41.000Z",
+    "namespace": "https://greasyfork.org/users/219930",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 219930,
+        "name": "kioh-pun",
+        "created_at": "2018-10-17T12:09:28.000Z",
+        "url": "https://greasyfork.org/users/219930-kioh-pun"
+      }
+    ],
+    "name": "Ang Sinabi Ko",
+    "description": "Heto ako. Kukunin ko ang mga sinabi ko.",
+    "url": "https://greasyfork.org/scripts/442063-ang-sinabi-ko",
+    "code_url": "https://update.greasyfork.org/scripts/442063/Ang%20Sinabi%20Ko.user.js",
+    "code_size": 5561,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

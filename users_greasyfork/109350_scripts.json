@@ -1,0 +1,68 @@
+[
+  {
+    "id": 417865,
+    "daily_installs": 0,
+    "total_installs": 153,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-04T10:24:36.000Z",
+    "code_updated_at": "2021-01-02T09:36:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 109350,
+        "name": "1694439208",
+        "created_at": "2017-03-12T04:16:37.000Z",
+        "url": "https://greasyfork.org/users/109350-1694439208"
+      }
+    ],
+    "name": "b站助手|热门置顶|排行榜放到主页",
+    "description": "热门冒泡",
+    "url": "https://greasyfork.org/scripts/417865-b%E7%AB%99%E5%8A%A9%E6%89%8B-%E7%83%AD%E9%97%A8%E7%BD%AE%E9%A1%B6-%E6%8E%92%E8%A1%8C%E6%A6%9C%E6%94%BE%E5%88%B0%E4%B8%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/417865/b%E7%AB%99%E5%8A%A9%E6%89%8B%7C%E7%83%AD%E9%97%A8%E7%BD%AE%E9%A1%B6%7C%E6%8E%92%E8%A1%8C%E6%A6%9C%E6%94%BE%E5%88%B0%E4%B8%BB%E9%A1%B5.user.js",
+    "code_size": 769,
+    "license": null,
+    "version": "0.30",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416962,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-28T13:42:58.000Z",
+    "code_updated_at": "2020-11-28T13:51:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 109350,
+        "name": "1694439208",
+        "created_at": "2017-03-12T04:16:37.000Z",
+        "url": "https://greasyfork.org/users/109350-1694439208"
+      }
+    ],
+    "name": "b站助手|热门置顶",
+    "description": "热门冒泡",
+    "url": "https://greasyfork.org/scripts/416962-b%E7%AB%99%E5%8A%A9%E6%89%8B-%E7%83%AD%E9%97%A8%E7%BD%AE%E9%A1%B6",
+    "code_url": "https://update.greasyfork.org/scripts/416962/b%E7%AB%99%E5%8A%A9%E6%89%8B%7C%E7%83%AD%E9%97%A8%E7%BD%AE%E9%A1%B6.user.js",
+    "code_size": 752,
+    "license": null,
+    "version": "0.30",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

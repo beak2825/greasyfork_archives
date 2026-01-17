@@ -1,0 +1,233 @@
+[
+  {
+    "id": 470878,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-15T06:58:17.000Z",
+    "code_updated_at": "2023-07-18T16:00:32.000Z",
+    "namespace": "https://greasyfork.org/ru/users/1032828-crystalby",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1002646,
+        "name": "Vitaliy Wasabi",
+        "created_at": "2022-12-25T13:53:51.000Z",
+        "url": "https://greasyfork.org/users/1002646-vitaliy-wasabi"
+      }
+    ],
+    "name": "Azure | Скрипт Кураторов Форума",
+    "description": "Скрипт для упрощения работы КФ",
+    "url": "https://greasyfork.org/scripts/470878-azure-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/470878/Azure%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 85791,
+    "license": "none",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 468676,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-14T18:37:27.000Z",
+    "code_updated_at": "2024-08-03T14:23:24.000Z",
+    "namespace": "https://greasyfork.org/ru/users/1032828-crystalby",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1002646,
+        "name": "Vitaliy Wasabi",
+        "created_at": "2022-12-25T13:53:51.000Z",
+        "url": "https://greasyfork.org/users/1002646-vitaliy-wasabi"
+      }
+    ],
+    "name": "Жб для админов 2.0",
+    "description": "Скрипт для упрощения работы КФ",
+    "url": "https://greasyfork.org/scripts/468676-%D0%B6%D0%B1-%D0%B4%D0%BB%D1%8F-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%BE%D0%B2-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/468676/%D0%96%D0%B1%20%D0%B4%D0%BB%D1%8F%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%BE%D0%B2%2020.user.js",
+    "code_size": 26784,
+    "license": "none",
+    "version": "1001-7",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459828,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-11T09:05:56.000Z",
+    "code_updated_at": "2023-02-12T14:54:24.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1002646,
+        "name": "Vitaliy Wasabi",
+        "created_at": "2022-12-25T13:53:51.000Z",
+        "url": "https://greasyfork.org/users/1002646-vitaliy-wasabi"
+      }
+    ],
+    "name": "да я е** котов",
+    "description": "Al2ays remember who you are!",
+    "url": "https://greasyfork.org/scripts/459828-%D0%B4%D0%B0-%D1%8F-%D0%B5-%D0%BA%D0%BE%D1%82%D0%BE%D0%B2",
+    "code_url": "https://update.greasyfork.org/scripts/459828/%D0%B4%D0%B0%20%D1%8F%20%D0%B5%2A%2A%20%D0%BA%D0%BE%D1%82%D0%BE%D0%B2.user.js",
+    "code_size": 18292,
+    "license": "MIT License",
+    "version": "1003 Mne pox  1000-7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458241,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-14T15:21:14.000Z",
+    "code_updated_at": "2023-01-14T16:18:37.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1002646,
+        "name": "Vitaliy Wasabi",
+        "created_at": "2022-12-25T13:53:51.000Z",
+        "url": "https://greasyfork.org/users/1002646-vitaliy-wasabi"
+      }
+    ],
+    "name": "RP Bio",
+    "description": "Always remember who you are!",
+    "url": "https://greasyfork.org/scripts/458241-rp-bio",
+    "code_url": "https://update.greasyfork.org/scripts/458241/RP%20Bio.user.js",
+    "code_size": 10007,
+    "license": "MIT License",
+    "version": "1.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458234,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-14T12:57:57.000Z",
+    "code_updated_at": "2023-01-14T12:57:56.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": "https://vk.com/m4rittka",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1002646,
+        "name": "Vitaliy Wasabi",
+        "created_at": "2022-12-25T13:53:51.000Z",
+        "url": "https://greasyfork.org/users/1002646-vitaliy-wasabi"
+      }
+    ],
+    "name": "Forum Curators |  for Black Russia  Redone Wasabi",
+    "description": "Suggestions for improving the script write here ---> https://vk.com/m4rittka",
+    "url": "https://greasyfork.org/scripts/458234-forum-curators-for-black-russia-redone-wasabi",
+    "code_url": "https://update.greasyfork.org/scripts/458234/Forum%20Curators%20%7C%20%20for%20Black%20Russia%20%20Redone%20Wasabi.user.js",
+    "code_size": 96068,
+    "license": "MIT License",
+    "version": "3.4.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 457132,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-25T14:18:06.000Z",
+    "code_updated_at": "2022-12-25T14:18:06.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1002646,
+        "name": "Vitaliy Wasabi",
+        "created_at": "2022-12-25T13:53:51.000Z",
+        "url": "https://greasyfork.org/users/1002646-vitaliy-wasabi"
+      }
+    ],
+    "name": "BR |типо для ЗГС/Гс и все",
+    "description": "Always remember who you are!",
+    "url": "https://greasyfork.org/scripts/457132-br-%D1%82%D0%B8%D0%BF%D0%BE-%D0%B4%D0%BB%D1%8F-%D0%B7%D0%B3%D1%81-%D0%B3%D1%81-%D0%B8-%D0%B2%D1%81%D0%B5",
+    "code_url": "https://update.greasyfork.org/scripts/457132/BR%20%7C%D1%82%D0%B8%D0%BF%D0%BE%20%D0%B4%D0%BB%D1%8F%20%D0%97%D0%93%D0%A1%D0%93%D1%81%20%D0%B8%20%D0%B2%D1%81%D0%B5.user.js",
+    "code_size": 16939,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 457131,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-25T13:57:32.000Z",
+    "code_updated_at": "2023-03-19T08:28:24.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1002646,
+        "name": "Vitaliy Wasabi",
+        "created_at": "2022-12-25T13:53:51.000Z",
+        "url": "https://greasyfork.org/users/1002646-vitaliy-wasabi"
+      }
+    ],
+    "name": "Пошел н",
+    "description": "Always remember who you are!",
+    "url": "https://greasyfork.org/scripts/457131-%D0%BF%D0%BE%D1%88%D0%B5%D0%BB-%D0%BD",
+    "code_url": "https://update.greasyfork.org/scripts/457131/%D0%9F%D0%BE%D1%88%D0%B5%D0%BB%20%D0%BD.user.js",
+    "code_size": 27175,
+    "license": "MIT License",
+    "version": "1.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

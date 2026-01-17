@@ -1,0 +1,59 @@
+{
+  "id": 415823,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-09T17:38:12.000Z",
+  "code_updated_at": "2020-11-09T17:38:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 703306,
+      "name": "monguin",
+      "created_at": "2020-11-09T16:35:08.000Z",
+      "url": "https://greasyfork.org/users/703306-monguin",
+      "scripts": [
+        {
+          "id": 415823,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-09T17:38:12.000Z",
+          "code_updated_at": "2020-11-09T17:38:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Github ID prefix in title",
+          "description": "change \"title\" to \"25: title\", where 25 is the id of the PR/issue",
+          "url": "https://greasyfork.org/scripts/415823-github-id-prefix-in-title",
+          "code_url": "https://update.greasyfork.org/scripts/415823/Github%20ID%20prefix%20in%20title.user.js",
+          "code_size": 721,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Github ID prefix in title",
+  "description": "change \"title\" to \"25: title\", where 25 is the id of the PR/issue",
+  "url": "https://greasyfork.org/scripts/415823-github-id-prefix-in-title",
+  "code_url": "https://update.greasyfork.org/scripts/415823/Github%20ID%20prefix%20in%20title.user.js",
+  "code_size": 721,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

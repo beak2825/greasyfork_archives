@@ -1,0 +1,59 @@
+{
+  "id": 442916,
+  "daily_installs": 0,
+  "total_installs": 1097,
+  "fan_score": "20.8",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-04-07T04:04:50.000Z",
+  "code_updated_at": "2022-04-08T15:05:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 898791,
+      "name": "付振博",
+      "created_at": "2022-04-07T04:04:05.000Z",
+      "url": "https://greasyfork.org/users/898791-%E4%BB%98%E6%8C%AF%E5%8D%9A",
+      "scripts": [
+        {
+          "id": 442916,
+          "daily_installs": 0,
+          "total_installs": 1097,
+          "fan_score": "20.8",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2022-04-07T04:04:50.000Z",
+          "code_updated_at": "2022-04-08T15:05:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "💡智慧树复读机-优化版",
+          "description": "半自动回答习惯分问题，基于原作者@ch3cknull修改",
+          "url": "https://greasyfork.org/scripts/442916-%E6%99%BA%E6%85%A7%E6%A0%91%E5%A4%8D%E8%AF%BB%E6%9C%BA-%E4%BC%98%E5%8C%96%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/442916/%F0%9F%92%A1%E6%99%BA%E6%85%A7%E6%A0%91%E5%A4%8D%E8%AF%BB%E6%9C%BA-%E4%BC%98%E5%8C%96%E7%89%88.user.js",
+          "code_size": 6705,
+          "license": "MIT License",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "💡智慧树复读机-优化版",
+  "description": "半自动回答习惯分问题，基于原作者@ch3cknull修改",
+  "url": "https://greasyfork.org/scripts/442916-%E6%99%BA%E6%85%A7%E6%A0%91%E5%A4%8D%E8%AF%BB%E6%9C%BA-%E4%BC%98%E5%8C%96%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/442916/%F0%9F%92%A1%E6%99%BA%E6%85%A7%E6%A0%91%E5%A4%8D%E8%AF%BB%E6%9C%BA-%E4%BC%98%E5%8C%96%E7%89%88.user.js",
+  "code_size": 6705,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

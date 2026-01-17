@@ -1,0 +1,59 @@
+{
+  "id": 469181,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-21T19:50:31.000Z",
+  "code_updated_at": "2023-06-21T19:50:31.000Z",
+  "namespace": "https://hypixel-skyblock.fandom.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1107745,
+      "name": "monkeysHK",
+      "created_at": "2023-06-21T05:24:20.000Z",
+      "url": "https://greasyfork.org/users/1107745-monkeyshk",
+      "scripts": [
+        {
+          "id": 469181,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-21T19:50:31.000Z",
+          "code_updated_at": "2023-06-21T19:50:31.000Z",
+          "namespace": "https://hypixel-skyblock.fandom.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hypixel Thread Wikitext Parser",
+          "description": "QOL Script for Uploading Changelog",
+          "url": "https://greasyfork.org/scripts/469181-hypixel-thread-wikitext-parser",
+          "code_url": "https://update.greasyfork.org/scripts/469181/Hypixel%20Thread%20Wikitext%20Parser.user.js",
+          "code_size": 5714,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hypixel Thread Wikitext Parser",
+  "description": "QOL Script for Uploading Changelog",
+  "url": "https://greasyfork.org/scripts/469181-hypixel-thread-wikitext-parser",
+  "code_url": "https://update.greasyfork.org/scripts/469181/Hypixel%20Thread%20Wikitext%20Parser.user.js",
+  "code_size": 5714,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

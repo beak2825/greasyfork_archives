@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468773,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-16T03:18:09.000Z",
+    "code_updated_at": "2023-06-16T03:18:09.000Z",
+    "namespace": "WJL",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1100769,
+        "name": "WJL_Lorelei_Long",
+        "created_at": "2023-06-16T00:49:00.000Z",
+        "url": "https://greasyfork.org/users/1100769-wjl-lorelei-long"
+      }
+    ],
+    "name": "my_reader",
+    "description": "get my blog",
+    "url": "https://greasyfork.org/scripts/468773-my-reader",
+    "code_url": "https://update.greasyfork.org/scripts/468773/my_reader.user.js",
+    "code_size": 17205,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

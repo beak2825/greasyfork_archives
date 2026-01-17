@@ -1,0 +1,33 @@
+{
+  "id": 432276,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-12T07:06:57.000Z",
+  "code_updated_at": "2021-09-12T07:06:57.000Z",
+  "namespace": "https://greasyfork.org/users/778136",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 778136,
+      "name": "galahal",
+      "created_at": "2021-05-31T08:41:34.000Z",
+      "url": "https://greasyfork.org/users/778136-galahal"
+    }
+  ],
+  "name": "PTP Toggle Filelist",
+  "description": "Toggle showing the filelist by default on PTP",
+  "url": "https://greasyfork.org/scripts/432276-ptp-toggle-filelist",
+  "code_url": "https://update.greasyfork.org/scripts/432276/PTP%20Toggle%20Filelist.user.js",
+  "code_size": 1291,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 454842,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-15T03:50:11.000Z",
+  "code_updated_at": "2022-11-15T04:01:12.000Z",
+  "namespace": "seclusion",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 983301,
+      "name": "seclusion",
+      "created_at": "2022-11-14T15:47:39.000Z",
+      "url": "https://greasyfork.org/users/983301-seclusion",
+      "scripts": []
+    }
+  ],
+  "name": "莘野起始页扩展",
+  "description": "用于为起始页添加跨域请求：因搜索聚合需要进行跨域请求，而使用服务器代理的话会被封，所以使用扩展进行跨域请求；",
+  "url": "https://greasyfork.org/scripts/454842-%E8%8E%98%E9%87%8E%E8%B5%B7%E5%A7%8B%E9%A1%B5%E6%89%A9%E5%B1%95",
+  "code_url": "https://update.greasyfork.org/scripts/454842/%E8%8E%98%E9%87%8E%E8%B5%B7%E5%A7%8B%E9%A1%B5%E6%89%A9%E5%B1%95.user.js",
+  "code_size": 2632,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

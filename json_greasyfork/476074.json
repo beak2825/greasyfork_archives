@@ -1,0 +1,59 @@
+{
+  "id": 476074,
+  "daily_installs": 0,
+  "total_installs": 377,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-09-25T16:22:36.000Z",
+  "code_updated_at": "2023-09-25T16:22:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1180874,
+      "name": "The1nk",
+      "created_at": "2023-09-25T16:19:44.000Z",
+      "url": "https://greasyfork.org/users/1180874-the1nk",
+      "scripts": [
+        {
+          "id": 476074,
+          "daily_installs": 0,
+          "total_installs": 377,
+          "fan_score": "31.0",
+          "good_ratings": 2,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2023-09-25T16:22:36.000Z",
+          "code_updated_at": "2023-09-25T16:22:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Nexus Mod - Updated Mod Highlighter",
+          "description": "Highlight mods that have updated since you last downloaded them",
+          "url": "https://greasyfork.org/scripts/476074-nexus-mod-updated-mod-highlighter",
+          "code_url": "https://update.greasyfork.org/scripts/476074/Nexus%20Mod%20-%20Updated%20Mod%20Highlighter.user.js",
+          "code_size": 1746,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Nexus Mod - Updated Mod Highlighter",
+  "description": "Highlight mods that have updated since you last downloaded them",
+  "url": "https://greasyfork.org/scripts/476074-nexus-mod-updated-mod-highlighter",
+  "code_url": "https://update.greasyfork.org/scripts/476074/Nexus%20Mod%20-%20Updated%20Mod%20Highlighter.user.js",
+  "code_size": 1746,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 453531,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-22T09:07:11.000Z",
+    "code_updated_at": "2023-03-03T15:34:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973792,
+        "name": "Rhythm-2019",
+        "created_at": "2022-10-22T07:40:21.000Z",
+        "url": "https://greasyfork.org/users/973792-rhythm-2019"
+      }
+    ],
+    "name": "IC全能王插件",
+    "description": "增强，为IC全能王中搜索的型号添加其他平台的快捷链接",
+    "url": "https://greasyfork.org/scripts/453531-ic%E5%85%A8%E8%83%BD%E7%8E%8B%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/453531/IC%E5%85%A8%E8%83%BD%E7%8E%8B%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 6546,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

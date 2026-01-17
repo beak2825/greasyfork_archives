@@ -1,0 +1,34 @@
+{
+  "id": 486881,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-08T06:50:09.000Z",
+  "code_updated_at": "2024-02-12T08:10:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1258903,
+      "name": "wentao.chen",
+      "created_at": "2024-02-08T06:40:28.000Z",
+      "url": "https://greasyfork.org/users/1258903-wentao-chen",
+      "scripts": []
+    }
+  ],
+  "name": "Jira Demo",
+  "description": "Jira demo",
+  "url": "https://greasyfork.org/scripts/486881-jira-demo",
+  "code_url": "https://update.greasyfork.org/scripts/486881/Jira%20Demo.user.js",
+  "code_size": 3930,
+  "license": null,
+  "version": "2024-02-12",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

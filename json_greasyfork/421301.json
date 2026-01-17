@@ -1,0 +1,34 @@
+{
+  "id": 421301,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-06T10:28:49.000Z",
+  "code_updated_at": "2021-02-06T10:28:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 735078,
+      "name": "keely.yuan",
+      "created_at": "2021-02-06T10:18:32.000Z",
+      "url": "https://greasyfork.org/users/735078-keely-yuan",
+      "scripts": []
+    }
+  ],
+  "name": "zhihu-help-test",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/421301-zhihu-help-test",
+  "code_url": "https://update.greasyfork.org/scripts/421301/zhihu-help-test.user.js",
+  "code_size": 165732,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

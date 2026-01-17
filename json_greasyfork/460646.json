@@ -1,0 +1,33 @@
+{
+  "id": 460646,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-24T09:01:53.000Z",
+  "code_updated_at": "2023-10-18T13:06:40.000Z",
+  "namespace": "copy_0x408B769E",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 956157,
+      "name": "ResplendentFervor",
+      "created_at": "2022-09-08T13:31:48.000Z",
+      "url": "https://greasyfork.org/users/956157-resplendentfervor"
+    }
+  ],
+  "name": "web版小說 - 字數切割內文📄",
+  "description": "貼上到翻譯網站的工具",
+  "url": "https://greasyfork.org/scripts/460646-web%E7%89%88%E5%B0%8F%E8%AA%AA-%E5%AD%97%E6%95%B8%E5%88%87%E5%89%B2%E5%85%A7%E6%96%87",
+  "code_url": "https://update.greasyfork.org/scripts/460646/web%E7%89%88%E5%B0%8F%E8%AA%AA%20-%20%E5%AD%97%E6%95%B8%E5%88%87%E5%89%B2%E5%85%A7%E6%96%87%F0%9F%93%84.user.js",
+  "code_size": 32280,
+  "license": "MIT License",
+  "version": "1.0.5",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

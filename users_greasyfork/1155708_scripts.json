@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473514,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-20T16:40:18.000Z",
+    "code_updated_at": "2023-08-27T14:07:30.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1155708-dfk-klee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1155708,
+        "name": "DFK_KLEE",
+        "created_at": "2023-08-20T16:31:05.000Z",
+        "url": "https://greasyfork.org/users/1155708-dfk-klee"
+      }
+    ],
+    "name": "Twitter特殊词语屏蔽替换",
+    "description": "屏蔽或替换Twitter上的特殊词语",
+    "url": "https://greasyfork.org/scripts/473514-twitter%E7%89%B9%E6%AE%8A%E8%AF%8D%E8%AF%AD%E5%B1%8F%E8%94%BD%E6%9B%BF%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/473514/Twitter%E7%89%B9%E6%AE%8A%E8%AF%8D%E8%AF%AD%E5%B1%8F%E8%94%BD%E6%9B%BF%E6%8D%A2.user.js",
+    "code_size": 2487,
+    "license": "GPLv3",
+    "version": "0.1.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

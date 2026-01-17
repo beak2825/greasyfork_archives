@@ -1,0 +1,34 @@
+{
+  "id": 452750,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-09T14:49:45.000Z",
+  "code_updated_at": "2022-10-09T14:51:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 952237,
+      "name": "Andreas Faber",
+      "created_at": "2022-08-29T18:01:53.000Z",
+      "url": "https://greasyfork.org/users/952237-andreas-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Vertragssignature Stoll",
+  "description": "Anforderung an GwG - digitale Signatur",
+  "url": "https://greasyfork.org/scripts/452750-vertragssignature-stoll",
+  "code_url": "https://update.greasyfork.org/scripts/452750/Vertragssignature%20Stoll.user.js",
+  "code_size": 5009,
+  "license": null,
+  "version": "2.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

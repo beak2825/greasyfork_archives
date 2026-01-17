@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486834,
+    "daily_installs": 0,
+    "total_installs": 168,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-07T11:09:24.000Z",
+    "code_updated_at": "2024-02-07T11:15:34.000Z",
+    "namespace": "https://blog.rhilip.info/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1258595,
+        "name": "Chen haolin",
+        "created_at": "2024-02-07T11:07:36.000Z",
+        "url": "https://greasyfork.org/users/1258595-chen-haolin"
+      }
+    ],
+    "name": "NSFC_conclusion_2024.2.4",
+    "description": "帮助你直接下载国自然结题报告",
+    "url": "https://greasyfork.org/scripts/486834-nsfc-conclusion-2024-2-4",
+    "code_url": "https://update.greasyfork.org/scripts/486834/NSFC_conclusion_202424.user.js",
+    "code_size": 6615,
+    "license": null,
+    "version": "24.2.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

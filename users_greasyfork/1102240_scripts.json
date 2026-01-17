@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468844,
+    "daily_installs": 0,
+    "total_installs": 638,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-17T03:31:33.000Z",
+    "code_updated_at": "2023-06-17T03:31:33.000Z",
+    "namespace": "http://your-namespace.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1102240,
+        "name": "Landon Michaud",
+        "created_at": "2023-06-17T03:11:01.000Z",
+        "url": "https://greasyfork.org/users/1102240-landon-michaud"
+      }
+    ],
+    "name": "Deluge RPG Pokémon Catcher",
+    "description": "Automatically catches Pokémon from the list if they appear on the Deluge RPG website.",
+    "url": "https://greasyfork.org/scripts/468844-deluge-rpg-pok%C3%A9mon-catcher",
+    "code_url": "https://update.greasyfork.org/scripts/468844/Deluge%20RPG%20Pok%C3%A9mon%20Catcher.user.js",
+    "code_size": 2665,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

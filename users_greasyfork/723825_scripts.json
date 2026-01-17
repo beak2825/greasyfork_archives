@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419621,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-04T10:03:23.000Z",
+    "code_updated_at": "2021-01-04T10:07:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 723825,
+        "name": "gitHub709394",
+        "created_at": "2021-01-04T09:52:50.000Z",
+        "url": "https://greasyfork.org/users/723825-github709394"
+      }
+    ],
+    "name": "LoveQ 添加播放倍数",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/419621-loveq-%E6%B7%BB%E5%8A%A0%E6%92%AD%E6%94%BE%E5%80%8D%E6%95%B0",
+    "code_url": "https://update.greasyfork.org/scripts/419621/LoveQ%20%E6%B7%BB%E5%8A%A0%E6%92%AD%E6%94%BE%E5%80%8D%E6%95%B0.user.js",
+    "code_size": 2017,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

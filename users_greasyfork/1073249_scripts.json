@@ -1,0 +1,134 @@
+[
+  {
+    "id": 471634,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-24T21:02:54.000Z",
+    "code_updated_at": "2023-07-24T21:02:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1073249,
+        "name": "SilverHawkSniper",
+        "created_at": "2023-05-05T00:49:04.000Z",
+        "url": "https://greasyfork.org/users/1073249-silverhawksniper"
+      }
+    ],
+    "name": "Flufffluffyplaysgamez's theme",
+    "description": "GO FOLLOW fluffyplaysgamez GREAT TWITCH STREAMER",
+    "url": "https://greasyfork.org/scripts/471634-flufffluffyplaysgamez-s-theme",
+    "code_url": "https://update.greasyfork.org/scripts/471634/Flufffluffyplaysgamez%27s%20theme.user.js",
+    "code_size": 7571,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 468234,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-08T19:48:58.000Z",
+    "code_updated_at": "2023-06-08T19:48:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1073249,
+        "name": "SilverHawkSniper",
+        "created_at": "2023-05-05T00:49:04.000Z",
+        "url": "https://greasyfork.org/users/1073249-silverhawksniper"
+      }
+    ],
+    "name": "BearWizard360 theme",
+    "description": "This is a theme created my me for bearwizard360",
+    "url": "https://greasyfork.org/scripts/468234-bearwizard360-theme",
+    "code_url": "https://update.greasyfork.org/scripts/468234/BearWizard360%20theme.user.js",
+    "code_size": 7456,
+    "license": null,
+    "version": "0.43",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466305,
+    "daily_installs": 0,
+    "total_installs": 130,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-14T23:30:31.000Z",
+    "code_updated_at": "2023-05-14T23:30:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1073249,
+        "name": "SilverHawkSniper",
+        "created_at": "2023-05-05T00:49:04.000Z",
+        "url": "https://greasyfork.org/users/1073249-silverhawksniper"
+      }
+    ],
+    "name": "SilverHawkTheme (Shellshock.io)",
+    "description": "Become a Hawk with my first theme",
+    "url": "https://greasyfork.org/scripts/466305-silverhawktheme-shellshock-io",
+    "code_url": "https://update.greasyfork.org/scripts/466305/SilverHawkTheme%20%28Shellshockio%29.user.js",
+    "code_size": 7454,
+    "license": null,
+    "version": "0.43",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465990,
+    "daily_installs": 0,
+    "total_installs": 80,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-11T02:36:22.000Z",
+    "code_updated_at": "2023-05-11T02:36:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1073249,
+        "name": "SilverHawkSniper",
+        "created_at": "2023-05-05T00:49:04.000Z",
+        "url": "https://greasyfork.org/users/1073249-silverhawksniper"
+      }
+    ],
+    "name": "SilverHawkTheme (Shellshock.io)",
+    "description": "Become a Hawk with my first theme",
+    "url": "https://greasyfork.org/scripts/465990-silverhawktheme-shellshock-io",
+    "code_url": "https://update.greasyfork.org/scripts/465990/SilverHawkTheme%20%28Shellshockio%29.user.js",
+    "code_size": 7454,
+    "license": null,
+    "version": "0.42",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

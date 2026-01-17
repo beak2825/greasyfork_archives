@@ -1,0 +1,59 @@
+{
+  "id": 420672,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-26T05:11:57.000Z",
+  "code_updated_at": "2021-01-26T06:56:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 731366,
+      "name": "a690089735",
+      "created_at": "2021-01-26T04:42:56.000Z",
+      "url": "https://greasyfork.org/users/731366-a690089735",
+      "scripts": [
+        {
+          "id": 420672,
+          "daily_installs": 0,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-26T05:11:57.000Z",
+          "code_updated_at": "2021-01-26T06:56:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "清除epubee广告条",
+          "description": "清除在下方遮挡epubee阅读器的VIP广告条",
+          "url": "https://greasyfork.org/scripts/420672-%E6%B8%85%E9%99%A4epubee%E5%B9%BF%E5%91%8A%E6%9D%A1",
+          "code_url": "https://update.greasyfork.org/scripts/420672/%E6%B8%85%E9%99%A4epubee%E5%B9%BF%E5%91%8A%E6%9D%A1.user.js",
+          "code_size": 751,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "清除epubee广告条",
+  "description": "清除在下方遮挡epubee阅读器的VIP广告条",
+  "url": "https://greasyfork.org/scripts/420672-%E6%B8%85%E9%99%A4epubee%E5%B9%BF%E5%91%8A%E6%9D%A1",
+  "code_url": "https://update.greasyfork.org/scripts/420672/%E6%B8%85%E9%99%A4epubee%E5%B9%BF%E5%91%8A%E6%9D%A1.user.js",
+  "code_size": 751,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

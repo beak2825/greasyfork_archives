@@ -1,0 +1,68 @@
+[
+  {
+    "id": 479174,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-06T12:31:07.000Z",
+    "code_updated_at": "2023-11-06T12:36:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1195074,
+        "name": "LeonTheremin",
+        "created_at": "2023-10-13T10:05:48.000Z",
+        "url": "https://greasyfork.org/users/1195074-leontheremin"
+      }
+    ],
+    "name": "Audio Autoplay for Everything",
+    "description": "Automatically enable audio playback on any videos",
+    "url": "https://greasyfork.org/scripts/479174-audio-autoplay-for-everything",
+    "code_url": "https://update.greasyfork.org/scripts/479174/Audio%20Autoplay%20for%20Everything.user.js",
+    "code_size": 1231,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 479173,
+    "daily_installs": 0,
+    "total_installs": 53,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-11-06T12:29:55.000Z",
+    "code_updated_at": "2023-11-06T12:29:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1195074,
+        "name": "LeonTheremin",
+        "created_at": "2023-10-13T10:05:48.000Z",
+        "url": "https://greasyfork.org/users/1195074-leontheremin"
+      }
+    ],
+    "name": "Instagram Audio Autoplay",
+    "description": "Automatically enable audio playback on Instagram videos",
+    "url": "https://greasyfork.org/scripts/479173-instagram-audio-autoplay",
+    "code_url": "https://update.greasyfork.org/scripts/479173/Instagram%20Audio%20Autoplay.user.js",
+    "code_size": 1258,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

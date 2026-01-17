@@ -63,6 +63,105 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492222,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-11T09:08:09.000Z",
+    "code_updated_at": "2024-04-14T07:12:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24324,
+        "name": "Tiande",
+        "created_at": "2015-12-22T04:31:54.000Z",
+        "url": "https://greasyfork.org/users/24324-tiande"
+      }
+    ],
+    "name": "IdleonEfficiency Produce Check",
+    "description": "Check and notify on https://www.idleonefficiency.com/ with Telegram support",
+    "url": "https://greasyfork.org/scripts/492222-idleonefficiency-produce-check",
+    "code_url": "https://update.greasyfork.org/scripts/492222/IdleonEfficiency%20Produce%20Check.user.js",
+    "code_size": 10524,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 487669,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-19T02:01:56.000Z",
+    "code_updated_at": "2025-03-15T16:28:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24324,
+        "name": "Tiande",
+        "created_at": "2015-12-22T04:31:54.000Z",
+        "url": "https://greasyfork.org/users/24324-tiande"
+      }
+    ],
+    "name": "Idleontoolbox Produce Check",
+    "description": "Check and notify on https://idleontoolbox.com/dashboard with Telegram support",
+    "url": "https://greasyfork.org/scripts/487669-idleontoolbox-produce-check",
+    "code_url": "https://update.greasyfork.org/scripts/487669/Idleontoolbox%20Produce%20Check.user.js",
+    "code_size": 21460,
+    "license": "MIT License",
+    "version": "13.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 480608,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-23T13:01:45.000Z",
+    "code_updated_at": "2023-11-23T13:01:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24324,
+        "name": "Tiande",
+        "created_at": "2015-12-22T04:31:54.000Z",
+        "url": "https://greasyfork.org/users/24324-tiande"
+      }
+    ],
+    "name": "v2ex-removebg",
+    "description": "remove background image.",
+    "url": "https://greasyfork.org/scripts/480608-v2ex-removebg",
+    "code_url": "https://update.greasyfork.org/scripts/480608/v2ex-removebg.user.js",
+    "code_size": 823,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

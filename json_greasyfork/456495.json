@@ -1,0 +1,33 @@
+{
+  "id": 456495,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-12T14:55:17.000Z",
+  "code_updated_at": "2022-12-12T14:58:21.000Z",
+  "namespace": "https://twitter.com/rusa6111",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 996547,
+      "name": "noppi_ kun",
+      "created_at": "2022-12-12T14:49:58.000Z",
+      "url": "https://greasyfork.org/users/996547-noppi-kun"
+    }
+  ],
+  "name": "OnlineMathContestColorizer",
+  "description": "Colorize performance values in OMC's user pages.",
+  "url": "https://greasyfork.org/scripts/456495-onlinemathcontestcolorizer",
+  "code_url": "https://update.greasyfork.org/scripts/456495/OnlineMathContestColorizer.user.js",
+  "code_size": 1397,
+  "license": null,
+  "version": "123.45",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 469871,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-30T16:51:57.000Z",
+  "code_updated_at": "2023-09-27T13:21:00.000Z",
+  "namespace": "gx3000",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1048889,
+      "name": "Pancras ZQ",
+      "created_at": "2023-03-27T09:47:31.000Z",
+      "url": "https://greasyfork.org/users/1048889-pancras-zq",
+      "scripts": []
+    }
+  ],
+  "name": "SALE_AI_2",
+  "description": "for AIIM project",
+  "url": "https://greasyfork.org/scripts/469871-sale-ai-2",
+  "code_url": "https://update.greasyfork.org/scripts/469871/SALE_AI_2.user.js",
+  "code_size": 31292,
+  "license": null,
+  "version": "0.0.17",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

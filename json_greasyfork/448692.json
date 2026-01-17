@@ -1,0 +1,59 @@
+{
+  "id": 448692,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-31T02:05:23.000Z",
+  "code_updated_at": "2022-07-31T02:05:23.000Z",
+  "namespace": "data",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 219642,
+      "name": "x569654",
+      "created_at": "2018-10-16T05:57:38.000Z",
+      "url": "https://greasyfork.org/users/219642-x569654",
+      "scripts": [
+        {
+          "id": 511531,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-05T00:54:13.000Z",
+          "code_updated_at": "2024-10-05T01:04:03.000Z",
+          "namespace": "https://panpacific.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "tpy",
+          "description": "用户内部",
+          "url": "https://greasyfork.org/scripts/511531-tpy",
+          "code_url": "https://update.greasyfork.org/scripts/511531/tpy.user.js",
+          "code_size": 21580,
+          "license": "MIT License",
+          "version": "0.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "4提交页面默认填写",
+  "description": "第四步骤选择小区",
+  "url": "https://greasyfork.org/scripts/448692-4%E6%8F%90%E4%BA%A4%E9%A1%B5%E9%9D%A2%E9%BB%98%E8%AE%A4%E5%A1%AB%E5%86%99",
+  "code_url": "https://update.greasyfork.org/scripts/448692/4%E6%8F%90%E4%BA%A4%E9%A1%B5%E9%9D%A2%E9%BB%98%E8%AE%A4%E5%A1%AB%E5%86%99.user.js",
+  "code_size": 1529,
+  "license": "dats",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

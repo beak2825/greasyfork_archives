@@ -1,0 +1,33 @@
+{
+  "id": 440164,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-17T02:53:43.000Z",
+  "code_updated_at": "2022-02-17T02:53:43.000Z",
+  "namespace": "简书去header",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 877382,
+      "name": "huge_cc",
+      "created_at": "2022-02-17T02:44:32.000Z",
+      "url": "https://greasyfork.org/users/877382-huge-cc"
+    }
+  ],
+  "name": "简书去header",
+  "description": "2022/2/17 10:23:57",
+  "url": "https://greasyfork.org/scripts/440164-%E7%AE%80%E4%B9%A6%E5%8E%BBheader",
+  "code_url": "https://update.greasyfork.org/scripts/440164/%E7%AE%80%E4%B9%A6%E5%8E%BBheader.user.js",
+  "code_size": 483,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

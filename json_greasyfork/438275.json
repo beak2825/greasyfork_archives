@@ -1,0 +1,34 @@
+{
+  "id": 438275,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-09T13:07:27.000Z",
+  "code_updated_at": "2022-06-12T20:59:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 317337,
+      "name": "Athano",
+      "created_at": "2019-07-12T18:48:25.000Z",
+      "url": "https://greasyfork.org/users/317337-athano",
+      "scripts": []
+    }
+  ],
+  "name": "Elethor Mining",
+  "description": "Logs ore mined and calculates averages. Based on Xortrox's scripts",
+  "url": "https://greasyfork.org/scripts/438275-elethor-mining",
+  "code_url": "https://update.greasyfork.org/scripts/438275/Elethor%20Mining.user.js",
+  "code_size": 12987,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

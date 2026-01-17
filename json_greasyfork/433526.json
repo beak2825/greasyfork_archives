@@ -1,0 +1,59 @@
+{
+  "id": 433526,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-06T22:07:59.000Z",
+  "code_updated_at": "2021-10-06T22:07:59.000Z",
+  "namespace": "https://alltheflavors.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 822567,
+      "name": "Kayla Colflesh",
+      "created_at": "2021-10-06T22:01:11.000Z",
+      "url": "https://greasyfork.org/users/822567-kayla-colflesh",
+      "scripts": [
+        {
+          "id": 433526,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-06T22:07:59.000Z",
+          "code_updated_at": "2021-10-06T22:07:59.000Z",
+          "namespace": "https://alltheflavors.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "All The Flavors - DIY Flavor Safety",
+          "description": "On the All The Flavors website, this will add warning badges to any flavors listed in the DIY Flavor Safety database.",
+          "url": "https://greasyfork.org/scripts/433526-all-the-flavors-diy-flavor-safety",
+          "code_url": "https://update.greasyfork.org/scripts/433526/All%20The%20Flavors%20-%20DIY%20Flavor%20Safety.user.js",
+          "code_size": 5743,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "All The Flavors - DIY Flavor Safety",
+  "description": "On the All The Flavors website, this will add warning badges to any flavors listed in the DIY Flavor Safety database.",
+  "url": "https://greasyfork.org/scripts/433526-all-the-flavors-diy-flavor-safety",
+  "code_url": "https://update.greasyfork.org/scripts/433526/All%20The%20Flavors%20-%20DIY%20Flavor%20Safety.user.js",
+  "code_size": 5743,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

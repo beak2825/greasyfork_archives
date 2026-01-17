@@ -1,0 +1,68 @@
+[
+  {
+    "id": 470177,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-04T23:52:00.000Z",
+    "code_updated_at": "2023-07-05T00:31:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 747068,
+        "name": "0xSD0M4",
+        "created_at": "2021-03-14T07:37:05.000Z",
+        "url": "https://greasyfork.org/users/747068-0xsd0m4"
+      }
+    ],
+    "name": "Cyberiana AFK System",
+    "description": "The most advanced AFK system for CSGOClicker v2.",
+    "url": "https://greasyfork.org/scripts/470177-cyberiana-afk-system",
+    "code_url": "https://update.greasyfork.org/scripts/470177/Cyberiana%20AFK%20System.user.js",
+    "code_size": 14628,
+    "license": null,
+    "version": "0.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424301,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-01T05:40:18.000Z",
+    "code_updated_at": "2021-04-01T05:56:37.000Z",
+    "namespace": "here lol",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 747068,
+        "name": "0xSD0M4",
+        "created_at": "2021-03-14T07:37:05.000Z",
+        "url": "https://greasyfork.org/users/747068-0xsd0m4"
+      }
+    ],
+    "name": "CCO Autoopen [Sell-Under update!]",
+    "description": "Basically an auto-opener and under-value seller for CCO (Cube Collector Online)",
+    "url": "https://greasyfork.org/scripts/424301-cco-autoopen-sell-under-update",
+    "code_url": "https://update.greasyfork.org/scripts/424301/CCO%20Autoopen%20%5BSell-Under%20update%21%5D.user.js",
+    "code_size": 3574,
+    "license": null,
+    "version": "3.5F",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

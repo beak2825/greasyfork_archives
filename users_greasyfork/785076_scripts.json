@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428183,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-19T12:31:11.000Z",
+    "code_updated_at": "2022-05-21T10:48:42.000Z",
+    "namespace": "Anade",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 785076,
+        "name": "Anade",
+        "created_at": "2021-06-19T12:11:31.000Z",
+        "url": "https://greasyfork.org/users/785076-anade"
+      }
+    ],
+    "name": "hoverPreview.js",
+    "description": "hover Preview images / videos / PDFs (if supported eg. by PDF.js extension)",
+    "url": "https://greasyfork.org/scripts/428183-hoverpreview-js",
+    "code_url": "https://update.greasyfork.org/scripts/428183/hoverPreviewjs.user.js",
+    "code_size": 21619,
+    "license": "GPL",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

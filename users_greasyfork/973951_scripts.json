@@ -1,0 +1,167 @@
+[
+  {
+    "id": 462617,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-26T10:42:05.000Z",
+    "code_updated_at": "2023-03-26T10:52:14.000Z",
+    "namespace": "VIP播放终端",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973951,
+        "name": "杨振博",
+        "created_at": "2022-10-22T15:00:55.000Z",
+        "url": "https://greasyfork.org/users/973951-%E6%9D%A8%E6%8C%AF%E5%8D%9A"
+      }
+    ],
+    "name": "解锁VIP视频（解锁内嵌播放体验更佳）",
+    "description": "VIP支持：腾讯视频、爱奇艺、优酷、芒果TV、搜孤视频、哔哩哔哩、聚力视频、乐视视频、1905电影网",
+    "url": "https://greasyfork.org/scripts/462617-%E8%A7%A3%E9%94%81vip%E8%A7%86%E9%A2%91-%E8%A7%A3%E9%94%81%E5%86%85%E5%B5%8C%E6%92%AD%E6%94%BE%E4%BD%93%E9%AA%8C%E6%9B%B4%E4%BD%B3",
+    "code_url": "https://update.greasyfork.org/scripts/462617/%E8%A7%A3%E9%94%81VIP%E8%A7%86%E9%A2%91%EF%BC%88%E8%A7%A3%E9%94%81%E5%86%85%E5%B5%8C%E6%92%AD%E6%94%BE%E4%BD%93%E9%AA%8C%E6%9B%B4%E4%BD%B3%EF%BC%89.user.js",
+    "code_size": 45626,
+    "license": "AGPL License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462612,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-26T10:12:35.000Z",
+    "code_updated_at": "2023-08-17T15:01:47.000Z",
+    "namespace": "VIP播放终端",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973951,
+        "name": "杨振博",
+        "created_at": "2022-10-22T15:00:55.000Z",
+        "url": "https://greasyfork.org/users/973951-%E6%9D%A8%E6%8C%AF%E5%8D%9A"
+      }
+    ],
+    "name": "解锁全网VIP视频",
+    "description": "VIP支持：腾讯视频、爱奇艺、优酷、芒果TV、搜孤视频、哔哩哔哩（带B站大会员接口有效）、聚力视频、乐视视频、1905电影网、A站（失效）",
+    "url": "https://greasyfork.org/scripts/462612-%E8%A7%A3%E9%94%81%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/462612/%E8%A7%A3%E9%94%81%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 46245,
+    "license": "AGPL License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462541,
+    "daily_installs": 0,
+    "total_installs": 299,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-25T09:15:11.000Z",
+    "code_updated_at": "2023-03-25T09:15:11.000Z",
+    "namespace": "杨振博",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973951,
+        "name": "杨振博",
+        "created_at": "2022-10-22T15:00:55.000Z",
+        "url": "https://greasyfork.org/users/973951-%E6%9D%A8%E6%8C%AF%E5%8D%9A"
+      }
+    ],
+    "name": "通用VIP视频解析",
+    "description": "爱奇艺、腾讯视频、优酷、乐视、芒果TV、搜狐、1905、PPTV、B站。",
+    "url": "https://greasyfork.org/scripts/462541-%E9%80%9A%E7%94%A8vip%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/462541/%E9%80%9A%E7%94%A8VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 16174,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454197,
+    "daily_installs": 0,
+    "total_installs": 201,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-03T14:09:38.000Z",
+    "code_updated_at": "2022-11-03T14:09:38.000Z",
+    "namespace": "花开花落",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973951,
+        "name": "杨振博",
+        "created_at": "2022-10-22T15:00:55.000Z",
+        "url": "https://greasyfork.org/users/973951-%E6%9D%A8%E6%8C%AF%E5%8D%9A"
+      }
+    ],
+    "name": "网页特效（樱花飘落）",
+    "description": "开启后，网页会有樱花飘落特效...",
+    "url": "https://greasyfork.org/scripts/454197-%E7%BD%91%E9%A1%B5%E7%89%B9%E6%95%88-%E6%A8%B1%E8%8A%B1%E9%A3%98%E8%90%BD",
+    "code_url": "https://update.greasyfork.org/scripts/454197/%E7%BD%91%E9%A1%B5%E7%89%B9%E6%95%88%EF%BC%88%E6%A8%B1%E8%8A%B1%E9%A3%98%E8%90%BD%EF%BC%89.user.js",
+    "code_size": 63173,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 454127,
+    "daily_installs": 0,
+    "total_installs": 1725,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-11-02T08:13:45.000Z",
+    "code_updated_at": "2023-07-30T07:59:43.000Z",
+    "namespace": "VIP播放终端",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973951,
+        "name": "杨振博",
+        "created_at": "2022-10-22T15:00:55.000Z",
+        "url": "https://greasyfork.org/users/973951-%E6%9D%A8%E6%8C%AF%E5%8D%9A"
+      }
+    ],
+    "name": "小可爱视频解析（PC端）",
+    "description": "VIP支持：腾讯、爱奇艺、优酷、芒果TV、搜孤、哔哩哔哩、聚力、乐视、1905电影网、等等网站会员视频解析，安装后在播放页左侧边上会出现一个小可爱，鼠标放上去会自动滑出功能界面，每个按钮代表不同解析接口，解析失败可选择其他按钮试试！！",
+    "url": "https://greasyfork.org/scripts/454127-%E5%B0%8F%E5%8F%AF%E7%88%B1%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90-pc%E7%AB%AF",
+    "code_url": "https://update.greasyfork.org/scripts/454127/%E5%B0%8F%E5%8F%AF%E7%88%B1%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%EF%BC%88PC%E7%AB%AF%EF%BC%89.user.js",
+    "code_size": 10802,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

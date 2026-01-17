@@ -1,0 +1,34 @@
+{
+  "id": 446939,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-23T22:01:44.000Z",
+  "code_updated_at": "2022-06-23T22:01:44.000Z",
+  "namespace": "https://greasyfork.org/users/928640",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 928640,
+      "name": "redtrillix",
+      "created_at": "2022-06-23T21:58:17.000Z",
+      "url": "https://greasyfork.org/users/928640-redtrillix",
+      "scripts": []
+    }
+  ],
+  "name": "Auto-Refresh",
+  "description": "Website Auto-Refresh Timer",
+  "url": "https://greasyfork.org/scripts/446939-auto-refresh",
+  "code_url": "https://update.greasyfork.org/scripts/446939/Auto-Refresh.user.js",
+  "code_size": 313,
+  "license": null,
+  "version": "0.0.1.20220623220144",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

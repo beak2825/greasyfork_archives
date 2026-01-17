@@ -1,0 +1,33 @@
+{
+  "id": 449211,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-09T09:52:38.000Z",
+  "code_updated_at": "2022-08-09T09:52:38.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 944516,
+      "name": "Jeb Kerman",
+      "created_at": "2022-08-09T02:42:08.000Z",
+      "url": "https://greasyfork.org/users/944516-jeb-kerman"
+    }
+  ],
+  "name": "xlsxExport.utils.js",
+  "description": "一个导出excel文件的导出工具",
+  "url": "https://greasyfork.org/scripts/449211-xlsxexport-utils-js",
+  "code_url": "https://update.greasyfork.org/scripts/449211/1079584/xlsxExportutilsjs.js",
+  "code_size": 5620,
+  "license": null,
+  "version": "0.0.1.20220809095238",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

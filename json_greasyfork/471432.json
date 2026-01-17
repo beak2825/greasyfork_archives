@@ -1,0 +1,59 @@
+{
+  "id": 471432,
+  "daily_installs": 2,
+  "total_installs": 12556,
+  "fan_score": "74.1",
+  "good_ratings": 11,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-22T08:12:19.000Z",
+  "code_updated_at": "2026-01-08T21:56:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1133029,
+      "name": "wang132",
+      "created_at": "2023-07-22T07:57:23.000Z",
+      "url": "https://greasyfork.org/users/1133029-wang132",
+      "scripts": [
+        {
+          "id": 471432,
+          "daily_installs": 2,
+          "total_installs": 12556,
+          "fan_score": "74.1",
+          "good_ratings": 11,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-22T08:12:19.000Z",
+          "code_updated_at": "2026-01-08T21:56:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "手机助手",
+          "description": "自动滚动，嗅探图片、视频，字体放大，去除广告浮动",
+          "url": "https://greasyfork.org/scripts/471432-%E6%89%8B%E6%9C%BA%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/471432/%E6%89%8B%E6%9C%BA%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 95066,
+          "license": "MIT License",
+          "version": "10.0.0.96",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "手机助手",
+  "description": "自动滚动，嗅探图片、视频，字体放大，去除广告浮动",
+  "url": "https://greasyfork.org/scripts/471432-%E6%89%8B%E6%9C%BA%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/471432/%E6%89%8B%E6%9C%BA%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 95066,
+  "license": "MIT License",
+  "version": "10.0.0.96",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

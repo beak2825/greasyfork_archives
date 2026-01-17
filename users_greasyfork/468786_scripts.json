@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424918,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-12T12:38:43.000Z",
+    "code_updated_at": "2021-04-12T12:41:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 468786,
+        "name": "shanqiaosong",
+        "created_at": "2020-03-25T08:52:28.000Z",
+        "url": "https://greasyfork.org/users/468786-shanqiaosong"
+      }
+    ],
+    "name": "CoursePlayback",
+    "description": "add hotkey to pku course playback",
+    "url": "https://greasyfork.org/scripts/424918-courseplayback",
+    "code_url": "https://update.greasyfork.org/scripts/424918/CoursePlayback.user.js",
+    "code_size": 17429,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480433,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-21T07:09:10.000Z",
+    "code_updated_at": "2023-11-21T07:11:14.000Z",
+    "namespace": "https://github.com/ZealPenK/RenrenTimeMachine/",
+    "support_url": "https://github.com/xcanwin/KeepChatGPT/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1221020,
+        "name": "PenK Zeal",
+        "created_at": "2023-11-21T07:04:02.000Z",
+        "url": "https://greasyfork.org/users/1221020-penk-zeal"
+      }
+    ],
+    "name": "人人相册下载器",
+    "description": "在相册页面下载人人图片",
+    "url": "https://greasyfork.org/scripts/480433-%E4%BA%BA%E4%BA%BA%E7%9B%B8%E5%86%8C%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/480433/%E4%BA%BA%E4%BA%BA%E7%9B%B8%E5%86%8C%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 2153,
+    "license": "GNU General Public License v2.0 only",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

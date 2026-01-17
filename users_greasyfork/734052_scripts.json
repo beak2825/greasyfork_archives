@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421169,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-04T02:07:59.000Z",
+    "code_updated_at": "2021-02-04T08:34:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 734052,
+        "name": "shaozenghui",
+        "created_at": "2021-02-03T08:58:52.000Z",
+        "url": "https://greasyfork.org/users/734052-shaozenghui"
+      }
+    ],
+    "name": "New Userscript",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/421169-new-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/421169/New%20Userscript.user.js",
+    "code_size": 2924,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

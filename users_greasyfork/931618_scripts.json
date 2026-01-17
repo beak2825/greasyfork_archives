@@ -1,0 +1,101 @@
+[
+  {
+    "id": 447520,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-06T18:18:00.000Z",
+    "code_updated_at": "2022-07-06T18:17:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931618,
+        "name": "Lonely Poco",
+        "created_at": "2022-07-03T08:00:18.000Z",
+        "url": "https://greasyfork.org/users/931618-lonely-poco"
+      }
+    ],
+    "name": "JlLiy",
+    "description": "JlLiy Liy",
+    "url": "https://greasyfork.org/scripts/447520-jlliy",
+    "code_url": "https://update.greasyfork.org/scripts/447520/JlLiy.user.js",
+    "code_size": 7382,
+    "license": "None",
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 447379,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-03T08:09:06.000Z",
+    "code_updated_at": "2022-07-03T08:09:05.000Z",
+    "namespace": "https://greasyfork.org/users/670183",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931618,
+        "name": "Lonely Poco",
+        "created_at": "2022-07-03T08:00:18.000Z",
+        "url": "https://greasyfork.org/users/931618-lonely-poco"
+      }
+    ],
+    "name": "Ya-Daun",
+    "description": "From rushers for rushers",
+    "url": "https://greasyfork.org/scripts/447379-ya-daun",
+    "code_url": "https://update.greasyfork.org/scripts/447379/Ya-Daun.user.js",
+    "code_size": 1831,
+    "license": "None",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 447378,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-03T08:03:31.000Z",
+    "code_updated_at": "2022-07-03T08:03:31.000Z",
+    "namespace": "https://greasyfork.org/users/670183",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931618,
+        "name": "Lonely Poco",
+        "created_at": "2022-07-03T08:00:18.000Z",
+        "url": "https://greasyfork.org/users/931618-lonely-poco"
+      }
+    ],
+    "name": "Ya-Daun",
+    "description": "From rushers for rushers",
+    "url": "https://greasyfork.org/scripts/447378-ya-daun",
+    "code_url": "https://update.greasyfork.org/scripts/447378/Ya-Daun.user.js",
+    "code_size": 149180,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

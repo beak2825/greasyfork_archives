@@ -1,0 +1,68 @@
+[
+  {
+    "id": 432620,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-18T19:41:28.000Z",
+    "code_updated_at": "2021-09-18T19:41:28.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 434434,
+        "name": "LagradOst",
+        "created_at": "2020-01-11T22:19:59.000Z",
+        "url": "https://greasyfork.org/users/434434-lagradost"
+      }
+    ],
+    "name": "Remove spacing - mangareader.to",
+    "description": "Removes the space between pages",
+    "url": "https://greasyfork.org/scripts/432620-remove-spacing-mangareader-to",
+    "code_url": "https://update.greasyfork.org/scripts/432620/Remove%20spacing%20-%20mangareaderto.user.js",
+    "code_size": 669,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431821,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-02T21:57:31.000Z",
+    "code_updated_at": "2021-09-02T21:57:30.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 434434,
+        "name": "LagradOst",
+        "created_at": "2020-01-11T22:19:59.000Z",
+        "url": "https://greasyfork.org/users/434434-lagradost"
+      }
+    ],
+    "name": "Always dark mode - readmanganato.com",
+    "description": "Automatic dark mode in readmanganato",
+    "url": "https://greasyfork.org/scripts/431821-always-dark-mode-readmanganato-com",
+    "code_url": "https://update.greasyfork.org/scripts/431821/Always%20dark%20mode%20-%20readmanganatocom.user.js",
+    "code_size": 357,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

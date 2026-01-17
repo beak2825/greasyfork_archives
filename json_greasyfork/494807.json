@@ -1,0 +1,34 @@
+{
+  "id": 494807,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-13T08:14:45.000Z",
+  "code_updated_at": "2024-05-13T08:15:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1167336,
+      "name": "Liu E2",
+      "created_at": "2023-09-06T10:17:02.000Z",
+      "url": "https://greasyfork.org/users/1167336-liu-e2",
+      "scripts": []
+    }
+  ],
+  "name": "D-PAR-旧-shop-yes",
+  "description": "css",
+  "url": "https://greasyfork.org/scripts/494807-d-par-%E6%97%A7-shop-yes",
+  "code_url": "https://update.greasyfork.org/scripts/494807/D-PAR-%E6%97%A7-shop-yes.user.js",
+  "code_size": 5659,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 476438,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-30T19:23:00.000Z",
+  "code_updated_at": "2023-09-30T19:23:00.000Z",
+  "namespace": "TigerHeads",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 843325,
+      "name": "phrog",
+      "created_at": "2021-11-23T19:32:36.000Z",
+      "url": "https://greasyfork.org/users/843325-phrog",
+      "scripts": []
+    }
+  ],
+  "name": "PaLadin Mod",
+  "description": "Best hack for moomoo.io 2023/2024",
+  "url": "https://greasyfork.org/scripts/476438-paladin-mod",
+  "code_url": "https://update.greasyfork.org/scripts/476438/PaLadin%20Mod.user.js",
+  "code_size": 633734,
+  "license": null,
+  "version": "v1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

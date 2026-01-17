@@ -1,0 +1,33 @@
+{
+  "id": 470228,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-05T13:41:30.000Z",
+  "code_updated_at": "2023-07-05T13:41:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1112905,
+      "name": "Mikill",
+      "created_at": "2023-06-26T19:09:08.000Z",
+      "url": "https://greasyfork.org/users/1112905-mikill"
+    }
+  ],
+  "name": "bCarregamento+SistemadePontos",
+  "description": "Da 10 segundos para o site carregar e te fornece 1 ponto a cada 30minutos",
+  "url": "https://greasyfork.org/scripts/470228-bcarregamento-sistemadepontos",
+  "code_url": "https://update.greasyfork.org/scripts/470228/bCarregamento%2BSistemadePontos.user.js",
+  "code_size": 3257,
+  "license": null,
+  "version": "0.3",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

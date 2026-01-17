@@ -1,0 +1,33 @@
+{
+  "id": 479845,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-14T11:21:42.000Z",
+  "code_updated_at": "2023-11-14T11:21:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 862686,
+      "name": "leerukang",
+      "created_at": "2022-01-09T04:39:43.000Z",
+      "url": "https://greasyfork.org/users/862686-leerukang"
+    }
+  ],
+  "name": "Aiqicha Company Detail Exporter with sp_no",
+  "description": "Extract and post company details from aiqicha.baidu.com.",
+  "url": "https://greasyfork.org/scripts/479845-aiqicha-company-detail-exporter-with-sp-no",
+  "code_url": "https://update.greasyfork.org/scripts/479845/Aiqicha%20Company%20Detail%20Exporter%20with%20sp_no.user.js",
+  "code_size": 3842,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

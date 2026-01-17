@@ -1,0 +1,33 @@
+{
+  "id": 459023,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-28T22:28:41.000Z",
+  "code_updated_at": "2023-01-28T22:28:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1014243,
+      "name": "ScripterOficial",
+      "created_at": "2023-01-19T12:25:08.000Z",
+      "url": "https://greasyfork.org/users/1014243-scripteroficial"
+    }
+  ],
+  "name": "AllInOne",
+  "description": "AllInOne - Super Pacotão de Scripts",
+  "url": "https://greasyfork.org/scripts/459023-allinone",
+  "code_url": "https://update.greasyfork.org/scripts/459023/AllInOne.user.js",
+  "code_size": 29897,
+  "license": null,
+  "version": "0.2",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

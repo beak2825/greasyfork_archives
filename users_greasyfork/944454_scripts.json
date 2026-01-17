@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449178,
+    "daily_installs": 1,
+    "total_installs": 141,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-08T18:55:03.000Z",
+    "code_updated_at": "2022-08-08T19:13:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 944454,
+        "name": "Yu Qixuan",
+        "created_at": "2022-08-08T18:35:06.000Z",
+        "url": "https://greasyfork.org/users/944454-yu-qixuan"
+      }
+    ],
+    "name": "b站多倍速播放",
+    "description": "b站所有视频倍速播放增加了额外倍速的选择，增加的方式是在原有的倍速播放样式基础上增加，保证使用方便及样式统一",
+    "url": "https://greasyfork.org/scripts/449178-b%E7%AB%99%E5%A4%9A%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/449178/b%E7%AB%99%E5%A4%9A%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE.user.js",
+    "code_size": 2373,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

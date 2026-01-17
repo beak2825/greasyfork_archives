@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447417,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-04T08:21:59.000Z",
+    "code_updated_at": "2022-07-04T08:21:59.000Z",
+    "namespace": "Gazelle Snatched",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931956,
+        "name": "dic_z",
+        "created_at": "2022-07-04T07:58:49.000Z",
+        "url": "https://greasyfork.org/users/931956-dic-z"
+      }
+    ],
+    "name": "Gazelle Music Tracker Snatched (patched)",
+    "description": "Mark snatched torrents across your favorite gazelle music trackers.",
+    "url": "https://greasyfork.org/scripts/447417-gazelle-music-tracker-snatched-patched",
+    "code_url": "https://update.greasyfork.org/scripts/447417/Gazelle%20Music%20Tracker%20Snatched%20%28patched%29.user.js",
+    "code_size": 67761,
+    "license": null,
+    "version": "3.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

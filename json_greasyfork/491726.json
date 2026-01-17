@@ -1,0 +1,33 @@
+{
+  "id": 491726,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-05T16:10:00.000Z",
+  "code_updated_at": "2024-11-04T10:49:58.000Z",
+  "namespace": "https://zosah.gitee.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 878840,
+      "name": "Zosah",
+      "created_at": "2022-02-21T05:57:33.000Z",
+      "url": "https://greasyfork.org/users/878840-zosah"
+    }
+  ],
+  "name": "XIAOE-MENU",
+  "description": "一键代理、获取Token、H5直接扫码登录、H5调试模式、H5直达B端、coding内容自动展开、快速复制直播链接、GitLab快捷入口、默认进添加讲师页、管理台新旧切换等",
+  "url": "https://greasyfork.org/scripts/491726-xiaoe-menu",
+  "code_url": "https://update.greasyfork.org/scripts/491726/XIAOE-MENU.user.js",
+  "code_size": 34165,
+  "license": "MIT License",
+  "version": "1.2.3",
+  "locale": "sr",
+  "deleted": false,
+  "visibility": "public"
+}

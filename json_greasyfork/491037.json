@@ -1,0 +1,59 @@
+{
+  "id": 491037,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-27T21:27:25.000Z",
+  "code_updated_at": "2024-03-28T07:45:13.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1280371,
+      "name": "minuscule",
+      "created_at": "2024-03-27T21:19:07.000Z",
+      "url": "https://greasyfork.org/users/1280371-minuscule",
+      "scripts": [
+        {
+          "id": 491037,
+          "daily_installs": 0,
+          "total_installs": 46,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-27T21:27:25.000Z",
+          "code_updated_at": "2024-03-28T07:45:13.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Maxroll Adblock popup be gone",
+          "description": "27/03/2024, 22:16:01",
+          "url": "https://greasyfork.org/scripts/491037-maxroll-adblock-popup-be-gone",
+          "code_url": "https://update.greasyfork.org/scripts/491037/Maxroll%20Adblock%20popup%20be%20gone.user.js",
+          "code_size": 399,
+          "license": "MIT License",
+          "version": "1.0.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Maxroll Adblock popup be gone",
+  "description": "27/03/2024, 22:16:01",
+  "url": "https://greasyfork.org/scripts/491037-maxroll-adblock-popup-be-gone",
+  "code_url": "https://update.greasyfork.org/scripts/491037/Maxroll%20Adblock%20popup%20be%20gone.user.js",
+  "code_size": 399,
+  "license": "MIT License",
+  "version": "1.0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 460878,
+  "daily_installs": 0,
+  "total_installs": 169,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-27T22:27:58.000Z",
+  "code_updated_at": "2023-03-05T04:40:50.000Z",
+  "namespace": "4chan-X",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1031463,
+      "name": "LalleSX",
+      "created_at": "2023-02-22T21:19:12.000Z",
+      "url": "https://greasyfork.org/users/1031463-lallesx"
+    }
+  ],
+  "name": "4chan X",
+  "description": "4chan X is a script that adds various features to anonymous imageboards.",
+  "url": "https://greasyfork.org/scripts/460878-4chan-x",
+  "code_url": "https://update.greasyfork.org/scripts/460878/4chan%20X.user.js",
+  "code_size": 1125755,
+  "license": "MIT; https://github.com/ccd0/4chan-x/blob/master/LICENSE",
+  "version": "1.14.22.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

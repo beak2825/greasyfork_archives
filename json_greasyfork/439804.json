@@ -1,0 +1,59 @@
+{
+  "id": 439804,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-10T03:38:00.000Z",
+  "code_updated_at": "2023-01-10T14:39:36.000Z",
+  "namespace": "https://github.com/Dadangdut33/Video-Seek-Forward-Backward-3-Seconds",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 874781,
+      "name": "Dadangdut33",
+      "created_at": "2022-02-10T03:11:34.000Z",
+      "url": "https://greasyfork.org/users/874781-dadangdut33",
+      "scripts": [
+        {
+          "id": 439804,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-10T03:38:00.000Z",
+          "code_updated_at": "2023-01-10T14:39:36.000Z",
+          "namespace": "https://github.com/Dadangdut33/Video-Seek-Forward-Backward-3-Seconds",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Video Seek Forward Backward 3 Seconds",
+          "description": "Use ctrl + \\ and ctrl + ] to seek video forward and backward 3 seconds. To seek forward use ctrl + \\. To seek backward use ctrl + ]. You can modify the key and the seek time to your desire easily in the script.",
+          "url": "https://greasyfork.org/scripts/439804-video-seek-forward-backward-3-seconds",
+          "code_url": "https://update.greasyfork.org/scripts/439804/Video%20Seek%20Forward%20Backward%203%20Seconds.user.js",
+          "code_size": 2392,
+          "license": "The Unlicense",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Video Seek Forward Backward 3 Seconds",
+  "description": "Use ctrl + \\ and ctrl + ] to seek video forward and backward 3 seconds. To seek forward use ctrl + \\. To seek backward use ctrl + ]. You can modify the key and the seek time to your desire easily in the script.",
+  "url": "https://greasyfork.org/scripts/439804-video-seek-forward-backward-3-seconds",
+  "code_url": "https://update.greasyfork.org/scripts/439804/Video%20Seek%20Forward%20Backward%203%20Seconds.user.js",
+  "code_size": 2392,
+  "license": "The Unlicense",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

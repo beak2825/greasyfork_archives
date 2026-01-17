@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464486,
+    "daily_installs": 2,
+    "total_installs": 534,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-20T16:46:36.000Z",
+    "code_updated_at": "2023-04-20T17:35:00.000Z",
+    "namespace": "https://github.com/sealldeveloper/lichess-better-moves",
+    "support_url": null,
+    "contribution_url": "https://github.com/sealldeveloper/lichess-better-moves",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1064338,
+        "name": "sealldeveloper",
+        "created_at": "2023-04-20T16:43:45.000Z",
+        "url": "https://greasyfork.org/users/1064338-sealldeveloper"
+      }
+    ],
+    "name": "Lichess - Detailed Moves",
+    "description": "Show brillant, excellent, great and book moves on lichess.org as chess.com does, an updated version of Thomas Sihapanya's version.",
+    "url": "https://greasyfork.org/scripts/464486-lichess-detailed-moves",
+    "code_url": "https://update.greasyfork.org/scripts/464486/Lichess%20-%20Detailed%20Moves.user.js",
+    "code_size": 13672,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

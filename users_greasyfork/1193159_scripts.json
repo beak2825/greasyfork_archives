@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482149,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-14T03:17:11.000Z",
+    "code_updated_at": "2023-12-14T03:17:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1193159,
+        "name": "YUNYE01",
+        "created_at": "2023-10-11T03:37:40.000Z",
+        "url": "https://greasyfork.org/users/1193159-yunye01"
+      }
+    ],
+    "name": "虫部落论坛背景去除",
+    "description": "Remove class attributes from all elements on https://www.chongbuluo.com/",
+    "url": "https://greasyfork.org/scripts/482149-%E8%99%AB%E9%83%A8%E8%90%BD%E8%AE%BA%E5%9D%9B%E8%83%8C%E6%99%AF%E5%8E%BB%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/482149/%E8%99%AB%E9%83%A8%E8%90%BD%E8%AE%BA%E5%9D%9B%E8%83%8C%E6%99%AF%E5%8E%BB%E9%99%A4.user.js",
+    "code_size": 494,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

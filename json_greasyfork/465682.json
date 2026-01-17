@@ -1,0 +1,59 @@
+{
+  "id": 465682,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-06T16:24:25.000Z",
+  "code_updated_at": "2023-05-17T13:25:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1073931,
+      "name": "Techsoft",
+      "created_at": "2023-05-06T01:35:07.000Z",
+      "url": "https://greasyfork.org/users/1073931-techsoft",
+      "scripts": [
+        {
+          "id": 465682,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-06T16:24:25.000Z",
+          "code_updated_at": "2023-05-17T13:25:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Custom Anime Scheduler",
+          "description": "Schedules anime from any season",
+          "url": "https://greasyfork.org/scripts/465682-custom-anime-scheduler",
+          "code_url": "https://update.greasyfork.org/scripts/465682/Custom%20Anime%20Scheduler.user.js",
+          "code_size": 11482,
+          "license": "MIT License",
+          "version": "0.1.6.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Custom Anime Scheduler",
+  "description": "Schedules anime from any season",
+  "url": "https://greasyfork.org/scripts/465682-custom-anime-scheduler",
+  "code_url": "https://update.greasyfork.org/scripts/465682/Custom%20Anime%20Scheduler.user.js",
+  "code_size": 11482,
+  "license": "MIT License",
+  "version": "0.1.6.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

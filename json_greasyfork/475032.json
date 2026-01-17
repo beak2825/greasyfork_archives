@@ -1,0 +1,33 @@
+{
+  "id": 475032,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-11T13:26:20.000Z",
+  "code_updated_at": "2025-02-21T02:31:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 973951,
+      "name": "杨振博",
+      "created_at": "2022-10-22T15:00:55.000Z",
+      "url": "https://greasyfork.org/users/973951-%E6%9D%A8%E6%8C%AF%E5%8D%9A"
+    }
+  ],
+  "name": "视频V {自用}",
+  "description": "支持：腾讯、爱奇艺、优酷、芒果、Bilibili、pptv、乐视等其它网站；",
+  "url": "https://greasyfork.org/scripts/475032-%E8%A7%86%E9%A2%91v-%E8%87%AA%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/475032/%E8%A7%86%E9%A2%91V%20%7B%E8%87%AA%E7%94%A8%7D.user.js",
+  "code_size": 33839,
+  "license": "GPL License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

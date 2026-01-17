@@ -1,0 +1,33 @@
+{
+  "id": 426022,
+  "daily_installs": 0,
+  "total_installs": 141,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-06T03:25:37.000Z",
+  "code_updated_at": "2021-05-06T03:25:36.000Z",
+  "namespace": "https://lab.wsl.moe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 175924,
+      "name": "YJSNPI",
+      "created_at": "2018-03-22T06:31:19.000Z",
+      "url": "https://greasyfork.org/users/175924-yjsnpi"
+    }
+  ],
+  "name": "解除所谓的安全提示跳转",
+  "description": "遇到所谓的“外部链接安全提示”页面直接跳转",
+  "url": "https://greasyfork.org/scripts/426022-%E8%A7%A3%E9%99%A4%E6%89%80%E8%B0%93%E7%9A%84%E5%AE%89%E5%85%A8%E6%8F%90%E7%A4%BA%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/426022/%E8%A7%A3%E9%99%A4%E6%89%80%E8%B0%93%E7%9A%84%E5%AE%89%E5%85%A8%E6%8F%90%E7%A4%BA%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 1365,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

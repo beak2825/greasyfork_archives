@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436875,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-11T01:28:53.000Z",
+    "code_updated_at": "2021-12-11T01:28:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790194,
+        "name": "cang dao",
+        "created_at": "2021-07-04T08:38:16.000Z",
+        "url": "https://greasyfork.org/users/790194-cang-dao"
+      }
+    ],
+    "name": "LOC-MJJ笔记",
+    "description": "来自地板带着爱，记录上网冲浪的美好瞬间",
+    "url": "https://greasyfork.org/scripts/436875-loc-mjj%E7%AC%94%E8%AE%B0",
+    "code_url": "https://update.greasyfork.org/scripts/436875/LOC-MJJ%E7%AC%94%E8%AE%B0.user.js",
+    "code_size": 13547,
+    "license": "MIT License",
+    "version": "0.2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

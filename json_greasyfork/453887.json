@@ -1,0 +1,33 @@
+{
+  "id": 453887,
+  "daily_installs": 0,
+  "total_installs": 153,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-28T11:12:47.000Z",
+  "code_updated_at": "2024-10-20T16:37:06.000Z",
+  "namespace": "http://r-ay.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 976292,
+      "name": "ENDsoft233",
+      "created_at": "2022-10-28T11:10:31.000Z",
+      "url": "https://greasyfork.org/users/976292-endsoft233"
+    }
+  ],
+  "name": "上大选课优化",
+  "description": "对上海大学本硕博一体化选课网进行了优化",
+  "url": "https://greasyfork.org/scripts/453887-%E4%B8%8A%E5%A4%A7%E9%80%89%E8%AF%BE%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/453887/%E4%B8%8A%E5%A4%A7%E9%80%89%E8%AF%BE%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 228831,
+  "license": "MIT License",
+  "version": "0.25",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

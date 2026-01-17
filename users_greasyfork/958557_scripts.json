@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451289,
+    "daily_installs": 0,
+    "total_installs": 192,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-13T07:54:50.000Z",
+    "code_updated_at": "2022-09-13T07:54:50.000Z",
+    "namespace": "www.bilibili.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 958557,
+        "name": "伏特加兑水",
+        "created_at": "2022-09-13T07:46:26.000Z",
+        "url": "https://greasyfork.org/users/958557-%E4%BC%8F%E7%89%B9%E5%8A%A0%E5%85%91%E6%B0%B4"
+      }
+    ],
+    "name": "新新新·自用三相之力（个人自用版）",
+    "description": "B站评论区自动标注三相玩家，虚拟主播的粉丝，依据是动态里是否有相关内容（基于原神指示器和原三相，新三相一些小的修改）。前一个显示虚拟主播粉丝（ASOUL粉丝名颜色已改为应援色，其余主播由于我没查到就用发色大概代替一下），后一个显示游戏玩家。新加了几个主播给群友用",
+    "url": "https://greasyfork.org/scripts/451289-%E6%96%B0%E6%96%B0%E6%96%B0-%E8%87%AA%E7%94%A8%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B-%E4%B8%AA%E4%BA%BA%E8%87%AA%E7%94%A8%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/451289/%E6%96%B0%E6%96%B0%E6%96%B0%C2%B7%E8%87%AA%E7%94%A8%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B%EF%BC%88%E4%B8%AA%E4%BA%BA%E8%87%AA%E7%94%A8%E7%89%88%EF%BC%89.user.js",
+    "code_size": 21793,
+    "license": "MIT License",
+    "version": "1.11111",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

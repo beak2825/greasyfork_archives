@@ -1,0 +1,59 @@
+{
+  "id": 446743,
+  "daily_installs": 0,
+  "total_installs": 47,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-20T02:20:22.000Z",
+  "code_updated_at": "2022-06-20T02:20:21.000Z",
+  "namespace": "http://39.101.206.248:808/student/studxlx.aspx",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 924546,
+      "name": "想要摆烂的浩",
+      "created_at": "2022-06-11T15:10:09.000Z",
+      "url": "https://greasyfork.org/users/924546-%E6%83%B3%E8%A6%81%E6%91%86%E7%83%82%E7%9A%84%E6%B5%A9",
+      "scripts": [
+        {
+          "id": 446743,
+          "daily_installs": 0,
+          "total_installs": 47,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-20T02:20:22.000Z",
+          "code_updated_at": "2022-06-20T02:20:21.000Z",
+          "namespace": "http://39.101.206.248:808/student/studxlx.aspx",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "C++选择题答题助手(进阶)",
+          "description": "自动答题",
+          "url": "https://greasyfork.org/scripts/446743-c-%E9%80%89%E6%8B%A9%E9%A2%98%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B-%E8%BF%9B%E9%98%B6",
+          "code_url": "https://update.greasyfork.org/scripts/446743/C%2B%2B%E9%80%89%E6%8B%A9%E9%A2%98%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B%28%E8%BF%9B%E9%98%B6%29.user.js",
+          "code_size": 4021,
+          "license": "MIT License",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "C++选择题答题助手(进阶)",
+  "description": "自动答题",
+  "url": "https://greasyfork.org/scripts/446743-c-%E9%80%89%E6%8B%A9%E9%A2%98%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B-%E8%BF%9B%E9%98%B6",
+  "code_url": "https://update.greasyfork.org/scripts/446743/C%2B%2B%E9%80%89%E6%8B%A9%E9%A2%98%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B%28%E8%BF%9B%E9%98%B6%29.user.js",
+  "code_size": 4021,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

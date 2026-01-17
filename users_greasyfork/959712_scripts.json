@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451434,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-15T16:29:39.000Z",
+    "code_updated_at": "2022-09-15T16:58:03.000Z",
+    "namespace": "https://greasyfork.org/users/959712",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 959712,
+        "name": "Nehemiah",
+        "created_at": "2022-09-15T16:19:41.000Z",
+        "url": "https://greasyfork.org/users/959712-nehemiah"
+      }
+    ],
+    "name": "The West - No oktober",
+    "description": "The West Oktoberfest",
+    "url": "https://greasyfork.org/scripts/451434-the-west-no-oktober",
+    "code_url": "https://update.greasyfork.org/scripts/451434/The%20West%20-%20No%20oktober.user.js",
+    "code_size": 841,
+    "license": null,
+    "version": "1.0",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

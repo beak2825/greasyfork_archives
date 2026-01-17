@@ -1,0 +1,34 @@
+{
+  "id": 448974,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-05T08:00:38.000Z",
+  "code_updated_at": "2022-08-05T08:00:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 943223,
+      "name": "Suraj Kumar Paudel",
+      "created_at": "2022-08-05T07:21:43.000Z",
+      "url": "https://greasyfork.org/users/943223-suraj-kumar-paudel",
+      "scripts": []
+    }
+  ],
+  "name": "hchaptcha solved? checker",
+  "description": "Check if hchaptcha has solved or not",
+  "url": "https://greasyfork.org/scripts/448974-hchaptcha-solved-checker",
+  "code_url": "https://update.greasyfork.org/scripts/448974/hchaptcha%20solved%20checker.user.js",
+  "code_size": 1123,
+  "license": "opensource",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

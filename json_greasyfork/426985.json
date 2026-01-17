@@ -1,0 +1,59 @@
+{
+  "id": 426985,
+  "daily_installs": 0,
+  "total_installs": 63,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-24T22:54:01.000Z",
+  "code_updated_at": "2021-05-24T22:56:22.000Z",
+  "namespace": "https://greasyfork.org/users/775826",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 775826,
+      "name": "Urasano",
+      "created_at": "2021-05-24T22:44:30.000Z",
+      "url": "https://greasyfork.org/users/775826-urasano",
+      "scripts": [
+        {
+          "id": 426985,
+          "daily_installs": 0,
+          "total_installs": 63,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-05-24T22:54:01.000Z",
+          "code_updated_at": "2021-05-24T22:56:22.000Z",
+          "namespace": "https://greasyfork.org/users/775826",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bypass DF",
+          "description": "Bypass para Diario Financiero, a través de DFU.owo.cl.",
+          "url": "https://greasyfork.org/scripts/426985-bypass-df",
+          "code_url": "https://update.greasyfork.org/scripts/426985/Bypass%20DF.user.js",
+          "code_size": 832,
+          "license": null,
+          "version": "0.0.1.20210524225622",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bypass DF",
+  "description": "Bypass para Diario Financiero, a través de DFU.owo.cl.",
+  "url": "https://greasyfork.org/scripts/426985-bypass-df",
+  "code_url": "https://update.greasyfork.org/scripts/426985/Bypass%20DF.user.js",
+  "code_size": 832,
+  "license": null,
+  "version": "0.0.1.20210524225622",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

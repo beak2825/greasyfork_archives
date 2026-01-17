@@ -1,0 +1,68 @@
+[
+  {
+    "id": 492265,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-11T16:22:40.000Z",
+    "code_updated_at": "2024-07-10T10:05:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1271299,
+        "name": "spacepch",
+        "created_at": "2024-03-07T07:43:09.000Z",
+        "url": "https://greasyfork.org/users/1271299-spacepch"
+      }
+    ],
+    "name": "coze窗口调整",
+    "description": "用于调整coze窗口大小",
+    "url": "https://greasyfork.org/scripts/492265-coze%E7%AA%97%E5%8F%A3%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/492265/coze%E7%AA%97%E5%8F%A3%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 4586,
+    "license": "MIT License",
+    "version": "4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 489211,
+    "daily_installs": 0,
+    "total_installs": 374,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-07T07:55:28.000Z",
+    "code_updated_at": "2024-03-07T07:55:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1271299,
+        "name": "spacepch",
+        "created_at": "2024-03-07T07:43:09.000Z",
+        "url": "https://greasyfork.org/users/1271299-spacepch"
+      }
+    ],
+    "name": "网站视频倍速",
+    "description": "改动百度网盘视频的倍速！",
+    "url": "https://greasyfork.org/scripts/489211-%E7%BD%91%E7%AB%99%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/489211/%E7%BD%91%E7%AB%99%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F.user.js",
+    "code_size": 2261,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

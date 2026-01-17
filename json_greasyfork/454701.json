@@ -1,0 +1,33 @@
+{
+  "id": 454701,
+  "daily_installs": 0,
+  "total_installs": 77,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-12T15:37:08.000Z",
+  "code_updated_at": "2022-11-12T15:37:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 982495,
+      "name": "Matt G",
+      "created_at": "2022-11-12T15:35:37.000Z",
+      "url": "https://greasyfork.org/users/982495-matt-g"
+    }
+  ],
+  "name": "Calculate Warehouse and Granary Total Capacity Size",
+  "description": "Hover over each cell in descending order - first warehouses then granaries, only once for each warehouse total, not three times (wood only for example). Press \"Enter\" when hovered.",
+  "url": "https://greasyfork.org/scripts/454701-calculate-warehouse-and-granary-total-capacity-size",
+  "code_url": "https://update.greasyfork.org/scripts/454701/Calculate%20Warehouse%20and%20Granary%20Total%20Capacity%20Size.user.js",
+  "code_size": 4642,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

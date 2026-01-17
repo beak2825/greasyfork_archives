@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484680,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-12T15:59:18.000Z",
+    "code_updated_at": "2024-03-28T09:15:23.000Z",
+    "namespace": "https://www.merriam-webster.com/dictionary/*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1247038,
+        "name": "wlbksy",
+        "created_at": "2024-01-12T15:50:32.000Z",
+        "url": "https://greasyfork.org/users/1247038-wlbksy"
+      }
+    ],
+    "name": "Merriam-Webster to Daniel Jones Phonetic Converter",
+    "description": "Convert Merriam-Webster phonetic symbols to Daniel Jones phonetic symbols.",
+    "url": "https://greasyfork.org/scripts/484680-merriam-webster-to-daniel-jones-phonetic-converter",
+    "code_url": "https://update.greasyfork.org/scripts/484680/Merriam-Webster%20to%20Daniel%20Jones%20Phonetic%20Converter.user.js",
+    "code_size": 3356,
+    "license": "GNU GPLv3",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

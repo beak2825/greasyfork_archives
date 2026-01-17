@@ -1,0 +1,101 @@
+[
+  {
+    "id": 470198,
+    "daily_installs": 0,
+    "total_installs": 225,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-07-05T07:09:10.000Z",
+    "code_updated_at": "2023-07-05T07:09:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795740,
+        "name": "Samathingamajig",
+        "created_at": "2021-07-21T04:58:37.000Z",
+        "url": "https://greasyfork.org/users/795740-samathingamajig"
+      }
+    ],
+    "name": "AP® Score Cheeser",
+    "description": "Cheeses the AP® Exam scores on the College Board website by allowing modification.",
+    "url": "https://greasyfork.org/scripts/470198-ap-score-cheeser",
+    "code_url": "https://update.greasyfork.org/scripts/470198/AP%C2%AE%20Score%20Cheeser.user.js",
+    "code_size": 8764,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 447276,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-30T18:55:00.000Z",
+    "code_updated_at": "2022-07-05T23:44:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795740,
+        "name": "Samathingamajig",
+        "created_at": "2021-07-21T04:58:37.000Z",
+        "url": "https://greasyfork.org/users/795740-samathingamajig"
+      }
+    ],
+    "name": "Discord Paste Links without Embeds",
+    "description": "Wraps URLs with angle brackets (<https://example.com>) when pasting into discord to avoid link embeds",
+    "url": "https://greasyfork.org/scripts/447276-discord-paste-links-without-embeds",
+    "code_url": "https://update.greasyfork.org/scripts/447276/Discord%20Paste%20Links%20without%20Embeds.user.js",
+    "code_size": 3703,
+    "license": "MIT License",
+    "version": "0.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429680,
+    "daily_installs": 0,
+    "total_installs": 489,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-21T05:03:42.000Z",
+    "code_updated_at": "2022-07-05T15:32:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795740,
+        "name": "Samathingamajig",
+        "created_at": "2021-07-21T04:58:37.000Z",
+        "url": "https://greasyfork.org/users/795740-samathingamajig"
+      }
+    ],
+    "name": "AP Score Hider",
+    "description": "Hides AP Exam scores on the College Board website until you click on them. As a bonus, display confetti when you click on a passing exam.",
+    "url": "https://greasyfork.org/scripts/429680-ap-score-hider",
+    "code_url": "https://update.greasyfork.org/scripts/429680/AP%20Score%20Hider.user.js",
+    "code_size": 3830,
+    "license": null,
+    "version": "1.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

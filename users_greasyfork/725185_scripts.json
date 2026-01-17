@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479158,
+    "daily_installs": 0,
+    "total_installs": 1710,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-06T08:19:16.000Z",
+    "code_updated_at": "2023-11-06T13:06:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725185,
+        "name": "Minke skl",
+        "created_at": "2021-01-08T14:20:54.000Z",
+        "url": "https://greasyfork.org/users/725185-minke-skl"
+      }
+    ],
+    "name": "批改网 复制粘贴启用",
+    "description": "批改网",
+    "url": "https://greasyfork.org/scripts/479158-%E6%89%B9%E6%94%B9%E7%BD%91-%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E5%90%AF%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/479158/%E6%89%B9%E6%94%B9%E7%BD%91%20%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E5%90%AF%E7%94%A8.user.js",
+    "code_size": 581,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

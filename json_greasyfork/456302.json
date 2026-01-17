@@ -1,0 +1,33 @@
+{
+  "id": 456302,
+  "daily_installs": 0,
+  "total_installs": 606,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-09T01:53:53.000Z",
+  "code_updated_at": "2022-12-09T02:05:40.000Z",
+  "namespace": "-",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 988401,
+      "name": "Derek Castellanos",
+      "created_at": "2022-11-26T20:06:50.000Z",
+      "url": "https://greasyfork.org/users/988401-derek-castellanos"
+    }
+  ],
+  "name": "just a little sum",
+  "description": "f for trap. v for r for spike (you have to press mouse to place not macro)",
+  "url": "https://greasyfork.org/scripts/456302-just-a-little-sum",
+  "code_url": "https://update.greasyfork.org/scripts/456302/just%20a%20little%20sum.user.js",
+  "code_size": 330286,
+  "license": "MIT License",
+  "version": "v0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

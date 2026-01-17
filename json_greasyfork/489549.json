@@ -1,0 +1,59 @@
+{
+  "id": 489549,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-11T12:36:27.000Z",
+  "code_updated_at": "2024-03-12T00:40:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1272718,
+      "name": "aqlkzf",
+      "created_at": "2024-03-10T14:19:31.000Z",
+      "url": "https://greasyfork.org/users/1272718-aqlkzf",
+      "scripts": [
+        {
+          "id": 489549,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-11T12:36:27.000Z",
+          "code_updated_at": "2024-03-12T00:40:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Enhance 10x Genomics Page with Text-Based Fast Download and Log",
+          "description": "Automatically clicks \"Batch download\", \"curl\", adds \"Fast Download\" button, and displays bash script on click with a copy function.",
+          "url": "https://greasyfork.org/scripts/489549-enhance-10x-genomics-page-with-text-based-fast-download-and-log",
+          "code_url": "https://update.greasyfork.org/scripts/489549/Enhance%2010x%20Genomics%20Page%20with%20Text-Based%20Fast%20Download%20and%20Log.user.js",
+          "code_size": 6175,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Enhance 10x Genomics Page with Text-Based Fast Download and Log",
+  "description": "Automatically clicks \"Batch download\", \"curl\", adds \"Fast Download\" button, and displays bash script on click with a copy function.",
+  "url": "https://greasyfork.org/scripts/489549-enhance-10x-genomics-page-with-text-based-fast-download-and-log",
+  "code_url": "https://update.greasyfork.org/scripts/489549/Enhance%2010x%20Genomics%20Page%20with%20Text-Based%20Fast%20Download%20and%20Log.user.js",
+  "code_size": 6175,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 454945,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-16T19:22:49.000Z",
+    "code_updated_at": "2022-11-17T12:47:30.000Z",
+    "namespace": "http://alamote.pp.ua/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 113957,
+        "name": "Sergey Lyskov",
+        "created_at": "2017-03-31T14:54:54.000Z",
+        "url": "https://greasyfork.org/users/113957-sergey-lyskov"
+      }
+    ],
+    "name": "VK Comments Link",
+    "description": "Add a link to comments on the Vk search",
+    "url": "https://greasyfork.org/scripts/454945-vk-comments-link",
+    "code_url": "https://update.greasyfork.org/scripts/454945/VK%20Comments%20Link.user.js",
+    "code_size": 1450,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420288,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-16T17:06:37.000Z",
+    "code_updated_at": "2022-12-02T18:59:23.000Z",
+    "namespace": "http://alamote.pp.ua/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 113957,
+        "name": "Sergey Lyskov",
+        "created_at": "2017-03-31T14:54:54.000Z",
+        "url": "https://greasyfork.org/users/113957-sergey-lyskov"
+      }
+    ],
+    "name": "Password Generator",
+    "description": "Password Generator for sites",
+    "url": "https://greasyfork.org/scripts/420288-password-generator",
+    "code_url": "https://update.greasyfork.org/scripts/420288/Password%20Generator.user.js",
+    "code_size": 7933,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

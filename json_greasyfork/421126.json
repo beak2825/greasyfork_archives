@@ -1,0 +1,59 @@
+{
+  "id": 421126,
+  "daily_installs": 0,
+  "total_installs": 13643,
+  "fan_score": "82.3",
+  "good_ratings": 27,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-02-03T10:13:20.000Z",
+  "code_updated_at": "2025-06-26T08:35:12.000Z",
+  "namespace": "https://greasyfork.org/users/734068",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 734068,
+      "name": "Yim",
+      "created_at": "2021-02-03T09:30:04.000Z",
+      "url": "https://greasyfork.org/users/734068-yim",
+      "scripts": [
+        {
+          "id": 421126,
+          "daily_installs": 0,
+          "total_installs": 13643,
+          "fan_score": "82.3",
+          "good_ratings": 27,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2021-02-03T10:13:20.000Z",
+          "code_updated_at": "2025-06-26T08:35:12.000Z",
+          "namespace": "https://greasyfork.org/users/734068",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微信编辑器爆破",
+          "description": "[请勿商用]无视微信编辑器VIP限制，可以使用VIP排版（135/365/96/zhubian/xmyeditor/wxeditor/yibanbianji/yiban.io）",
+          "url": "https://greasyfork.org/scripts/421126-%E5%BE%AE%E4%BF%A1%E7%BC%96%E8%BE%91%E5%99%A8%E7%88%86%E7%A0%B4",
+          "code_url": "https://update.greasyfork.org/scripts/421126/%E5%BE%AE%E4%BF%A1%E7%BC%96%E8%BE%91%E5%99%A8%E7%88%86%E7%A0%B4.user.js",
+          "code_size": 16546,
+          "license": null,
+          "version": "1.17",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微信编辑器爆破",
+  "description": "[请勿商用]无视微信编辑器VIP限制，可以使用VIP排版（135/365/96/zhubian/xmyeditor/wxeditor/yibanbianji/yiban.io）",
+  "url": "https://greasyfork.org/scripts/421126-%E5%BE%AE%E4%BF%A1%E7%BC%96%E8%BE%91%E5%99%A8%E7%88%86%E7%A0%B4",
+  "code_url": "https://update.greasyfork.org/scripts/421126/%E5%BE%AE%E4%BF%A1%E7%BC%96%E8%BE%91%E5%99%A8%E7%88%86%E7%A0%B4.user.js",
+  "code_size": 16546,
+  "license": null,
+  "version": "1.17",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

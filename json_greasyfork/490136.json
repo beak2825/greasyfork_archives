@@ -1,0 +1,33 @@
+{
+  "id": 490136,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-17T23:01:56.000Z",
+  "code_updated_at": "2024-03-21T17:59:35.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 995510,
+      "name": "Sad-M",
+      "created_at": "2022-12-10T13:57:23.000Z",
+      "url": "https://greasyfork.org/users/995510-sad-m"
+    }
+  ],
+  "name": "Auto-Udemy",
+  "description": "Allows you to automatically skip videos and articles",
+  "url": "https://greasyfork.org/scripts/490136-auto-udemy",
+  "code_url": "https://update.greasyfork.org/scripts/490136/Auto-Udemy.user.js",
+  "code_size": 3461,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

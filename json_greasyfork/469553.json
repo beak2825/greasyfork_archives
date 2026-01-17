@@ -1,0 +1,33 @@
+{
+  "id": 469553,
+  "daily_installs": 0,
+  "total_installs": 125,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-27T09:55:49.000Z",
+  "code_updated_at": "2023-06-28T06:54:27.000Z",
+  "namespace": "your-namespace",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 826292,
+      "name": "weakestan",
+      "created_at": "2021-10-18T05:22:48.000Z",
+      "url": "https://greasyfork.org/users/826292-weakestan"
+    }
+  ],
+  "name": "淘宝、京东、拼多多网页版，隐藏1天内的追加评价",
+  "description": "购物党查看追加评论用。根据正则表达式隐藏无效数据：0-1天的追加评论。",
+  "url": "https://greasyfork.org/scripts/469553-%E6%B7%98%E5%AE%9D-%E4%BA%AC%E4%B8%9C-%E6%8B%BC%E5%A4%9A%E5%A4%9A%E7%BD%91%E9%A1%B5%E7%89%88-%E9%9A%90%E8%97%8F1%E5%A4%A9%E5%86%85%E7%9A%84%E8%BF%BD%E5%8A%A0%E8%AF%84%E4%BB%B7",
+  "code_url": "https://update.greasyfork.org/scripts/469553/%E6%B7%98%E5%AE%9D%E3%80%81%E4%BA%AC%E4%B8%9C%E3%80%81%E6%8B%BC%E5%A4%9A%E5%A4%9A%E7%BD%91%E9%A1%B5%E7%89%88%EF%BC%8C%E9%9A%90%E8%97%8F1%E5%A4%A9%E5%86%85%E7%9A%84%E8%BF%BD%E5%8A%A0%E8%AF%84%E4%BB%B7.user.js",
+  "code_size": 3749,
+  "license": "GPLv3",
+  "version": "1.14",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

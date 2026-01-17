@@ -1,0 +1,59 @@
+{
+  "id": 463111,
+  "daily_installs": 0,
+  "total_installs": 204,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-02T12:07:31.000Z",
+  "code_updated_at": "2023-07-23T10:15:01.000Z",
+  "namespace": "https://este.linux.it",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1051895,
+      "name": "loviuz",
+      "created_at": "2023-04-02T10:39:15.000Z",
+      "url": "https://greasyfork.org/users/1051895-loviuz",
+      "scripts": [
+        {
+          "id": 463111,
+          "daily_installs": 0,
+          "total_installs": 204,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-02T12:07:31.000Z",
+          "code_updated_at": "2023-07-23T10:15:01.000Z",
+          "namespace": "https://este.linux.it",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "No Cookiewall Italia",
+          "description": "Permette di navigare siti web italiani di notizie evitando il cookiewall, il quale permette di accedere ai contenuti, già arrivati al browser, previa accettazione cookie o il pagamento di un abbonamento. Alcuni stabiliscono che questo comportamento dei siti non è lecito secondo il GDPR: in attesa di una pronuncia del garante della privacy propongo questo metodo per saltare questo blocco.",
+          "url": "https://greasyfork.org/scripts/463111-no-cookiewall-italia",
+          "code_url": "https://update.greasyfork.org/scripts/463111/No%20Cookiewall%20Italia.user.js",
+          "code_size": 4737,
+          "license": "AGPL v3",
+          "version": "1.6.2",
+          "locale": "it",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "No Cookiewall Italia",
+  "description": "Permette di navigare siti web italiani di notizie evitando il cookiewall, il quale permette di accedere ai contenuti, già arrivati al browser, previa accettazione cookie o il pagamento di un abbonamento. Alcuni stabiliscono che questo comportamento dei siti non è lecito secondo il GDPR: in attesa di una pronuncia del garante della privacy propongo questo metodo per saltare questo blocco.",
+  "url": "https://greasyfork.org/scripts/463111-no-cookiewall-italia",
+  "code_url": "https://update.greasyfork.org/scripts/463111/No%20Cookiewall%20Italia.user.js",
+  "code_size": 4737,
+  "license": "AGPL v3",
+  "version": "1.6.2",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

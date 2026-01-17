@@ -1,0 +1,33 @@
+{
+  "id": 482442,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-17T03:05:58.000Z",
+  "code_updated_at": "2023-12-17T03:05:58.000Z",
+  "namespace": "yyyzzz999",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 705546,
+      "name": "yyyzzz999",
+      "created_at": "2020-11-16T06:31:37.000Z",
+      "url": "https://greasyfork.org/users/705546-yyyzzz999"
+    }
+  ],
+  "name": "Copy Magnet Links to Clipboard",
+  "description": "Copy all links on the current page that start with magnet to the clipboard.",
+  "url": "https://greasyfork.org/scripts/482442-copy-magnet-links-to-clipboard",
+  "code_url": "https://update.greasyfork.org/scripts/482442/Copy%20Magnet%20Links%20to%20Clipboard.user.js",
+  "code_size": 1312,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

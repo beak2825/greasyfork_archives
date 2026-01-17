@@ -1,0 +1,101 @@
+[
+  {
+    "id": 469844,
+    "daily_installs": 0,
+    "total_installs": 257,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-30T07:18:05.000Z",
+    "code_updated_at": "2025-09-20T17:33:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5102,
+        "name": "Jeau",
+        "created_at": "2014-09-07T09:20:25.000Z",
+        "url": "https://greasyfork.org/users/5102-jeau"
+      }
+    ],
+    "name": "Prime Video Sólo Contenido Prime [ESP]",
+    "description": "Oculta las secciones de compra o alquiler en la portada de Amazon Prime Video.",
+    "url": "https://greasyfork.org/scripts/469844-prime-video-s%C3%B3lo-contenido-prime-esp",
+    "code_url": "https://update.greasyfork.org/scripts/469844/Prime%20Video%20S%C3%B3lo%20Contenido%20Prime%20%5BESP%5D.user.js",
+    "code_size": 10999,
+    "license": "MIT License",
+    "version": "0.4.3",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448597,
+    "daily_installs": 0,
+    "total_installs": 606,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-28T20:47:29.000Z",
+    "code_updated_at": "2025-06-05T12:42:11.000Z",
+    "namespace": "https://greasyfork.org/en/users/5102-jeau",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5102,
+        "name": "Jeau",
+        "created_at": "2014-09-07T09:20:25.000Z",
+        "url": "https://greasyfork.org/users/5102-jeau"
+      }
+    ],
+    "name": "Prime Video Ad Blocker [ESP]",
+    "description": "Skip Ads and self Promotionals in Prime Video.",
+    "url": "https://greasyfork.org/scripts/448597-prime-video-ad-blocker-esp",
+    "code_url": "https://update.greasyfork.org/scripts/448597/Prime%20Video%20Ad%20Blocker%20%5BESP%5D.user.js",
+    "code_size": 3666,
+    "license": "MIT License",
+    "version": "0.3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418299,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-07T21:15:36.000Z",
+    "code_updated_at": "2022-08-27T13:58:55.000Z",
+    "namespace": "https://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5102,
+        "name": "Jeau",
+        "created_at": "2014-09-07T09:20:25.000Z",
+        "url": "https://greasyfork.org/users/5102-jeau"
+      }
+    ],
+    "name": "HdFull Season Button",
+    "description": "Permite marcar como 'no vistos' todos los episodios de una temporada, modificando el botón cuando todos los episodios aparecen como 'vistos'.",
+    "url": "https://greasyfork.org/scripts/418299-hdfull-season-button",
+    "code_url": "https://update.greasyfork.org/scripts/418299/HdFull%20Season%20Button.user.js",
+    "code_size": 5010,
+    "license": null,
+    "version": "0.1.5",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

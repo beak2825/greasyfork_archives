@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 429475,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-16T14:12:52.000Z",
+    "code_updated_at": "2021-07-16T14:12:52.000Z",
+    "namespace": "https://github.com/Dragosarus/Userscripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 582968,
+        "name": "Dragosarus",
+        "created_at": "2020-06-09T04:42:09.000Z",
+        "url": "https://greasyfork.org/users/582968-dragosarus"
+      }
+    ],
+    "name": "Remove the Youtube comment teaser",
+    "description": "Undo part of YT's new UI change",
+    "url": "https://greasyfork.org/scripts/429475-remove-the-youtube-comment-teaser",
+    "code_url": "https://update.greasyfork.org/scripts/429475/Remove%20the%20Youtube%20comment%20teaser.user.js",
+    "code_size": 803,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419227,
+    "daily_installs": 0,
+    "total_installs": 386,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-12-27T12:48:27.000Z",
+    "code_updated_at": "2021-01-14T14:06:52.000Z",
+    "namespace": "https://github.com/Dragosarus/Userscripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 582968,
+        "name": "Dragosarus",
+        "created_at": "2020-06-09T04:42:09.000Z",
+        "url": "https://greasyfork.org/users/582968-dragosarus"
+      }
+    ],
+    "name": "Hide Discord sidebars",
+    "description": "Give the chat more screen space",
+    "url": "https://greasyfork.org/scripts/419227-hide-discord-sidebars",
+    "code_url": "https://update.greasyfork.org/scripts/419227/Hide%20Discord%20sidebars.user.js",
+    "code_size": 3971,
+    "license": null,
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

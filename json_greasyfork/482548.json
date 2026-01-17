@@ -1,0 +1,59 @@
+{
+  "id": 482548,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-18T11:01:06.000Z",
+  "code_updated_at": "2023-12-18T11:01:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1235771,
+      "name": "wuyuzegh",
+      "created_at": "2023-12-18T10:59:44.000Z",
+      "url": "https://greasyfork.org/users/1235771-wuyuzegh",
+      "scripts": [
+        {
+          "id": 482548,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-18T11:01:06.000Z",
+          "code_updated_at": "2023-12-18T11:01:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "技术文章发布日期检测",
+          "description": "Check if a  article is expired and show a alert notification.发布太久的技术文章copy的时候得注意点",
+          "url": "https://greasyfork.org/scripts/482548-%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F%E6%A3%80%E6%B5%8B",
+          "code_url": "https://update.greasyfork.org/scripts/482548/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F%E6%A3%80%E6%B5%8B.user.js",
+          "code_size": 4605,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "技术文章发布日期检测",
+  "description": "Check if a  article is expired and show a alert notification.发布太久的技术文章copy的时候得注意点",
+  "url": "https://greasyfork.org/scripts/482548-%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F%E6%A3%80%E6%B5%8B",
+  "code_url": "https://update.greasyfork.org/scripts/482548/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F%E6%A3%80%E6%B5%8B.user.js",
+  "code_size": 4605,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

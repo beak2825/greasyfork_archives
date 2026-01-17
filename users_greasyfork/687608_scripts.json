@@ -1,0 +1,68 @@
+[
+  {
+    "id": 442280,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-29T02:21:09.000Z",
+    "code_updated_at": "2022-04-13T06:10:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 687608,
+        "name": "HUALONG an",
+        "created_at": "2020-09-15T08:40:56.000Z",
+        "url": "https://greasyfork.org/users/687608-hualong-an"
+      }
+    ],
+    "name": "财报",
+    "description": "财报小工具",
+    "url": "https://greasyfork.org/scripts/442280-%E8%B4%A2%E6%8A%A5",
+    "code_url": "https://update.greasyfork.org/scripts/442280/%E8%B4%A2%E6%8A%A5.user.js",
+    "code_size": 18751,
+    "license": "GPL License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 430674,
+    "daily_installs": 0,
+    "total_installs": 309,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-12T01:28:04.000Z",
+    "code_updated_at": "2021-08-12T01:29:51.000Z",
+    "namespace": "https://www.fenbi.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 687608,
+        "name": "HUALONG an",
+        "created_at": "2020-09-15T08:40:56.000Z",
+        "url": "https://greasyfork.org/users/687608-hualong-an"
+      }
+    ],
+    "name": "粉笔美化",
+    "description": "粉笔界面优化",
+    "url": "https://greasyfork.org/scripts/430674-%E7%B2%89%E7%AC%94%E7%BE%8E%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/430674/%E7%B2%89%E7%AC%94%E7%BE%8E%E5%8C%96.user.js",
+    "code_size": 829,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

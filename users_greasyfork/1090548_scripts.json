@@ -1,0 +1,68 @@
+[
+  {
+    "id": 476993,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-08T18:31:48.000Z",
+    "code_updated_at": "2023-10-08T19:54:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1090548,
+        "name": "reyzitwo",
+        "created_at": "2023-06-04T07:22:59.000Z",
+        "url": "https://greasyfork.org/users/1090548-reyzitwo"
+      }
+    ],
+    "name": "Статистика баллов VK Testers",
+    "description": "Показывает статистику, сколько еще осталось до накопления какого-либо товара в /testpool. Анализ идет по 3, 6 и 12 месяцам всех начислений. (В данный момент mvp, поэтому только последние 6 месяцев)",
+    "url": "https://greasyfork.org/scripts/476993-%D1%81%D1%82%D0%B0%D1%82%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B0-%D0%B1%D0%B0%D0%BB%D0%BB%D0%BE%D0%B2-vk-testers",
+    "code_url": "https://update.greasyfork.org/scripts/476993/%D0%A1%D1%82%D0%B0%D1%82%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B0%20%D0%B1%D0%B0%D0%BB%D0%BB%D0%BE%D0%B2%20VK%20Testers.user.js",
+    "code_size": 9387,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 467861,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-04T07:36:56.000Z",
+    "code_updated_at": "2024-08-03T18:13:41.000Z",
+    "namespace": "https://greasyfork.org/ru/users/1090548-reyzitwo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1090548,
+        "name": "reyzitwo",
+        "created_at": "2023-06-04T07:22:59.000Z",
+        "url": "https://greasyfork.org/users/1090548-reyzitwo"
+      }
+    ],
+    "name": "VK Bugtracker opens reports in a new tab",
+    "description": "Add 'target=_blank' on vk.com/bugs results page",
+    "url": "https://greasyfork.org/scripts/467861-vk-bugtracker-opens-reports-in-a-new-tab",
+    "code_url": "https://update.greasyfork.org/scripts/467861/VK%20Bugtracker%20opens%20reports%20in%20a%20new%20tab.user.js",
+    "code_size": 1083,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

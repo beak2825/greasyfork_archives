@@ -1,0 +1,59 @@
+{
+  "id": 433707,
+  "daily_installs": 0,
+  "total_installs": 1314,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-11T03:16:36.000Z",
+  "code_updated_at": "2021-10-11T03:16:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 823905,
+      "name": "dundun",
+      "created_at": "2021-10-11T02:41:03.000Z",
+      "url": "https://greasyfork.org/users/823905-dundun",
+      "scripts": [
+        {
+          "id": 433707,
+          "daily_installs": 0,
+          "total_installs": 1314,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-11T03:16:36.000Z",
+          "code_updated_at": "2021-10-11T03:16:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "南昌大学校园网自动连接",
+          "description": "南昌大学校园网自动连接并关闭（适用NCU-2.4G、NCU-5G、NCUWLAN）只需要在下面输入你的信息即可",
+          "url": "https://greasyfork.org/scripts/433707-%E5%8D%97%E6%98%8C%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5",
+          "code_url": "https://update.greasyfork.org/scripts/433707/%E5%8D%97%E6%98%8C%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5.user.js",
+          "code_size": 2764,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "南昌大学校园网自动连接",
+  "description": "南昌大学校园网自动连接并关闭（适用NCU-2.4G、NCU-5G、NCUWLAN）只需要在下面输入你的信息即可",
+  "url": "https://greasyfork.org/scripts/433707-%E5%8D%97%E6%98%8C%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5",
+  "code_url": "https://update.greasyfork.org/scripts/433707/%E5%8D%97%E6%98%8C%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5.user.js",
+  "code_size": 2764,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

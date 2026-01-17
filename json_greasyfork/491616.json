@@ -1,0 +1,59 @@
+{
+  "id": 491616,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-04T08:04:44.000Z",
+  "code_updated_at": "2024-04-04T08:04:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1283712,
+      "name": "borstan han",
+      "created_at": "2024-04-04T08:02:13.000Z",
+      "url": "https://greasyfork.org/users/1283712-borstan-han",
+      "scripts": [
+        {
+          "id": 491616,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-04T08:04:44.000Z",
+          "code_updated_at": "2024-04-04T08:04:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "pwdhash",
+          "description": "根据域名对密码哈希",
+          "url": "https://greasyfork.org/scripts/491616-pwdhash",
+          "code_url": "https://update.greasyfork.org/scripts/491616/pwdhash.user.js",
+          "code_size": 11398,
+          "license": "MIT License",
+          "version": "2024-04-04",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "pwdhash",
+  "description": "根据域名对密码哈希",
+  "url": "https://greasyfork.org/scripts/491616-pwdhash",
+  "code_url": "https://update.greasyfork.org/scripts/491616/pwdhash.user.js",
+  "code_size": 11398,
+  "license": "MIT License",
+  "version": "2024-04-04",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

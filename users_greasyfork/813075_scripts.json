@@ -1,0 +1,200 @@
+[
+  {
+    "id": 490559,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-22T10:19:29.000Z",
+    "code_updated_at": "2024-03-22T10:54:52.000Z",
+    "namespace": "http://forhot2000.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813075,
+        "name": "王翔",
+        "created_at": "2021-09-07T13:36:31.000Z",
+        "url": "https://greasyfork.org/users/813075-%E7%8E%8B%E7%BF%94"
+      }
+    ],
+    "name": "Adminer Enhancement",
+    "description": "format numbers and date time values",
+    "url": "https://greasyfork.org/scripts/490559-adminer-enhancement",
+    "code_url": "https://update.greasyfork.org/scripts/490559/Adminer%20Enhancement.user.js",
+    "code_size": 5260,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 490519,
+    "daily_installs": 0,
+    "total_installs": 179,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-22T03:08:44.000Z",
+    "code_updated_at": "2024-06-29T08:33:09.000Z",
+    "namespace": "http://forhot2000.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813075,
+        "name": "王翔",
+        "created_at": "2021-09-07T13:36:31.000Z",
+        "url": "https://greasyfork.org/users/813075-%E7%8E%8B%E7%BF%94"
+      }
+    ],
+    "name": "CSDN增强插件",
+    "description": "CSDN增强插件，允许复制网页内容",
+    "url": "https://greasyfork.org/scripts/490519-csdn%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/490519/CSDN%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 1880,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 490517,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-22T03:06:58.000Z",
+    "code_updated_at": "2024-03-22T10:29:08.000Z",
+    "namespace": "http://forhot2000.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813075,
+        "name": "王翔",
+        "created_at": "2021-09-07T13:36:31.000Z",
+        "url": "https://greasyfork.org/users/813075-%E7%8E%8B%E7%BF%94"
+      }
+    ],
+    "name": "Super copy",
+    "description": "Enable copy from page",
+    "url": "https://greasyfork.org/scripts/490517-super-copy",
+    "code_url": "https://update.greasyfork.org/scripts/490517/Super%20copy.user.js",
+    "code_size": 10279,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438849,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-20T05:04:14.000Z",
+    "code_updated_at": "2022-04-01T07:26:09.000Z",
+    "namespace": "https://github.com/forhot2000",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813075,
+        "name": "王翔",
+        "created_at": "2021-09-07T13:36:31.000Z",
+        "url": "https://greasyfork.org/users/813075-%E7%8E%8B%E7%BF%94"
+      }
+    ],
+    "name": "自动弹正在讲解",
+    "description": "抖音直播自动弹正在讲解",
+    "url": "https://greasyfork.org/scripts/438849-%E8%87%AA%E5%8A%A8%E5%BC%B9%E6%AD%A3%E5%9C%A8%E8%AE%B2%E8%A7%A3",
+    "code_url": "https://update.greasyfork.org/scripts/438849/%E8%87%AA%E5%8A%A8%E5%BC%B9%E6%AD%A3%E5%9C%A8%E8%AE%B2%E8%A7%A3.user.js",
+    "code_size": 118172,
+    "license": "ISC License",
+    "version": "0.3.7.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433727,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-11T12:09:43.000Z",
+    "code_updated_at": "2022-02-18T03:36:30.000Z",
+    "namespace": "https://github.com/forhot2000",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813075,
+        "name": "王翔",
+        "created_at": "2021-09-07T13:36:31.000Z",
+        "url": "https://greasyfork.org/users/813075-%E7%8E%8B%E7%BF%94"
+      }
+    ],
+    "name": "吉客云工具条",
+    "description": "吉客云自定义工具按钮条",
+    "url": "https://greasyfork.org/scripts/433727-%E5%90%89%E5%AE%A2%E4%BA%91%E5%B7%A5%E5%85%B7%E6%9D%A1",
+    "code_url": "https://update.greasyfork.org/scripts/433727/%E5%90%89%E5%AE%A2%E4%BA%91%E5%B7%A5%E5%85%B7%E6%9D%A1.user.js",
+    "code_size": 9828,
+    "license": "ISC License",
+    "version": "0.1.17",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432067,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-07T13:38:38.000Z",
+    "code_updated_at": "2021-10-12T09:13:02.000Z",
+    "namespace": "https://github.com/forhot2000",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813075,
+        "name": "王翔",
+        "created_at": "2021-09-07T13:36:31.000Z",
+        "url": "https://greasyfork.org/users/813075-%E7%8E%8B%E7%BF%94"
+      }
+    ],
+    "name": "抖店工具条",
+    "description": "抖店自定义工具按钮条",
+    "url": "https://greasyfork.org/scripts/432067-%E6%8A%96%E5%BA%97%E5%B7%A5%E5%85%B7%E6%9D%A1",
+    "code_url": "https://update.greasyfork.org/scripts/432067/%E6%8A%96%E5%BA%97%E5%B7%A5%E5%85%B7%E6%9D%A1.user.js",
+    "code_size": 5265,
+    "license": null,
+    "version": "0.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

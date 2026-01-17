@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443405,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-15T06:44:24.000Z",
+    "code_updated_at": "2022-04-15T06:44:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 902418,
+        "name": "BigHolder",
+        "created_at": "2022-04-15T06:26:41.000Z",
+        "url": "https://greasyfork.org/users/902418-bigholder"
+      }
+    ],
+    "name": "Pegaxy Auto Play NOVO",
+    "description": "Joga com os cavalin automatico",
+    "url": "https://greasyfork.org/scripts/443405-pegaxy-auto-play-novo",
+    "code_url": "https://update.greasyfork.org/scripts/443405/Pegaxy%20Auto%20Play%20NOVO.user.js",
+    "code_size": 1982,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

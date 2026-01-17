@@ -63,6 +63,105 @@
     "version": "2025.06.15",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488038,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-22T17:26:52.000Z",
+    "code_updated_at": "2026-01-06T00:16:15.000Z",
+    "namespace": "https://feedly.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3689,
+        "name": "ejin",
+        "created_at": "2014-07-20T04:41:40.000Z",
+        "url": "https://greasyfork.org/users/3689-ejin"
+      }
+    ],
+    "name": "Feedly 优化",
+    "description": "一些优化",
+    "url": "https://greasyfork.org/scripts/488038-feedly-%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/488038/Feedly%20%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 11936,
+    "license": null,
+    "version": "2026.01.06.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470642,
+    "daily_installs": 0,
+    "total_installs": 297,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-12T04:40:32.000Z",
+    "code_updated_at": "2024-01-27T13:36:29.000Z",
+    "namespace": "f65l3ph5oz93x1j23128sh1tp0ban7ce",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3689,
+        "name": "ejin",
+        "created_at": "2014-07-20T04:41:40.000Z",
+        "url": "https://greasyfork.org/users/3689-ejin"
+      }
+    ],
+    "name": "知乎网页优化",
+    "description": "1.首页避免自动跳转到登录页。",
+    "url": "https://greasyfork.org/scripts/470642-%E7%9F%A5%E4%B9%8E%E7%BD%91%E9%A1%B5%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/470642/%E7%9F%A5%E4%B9%8E%E7%BD%91%E9%A1%B5%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 616,
+    "license": null,
+    "version": "2023.09.14.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424572,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-06T07:46:45.000Z",
+    "code_updated_at": "2024-01-19T16:09:27.000Z",
+    "namespace": "ny1jlnkq1nz09y5cux4jlh2g42rd8ztr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3689,
+        "name": "ejin",
+        "created_at": "2014-07-20T04:41:40.000Z",
+        "url": "https://greasyfork.org/users/3689-ejin"
+      }
+    ],
+    "name": "网易企业邮箱自用脚本",
+    "description": "1.自动登录帐号,2.登录后自动打开账户列表。",
+    "url": "https://greasyfork.org/scripts/424572-%E7%BD%91%E6%98%93%E4%BC%81%E4%B8%9A%E9%82%AE%E7%AE%B1%E8%87%AA%E7%94%A8%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/424572/%E7%BD%91%E6%98%93%E4%BC%81%E4%B8%9A%E9%82%AE%E7%AE%B1%E8%87%AA%E7%94%A8%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 2389,
+    "license": null,
+    "version": "2022.06.13.2",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

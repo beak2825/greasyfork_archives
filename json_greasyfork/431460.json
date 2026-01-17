@@ -1,0 +1,59 @@
+{
+  "id": 431460,
+  "daily_installs": 0,
+  "total_installs": 435,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-27T04:03:10.000Z",
+  "code_updated_at": "2023-01-17T11:12:10.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/431460-remove-fandom-garbage-x",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 809036,
+      "name": "WeiHengYi",
+      "created_at": "2021-08-27T03:32:02.000Z",
+      "url": "https://greasyfork.org/users/809036-weihengyi",
+      "scripts": [
+        {
+          "id": 431460,
+          "daily_installs": 0,
+          "total_installs": 435,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-08-27T04:03:10.000Z",
+          "code_updated_at": "2023-01-17T11:12:10.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/431460-remove-fandom-garbage-x",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove Fandom Garbage X",
+          "description": "简化 Fondom 界面，移除各个广告。",
+          "url": "https://greasyfork.org/scripts/431460-remove-fandom-garbage-x",
+          "code_url": "https://update.greasyfork.org/scripts/431460/Remove%20Fandom%20Garbage%20X.user.js",
+          "code_size": 903,
+          "license": "GNU General Public License v3.0 only",
+          "version": "2.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove Fandom Garbage X",
+  "description": "简化 Fondom 界面，移除各个广告。",
+  "url": "https://greasyfork.org/scripts/431460-remove-fandom-garbage-x",
+  "code_url": "https://update.greasyfork.org/scripts/431460/Remove%20Fandom%20Garbage%20X.user.js",
+  "code_size": 903,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

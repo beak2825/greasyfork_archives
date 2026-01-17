@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432774,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-21T22:21:28.000Z",
+    "code_updated_at": "2021-09-21T22:21:28.000Z",
+    "namespace": "https://greasyfork.org/users/817739",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 817739,
+        "name": "Michelino",
+        "created_at": "2021-09-21T21:59:51.000Z",
+        "url": "https://greasyfork.org/users/817739-michelino"
+      }
+    ],
+    "name": "Frozen Cookies",
+    "description": "Userscript to load Frozen Cookies",
+    "url": "https://greasyfork.org/scripts/432774-frozen-cookies",
+    "code_url": "https://update.greasyfork.org/scripts/432774/Frozen%20Cookies.user.js",
+    "code_size": 902,
+    "license": null,
+    "version": "github-latest",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

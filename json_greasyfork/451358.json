@@ -1,0 +1,33 @@
+{
+  "id": 451358,
+  "daily_installs": 0,
+  "total_installs": 216,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-14T08:30:30.000Z",
+  "code_updated_at": "2022-09-14T11:35:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 959096,
+      "name": "loyal-wind",
+      "created_at": "2022-09-14T08:18:30.000Z",
+      "url": "https://greasyfork.org/users/959096-loyal-wind"
+    }
+  ],
+  "name": "百度翻译精简脚本",
+  "description": "去除百度翻译无用内容，保留主要翻译功能。",
+  "url": "https://greasyfork.org/scripts/451358-%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91%E7%B2%BE%E7%AE%80%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/451358/%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91%E7%B2%BE%E7%AE%80%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 971,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

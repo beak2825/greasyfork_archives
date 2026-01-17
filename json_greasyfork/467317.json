@@ -1,0 +1,59 @@
+{
+  "id": 467317,
+  "daily_installs": 0,
+  "total_installs": 41699,
+  "fan_score": "74.1",
+  "good_ratings": 18,
+  "ok_ratings": 3,
+  "bad_ratings": 0,
+  "created_at": "2023-05-28T15:11:01.000Z",
+  "code_updated_at": "2023-06-26T15:34:40.000Z",
+  "namespace": "https://chat.openai.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1086295,
+      "name": "Braum Ye",
+      "created_at": "2023-05-28T14:40:47.000Z",
+      "url": "https://greasyfork.org/users/1086295-braum-ye",
+      "scripts": [
+        {
+          "id": 467317,
+          "daily_installs": 0,
+          "total_installs": 41699,
+          "fan_score": "74.1",
+          "good_ratings": 18,
+          "ok_ratings": 3,
+          "bad_ratings": 0,
+          "created_at": "2023-05-28T15:11:01.000Z",
+          "code_updated_at": "2023-06-26T15:34:40.000Z",
+          "namespace": "https://chat.openai.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT开启不限次数的GPT4-Mobile",
+          "description": "GPT4-Mobile已和GPT4共享3小时25次限制，意味着此脚本已没有意义！！！取自iOS客户端的GPT4模型, 和GPT4一样仅限Plus会员使用",
+          "url": "https://greasyfork.org/scripts/467317-chatgpt%E5%BC%80%E5%90%AF%E4%B8%8D%E9%99%90%E6%AC%A1%E6%95%B0%E7%9A%84gpt4-mobile",
+          "code_url": "https://update.greasyfork.org/scripts/467317/ChatGPT%E5%BC%80%E5%90%AF%E4%B8%8D%E9%99%90%E6%AC%A1%E6%95%B0%E7%9A%84GPT4-Mobile.user.js",
+          "code_size": 1626,
+          "license": "GNU General Public License v2.0 only",
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT开启不限次数的GPT4-Mobile",
+  "description": "GPT4-Mobile已和GPT4共享3小时25次限制，意味着此脚本已没有意义！！！取自iOS客户端的GPT4模型, 和GPT4一样仅限Plus会员使用",
+  "url": "https://greasyfork.org/scripts/467317-chatgpt%E5%BC%80%E5%90%AF%E4%B8%8D%E9%99%90%E6%AC%A1%E6%95%B0%E7%9A%84gpt4-mobile",
+  "code_url": "https://update.greasyfork.org/scripts/467317/ChatGPT%E5%BC%80%E5%90%AF%E4%B8%8D%E9%99%90%E6%AC%A1%E6%95%B0%E7%9A%84GPT4-Mobile.user.js",
+  "code_size": 1626,
+  "license": "GNU General Public License v2.0 only",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

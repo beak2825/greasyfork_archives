@@ -1,0 +1,59 @@
+{
+  "id": 464309,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-18T13:48:01.000Z",
+  "code_updated_at": "2023-04-18T13:48:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1062733,
+      "name": "sbill-Fu",
+      "created_at": "2023-04-18T13:31:29.000Z",
+      "url": "https://greasyfork.org/users/1062733-sbill-fu",
+      "scripts": [
+        {
+          "id": 464309,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-18T13:48:01.000Z",
+          "code_updated_at": "2023-04-18T13:48:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Slack Code Copy Button",
+          "description": "在 Slack 的网页版代码块上添加复制按钮",
+          "url": "https://greasyfork.org/scripts/464309-slack-code-copy-button",
+          "code_url": "https://update.greasyfork.org/scripts/464309/Slack%20Code%20Copy%20Button.user.js",
+          "code_size": 2523,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Slack Code Copy Button",
+  "description": "在 Slack 的网页版代码块上添加复制按钮",
+  "url": "https://greasyfork.org/scripts/464309-slack-code-copy-button",
+  "code_url": "https://update.greasyfork.org/scripts/464309/Slack%20Code%20Copy%20Button.user.js",
+  "code_size": 2523,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462142,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-19T20:25:09.000Z",
+    "code_updated_at": "2025-05-25T10:40:50.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1021535,
+        "name": "Sal R. (Scolo)",
+        "created_at": "2023-02-04T07:29:15.000Z",
+        "url": "https://greasyfork.org/users/1021535-sal-r-scolo"
+      }
+    ],
+    "name": "oxygen",
+    "description": "19/03/2023 19:08:35",
+    "url": "https://greasyfork.org/scripts/462142-oxygen",
+    "code_url": "https://update.greasyfork.org/scripts/462142/oxygen.user.js",
+    "code_size": 1147,
+    "license": "MIT License",
+    "version": "0.6.1.6",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

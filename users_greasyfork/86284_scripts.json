@@ -1,0 +1,101 @@
+[
+  {
+    "id": 435460,
+    "daily_installs": 0,
+    "total_installs": 259,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-13T18:51:07.000Z",
+    "code_updated_at": "2022-08-12T18:36:51.000Z",
+    "namespace": "https://greasyfork.org/en/users/86284-benjababe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 86284,
+        "name": "Benjababe",
+        "created_at": "2016-12-11T16:38:08.000Z",
+        "url": "https://greasyfork.org/users/86284-benjababe"
+      }
+    ],
+    "name": "Nicovideo Fast Downloader",
+    "description": "Download your nicovideos with one simple click",
+    "url": "https://greasyfork.org/scripts/435460-nicovideo-fast-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/435460/Nicovideo%20Fast%20Downloader.user.js",
+    "code_size": 3719,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 430850,
+    "daily_installs": 0,
+    "total_installs": 103,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-08-15T18:13:36.000Z",
+    "code_updated_at": "2022-08-12T17:57:00.000Z",
+    "namespace": "https://greasyfork.org/en/users/86284-benjababe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 86284,
+        "name": "Benjababe",
+        "created_at": "2016-12-11T16:38:08.000Z",
+        "url": "https://greasyfork.org/users/86284-benjababe"
+      }
+    ],
+    "name": "Google Logo Replacer",
+    "description": "Replaces google logo on search and image page",
+    "url": "https://greasyfork.org/scripts/430850-google-logo-replacer",
+    "code_url": "https://update.greasyfork.org/scripts/430850/Google%20Logo%20Replacer.user.js",
+    "code_size": 1942,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427057,
+    "daily_installs": 0,
+    "total_installs": 291,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-26T12:26:46.000Z",
+    "code_updated_at": "2021-11-18T03:07:23.000Z",
+    "namespace": "https://greasyfork.org/en/users/86284-benjababe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 86284,
+        "name": "Benjababe",
+        "created_at": "2016-12-11T16:38:08.000Z",
+        "url": "https://greasyfork.org/users/86284-benjababe"
+      }
+    ],
+    "name": "Chin Fast Image Downloader",
+    "description": "One click to download current hovered image/webmeme",
+    "url": "https://greasyfork.org/scripts/427057-chin-fast-image-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/427057/Chin%20Fast%20Image%20Downloader.user.js",
+    "code_size": 1850,
+    "license": null,
+    "version": "1.04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

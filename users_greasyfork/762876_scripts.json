@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428399,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-24T11:11:41.000Z",
+    "code_updated_at": "2021-06-24T11:11:41.000Z",
+    "namespace": "https://nebocco.hatenablog.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 762876,
+        "name": "nebocco",
+        "created_at": "2021-04-21T06:41:58.000Z",
+        "url": "https://greasyfork.org/users/762876-nebocco"
+      }
+    ],
+    "name": "Pastoral Competitive Programming",
+    "description": "cow barks on submissing code to calm you down",
+    "url": "https://greasyfork.org/scripts/428399-pastoral-competitive-programming",
+    "code_url": "https://update.greasyfork.org/scripts/428399/Pastoral%20Competitive%20Programming.user.js",
+    "code_size": 1098,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

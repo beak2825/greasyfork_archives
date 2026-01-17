@@ -1,0 +1,33 @@
+{
+  "id": 435491,
+  "daily_installs": 0,
+  "total_installs": 958,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-14T09:53:38.000Z",
+  "code_updated_at": "2021-11-14T09:53:38.000Z",
+  "namespace": "https://github.com/syhyz1990/panAI",
+  "support_url": "https://github.com/syhyz1990/panAI",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 838488,
+      "name": "qq84065994",
+      "created_at": "2021-11-14T09:42:25.000Z",
+      "url": "https://greasyfork.org/users/838488-qq84065994"
+    }
+  ],
+  "name": "网盘智能识别助手",
+  "description": "AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘。",
+  "url": "https://greasyfork.org/scripts/435491-%E7%BD%91%E7%9B%98%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/435491/%E7%BD%91%E7%9B%98%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 18742,
+  "license": "AGPL",
+  "version": "1.4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

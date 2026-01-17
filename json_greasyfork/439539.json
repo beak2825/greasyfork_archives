@@ -1,0 +1,34 @@
+{
+  "id": 439539,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-03T22:08:48.000Z",
+  "code_updated_at": "2022-02-17T15:35:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 831083,
+      "name": "GavoroX",
+      "created_at": "2021-11-01T23:09:52.000Z",
+      "url": "https://greasyfork.org/users/831083-gavorox",
+      "scripts": []
+    }
+  ],
+  "name": "Troll Bonk.io",
+  "description": "Adds a troll bonk.io button to bonk.io, click the button then leave the tab opened to troll bonk.io",
+  "url": "https://greasyfork.org/scripts/439539-troll-bonk-io",
+  "code_url": "https://update.greasyfork.org/scripts/439539/Troll%20Bonkio.user.js",
+  "code_size": 2254,
+  "license": null,
+  "version": "0.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 449384,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-11T20:25:35.000Z",
+    "code_updated_at": "2022-08-13T10:29:59.000Z",
+    "namespace": "https://greasyfork.org/en/users/697139-labuwx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 697139,
+        "name": "labuwx",
+        "created_at": "2020-10-21T23:09:50.000Z",
+        "url": "https://greasyfork.org/users/697139-labuwx"
+      }
+    ],
+    "name": "LCWO transmit beep fix",
+    "description": "Fix for the \"An AudioContext was prevented from starting automatically\" issue.",
+    "url": "https://greasyfork.org/scripts/449384-lcwo-transmit-beep-fix",
+    "code_url": "https://update.greasyfork.org/scripts/449384/LCWO%20transmit%20beep%20fix.user.js",
+    "code_size": 529,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 414052,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-21T23:14:10.000Z",
+    "code_updated_at": "2020-11-11T01:33:47.000Z",
+    "namespace": "https://greasyfork.org/en/users/697139-labuwx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 697139,
+        "name": "labuwx",
+        "created_at": "2020-10-21T23:09:50.000Z",
+        "url": "https://greasyfork.org/users/697139-labuwx"
+      }
+    ],
+    "name": "BarcsihirekPhotoFS",
+    "description": "Full size photos on www.barcsihirek.hu",
+    "url": "https://greasyfork.org/scripts/414052-barcsihirekphotofs",
+    "code_url": "https://update.greasyfork.org/scripts/414052/BarcsihirekPhotoFS.user.js",
+    "code_size": 942,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

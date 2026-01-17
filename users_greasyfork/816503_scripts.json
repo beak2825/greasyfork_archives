@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432581,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-18T02:44:41.000Z",
+    "code_updated_at": "2021-09-18T02:44:40.000Z",
+    "namespace": "http://wiki.urbandead.com/index.php/User:Thvortex",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 816503,
+        "name": "ThVortex",
+        "created_at": "2021-09-18T02:27:40.000Z",
+        "url": "https://greasyfork.org/users/816503-thvortex"
+      }
+    ],
+    "name": "UD Speech Combiner",
+    "description": "Enlarges the speech input box and combines it with graffiti and broadcast boxes",
+    "url": "https://greasyfork.org/scripts/432581-ud-speech-combiner",
+    "code_url": "https://update.greasyfork.org/scripts/432581/UD%20Speech%20Combiner.user.js",
+    "code_size": 3153,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

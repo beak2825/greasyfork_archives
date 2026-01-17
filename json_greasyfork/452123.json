@@ -1,0 +1,59 @@
+{
+  "id": 452123,
+  "daily_installs": 5,
+  "total_installs": 8105,
+  "fan_score": "23.1",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2022-09-27T17:48:37.000Z",
+  "code_updated_at": "2024-10-04T02:23:18.000Z",
+  "namespace": "https://greasyfork.org/users/964173",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 964173,
+      "name": "slither",
+      "created_at": "2022-09-27T17:44:24.000Z",
+      "url": "https://greasyfork.org/users/964173-slither",
+      "scripts": [
+        {
+          "id": 452123,
+          "daily_installs": 5,
+          "total_installs": 8105,
+          "fan_score": "23.1",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2022-09-27T17:48:37.000Z",
+          "code_updated_at": "2024-10-04T02:23:18.000Z",
+          "namespace": "https://greasyfork.org/users/964173",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kahoot Namerator and Name Length Bypass",
+          "description": "Bypasses kahoot nickname generator as well as the maximum name length",
+          "url": "https://greasyfork.org/scripts/452123-kahoot-namerator-and-name-length-bypass",
+          "code_url": "https://update.greasyfork.org/scripts/452123/Kahoot%20Namerator%20and%20Name%20Length%20Bypass.user.js",
+          "code_size": 3211,
+          "license": "MIT License",
+          "version": "2.3.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kahoot Namerator and Name Length Bypass",
+  "description": "Bypasses kahoot nickname generator as well as the maximum name length",
+  "url": "https://greasyfork.org/scripts/452123-kahoot-namerator-and-name-length-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/452123/Kahoot%20Namerator%20and%20Name%20Length%20Bypass.user.js",
+  "code_size": 3211,
+  "license": "MIT License",
+  "version": "2.3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

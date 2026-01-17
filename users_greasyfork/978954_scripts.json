@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454215,
+    "daily_installs": 0,
+    "total_installs": 527,
+    "fan_score": "51.7",
+    "good_ratings": 5,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-11-03T20:02:52.000Z",
+    "code_updated_at": "2023-07-24T14:55:03.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 978954,
+        "name": "The_Loko",
+        "created_at": "2022-11-03T19:10:42.000Z",
+        "url": "https://greasyfork.org/users/978954-the-loko"
+      }
+    ],
+    "name": "Bring back Youtube channel playlists",
+    "description": "Adds a \"Play All\" button redirecting to the channel's uploaded videos playlist on the \"Videos\" tab.",
+    "url": "https://greasyfork.org/scripts/454215-bring-back-youtube-channel-playlists",
+    "code_url": "https://update.greasyfork.org/scripts/454215/Bring%20back%20Youtube%20channel%20playlists.user.js",
+    "code_size": 3692,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

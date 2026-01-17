@@ -1,0 +1,33 @@
+{
+  "id": 494602,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-10T21:11:24.000Z",
+  "code_updated_at": "2024-05-10T21:11:23.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1299655,
+      "name": "tiritto",
+      "created_at": "2024-05-10T21:07:11.000Z",
+      "url": "https://greasyfork.org/users/1299655-tiritto"
+    }
+  ],
+  "name": "Game-Stats Canvas to CSV",
+  "description": "10.05.2024, 22:08:07",
+  "url": "https://greasyfork.org/scripts/494602-game-stats-canvas-to-csv",
+  "code_url": "https://update.greasyfork.org/scripts/494602/Game-Stats%20Canvas%20to%20CSV.user.js",
+  "code_size": 2997,
+  "license": "EUPL 1.2",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

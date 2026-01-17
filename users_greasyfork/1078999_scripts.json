@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466265,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-14T12:12:16.000Z",
+    "code_updated_at": "2023-05-14T12:12:16.000Z",
+    "namespace": "https://greasyfork.org/users/1078999",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1078999,
+        "name": "minato6",
+        "created_at": "2023-05-14T12:09:00.000Z",
+        "url": "https://greasyfork.org/users/1078999-minato6"
+      }
+    ],
+    "name": "NerinyanDL",
+    "description": "nerinyan.moe에서 비트맵을 바로 다운로드 할 수 있는 버튼을 추가합니다.",
+    "url": "https://greasyfork.org/scripts/466265-nerinyandl",
+    "code_url": "https://update.greasyfork.org/scripts/466265/NerinyanDL.user.js",
+    "code_size": 4288,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

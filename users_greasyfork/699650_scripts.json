@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415063,
+    "daily_installs": 0,
+    "total_installs": 444,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-30T07:28:11.000Z",
+    "code_updated_at": "2020-10-31T10:43:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 699650,
+        "name": "jing332",
+        "created_at": "2020-10-30T07:16:48.000Z",
+        "url": "https://greasyfork.org/users/699650-jing332"
+      }
+    ],
+    "name": "喜马拉雅FM音质修改",
+    "description": "修改喜马拉雅FM音质为64/128kbps",
+    "url": "https://greasyfork.org/scripts/415063-%E5%96%9C%E9%A9%AC%E6%8B%89%E9%9B%85fm%E9%9F%B3%E8%B4%A8%E4%BF%AE%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/415063/%E5%96%9C%E9%A9%AC%E6%8B%89%E9%9B%85FM%E9%9F%B3%E8%B4%A8%E4%BF%AE%E6%94%B9.user.js",
+    "code_size": 1162,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

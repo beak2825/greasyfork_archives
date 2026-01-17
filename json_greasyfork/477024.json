@@ -1,0 +1,34 @@
+{
+  "id": 477024,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-09T06:38:28.000Z",
+  "code_updated_at": "2024-02-04T02:24:46.000Z",
+  "namespace": "hx",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1191773,
+      "name": "不喝水的绘星",
+      "created_at": "2023-10-09T06:20:07.000Z",
+      "url": "https://greasyfork.org/users/1191773-%E4%B8%8D%E5%96%9D%E6%B0%B4%E7%9A%84%E7%BB%98%E6%98%9F",
+      "scripts": []
+    }
+  ],
+  "name": "百万工程",
+  "description": "模仿手动方式进行点z，非刷z，默认20一组 每隔15分钟进行一轮 上限200，可自行调整参数，一组z只取按时间排序的近20个进行点z，如已点过z会自动跳过，计数z为确认成功数量，可能存在点上z但没计数的情况，不建议频率过高，以稳为主 细水长流。",
+  "url": "https://greasyfork.org/scripts/477024-%E7%99%BE%E4%B8%87%E5%B7%A5%E7%A8%8B",
+  "code_url": "https://update.greasyfork.org/scripts/477024/%E7%99%BE%E4%B8%87%E5%B7%A5%E7%A8%8B.user.js",
+  "code_size": 6273,
+  "license": null,
+  "version": "1.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

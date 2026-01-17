@@ -64,5 +64,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 486860,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-07T18:07:29.000Z",
+    "code_updated_at": "2024-05-13T12:10:07.000Z",
+    "namespace": "https://greasyfork.org/users/931787",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931787,
+        "name": "incognico",
+        "created_at": "2022-07-03T21:33:30.000Z",
+        "url": "https://greasyfork.org/users/931787-incognico"
+      }
+    ],
+    "name": "Alfies — Status Update Notifier",
+    "description": "Sends notifications when the order status gets updated",
+    "url": "https://greasyfork.org/scripts/486860-alfies-status-update-notifier",
+    "code_url": "https://update.greasyfork.org/scripts/486860/Alfies%20%E2%80%94%20Status%20Update%20Notifier.user.js",
+    "code_size": 4722,
+    "license": "GPL v3",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 481084,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-30T10:23:50.000Z",
+    "code_updated_at": "2025-09-25T13:37:27.000Z",
+    "namespace": "https://greasyfork.org/users/931787",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931787,
+        "name": "incognico",
+        "created_at": "2022-07-03T21:33:30.000Z",
+        "url": "https://greasyfork.org/users/931787-incognico"
+      }
+    ],
+    "name": "Foodora - Remove annoyances!",
+    "description": "Remove the annoying review modal and donate/download/pro banner on Foodora",
+    "url": "https://greasyfork.org/scripts/481084-foodora-remove-annoyances",
+    "code_url": "https://update.greasyfork.org/scripts/481084/Foodora%20-%20Remove%20annoyances%21.user.js",
+    "code_size": 1917,
+    "license": "GPL v3",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460922,
+    "daily_installs": 0,
+    "total_installs": 306,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-28T14:02:54.000Z",
+    "code_updated_at": "2023-03-30T18:20:14.000Z",
+    "namespace": "https://greasyfork.org/users/931787",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931787,
+        "name": "incognico",
+        "created_at": "2022-07-03T21:33:30.000Z",
+        "url": "https://greasyfork.org/users/931787-incognico"
+      }
+    ],
+    "name": "TikTok - Remove distractions",
+    "description": "Remove distractions on TikTok",
+    "url": "https://greasyfork.org/scripts/460922-tiktok-remove-distractions",
+    "code_url": "https://update.greasyfork.org/scripts/460922/TikTok%20-%20Remove%20distractions.user.js",
+    "code_size": 2075,
+    "license": "GPL v3",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

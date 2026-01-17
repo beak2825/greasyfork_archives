@@ -1,0 +1,101 @@
+[
+  {
+    "id": 481927,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-11T10:28:33.000Z",
+    "code_updated_at": "2023-12-11T10:28:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 228293,
+        "name": "John Ren",
+        "created_at": "2018-11-25T13:01:46.000Z",
+        "url": "https://greasyfork.org/users/228293-john-ren"
+      }
+    ],
+    "name": "Leetcode: format on save",
+    "description": "Format code on save (Ctrl + S)",
+    "url": "https://greasyfork.org/scripts/481927-leetcode-format-on-save",
+    "code_url": "https://update.greasyfork.org/scripts/481927/Leetcode%3A%20format%20on%20save.user.js",
+    "code_size": 832,
+    "license": "MIT License",
+    "version": "2023-12-11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 478984,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-04T04:08:03.000Z",
+    "code_updated_at": "2023-11-04T16:10:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 228293,
+        "name": "John Ren",
+        "created_at": "2018-11-25T13:01:46.000Z",
+        "url": "https://greasyfork.org/users/228293-john-ren"
+      }
+    ],
+    "name": "Query String Automator",
+    "description": "Automation based on query string. Example: https://www.google.com/?uauto={selector:\".RNmpXc\",action:\"this.click()\"}",
+    "url": "https://greasyfork.org/scripts/478984-query-string-automator",
+    "code_url": "https://update.greasyfork.org/scripts/478984/Query%20String%20Automator.user.js",
+    "code_size": 1201,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 455358,
+    "daily_installs": 0,
+    "total_installs": 288,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-24T18:26:59.000Z",
+    "code_updated_at": "2022-11-24T18:26:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 228293,
+        "name": "John Ren",
+        "created_at": "2018-11-25T13:01:46.000Z",
+        "url": "https://greasyfork.org/users/228293-john-ren"
+      }
+    ],
+    "name": "Poke AutoClicker",
+    "description": "Auto click/farm/hatch",
+    "url": "https://greasyfork.org/scripts/455358-poke-autoclicker",
+    "code_url": "https://update.greasyfork.org/scripts/455358/Poke%20AutoClicker.user.js",
+    "code_size": 4016,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

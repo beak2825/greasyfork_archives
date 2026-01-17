@@ -1,0 +1,233 @@
+[
+  {
+    "id": 472236,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-02T08:44:35.000Z",
+    "code_updated_at": "2025-05-08T15:12:29.000Z",
+    "namespace": "https://github.com/Sec-ant",
+    "support_url": "https://github.com/Sec-ant/gm-fetch/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152136,
+        "name": "Secant",
+        "created_at": "2017-09-09T12:15:22.000Z",
+        "url": "https://greasyfork.org/users/152136-secant"
+      }
+    ],
+    "name": "GM Fetch",
+    "description": "A fetch API of GM_xmlhttpRequest",
+    "url": "https://greasyfork.org/scripts/472236-gm-fetch",
+    "code_url": "https://update.greasyfork.org/scripts/472236/1585366/GM%20Fetch.js",
+    "code_size": 5937,
+    "license": "MIT License",
+    "version": "1.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451563,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-18T05:43:53.000Z",
+    "code_updated_at": "2022-09-21T14:55:04.000Z",
+    "namespace": "https://github.com/ZJU-CC98/Forum",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152136,
+        "name": "Secant",
+        "created_at": "2017-09-09T12:15:22.000Z",
+        "url": "https://greasyfork.org/users/152136-secant"
+      }
+    ],
+    "name": "Add Watermark",
+    "description": "Add watermarks to CC98 webpages",
+    "url": "https://greasyfork.org/scripts/451563-add-watermark",
+    "code_url": "https://update.greasyfork.org/scripts/451563/Add%20Watermark.user.js",
+    "code_size": 14534,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 444959,
+    "daily_installs": 0,
+    "total_installs": 707,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-14T12:30:29.000Z",
+    "code_updated_at": "2024-06-30T05:24:59.000Z",
+    "namespace": "https://github.com/Sec-ant/",
+    "support_url": "https://github.com/Sec-ant/doufree/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152136,
+        "name": "Secant",
+        "created_at": "2017-09-09T12:15:22.000Z",
+        "url": "https://greasyfork.org/users/152136-secant"
+      }
+    ],
+    "name": "DouFree",
+    "description": "Free you from DouBan restrictions",
+    "url": "https://greasyfork.org/scripts/444959-doufree",
+    "code_url": "https://update.greasyfork.org/scripts/444959/DouFree.user.js",
+    "code_size": 4885,
+    "license": "MIT License",
+    "version": "0.14.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438042,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-04T16:01:49.000Z",
+    "code_updated_at": "2022-01-09T07:14:25.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152136,
+        "name": "Secant",
+        "created_at": "2017-09-09T12:15:22.000Z",
+        "url": "https://greasyfork.org/users/152136-secant"
+      }
+    ],
+    "name": "Douban Info Class",
+    "description": "Parse Douban Info",
+    "url": "https://greasyfork.org/scripts/438042-douban-info-class",
+    "code_url": "https://update.greasyfork.org/scripts/438042/1006692/Douban%20Info%20Class.js",
+    "code_size": 32618,
+    "license": null,
+    "version": "0.0.1.20220109071425",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438040,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-04T15:36:09.000Z",
+    "code_updated_at": "2022-01-04T15:36:09.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152136,
+        "name": "Secant",
+        "created_at": "2017-09-09T12:15:22.000Z",
+        "url": "https://greasyfork.org/users/152136-secant"
+      }
+    ],
+    "name": "dirty-json",
+    "description": "A bundle of dirty-json in browser environment",
+    "url": "https://greasyfork.org/scripts/438040-dirty-json",
+    "code_url": "https://update.greasyfork.org/scripts/438040/1005176/dirty-json.js",
+    "code_size": 38873,
+    "license": null,
+    "version": "0.0.1.20220104153609",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 436912,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-11T18:40:01.000Z",
+    "code_updated_at": "2021-12-11T18:40:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152136,
+        "name": "Secant",
+        "created_at": "2017-09-09T12:15:22.000Z",
+        "url": "https://greasyfork.org/users/152136-secant"
+      }
+    ],
+    "name": "Show Me the Posters",
+    "description": "Display posters on Karagarga Browse Page",
+    "url": "https://greasyfork.org/scripts/436912-show-me-the-posters",
+    "code_url": "https://update.greasyfork.org/scripts/436912/Show%20Me%20the%20Posters.user.js",
+    "code_size": 3915,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 425661,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-28T12:43:00.000Z",
+    "code_updated_at": "2021-04-28T13:45:34.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152136,
+        "name": "Secant",
+        "created_at": "2017-09-09T12:15:22.000Z",
+        "url": "https://greasyfork.org/users/152136-secant"
+      }
+    ],
+    "name": "texmath",
+    "description": "TeXmath support for cc98 markdown posts",
+    "url": "https://greasyfork.org/scripts/425661-texmath",
+    "code_url": "https://update.greasyfork.org/scripts/425661/926061/texmath.js",
+    "code_size": 5400,
+    "license": null,
+    "version": "0.0.1.20210428134534",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

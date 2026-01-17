@@ -1,0 +1,68 @@
+[
+  {
+    "id": 468181,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-08T07:14:51.000Z",
+    "code_updated_at": "2023-06-10T15:09:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957845,
+        "name": "比比玉兔ww",
+        "created_at": "2022-09-12T05:32:44.000Z",
+        "url": "https://greasyfork.org/users/957845-%E6%AF%94%E6%AF%94%E7%8E%89%E5%85%94ww"
+      }
+    ],
+    "name": "TouPiao",
+    "description": "打开B站动态",
+    "url": "https://greasyfork.org/scripts/468181-toupiao",
+    "code_url": "https://update.greasyfork.org/scripts/468181/TouPiao.user.js",
+    "code_size": 2196,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451236,
+    "daily_installs": 0,
+    "total_installs": 5893,
+    "fan_score": "50.0",
+    "good_ratings": 10,
+    "ok_ratings": 16,
+    "bad_ratings": 0,
+    "created_at": "2022-09-12T07:14:28.000Z",
+    "code_updated_at": "2022-09-13T12:40:17.000Z",
+    "namespace": "ACG3CGTCG",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957845,
+        "name": "比比玉兔ww",
+        "created_at": "2022-09-12T05:32:44.000Z",
+        "url": "https://greasyfork.org/users/957845-%E6%AF%94%E6%AF%94%E7%8E%89%E5%85%94ww"
+      }
+    ],
+    "name": "A畜3畜野狗大杂烩指示器",
+    "description": "自动标注成分，初版默认包括a畜、3畜、4畜、e畜、OP、农狗、粥批、塔畜、罕见（東雪蓮）、T畜（星瞳）",
+    "url": "https://greasyfork.org/scripts/451236-a%E7%95%9C3%E7%95%9C%E9%87%8E%E7%8B%97%E5%A4%A7%E6%9D%82%E7%83%A9%E6%8C%87%E7%A4%BA%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/451236/A%E7%95%9C3%E7%95%9C%E9%87%8E%E7%8B%97%E5%A4%A7%E6%9D%82%E7%83%A9%E6%8C%87%E7%A4%BA%E5%99%A8.user.js",
+    "code_size": 14348,
+    "license": "GPLv3",
+    "version": "2.57",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

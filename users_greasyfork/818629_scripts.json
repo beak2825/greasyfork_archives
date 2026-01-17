@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432894,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-24T13:42:06.000Z",
+    "code_updated_at": "2021-09-24T13:46:28.000Z",
+    "namespace": "https://5266.live/greas/gm.php",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 818629,
+        "name": "偷尼（偷尼 Tony）",
+        "created_at": "2021-09-24T13:34:30.000Z",
+        "url": "https://greasyfork.org/users/818629-%E5%81%B7%E5%B0%BC-%E5%81%B7%E5%B0%BC-tony"
+      }
+    ],
+    "name": "DouyuEx(偷尼改)",
+    "description": "DouyuEx-斗鱼直播间增强插件 (偷尼改)",
+    "url": "https://greasyfork.org/scripts/432894-douyuex-%E5%81%B7%E5%B0%BC%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/432894/DouyuEx%28%E5%81%B7%E5%B0%BC%E6%94%B9%29.user.js",
+    "code_size": 2257,
+    "license": null,
+    "version": "2021.09.24.02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

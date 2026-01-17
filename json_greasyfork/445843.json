@@ -1,0 +1,34 @@
+{
+  "id": 445843,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-01T06:29:20.000Z",
+  "code_updated_at": "2022-06-08T05:59:43.000Z",
+  "namespace": "name.mrzc.clocktower",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 920714,
+      "name": "明日之春",
+      "created_at": "2022-06-01T00:25:51.000Z",
+      "url": "https://greasyfork.org/users/920714-%E6%98%8E%E6%97%A5%E4%B9%8B%E6%98%A5",
+      "scripts": []
+    }
+  ],
+  "name": "染·钟楼谜团魔典-添加座位",
+  "description": "2022/6/3 16:18:06",
+  "url": "https://greasyfork.org/scripts/445843-%E6%9F%93-%E9%92%9F%E6%A5%BC%E8%B0%9C%E5%9B%A2%E9%AD%94%E5%85%B8-%E6%B7%BB%E5%8A%A0%E5%BA%A7%E4%BD%8D",
+  "code_url": "https://update.greasyfork.org/scripts/445843/%E6%9F%93%C2%B7%E9%92%9F%E6%A5%BC%E8%B0%9C%E5%9B%A2%E9%AD%94%E5%85%B8-%E6%B7%BB%E5%8A%A0%E5%BA%A7%E4%BD%8D.user.js",
+  "code_size": 4286,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

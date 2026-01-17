@@ -1,0 +1,68 @@
+[
+  {
+    "id": 418465,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-10T18:49:53.000Z",
+    "code_updated_at": "2021-01-21T14:56:20.000Z",
+    "namespace": "https://git.kaki87.net/KaKi87/userscripts/src/branch/master/GitHubActionsNotifications",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 430889,
+        "name": "KaKi87",
+        "created_at": "2020-01-01T20:15:52.000Z",
+        "url": "https://greasyfork.org/users/430889-kaki87"
+      }
+    ],
+    "name": "GitHub Actions notifications",
+    "description": "Enable desktop notifications for GitHub Actions updates",
+    "url": "https://greasyfork.org/scripts/418465-github-actions-notifications",
+    "code_url": "https://update.greasyfork.org/scripts/418465/GitHub%20Actions%20notifications.user.js",
+    "code_size": 2063,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416140,
+    "daily_installs": 0,
+    "total_installs": 1357,
+    "fan_score": "40.2",
+    "good_ratings": 6,
+    "ok_ratings": 1,
+    "bad_ratings": 2,
+    "created_at": "2020-11-15T15:05:19.000Z",
+    "code_updated_at": "2020-12-23T17:02:17.000Z",
+    "namespace": "https://git.kaki87.net/KaKi87/userscripts/src/branch/master/rarbgThreatDefenceBypasser",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 430889,
+        "name": "KaKi87",
+        "created_at": "2020-01-01T20:15:52.000Z",
+        "url": "https://greasyfork.org/users/430889-kaki87"
+      }
+    ],
+    "name": "RARBG threat defence bypasser",
+    "description": "Automatically fill & submit captcha",
+    "url": "https://greasyfork.org/scripts/416140-rarbg-threat-defence-bypasser",
+    "code_url": "https://update.greasyfork.org/scripts/416140/RARBG%20threat%20defence%20bypasser.user.js",
+    "code_size": 907,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

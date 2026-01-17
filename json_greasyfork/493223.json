@@ -1,0 +1,33 @@
+{
+  "id": 493223,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-23T02:48:29.000Z",
+  "code_updated_at": "2024-04-23T02:48:29.000Z",
+  "namespace": "github.com/openstyles/stylus",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1125570,
+      "name": "posthumz",
+      "created_at": "2023-07-13T10:55:19.000Z",
+      "url": "https://greasyfork.org/users/1125570-posthumz"
+    }
+  ],
+  "name": "Wider Bilibili 自定义样式",
+  "description": "搭配Wider Bilibili使用",
+  "url": "https://greasyfork.org/scripts/493223-wider-bilibili-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%B7%E5%BC%8F",
+  "code_url": "https://update.greasyfork.org/scripts/493223/Wider%20Bilibili%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%B7%E5%BC%8F.user.css",
+  "code_size": 1282,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

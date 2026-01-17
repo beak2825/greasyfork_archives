@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447464,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-05T14:11:15.000Z",
+    "code_updated_at": "2022-07-18T12:07:35.000Z",
+    "namespace": "http://localhost",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 932661,
+        "name": "Chick Yik",
+        "created_at": "2022-07-05T13:54:06.000Z",
+        "url": "https://greasyfork.org/users/932661-chick-yik"
+      }
+    ],
+    "name": "Dragcave egg monitor",
+    "description": "Monitor the location page and catch the egg you want.",
+    "url": "https://greasyfork.org/scripts/447464-dragcave-egg-monitor",
+    "code_url": "https://update.greasyfork.org/scripts/447464/Dragcave%20egg%20monitor.user.js",
+    "code_size": 1258,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

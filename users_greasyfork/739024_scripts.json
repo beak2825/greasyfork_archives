@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422015,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-19T20:32:17.000Z",
+    "code_updated_at": "2021-02-19T20:33:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739024,
+        "name": "Babulous",
+        "created_at": "2021-02-19T20:19:34.000Z",
+        "url": "https://greasyfork.org/users/739024-babulous"
+      }
+    ],
+    "name": "Crunchyroll Manga Keyboard Controls",
+    "description": "Basic keyboard controls for Crunchyroll's HTML5 manga reader.",
+    "url": "https://greasyfork.org/scripts/422015-crunchyroll-manga-keyboard-controls",
+    "code_url": "https://update.greasyfork.org/scripts/422015/Crunchyroll%20Manga%20Keyboard%20Controls.user.js",
+    "code_size": 1009,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

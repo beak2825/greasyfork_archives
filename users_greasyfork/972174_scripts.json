@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 486616,
+    "daily_installs": 1,
+    "total_installs": 115,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-04T21:55:51.000Z",
+    "code_updated_at": "2024-02-04T21:55:51.000Z",
+    "namespace": "adtitas",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972174,
+        "name": "foxbinner",
+        "created_at": "2022-10-18T03:47:17.000Z",
+        "url": "https://greasyfork.org/users/972174-foxbinner"
+      }
+    ],
+    "name": "YouTube Search Results CleanUp",
+    "description": "Refine search results by removing unrelated content such as 'People also watched', 'For you' & 'Reels' ensuring a focused and relevant video search experience.",
+    "url": "https://greasyfork.org/scripts/486616-youtube-search-results-cleanup",
+    "code_url": "https://update.greasyfork.org/scripts/486616/YouTube%20Search%20Results%20CleanUp.user.js",
+    "code_size": 1515,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

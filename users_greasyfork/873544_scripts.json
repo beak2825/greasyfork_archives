@@ -1,0 +1,101 @@
+[
+  {
+    "id": 446432,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-13T17:45:25.000Z",
+    "code_updated_at": "2022-06-18T04:55:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 873544,
+        "name": "shell shock modder",
+        "created_at": "2022-02-06T22:30:46.000Z",
+        "url": "https://greasyfork.org/users/873544-shell-shock-modder"
+      }
+    ],
+    "name": "zert add blocker",
+    "description": "blocks zert's anoying adds",
+    "url": "https://greasyfork.org/scripts/446432-zert-add-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/446432/zert%20add%20blocker.user.js",
+    "code_size": 640,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 446431,
+    "daily_installs": 0,
+    "total_installs": 918,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-13T17:40:18.000Z",
+    "code_updated_at": "2022-06-13T17:40:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 873544,
+        "name": "shell shock modder",
+        "created_at": "2022-02-06T22:30:46.000Z",
+        "url": "https://greasyfork.org/users/873544-shell-shock-modder"
+      }
+    ],
+    "name": "reload fixer",
+    "description": "keeps the game from reloading a bunch",
+    "url": "https://greasyfork.org/scripts/446431-reload-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/446431/reload%20fixer.user.js",
+    "code_size": 472,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439684,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-07T22:24:46.000Z",
+    "code_updated_at": "2023-06-20T04:16:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 873544,
+        "name": "shell shock modder",
+        "created_at": "2022-02-06T22:30:46.000Z",
+        "url": "https://greasyfork.org/users/873544-shell-shock-modder"
+      }
+    ],
+    "name": "mod",
+    "description": "Locks aim to the nearest player in shellshock.io. Comes with an ESP too. Press B, V, N to toggle aimbot, esp, esp lines.",
+    "url": "https://greasyfork.org/scripts/439684-mod",
+    "code_url": "https://update.greasyfork.org/scripts/439684/mod.user.js",
+    "code_size": 63367,
+    "license": null,
+    "version": "1.21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

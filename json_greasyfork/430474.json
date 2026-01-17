@@ -1,0 +1,34 @@
+{
+  "id": 430474,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-08T00:40:06.000Z",
+  "code_updated_at": "2021-08-08T00:40:06.000Z",
+  "namespace": "ouroborus.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 218031,
+      "name": "ouroborus",
+      "created_at": "2018-10-07T23:42:53.000Z",
+      "url": "https://greasyfork.org/users/218031-ouroborus",
+      "scripts": []
+    }
+  ],
+  "name": "Imgur numbered images 2",
+  "description": "Numbers images in Imgur galleries",
+  "url": "https://greasyfork.org/scripts/430474-imgur-numbered-images-2",
+  "code_url": "https://update.greasyfork.org/scripts/430474/Imgur%20numbered%20images%202.user.js",
+  "code_size": 952,
+  "license": null,
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

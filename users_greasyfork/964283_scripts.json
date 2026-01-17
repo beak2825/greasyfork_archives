@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452144,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-28T05:21:06.000Z",
+    "code_updated_at": "2023-05-11T20:31:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964283,
+        "name": "CIT Hackerz",
+        "created_at": "2022-09-28T05:18:40.000Z",
+        "url": "https://greasyfork.org/users/964283-cit-hackerz"
+      }
+    ],
+    "name": "See CodeChum hidden test cases",
+    "description": "See hidden test cases as if they are not hidden in codechum after you press submit",
+    "url": "https://greasyfork.org/scripts/452144-see-codechum-hidden-test-cases",
+    "code_url": "https://update.greasyfork.org/scripts/452144/See%20CodeChum%20hidden%20test%20cases.user.js",
+    "code_size": 10281,
+    "license": "none",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

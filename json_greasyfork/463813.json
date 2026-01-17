@@ -1,0 +1,59 @@
+{
+  "id": 463813,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-12T08:40:31.000Z",
+  "code_updated_at": "2023-04-12T08:40:31.000Z",
+  "namespace": "https://greasyfork.org/users/1058676",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1058676,
+      "name": "cuebitt",
+      "created_at": "2023-04-12T08:34:44.000Z",
+      "url": "https://greasyfork.org/users/1058676-cuebitt",
+      "scripts": [
+        {
+          "id": 463813,
+          "daily_installs": 0,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-12T08:40:31.000Z",
+          "code_updated_at": "2023-04-12T08:40:31.000Z",
+          "namespace": "https://greasyfork.org/users/1058676",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitch Raid Redirect",
+          "description": "Removes \"?referrer=raid\" from redirect URLs to count yourself as a viewer",
+          "url": "https://greasyfork.org/scripts/463813-twitch-raid-redirect",
+          "code_url": "https://update.greasyfork.org/scripts/463813/Twitch%20Raid%20Redirect.user.js",
+          "code_size": 521,
+          "license": "CC0",
+          "version": "0.0.1.20230412084031",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitch Raid Redirect",
+  "description": "Removes \"?referrer=raid\" from redirect URLs to count yourself as a viewer",
+  "url": "https://greasyfork.org/scripts/463813-twitch-raid-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/463813/Twitch%20Raid%20Redirect.user.js",
+  "code_size": 521,
+  "license": "CC0",
+  "version": "0.0.1.20230412084031",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

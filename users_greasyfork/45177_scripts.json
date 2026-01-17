@@ -1,0 +1,68 @@
+[
+  {
+    "id": 455569,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-29T03:54:31.000Z",
+    "code_updated_at": "2022-11-30T14:20:53.000Z",
+    "namespace": "cedroca-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45177,
+        "name": "Diego Queiroz",
+        "created_at": "2016-05-23T17:11:07.000Z",
+        "url": "https://greasyfork.org/users/45177-diego-queiroz"
+      }
+    ],
+    "name": "Tab News - Modo Escuro (UI)",
+    "description": "Sistema de troca de temas, dai, fiz temas focados em azul, verde e rosa, para testar.",
+    "url": "https://greasyfork.org/scripts/455569-tab-news-modo-escuro-ui",
+    "code_url": "https://update.greasyfork.org/scripts/455569/Tab%20News%20-%20Modo%20Escuro%20%28UI%29.user.js",
+    "code_size": 11027,
+    "license": null,
+    "version": "4.5",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 455522,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-28T04:23:31.000Z",
+    "code_updated_at": "2022-11-28T04:23:31.000Z",
+    "namespace": "cedroca-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45177,
+        "name": "Diego Queiroz",
+        "created_at": "2016-05-23T17:11:07.000Z",
+        "url": "https://greasyfork.org/users/45177-diego-queiroz"
+      }
+    ],
+    "name": "Tab News - Sistema de Seguir Usuarios",
+    "description": "Sistema para Seguir Usuarios, tendo Notificação simples de Novos Posts",
+    "url": "https://greasyfork.org/scripts/455522-tab-news-sistema-de-seguir-usuarios",
+    "code_url": "https://update.greasyfork.org/scripts/455522/Tab%20News%20-%20Sistema%20de%20Seguir%20Usuarios.user.js",
+    "code_size": 7990,
+    "license": null,
+    "version": "2.0",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

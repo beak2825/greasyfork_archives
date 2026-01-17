@@ -1,0 +1,59 @@
+{
+  "id": 461307,
+  "daily_installs": 0,
+  "total_installs": 151,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-06T14:10:42.000Z",
+  "code_updated_at": "2023-03-20T09:43:28.000Z",
+  "namespace": "https://greasyfork.org/users/1037559",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1037559,
+      "name": "SADIKF",
+      "created_at": "2023-03-06T13:56:40.000Z",
+      "url": "https://greasyfork.org/users/1037559-sadikf",
+      "scripts": [
+        {
+          "id": 461307,
+          "daily_installs": 0,
+          "total_installs": 151,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-06T14:10:42.000Z",
+          "code_updated_at": "2023-03-20T09:43:28.000Z",
+          "namespace": "https://greasyfork.org/users/1037559",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "亚马逊翻页",
+          "description": "解除翻页按钮限制 类目和产品链接可以直接跳转新的标签页",
+          "url": "https://greasyfork.org/scripts/461307-%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%BF%BB%E9%A1%B5",
+          "code_url": "https://update.greasyfork.org/scripts/461307/%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%BF%BB%E9%A1%B5.user.js",
+          "code_size": 2323,
+          "license": null,
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "亚马逊翻页",
+  "description": "解除翻页按钮限制 类目和产品链接可以直接跳转新的标签页",
+  "url": "https://greasyfork.org/scripts/461307-%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%BF%BB%E9%A1%B5",
+  "code_url": "https://update.greasyfork.org/scripts/461307/%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%BF%BB%E9%A1%B5.user.js",
+  "code_size": 2323,
+  "license": null,
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

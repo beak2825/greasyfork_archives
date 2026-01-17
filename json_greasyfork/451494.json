@@ -1,0 +1,59 @@
+{
+  "id": 451494,
+  "daily_installs": 1,
+  "total_installs": 49,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-09-16T16:32:59.000Z",
+  "code_updated_at": "2022-09-16T16:32:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 960106,
+      "name": "Griffin Beels",
+      "created_at": "2022-09-16T16:26:55.000Z",
+      "url": "https://greasyfork.org/users/960106-griffin-beels",
+      "scripts": [
+        {
+          "id": 451494,
+          "daily_installs": 1,
+          "total_installs": 49,
+          "fan_score": "19.8",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-09-16T16:32:59.000Z",
+          "code_updated_at": "2022-09-16T16:32:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide YouTube Video Views",
+          "description": "Removes all divs on YouTube that contain view counts.",
+          "url": "https://greasyfork.org/scripts/451494-hide-youtube-video-views",
+          "code_url": "https://update.greasyfork.org/scripts/451494/Hide%20YouTube%20Video%20Views.user.js",
+          "code_size": 1531,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide YouTube Video Views",
+  "description": "Removes all divs on YouTube that contain view counts.",
+  "url": "https://greasyfork.org/scripts/451494-hide-youtube-video-views",
+  "code_url": "https://update.greasyfork.org/scripts/451494/Hide%20YouTube%20Video%20Views.user.js",
+  "code_size": 1531,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 425414,
+  "daily_installs": 0,
+  "total_installs": 2693,
+  "fan_score": "26.7",
+  "good_ratings": 4,
+  "ok_ratings": 2,
+  "bad_ratings": 3,
+  "created_at": "2021-04-22T21:55:07.000Z",
+  "code_updated_at": "2021-10-20T22:18:13.000Z",
+  "namespace": "http://violentcoords.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 763623,
+      "name": "violentcacher",
+      "created_at": "2021-04-22T21:48:38.000Z",
+      "url": "https://greasyfork.org/users/763623-violentcacher",
+      "scripts": [
+        {
+          "id": 425414,
+          "daily_installs": 0,
+          "total_installs": 2693,
+          "fan_score": "26.7",
+          "good_ratings": 4,
+          "ok_ratings": 2,
+          "bad_ratings": 3,
+          "created_at": "2021-04-22T21:55:07.000Z",
+          "code_updated_at": "2021-10-20T22:18:13.000Z",
+          "namespace": "http://violentcoords.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Violent Coords",
+          "description": "Exchange Corrected Coordinates.",
+          "url": "https://greasyfork.org/scripts/425414-violent-coords",
+          "code_url": "https://update.greasyfork.org/scripts/425414/Violent%20Coords.user.js",
+          "code_size": 19603,
+          "license": null,
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Violent Coords",
+  "description": "Exchange Corrected Coordinates.",
+  "url": "https://greasyfork.org/scripts/425414-violent-coords",
+  "code_url": "https://update.greasyfork.org/scripts/425414/Violent%20Coords.user.js",
+  "code_size": 19603,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 477813,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-20T02:16:07.000Z",
+  "code_updated_at": "2023-10-20T03:27:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1199942,
+      "name": "生炝小虾米",
+      "created_at": "2023-10-20T01:57:45.000Z",
+      "url": "https://greasyfork.org/users/1199942-%E7%94%9F%E7%82%9D%E5%B0%8F%E8%99%BE%E7%B1%B3"
+    }
+  ],
+  "name": "永辉-OA显示下班时间",
+  "description": "永辉-OA显示下班时间信息",
+  "url": "https://greasyfork.org/scripts/477813-%E6%B0%B8%E8%BE%89-oa%E6%98%BE%E7%A4%BA%E4%B8%8B%E7%8F%AD%E6%97%B6%E9%97%B4",
+  "code_url": "https://update.greasyfork.org/scripts/477813/%E6%B0%B8%E8%BE%89-OA%E6%98%BE%E7%A4%BA%E4%B8%8B%E7%8F%AD%E6%97%B6%E9%97%B4.user.js",
+  "code_size": 1156,
+  "license": "GPL License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 477786,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-19T15:02:40.000Z",
+  "code_updated_at": "2023-10-19T18:22:32.000Z",
+  "namespace": "https://github.com/paponius/papo-userscripts/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 409372,
+      "name": "Papo",
+      "created_at": "2019-11-30T03:00:22.000Z",
+      "url": "https://greasyfork.org/users/409372-papo"
+    }
+  ],
+  "name": "Google I'm Feeling Lucky Redirect Workaround",
+  "description": "Immediately redirects when google prompts 'redirection notice'. Used to circumvent google pestering you when querying with I'm Feeling Lucky feature.",
+  "url": "https://greasyfork.org/scripts/477786-google-i-m-feeling-lucky-redirect-workaround",
+  "code_url": "https://update.greasyfork.org/scripts/477786/Google%20I%27m%20Feeling%20Lucky%20Redirect%20Workaround.user.js",
+  "code_size": 3697,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

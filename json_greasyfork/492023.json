@@ -1,0 +1,33 @@
+{
+  "id": 492023,
+  "daily_installs": 0,
+  "total_installs": 266,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-04-08T23:33:01.000Z",
+  "code_updated_at": "2024-04-08T23:33:01.000Z",
+  "namespace": "https://greasyfork.org/users/919633",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1285332,
+      "name": "weckin balls",
+      "created_at": "2024-04-08T01:08:38.000Z",
+      "url": "https://greasyfork.org/users/1285332-weckin-balls"
+    }
+  ],
+  "name": "Dsync Client [Sploop.io]",
+  "description": "The most advanced hack for sploop.io",
+  "url": "https://greasyfork.org/scripts/492023-dsync-client-sploop-io",
+  "code_url": "https://update.greasyfork.org/scripts/492023/Dsync%20Client%20%5BSploopio%5D.user.js",
+  "code_size": 223256,
+  "license": "MIT License",
+  "version": "1.0.21",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

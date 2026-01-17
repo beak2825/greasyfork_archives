@@ -1,0 +1,59 @@
+{
+  "id": 426363,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-12T17:51:32.000Z",
+  "code_updated_at": "2021-05-12T17:51:32.000Z",
+  "namespace": "https://greasyfork.org/users/763612",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 763612,
+      "name": "Shadowbreaker GD",
+      "created_at": "2021-04-22T20:49:41.000Z",
+      "url": "https://greasyfork.org/users/763612-shadowbreaker-gd",
+      "scripts": [
+        {
+          "id": 426363,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-05-12T17:51:32.000Z",
+          "code_updated_at": "2021-05-12T17:51:32.000Z",
+          "namespace": "https://greasyfork.org/users/763612",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GDbrowser Show Comment button",
+          "description": "A userscript that shows the comment button in the comments of levels that dont have the comment button. Mostly for commenting on nonexisting level ids",
+          "url": "https://greasyfork.org/scripts/426363-gdbrowser-show-comment-button",
+          "code_url": "https://update.greasyfork.org/scripts/426363/GDbrowser%20Show%20Comment%20button.user.js",
+          "code_size": 337,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GDbrowser Show Comment button",
+  "description": "A userscript that shows the comment button in the comments of levels that dont have the comment button. Mostly for commenting on nonexisting level ids",
+  "url": "https://greasyfork.org/scripts/426363-gdbrowser-show-comment-button",
+  "code_url": "https://update.greasyfork.org/scripts/426363/GDbrowser%20Show%20Comment%20button.user.js",
+  "code_size": 337,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 445502,
+  "daily_installs": 0,
+  "total_installs": 63,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-25T05:16:57.000Z",
+  "code_updated_at": "2022-09-15T20:13:15.000Z",
+  "namespace": "A script by Tinhone",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 810191,
+      "name": "Tinhone",
+      "created_at": "2021-08-30T06:23:02.000Z",
+      "url": "https://greasyfork.org/users/810191-tinhone"
+    }
+  ],
+  "name": "哔哩哔哩（B站）评论区翻页功能",
+  "description": "（2022/09可用）以一种十分不安全的方式强行恢复了哔哩哔哩评论区的翻页功能",
+  "url": "https://greasyfork.org/scripts/445502-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-b%E7%AB%99-%E8%AF%84%E8%AE%BA%E5%8C%BA%E7%BF%BB%E9%A1%B5%E5%8A%9F%E8%83%BD",
+  "code_url": "https://update.greasyfork.org/scripts/445502/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%EF%BC%88B%E7%AB%99%EF%BC%89%E8%AF%84%E8%AE%BA%E5%8C%BA%E7%BF%BB%E9%A1%B5%E5%8A%9F%E8%83%BD.user.js",
+  "code_size": 1919,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

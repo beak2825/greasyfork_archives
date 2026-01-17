@@ -1,0 +1,59 @@
+{
+  "id": 464312,
+  "daily_installs": 0,
+  "total_installs": 269,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-18T15:33:34.000Z",
+  "code_updated_at": "2023-04-18T15:37:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1062820,
+      "name": "hinayahh",
+      "created_at": "2023-04-18T15:21:17.000Z",
+      "url": "https://greasyfork.org/users/1062820-hinayahh",
+      "scripts": [
+        {
+          "id": 464312,
+          "daily_installs": 0,
+          "total_installs": 269,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-18T15:33:34.000Z",
+          "code_updated_at": "2023-04-18T15:37:31.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "b站隐藏投票",
+          "description": "隐藏网页端b站的各种烦人弹窗，包括但不限于投票窗口、三连窗口、打星窗口等",
+          "url": "https://greasyfork.org/scripts/464312-b%E7%AB%99%E9%9A%90%E8%97%8F%E6%8A%95%E7%A5%A8",
+          "code_url": "https://update.greasyfork.org/scripts/464312/b%E7%AB%99%E9%9A%90%E8%97%8F%E6%8A%95%E7%A5%A8.user.js",
+          "code_size": 1010,
+          "license": "ISC License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "b站隐藏投票",
+  "description": "隐藏网页端b站的各种烦人弹窗，包括但不限于投票窗口、三连窗口、打星窗口等",
+  "url": "https://greasyfork.org/scripts/464312-b%E7%AB%99%E9%9A%90%E8%97%8F%E6%8A%95%E7%A5%A8",
+  "code_url": "https://update.greasyfork.org/scripts/464312/b%E7%AB%99%E9%9A%90%E8%97%8F%E6%8A%95%E7%A5%A8.user.js",
+  "code_size": 1010,
+  "license": "ISC License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

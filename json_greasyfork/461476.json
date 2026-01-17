@@ -1,0 +1,34 @@
+{
+  "id": 461476,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-08T22:37:25.000Z",
+  "code_updated_at": "2023-03-13T19:05:01.000Z",
+  "namespace": "https://greasyfork.org/users/1038842",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1038842,
+      "name": "Christopher Barwick",
+      "created_at": "2023-03-08T22:34:34.000Z",
+      "url": "https://greasyfork.org/users/1038842-christopher-barwick",
+      "scripts": []
+    }
+  ],
+  "name": "Asana - Hide Empty Columns",
+  "description": "Removes empty tasks columns in Asana.",
+  "url": "https://greasyfork.org/scripts/461476-asana-hide-empty-columns",
+  "code_url": "https://update.greasyfork.org/scripts/461476/Asana%20-%20Hide%20Empty%20Columns.user.js",
+  "code_size": 2217,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

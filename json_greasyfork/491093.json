@@ -1,0 +1,34 @@
+{
+  "id": 491093,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-28T12:16:21.000Z",
+  "code_updated_at": "2024-05-27T08:11:32.000Z",
+  "namespace": "https://greasyfork.org/users/1280664",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1280664,
+      "name": "HectorCastelli",
+      "created_at": "2024-03-28T12:12:24.000Z",
+      "url": "https://greasyfork.org/users/1280664-hectorcastelli",
+      "scripts": []
+    }
+  ],
+  "name": "Factorial HR Spanish hours",
+  "description": "Automate the input of shifts in factorial",
+  "url": "https://greasyfork.org/scripts/491093-factorial-hr-spanish-hours",
+  "code_url": "https://update.greasyfork.org/scripts/491093/Factorial%20HR%20Spanish%20hours.user.js",
+  "code_size": 4878,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

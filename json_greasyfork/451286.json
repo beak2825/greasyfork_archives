@@ -1,0 +1,59 @@
+{
+  "id": 451286,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-13T07:26:49.000Z",
+  "code_updated_at": "2022-09-14T03:31:52.000Z",
+  "namespace": "NightSwan",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 958543,
+      "name": "m9002ko",
+      "created_at": "2022-09-13T07:18:34.000Z",
+      "url": "https://greasyfork.org/users/958543-m9002ko",
+      "scripts": [
+        {
+          "id": 451286,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-13T07:26:49.000Z",
+          "code_updated_at": "2022-09-14T03:31:52.000Z",
+          "namespace": "NightSwan",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "原神王者GTA玩家友好交流工具",
+          "description": "b站交流工具",
+          "url": "https://greasyfork.org/scripts/451286-%E5%8E%9F%E7%A5%9E%E7%8E%8B%E8%80%85gta%E7%8E%A9%E5%AE%B6%E5%8F%8B%E5%A5%BD%E4%BA%A4%E6%B5%81%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/451286/%E5%8E%9F%E7%A5%9E%E7%8E%8B%E8%80%85GTA%E7%8E%A9%E5%AE%B6%E5%8F%8B%E5%A5%BD%E4%BA%A4%E6%B5%81%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 8297,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "原神王者GTA玩家友好交流工具",
+  "description": "b站交流工具",
+  "url": "https://greasyfork.org/scripts/451286-%E5%8E%9F%E7%A5%9E%E7%8E%8B%E8%80%85gta%E7%8E%A9%E5%AE%B6%E5%8F%8B%E5%A5%BD%E4%BA%A4%E6%B5%81%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/451286/%E5%8E%9F%E7%A5%9E%E7%8E%8B%E8%80%85GTA%E7%8E%A9%E5%AE%B6%E5%8F%8B%E5%A5%BD%E4%BA%A4%E6%B5%81%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 8297,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

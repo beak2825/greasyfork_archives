@@ -1,0 +1,33 @@
+{
+  "id": 425843,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-02T22:21:19.000Z",
+  "code_updated_at": "2021-05-02T22:21:19.000Z",
+  "namespace": "httsp://xandaros.dyndns.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 767774,
+      "name": "Xandaros",
+      "created_at": "2021-05-02T22:18:05.000Z",
+      "url": "https://greasyfork.org/users/767774-xandaros"
+    }
+  ],
+  "name": "PuzzleTeam confirm New Puzzle",
+  "description": "Simple script to make the \"New Puzzle\" button on PuzzleTeam's websites show a confirmation dialogue",
+  "url": "https://greasyfork.org/scripts/425843-puzzleteam-confirm-new-puzzle",
+  "code_url": "https://update.greasyfork.org/scripts/425843/PuzzleTeam%20confirm%20New%20Puzzle.user.js",
+  "code_size": 1924,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

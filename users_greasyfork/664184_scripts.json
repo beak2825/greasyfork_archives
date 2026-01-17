@@ -1,0 +1,101 @@
+[
+  {
+    "id": 444798,
+    "daily_installs": 0,
+    "total_installs": 151,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-10T13:32:11.000Z",
+    "code_updated_at": "2022-05-10T13:32:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://audiences.me/contactstaff.php",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 664184,
+        "name": "eveloki",
+        "created_at": "2020-07-07T04:53:50.000Z",
+        "url": "https://greasyfork.org/users/664184-eveloki"
+      }
+    ],
+    "name": "Audiences 屏蔽首页海报图",
+    "description": "通过JQuery 完成屏蔽首页海报图",
+    "url": "https://greasyfork.org/scripts/444798-audiences-%E5%B1%8F%E8%94%BD%E9%A6%96%E9%A1%B5%E6%B5%B7%E6%8A%A5%E5%9B%BE",
+    "code_url": "https://update.greasyfork.org/scripts/444798/Audiences%20%E5%B1%8F%E8%94%BD%E9%A6%96%E9%A1%B5%E6%B5%B7%E6%8A%A5%E5%9B%BE.user.js",
+    "code_size": 816,
+    "license": "MIT License",
+    "version": "1.05",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 436992,
+    "daily_installs": 0,
+    "total_installs": 194,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-13T16:33:56.000Z",
+    "code_updated_at": "2022-05-26T09:22:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://audiences.me/contactstaff.php",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 664184,
+        "name": "eveloki",
+        "created_at": "2020-07-07T04:53:50.000Z",
+        "url": "https://greasyfork.org/users/664184-eveloki"
+      }
+    ],
+    "name": "Audiences 媒体信息帮助程序一键发种",
+    "description": "通过JQuery 完成对发布页面的一键填写 杜绝手工填写各种错误的可能性;",
+    "url": "https://greasyfork.org/scripts/436992-audiences-%E5%AA%92%E4%BD%93%E4%BF%A1%E6%81%AF%E5%B8%AE%E5%8A%A9%E7%A8%8B%E5%BA%8F%E4%B8%80%E9%94%AE%E5%8F%91%E7%A7%8D",
+    "code_url": "https://update.greasyfork.org/scripts/436992/Audiences%20%E5%AA%92%E4%BD%93%E4%BF%A1%E6%81%AF%E5%B8%AE%E5%8A%A9%E7%A8%8B%E5%BA%8F%E4%B8%80%E9%94%AE%E5%8F%91%E7%A7%8D.user.js",
+    "code_size": 15701,
+    "license": "MIT License",
+    "version": "1.06",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 431336,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-25T09:16:37.000Z",
+    "code_updated_at": "2021-08-25T09:16:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://pthome.net/contactstaff.php",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 664184,
+        "name": "eveloki",
+        "created_at": "2020-07-07T04:53:50.000Z",
+        "url": "https://greasyfork.org/users/664184-eveloki"
+      }
+    ],
+    "name": "PTHOME 辅助脚本",
+    "description": "辅助脚本 辅助使用pthome",
+    "url": "https://greasyfork.org/scripts/431336-pthome-%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/431336/PTHOME%20%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 3874,
+    "license": "MIT License",
+    "version": "1.00",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

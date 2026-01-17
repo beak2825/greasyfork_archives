@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495197,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-16T18:49:24.000Z",
+    "code_updated_at": "2024-05-17T18:03:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1302729,
+        "name": "futlirox",
+        "created_at": "2024-05-16T18:47:38.000Z",
+        "url": "https://greasyfork.org/users/1302729-futlirox"
+      }
+    ],
+    "name": "Таминг экзамен",
+    "description": "Поиск ответов на экзаменационные вопросы в игре Taming.io, находиться в разработке, чтобы получть ответ автоматически просто нажмите на кнопку в меню тампермонкей ещё 2 раза!",
+    "url": "https://greasyfork.org/scripts/495197-%D1%82%D0%B0%D0%BC%D0%B8%D0%BD%D0%B3-%D1%8D%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD",
+    "code_url": "https://update.greasyfork.org/scripts/495197/%D0%A2%D0%B0%D0%BC%D0%B8%D0%BD%D0%B3%20%D1%8D%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD.user.js",
+    "code_size": 16996,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

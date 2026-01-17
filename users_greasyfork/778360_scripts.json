@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427327,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-01T00:32:13.000Z",
+    "code_updated_at": "2021-06-01T00:32:13.000Z",
+    "namespace": "mailto:Roy-Orbison@users.noreply.github.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 778360,
+        "name": "Roy-Orbison",
+        "created_at": "2021-06-01T00:00:52.000Z",
+        "url": "https://greasyfork.org/users/778360-roy-orbison"
+      }
+    ],
+    "name": "De-embed AusPost PDFs",
+    "description": "The Australia Post eParcel site wraps label PDF downloads in an <object> tag that interferes with browsers' normal PDF display and printing. This script \"unwraps\" those PDF links.",
+    "url": "https://greasyfork.org/scripts/427327-de-embed-auspost-pdfs",
+    "code_url": "https://update.greasyfork.org/scripts/427327/De-embed%20AusPost%20PDFs.user.js",
+    "code_size": 1073,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

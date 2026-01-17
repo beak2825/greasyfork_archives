@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448054,
+    "daily_installs": 0,
+    "total_installs": 589,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-07-18T12:08:49.000Z",
+    "code_updated_at": "2022-07-18T12:08:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 671521,
+        "name": "灵舒",
+        "created_at": "2020-07-30T04:34:28.000Z",
+        "url": "https://greasyfork.org/users/671521-%E7%81%B5%E8%88%92"
+      }
+    ],
+    "name": "英华在线实训平台专门开发（颖宝专用）",
+    "description": "自动连播网课",
+    "url": "https://greasyfork.org/scripts/448054-%E8%8B%B1%E5%8D%8E%E5%9C%A8%E7%BA%BF%E5%AE%9E%E8%AE%AD%E5%B9%B3%E5%8F%B0%E4%B8%93%E9%97%A8%E5%BC%80%E5%8F%91-%E9%A2%96%E5%AE%9D%E4%B8%93%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/448054/%E8%8B%B1%E5%8D%8E%E5%9C%A8%E7%BA%BF%E5%AE%9E%E8%AE%AD%E5%B9%B3%E5%8F%B0%E4%B8%93%E9%97%A8%E5%BC%80%E5%8F%91%EF%BC%88%E9%A2%96%E5%AE%9D%E4%B8%93%E7%94%A8%EF%BC%89.user.js",
+    "code_size": 47004,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

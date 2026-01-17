@@ -1,0 +1,34 @@
+{
+  "id": 482103,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-13T11:27:35.000Z",
+  "code_updated_at": "2023-12-13T12:06:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Combined Patric Edens only spar test",
+  "description": "Combine multiple scripts",
+  "url": "https://greasyfork.org/scripts/482103-combined-patric-edens-only-spar-test",
+  "code_url": "https://update.greasyfork.org/scripts/482103/Combined%20Patric%20Edens%20only%20spar%20test.user.js",
+  "code_size": 46441,
+  "license": null,
+  "version": "9.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449975,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-22T10:34:38.000Z",
+    "code_updated_at": "2025-12-17T05:15:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949205,
+        "name": "toshiko-m",
+        "created_at": "2022-08-21T23:52:32.000Z",
+        "url": "https://greasyfork.org/users/949205-toshiko-m"
+      }
+    ],
+    "name": "Fusion Kousu Keisan (Four Buttons)",
+    "description": "All, +0.5, -0.5, Clearの4つのボタンで工数入力を効率化",
+    "url": "https://greasyfork.org/scripts/449975-fusion-kousu-keisan-four-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/449975/Fusion%20Kousu%20Keisan%20%28Four%20Buttons%29.user.js",
+    "code_size": 5597,
+    "license": null,
+    "version": "0.6",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 467630,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-01T08:27:24.000Z",
+  "code_updated_at": "2023-07-18T13:06:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1087214,
+      "name": "Antoine Belot",
+      "created_at": "2023-05-30T09:53:00.000Z",
+      "url": "https://greasyfork.org/users/1087214-antoine-belot",
+      "scripts": []
+    }
+  ],
+  "name": "clickable cluster graphiq links",
+  "description": "This script adds clickable links to magnetALL clusters",
+  "url": "https://greasyfork.org/scripts/467630-clickable-cluster-graphiq-links",
+  "code_url": "https://update.greasyfork.org/scripts/467630/clickable%20cluster%20graphiq%20links.user.js",
+  "code_size": 3401,
+  "license": "KIO",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

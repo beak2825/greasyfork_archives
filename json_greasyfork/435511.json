@@ -1,0 +1,59 @@
+{
+  "id": 435511,
+  "daily_installs": 1,
+  "total_installs": 151,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-14T22:40:50.000Z",
+  "code_updated_at": "2021-11-14T22:40:50.000Z",
+  "namespace": "eeks",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 838682,
+      "name": "The Things 027",
+      "created_at": "2021-11-14T22:38:05.000Z",
+      "url": "https://greasyfork.org/users/838682-the-things-027",
+      "scripts": [
+        {
+          "id": 435511,
+          "daily_installs": 1,
+          "total_installs": 151,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-14T22:40:50.000Z",
+          "code_updated_at": "2021-11-14T22:40:50.000Z",
+          "namespace": "eeks",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CSGO Clicker Money Hack - CSGO CSGOClicker Case CaseClicker Clicker (Unbloocked)",
+          "description": "Automatically clicks the \"Accept\" button for you over and over again!",
+          "url": "https://greasyfork.org/scripts/435511-csgo-clicker-money-hack-csgo-csgoclicker-case-caseclicker-clicker-unbloocked",
+          "code_url": "https://update.greasyfork.org/scripts/435511/CSGO%20Clicker%20Money%20Hack%20-%20CSGO%20CSGOClicker%20Case%20CaseClicker%20Clicker%20%28Unbloocked%29.user.js",
+          "code_size": 20884,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CSGO Clicker Money Hack - CSGO CSGOClicker Case CaseClicker Clicker (Unbloocked)",
+  "description": "Automatically clicks the \"Accept\" button for you over and over again!",
+  "url": "https://greasyfork.org/scripts/435511-csgo-clicker-money-hack-csgo-csgoclicker-case-caseclicker-clicker-unbloocked",
+  "code_url": "https://update.greasyfork.org/scripts/435511/CSGO%20Clicker%20Money%20Hack%20-%20CSGO%20CSGOClicker%20Case%20CaseClicker%20Clicker%20%28Unbloocked%29.user.js",
+  "code_size": 20884,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,200 @@
+[
+  {
+    "id": 460219,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-18T01:31:36.000Z",
+    "code_updated_at": "2023-09-30T14:47:43.000Z",
+    "namespace": "https://www.nanoka.top",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913503,
+        "name": "asadahimeka",
+        "created_at": "2022-05-12T15:01:46.000Z",
+        "url": "https://greasyfork.org/users/913503-asadahimeka"
+      }
+    ],
+    "name": "Pixivision 图床替换",
+    "description": "将 Pixivision 的图片替换为 i.pixiv.re",
+    "url": "https://greasyfork.org/scripts/460219-pixivision-%E5%9B%BE%E5%BA%8A%E6%9B%BF%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/460219/Pixivision%20%E5%9B%BE%E5%BA%8A%E6%9B%BF%E6%8D%A2.user.js",
+    "code_size": 926,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449227,
+    "daily_installs": 0,
+    "total_installs": 257,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-09T14:53:36.000Z",
+    "code_updated_at": "2022-08-09T14:53:35.000Z",
+    "namespace": "https://www.nanoka.top",
+    "support_url": "https://github.com/asadahimeka/userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913503,
+        "name": "asadahimeka",
+        "created_at": "2022-05-12T15:01:46.000Z",
+        "url": "https://greasyfork.org/users/913503-asadahimeka"
+      }
+    ],
+    "name": "Pixiv 排行榜宽屏展示",
+    "description": "Pixiv 排行榜页面图片列表加宽，图片紧凑展示",
+    "url": "https://greasyfork.org/scripts/449227-pixiv-%E6%8E%92%E8%A1%8C%E6%A6%9C%E5%AE%BD%E5%B1%8F%E5%B1%95%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/449227/Pixiv%20%E6%8E%92%E8%A1%8C%E6%A6%9C%E5%AE%BD%E5%B1%8F%E5%B1%95%E7%A4%BA.user.js",
+    "code_size": 1165,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448880,
+    "daily_installs": 0,
+    "total_installs": 439,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-03T16:15:48.000Z",
+    "code_updated_at": "2023-05-03T04:34:36.000Z",
+    "namespace": "https://www.nanoka.top",
+    "support_url": "https://github.com/asadahimeka/userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913503,
+        "name": "asadahimeka",
+        "created_at": "2022-05-12T15:01:46.000Z",
+        "url": "https://greasyfork.org/users/913503-asadahimeka"
+      }
+    ],
+    "name": "原神米游社签到",
+    "description": "【已失效】在网页端执行米游社原神每日签到",
+    "url": "https://greasyfork.org/scripts/448880-%E5%8E%9F%E7%A5%9E%E7%B1%B3%E6%B8%B8%E7%A4%BE%E7%AD%BE%E5%88%B0",
+    "code_url": "https://update.greasyfork.org/scripts/448880/%E5%8E%9F%E7%A5%9E%E7%B1%B3%E6%B8%B8%E7%A4%BE%E7%AD%BE%E5%88%B0.user.js",
+    "code_size": 4008,
+    "license": "MIT License",
+    "version": "0.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448864,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-03T14:18:45.000Z",
+    "code_updated_at": "2022-08-03T14:18:45.000Z",
+    "namespace": "https://www.nanoka.top",
+    "support_url": "https://github.com/asadahimeka/userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913503,
+        "name": "asadahimeka",
+        "created_at": "2022-05-12T15:01:46.000Z",
+        "url": "https://greasyfork.org/users/913503-asadahimeka"
+      }
+    ],
+    "name": "B 站直播间页面清理",
+    "description": "bilibili 直播间页面清理、隐藏多余内容、显示已关注 UP 主的粉丝数",
+    "url": "https://greasyfork.org/scripts/448864-b-%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E9%A1%B5%E9%9D%A2%E6%B8%85%E7%90%86",
+    "code_url": "https://update.greasyfork.org/scripts/448864/B%20%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E9%A1%B5%E9%9D%A2%E6%B8%85%E7%90%86.user.js",
+    "code_size": 2582,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448859,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-03T13:19:55.000Z",
+    "code_updated_at": "2022-08-03T13:19:55.000Z",
+    "namespace": "https://www.nanoka.top",
+    "support_url": "https://github.com/asadahimeka/userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913503,
+        "name": "asadahimeka",
+        "created_at": "2022-05-12T15:01:46.000Z",
+        "url": "https://greasyfork.org/users/913503-asadahimeka"
+      }
+    ],
+    "name": "B 站番剧播放页面显示封面",
+    "description": "在 bilibili 番剧播放页集数选择下面显示封面，并添加全屏与弹幕开关快捷键",
+    "url": "https://greasyfork.org/scripts/448859-b-%E7%AB%99%E7%95%AA%E5%89%A7%E6%92%AD%E6%94%BE%E9%A1%B5%E9%9D%A2%E6%98%BE%E7%A4%BA%E5%B0%81%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/448859/B%20%E7%AB%99%E7%95%AA%E5%89%A7%E6%92%AD%E6%94%BE%E9%A1%B5%E9%9D%A2%E6%98%BE%E7%A4%BA%E5%B0%81%E9%9D%A2.user.js",
+    "code_size": 1436,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448836,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-03T06:06:11.000Z",
+    "code_updated_at": "2022-08-03T07:14:18.000Z",
+    "namespace": "https://www.nanoka.top",
+    "support_url": "https://github.com/asadahimeka/userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913503,
+        "name": "asadahimeka",
+        "created_at": "2022-05-12T15:01:46.000Z",
+        "url": "https://greasyfork.org/users/913503-asadahimeka"
+      }
+    ],
+    "name": "百度搜索页面美化",
+    "description": "百度搜索页面样式美化、隐藏多余内容、去广告、整体居中",
+    "url": "https://greasyfork.org/scripts/448836-%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/448836/%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96.user.js",
+    "code_size": 7802,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

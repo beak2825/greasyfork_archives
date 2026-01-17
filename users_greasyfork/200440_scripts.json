@@ -1,0 +1,101 @@
+[
+  {
+    "id": 484498,
+    "daily_installs": 1,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-11T02:12:08.000Z",
+    "code_updated_at": "2024-01-11T02:13:23.000Z",
+    "namespace": "en20",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200440,
+        "name": "Tyrone2333",
+        "created_at": "2018-08-02T06:03:41.000Z",
+        "url": "https://greasyfork.org/users/200440-tyrone2333"
+      }
+    ],
+    "name": "按钮旋转",
+    "description": "非常好脚本,使我滨州旋转",
+    "url": "https://greasyfork.org/scripts/484498-%E6%8C%89%E9%92%AE%E6%97%8B%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/484498/%E6%8C%89%E9%92%AE%E6%97%8B%E8%BD%AC.user.js",
+    "code_size": 670,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 478600,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-30T08:07:47.000Z",
+    "code_updated_at": "2023-10-30T08:25:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200440,
+        "name": "Tyrone2333",
+        "created_at": "2018-08-02T06:03:41.000Z",
+        "url": "https://greasyfork.org/users/200440-tyrone2333"
+      }
+    ],
+    "name": "解除 displayspecifications 复制限制",
+    "description": "Remove the copy restriction on displayspecifications.com, 解除 displayspecifications 复制限制",
+    "url": "https://greasyfork.org/scripts/478600-%E8%A7%A3%E9%99%A4-displayspecifications-%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/478600/%E8%A7%A3%E9%99%A4%20displayspecifications%20%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6.user.js",
+    "code_size": 1589,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435522,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-15T02:52:30.000Z",
+    "code_updated_at": "2021-11-15T02:52:30.000Z",
+    "namespace": "https://github.com/Tyrone2333/add-space-between-zh-and-en",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 200440,
+        "name": "Tyrone2333",
+        "created_at": "2018-08-02T06:03:41.000Z",
+        "url": "https://greasyfork.org/users/200440-tyrone2333"
+      }
+    ],
+    "name": "选中输入框内容,给中英文之间加空格",
+    "description": "选中输入框内容,自动给中英文之间加空格",
+    "url": "https://greasyfork.org/scripts/435522-%E9%80%89%E4%B8%AD%E8%BE%93%E5%85%A5%E6%A1%86%E5%86%85%E5%AE%B9-%E7%BB%99%E4%B8%AD%E8%8B%B1%E6%96%87%E4%B9%8B%E9%97%B4%E5%8A%A0%E7%A9%BA%E6%A0%BC",
+    "code_url": "https://update.greasyfork.org/scripts/435522/%E9%80%89%E4%B8%AD%E8%BE%93%E5%85%A5%E6%A1%86%E5%86%85%E5%AE%B9%2C%E7%BB%99%E4%B8%AD%E8%8B%B1%E6%96%87%E4%B9%8B%E9%97%B4%E5%8A%A0%E7%A9%BA%E6%A0%BC.user.js",
+    "code_size": 1674,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

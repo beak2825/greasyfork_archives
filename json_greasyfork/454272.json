@@ -1,0 +1,59 @@
+{
+  "id": 454272,
+  "daily_installs": 0,
+  "total_installs": 75,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-04T23:41:10.000Z",
+  "code_updated_at": "2022-11-05T00:01:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 979368,
+      "name": "Sneee Dums",
+      "created_at": "2022-11-04T23:38:13.000Z",
+      "url": "https://greasyfork.org/users/979368-sneee-dums",
+      "scripts": [
+        {
+          "id": 454272,
+          "daily_installs": 0,
+          "total_installs": 75,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-04T23:41:10.000Z",
+          "code_updated_at": "2022-11-05T00:01:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitch Add Channel Name To Vod URLs",
+          "description": "Adds the channel name to undeleted Twitch VODs on load so you know who you were watching when they get deleted",
+          "url": "https://greasyfork.org/scripts/454272-twitch-add-channel-name-to-vod-urls",
+          "code_url": "https://update.greasyfork.org/scripts/454272/Twitch%20Add%20Channel%20Name%20To%20Vod%20URLs.user.js",
+          "code_size": 2300,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitch Add Channel Name To Vod URLs",
+  "description": "Adds the channel name to undeleted Twitch VODs on load so you know who you were watching when they get deleted",
+  "url": "https://greasyfork.org/scripts/454272-twitch-add-channel-name-to-vod-urls",
+  "code_url": "https://update.greasyfork.org/scripts/454272/Twitch%20Add%20Channel%20Name%20To%20Vod%20URLs.user.js",
+  "code_size": 2300,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

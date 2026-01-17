@@ -1,0 +1,68 @@
+[
+  {
+    "id": 487579,
+    "daily_installs": 2,
+    "total_installs": 803,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-18T07:17:43.000Z",
+    "code_updated_at": "2024-02-22T14:19:27.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/487579-jellyfin-with-potplayer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 468610,
+        "name": "jpyl0423",
+        "created_at": "2020-03-25T03:28:57.000Z",
+        "url": "https://greasyfork.org/users/468610-jpyl0423"
+      }
+    ],
+    "name": "Jellyfin with Potplayer",
+    "description": "play video with Potplayer",
+    "url": "https://greasyfork.org/scripts/487579-jellyfin-with-potplayer",
+    "code_url": "https://update.greasyfork.org/scripts/487579/Jellyfin%20with%20Potplayer.user.js",
+    "code_size": 5809,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 481441,
+    "daily_installs": 0,
+    "total_installs": 1301,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-05T08:53:50.000Z",
+    "code_updated_at": "2023-12-15T07:55:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 468610,
+        "name": "jpyl0423",
+        "created_at": "2020-03-25T03:28:57.000Z",
+        "url": "https://greasyfork.org/users/468610-jpyl0423"
+      }
+    ],
+    "name": "Gooboo辅助",
+    "description": "循环学习、参加考试、使用装备、循环播种",
+    "url": "https://greasyfork.org/scripts/481441-gooboo%E8%BE%85%E5%8A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/481441/Gooboo%E8%BE%85%E5%8A%A9.user.js",
+    "code_size": 23144,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

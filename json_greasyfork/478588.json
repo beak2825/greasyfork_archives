@@ -1,0 +1,59 @@
+{
+  "id": 478588,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-30T05:05:19.000Z",
+  "code_updated_at": "2023-10-30T05:05:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1207095,
+      "name": "libing8331",
+      "created_at": "2023-10-30T04:49:06.000Z",
+      "url": "https://greasyfork.org/users/1207095-libing8331",
+      "scripts": [
+        {
+          "id": 478588,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-30T05:05:19.000Z",
+          "code_updated_at": "2023-10-30T05:05:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove inaccessible fav",
+          "description": "Remove fav directly",
+          "url": "https://greasyfork.org/scripts/478588-remove-inaccessible-fav",
+          "code_url": "https://update.greasyfork.org/scripts/478588/Remove%20inaccessible%20fav.user.js",
+          "code_size": 1556,
+          "license": "GPL",
+          "version": "0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove inaccessible fav",
+  "description": "Remove fav directly",
+  "url": "https://greasyfork.org/scripts/478588-remove-inaccessible-fav",
+  "code_url": "https://update.greasyfork.org/scripts/478588/Remove%20inaccessible%20fav.user.js",
+  "code_size": 1556,
+  "license": "GPL",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

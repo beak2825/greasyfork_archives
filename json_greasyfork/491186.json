@@ -1,0 +1,33 @@
+{
+  "id": 491186,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-29T16:16:17.000Z",
+  "code_updated_at": "2024-03-29T18:28:07.000Z",
+  "namespace": "https://github.com/Alistair1231/my-userscripts/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 12725,
+      "name": "Alistair1231",
+      "created_at": "2015-06-25T13:01:33.000Z",
+      "url": "https://greasyfork.org/users/12725-alistair1231"
+    }
+  ],
+  "name": "Trimps Tweaks",
+  "description": "various tweaks like Quicksave/Quickload for Trimps",
+  "url": "https://greasyfork.org/scripts/491186-trimps-tweaks",
+  "code_url": "https://update.greasyfork.org/scripts/491186/Trimps%20Tweaks.user.js",
+  "code_size": 3239,
+  "license": "MIT License",
+  "version": "0.2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

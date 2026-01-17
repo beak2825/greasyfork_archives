@@ -1,0 +1,34 @@
+{
+  "id": 468462,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-11T23:31:06.000Z",
+  "code_updated_at": "2023-06-11T23:31:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1096710,
+      "name": "Ирина Пирожникова",
+      "created_at": "2023-06-11T23:29:04.000Z",
+      "url": "https://greasyfork.org/users/1096710-%D0%B8%D1%80%D0%B8%D0%BD%D0%B0-%D0%BF%D0%B8%D1%80%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2%D0%B0",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Karma Script",
+  "description": "Changes the word \"Dexterity\" to \"Karma\" on Torn.com",
+  "url": "https://greasyfork.org/scripts/468462-torn-karma-script",
+  "code_url": "https://update.greasyfork.org/scripts/468462/Torn%20Karma%20Script.user.js",
+  "code_size": 1584,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

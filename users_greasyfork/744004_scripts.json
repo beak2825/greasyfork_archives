@@ -1,0 +1,68 @@
+[
+  {
+    "id": 439345,
+    "daily_installs": 0,
+    "total_installs": 90,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-30T05:28:55.000Z",
+    "code_updated_at": "2022-01-30T05:28:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 744004,
+        "name": "MatteCrystal",
+        "created_at": "2021-03-05T17:28:46.000Z",
+        "url": "https://greasyfork.org/users/744004-mattecrystal"
+      }
+    ],
+    "name": "Pixiv Direct External Link",
+    "description": "When clicking links in the description redirect directly to the url.",
+    "url": "https://greasyfork.org/scripts/439345-pixiv-direct-external-link",
+    "code_url": "https://update.greasyfork.org/scripts/439345/Pixiv%20Direct%20External%20Link.user.js",
+    "code_size": 2108,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422745,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-05T17:42:09.000Z",
+    "code_updated_at": "2021-03-06T05:09:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 744004,
+        "name": "MatteCrystal",
+        "created_at": "2021-03-05T17:28:46.000Z",
+        "url": "https://greasyfork.org/users/744004-mattecrystal"
+      }
+    ],
+    "name": "Polltab Bracket Show Iframe",
+    "description": "It allows you to paste youtube video url's as the question and then when actually viewing the bracket instead of showing the url as text it will instead show an embedded YouTube video of the url.",
+    "url": "https://greasyfork.org/scripts/422745-polltab-bracket-show-iframe",
+    "code_url": "https://update.greasyfork.org/scripts/422745/Polltab%20Bracket%20Show%20Iframe.user.js",
+    "code_size": 3145,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

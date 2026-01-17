@@ -1,0 +1,68 @@
+[
+  {
+    "id": 489935,
+    "daily_installs": 2,
+    "total_installs": 301,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-03-16T05:08:42.000Z",
+    "code_updated_at": "2024-11-11T21:54:52.000Z",
+    "namespace": "GeforceNowAdBlocker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245736,
+        "name": "._._.dustin",
+        "created_at": "2024-01-09T22:07:52.000Z",
+        "url": "https://greasyfork.org/users/1245736-dustin"
+      }
+    ],
+    "name": "Geforce Now Ad Blocker",
+    "description": "Geforce now ad blocker! Mutes, and hides video, and continues to play ads even when you're not on the website! Dm me on discord if it breaks at ._._.dustin",
+    "url": "https://greasyfork.org/scripts/489935-geforce-now-ad-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/489935/Geforce%20Now%20Ad%20Blocker.user.js",
+    "code_size": 1359,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484398,
+    "daily_installs": 0,
+    "total_installs": 410,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-09T22:12:09.000Z",
+    "code_updated_at": "2024-01-09T22:17:44.000Z",
+    "namespace": "Roblox group claimer",
+    "support_url": null,
+    "contribution_url": "https://www.buymeacoffee.com/dustin21335",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245736,
+        "name": "._._.dustin",
+        "created_at": "2024-01-09T22:07:52.000Z",
+        "url": "https://greasyfork.org/users/1245736-dustin"
+      }
+    ],
+    "name": "Roblox group claimer with auto join, and discord webhooks",
+    "description": "Finds unclaimed roblox groups and sends them to a webhook, or auto joins them!",
+    "url": "https://greasyfork.org/scripts/484398-roblox-group-claimer-with-auto-join-and-discord-webhooks",
+    "code_url": "https://update.greasyfork.org/scripts/484398/Roblox%20group%20claimer%20with%20auto%20join%2C%20and%20discord%20webhooks.user.js",
+    "code_size": 3374,
+    "license": "MIT License",
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

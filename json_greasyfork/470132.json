@@ -1,0 +1,34 @@
+{
+  "id": 470132,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-04T10:12:01.000Z",
+  "code_updated_at": "2025-09-16T02:08:57.000Z",
+  "namespace": "https://youtu.be/5OI2hmEPYgc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 695618,
+      "name": "yuXs",
+      "created_at": "2020-10-16T12:57:53.000Z",
+      "url": "https://greasyfork.org/users/695618-yuxs",
+      "scripts": []
+    }
+  ],
+  "name": "Public Document helper",
+  "description": "try to take over the worldQQ https://greasyfork.org/zh-TW/scripts/470132-public-document-helper!",
+  "url": "https://greasyfork.org/scripts/470132-public-document-helper",
+  "code_url": "https://update.greasyfork.org/scripts/470132/Public%20Document%20helper.user.js",
+  "code_size": 15412,
+  "license": "MIT License",
+  "version": "0.035",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 448152,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-20T02:27:45.000Z",
+  "code_updated_at": "2022-07-20T05:51:33.000Z",
+  "namespace": "BaskinBros Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 734276,
+      "name": "Goji",
+      "created_at": "2021-02-04T01:31:04.000Z",
+      "url": "https://greasyfork.org/users/734276-goji"
+    }
+  ],
+  "name": "EzcapeChat Auto SWF Mode",
+  "description": "Redirects to SWF",
+  "url": "https://greasyfork.org/scripts/448152-ezcapechat-auto-swf-mode",
+  "code_url": "https://update.greasyfork.org/scripts/448152/EzcapeChat%20Auto%20SWF%20Mode.user.js",
+  "code_size": 714,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

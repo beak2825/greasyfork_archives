@@ -1,0 +1,59 @@
+{
+  "id": 420346,
+  "daily_installs": 2,
+  "total_installs": 23168,
+  "fan_score": "50.6",
+  "good_ratings": 14,
+  "ok_ratings": 1,
+  "bad_ratings": 5,
+  "created_at": "2021-01-18T06:30:59.000Z",
+  "code_updated_at": "2021-04-08T12:49:54.000Z",
+  "namespace": "https://greasyfork.org/users/548266",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 548266,
+      "name": "bAdRocK",
+      "created_at": "2020-05-02T19:45:31.000Z",
+      "url": "https://greasyfork.org/users/548266-badrock",
+      "scripts": [
+        {
+          "id": 420346,
+          "daily_installs": 2,
+          "total_installs": 23168,
+          "fan_score": "50.6",
+          "good_ratings": 14,
+          "ok_ratings": 1,
+          "bad_ratings": 5,
+          "created_at": "2021-01-18T06:30:59.000Z",
+          "code_updated_at": "2021-04-08T12:49:54.000Z",
+          "namespace": "https://greasyfork.org/users/548266",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto Claim Twitch drop",
+          "description": "Auto clicking \"Click to claim a drop\" under the chat",
+          "url": "https://greasyfork.org/scripts/420346-auto-claim-twitch-drop",
+          "code_url": "https://update.greasyfork.org/scripts/420346/Auto%20Claim%20Twitch%20drop.user.js",
+          "code_size": 67551,
+          "license": null,
+          "version": "0.69.421",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto Claim Twitch drop",
+  "description": "Auto clicking \"Click to claim a drop\" under the chat",
+  "url": "https://greasyfork.org/scripts/420346-auto-claim-twitch-drop",
+  "code_url": "https://update.greasyfork.org/scripts/420346/Auto%20Claim%20Twitch%20drop.user.js",
+  "code_size": 67551,
+  "license": null,
+  "version": "0.69.421",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

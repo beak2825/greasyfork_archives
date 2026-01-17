@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 448523,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-27T07:16:37.000Z",
+    "code_updated_at": "2022-07-27T07:16:37.000Z",
+    "namespace": "slackwebversion",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 767993,
+        "name": "pas-calc",
+        "created_at": "2021-05-03T11:40:40.000Z",
+        "url": "https://greasyfork.org/users/767993-pas-calc"
+      }
+    ],
+    "name": "Slack automatic redirect (open with browser)",
+    "description": "automatically use Slack in browser (web version)",
+    "url": "https://greasyfork.org/scripts/448523-slack-automatic-redirect-open-with-browser",
+    "code_url": "https://update.greasyfork.org/scripts/448523/Slack%20automatic%20redirect%20%28open%20with%20browser%29.user.js",
+    "code_size": 1953,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 426535,
+    "daily_installs": 0,
+    "total_installs": 801,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-05-15T21:07:39.000Z",
+    "code_updated_at": "2021-08-30T16:39:23.000Z",
+    "namespace": "https://greasyfork.org/users/767993",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 767993,
+        "name": "pas-calc",
+        "created_at": "2021-05-03T11:40:40.000Z",
+        "url": "https://greasyfork.org/users/767993-pas-calc"
+      }
+    ],
+    "name": "skip Google and Youtube \"Before you continue\"",
+    "description": "remove popup",
+    "url": "https://greasyfork.org/scripts/426535-skip-google-and-youtube-before-you-continue",
+    "code_url": "https://update.greasyfork.org/scripts/426535/skip%20Google%20and%20Youtube%20%22Before%20you%20continue%22.user.js",
+    "code_size": 1952,
+    "license": null,
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425863,
+    "daily_installs": 0,
+    "total_installs": 425,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-03T11:45:07.000Z",
+    "code_updated_at": "2021-08-15T16:28:24.000Z",
+    "namespace": "waz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 767993,
+        "name": "pas-calc",
+        "created_at": "2021-05-03T11:40:40.000Z",
+        "url": "https://greasyfork.org/users/767993-pas-calc"
+      }
+    ],
+    "name": "WAZ NRZ deobfuscator",
+    "description": "bypass paywall on waz.de, nrz.de",
+    "url": "https://greasyfork.org/scripts/425863-waz-nrz-deobfuscator",
+    "code_url": "https://update.greasyfork.org/scripts/425863/WAZ%20NRZ%20deobfuscator.user.js",
+    "code_size": 3334,
+    "license": null,
+    "version": "2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -31,5 +31,38 @@
     "locale": "es-419",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 487424,
+    "daily_installs": 0,
+    "total_installs": 120,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-16T00:55:38.000Z",
+    "code_updated_at": "2025-06-11T03:18:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 14568,
+        "name": "Nicolás Romero",
+        "created_at": "2015-08-24T03:06:54.000Z",
+        "url": "https://greasyfork.org/users/14568-nicol%C3%A1s-romero"
+      }
+    ],
+    "name": "Autoclick bonificación Twitch (detector completo con sonido)",
+    "description": "Click automático y con sonido en el botón \"Reclamar bonificación\" en Twitch",
+    "url": "https://greasyfork.org/scripts/487424-autoclick-bonificaci%C3%B3n-twitch-detector-completo-con-sonido",
+    "code_url": "https://update.greasyfork.org/scripts/487424/Autoclick%20bonificaci%C3%B3n%20Twitch%20%28detector%20completo%20con%20sonido%29.user.js",
+    "code_size": 2529,
+    "license": "De_lujo",
+    "version": "1.4",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

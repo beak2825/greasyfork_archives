@@ -1,0 +1,68 @@
+[
+  {
+    "id": 438871,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-20T11:46:43.000Z",
+    "code_updated_at": "2022-01-28T00:22:25.000Z",
+    "namespace": "Google don't open account in new tab by C4illin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 217869,
+        "name": "C4illin",
+        "created_at": "2018-10-06T21:13:12.000Z",
+        "url": "https://greasyfork.org/users/217869-c4illin"
+      }
+    ],
+    "name": "Google don't open account in new tab",
+    "description": "Replace target=\"_blank\" links in account selector",
+    "url": "https://greasyfork.org/scripts/438871-google-don-t-open-account-in-new-tab",
+    "code_url": "https://update.greasyfork.org/scripts/438871/Google%20don%27t%20open%20account%20in%20new%20tab.user.js",
+    "code_size": 506,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429217,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-11T14:41:30.000Z",
+    "code_updated_at": "2021-07-12T02:41:43.000Z",
+    "namespace": "Google Meet Attendees & Breakout Rooms by Daniel & Emrik",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 217869,
+        "name": "C4illin",
+        "created_at": "2018-10-06T21:13:12.000Z",
+        "url": "https://greasyfork.org/users/217869-c4illin"
+      }
+    ],
+    "name": "Google Meet Attendees & Breakout Rooms",
+    "description": "Get attendees at a google meet and do different things.",
+    "url": "https://greasyfork.org/scripts/429217-google-meet-attendees-breakout-rooms",
+    "code_url": "https://update.greasyfork.org/scripts/429217/Google%20Meet%20Attendees%20%20Breakout%20Rooms.user.js",
+    "code_size": 55587,
+    "license": null,
+    "version": "0.2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

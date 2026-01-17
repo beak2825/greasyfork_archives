@@ -1,0 +1,34 @@
+{
+  "id": 412705,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-08T22:16:32.000Z",
+  "code_updated_at": "2020-10-08T22:16:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 43725,
+      "name": "AllMight [1878147]",
+      "created_at": "2016-05-14T20:00:12.000Z",
+      "url": "https://greasyfork.org/users/43725-allmight-1878147",
+      "scripts": []
+    }
+  ],
+  "name": "TUS: Live faction chain breaker/revive helper",
+  "description": "Makes faction page update members status and activity live and allow filters",
+  "url": "https://greasyfork.org/scripts/412705-tus-live-faction-chain-breaker-revive-helper",
+  "code_url": "https://update.greasyfork.org/scripts/412705/TUS%3A%20Live%20faction%20chain%20breakerrevive%20helper.user.js",
+  "code_size": 15471,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

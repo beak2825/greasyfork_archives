@@ -1,0 +1,59 @@
+{
+  "id": 443454,
+  "daily_installs": 0,
+  "total_installs": 61,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-16T04:59:58.000Z",
+  "code_updated_at": "2023-01-06T04:17:55.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 902847,
+      "name": "Justin Carroll",
+      "created_at": "2022-04-16T04:51:46.000Z",
+      "url": "https://greasyfork.org/users/902847-justin-carroll",
+      "scripts": [
+        {
+          "id": 443454,
+          "daily_installs": 0,
+          "total_installs": 61,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-16T04:59:58.000Z",
+          "code_updated_at": "2023-01-06T04:17:55.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Simulcast Calendar Dub Remover - crunchyroll.com",
+          "description": "Removes dubs from simulcast calendar to reduce clutter. Also adds \"Last Week\" button when it is missing.",
+          "url": "https://greasyfork.org/scripts/443454-simulcast-calendar-dub-remover-crunchyroll-com",
+          "code_url": "https://update.greasyfork.org/scripts/443454/Simulcast%20Calendar%20Dub%20Remover%20-%20crunchyrollcom.user.js",
+          "code_size": 1241,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Simulcast Calendar Dub Remover - crunchyroll.com",
+  "description": "Removes dubs from simulcast calendar to reduce clutter. Also adds \"Last Week\" button when it is missing.",
+  "url": "https://greasyfork.org/scripts/443454-simulcast-calendar-dub-remover-crunchyroll-com",
+  "code_url": "https://update.greasyfork.org/scripts/443454/Simulcast%20Calendar%20Dub%20Remover%20-%20crunchyrollcom.user.js",
+  "code_size": 1241,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

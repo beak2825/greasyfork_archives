@@ -1,0 +1,68 @@
+[
+  {
+    "id": 454760,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-13T19:30:46.000Z",
+    "code_updated_at": "2022-11-13T19:30:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 979338,
+        "name": "SkittleGamer_YT",
+        "created_at": "2022-11-04T19:29:33.000Z",
+        "url": "https://greasyfork.org/users/979338-skittlegamer-yt"
+      }
+    ],
+    "name": "SkittleGamer_TTV Theme",
+    "description": "Simple SS Theme using CSS Variables",
+    "url": "https://greasyfork.org/scripts/454760-skittlegamer-ttv-theme",
+    "code_url": "https://update.greasyfork.org/scripts/454760/1116664/SkittleGamer_TTV%20Theme.js",
+    "code_size": 2520,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454747,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-13T15:59:18.000Z",
+    "code_updated_at": "2022-11-13T19:33:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 979338,
+        "name": "SkittleGamer_YT",
+        "created_at": "2022-11-04T19:29:33.000Z",
+        "url": "https://greasyfork.org/users/979338-skittlegamer-yt"
+      }
+    ],
+    "name": "SkittleGamer_TTV",
+    "description": "Simple SS Theme using CSS Variables",
+    "url": "https://greasyfork.org/scripts/454747-skittlegamer-ttv",
+    "code_url": "https://update.greasyfork.org/scripts/454747/SkittleGamer_TTV.user.js",
+    "code_size": 2535,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

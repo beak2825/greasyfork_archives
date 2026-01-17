@@ -1,0 +1,59 @@
+{
+  "id": 440525,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-24T03:34:14.000Z",
+  "code_updated_at": "2022-02-24T03:34:14.000Z",
+  "namespace": "l.r",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 879942,
+      "name": "run.luo",
+      "created_at": "2022-02-24T03:25:42.000Z",
+      "url": "https://greasyfork.org/users/879942-run-luo",
+      "scripts": [
+        {
+          "id": 440525,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-24T03:34:14.000Z",
+          "code_updated_at": "2022-02-24T03:34:14.000Z",
+          "namespace": "l.r",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "快速打开tapd详情",
+          "description": "帮助用户快速打开tapd详情",
+          "url": "https://greasyfork.org/scripts/440525-%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80tapd%E8%AF%A6%E6%83%85",
+          "code_url": "https://update.greasyfork.org/scripts/440525/%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80tapd%E8%AF%A6%E6%83%85.user.js",
+          "code_size": 2422,
+          "license": "GPLv3 License",
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "快速打开tapd详情",
+  "description": "帮助用户快速打开tapd详情",
+  "url": "https://greasyfork.org/scripts/440525-%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80tapd%E8%AF%A6%E6%83%85",
+  "code_url": "https://update.greasyfork.org/scripts/440525/%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80tapd%E8%AF%A6%E6%83%85.user.js",
+  "code_size": 2422,
+  "license": "GPLv3 License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

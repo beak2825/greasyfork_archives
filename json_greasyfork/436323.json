@@ -1,0 +1,33 @@
+{
+  "id": 436323,
+  "daily_installs": 0,
+  "total_installs": 802,
+  "fan_score": "56.6",
+  "good_ratings": 5,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-30T07:47:31.000Z",
+  "code_updated_at": "2026-01-14T13:19:59.000Z",
+  "namespace": "arthals/pku-art",
+  "support_url": "https://github.com/zhuozhiyongde/PKU-Art/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 445531,
+      "name": "zhuozhiyongde",
+      "created_at": "2020-02-15T16:43:37.000Z",
+      "url": "https://greasyfork.org/users/445531-zhuozhiyongde"
+    }
+  ],
+  "name": "PKU-Art",
+  "description": "给你一个足够好看的北大网站。",
+  "url": "https://greasyfork.org/scripts/436323-pku-art",
+  "code_url": "https://update.greasyfork.org/scripts/436323/PKU-Art.user.js",
+  "code_size": 220758,
+  "license": "GPL-3.0 license",
+  "version": "2.6.20",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 450953,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-08T06:29:16.000Z",
+  "code_updated_at": "2022-09-08T10:25:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 955971,
+      "name": "Nustinian",
+      "created_at": "2022-09-08T06:27:20.000Z",
+      "url": "https://greasyfork.org/users/955971-nustinian",
+      "scripts": []
+    }
+  ],
+  "name": "JA-EN Diff",
+  "description": "ja-en diff pop-ups for Microsoft docs. double click \"link\" icons for pop-ups. click outside pop-up to close.",
+  "url": "https://greasyfork.org/scripts/450953-ja-en-diff",
+  "code_url": "https://update.greasyfork.org/scripts/450953/JA-EN%20Diff.user.js",
+  "code_size": 3359,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

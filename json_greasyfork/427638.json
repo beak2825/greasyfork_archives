@@ -1,0 +1,59 @@
+{
+  "id": 427638,
+  "daily_installs": 0,
+  "total_installs": 2468,
+  "fan_score": "56.1",
+  "good_ratings": 6,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-06-07T16:55:24.000Z",
+  "code_updated_at": "2021-06-07T16:55:24.000Z",
+  "namespace": "chat-translator",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 780954,
+      "name": "wen yiyu",
+      "created_at": "2021-06-07T16:49:09.000Z",
+      "url": "https://greasyfork.org/users/780954-wen-yiyu",
+      "scripts": [
+        {
+          "id": 427638,
+          "daily_installs": 0,
+          "total_installs": 2468,
+          "fan_score": "56.1",
+          "good_ratings": 6,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2021-06-07T16:55:24.000Z",
+          "code_updated_at": "2021-06-07T16:55:24.000Z",
+          "namespace": "chat-translator",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chat Translator",
+          "description": "Chat翻译",
+          "url": "https://greasyfork.org/scripts/427638-chat-translator",
+          "code_url": "https://update.greasyfork.org/scripts/427638/Chat%20Translator.user.js",
+          "code_size": 15537,
+          "license": "MIT; https://opensource.org/licenses/MIT",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chat Translator",
+  "description": "Chat翻译",
+  "url": "https://greasyfork.org/scripts/427638-chat-translator",
+  "code_url": "https://update.greasyfork.org/scripts/427638/Chat%20Translator.user.js",
+  "code_size": 15537,
+  "license": "MIT; https://opensource.org/licenses/MIT",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

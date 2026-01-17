@@ -1,0 +1,34 @@
+{
+  "id": 465580,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-05T11:01:29.000Z",
+  "code_updated_at": "2023-05-05T12:17:48.000Z",
+  "namespace": "https://greasyfork.org/users/1050330",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1050330,
+      "name": "单车骑士",
+      "created_at": "2023-03-30T08:02:00.000Z",
+      "url": "https://greasyfork.org/users/1050330-%E5%8D%95%E8%BD%A6%E9%AA%91%E5%A3%AB",
+      "scripts": []
+    }
+  ],
+  "name": "河南大学IOS校园网自动登录",
+  "description": "自动登录校园网",
+  "url": "https://greasyfork.org/scripts/465580-%E6%B2%B3%E5%8D%97%E5%A4%A7%E5%AD%A6ios%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/465580/%E6%B2%B3%E5%8D%97%E5%A4%A7%E5%AD%A6IOS%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 820,
+  "license": null,
+  "version": "0.0.1.20230505121748",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

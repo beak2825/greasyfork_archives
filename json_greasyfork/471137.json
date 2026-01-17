@@ -1,0 +1,33 @@
+{
+  "id": 471137,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-18T16:05:59.000Z",
+  "code_updated_at": "2023-07-18T16:05:59.000Z",
+  "namespace": "http://pravovest.ru",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1130073,
+      "name": "Kinish",
+      "created_at": "2023-07-18T16:02:31.000Z",
+      "url": "https://greasyfork.org/users/1130073-kinish"
+    }
+  ],
+  "name": "LeadColor",
+  "description": "Смена цвета лидов и сделок",
+  "url": "https://greasyfork.org/scripts/471137-leadcolor",
+  "code_url": "https://update.greasyfork.org/scripts/471137/LeadColor.user.js",
+  "code_size": 2114,
+  "license": null,
+  "version": "0.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

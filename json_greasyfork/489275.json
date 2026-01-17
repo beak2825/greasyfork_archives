@@ -1,0 +1,34 @@
+{
+  "id": 489275,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-08T05:52:22.000Z",
+  "code_updated_at": "2024-03-08T05:52:22.000Z",
+  "namespace": "https://greasyfork.org/users/1271659",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1271659,
+      "name": "ghtjason",
+      "created_at": "2024-03-08T05:48:50.000Z",
+      "url": "https://greasyfork.org/users/1271659-ghtjason",
+      "scripts": []
+    }
+  ],
+  "name": "UCLA Bitwarden Autofill Fix",
+  "description": "Fixes Bitwarden autofill not working on the UCLA login password field",
+  "url": "https://greasyfork.org/scripts/489275-ucla-bitwarden-autofill-fix",
+  "code_url": "https://update.greasyfork.org/scripts/489275/UCLA%20Bitwarden%20Autofill%20Fix.user.js",
+  "code_size": 385,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 442566,
+  "daily_installs": 0,
+  "total_installs": 717,
+  "fan_score": "51.7",
+  "good_ratings": 5,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-04-02T18:26:57.000Z",
+  "code_updated_at": "2022-11-21T14:45:29.000Z",
+  "namespace": "Earn Free Coin Instantly",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 849941,
+      "name": "lotocamion",
+      "created_at": "2021-12-07T15:23:58.000Z",
+      "url": "https://greasyfork.org/users/849941-lotocamion"
+    }
+  ],
+  "name": "NEW HCAPTCHA FREE COIN ROTATOR",
+  "description": "Earn Free Coin Instantly",
+  "url": "https://greasyfork.org/scripts/442566-new-hcaptcha-free-coin-rotator",
+  "code_url": "https://update.greasyfork.org/scripts/442566/NEW%20HCAPTCHA%20FREE%20COIN%20ROTATOR.user.js",
+  "code_size": 39733,
+  "license": null,
+  "version": "21.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494726,
+    "daily_installs": 1,
+    "total_installs": 65,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-12T05:30:39.000Z",
+    "code_updated_at": "2025-06-19T08:35:21.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1300333,
+        "name": "ing L",
+        "created_at": "2024-05-12T05:22:51.000Z",
+        "url": "https://greasyfork.org/users/1300333-ing-l"
+      }
+    ],
+    "name": "头条搜索跳过app下载(自动展开)",
+    "description": "2025/6/19 16:41:00",
+    "url": "https://greasyfork.org/scripts/494726-%E5%A4%B4%E6%9D%A1%E6%90%9C%E7%B4%A2%E8%B7%B3%E8%BF%87app%E4%B8%8B%E8%BD%BD-%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/494726/%E5%A4%B4%E6%9D%A1%E6%90%9C%E7%B4%A2%E8%B7%B3%E8%BF%87app%E4%B8%8B%E8%BD%BD%28%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%29.user.js",
+    "code_size": 3844,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 445991,
+  "daily_installs": 0,
+  "total_installs": 71,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-04T11:35:08.000Z",
+  "code_updated_at": "2022-06-04T11:35:08.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 921942,
+      "name": "Roni_Tesla",
+      "created_at": "2022-06-04T10:37:06.000Z",
+      "url": "https://greasyfork.org/users/921942-roni-tesla",
+      "scripts": []
+    }
+  ],
+  "name": "BlackRussia AZURE | Curator's Team Script for forum by R. Tesla",
+  "description": "Tesla number one",
+  "url": "https://greasyfork.org/scripts/445991-blackrussia-azure-curator-s-team-script-for-forum-by-r-tesla",
+  "code_url": "https://update.greasyfork.org/scripts/445991/BlackRussia%20AZURE%20%7C%20Curator%27s%20Team%20Script%20for%20forum%20by%20R%20Tesla.user.js",
+  "code_size": 78621,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

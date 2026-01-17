@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476888,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-07T14:39:28.000Z",
+    "code_updated_at": "2023-11-04T14:43:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1189985,
+        "name": "kongshanfang",
+        "created_at": "2023-10-07T04:09:50.000Z",
+        "url": "https://greasyfork.org/users/1189985-kongshanfang"
+      }
+    ],
+    "name": "桀桀桀，小可爱1.0.1",
+    "description": "快到点了打开图书馆网站",
+    "url": "https://greasyfork.org/scripts/476888-%E6%A1%80%E6%A1%80%E6%A1%80-%E5%B0%8F%E5%8F%AF%E7%88%B11-0-1",
+    "code_url": "https://update.greasyfork.org/scripts/476888/%E6%A1%80%E6%A1%80%E6%A1%80%EF%BC%8C%E5%B0%8F%E5%8F%AF%E7%88%B1101.user.js",
+    "code_size": 9061,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

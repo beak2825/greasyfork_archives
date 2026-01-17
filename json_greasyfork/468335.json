@@ -1,0 +1,33 @@
+{
+  "id": 468335,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-10T03:14:54.000Z",
+  "code_updated_at": "2023-06-10T07:24:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 880929,
+      "name": "cass_per",
+      "created_at": "2022-02-26T22:39:30.000Z",
+      "url": "https://greasyfork.org/users/880929-cass-per"
+    }
+  ],
+  "name": "My Profile Link",
+  "description": "Adds a link to profile in nav bar",
+  "url": "https://greasyfork.org/scripts/468335-my-profile-link",
+  "code_url": "https://update.greasyfork.org/scripts/468335/My%20Profile%20Link.user.js",
+  "code_size": 1178,
+  "license": "MIT License",
+  "version": "0.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

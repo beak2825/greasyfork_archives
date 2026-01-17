@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437926,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-02T07:34:04.000Z",
+    "code_updated_at": "2022-01-31T11:29:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860210,
+        "name": "Darwin Nu",
+        "created_at": "2022-01-02T07:15:36.000Z",
+        "url": "https://greasyfork.org/users/860210-darwin-nu"
+      }
+    ],
+    "name": "浮游城多開與徵收",
+    "description": "在同一個帳號底下可以進行別的帳號的行動與徵收帳號資源到本帳",
+    "url": "https://greasyfork.org/scripts/437926-%E6%B5%AE%E6%B8%B8%E5%9F%8E%E5%A4%9A%E9%96%8B%E8%88%87%E5%BE%B5%E6%94%B6",
+    "code_url": "https://update.greasyfork.org/scripts/437926/%E6%B5%AE%E6%B8%B8%E5%9F%8E%E5%A4%9A%E9%96%8B%E8%88%87%E5%BE%B5%E6%94%B6.user.js",
+    "code_size": 74279,
+    "license": null,
+    "version": "1.5",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

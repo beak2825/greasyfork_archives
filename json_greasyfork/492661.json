@@ -1,0 +1,59 @@
+{
+  "id": 492661,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-16T10:41:06.000Z",
+  "code_updated_at": "2024-04-16T10:41:06.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1288985,
+      "name": "luck0861",
+      "created_at": "2024-04-16T10:39:30.000Z",
+      "url": "https://greasyfork.org/users/1288985-luck0861",
+      "scripts": [
+        {
+          "id": 492661,
+          "daily_installs": 0,
+          "total_installs": 34,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-16T10:41:06.000Z",
+          "code_updated_at": "2024-04-16T10:41:06.000Z",
+          "namespace": "",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页返回顶部",
+          "description": "返回顶部",
+          "url": "https://greasyfork.org/scripts/492661-%E7%BD%91%E9%A1%B5%E8%BF%94%E5%9B%9E%E9%A1%B6%E9%83%A8",
+          "code_url": "https://update.greasyfork.org/scripts/492661/%E7%BD%91%E9%A1%B5%E8%BF%94%E5%9B%9E%E9%A1%B6%E9%83%A8.user.js",
+          "code_size": 4523,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网页返回顶部",
+  "description": "返回顶部",
+  "url": "https://greasyfork.org/scripts/492661-%E7%BD%91%E9%A1%B5%E8%BF%94%E5%9B%9E%E9%A1%B6%E9%83%A8",
+  "code_url": "https://update.greasyfork.org/scripts/492661/%E7%BD%91%E9%A1%B5%E8%BF%94%E5%9B%9E%E9%A1%B6%E9%83%A8.user.js",
+  "code_size": 4523,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

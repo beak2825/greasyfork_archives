@@ -1,0 +1,200 @@
+[
+  {
+    "id": 485560,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-24T08:27:13.000Z",
+    "code_updated_at": "2024-01-24T08:27:13.000Z",
+    "namespace": "https://greasyfork.org/ru/users/1118525-pistenkov",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114041,
+        "name": "Leted",
+        "created_at": "2023-06-28T07:06:28.000Z",
+        "url": "https://greasyfork.org/users/1114041-leted"
+      }
+    ],
+    "name": "ULYANOVSK | Скрипт для ГС/ЗГС",
+    "description": "Скрипт для ГС/ЗГС ГОСС/ОПГ",
+    "url": "https://greasyfork.org/scripts/485560-ulyanovsk-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B3%D1%81-%D0%B7%D0%B3%D1%81",
+    "code_url": "https://update.greasyfork.org/scripts/485560/ULYANOVSK%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%93%D0%A1%D0%97%D0%93%D0%A1.user.js",
+    "code_size": 12246,
+    "license": "none",
+    "version": "0.01",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 485559,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-24T08:25:07.000Z",
+    "code_updated_at": "2024-01-24T08:25:07.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114041,
+        "name": "Leted",
+        "created_at": "2023-06-28T07:06:28.000Z",
+        "url": "https://greasyfork.org/users/1114041-leted"
+      }
+    ],
+    "name": "ULYANOVSK | Скрипт для Кураторов Форума",
+    "description": "Скрипт для проверки жалоб",
+    "url": "https://greasyfork.org/scripts/485559-ulyanovsk-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/485559/ULYANOVSK%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 29957,
+    "license": "MIT License",
+    "version": "0.01",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 485558,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-24T08:20:10.000Z",
+    "code_updated_at": "2024-01-24T08:20:10.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114041,
+        "name": "Leted",
+        "created_at": "2023-06-28T07:06:28.000Z",
+        "url": "https://greasyfork.org/users/1114041-leted"
+      }
+    ],
+    "name": "Жалобы/Обжалования",
+    "description": "by Andranik_Leted",
+    "url": "https://greasyfork.org/scripts/485558-%D0%B6%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-%D0%BE%D0%B1%D0%B6%D0%B0%D0%BB%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/485558/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B%D0%9E%D0%B1%D0%B6%D0%B0%D0%BB%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.user.js",
+    "code_size": 29541,
+    "license": "MIT License",
+    "version": "0.01",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471558,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-24T05:17:41.000Z",
+    "code_updated_at": "2025-05-23T08:17:19.000Z",
+    "namespace": "https://greasyfork.org/ru/users/1118525-pistenkov",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114041,
+        "name": "Leted",
+        "created_at": "2023-06-28T07:06:28.000Z",
+        "url": "https://greasyfork.org/users/1114041-leted"
+      }
+    ],
+    "name": "Blue | Скрипт для ГС/ЗГС",
+    "description": "Скрипт для ГС/ЗГС ГОСС/ОПГ",
+    "url": "https://greasyfork.org/scripts/471558-blue-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B3%D1%81-%D0%B7%D0%B3%D1%81",
+    "code_url": "https://update.greasyfork.org/scripts/471558/Blue%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%93%D0%A1%D0%97%D0%93%D0%A1.user.js",
+    "code_size": 13039,
+    "license": "none",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470061,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-03T15:54:16.000Z",
+    "code_updated_at": "2023-07-25T06:09:13.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114041,
+        "name": "Leted",
+        "created_at": "2023-06-28T07:06:28.000Z",
+        "url": "https://greasyfork.org/users/1114041-leted"
+      }
+    ],
+    "name": "Жалобы/Обжалования",
+    "description": "by Andranik_Leted",
+    "url": "https://greasyfork.org/scripts/470061-%D0%B6%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-%D0%BE%D0%B1%D0%B6%D0%B0%D0%BB%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/470061/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B%D0%9E%D0%B1%D0%B6%D0%B0%D0%BB%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.user.js",
+    "code_size": 29446,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469622,
+    "daily_installs": 0,
+    "total_installs": 275,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-28T07:08:23.000Z",
+    "code_updated_at": "2023-07-25T06:11:38.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114041,
+        "name": "Leted",
+        "created_at": "2023-06-28T07:06:28.000Z",
+        "url": "https://greasyfork.org/users/1114041-leted"
+      }
+    ],
+    "name": "BLUE | Скрипт для Кураторов Форума",
+    "description": "Скрипт для проверки жалоб",
+    "url": "https://greasyfork.org/scripts/469622-blue-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/469622/BLUE%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 29947,
+    "license": "MIT License",
+    "version": "2.21",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

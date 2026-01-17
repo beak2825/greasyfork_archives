@@ -1,0 +1,34 @@
+{
+  "id": 417063,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-29T21:48:46.000Z",
+  "code_updated_at": "2020-11-29T21:48:45.000Z",
+  "namespace": "https://github.com/victornpb/deleteDiscordMessages",
+  "support_url": "https://github.com/victornpb/deleteDiscordMessages/issues",
+  "contribution_url": "https://www.buymeacoffee.com/vitim",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 710331,
+      "name": "Motion YT",
+      "created_at": "2020-11-29T21:48:18.000Z",
+      "url": "https://greasyfork.org/users/710331-motion-yt",
+      "scripts": []
+    }
+  ],
+  "name": "Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)",
+  "description": "Extends the discord interface so you can mass delete messages from discord",
+  "url": "https://greasyfork.org/scripts/417063-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion",
+  "code_url": "https://update.greasyfork.org/scripts/417063/Undiscord%20-%20Delete%20all%20messages%20in%20a%20Discord%20channel%20or%20DM%20%28Bulk%20deletion%29.user.js",
+  "code_size": 23985,
+  "license": "MIT License",
+  "version": "4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

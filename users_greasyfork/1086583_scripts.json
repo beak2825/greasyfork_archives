@@ -1,0 +1,35 @@
+[
+  {
+    "id": 467368,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-29T07:26:03.000Z",
+    "code_updated_at": "2023-05-29T07:26:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1086583,
+        "name": "yang925",
+        "created_at": "2023-05-29T06:59:41.000Z",
+        "url": "https://greasyfork.org/users/1086583-yang925"
+      }
+    ],
+    "name": "passwall批量可用性测试",
+    "description": "在节点列表页面添加批量可用性测试按钮，对于勾选的多节点可以进行批量可用性测试",
+    "url": "https://greasyfork.org/scripts/467368-passwall%E6%89%B9%E9%87%8F%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/467368/passwall%E6%89%B9%E9%87%8F%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95.user.js",
+    "code_size": 2027,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

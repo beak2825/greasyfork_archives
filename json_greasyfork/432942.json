@@ -1,0 +1,59 @@
+{
+  "id": 432942,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-25T13:27:30.000Z",
+  "code_updated_at": "2021-10-06T06:06:11.000Z",
+  "namespace": "virtonomica",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 818600,
+      "name": "saqot",
+      "created_at": "2021-09-24T11:37:03.000Z",
+      "url": "https://greasyfork.org/users/818600-saqot",
+      "scripts": [
+        {
+          "id": 437800,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-30T15:37:28.000Z",
+          "code_updated_at": "2022-01-01T13:51:29.000Z",
+          "namespace": "virtonomica",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VIRTA::Forum",
+          "description": "Скрытие ачивок в спойлер + Вписываение оргомных изображений в размер форума",
+          "url": "https://greasyfork.org/scripts/437800-virta-forum",
+          "code_url": "https://update.greasyfork.org/scripts/437800/VIRTA%3A%3AForum.user.js",
+          "code_size": 4453,
+          "license": null,
+          "version": "1.3",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VIRTA::Materials Select Help",
+  "description": "Доп. стата при заказе товара",
+  "url": "https://greasyfork.org/scripts/432942-virta-materials-select-help",
+  "code_url": "https://update.greasyfork.org/scripts/432942/VIRTA%3A%3AMaterials%20Select%20Help.user.js",
+  "code_size": 3399,
+  "license": null,
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

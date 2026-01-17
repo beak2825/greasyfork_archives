@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436359,
+    "daily_installs": 8,
+    "total_installs": 7857,
+    "fan_score": "56.5",
+    "good_ratings": 7,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2021-11-30T20:00:12.000Z",
+    "code_updated_at": "2025-02-12T01:26:40.000Z",
+    "namespace": "https://github.com/dybdeskarphet/privacy-redirector",
+    "support_url": "https://github.com/dybdeskarphet/privacy-redirector",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846891,
+        "name": "dybdeskarphet",
+        "created_at": "2021-11-30T19:42:46.000Z",
+        "url": "https://greasyfork.org/users/846891-dybdeskarphet"
+      }
+    ],
+    "name": "Privacy Redirector",
+    "description": "Redirect social media platforms to their privacy respecting frontends",
+    "url": "https://greasyfork.org/scripts/436359-privacy-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/436359/Privacy%20Redirector.user.js",
+    "code_size": 38211,
+    "license": "GPLv3",
+    "version": "1.6.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

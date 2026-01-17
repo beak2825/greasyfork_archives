@@ -1,0 +1,33 @@
+{
+  "id": 469299,
+  "daily_installs": 0,
+  "total_installs": 960,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-23T13:58:49.000Z",
+  "code_updated_at": "2023-06-23T13:58:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1109984,
+      "name": "luxi78",
+      "created_at": "2023-06-23T13:52:34.000Z",
+      "url": "https://greasyfork.org/users/1109984-luxi78"
+    }
+  ],
+  "name": "开放大学视频快过",
+  "description": "将视频播放速度加快16倍，并解除网页失焦后视频暂停的限制",
+  "url": "https://greasyfork.org/scripts/469299-%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%A7%86%E9%A2%91%E5%BF%AB%E8%BF%87",
+  "code_url": "https://update.greasyfork.org/scripts/469299/%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%A7%86%E9%A2%91%E5%BF%AB%E8%BF%87.user.js",
+  "code_size": 1478,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

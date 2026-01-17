@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487405,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-15T17:46:04.000Z",
+    "code_updated_at": "2024-02-24T20:45:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1261708,
+        "name": "Restorn",
+        "created_at": "2024-02-15T17:42:12.000Z",
+        "url": "https://greasyfork.org/users/1261708-restorn"
+      }
+    ],
+    "name": "Wanikani: Show SRS Level In Reviews",
+    "description": "Self explanatory",
+    "url": "https://greasyfork.org/scripts/487405-wanikani-show-srs-level-in-reviews",
+    "code_url": "https://update.greasyfork.org/scripts/487405/Wanikani%3A%20Show%20SRS%20Level%20In%20Reviews.user.js",
+    "code_size": 6867,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

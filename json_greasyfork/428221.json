@@ -1,0 +1,33 @@
+{
+  "id": 428221,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-20T12:44:31.000Z",
+  "code_updated_at": "2021-06-21T14:49:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 785435,
+      "name": "hloodelbn",
+      "created_at": "2021-06-20T12:35:14.000Z",
+      "url": "https://greasyfork.org/users/785435-hloodelbn"
+    }
+  ],
+  "name": "贝壳房屋列表追加户型图",
+  "description": "贝壳房屋列表追加户型图，方便搜索",
+  "url": "https://greasyfork.org/scripts/428221-%E8%B4%9D%E5%A3%B3%E6%88%BF%E5%B1%8B%E5%88%97%E8%A1%A8%E8%BF%BD%E5%8A%A0%E6%88%B7%E5%9E%8B%E5%9B%BE",
+  "code_url": "https://update.greasyfork.org/scripts/428221/%E8%B4%9D%E5%A3%B3%E6%88%BF%E5%B1%8B%E5%88%97%E8%A1%A8%E8%BF%BD%E5%8A%A0%E6%88%B7%E5%9E%8B%E5%9B%BE.user.js",
+  "code_size": 3851,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

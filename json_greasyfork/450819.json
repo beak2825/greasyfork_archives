@@ -1,0 +1,33 @@
+{
+  "id": 450819,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-06T06:19:18.000Z",
+  "code_updated_at": "2023-07-12T07:46:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 955158,
+      "name": "st liu",
+      "created_at": "2022-09-06T06:16:09.000Z",
+      "url": "https://greasyfork.org/users/955158-st-liu"
+    }
+  ],
+  "name": "log-util",
+  "description": "日志增强工具",
+  "url": "https://greasyfork.org/scripts/450819-log-util",
+  "code_url": "https://update.greasyfork.org/scripts/450819/log-util.user.js",
+  "code_size": 239753,
+  "license": null,
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

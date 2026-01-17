@@ -1,0 +1,59 @@
+{
+  "id": 440399,
+  "daily_installs": 0,
+  "total_installs": 2191,
+  "fan_score": "1.8",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 2,
+  "created_at": "2022-02-21T13:24:17.000Z",
+  "code_updated_at": "2022-02-21T13:24:17.000Z",
+  "namespace": "https://greasyfork.org/users/878986",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 878986,
+      "name": "Preston Meakin",
+      "created_at": "2022-02-21T13:20:12.000Z",
+      "url": "https://greasyfork.org/users/878986-preston-meakin",
+      "scripts": [
+        {
+          "id": 440399,
+          "daily_installs": 0,
+          "total_installs": 2191,
+          "fan_score": "1.8",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 2,
+          "created_at": "2022-02-21T13:24:17.000Z",
+          "code_updated_at": "2022-02-21T13:24:17.000Z",
+          "namespace": "https://greasyfork.org/users/878986",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "x-ware",
+          "description": "x-ware cool",
+          "url": "https://greasyfork.org/scripts/440399-x-ware",
+          "code_url": "https://update.greasyfork.org/scripts/440399/x-ware.user.js",
+          "code_size": 218753,
+          "license": null,
+          "version": "0.0.1.20220221132417",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "x-ware",
+  "description": "x-ware cool",
+  "url": "https://greasyfork.org/scripts/440399-x-ware",
+  "code_url": "https://update.greasyfork.org/scripts/440399/x-ware.user.js",
+  "code_size": 218753,
+  "license": null,
+  "version": "0.0.1.20220221132417",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

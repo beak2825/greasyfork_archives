@@ -1,0 +1,59 @@
+{
+  "id": 432392,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-14T08:24:09.000Z",
+  "code_updated_at": "2021-09-24T02:27:48.000Z",
+  "namespace": "Script Runner Pro",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 815281,
+      "name": "Ryan Mark Hiluano",
+      "created_at": "2021-09-14T08:19:12.000Z",
+      "url": "https://greasyfork.org/users/815281-ryan-mark-hiluano",
+      "scripts": [
+        {
+          "id": 432392,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-14T08:24:09.000Z",
+          "code_updated_at": "2021-09-24T02:27:48.000Z",
+          "namespace": "Script Runner Pro",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bugaw Crow v1.7",
+          "description": "PVU tool",
+          "url": "https://greasyfork.org/scripts/432392-bugaw-crow-v1-7",
+          "code_url": "https://update.greasyfork.org/scripts/432392/Bugaw%20Crow%20v17.user.js",
+          "code_size": 5420,
+          "license": null,
+          "version": "1.7",
+          "locale": "ceb",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bugaw Crow v1.7",
+  "description": "PVU tool",
+  "url": "https://greasyfork.org/scripts/432392-bugaw-crow-v1-7",
+  "code_url": "https://update.greasyfork.org/scripts/432392/Bugaw%20Crow%20v17.user.js",
+  "code_size": 5420,
+  "license": null,
+  "version": "1.7",
+  "locale": "ceb",
+  "deleted": false,
+  "visibility": "public"
+}

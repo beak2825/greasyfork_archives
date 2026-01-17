@@ -1,0 +1,59 @@
+{
+  "id": 481561,
+  "daily_installs": 0,
+  "total_installs": 318,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-06T22:48:54.000Z",
+  "code_updated_at": "2023-12-06T22:52:23.000Z",
+  "namespace": "https://greasyfork.org/users/919633",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1229496,
+      "name": "Murka FaZe",
+      "created_at": "2023-12-06T22:32:03.000Z",
+      "url": "https://greasyfork.org/users/1229496-murka-faze",
+      "scripts": [
+        {
+          "id": 481561,
+          "daily_installs": 0,
+          "total_installs": 318,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-06T22:48:54.000Z",
+          "code_updated_at": "2023-12-06T22:52:23.000Z",
+          "namespace": "https://greasyfork.org/users/919633",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Moomoo.io Force conect bird .op clien (@FaZeGG456) for mod :) in youtube %%",
+          "description": "Allows to connect to the full server",
+          "url": "https://greasyfork.org/scripts/481561-moomoo-io-force-conect-bird-op-clien-fazegg456-for-mod-in-youtube",
+          "code_url": "https://update.greasyfork.org/scripts/481561/Moomooio%20Force%20conect%20bird%20op%20clien%20%28%40FaZeGG456%29%20for%20mod%20%3A%29%20in%20youtube%20%25%25.user.js",
+          "code_size": 1435,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Moomoo.io Force conect bird .op clien (@FaZeGG456) for mod :) in youtube %%",
+  "description": "Allows to connect to the full server",
+  "url": "https://greasyfork.org/scripts/481561-moomoo-io-force-conect-bird-op-clien-fazegg456-for-mod-in-youtube",
+  "code_url": "https://update.greasyfork.org/scripts/481561/Moomooio%20Force%20conect%20bird%20op%20clien%20%28%40FaZeGG456%29%20for%20mod%20%3A%29%20in%20youtube%20%25%25.user.js",
+  "code_size": 1435,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 485171,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-18T15:42:26.000Z",
+    "code_updated_at": "2024-01-18T15:42:26.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394023,
+        "name": "lucianjp",
+        "created_at": "2019-11-01T19:35:18.000Z",
+        "url": "https://greasyfork.org/users/394023-lucianjp"
+      }
+    ],
+    "name": "PTP image cache",
+    "description": "--",
+    "url": "https://greasyfork.org/scripts/485171-ptp-image-cache",
+    "code_url": "https://update.greasyfork.org/scripts/485171/PTP%20image%20cache.user.js",
+    "code_size": 10823,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 476017,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-24T14:33:21.000Z",
+    "code_updated_at": "2024-04-09T13:24:07.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394023,
+        "name": "lucianjp",
+        "created_at": "2019-11-01T19:35:18.000Z",
+        "url": "https://greasyfork.org/users/394023-lucianjp"
+      }
+    ],
+    "name": "userscripts-core-library",
+    "description": "Core library to be used on different userscripts",
+    "url": "https://greasyfork.org/scripts/476017-userscripts-core-library",
+    "code_url": "https://update.greasyfork.org/scripts/476017/1357292/userscripts-core-library.js",
+    "code_size": 13447,
+    "license": null,
+    "version": "0.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471448,
+    "daily_installs": 0,
+    "total_installs": 74,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-22T13:54:49.000Z",
+    "code_updated_at": "2024-05-09T14:19:18.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394023,
+        "name": "lucianjp",
+        "created_at": "2019-11-01T19:35:18.000Z",
+        "url": "https://greasyfork.org/users/394023-lucianjp"
+      }
+    ],
+    "name": "GGn lucianjp - Gallery Search",
+    "description": "Display the search into a cover gallery",
+    "url": "https://greasyfork.org/scripts/471448-ggn-lucianjp-gallery-search",
+    "code_url": "https://update.greasyfork.org/scripts/471448/GGn%20lucianjp%20-%20Gallery%20Search.user.js",
+    "code_size": 27624,
+    "license": null,
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 464986,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-27T14:29:37.000Z",
+    "code_updated_at": "2023-04-27T16:44:33.000Z",
+    "namespace": "lucianjp",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394023,
+        "name": "lucianjp",
+        "created_at": "2019-11-01T19:35:18.000Z",
+        "url": "https://greasyfork.org/users/394023-lucianjp"
+      }
+    ],
+    "name": "lucianjp-library",
+    "description": "Core library to handle webpages dom with userscripts",
+    "url": "https://greasyfork.org/scripts/464986-lucianjp-library",
+    "code_url": "https://update.greasyfork.org/scripts/464986/1182404/lucianjp-library.js",
+    "code_size": 2609,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

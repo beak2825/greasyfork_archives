@@ -1,0 +1,59 @@
+{
+  "id": 474427,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-02T19:06:47.000Z",
+  "code_updated_at": "2023-09-02T19:06:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1148620,
+      "name": "viol",
+      "created_at": "2023-08-10T19:02:32.000Z",
+      "url": "https://greasyfork.org/users/1148620-viol",
+      "scripts": [
+        {
+          "id": 472922,
+          "daily_installs": 0,
+          "total_installs": 559,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-11T20:53:01.000Z",
+          "code_updated_at": "2023-08-11T21:04:45.000Z",
+          "namespace": "https://violentmonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DigDig.IO Gold (written with chatgpt)",
+          "description": "trying to make chatgpt write me a script for digdig that gives you gold",
+          "url": "https://greasyfork.org/scripts/472922-digdig-io-gold-written-with-chatgpt",
+          "code_url": "https://update.greasyfork.org/scripts/472922/DigDigIO%20Gold%20%28written%20with%20chatgpt%29.user.js",
+          "code_size": 965,
+          "license": null,
+          "version": "0.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RoSniperX  (Attempt to fix)",
+  "description": "(WORKING AS OF 4/15/23) The only working stream sniper script without using exploits",
+  "url": "https://greasyfork.org/scripts/474427-rosniperx-attempt-to-fix",
+  "code_url": "https://update.greasyfork.org/scripts/474427/RoSniperX%20%20%28Attempt%20to%20fix%29.user.js",
+  "code_size": 6750,
+  "license": null,
+  "version": "2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

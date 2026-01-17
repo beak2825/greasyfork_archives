@@ -1,0 +1,68 @@
+[
+  {
+    "id": 492636,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-16T05:48:46.000Z",
+    "code_updated_at": "2025-02-13T08:40:23.000Z",
+    "namespace": "http://www.leadfluid.com.cn/zhbing",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286462,
+        "name": "zhbing",
+        "created_at": "2024-04-10T13:45:41.000Z",
+        "url": "https://greasyfork.org/users/1286462-zhbing"
+      }
+    ],
+    "name": "LF-ERP-User-Enhance",
+    "description": "雷弗内部用ERP的功能增强脚本（For 用户）",
+    "url": "https://greasyfork.org/scripts/492636-lf-erp-user-enhance",
+    "code_url": "https://update.greasyfork.org/scripts/492636/LF-ERP-User-Enhance.user.js",
+    "code_size": 50823,
+    "license": "MIT License",
+    "version": "0.3.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492164,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-10T14:06:13.000Z",
+    "code_updated_at": "2024-04-16T05:53:22.000Z",
+    "namespace": "http://www.leadfluid.com.cn/zhbing",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286462,
+        "name": "zhbing",
+        "created_at": "2024-04-10T13:45:41.000Z",
+        "url": "https://greasyfork.org/users/1286462-zhbing"
+      }
+    ],
+    "name": "LF-ERP-Admin-Enhance",
+    "description": "增强雷弗内部用ERP的功能（For Admin）",
+    "url": "https://greasyfork.org/scripts/492164-lf-erp-admin-enhance",
+    "code_url": "https://update.greasyfork.org/scripts/492164/LF-ERP-Admin-Enhance.user.js",
+    "code_size": 6714,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "sr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

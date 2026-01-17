@@ -1,0 +1,33 @@
+{
+  "id": 459694,
+  "daily_installs": 1,
+  "total_installs": 885,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-09T04:08:04.000Z",
+  "code_updated_at": "2023-02-09T04:08:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1024060,
+      "name": "Loka88888",
+      "created_at": "2023-02-09T04:04:20.000Z",
+      "url": "https://greasyfork.org/users/1024060-loka88888"
+    }
+  ],
+  "name": "Block all ads (Undetectable)",
+  "description": "Blocks all ads on the current webpage in an undetectable way",
+  "url": "https://greasyfork.org/scripts/459694-block-all-ads-undetectable",
+  "code_url": "https://update.greasyfork.org/scripts/459694/Block%20all%20ads%20%28Undetectable%29.user.js",
+  "code_size": 995,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

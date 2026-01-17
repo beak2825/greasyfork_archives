@@ -1,0 +1,33 @@
+{
+  "id": 467484,
+  "daily_installs": 0,
+  "total_installs": 1476,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-30T10:23:17.000Z",
+  "code_updated_at": "2023-05-30T10:23:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1087231,
+      "name": "Lix D",
+      "created_at": "2023-05-30T10:20:49.000Z",
+      "url": "https://greasyfork.org/users/1087231-lix-d"
+    }
+  ],
+  "name": "广东省华医网继续教育公需课（2023）",
+  "description": "广东省2023年专用",
+  "url": "https://greasyfork.org/scripts/467484-%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%8D%8E%E5%8C%BB%E7%BD%91%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%85%AC%E9%9C%80%E8%AF%BE-2023",
+  "code_url": "https://update.greasyfork.org/scripts/467484/%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%8D%8E%E5%8C%BB%E7%BD%91%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%85%AC%E9%9C%80%E8%AF%BE%EF%BC%882023%EF%BC%89.user.js",
+  "code_size": 6011,
+  "license": "MIT License",
+  "version": "2023.5.24",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

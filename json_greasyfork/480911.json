@@ -1,0 +1,59 @@
+{
+  "id": 480911,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-27T22:02:50.000Z",
+  "code_updated_at": "2023-11-27T22:17:30.000Z",
+  "namespace": "https://greasyfork.org/users/980311",
+  "support_url": "https://t.me/skojaren",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 980311,
+      "name": "fulingen",
+      "created_at": "2022-11-07T09:56:39.000Z",
+      "url": "https://greasyfork.org/users/980311-fulingen",
+      "scripts": [
+        {
+          "id": 465567,
+          "daily_installs": 0,
+          "total_installs": 102,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-05T06:48:15.000Z",
+          "code_updated_at": "2024-07-12T11:26:29.000Z",
+          "namespace": "https://greasyfork.org/users/980311",
+          "support_url": "https://t.me/fulingen",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TikTok Live Expander",
+          "description": "Automatically clicks show more on following and recommending",
+          "url": "https://greasyfork.org/scripts/465567-tiktok-live-expander",
+          "code_url": "https://update.greasyfork.org/scripts/465567/TikTok%20Live%20Expander.user.js",
+          "code_size": 1269,
+          "license": "GNU GPLv3",
+          "version": "0.3.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TikTok Download Button",
+  "description": "Adds a download button to video element when it's loaded",
+  "url": "https://greasyfork.org/scripts/480911-tiktok-download-button",
+  "code_url": "https://update.greasyfork.org/scripts/480911/TikTok%20Download%20Button.user.js",
+  "code_size": 5736,
+  "license": "GNU GPLv3",
+  "version": "0.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

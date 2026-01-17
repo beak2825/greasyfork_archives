@@ -1,0 +1,34 @@
+{
+  "id": 441302,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-10T22:23:07.000Z",
+  "code_updated_at": "2022-03-10T22:23:07.000Z",
+  "namespace": "https://www.stemplayer.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 885582,
+      "name": "Gerald Kamper",
+      "created_at": "2022-03-10T22:20:20.000Z",
+      "url": "https://greasyfork.org/users/885582-gerald-kamper",
+      "scripts": []
+    }
+  ],
+  "name": "Stem Player Emulator",
+  "description": "Emulator for Kanye West's stem player",
+  "url": "https://greasyfork.org/scripts/441302-stem-player-emulator",
+  "code_url": "https://update.greasyfork.org/scripts/441302/Stem%20Player%20Emulator.user.js",
+  "code_size": 20806,
+  "license": null,
+  "version": "0.8.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

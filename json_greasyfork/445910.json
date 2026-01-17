@@ -1,0 +1,33 @@
+{
+  "id": 445910,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-02T09:36:42.000Z",
+  "code_updated_at": "2022-06-02T09:36:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 918372,
+      "name": "SEAN GODRIC REYES",
+      "created_at": "2022-05-25T09:17:10.000Z",
+      "url": "https://greasyfork.org/users/918372-sean-godric-reyes"
+    }
+  ],
+  "name": "Autofillup ESMIS",
+  "description": "emis lmao get rekt",
+  "url": "https://greasyfork.org/scripts/445910-autofillup-esmis",
+  "code_url": "https://update.greasyfork.org/scripts/445910/Autofillup%20ESMIS.user.js",
+  "code_size": 607,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

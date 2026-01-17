@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482591,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-18T17:46:53.000Z",
+    "code_updated_at": "2023-12-18T19:39:30.000Z",
+    "namespace": "https://github.com/Niloy-Sarker/scripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1235972,
+        "name": "Niloy-Sarker",
+        "created_at": "2023-12-18T17:41:34.000Z",
+        "url": "https://greasyfork.org/users/1235972-niloy-sarker"
+      }
+    ],
+    "name": "Chegg to Homeworkify",
+    "description": "Replace \"See Answer\" button with Homeworkify Button. Automatically copies chegg link to clipboard (Need to enable clipboard site permission).",
+    "url": "https://greasyfork.org/scripts/482591-chegg-to-homeworkify",
+    "code_url": "https://update.greasyfork.org/scripts/482591/Chegg%20to%20Homeworkify.user.js",
+    "code_size": 1346,
+    "license": "MIT License",
+    "version": "0.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

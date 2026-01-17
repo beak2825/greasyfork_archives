@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465958,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-10T18:40:58.000Z",
+    "code_updated_at": "2023-05-10T18:40:57.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 899154,
+        "name": "Max Sumerton",
+        "created_at": "2022-04-08T00:55:18.000Z",
+        "url": "https://greasyfork.org/users/899154-max-sumerton"
+      }
+    ],
+    "name": "PhoenixMod V3 - FIXED (OBFUSCATED & ENCODED)",
+    "description": "Phoenix Mod / DESTROY",
+    "url": "https://greasyfork.org/scripts/465958-phoenixmod-v3-fixed-obfuscated-encoded",
+    "code_url": "https://update.greasyfork.org/scripts/465958/PhoenixMod%20V3%20-%20FIXED%20%28OBFUSCATED%20%20ENCODED%29.user.js",
+    "code_size": 52575,
+    "license": null,
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

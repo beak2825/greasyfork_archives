@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480575,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-23T01:55:58.000Z",
+    "code_updated_at": "2023-12-13T06:19:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1222014,
+        "name": "blueSLota",
+        "created_at": "2023-11-23T01:44:52.000Z",
+        "url": "https://greasyfork.org/users/1222014-blueslota"
+      }
+    ],
+    "name": "Remove Bilibili video page Live ads",
+    "description": "Remove element by class on specific webpage",
+    "url": "https://greasyfork.org/scripts/480575-remove-bilibili-video-page-live-ads",
+    "code_url": "https://update.greasyfork.org/scripts/480575/Remove%20Bilibili%20video%20page%20Live%20ads.user.js",
+    "code_size": 2541,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

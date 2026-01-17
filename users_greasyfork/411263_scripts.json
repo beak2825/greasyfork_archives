@@ -1,0 +1,68 @@
+[
+  {
+    "id": 465498,
+    "daily_installs": 0,
+    "total_installs": 205,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T09:47:35.000Z",
+    "code_updated_at": "2023-05-06T06:02:36.000Z",
+    "namespace": "http://bulan-zade.top/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 411263,
+        "name": "bulanzade",
+        "created_at": "2019-12-02T10:50:12.000Z",
+        "url": "https://greasyfork.org/users/411263-bulanzade"
+      }
+    ],
+    "name": "关闭微软小冰",
+    "description": "关掉智障小冰，去除广告",
+    "url": "https://greasyfork.org/scripts/465498-%E5%85%B3%E9%97%AD%E5%BE%AE%E8%BD%AF%E5%B0%8F%E5%86%B0",
+    "code_url": "https://update.greasyfork.org/scripts/465498/%E5%85%B3%E9%97%AD%E5%BE%AE%E8%BD%AF%E5%B0%8F%E5%86%B0.user.js",
+    "code_size": 830,
+    "license": "MIT License",
+    "version": "0.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439482,
+    "daily_installs": 0,
+    "total_installs": 261,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-02T10:17:56.000Z",
+    "code_updated_at": "2022-02-05T12:40:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 411263,
+        "name": "bulanzade",
+        "created_at": "2019-12-02T10:50:12.000Z",
+        "url": "https://greasyfork.org/users/411263-bulanzade"
+      }
+    ],
+    "name": "微信读书自动翻页",
+    "description": "微信读书网页版自动翻页",
+    "url": "https://greasyfork.org/scripts/439482-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/439482/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5.user.js",
+    "code_size": 4514,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

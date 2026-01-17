@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465406,
+    "daily_installs": 0,
+    "total_installs": 637,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-03T02:49:22.000Z",
+    "code_updated_at": "2023-05-03T02:49:22.000Z",
+    "namespace": "softcobra_nin10news",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1072043,
+        "name": "cdb",
+        "created_at": "2023-05-03T02:38:56.000Z",
+        "url": "https://greasyfork.org/users/1072043-cdb"
+      }
+    ],
+    "name": "SoftCobra / Nin10News Decoder",
+    "description": "Automatically convert all SoftCobra.com link codes into clickable links which automatically redirect to the link code's decoded link.",
+    "url": "https://greasyfork.org/scripts/465406-softcobra-nin10news-decoder",
+    "code_url": "https://update.greasyfork.org/scripts/465406/SoftCobra%20%20Nin10News%20Decoder.user.js",
+    "code_size": 2206,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

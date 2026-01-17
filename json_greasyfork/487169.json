@@ -1,0 +1,33 @@
+{
+  "id": 487169,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-12T14:47:01.000Z",
+  "code_updated_at": "2024-02-12T14:47:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 726370,
+      "name": "antecede",
+      "created_at": "2021-01-12T02:27:09.000Z",
+      "url": "https://greasyfork.org/users/726370-antecede"
+    }
+  ],
+  "name": "ArXiv 自动展开摘要 | ArXiv automatically expands abstract",
+  "description": "ArXiv 自动展开摘要",
+  "url": "https://greasyfork.org/scripts/487169-arxiv-%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E6%91%98%E8%A6%81-arxiv-automatically-expands-abstract",
+  "code_url": "https://update.greasyfork.org/scripts/487169/ArXiv%20%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E6%91%98%E8%A6%81%20%7C%20ArXiv%20automatically%20expands%20abstract.user.js",
+  "code_size": 467,
+  "license": "AGPL License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 425542,
+  "daily_installs": 0,
+  "total_installs": 78,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-25T15:22:19.000Z",
+  "code_updated_at": "2021-04-25T15:22:19.000Z",
+  "namespace": "https://blog.chrxw.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 719636,
+      "name": "chr233",
+      "created_at": "2020-12-22T05:17:18.000Z",
+      "url": "https://greasyfork.org/users/719636-chr233"
+    }
+  ],
+  "name": "Twitter_Auto_Like",
+  "description": "推特时间线自动点赞",
+  "url": "https://greasyfork.org/scripts/425542-twitter-auto-like",
+  "code_url": "https://update.greasyfork.org/scripts/425542/Twitter_Auto_Like.user.js",
+  "code_size": 1184,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 440080,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-15T13:37:30.000Z",
+  "code_updated_at": "2023-06-24T05:36:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 804474,
+      "name": "折纸",
+      "created_at": "2021-08-14T06:21:35.000Z",
+      "url": "https://greasyfork.org/users/804474-%E6%8A%98%E7%BA%B8"
+    }
+  ],
+  "name": "TieBa Remove Ad",
+  "description": "Title is description",
+  "url": "https://greasyfork.org/scripts/440080-tieba-remove-ad",
+  "code_url": "https://update.greasyfork.org/scripts/440080/TieBa%20Remove%20Ad.user.js",
+  "code_size": 1542,
+  "license": null,
+  "version": "0.13",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

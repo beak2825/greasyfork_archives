@@ -1,0 +1,68 @@
+[
+  {
+    "id": 488508,
+    "daily_installs": 0,
+    "total_installs": 11370,
+    "fan_score": "85.8",
+    "good_ratings": 34,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2024-02-28T07:04:01.000Z",
+    "code_updated_at": "2025-08-05T07:22:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 601489,
+        "name": "yubing liu",
+        "created_at": "2020-06-18T11:32:33.000Z",
+        "url": "https://greasyfork.org/users/601489-yubing-liu"
+      }
+    ],
+    "name": "知乎修改器移动版-持续更新",
+    "description": "知乎修改器的移动版：首页可持续加载内容，回答可以查看全部回答和评论，文章可以查看全部评论，回答内容、文章、评论可直接点赞、反对，去除禁止复制的限制，列表标题类别显示功能设置，收起按钮悬浮设置，列表、问题详情、回答、文章内容置顶创建和修改时间设置，一键获取内容链接设置，问题详情添加查看问题日志按钮，自定义样式，隐藏模块，缓存列表和浏览历史记录等功能。",
+    "url": "https://greasyfork.org/scripts/488508-%E7%9F%A5%E4%B9%8E%E4%BF%AE%E6%94%B9%E5%99%A8%E7%A7%BB%E5%8A%A8%E7%89%88-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/488508/%E7%9F%A5%E4%B9%8E%E4%BF%AE%E6%94%B9%E5%99%A8%E7%A7%BB%E5%8A%A8%E7%89%88-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0.user.js",
+    "code_size": 147668,
+    "license": "MIT License",
+    "version": "2.9.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412856,
+    "daily_installs": 0,
+    "total_installs": 1196,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-10T14:49:34.000Z",
+    "code_updated_at": "2024-10-28T03:47:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 601489,
+        "name": "yubing liu",
+        "created_at": "2020-06-18T11:32:33.000Z",
+        "url": "https://greasyfork.org/users/601489-yubing-liu"
+      }
+    ],
+    "name": "9dm每日计算自动填入",
+    "description": "9dm每日计算验证自动填入；旧的收藏页面地址重定向到新地址；搜索计算自动验证",
+    "url": "https://greasyfork.org/scripts/412856-9dm%E6%AF%8F%E6%97%A5%E8%AE%A1%E7%AE%97%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5",
+    "code_url": "https://update.greasyfork.org/scripts/412856/9dm%E6%AF%8F%E6%97%A5%E8%AE%A1%E7%AE%97%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5.user.js",
+    "code_size": 1892,
+    "license": null,
+    "version": "2.4.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

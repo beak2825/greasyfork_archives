@@ -1,0 +1,33 @@
+{
+  "id": 487048,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-10T22:06:58.000Z",
+  "code_updated_at": "2024-02-11T03:13:49.000Z",
+  "namespace": "DragonTower",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 960434,
+      "name": "Nicholas Kiraly",
+      "created_at": "2022-09-17T13:59:33.000Z",
+      "url": "https://greasyfork.org/users/960434-nicholas-kiraly"
+    }
+  ],
+  "name": "DTower(COM)",
+  "description": "Dragon-Tower",
+  "url": "https://greasyfork.org/scripts/487048-dtower-com",
+  "code_url": "https://update.greasyfork.org/scripts/487048/DTower%28COM%29.user.js",
+  "code_size": 13220,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

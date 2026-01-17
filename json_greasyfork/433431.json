@@ -1,0 +1,59 @@
+{
+  "id": 433431,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-05T06:13:29.000Z",
+  "code_updated_at": "2021-12-11T20:31:21.000Z",
+  "namespace": "wanikani_anki_mode",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 822035,
+      "name": "JDurman",
+      "created_at": "2021-10-05T06:11:04.000Z",
+      "url": "https://greasyfork.org/users/822035-jdurman",
+      "scripts": [
+        {
+          "id": 437009,
+          "daily_installs": 0,
+          "total_installs": 1321,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-14T02:15:10.000Z",
+          "code_updated_at": "2024-12-01T18:13:02.000Z",
+          "namespace": "wkankimode",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wanikani Anki Mode",
+          "description": "Anki mode for Wanikani; DoubleCheck 3.0 Support;",
+          "url": "https://greasyfork.org/scripts/437009-wanikani-anki-mode",
+          "code_url": "https://update.greasyfork.org/scripts/437009/Wanikani%20Anki%20Mode.user.js",
+          "code_size": 32048,
+          "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+          "version": "3.0.12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wanikani Anki Mode",
+  "description": "Anki mode for Wanikani; DoubleCheck 2.0 Support; Modified to show Anki buttons below character & answer field so that your hand doesn't hide that information. Uses two states for the button: either one large \"Show Answer\" button or two \"Know\"/\"Don't Know\" buttons so that you don't have to move your finger anywhere in case you got an answer correct.  You can also use \"K\" as the shortcut for \"Know\" (oKAY, I *K*now this) and \"L\" as the shortcut for \"Don't know\" (as in \"this time, I *L*ose\").",
+  "url": "https://greasyfork.org/scripts/433431-wanikani-anki-mode",
+  "code_url": "https://update.greasyfork.org/scripts/433431/Wanikani%20Anki%20Mode.user.js",
+  "code_size": 15697,
+  "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+  "version": "1.8.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

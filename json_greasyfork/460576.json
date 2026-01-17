@@ -1,0 +1,33 @@
+{
+  "id": 460576,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-23T09:44:35.000Z",
+  "code_updated_at": "2023-11-16T11:38:44.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 444867,
+      "name": "Azan",
+      "created_at": "2020-02-14T04:20:40.000Z",
+      "url": "https://greasyfork.org/users/444867-azan"
+    }
+  ],
+  "name": "千川/本地一键勾选指标",
+  "description": "2023/11/16 19:38:28",
+  "url": "https://greasyfork.org/scripts/460576-%E5%8D%83%E5%B7%9D-%E6%9C%AC%E5%9C%B0%E4%B8%80%E9%94%AE%E5%8B%BE%E9%80%89%E6%8C%87%E6%A0%87",
+  "code_url": "https://update.greasyfork.org/scripts/460576/%E5%8D%83%E5%B7%9D%E6%9C%AC%E5%9C%B0%E4%B8%80%E9%94%AE%E5%8B%BE%E9%80%89%E6%8C%87%E6%A0%87.user.js",
+  "code_size": 1932,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

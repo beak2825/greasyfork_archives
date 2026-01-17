@@ -1,0 +1,33 @@
+{
+  "id": 415959,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-11T21:15:08.000Z",
+  "code_updated_at": "2020-11-11T21:15:07.000Z",
+  "namespace": "Demin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 12821,
+      "name": "Клешнерукий",
+      "created_at": "2015-06-28T19:19:08.000Z",
+      "url": "https://greasyfork.org/users/12821-%D0%BA%D0%BB%D0%B5%D1%88%D0%BD%D0%B5%D1%80%D1%83%D0%BA%D0%B8%D0%B9"
+    }
+  ],
+  "name": "hwm_forum_spam_filter",
+  "description": "HWM mod - Udalenie soobshhenij personazhej na forume (by Demin)",
+  "url": "https://greasyfork.org/scripts/415959-hwm-forum-spam-filter",
+  "code_url": "https://update.greasyfork.org/scripts/415959/hwm_forum_spam_filter.user.js",
+  "code_size": 18599,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 437324,
+  "daily_installs": 0,
+  "total_installs": 941,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-20T05:07:25.000Z",
+  "code_updated_at": "2024-06-03T07:36:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 192413,
+      "name": "xiefucai",
+      "created_at": "2018-06-21T12:15:30.000Z",
+      "url": "https://greasyfork.org/users/192413-xiefucai"
+    }
+  ],
+  "name": "FCTool",
+  "description": "这是一款可以功能强大、使用简单的工具\\n可将网页文章内容转为markdown文档\\n可提取网页中的svg图片\\n阅读的时候可以高亮显示选中的文本(需要在设置中打开，每个网站的设置都是独立的)\\n可以根据规则隐藏广告内容(需要在设置中打开，每个网站的设置都是独立的)\\n可以高亮下载链接，进入电影天堂等下载站的时候，如果页面中有下载地址，会高亮出来，点击下载地址方便下载到迅雷云盘或者玩客云。。",
+  "url": "https://greasyfork.org/scripts/437324-fctool",
+  "code_url": "https://update.greasyfork.org/scripts/437324/FCTool.user.js",
+  "code_size": 5217,
+  "license": "MIT License",
+  "version": "0.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

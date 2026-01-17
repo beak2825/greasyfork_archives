@@ -1,0 +1,34 @@
+{
+  "id": 492981,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-20T02:39:09.000Z",
+  "code_updated_at": "2025-04-12T06:32:59.000Z",
+  "namespace": "血小板",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1290257,
+      "name": "血小板",
+      "created_at": "2024-04-19T06:48:22.000Z",
+      "url": "https://greasyfork.org/users/1290257-%E8%A1%80%E5%B0%8F%E6%9D%BF",
+      "scripts": []
+    }
+  ],
+  "name": "小狐狸/橘猫",
+  "description": "破解小狐狸/橘猫VIP",
+  "url": "https://greasyfork.org/scripts/492981-%E5%B0%8F%E7%8B%90%E7%8B%B8-%E6%A9%98%E7%8C%AB",
+  "code_url": "https://update.greasyfork.org/scripts/492981/%E5%B0%8F%E7%8B%90%E7%8B%B8%E6%A9%98%E7%8C%AB.user.js",
+  "code_size": 3890,
+  "license": "MIT License",
+  "version": "0.5.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

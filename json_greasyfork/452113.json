@@ -1,0 +1,33 @@
+{
+  "id": 452113,
+  "daily_installs": 0,
+  "total_installs": 78,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-27T14:50:51.000Z",
+  "code_updated_at": "2022-09-27T15:32:18.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/452113",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 964132,
+      "name": "bkidy",
+      "created_at": "2022-09-27T14:39:14.000Z",
+      "url": "https://greasyfork.org/users/964132-bkidy"
+    }
+  ],
+  "name": "知乎-蛙了个蛙",
+  "description": "知乎版找蛙神器，前端渣渣，源码改自《知乎增强》，致敬作者X.I.U.全脚本两个功能：回答页面、用户主页给疑似蛙蛙投票；用户主页如果蛙蛙票数超过一定数量会显示蛙蛙标签。也不知道哪天会挂，纯粹为环境净化做一点点贡献。",
+  "url": "https://greasyfork.org/scripts/452113-%E7%9F%A5%E4%B9%8E-%E8%9B%99%E4%BA%86%E4%B8%AA%E8%9B%99",
+  "code_url": "https://update.greasyfork.org/scripts/452113/%E7%9F%A5%E4%B9%8E-%E8%9B%99%E4%BA%86%E4%B8%AA%E8%9B%99.user.js",
+  "code_size": 6795,
+  "license": "GPL-3.0 License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

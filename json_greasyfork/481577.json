@@ -1,0 +1,33 @@
+{
+  "id": 481577,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-07T04:23:55.000Z",
+  "code_updated_at": "2023-12-07T04:23:55.000Z",
+  "namespace": "sp.mengzonefire/fork/rin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1229594,
+      "name": "xingabraham",
+      "created_at": "2023-12-07T04:14:16.000Z",
+      "url": "https://greasyfork.org/users/1229594-xingabraham"
+    }
+  ],
+  "name": "百度网盘秒传转存助手 支持PC及移动端 永久无广告绿色版",
+  "description": "百度网盘秒传链接转存及生成 永久无广告绿色版 支持移动端界面 -- 再次感谢初代大佬伟大贡献",
+  "url": "https://greasyfork.org/scripts/481577-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%A7%92%E4%BC%A0%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B-%E6%94%AF%E6%8C%81pc%E5%8F%8A%E7%A7%BB%E5%8A%A8%E7%AB%AF-%E6%B0%B8%E4%B9%85%E6%97%A0%E5%B9%BF%E5%91%8A%E7%BB%BF%E8%89%B2%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/481577/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%A7%92%E4%BC%A0%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B%20%E6%94%AF%E6%8C%81PC%E5%8F%8A%E7%A7%BB%E5%8A%A8%E7%AB%AF%20%E6%B0%B8%E4%B9%85%E6%97%A0%E5%B9%BF%E5%91%8A%E7%BB%BF%E8%89%B2%E7%89%88.user.js",
+  "code_size": 120073,
+  "license": "GPLv3",
+  "version": "3.1.9.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 477887,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-20T18:49:45.000Z",
+  "code_updated_at": "2023-10-20T18:49:45.000Z",
+  "namespace": "https://moodle.iesmontsia.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1200570,
+      "name": "Iñaki Gisbert Martínez",
+      "created_at": "2023-10-20T18:48:00.000Z",
+      "url": "https://greasyfork.org/users/1200570-i%C3%B1aki-gisbert-mart%C3%ADnez"
+    }
+  ],
+  "name": "Añadir target _blank a enlaces con \"/resource/\" o a dominios externos",
+  "description": "Añade target=\"_blank\" a enlaces que contienen \"/resource/\" o a dominios externos en todas las páginas",
+  "url": "https://greasyfork.org/scripts/477887-a%C3%B1adir-target-blank-a-enlaces-con-resource-o-a-dominios-externos",
+  "code_url": "https://update.greasyfork.org/scripts/477887/A%C3%B1adir%20target%20_blank%20a%20enlaces%20con%20%22resource%22%20o%20a%20dominios%20externos.user.js",
+  "code_size": 835,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

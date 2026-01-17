@@ -1,0 +1,59 @@
+{
+  "id": 478732,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-31T17:40:10.000Z",
+  "code_updated_at": "2023-10-31T18:54:20.000Z",
+  "namespace": "always on the plus side",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1208209,
+      "name": "fumofetch",
+      "created_at": "2023-10-31T17:22:43.000Z",
+      "url": "https://greasyfork.org/users/1208209-fumofetch",
+      "scripts": [
+        {
+          "id": 478732,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-31T17:40:10.000Z",
+          "code_updated_at": "2023-10-31T18:54:20.000Z",
+          "namespace": "always on the plus side",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "always on the plus side",
+          "description": "every transfer is a +. unfortunately, it only works on the first transfer.",
+          "url": "https://greasyfork.org/scripts/478732-always-on-the-plus-side",
+          "code_url": "https://update.greasyfork.org/scripts/478732/always%20on%20the%20plus%20side.user.js",
+          "code_size": 1548,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "always on the plus side",
+  "description": "every transfer is a +. unfortunately, it only works on the first transfer.",
+  "url": "https://greasyfork.org/scripts/478732-always-on-the-plus-side",
+  "code_url": "https://update.greasyfork.org/scripts/478732/always%20on%20the%20plus%20side.user.js",
+  "code_size": 1548,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

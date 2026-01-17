@@ -64,5 +64,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 478125,
+    "daily_installs": 0,
+    "total_installs": 53,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-24T04:02:19.000Z",
+    "code_updated_at": "2025-04-16T14:38:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735297,
+        "name": "YouXam",
+        "created_at": "2021-02-07T04:04:12.000Z",
+        "url": "https://greasyfork.org/users/735297-youxam"
+      }
+    ],
+    "name": "云邮教学空间助手",
+    "description": "作业显示相关课程，office文档预览切换到 view.officeapps.live.com，重命名下载文件名",
+    "url": "https://greasyfork.org/scripts/478125-%E4%BA%91%E9%82%AE%E6%95%99%E5%AD%A6%E7%A9%BA%E9%97%B4%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/478125/%E4%BA%91%E9%82%AE%E6%95%99%E5%AD%A6%E7%A9%BA%E9%97%B4%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 20003,
+    "license": "MIT License",
+    "version": "0.20",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421351,
+    "daily_installs": 0,
+    "total_installs": 2684,
+    "fan_score": "48.7",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-02-07T04:08:16.000Z",
+    "code_updated_at": "2025-02-07T11:54:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735297,
+        "name": "YouXam",
+        "created_at": "2021-02-07T04:04:12.000Z",
+        "url": "https://greasyfork.org/users/735297-youxam"
+      }
+    ],
+    "name": "小鑫作业助手",
+    "description": "键盘输入录选择题，上传他人二卷",
+    "url": "https://greasyfork.org/scripts/421351-%E5%B0%8F%E9%91%AB%E4%BD%9C%E4%B8%9A%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/421351/%E5%B0%8F%E9%91%AB%E4%BD%9C%E4%B8%9A%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 51979,
+    "license": "GPL",
+    "version": "5.3.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,33 @@
+{
+  "id": 488431,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-27T12:54:57.000Z",
+  "code_updated_at": "2024-02-27T12:54:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1267614,
+      "name": "jockel09",
+      "created_at": "2024-02-27T12:49:05.000Z",
+      "url": "https://greasyfork.org/users/1267614-jockel09"
+    }
+  ],
+  "name": "Kapiland Blinkende Zeitung entfernen",
+  "description": "Lässt die Zeitung nicht mehr blinken",
+  "url": "https://greasyfork.org/scripts/488431-kapiland-blinkende-zeitung-entfernen",
+  "code_url": "https://update.greasyfork.org/scripts/488431/Kapiland%20Blinkende%20Zeitung%20entfernen.user.js",
+  "code_size": 627,
+  "license": null,
+  "version": "0.1",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

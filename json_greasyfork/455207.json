@@ -1,0 +1,34 @@
+{
+  "id": 455207,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-21T16:53:59.000Z",
+  "code_updated_at": "2022-11-21T16:53:59.000Z",
+  "namespace": "https://github.com/ifeng0188",
+  "support_url": "https://github.com/ifeng0188/GenshinLiveStreamHelper/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 806955,
+      "name": "KOFKOY",
+      "created_at": "2021-08-21T10:38:30.000Z",
+      "url": "https://greasyfork.org/users/806955-kofkoy",
+      "scripts": []
+    }
+  ],
+  "name": "原神直播活动抢码助手",
+  "description": "一款用于原神直播活动的抢码助手，支持哔哩哔哩、虎牙、斗鱼多个平台的自动抢码，附带一些页面优化功能 注意：使用之前请先修改配置，斗鱼平台需要手动完成一次滑块验证码（如果没弹就不用理）",
+  "url": "https://greasyfork.org/scripts/455207-%E5%8E%9F%E7%A5%9E%E7%9B%B4%E6%92%AD%E6%B4%BB%E5%8A%A8%E6%8A%A2%E7%A0%81%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/455207/%E5%8E%9F%E7%A5%9E%E7%9B%B4%E6%92%AD%E6%B4%BB%E5%8A%A8%E6%8A%A2%E7%A0%81%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 5695,
+  "license": "GPL-3.0 license",
+  "version": "3.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

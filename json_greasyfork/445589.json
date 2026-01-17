@@ -1,0 +1,59 @@
+{
+  "id": 445589,
+  "daily_installs": 0,
+  "total_installs": 1654,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-26T15:36:24.000Z",
+  "code_updated_at": "2022-05-31T17:46:04.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 918880,
+      "name": "613078",
+      "created_at": "2022-05-26T15:23:47.000Z",
+      "url": "https://greasyfork.org/users/918880-613078",
+      "scripts": [
+        {
+          "id": 445589,
+          "daily_installs": 0,
+          "total_installs": 1654,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-26T15:36:24.000Z",
+          "code_updated_at": "2022-05-31T17:46:04.000Z",
+          "namespace": "https://greasyfork.org/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "2021改2022广东省教师继续教育信息管理平台公需课刷课",
+          "description": "广东省教师继续教育信息管理平台公需课刷课",
+          "url": "https://greasyfork.org/scripts/445589-2021%E6%94%B92022%E5%B9%BF%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%85%AC%E9%9C%80%E8%AF%BE%E5%88%B7%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/445589/2021%E6%94%B92022%E5%B9%BF%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%85%AC%E9%9C%80%E8%AF%BE%E5%88%B7%E8%AF%BE.user.js",
+          "code_size": 12998,
+          "license": "GPL",
+          "version": "2022.6.1 修改减少页面刷新时间为8分钟",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "2021改2022广东省教师继续教育信息管理平台公需课刷课",
+  "description": "广东省教师继续教育信息管理平台公需课刷课",
+  "url": "https://greasyfork.org/scripts/445589-2021%E6%94%B92022%E5%B9%BF%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%85%AC%E9%9C%80%E8%AF%BE%E5%88%B7%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/445589/2021%E6%94%B92022%E5%B9%BF%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%85%AC%E9%9C%80%E8%AF%BE%E5%88%B7%E8%AF%BE.user.js",
+  "code_size": 12998,
+  "license": "GPL",
+  "version": "2022.6.1 修改减少页面刷新时间为8分钟",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

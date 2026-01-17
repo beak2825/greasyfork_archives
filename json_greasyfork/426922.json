@@ -1,0 +1,59 @@
+{
+  "id": 426922,
+  "daily_installs": 0,
+  "total_installs": 278,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-23T19:00:56.000Z",
+  "code_updated_at": "2021-06-06T20:48:43.000Z",
+  "namespace": "Ticpo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 729867,
+      "name": "Ticpo",
+      "created_at": "2021-01-21T19:28:16.000Z",
+      "url": "https://greasyfork.org/users/729867-ticpo",
+      "scripts": [
+        {
+          "id": 424267,
+          "daily_installs": 0,
+          "total_installs": 219,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-31T14:49:14.000Z",
+          "code_updated_at": "2021-03-31T14:49:14.000Z",
+          "namespace": "Ticpo",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Minecraft Style for JDN",
+          "description": "Adds the Minecraft ui for JDN!",
+          "url": "https://greasyfork.org/scripts/424267-minecraft-style-for-jdn",
+          "code_url": "https://update.greasyfork.org/scripts/424267/Minecraft%20Style%20for%20JDN.user.css",
+          "code_size": 20404,
+          "license": null,
+          "version": "0.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JD18 Style for JDN (REALLY EARLY BUILD)",
+  "description": "REALLY EARLY BUILD! Don't be confused on why so many things are broken!",
+  "url": "https://greasyfork.org/scripts/426922-jd18-style-for-jdn-really-early-build",
+  "code_url": "https://update.greasyfork.org/scripts/426922/JD18%20Style%20for%20JDN%20%28REALLY%20EARLY%20BUILD%29.user.css",
+  "code_size": 85458,
+  "license": null,
+  "version": "2.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 484314,
+    "daily_installs": 0,
+    "total_installs": 1267,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-01-09T04:52:18.000Z",
+    "code_updated_at": "2024-07-24T07:21:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1243513,
+        "name": "CCCC-L",
+        "created_at": "2024-01-05T07:26:31.000Z",
+        "url": "https://greasyfork.org/users/1243513-cccc-l"
+      }
+    ],
+    "name": "123网盘自动填写提取码、关闭广告",
+    "description": "如名",
+    "url": "https://greasyfork.org/scripts/484314-123%E7%BD%91%E7%9B%98%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%8F%90%E5%8F%96%E7%A0%81-%E5%85%B3%E9%97%AD%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/484314/123%E7%BD%91%E7%9B%98%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%8F%90%E5%8F%96%E7%A0%81%E3%80%81%E5%85%B3%E9%97%AD%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 1140,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484313,
+    "daily_installs": 0,
+    "total_installs": 229,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-09T04:49:02.000Z",
+    "code_updated_at": "2024-01-09T04:49:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1243513,
+        "name": "CCCC-L",
+        "created_at": "2024-01-05T07:26:31.000Z",
+        "url": "https://greasyfork.org/users/1243513-cccc-l"
+      }
+    ],
+    "name": "123网盘复制分享链接时带pwd=提取码",
+    "description": "如名，建议搭配`自动填写提取码、关闭广告`脚本使用",
+    "url": "https://greasyfork.org/scripts/484313-123%E7%BD%91%E7%9B%98%E5%A4%8D%E5%88%B6%E5%88%86%E4%BA%AB%E9%93%BE%E6%8E%A5%E6%97%B6%E5%B8%A6pwd-%E6%8F%90%E5%8F%96%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/484313/123%E7%BD%91%E7%9B%98%E5%A4%8D%E5%88%B6%E5%88%86%E4%BA%AB%E9%93%BE%E6%8E%A5%E6%97%B6%E5%B8%A6pwd%3D%E6%8F%90%E5%8F%96%E7%A0%81.user.js",
+    "code_size": 908,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

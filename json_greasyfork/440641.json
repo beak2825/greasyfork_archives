@@ -1,0 +1,34 @@
+{
+  "id": 440641,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-26T15:32:33.000Z",
+  "code_updated_at": "2022-02-26T15:32:32.000Z",
+  "namespace": "https://www.youtube.com/channel/UCKtyj4gKoJqzsqo15MRiupw",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 880854,
+      "name": "6 0",
+      "created_at": "2022-02-26T15:11:03.000Z",
+      "url": "https://greasyfork.org/users/880854-6-0",
+      "scripts": []
+    }
+  ],
+  "name": "06 Line Split Hack(beta)",
+  "description": "Easy line split, Redo respawn, Make the chat text selectable, Copy the name,This is a script that works with gota.io's self-feed server.",
+  "url": "https://greasyfork.org/scripts/440641-06-line-split-hack-beta",
+  "code_url": "https://update.greasyfork.org/scripts/440641/06%20Line%20Split%20Hack%28beta%29.user.js",
+  "code_size": 40242,
+  "license": null,
+  "version": "1.0.23",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

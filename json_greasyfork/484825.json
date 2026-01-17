@@ -1,0 +1,34 @@
+{
+  "id": 484825,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-14T11:30:21.000Z",
+  "code_updated_at": "2024-01-14T11:30:21.000Z",
+  "namespace": "https://7745.by/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1246913,
+      "name": "Микола Б.",
+      "created_at": "2024-01-12T11:05:36.000Z",
+      "url": "https://greasyfork.org/users/1246913-%D0%BC%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0-%D0%B1",
+      "scripts": []
+    }
+  ],
+  "name": "7745.by",
+  "description": "High resolution photo",
+  "url": "https://greasyfork.org/scripts/484825-7745-by",
+  "code_url": "https://update.greasyfork.org/scripts/484825/7745by.user.js",
+  "code_size": 454,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

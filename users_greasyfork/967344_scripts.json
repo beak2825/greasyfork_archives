@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452575,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-06T20:10:54.000Z",
+    "code_updated_at": "2022-10-06T20:12:30.000Z",
+    "namespace": "https://techandnature.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 967344,
+        "name": "Seeeven",
+        "created_at": "2022-10-06T20:00:57.000Z",
+        "url": "https://greasyfork.org/users/967344-seeeven"
+      }
+    ],
+    "name": "Twitter Auto Theme",
+    "description": "Automatically switches between light and dark themes on Twitter.com (web version) based on system settings.",
+    "url": "https://greasyfork.org/scripts/452575-twitter-auto-theme",
+    "code_url": "https://update.greasyfork.org/scripts/452575/Twitter%20Auto%20Theme.user.js",
+    "code_size": 1111,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

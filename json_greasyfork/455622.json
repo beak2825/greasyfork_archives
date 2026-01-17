@@ -1,0 +1,34 @@
+{
+  "id": 455622,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-29T17:42:50.000Z",
+  "code_updated_at": "2022-11-29T17:44:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 192158,
+      "name": "johnnboy",
+      "created_at": "2018-06-20T02:05:25.000Z",
+      "url": "https://greasyfork.org/users/192158-johnnboy",
+      "scripts": []
+    }
+  ],
+  "name": "Fame Parties Image Downloader",
+  "description": "Adds a button to download full size images from Fame Parties",
+  "url": "https://greasyfork.org/scripts/455622-fame-parties-image-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/455622/Fame%20Parties%20Image%20Downloader.user.js",
+  "code_size": 1927,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

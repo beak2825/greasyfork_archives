@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441181,
+    "daily_installs": 0,
+    "total_installs": 173,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-08T23:05:13.000Z",
+    "code_updated_at": "2022-03-08T23:08:38.000Z",
+    "namespace": "https://greasyfork.org/en/users/729550-sugimoto",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729550,
+        "name": "sugimoto",
+        "created_at": "2021-01-20T23:27:30.000Z",
+        "url": "https://greasyfork.org/users/729550-sugimoto"
+      }
+    ],
+    "name": "Amazon Camel Syringe",
+    "description": "previous price charts on amazon pages",
+    "url": "https://greasyfork.org/scripts/441181-amazon-camel-syringe",
+    "code_url": "https://update.greasyfork.org/scripts/441181/Amazon%20Camel%20Syringe.user.js",
+    "code_size": 2045,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 463351,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-05T17:22:03.000Z",
+  "code_updated_at": "2025-05-15T14:06:13.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/463351-1_tuscaloosa-news",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906522,
+      "name": "sports_wook",
+      "created_at": "2022-04-25T00:32:15.000Z",
+      "url": "https://greasyfork.org/users/906522-sports-wook"
+    }
+  ],
+  "name": "1_Tuscaloosa-News",
+  "description": "hide ads & fix layout",
+  "url": "https://greasyfork.org/scripts/463351-1-tuscaloosa-news",
+  "code_url": "https://update.greasyfork.org/scripts/463351/1_Tuscaloosa-News.user.js",
+  "code_size": 3791,
+  "license": null,
+  "version": "2025.05.15",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

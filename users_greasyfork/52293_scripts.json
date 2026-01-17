@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416070,
+    "daily_installs": 0,
+    "total_installs": 2260,
+    "fan_score": "69.9",
+    "good_ratings": 11,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-11-14T05:16:47.000Z",
+    "code_updated_at": "2020-11-14T06:19:25.000Z",
+    "namespace": "ACScript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 52293,
+        "name": "狐狸",
+        "created_at": "2016-06-30T17:49:07.000Z",
+        "url": "https://greasyfork.org/users/52293-%E7%8B%90%E7%8B%B8"
+      }
+    ],
+    "name": "磁力链文本变链接",
+    "description": "点击magnet协议文本变为超链接",
+    "url": "https://greasyfork.org/scripts/416070-%E7%A3%81%E5%8A%9B%E9%93%BE%E6%96%87%E6%9C%AC%E5%8F%98%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/416070/%E7%A3%81%E5%8A%9B%E9%93%BE%E6%96%87%E6%9C%AC%E5%8F%98%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 732,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

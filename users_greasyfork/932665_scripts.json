@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447463,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-05T14:10:23.000Z",
+    "code_updated_at": "2022-07-19T14:39:15.000Z",
+    "namespace": "http://metaqiu.art/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 932665,
+        "name": "MetaQiu",
+        "created_at": "2022-07-05T13:59:55.000Z",
+        "url": "https://greasyfork.org/users/932665-metaqiu"
+      }
+    ],
+    "name": "河北大学自动登录",
+    "description": "盒带教务系统自动登录 请自行替换脚本中的账号密码！你可以在脚本下拉页面选择登陆模式",
+    "url": "https://greasyfork.org/scripts/447463-%E6%B2%B3%E5%8C%97%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/447463/%E6%B2%B3%E5%8C%97%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 4509,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

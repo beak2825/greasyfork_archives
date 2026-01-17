@@ -1,0 +1,68 @@
+[
+  {
+    "id": 467531,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-30T23:28:44.000Z",
+    "code_updated_at": "2023-05-31T11:30:24.000Z",
+    "namespace": "https://greasyfork.org/en/users/94058-lyoniel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 94058,
+        "name": "Lyoniel",
+        "created_at": "2017-01-11T23:21:39.000Z",
+        "url": "https://greasyfork.org/users/94058-lyoniel"
+      }
+    ],
+    "name": "MouseHunt Cached Location Preview HUD",
+    "description": "Keep track of what state you left an area in, because travelling just to check is jank",
+    "url": "https://greasyfork.org/scripts/467531-mousehunt-cached-location-preview-hud",
+    "code_url": "https://update.greasyfork.org/scripts/467531/MouseHunt%20Cached%20Location%20Preview%20HUD.user.js",
+    "code_size": 30631,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 466026,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-11T09:32:28.000Z",
+    "code_updated_at": "2023-05-20T13:27:50.000Z",
+    "namespace": "https://greasyfork.org/en/users/440271",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 94058,
+        "name": "Lyoniel",
+        "created_at": "2017-01-11T23:21:39.000Z",
+        "url": "https://greasyfork.org/users/94058-lyoniel"
+      }
+    ],
+    "name": "MouseHunt AutoBot UPDATED",
+    "description": "Script automating MH horn sounding and gifting, mostly functional as of 13/12/2022 (works for GWH 2022). Updating the outdated script from nobodyrandom, who adapted the original versions by CnN and Ooi.",
+    "url": "https://greasyfork.org/scripts/466026-mousehunt-autobot-updated",
+    "code_url": "https://update.greasyfork.org/scripts/466026/MouseHunt%20AutoBot%20UPDATED.user.js",
+    "code_size": 716249,
+    "license": "GPL-3.0+; http://www.gnu.org/copyleft/gpl.html",
+    "version": "1.7.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

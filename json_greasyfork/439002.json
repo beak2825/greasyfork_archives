@@ -1,0 +1,34 @@
+{
+  "id": 439002,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-23T05:39:00.000Z",
+  "code_updated_at": "2022-01-23T20:28:51.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 868115,
+      "name": "gogobmn",
+      "created_at": "2022-01-23T05:28:46.000Z",
+      "url": "https://greasyfork.org/users/868115-gogobmn",
+      "scripts": []
+    }
+  ],
+  "name": "Bingosync Treasure Hunt",
+  "description": "Adds Treasure Hunt scoring, and a right click mode that uses all 4 corners of each square.",
+  "url": "https://greasyfork.org/scripts/439002-bingosync-treasure-hunt",
+  "code_url": "https://update.greasyfork.org/scripts/439002/Bingosync%20Treasure%20Hunt.user.js",
+  "code_size": 4195,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

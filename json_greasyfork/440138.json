@@ -1,0 +1,33 @@
+{
+  "id": 440138,
+  "daily_installs": 0,
+  "total_installs": 155,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-16T15:07:00.000Z",
+  "code_updated_at": "2022-02-16T15:07:00.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 876603,
+      "name": "Emiliano Jimenez",
+      "created_at": "2022-02-14T17:44:50.000Z",
+      "url": "https://greasyfork.org/users/876603-emiliano-jimenez"
+    }
+  ],
+  "name": "Black Russia Скрипт для Кураторов форума.",
+  "description": "Для рассмотрения жалоб.",
+  "url": "https://greasyfork.org/scripts/440138-black-russia-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/440138/Black%20Russia%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+  "code_size": 70906,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

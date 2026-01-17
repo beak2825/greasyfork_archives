@@ -1,0 +1,33 @@
+{
+  "id": 449730,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-17T19:02:00.000Z",
+  "code_updated_at": "2022-08-17T19:02:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 217333,
+      "name": "秋月",
+      "created_at": "2018-10-04T03:27:58.000Z",
+      "url": "https://greasyfork.org/users/217333-%E7%A7%8B%E6%9C%88"
+    }
+  ],
+  "name": "库库直播间真原画",
+  "description": "移除fetch中含有_bluray字段的内容，以对抗阿姨的假原画。",
+  "url": "https://greasyfork.org/scripts/449730-%E5%BA%93%E5%BA%93%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9C%9F%E5%8E%9F%E7%94%BB",
+  "code_url": "https://update.greasyfork.org/scripts/449730/%E5%BA%93%E5%BA%93%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9C%9F%E5%8E%9F%E7%94%BB.user.js",
+  "code_size": 981,
+  "license": "GPLv3",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

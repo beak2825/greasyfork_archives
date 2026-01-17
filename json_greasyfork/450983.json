@@ -1,0 +1,59 @@
+{
+  "id": 450983,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-08T11:17:07.000Z",
+  "code_updated_at": "2022-09-08T11:17:07.000Z",
+  "namespace": "https://greatalazar.github.io",
+  "support_url": "https://github.com/greatalazar/GeniusFix/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 956097,
+      "name": "greatalazar",
+      "created_at": "2022-09-08T11:07:45.000Z",
+      "url": "https://greasyfork.org/users/956097-greatalazar",
+      "scripts": [
+        {
+          "id": 450983,
+          "daily_installs": 0,
+          "total_installs": 49,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-08T11:17:07.000Z",
+          "code_updated_at": "2022-09-08T11:17:07.000Z",
+          "namespace": "https://greatalazar.github.io",
+          "support_url": "https://github.com/greatalazar/GeniusFix/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Genius: Back to The Original Page Layout",
+          "description": "Automatically redirect to the old page layout, I have nothing but contempt for the \"new genius page\", With this we can go back to the old and cool page",
+          "url": "https://greasyfork.org/scripts/450983-genius-back-to-the-original-page-layout",
+          "code_url": "https://update.greasyfork.org/scripts/450983/Genius%3A%20Back%20to%20The%20Original%20Page%20Layout.user.js",
+          "code_size": 1275,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Genius: Back to The Original Page Layout",
+  "description": "Automatically redirect to the old page layout, I have nothing but contempt for the \"new genius page\", With this we can go back to the old and cool page",
+  "url": "https://greasyfork.org/scripts/450983-genius-back-to-the-original-page-layout",
+  "code_url": "https://update.greasyfork.org/scripts/450983/Genius%3A%20Back%20to%20The%20Original%20Page%20Layout.user.js",
+  "code_size": 1275,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

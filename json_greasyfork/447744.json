@@ -1,0 +1,59 @@
+{
+  "id": 447744,
+  "daily_installs": 0,
+  "total_installs": 75,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-12T06:01:23.000Z",
+  "code_updated_at": "2023-09-15T00:47:45.000Z",
+  "namespace": "http://userstyles.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 934856,
+      "name": "Desc",
+      "created_at": "2022-07-12T05:56:29.000Z",
+      "url": "https://greasyfork.org/users/934856-desc",
+      "scripts": [
+        {
+          "id": 447744,
+          "daily_installs": 0,
+          "total_installs": 75,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-12T06:01:23.000Z",
+          "code_updated_at": "2023-09-15T00:47:45.000Z",
+          "namespace": "http://userstyles.org",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ryuten Extensión By Desc + Video Tutorial",
+          "description": "Desc Style",
+          "url": "https://greasyfork.org/scripts/447744-ryuten-extensi%C3%B3n-by-desc-video-tutorial",
+          "code_url": "https://update.greasyfork.org/scripts/447744/Ryuten%20Extensi%C3%B3n%20By%20Desc%20%2B%20Video%20Tutorial.user.js",
+          "code_size": 2996,
+          "license": null,
+          "version": "0.20220712054133",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ryuten Extensión By Desc + Video Tutorial",
+  "description": "Desc Style",
+  "url": "https://greasyfork.org/scripts/447744-ryuten-extensi%C3%B3n-by-desc-video-tutorial",
+  "code_url": "https://update.greasyfork.org/scripts/447744/Ryuten%20Extensi%C3%B3n%20By%20Desc%20%2B%20Video%20Tutorial.user.js",
+  "code_size": 2996,
+  "license": null,
+  "version": "0.20220712054133",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

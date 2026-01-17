@@ -1,0 +1,59 @@
+{
+  "id": 435934,
+  "daily_installs": 0,
+  "total_installs": 177,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-23T08:56:14.000Z",
+  "code_updated_at": "2021-11-23T08:59:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841569,
+      "name": "tojunfeng",
+      "created_at": "2021-11-20T10:45:29.000Z",
+      "url": "https://greasyfork.org/users/841569-tojunfeng",
+      "scripts": [
+        {
+          "id": 435934,
+          "daily_installs": 0,
+          "total_installs": 177,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-23T08:56:14.000Z",
+          "code_updated_at": "2021-11-23T08:59:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "洛谷题面复制为markdown格式",
+          "description": "在洛谷的题目页面时，双击即可复制洛谷md题面",
+          "url": "https://greasyfork.org/scripts/435934-%E6%B4%9B%E8%B0%B7%E9%A2%98%E9%9D%A2%E5%A4%8D%E5%88%B6%E4%B8%BAmarkdown%E6%A0%BC%E5%BC%8F",
+          "code_url": "https://update.greasyfork.org/scripts/435934/%E6%B4%9B%E8%B0%B7%E9%A2%98%E9%9D%A2%E5%A4%8D%E5%88%B6%E4%B8%BAmarkdown%E6%A0%BC%E5%BC%8F.user.js",
+          "code_size": 3020,
+          "license": "MIT License",
+          "version": "0.1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "洛谷题面复制为markdown格式",
+  "description": "在洛谷的题目页面时，双击即可复制洛谷md题面",
+  "url": "https://greasyfork.org/scripts/435934-%E6%B4%9B%E8%B0%B7%E9%A2%98%E9%9D%A2%E5%A4%8D%E5%88%B6%E4%B8%BAmarkdown%E6%A0%BC%E5%BC%8F",
+  "code_url": "https://update.greasyfork.org/scripts/435934/%E6%B4%9B%E8%B0%B7%E9%A2%98%E9%9D%A2%E5%A4%8D%E5%88%B6%E4%B8%BAmarkdown%E6%A0%BC%E5%BC%8F.user.js",
+  "code_size": 3020,
+  "license": "MIT License",
+  "version": "0.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

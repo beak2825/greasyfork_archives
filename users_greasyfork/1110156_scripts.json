@@ -1,0 +1,35 @@
+[
+  {
+    "id": 469335,
+    "daily_installs": 1,
+    "total_installs": 4478,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-24T04:06:05.000Z",
+    "code_updated_at": "2023-07-13T13:38:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1110156,
+        "name": "wfjeefwe",
+        "created_at": "2023-06-23T16:29:42.000Z",
+        "url": "https://greasyfork.org/users/1110156-wfjeefwe"
+      }
+    ],
+    "name": "🔥🔥🔥【持续更新】CSDN、B站（bilibili）、51CTO博客、站酷等各类网站轻松复制",
+    "description": "【🔥 功能1】复制CSDN文字：多数脚本已实现未登录可复制CSDN网页中的代码，本脚本补充实现未登录可复制CSDN网页中的文字，且不限于CSDN，51CTO博客等众多其他网站也适用，自测便知。【🔥 功能2】去掉B站尾巴：去掉B站文字复制粘贴后出现的作者和链接等信息，且不限于B站，众多其他网站也适用，自测便知。【🔥 功能3】安卓手机浏览器也可用：先安装支持油猴（Tampermonkey）插件的安卓手机浏览器（如：kiwi 浏览器），再安装油猴插件，最后安装本脚本，以上所有功能在手机上也可用。",
+    "url": "https://greasyfork.org/scripts/469335-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0-csdn-b%E7%AB%99-bilibili-51cto%E5%8D%9A%E5%AE%A2-%E7%AB%99%E9%85%B7%E7%AD%89%E5%90%84%E7%B1%BB%E7%BD%91%E7%AB%99%E8%BD%BB%E6%9D%BE%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/469335/%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5%E3%80%90%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E3%80%91CSDN%E3%80%81B%E7%AB%99%EF%BC%88bilibili%EF%BC%89%E3%80%8151CTO%E5%8D%9A%E5%AE%A2%E3%80%81%E7%AB%99%E9%85%B7%E7%AD%89%E5%90%84%E7%B1%BB%E7%BD%91%E7%AB%99%E8%BD%BB%E6%9D%BE%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 2263,
+    "license": "MIT License",
+    "version": "1.3.3.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

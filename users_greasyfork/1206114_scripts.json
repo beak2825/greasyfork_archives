@@ -1,0 +1,35 @@
+[
+  {
+    "id": 478483,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-28T18:09:08.000Z",
+    "code_updated_at": "2023-10-28T18:09:08.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1206114,
+        "name": "P.シグマ",
+        "created_at": "2023-10-28T18:02:48.000Z",
+        "url": "https://greasyfork.org/users/1206114-p-%E3%82%B7%E3%82%B0%E3%83%9E"
+      }
+    ],
+    "name": "일기장갤 대짤 변경 [ver.로아]",
+    "description": "10/29/2023, 2:09:59 AM",
+    "url": "https://greasyfork.org/scripts/478483-%EC%9D%BC%EA%B8%B0%EC%9E%A5%EA%B0%A4-%EB%8C%80%EC%A7%A4-%EB%B3%80%EA%B2%BD-ver-%EB%A1%9C%EC%95%84",
+    "code_url": "https://update.greasyfork.org/scripts/478483/%EC%9D%BC%EA%B8%B0%EC%9E%A5%EA%B0%A4%20%EB%8C%80%EC%A7%A4%20%EB%B3%80%EA%B2%BD%20%5Bver%EB%A1%9C%EC%95%84%5D.user.js",
+    "code_size": 811,
+    "license": null,
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

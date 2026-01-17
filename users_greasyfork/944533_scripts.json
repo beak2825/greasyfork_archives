@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 456110,
+    "daily_installs": 0,
+    "total_installs": 118,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-06T09:20:16.000Z",
+    "code_updated_at": "2025-11-29T11:47:31.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 944533,
+        "name": "xioneko",
+        "created_at": "2022-08-09T03:39:14.000Z",
+        "url": "https://greasyfork.org/users/944533-xioneko"
+      }
+    ],
+    "name": "BIT北理工一键评教 - pj.bit.edu.cn（停止维护）",
+    "description": "一键完成所有单选项并提交，可自定义评价选项；修复评教按钮不显示的问题",
+    "url": "https://greasyfork.org/scripts/456110-bit%E5%8C%97%E7%90%86%E5%B7%A5%E4%B8%80%E9%94%AE%E8%AF%84%E6%95%99-pj-bit-edu-cn-%E5%81%9C%E6%AD%A2%E7%BB%B4%E6%8A%A4",
+    "code_url": "https://update.greasyfork.org/scripts/456110/BIT%E5%8C%97%E7%90%86%E5%B7%A5%E4%B8%80%E9%94%AE%E8%AF%84%E6%95%99%20-%20pjbiteducn%EF%BC%88%E5%81%9C%E6%AD%A2%E7%BB%B4%E6%8A%A4%EF%BC%89.user.js",
+    "code_size": 2848,
+    "license": "MIT License",
+    "version": "2.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434189,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-20T13:40:10.000Z",
+    "code_updated_at": "2021-10-20T13:40:09.000Z",
+    "namespace": "http://cnc-eco.herokuapp.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 827063,
+        "name": "Harry Stuttkewitz",
+        "created_at": "2021-10-20T13:07:43.000Z",
+        "url": "https://greasyfork.org/users/827063-harry-stuttkewitz"
+      }
+    ],
+    "name": "C&C:TA CnC-Eco",
+    "description": "Sammelt Informationen ueber Basenausbau der Allianzmitglieder (basierend auf Skripte / Routinen von neobsen, JimBeamJD, KRS_L, F.D, und Dooki)",
+    "url": "https://greasyfork.org/scripts/434189-c-c-ta-cnc-eco",
+    "code_url": "https://update.greasyfork.org/scripts/434189/CC%3ATA%20CnC-Eco.user.js",
+    "code_size": 292134,
+    "license": "CC BY-NC-SA 4.0 - http://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "1.2.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

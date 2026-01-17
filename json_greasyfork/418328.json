@@ -1,0 +1,33 @@
+{
+  "id": 418328,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-08T06:45:46.000Z",
+  "code_updated_at": "2020-12-08T06:45:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 711125,
+      "name": "mentoster",
+      "created_at": "2020-12-01T22:39:39.000Z",
+      "url": "https://greasyfork.org/users/711125-mentoster"
+    }
+  ],
+  "name": "auto like on webinar",
+  "description": "auto like on webinar infinity",
+  "url": "https://greasyfork.org/scripts/418328-auto-like-on-webinar",
+  "code_url": "https://update.greasyfork.org/scripts/418328/auto%20like%20on%20webinar.user.js",
+  "code_size": 749,
+  "license": null,
+  "version": "1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

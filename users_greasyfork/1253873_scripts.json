@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485810,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-27T10:13:33.000Z",
+    "code_updated_at": "2024-01-27T10:13:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1253873,
+        "name": "Yuuus",
+        "created_at": "2024-01-27T10:06:33.000Z",
+        "url": "https://greasyfork.org/users/1253873-yuuus"
+      }
+    ],
+    "name": "xanim Krunker.io 2022 Skin Hack [Displays that you Have Rare skins Equipped]",
+    "description": "It displays that you have it Equipped but does Not Show in game",
+    "url": "https://greasyfork.org/scripts/485810-xanim-krunker-io-2022-skin-hack-displays-that-you-have-rare-skins-equipped",
+    "code_url": "https://update.greasyfork.org/scripts/485810/xanim%20Krunkerio%202022%20Skin%20Hack%20%5BDisplays%20that%20you%20Have%20Rare%20skins%20Equipped%5D.user.js",
+    "code_size": 4876,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 423091,
+  "daily_installs": 0,
+  "total_installs": 53,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-11T23:20:25.000Z",
+  "code_updated_at": "2025-07-16T11:08:57.000Z",
+  "namespace": "https://greasyfork.org/users/636724-cml99",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 636724,
+      "name": "CML99",
+      "created_at": "2020-06-23T16:09:09.000Z",
+      "url": "https://greasyfork.org/users/636724-cml99"
+    }
+  ],
+  "name": "Filmweb Hide & Seek",
+  "description": "Pozwala ukryć wybrane sekcje na podstronach filmów, osób, postaci i światów.",
+  "url": "https://greasyfork.org/scripts/423091-filmweb-hide-seek",
+  "code_url": "https://update.greasyfork.org/scripts/423091/Filmweb%20Hide%20%20Seek.user.css",
+  "code_size": 42296,
+  "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+  "version": "1.3.7",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

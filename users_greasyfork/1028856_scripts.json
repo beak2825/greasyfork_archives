@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460198,
+    "daily_installs": 0,
+    "total_installs": 191,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-02-17T16:19:59.000Z",
+    "code_updated_at": "2023-02-17T16:22:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1028856,
+        "name": "123485k",
+        "created_at": "2023-02-17T15:15:54.000Z",
+        "url": "https://greasyfork.org/users/1028856-123485k"
+      }
+    ],
+    "name": "检测B站直播弹幕拦截",
+    "description": "检测你的弹幕是否真的发出去了",
+    "url": "https://greasyfork.org/scripts/460198-%E6%A3%80%E6%B5%8Bb%E7%AB%99%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E6%8B%A6%E6%88%AA",
+    "code_url": "https://update.greasyfork.org/scripts/460198/%E6%A3%80%E6%B5%8BB%E7%AB%99%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E6%8B%A6%E6%88%AA.user.js",
+    "code_size": 2508,
+    "license": null,
+    "version": "1.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

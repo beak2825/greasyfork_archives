@@ -1,0 +1,59 @@
+{
+  "id": 437340,
+  "daily_installs": 0,
+  "total_installs": 151,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-20T11:49:44.000Z",
+  "code_updated_at": "2021-12-20T11:49:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 855699,
+      "name": "无双愣坑",
+      "created_at": "2021-12-20T11:34:03.000Z",
+      "url": "https://greasyfork.org/users/855699-%E6%97%A0%E5%8F%8C%E6%84%A3%E5%9D%91",
+      "scripts": [
+        {
+          "id": 437340,
+          "daily_installs": 0,
+          "total_installs": 151,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-20T11:49:44.000Z",
+          "code_updated_at": "2021-12-20T11:49:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "国科大SEP自动评教",
+          "description": "一键选择对课程或者对老师的评价，免去繁琐的点击环节。",
+          "url": "https://greasyfork.org/scripts/437340-%E5%9B%BD%E7%A7%91%E5%A4%A7sep%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+          "code_url": "https://update.greasyfork.org/scripts/437340/%E5%9B%BD%E7%A7%91%E5%A4%A7SEP%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+          "code_size": 2886,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "国科大SEP自动评教",
+  "description": "一键选择对课程或者对老师的评价，免去繁琐的点击环节。",
+  "url": "https://greasyfork.org/scripts/437340-%E5%9B%BD%E7%A7%91%E5%A4%A7sep%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/437340/%E5%9B%BD%E7%A7%91%E5%A4%A7SEP%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+  "code_size": 2886,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

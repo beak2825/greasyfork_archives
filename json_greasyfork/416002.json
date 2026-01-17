@@ -1,0 +1,59 @@
+{
+  "id": 416002,
+  "daily_installs": 1,
+  "total_installs": 9915,
+  "fan_score": "83.3",
+  "good_ratings": 28,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2020-11-12T13:54:48.000Z",
+  "code_updated_at": "2024-10-31T06:29:00.000Z",
+  "namespace": "http://shawjie.cn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 162519,
+      "name": "Shaw Jie",
+      "created_at": "2017-12-10T08:59:51.000Z",
+      "url": "https://greasyfork.org/users/162519-shaw-jie",
+      "scripts": [
+        {
+          "id": 416002,
+          "daily_installs": 1,
+          "total_installs": 9915,
+          "fan_score": "83.3",
+          "good_ratings": 28,
+          "ok_ratings": 2,
+          "bad_ratings": 0,
+          "created_at": "2020-11-12T13:54:48.000Z",
+          "code_updated_at": "2024-10-31T06:29:00.000Z",
+          "namespace": "http://shawjie.cn",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "电商历史价格查询",
+          "description": "看看历史价格 拒绝当小白鼠",
+          "url": "https://greasyfork.org/scripts/416002-%E7%94%B5%E5%95%86%E5%8E%86%E5%8F%B2%E4%BB%B7%E6%A0%BC%E6%9F%A5%E8%AF%A2",
+          "code_url": "https://update.greasyfork.org/scripts/416002/%E7%94%B5%E5%95%86%E5%8E%86%E5%8F%B2%E4%BB%B7%E6%A0%BC%E6%9F%A5%E8%AF%A2.user.js",
+          "code_size": 23843,
+          "license": null,
+          "version": "1.0.12.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "电商历史价格查询",
+  "description": "看看历史价格 拒绝当小白鼠",
+  "url": "https://greasyfork.org/scripts/416002-%E7%94%B5%E5%95%86%E5%8E%86%E5%8F%B2%E4%BB%B7%E6%A0%BC%E6%9F%A5%E8%AF%A2",
+  "code_url": "https://update.greasyfork.org/scripts/416002/%E7%94%B5%E5%95%86%E5%8E%86%E5%8F%B2%E4%BB%B7%E6%A0%BC%E6%9F%A5%E8%AF%A2.user.js",
+  "code_size": 23843,
+  "license": null,
+  "version": "1.0.12.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

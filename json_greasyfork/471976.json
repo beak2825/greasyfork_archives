@@ -1,0 +1,59 @@
+{
+  "id": 471976,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-29T07:23:49.000Z",
+  "code_updated_at": "2023-07-29T10:33:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 981445,
+      "name": "longfei347",
+      "created_at": "2022-11-10T06:22:30.000Z",
+      "url": "https://greasyfork.org/users/981445-longfei347",
+      "scripts": [
+        {
+          "id": 472115,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-31T09:36:38.000Z",
+          "code_updated_at": "2023-08-02T02:31:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "netcare debug工具",
+          "description": "使用说明:在service_debug中添加全局搜索;",
+          "url": "https://greasyfork.org/scripts/472115-netcare-debug%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/472115/netcare%20debug%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 14560,
+          "license": "MIT License",
+          "version": "0.1.3",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "netcare 收藏夹",
+  "description": "使用说明:可添加开发域收藏夹,动态添加快捷链接在开发域header上,需结合chrome插件,tampermonkey安装此脚本;使用方法,在gde开发域,打开常用页签后,可将页签链接添加到header全局上,也在控制台调用_addMyFav()添加,n对应开发已打开的tab页签;",
+  "url": "https://greasyfork.org/scripts/471976-netcare-%E6%94%B6%E8%97%8F%E5%A4%B9",
+  "code_url": "https://update.greasyfork.org/scripts/471976/netcare%20%E6%94%B6%E8%97%8F%E5%A4%B9.user.js",
+  "code_size": 10205,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

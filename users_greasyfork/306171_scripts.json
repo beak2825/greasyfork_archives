@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472763,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-09T07:26:49.000Z",
+    "code_updated_at": "2023-08-09T08:47:18.000Z",
+    "namespace": "https://github.com/zjn0505",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 306171,
+        "name": "zjn0505",
+        "created_at": "2019-05-31T13:43:11.000Z",
+        "url": "https://greasyfork.org/users/306171-zjn0505"
+      }
+    ],
+    "name": "Google Codelabs Marker",
+    "description": "8/9/2023, 11:11:06 AM",
+    "url": "https://greasyfork.org/scripts/472763-google-codelabs-marker",
+    "code_url": "https://update.greasyfork.org/scripts/472763/Google%20Codelabs%20Marker.user.js",
+    "code_size": 4138,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

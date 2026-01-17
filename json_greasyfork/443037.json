@@ -1,0 +1,34 @@
+{
+  "id": 443037,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-09T06:19:13.000Z",
+  "code_updated_at": "2022-04-09T06:23:17.000Z",
+  "namespace": "MXPSQL",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 747877,
+      "name": "MXP2095onetechguy",
+      "created_at": "2021-03-16T09:57:55.000Z",
+      "url": "https://greasyfork.org/users/747877-mxp2095onetechguy",
+      "scripts": []
+    }
+  ],
+  "name": "AntiNoOverflow",
+  "description": "Say goodbye to anti adblockers preventing scrolls. WARNING: This will affect all websites and it should be used with uBlock origin with the block element feature.",
+  "url": "https://greasyfork.org/scripts/443037-antinooverflow",
+  "code_url": "https://update.greasyfork.org/scripts/443037/AntiNoOverflow.user.js",
+  "code_size": 851,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

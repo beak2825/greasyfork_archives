@@ -1,0 +1,59 @@
+{
+  "id": 440997,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-06T01:25:10.000Z",
+  "code_updated_at": "2022-03-06T01:25:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 883434,
+      "name": "tmxkn1",
+      "created_at": "2022-03-06T01:22:18.000Z",
+      "url": "https://greasyfork.org/users/883434-tmxkn1",
+      "scripts": [
+        {
+          "id": 440997,
+          "daily_installs": 0,
+          "total_installs": 57,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-06T01:25:10.000Z",
+          "code_updated_at": "2022-03-06T01:25:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GrimTool Map Full Page",
+          "description": "Adds a button on map toolbar to expand the map to full page.",
+          "url": "https://greasyfork.org/scripts/440997-grimtool-map-full-page",
+          "code_url": "https://update.greasyfork.org/scripts/440997/GrimTool%20Map%20Full%20Page.user.js",
+          "code_size": 3606,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GrimTool Map Full Page",
+  "description": "Adds a button on map toolbar to expand the map to full page.",
+  "url": "https://greasyfork.org/scripts/440997-grimtool-map-full-page",
+  "code_url": "https://update.greasyfork.org/scripts/440997/GrimTool%20Map%20Full%20Page.user.js",
+  "code_size": 3606,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

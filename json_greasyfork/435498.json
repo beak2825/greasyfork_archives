@@ -1,0 +1,34 @@
+{
+  "id": 435498,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-14T13:34:50.000Z",
+  "code_updated_at": "2021-11-14T13:34:50.000Z",
+  "namespace": "https://greasyfork.org/ru/users/155145-inlifeuser",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 838012,
+      "name": "design.erm",
+      "created_at": "2021-11-13T07:21:15.000Z",
+      "url": "https://greasyfork.org/users/838012-design-erm",
+      "scripts": []
+    }
+  ],
+  "name": "Display additional information in VK profile",
+  "description": "Display profile ID, registration date, last profile edit and last seen in VK user profile",
+  "url": "https://greasyfork.org/scripts/435498-display-additional-information-in-vk-profile",
+  "code_url": "https://update.greasyfork.org/scripts/435498/Display%20additional%20information%20in%20VK%20profile.user.js",
+  "code_size": 12263,
+  "license": "MIT License",
+  "version": "1.1.1.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

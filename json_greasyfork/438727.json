@@ -1,0 +1,59 @@
+{
+  "id": 438727,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-18T09:30:27.000Z",
+  "code_updated_at": "2022-01-18T09:30:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 794993,
+      "name": "mm0809",
+      "created_at": "2021-07-18T18:15:30.000Z",
+      "url": "https://greasyfork.org/users/794993-mm0809",
+      "scripts": [
+        {
+          "id": 429579,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-07-18T18:19:39.000Z",
+          "code_updated_at": "2021-08-25T05:45:08.000Z",
+          "namespace": "GiCha",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Baha JiCha tool",
+          "description": "Let me hlep you JiCha!!",
+          "url": "https://greasyfork.org/scripts/429579-baha-jicha-tool",
+          "code_url": "https://update.greasyfork.org/scripts/429579/Baha%20JiCha%20tool.user.js",
+          "code_size": 3628,
+          "license": null,
+          "version": "0.4.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OhMyNTHU",
+  "description": "Replace the function \"distribution\"",
+  "url": "https://greasyfork.org/scripts/438727-ohmynthu",
+  "code_url": "https://update.greasyfork.org/scripts/438727/OhMyNTHU.user.js",
+  "code_size": 2491,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

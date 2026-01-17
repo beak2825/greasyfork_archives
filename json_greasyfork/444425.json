@@ -1,0 +1,34 @@
+{
+  "id": 444425,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-03T15:23:49.000Z",
+  "code_updated_at": "2022-05-09T12:32:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841274,
+      "name": "weiv",
+      "created_at": "2021-11-20T02:01:35.000Z",
+      "url": "https://greasyfork.org/users/841274-weiv",
+      "scripts": []
+    }
+  ],
+  "name": "通过剧名自动跳过片头",
+  "description": "按对应视频的剧名可以跳过对应时长。",
+  "url": "https://greasyfork.org/scripts/444425-%E9%80%9A%E8%BF%87%E5%89%A7%E5%90%8D%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87%E7%89%87%E5%A4%B4",
+  "code_url": "https://update.greasyfork.org/scripts/444425/%E9%80%9A%E8%BF%87%E5%89%A7%E5%90%8D%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87%E7%89%87%E5%A4%B4.user.js",
+  "code_size": 3603,
+  "license": null,
+  "version": "0.2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

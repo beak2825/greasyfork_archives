@@ -1,0 +1,34 @@
+{
+  "id": 429614,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-19T16:41:31.000Z",
+  "code_updated_at": "2025-10-30T14:45:10.000Z",
+  "namespace": "https://greasyfork.org/de/users/577453",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 577453,
+      "name": "KnutEdelbert",
+      "created_at": "2020-06-02T15:03:35.000Z",
+      "url": "https://greasyfork.org/users/577453-knutedelbert",
+      "scripts": []
+    }
+  ],
+  "name": "OnlineligaLineupHelper",
+  "description": "Zusatzinfos rund um die Aufstellung bei Onlineliga.de",
+  "url": "https://greasyfork.org/scripts/429614-onlineligalineuphelper",
+  "code_url": "https://update.greasyfork.org/scripts/429614/OnlineligaLineupHelper.user.js",
+  "code_size": 57087,
+  "license": "LGPLv3",
+  "version": "0.5.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

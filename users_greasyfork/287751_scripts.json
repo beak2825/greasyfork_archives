@@ -1,0 +1,101 @@
+[
+  {
+    "id": 427773,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-10T23:14:27.000Z",
+    "code_updated_at": "2021-06-10T23:23:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 287751,
+        "name": "r1825",
+        "created_at": "2019-03-31T08:34:15.000Z",
+        "url": "https://greasyfork.org/users/287751-r1825"
+      }
+    ],
+    "name": "HUSMLSSSS: HUSM Learning Support System Support System",
+    "description": "学修支援システムを支援するシステムです",
+    "url": "https://greasyfork.org/scripts/427773-husmlssss-husm-learning-support-system-support-system",
+    "code_url": "https://update.greasyfork.org/scripts/427773/HUSMLSSSS%3A%20HUSM%20Learning%20Support%20System%20Support%20System.user.js",
+    "code_size": 1870,
+    "license": null,
+    "version": "1.8.25.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 427532,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-05T00:15:12.000Z",
+    "code_updated_at": "2021-06-06T05:10:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 287751,
+        "name": "r1825",
+        "created_at": "2019-03-31T08:34:15.000Z",
+        "url": "https://greasyfork.org/users/287751-r1825"
+      }
+    ],
+    "name": "Manaba Integrated",
+    "description": "Manabaの課題提出期限をGoogleカレンダーに追加するリンクを追加します",
+    "url": "https://greasyfork.org/scripts/427532-manaba-integrated",
+    "code_url": "https://update.greasyfork.org/scripts/427532/Manaba%20Integrated.user.js",
+    "code_size": 2472,
+    "license": null,
+    "version": "1.8.25.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 422189,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-23T10:19:44.000Z",
+    "code_updated_at": "2021-02-23T10:21:12.000Z",
+    "namespace": "https://twitter.com/r1825_java",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 287751,
+        "name": "r1825",
+        "created_at": "2019-03-31T08:34:15.000Z",
+        "url": "https://greasyfork.org/users/287751-r1825"
+      }
+    ],
+    "name": "niconico tagrepo",
+    "description": "niconicoのフォローページにタグレポへのリンクを追加します。",
+    "url": "https://greasyfork.org/scripts/422189-niconico-tagrepo",
+    "code_url": "https://update.greasyfork.org/scripts/422189/niconico%20tagrepo.user.js",
+    "code_size": 4194,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -97,5 +97,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 489439,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-10T00:01:07.000Z",
+    "code_updated_at": "2025-05-10T16:01:55.000Z",
+    "namespace": "Freebee1693",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453470,
+        "name": "ModLabs",
+        "created_at": "2020-03-03T14:52:15.000Z",
+        "url": "https://greasyfork.org/users/453470-modlabs"
+      }
+    ],
+    "name": "Codenames AI Assistant",
+    "description": "A script that uses AI to assist with both guessing words and generating hints for Codenames",
+    "url": "https://greasyfork.org/scripts/489439-codenames-ai-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/489439/Codenames%20AI%20Assistant.user.js",
+    "code_size": 30807,
+    "license": "Apache License 2.0",
+    "version": "1.2.2-GitHub",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 461296,
+    "daily_installs": 0,
+    "total_installs": 172,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-06T12:04:52.000Z",
+    "code_updated_at": "2024-09-04T11:22:47.000Z",
+    "namespace": "https://flawcra.cc/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453470,
+        "name": "ModLabs",
+        "created_at": "2020-03-03T14:52:15.000Z",
+        "url": "https://greasyfork.org/users/453470-modlabs"
+      }
+    ],
+    "name": "Super PiP",
+    "description": "A simple script to add a Picture in Picture button to multiple Sites.",
+    "url": "https://greasyfork.org/scripts/461296-super-pip",
+    "code_url": "https://update.greasyfork.org/scripts/461296/Super%20PiP.user.js",
+    "code_size": 10036,
+    "license": "Apache License 2.0",
+    "version": "1.1.1-GitHub",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444929,
+    "daily_installs": 0,
+    "total_installs": 468,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-13T15:07:23.000Z",
+    "code_updated_at": "2022-10-27T06:27:49.000Z",
+    "namespace": "https://flawcra.cc/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453470,
+        "name": "ModLabs",
+        "created_at": "2020-03-03T14:52:15.000Z",
+        "url": "https://greasyfork.org/users/453470-modlabs"
+      }
+    ],
+    "name": "Kahoot! QOL",
+    "description": "Improves the Quality of Life on Kahoot!",
+    "url": "https://greasyfork.org/scripts/444929-kahoot-qol",
+    "code_url": "https://update.greasyfork.org/scripts/444929/Kahoot%21%20QOL.user.js",
+    "code_size": 4510,
+    "license": "Apache License 2.0",
+    "version": "1.0.3-GitHub",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418451,
+    "daily_installs": 0,
+    "total_installs": 226,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-12-10T15:01:57.000Z",
+    "code_updated_at": "2025-05-10T15:58:53.000Z",
+    "namespace": "Freebee1693",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453470,
+        "name": "ModLabs",
+        "created_at": "2020-03-03T14:52:15.000Z",
+        "url": "https://greasyfork.org/users/453470-modlabs"
+      }
+    ],
+    "name": "Bandcamp Download Button",
+    "description": "A simple download button for Bandcamp and Bandcamp based sites",
+    "url": "https://greasyfork.org/scripts/418451-bandcamp-download-button",
+    "code_url": "https://update.greasyfork.org/scripts/418451/Bandcamp%20Download%20Button.user.js",
+    "code_size": 3117,
+    "license": "Apache License 2.0",
+    "version": "1.0.9-GitHub",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412108,
+    "daily_installs": 0,
+    "total_installs": 2735,
+    "fan_score": "31.3",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 4,
+    "created_at": "2020-09-27T16:27:25.000Z",
+    "code_updated_at": "2025-05-24T13:44:24.000Z",
+    "namespace": "Freebee1693",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453470,
+        "name": "ModLabs",
+        "created_at": "2020-03-03T14:52:15.000Z",
+        "url": "https://greasyfork.org/users/453470-modlabs"
+      }
+    ],
+    "name": "Soundcloud Download Button",
+    "description": "A Script that adds a Download button to SoundCloud",
+    "url": "https://greasyfork.org/scripts/412108-soundcloud-download-button",
+    "code_url": "https://update.greasyfork.org/scripts/412108/Soundcloud%20Download%20Button.user.js",
+    "code_size": 3604,
+    "license": "Apache License 2.0",
+    "version": "1.1.0-GitHub",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

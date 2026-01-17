@@ -1,0 +1,33 @@
+{
+  "id": 483739,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-03T04:25:17.000Z",
+  "code_updated_at": "2024-01-03T07:29:29.000Z",
+  "namespace": "github.com/maojj",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1125286,
+      "name": "maojj",
+      "created_at": "2023-07-13T04:20:56.000Z",
+      "url": "https://greasyfork.org/users/1125286-maojj"
+    }
+  ],
+  "name": "Wukong Commit 预览脚本",
+  "description": "快速查看 wukong commit 环境",
+  "url": "https://greasyfork.org/scripts/483739-wukong-commit-%E9%A2%84%E8%A7%88%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/483739/Wukong%20Commit%20%E9%A2%84%E8%A7%88%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 3712,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

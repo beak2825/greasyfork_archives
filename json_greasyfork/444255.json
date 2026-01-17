@@ -1,0 +1,59 @@
+{
+  "id": 444255,
+  "daily_installs": 0,
+  "total_installs": 111,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-30T17:25:10.000Z",
+  "code_updated_at": "2022-10-04T21:47:02.000Z",
+  "namespace": "CosmicTowel42",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 830667,
+      "name": "scoobydooooo",
+      "created_at": "2021-10-31T13:53:44.000Z",
+      "url": "https://greasyfork.org/users/830667-scoobydooooo",
+      "scripts": [
+        {
+          "id": 444255,
+          "daily_installs": 0,
+          "total_installs": 111,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-30T17:25:10.000Z",
+          "code_updated_at": "2022-10-04T21:47:02.000Z",
+          "namespace": "CosmicTowel42",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "IMDb Page Cleaner",
+          "description": "Remove unnecessary information from IMDb & rearrange the layout",
+          "url": "https://greasyfork.org/scripts/444255-imdb-page-cleaner",
+          "code_url": "https://update.greasyfork.org/scripts/444255/IMDb%20Page%20Cleaner.user.js",
+          "code_size": 3604,
+          "license": "GNU GPLv3",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "IMDb Page Cleaner",
+  "description": "Remove unnecessary information from IMDb & rearrange the layout",
+  "url": "https://greasyfork.org/scripts/444255-imdb-page-cleaner",
+  "code_url": "https://update.greasyfork.org/scripts/444255/IMDb%20Page%20Cleaner.user.js",
+  "code_size": 3604,
+  "license": "GNU GPLv3",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

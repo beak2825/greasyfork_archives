@@ -1,0 +1,34 @@
+{
+  "id": 466975,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-24T05:49:24.000Z",
+  "code_updated_at": "2023-05-24T05:49:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 975348,
+      "name": "zhouxiGib",
+      "created_at": "2022-10-26T06:41:20.000Z",
+      "url": "https://greasyfork.org/users/975348-zhouxigib",
+      "scripts": []
+    }
+  ],
+  "name": "打印国际每日数据概览",
+  "description": "打印国际站数据概览数据，点击日周月数据即可打印",
+  "url": "https://greasyfork.org/scripts/466975-%E6%89%93%E5%8D%B0%E5%9B%BD%E9%99%85%E6%AF%8F%E6%97%A5%E6%95%B0%E6%8D%AE%E6%A6%82%E8%A7%88",
+  "code_url": "https://update.greasyfork.org/scripts/466975/%E6%89%93%E5%8D%B0%E5%9B%BD%E9%99%85%E6%AF%8F%E6%97%A5%E6%95%B0%E6%8D%AE%E6%A6%82%E8%A7%88.user.js",
+  "code_size": 13582,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

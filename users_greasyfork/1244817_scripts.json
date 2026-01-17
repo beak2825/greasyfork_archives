@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484194,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-08T03:24:18.000Z",
+    "code_updated_at": "2024-01-08T07:40:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244817,
+        "name": "ad1ab",
+        "created_at": "2024-01-08T03:21:38.000Z",
+        "url": "https://greasyfork.org/users/1244817-ad1ab"
+      }
+    ],
+    "name": "Hide-OA-Watermarks",
+    "description": "Masking Panavision OA Watermark",
+    "url": "https://greasyfork.org/scripts/484194-hide-oa-watermarks",
+    "code_url": "https://update.greasyfork.org/scripts/484194/Hide-OA-Watermarks.user.js",
+    "code_size": 1064,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 479231,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-07T10:53:00.000Z",
+  "code_updated_at": "2023-11-14T09:00:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 804215,
+      "name": "Nex01",
+      "created_at": "2021-08-13T11:19:12.000Z",
+      "url": "https://greasyfork.org/users/804215-nex01"
+    }
+  ],
+  "name": "1114AE模型考试脚本",
+  "description": "对AE模型考试项目进行辅助标注",
+  "url": "https://greasyfork.org/scripts/479231-1114ae%E6%A8%A1%E5%9E%8B%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/479231/1114AE%E6%A8%A1%E5%9E%8B%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 6578,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

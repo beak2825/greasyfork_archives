@@ -1,0 +1,167 @@
+[
+  {
+    "id": 480038,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-16T12:49:31.000Z",
+    "code_updated_at": "2023-11-17T17:39:10.000Z",
+    "namespace": "https://greasyfork.org/users/1202891",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1202891,
+        "name": "小黄不会擦屁股",
+        "created_at": "2023-10-24T00:52:39.000Z",
+        "url": "https://greasyfork.org/users/1202891-%E5%B0%8F%E9%BB%84%E4%B8%8D%E4%BC%9A%E6%93%A6%E5%B1%81%E8%82%A1"
+      }
+    ],
+    "name": "Idle Infinity - All in One",
+    "description": "Idle Infinity",
+    "url": "https://greasyfork.org/scripts/480038-idle-infinity-all-in-one",
+    "code_url": "https://update.greasyfork.org/scripts/480038/Idle%20Infinity%20-%20All%20in%20One.user.js",
+    "code_size": 31432,
+    "license": "MIT License",
+    "version": "0.0.1.20231117173910",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479825,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-14T06:58:37.000Z",
+    "code_updated_at": "2023-11-14T06:58:37.000Z",
+    "namespace": "https://greasyfork.org/users/1202891",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1202891,
+        "name": "小黄不会擦屁股",
+        "created_at": "2023-10-24T00:52:39.000Z",
+        "url": "https://greasyfork.org/users/1202891-%E5%B0%8F%E9%BB%84%E4%B8%8D%E4%BC%9A%E6%93%A6%E5%B1%81%E8%82%A1"
+      }
+    ],
+    "name": "Idle Infinity - ShowNavBarCharacters",
+    "description": "Idle Infinity",
+    "url": "https://greasyfork.org/scripts/479825-idle-infinity-shownavbarcharacters",
+    "code_url": "https://update.greasyfork.org/scripts/479825/Idle%20Infinity%20-%20ShowNavBarCharacters.user.js",
+    "code_size": 2017,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479007,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-04T10:09:35.000Z",
+    "code_updated_at": "2023-11-10T21:02:58.000Z",
+    "namespace": "https://greasyfork.org/users/1202891",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1202891,
+        "name": "小黄不会擦屁股",
+        "created_at": "2023-10-24T00:52:39.000Z",
+        "url": "https://greasyfork.org/users/1202891-%E5%B0%8F%E9%BB%84%E4%B8%8D%E4%BC%9A%E6%93%A6%E5%B1%81%E8%82%A1"
+      }
+    ],
+    "name": "Idle Infinity - AutomaticDungeon",
+    "description": "Idle Infinity",
+    "url": "https://greasyfork.org/scripts/479007-idle-infinity-automaticdungeon",
+    "code_url": "https://update.greasyfork.org/scripts/479007/Idle%20Infinity%20-%20AutomaticDungeon.user.js",
+    "code_size": 7077,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478124,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-24T03:31:34.000Z",
+    "code_updated_at": "2023-10-24T03:31:34.000Z",
+    "namespace": "https://greasyfork.org/users/1202891",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1202891,
+        "name": "小黄不会擦屁股",
+        "created_at": "2023-10-24T00:52:39.000Z",
+        "url": "https://greasyfork.org/users/1202891-%E5%B0%8F%E9%BB%84%E4%B8%8D%E4%BC%9A%E6%93%A6%E5%B1%81%E8%82%A1"
+      }
+    ],
+    "name": "Idle Infinity - ShowTitle",
+    "description": "Idle Infinity",
+    "url": "https://greasyfork.org/scripts/478124-idle-infinity-showtitle",
+    "code_url": "https://update.greasyfork.org/scripts/478124/Idle%20Infinity%20-%20ShowTitle.user.js",
+    "code_size": 3917,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478121,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-24T03:20:52.000Z",
+    "code_updated_at": "2023-10-27T04:37:31.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1202891,
+        "name": "小黄不会擦屁股",
+        "created_at": "2023-10-24T00:52:39.000Z",
+        "url": "https://greasyfork.org/users/1202891-%E5%B0%8F%E9%BB%84%E4%B8%8D%E4%BC%9A%E6%93%A6%E5%B1%81%E8%82%A1"
+      }
+    ],
+    "name": "Idle Infinity - ShowEquipBagAutomatic",
+    "description": "Idle Infinity",
+    "url": "https://greasyfork.org/scripts/478121-idle-infinity-showequipbagautomatic",
+    "code_url": "https://update.greasyfork.org/scripts/478121/Idle%20Infinity%20-%20ShowEquipBagAutomatic.user.js",
+    "code_size": 15601,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

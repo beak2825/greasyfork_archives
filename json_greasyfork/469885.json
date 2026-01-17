@@ -1,0 +1,33 @@
+{
+  "id": 469885,
+  "daily_installs": 0,
+  "total_installs": 66,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-07-01T04:45:03.000Z",
+  "code_updated_at": "2024-05-08T19:52:59.000Z",
+  "namespace": "https://greasyfork.org/users/3989",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 3989,
+      "name": "TNB",
+      "created_at": "2014-07-28T19:39:14.000Z",
+      "url": "https://greasyfork.org/users/3989-tnb"
+    }
+  ],
+  "name": "Amazon送料込",
+  "description": "Amazonで送料込みの値段を表示する",
+  "url": "https://greasyfork.org/scripts/469885-amazon%E9%80%81%E6%96%99%E8%BE%BC",
+  "code_url": "https://update.greasyfork.org/scripts/469885/Amazon%E9%80%81%E6%96%99%E8%BE%BC.user.js",
+  "code_size": 13349,
+  "license": "MIT License",
+  "version": "0.88",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

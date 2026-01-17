@@ -1,0 +1,34 @@
+{
+  "id": 453779,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-26T15:22:34.000Z",
+  "code_updated_at": "2022-10-26T15:22:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 473672,
+      "name": "hello w",
+      "created_at": "2020-04-02T11:45:27.000Z",
+      "url": "https://greasyfork.org/users/473672-hello-w",
+      "scripts": []
+    }
+  ],
+  "name": "2022华医网公需课",
+  "description": "2022华医网公需课，进入视频播放界面后全自动。",
+  "url": "https://greasyfork.org/scripts/453779-2022%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%85%AC%E9%9C%80%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/453779/2022%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%85%AC%E9%9C%80%E8%AF%BE.user.js",
+  "code_size": 4437,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

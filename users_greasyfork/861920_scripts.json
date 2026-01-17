@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438143,
+    "daily_installs": 0,
+    "total_installs": 79,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-07T03:07:23.000Z",
+    "code_updated_at": "2022-01-07T03:07:23.000Z",
+    "namespace": "https://greasyfork.org/users/861920",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 861920,
+        "name": "HunterZ",
+        "created_at": "2022-01-07T02:54:49.000Z",
+        "url": "https://greasyfork.org/users/861920-hunterz"
+      }
+    ],
+    "name": "No patreon banners, less polution",
+    "description": "A script to make gbatemp like the old times, only Member banners.",
+    "url": "https://greasyfork.org/scripts/438143-no-patreon-banners-less-polution",
+    "code_url": "https://update.greasyfork.org/scripts/438143/No%20patreon%20banners%2C%20less%20polution.user.js",
+    "code_size": 842,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

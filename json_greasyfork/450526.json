@@ -1,0 +1,33 @@
+{
+  "id": 450526,
+  "daily_installs": 0,
+  "total_installs": 415,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-31T09:30:19.000Z",
+  "code_updated_at": "2022-09-10T09:36:30.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 952704,
+      "name": "Hirosoiko",
+      "created_at": "2022-08-31T02:39:13.000Z",
+      "url": "https://greasyfork.org/users/952704-hirosoiko"
+    }
+  ],
+  "name": "Florr.io Chat with other Players",
+  "description": "Simple chat application. Press [Enter] to type and send a message in the squad panel, in game, and your teammates will receive your message even if you are out of their range or dead. Useful if you want to encourage them! When someone also have this extension, you will recognize them because of their blue name. You can also click or press [Ctrl] / [Cmd] + [Enter] to talk with other chat users in a dedicated panel where you may join their squad! This application doesn't add lag to the game.",
+  "url": "https://greasyfork.org/scripts/450526-florr-io-chat-with-other-players",
+  "code_url": "https://update.greasyfork.org/scripts/450526/Florrio%20Chat%20with%20other%20Players.user.js",
+  "code_size": 62163,
+  "license": null,
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

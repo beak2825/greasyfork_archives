@@ -1,0 +1,33 @@
+{
+  "id": 452286,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-30T12:05:38.000Z",
+  "code_updated_at": "2022-09-30T12:05:38.000Z",
+  "namespace": "polv/wanikani",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 160259,
+      "name": "Pacharapol Withayasakpunt (Pol)",
+      "created_at": "2017-11-21T16:13:22.000Z",
+      "url": "https://greasyfork.org/users/160259-pacharapol-withayasakpunt-pol"
+    }
+  ],
+  "name": "WaniKani Autoplay Sentence Audio",
+  "description": "Autoplay audio sentences (via ImmersionKit.com), with customizability (via Anki-Connect)",
+  "url": "https://greasyfork.org/scripts/452286-wanikani-autoplay-sentence-audio",
+  "code_url": "https://update.greasyfork.org/scripts/452286/WaniKani%20Autoplay%20Sentence%20Audio.user.js",
+  "code_size": 18296,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

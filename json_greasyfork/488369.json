@@ -1,0 +1,59 @@
+{
+  "id": 488369,
+  "daily_installs": 0,
+  "total_installs": 185,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-02-26T19:51:31.000Z",
+  "code_updated_at": "2024-02-26T19:51:31.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1267345,
+      "name": "crazygames",
+      "created_at": "2024-02-26T19:47:08.000Z",
+      "url": "https://greasyfork.org/users/1267345-crazygames",
+      "scripts": [
+        {
+          "id": 488369,
+          "daily_installs": 0,
+          "total_installs": 185,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-02-26T19:51:31.000Z",
+          "code_updated_at": "2024-02-26T19:51:31.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Full Screen for CrazyGames",
+          "description": "Refresh page if not working",
+          "url": "https://greasyfork.org/scripts/488369-full-screen-for-crazygames",
+          "code_url": "https://update.greasyfork.org/scripts/488369/Full%20Screen%20for%20CrazyGames.user.js",
+          "code_size": 1474,
+          "license": "CC0",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Full Screen for CrazyGames",
+  "description": "Refresh page if not working",
+  "url": "https://greasyfork.org/scripts/488369-full-screen-for-crazygames",
+  "code_url": "https://update.greasyfork.org/scripts/488369/Full%20Screen%20for%20CrazyGames.user.js",
+  "code_size": 1474,
+  "license": "CC0",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

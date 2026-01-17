@@ -1,0 +1,34 @@
+{
+  "id": 446958,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-24T06:38:22.000Z",
+  "code_updated_at": "2025-04-02T15:04:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 928737,
+      "name": "BSuser",
+      "created_at": "2022-06-24T06:18:15.000Z",
+      "url": "https://greasyfork.org/users/928737-bsuser",
+      "scripts": []
+    }
+  ],
+  "name": "Weryfikacja zamówienia | Dodatki",
+  "description": "Labele na stronie weryfikacji",
+  "url": "https://greasyfork.org/scripts/446958-weryfikacja-zam%C3%B3wienia-dodatki",
+  "code_url": "https://update.greasyfork.org/scripts/446958/Weryfikacja%20zam%C3%B3wienia%20%7C%20Dodatki.user.js",
+  "code_size": 16975,
+  "license": null,
+  "version": "0.50",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

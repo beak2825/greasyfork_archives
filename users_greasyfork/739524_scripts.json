@@ -1,0 +1,68 @@
+[
+  {
+    "id": 456133,
+    "daily_installs": 0,
+    "total_installs": 419,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-06T16:12:45.000Z",
+    "code_updated_at": "2022-12-06T16:12:45.000Z",
+    "namespace": "https://greasyfork.org/en/users/739524-in59te",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739524,
+        "name": "in59te",
+        "created_at": "2021-02-21T10:04:30.000Z",
+        "url": "https://greasyfork.org/users/739524-in59te"
+      }
+    ],
+    "name": "MouseHunt - GWH 2022 Naughty/Nice map colour coder",
+    "description": "Colour codes mice on Naughty/Nice maps according to type",
+    "url": "https://greasyfork.org/scripts/456133-mousehunt-gwh-2022-naughty-nice-map-colour-coder",
+    "code_url": "https://update.greasyfork.org/scripts/456133/MouseHunt%20-%20GWH%202022%20NaughtyNice%20map%20colour%20coder.user.js",
+    "code_size": 7852,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 436714,
+    "daily_installs": 0,
+    "total_installs": 773,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-08T03:02:32.000Z",
+    "code_updated_at": "2021-12-09T11:58:08.000Z",
+    "namespace": "https://greasyfork.org/en/users/739524-in59te",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739524,
+        "name": "in59te",
+        "created_at": "2021-02-21T10:04:30.000Z",
+        "url": "https://greasyfork.org/users/739524-in59te"
+      }
+    ],
+    "name": "MouseHunt - GWH 2021 Naughty/Nice map colour coder",
+    "description": "Color codes mice on Naughty/Nice maps according to type",
+    "url": "https://greasyfork.org/scripts/436714-mousehunt-gwh-2021-naughty-nice-map-colour-coder",
+    "code_url": "https://update.greasyfork.org/scripts/436714/MouseHunt%20-%20GWH%202021%20NaughtyNice%20map%20colour%20coder.user.js",
+    "code_size": 12539,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

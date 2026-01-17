@@ -1,0 +1,33 @@
+{
+  "id": 456744,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-17T22:40:26.000Z",
+  "code_updated_at": "2022-12-17T22:40:26.000Z",
+  "namespace": "sprremix",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 5561,
+      "name": "sprremix",
+      "created_at": "2014-09-23T16:08:27.000Z",
+      "url": "https://greasyfork.org/users/5561-sprremix"
+    }
+  ],
+  "name": "Dashvapes bypass age check",
+  "description": "Bypass (annoying) age check on Dashvapes",
+  "url": "https://greasyfork.org/scripts/456744-dashvapes-bypass-age-check",
+  "code_url": "https://update.greasyfork.org/scripts/456744/Dashvapes%20bypass%20age%20check.user.js",
+  "code_size": 618,
+  "license": "The Unlicense",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

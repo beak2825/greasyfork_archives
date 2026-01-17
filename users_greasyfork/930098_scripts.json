@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447174,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-28T13:12:48.000Z",
+    "code_updated_at": "2022-06-28T13:12:47.000Z",
+    "namespace": "http://gnaq.cat/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 930098,
+        "name": "GNAQ",
+        "created_at": "2022-06-28T13:08:48.000Z",
+        "url": "https://greasyfork.org/users/930098-gnaq"
+      }
+    ],
+    "name": "HIT jwts 表格只保留考试课",
+    "description": "表格中只保留考试课的学分绩（没有测试多页的情况）",
+    "url": "https://greasyfork.org/scripts/447174-hit-jwts-%E8%A1%A8%E6%A0%BC%E5%8F%AA%E4%BF%9D%E7%95%99%E8%80%83%E8%AF%95%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/447174/HIT%20jwts%20%E8%A1%A8%E6%A0%BC%E5%8F%AA%E4%BF%9D%E7%95%99%E8%80%83%E8%AF%95%E8%AF%BE.user.js",
+    "code_size": 1289,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460281,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-19T06:47:44.000Z",
+    "code_updated_at": "2023-02-19T06:47:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1029658,
+        "name": "bugfork",
+        "created_at": "2023-02-19T06:43:41.000Z",
+        "url": "https://greasyfork.org/users/1029658-bugfork"
+      }
+    ],
+    "name": "Preview Skin Image in spelunky.fyi",
+    "description": "bab",
+    "url": "https://greasyfork.org/scripts/460281-preview-skin-image-in-spelunky-fyi",
+    "code_url": "https://update.greasyfork.org/scripts/460281/Preview%20Skin%20Image%20in%20spelunkyfyi.user.js",
+    "code_size": 6610,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

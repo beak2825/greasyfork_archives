@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481815,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-09T20:45:24.000Z",
+    "code_updated_at": "2023-12-09T20:45:24.000Z",
+    "namespace": "https://greasyfork.org/users/706973",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1227141,
+        "name": "Duffen03",
+        "created_at": "2023-12-03T02:24:17.000Z",
+        "url": "https://greasyfork.org/users/1227141-duffen03"
+      }
+    ],
+    "name": "SDL evo2",
+    "description": "Extension du jeu seduis-les.fr",
+    "url": "https://greasyfork.org/scripts/481815-sdl-evo2",
+    "code_url": "https://update.greasyfork.org/scripts/481815/SDL%20evo2.user.js",
+    "code_size": 15320,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

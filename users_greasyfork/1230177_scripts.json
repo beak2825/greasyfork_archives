@@ -1,0 +1,68 @@
+[
+  {
+    "id": 484503,
+    "daily_installs": 0,
+    "total_installs": 229,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-11T03:41:34.000Z",
+    "code_updated_at": "2024-01-16T16:28:53.000Z",
+    "namespace": "CSDNGreen",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230177,
+        "name": "大耳贼",
+        "created_at": "2023-12-08T03:43:51.000Z",
+        "url": "https://greasyfork.org/users/1230177-%E5%A4%A7%E8%80%B3%E8%B4%BC"
+      }
+    ],
+    "name": "绿色纯净版CSDN-持续更新",
+    "description": "绿色纯净版CSDN-持续更新,现支持🔥免登录复制🔥沉浸式阅读🆕登录自动展开评论，并添加到页面底部",
+    "url": "https://greasyfork.org/scripts/484503-%E7%BB%BF%E8%89%B2%E7%BA%AF%E5%87%80%E7%89%88csdn-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/484503/%E7%BB%BF%E8%89%B2%E7%BA%AF%E5%87%80%E7%89%88CSDN-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0.user.js",
+    "code_size": 4640,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "0.0.53",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 481664,
+    "daily_installs": 0,
+    "total_installs": 107,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-08T07:24:09.000Z",
+    "code_updated_at": "2023-12-08T07:25:31.000Z",
+    "namespace": "video-dog",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230177,
+        "name": "大耳贼",
+        "created_at": "2023-12-08T03:43:51.000Z",
+        "url": "https://greasyfork.org/users/1230177-%E5%A4%A7%E8%80%B3%E8%B4%BC"
+      }
+    ],
+    "name": "华东理工大学网教课程专供刷课脚本",
+    "description": "- **这是一个船新的版本，系兄弟就来砍我**",
+    "url": "https://greasyfork.org/scripts/481664-%E5%8D%8E%E4%B8%9C%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6%E7%BD%91%E6%95%99%E8%AF%BE%E7%A8%8B%E4%B8%93%E4%BE%9B%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/481664/%E5%8D%8E%E4%B8%9C%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6%E7%BD%91%E6%95%99%E8%AF%BE%E7%A8%8B%E4%B8%93%E4%BE%9B%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 9166,
+    "license": "0.10.1",
+    "version": "0.10.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

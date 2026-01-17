@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443952,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-24T23:41:10.000Z",
+    "code_updated_at": "2022-05-01T01:32:30.000Z",
+    "namespace": "https://holynetworkadapter.github.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906515,
+        "name": "HolyNetworkAdapter",
+        "created_at": "2022-04-24T23:14:37.000Z",
+        "url": "https://greasyfork.org/users/906515-holynetworkadapter"
+      }
+    ],
+    "name": "Mikasoft Wibdows 91 Sample Program",
+    "description": "A sample program for Mikasoft Wibdows 91",
+    "url": "https://greasyfork.org/scripts/443952-mikasoft-wibdows-91-sample-program",
+    "code_url": "https://update.greasyfork.org/scripts/443952/Mikasoft%20Wibdows%2091%20Sample%20Program.user.js",
+    "code_size": 939,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

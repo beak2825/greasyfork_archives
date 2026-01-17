@@ -1,0 +1,34 @@
+{
+  "id": 446413,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-13T08:43:08.000Z",
+  "code_updated_at": "2022-06-13T08:43:08.000Z",
+  "namespace": "http://tishka.xyz/sdt",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841407,
+      "name": "Tishka",
+      "created_at": "2021-11-20T05:38:55.000Z",
+      "url": "https://greasyfork.org/users/841407-tishka",
+      "scripts": []
+    }
+  ],
+  "name": "highlight if 50 deps",
+  "description": "highlights some",
+  "url": "https://greasyfork.org/scripts/446413-highlight-if-50-deps",
+  "code_url": "https://update.greasyfork.org/scripts/446413/highlight%20if%2050%20deps.user.js",
+  "code_size": 1747,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

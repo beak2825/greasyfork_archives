@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438498,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-14T00:06:54.000Z",
+    "code_updated_at": "2022-01-14T10:05:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864552,
+        "name": "Amre M",
+        "created_at": "2022-01-14T00:05:23.000Z",
+        "url": "https://greasyfork.org/users/864552-amre-m"
+      }
+    ],
+    "name": "Avito : cacher les professionnels",
+    "description": "Cache les résultats de professionels sur avito.ma",
+    "url": "https://greasyfork.org/scripts/438498-avito-cacher-les-professionnels",
+    "code_url": "https://update.greasyfork.org/scripts/438498/Avito%20%3A%20cacher%20les%20professionnels.user.js",
+    "code_size": 797,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

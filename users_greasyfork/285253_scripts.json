@@ -1,0 +1,35 @@
+[
+  {
+    "id": 453206,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-17T07:55:50.000Z",
+    "code_updated_at": "2022-10-18T09:50:39.000Z",
+    "namespace": "tk_pdd_tool",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 285253,
+        "name": "xuhaoqiang",
+        "created_at": "2019-03-22T07:51:22.000Z",
+        "url": "https://greasyfork.org/users/285253-xuhaoqiang"
+      }
+    ],
+    "name": "TK拼多多插件",
+    "description": "用于拼多多商品链接转化快手CID落地页获取商品主图使用",
+    "url": "https://greasyfork.org/scripts/453206-tk%E6%8B%BC%E5%A4%9A%E5%A4%9A%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/453206/TK%E6%8B%BC%E5%A4%9A%E5%A4%9A%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 1512,
+    "license": "仅限内部使用。",
+    "version": "1.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

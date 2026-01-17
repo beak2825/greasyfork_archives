@@ -1,0 +1,59 @@
+{
+  "id": 450742,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-04T12:47:00.000Z",
+  "code_updated_at": "2022-09-04T12:48:37.000Z",
+  "namespace": "https://note.shirakawatyu.top/#/article/45",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 954523,
+      "name": "flben233",
+      "created_at": "2022-09-04T12:22:16.000Z",
+      "url": "https://greasyfork.org/users/954523-flben233",
+      "scripts": [
+        {
+          "id": 450742,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-04T12:47:00.000Z",
+          "code_updated_at": "2022-09-04T12:48:37.000Z",
+          "namespace": "https://note.shirakawatyu.top/#/article/45",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SWUST西南科技大学课程表导出JSON",
+          "description": "把教务系统上面的课程表导出JSON",
+          "url": "https://greasyfork.org/scripts/450742-swust%E8%A5%BF%E5%8D%97%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%AF%BC%E5%87%BAjson",
+          "code_url": "https://update.greasyfork.org/scripts/450742/SWUST%E8%A5%BF%E5%8D%97%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%AF%BC%E5%87%BAJSON.user.js",
+          "code_size": 3697,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SWUST西南科技大学课程表导出JSON",
+  "description": "把教务系统上面的课程表导出JSON",
+  "url": "https://greasyfork.org/scripts/450742-swust%E8%A5%BF%E5%8D%97%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%AF%BC%E5%87%BAjson",
+  "code_url": "https://update.greasyfork.org/scripts/450742/SWUST%E8%A5%BF%E5%8D%97%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%AF%BC%E5%87%BAJSON.user.js",
+  "code_size": 3697,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

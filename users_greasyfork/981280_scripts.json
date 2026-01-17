@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454535,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-09T17:31:43.000Z",
+    "code_updated_at": "2022-11-24T22:23:51.000Z",
+    "namespace": "KPA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 981280,
+        "name": "Max Meet",
+        "created_at": "2022-11-09T17:27:06.000Z",
+        "url": "https://greasyfork.org/users/981280-max-meet"
+      }
+    ],
+    "name": "KPA",
+    "description": ":)",
+    "url": "https://greasyfork.org/scripts/454535-kpa",
+    "code_url": "https://update.greasyfork.org/scripts/454535/KPA.user.js",
+    "code_size": 8460,
+    "license": null,
+    "version": "1.5.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

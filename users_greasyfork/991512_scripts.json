@@ -1,0 +1,167 @@
+[
+  {
+    "id": 471956,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T20:54:16.000Z",
+    "code_updated_at": "2023-07-28T20:54:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 991512,
+        "name": "laireshi",
+        "created_at": "2022-12-02T23:29:41.000Z",
+        "url": "https://greasyfork.org/users/991512-laireshi"
+      }
+    ],
+    "name": "Guardian actor names ao3",
+    "description": "Change actor names",
+    "url": "https://greasyfork.org/scripts/471956-guardian-actor-names-ao3",
+    "code_url": "https://update.greasyfork.org/scripts/471956/Guardian%20actor%20names%20ao3.user.js",
+    "code_size": 1206,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471949,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T19:43:55.000Z",
+    "code_updated_at": "2023-07-28T19:53:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 991512,
+        "name": "laireshi",
+        "created_at": "2022-12-02T23:29:41.000Z",
+        "url": "https://greasyfork.org/users/991512-laireshi"
+      }
+    ],
+    "name": "Guardian actor names tumblr",
+    "description": "Change actor names",
+    "url": "https://greasyfork.org/scripts/471949-guardian-actor-names-tumblr",
+    "code_url": "https://update.greasyfork.org/scripts/471949/Guardian%20actor%20names%20tumblr.user.js",
+    "code_size": 1207,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471943,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T17:42:09.000Z",
+    "code_updated_at": "2023-07-28T23:43:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 991512,
+        "name": "laireshi",
+        "created_at": "2022-12-02T23:29:41.000Z",
+        "url": "https://greasyfork.org/users/991512-laireshi"
+      }
+    ],
+    "name": "Guardian actor names dreamwidth",
+    "description": "Change actor names",
+    "url": "https://greasyfork.org/scripts/471943-guardian-actor-names-dreamwidth",
+    "code_url": "https://update.greasyfork.org/scripts/471943/Guardian%20actor%20names%20dreamwidth.user.js",
+    "code_size": 1555,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 455885,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-02T23:56:25.000Z",
+    "code_updated_at": "2022-12-02T23:56:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 991512,
+        "name": "laireshi",
+        "created_at": "2022-12-02T23:29:41.000Z",
+        "url": "https://greasyfork.org/users/991512-laireshi"
+      }
+    ],
+    "name": "DMBJNames",
+    "description": "Change the translated DMBJ names back to pinyin",
+    "url": "https://greasyfork.org/scripts/455885-dmbjnames",
+    "code_url": "https://update.greasyfork.org/scripts/455885/DMBJNames.user.js",
+    "code_size": 1153,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 455884,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-02T23:51:33.000Z",
+    "code_updated_at": "2022-12-03T13:22:05.000Z",
+    "namespace": "https://greasyfork.org/users/991512",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 991512,
+        "name": "laireshi",
+        "created_at": "2022-12-02T23:29:41.000Z",
+        "url": "https://greasyfork.org/users/991512-laireshi"
+      }
+    ],
+    "name": "Ao3 De-Piped Tags",
+    "description": "For some fandoms, a character is given two names, like: \"Geralt z Rivii | Geralt of Rivia\". This script lets you choose which name you want to see.",
+    "url": "https://greasyfork.org/scripts/455884-ao3-de-piped-tags",
+    "code_url": "https://update.greasyfork.org/scripts/455884/Ao3%20De-Piped%20Tags.user.js",
+    "code_size": 3179,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

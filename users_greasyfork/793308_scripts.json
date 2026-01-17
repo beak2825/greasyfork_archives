@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 468882,
+    "daily_installs": 0,
+    "total_installs": 142,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-17T14:07:17.000Z",
+    "code_updated_at": "2023-06-17T14:07:17.000Z",
+    "namespace": "https://www.turbosquid.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 793308,
+        "name": "slysnake96",
+        "created_at": "2021-07-14T02:09:32.000Z",
+        "url": "https://greasyfork.org/users/793308-slysnake96"
+      }
+    ],
+    "name": "TurboSquid Paid Asset Tile Remover In Free Sections",
+    "description": "Removes the paid asset tiles when the free tag is selected on TurboSquid",
+    "url": "https://greasyfork.org/scripts/468882-turbosquid-paid-asset-tile-remover-in-free-sections",
+    "code_url": "https://update.greasyfork.org/scripts/468882/TurboSquid%20Paid%20Asset%20Tile%20Remover%20In%20Free%20Sections.user.js",
+    "code_size": 1960,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461210,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-05T07:28:33.000Z",
+    "code_updated_at": "2023-03-10T10:21:33.000Z",
+    "namespace": "slysnake96 & ChatGPT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 793308,
+        "name": "slysnake96",
+        "created_at": "2021-07-14T02:09:32.000Z",
+        "url": "https://greasyfork.org/users/793308-slysnake96"
+      }
+    ],
+    "name": "Hide YouTube Expandable Metadata Box In Search Results",
+    "description": "Hides the Expandable Metadata box from YouTube search results.",
+    "url": "https://greasyfork.org/scripts/461210-hide-youtube-expandable-metadata-box-in-search-results",
+    "code_url": "https://update.greasyfork.org/scripts/461210/Hide%20YouTube%20Expandable%20Metadata%20Box%20In%20Search%20Results.user.js",
+    "code_size": 1163,
+    "license": "MIT License",
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416333,
+    "daily_installs": 0,
+    "total_installs": 305,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-11-18T11:57:54.000Z",
+    "code_updated_at": "2022-04-04T11:57:18.000Z",
+    "namespace": "astroid.com.tr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 689225,
+        "name": "yigitgnc",
+        "created_at": "2020-09-20T18:54:49.000Z",
+        "url": "https://greasyfork.org/users/689225-yigitgnc"
+      }
+    ],
+    "name": "Whatsapp Toggle (Hide/Show) Contacts By N.S",
+    "description": "Creates A Toggle Button Switch Which Hides And Shows The WhatsApp Contacts And Messages For Privacy (Also ESC Key can be used)",
+    "url": "https://greasyfork.org/scripts/416333-whatsapp-toggle-hide-show-contacts-by-n-s",
+    "code_url": "https://update.greasyfork.org/scripts/416333/Whatsapp%20Toggle%20%28HideShow%29%20Contacts%20By%20NS.user.js",
+    "code_size": 4497,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

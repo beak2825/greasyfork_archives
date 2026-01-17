@@ -1,0 +1,59 @@
+{
+  "id": 446723,
+  "daily_installs": 0,
+  "total_installs": 104,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-19T15:16:13.000Z",
+  "code_updated_at": "2022-06-19T15:18:09.000Z",
+  "namespace": "https://greasyfork.org/en/users/927303-rawmeateater",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 927303,
+      "name": "RawMeatEater",
+      "created_at": "2022-06-19T15:13:23.000Z",
+      "url": "https://greasyfork.org/users/927303-rawmeateater",
+      "scripts": [
+        {
+          "id": 446723,
+          "daily_installs": 0,
+          "total_installs": 104,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-19T15:16:13.000Z",
+          "code_updated_at": "2022-06-19T15:18:09.000Z",
+          "namespace": "https://greasyfork.org/en/users/927303-rawmeateater",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Amazon Video AD Blocker",
+          "description": "Made in June 19 2022 For Amazon Prime Videos. If anything you might see a millisecond of the AD.",
+          "url": "https://greasyfork.org/scripts/446723-amazon-video-ad-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/446723/Amazon%20Video%20AD%20Blocker.user.js",
+          "code_size": 1879,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Amazon Video AD Blocker",
+  "description": "Made in June 19 2022 For Amazon Prime Videos. If anything you might see a millisecond of the AD.",
+  "url": "https://greasyfork.org/scripts/446723-amazon-video-ad-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/446723/Amazon%20Video%20AD%20Blocker.user.js",
+  "code_size": 1879,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 428021,
+  "daily_installs": 0,
+  "total_installs": 1026,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-16T04:25:27.000Z",
+  "code_updated_at": "2022-08-19T12:53:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 550089,
+      "name": "shandianchengzi",
+      "created_at": "2020-05-03T11:13:17.000Z",
+      "url": "https://greasyfork.org/users/550089-shandianchengzi"
+    }
+  ],
+  "name": "mooc复制粘贴助手",
+  "description": "① 一键复制题目，便于笔记和整理。暂时不支持图片复制。② 支持视频任意倍速播放。",
+  "url": "https://greasyfork.org/scripts/428021-mooc%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/428021/mooc%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 15670,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

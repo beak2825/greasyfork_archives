@@ -1,0 +1,59 @@
+{
+  "id": 464623,
+  "daily_installs": 0,
+  "total_installs": 62,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-22T14:37:31.000Z",
+  "code_updated_at": "2023-10-23T12:20:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1065656,
+      "name": "植树淡季",
+      "created_at": "2023-04-22T14:35:37.000Z",
+      "url": "https://greasyfork.org/users/1065656-%E6%A4%8D%E6%A0%91%E6%B7%A1%E5%AD%A3",
+      "scripts": [
+        {
+          "id": 464623,
+          "daily_installs": 0,
+          "total_installs": 62,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-22T14:37:31.000Z",
+          "code_updated_at": "2023-10-23T12:20:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "蜜柑计划番剧列表页面加载番组计划的评分",
+          "description": "Display ratings of bangumi from bgm.tv",
+          "url": "https://greasyfork.org/scripts/464623-%E8%9C%9C%E6%9F%91%E8%AE%A1%E5%88%92%E7%95%AA%E5%89%A7%E5%88%97%E8%A1%A8%E9%A1%B5%E9%9D%A2%E5%8A%A0%E8%BD%BD%E7%95%AA%E7%BB%84%E8%AE%A1%E5%88%92%E7%9A%84%E8%AF%84%E5%88%86",
+          "code_url": "https://update.greasyfork.org/scripts/464623/%E8%9C%9C%E6%9F%91%E8%AE%A1%E5%88%92%E7%95%AA%E5%89%A7%E5%88%97%E8%A1%A8%E9%A1%B5%E9%9D%A2%E5%8A%A0%E8%BD%BD%E7%95%AA%E7%BB%84%E8%AE%A1%E5%88%92%E7%9A%84%E8%AF%84%E5%88%86.user.js",
+          "code_size": 5760,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "蜜柑计划番剧列表页面加载番组计划的评分",
+  "description": "Display ratings of bangumi from bgm.tv",
+  "url": "https://greasyfork.org/scripts/464623-%E8%9C%9C%E6%9F%91%E8%AE%A1%E5%88%92%E7%95%AA%E5%89%A7%E5%88%97%E8%A1%A8%E9%A1%B5%E9%9D%A2%E5%8A%A0%E8%BD%BD%E7%95%AA%E7%BB%84%E8%AE%A1%E5%88%92%E7%9A%84%E8%AF%84%E5%88%86",
+  "code_url": "https://update.greasyfork.org/scripts/464623/%E8%9C%9C%E6%9F%91%E8%AE%A1%E5%88%92%E7%95%AA%E5%89%A7%E5%88%97%E8%A1%A8%E9%A1%B5%E9%9D%A2%E5%8A%A0%E8%BD%BD%E7%95%AA%E7%BB%84%E8%AE%A1%E5%88%92%E7%9A%84%E8%AF%84%E5%88%86.user.js",
+  "code_size": 5760,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

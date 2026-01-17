@@ -1,0 +1,33 @@
+{
+  "id": 465960,
+  "daily_installs": 1,
+  "total_installs": 163,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-10T19:02:45.000Z",
+  "code_updated_at": "2025-03-30T03:39:11.000Z",
+  "namespace": "i2p.schimon.paperclip",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076667,
+      "name": "Schimon",
+      "created_at": "2023-05-10T13:50:36.000Z",
+      "url": "https://greasyfork.org/users/1076667-schimon"
+    }
+  ],
+  "name": "Paper Clip (Save pages as XHTML/Markdown/Text)",
+  "description": "Edit and save selection as clean XHTML, Markdown or Text file optimized for printing. Hotkey: Command + Shift + S.",
+  "url": "https://greasyfork.org/scripts/465960-paper-clip-save-pages-as-xhtml-markdown-text",
+  "code_url": "https://update.greasyfork.org/scripts/465960/Paper%20Clip%20%28Save%20pages%20as%20XHTMLMarkdownText%29.user.js",
+  "code_size": 27822,
+  "license": "MIT; https://opensource.org/licenses/MIT",
+  "version": "25.01.24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

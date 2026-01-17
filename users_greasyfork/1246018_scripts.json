@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 491772,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-06T06:14:20.000Z",
+    "code_updated_at": "2024-07-01T15:04:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1246018,
+        "name": "xxtamuraxx",
+        "created_at": "2024-01-10T13:41:09.000Z",
+        "url": "https://greasyfork.org/users/1246018-xxtamuraxx"
+      }
+    ],
+    "name": "omc_simple_like_buttons",
+    "description": "OMC の問題ページの Like ボタンを目立たなくします",
+    "url": "https://greasyfork.org/scripts/491772-omc-simple-like-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/491772/omc_simple_like_buttons.user.js",
+    "code_size": 1285,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

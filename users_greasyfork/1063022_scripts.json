@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464334,
+    "daily_installs": 0,
+    "total_installs": 1516,
+    "fan_score": "2.7",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2023-04-19T00:21:47.000Z",
+    "code_updated_at": "2023-04-19T00:21:47.000Z",
+    "namespace": "pl.4as.chatgpt",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1063022,
+        "name": "hearsaad",
+        "created_at": "2023-04-19T00:19:21.000Z",
+        "url": "https://greasyfork.org/users/1063022-hearsaad"
+      }
+    ],
+    "name": "ChatGPT DeMod",
+    "description": "Prevents moderation checks during conversations with ChatGPT",
+    "url": "https://greasyfork.org/scripts/464334-chatgpt-demod",
+    "code_url": "https://update.greasyfork.org/scripts/464334/ChatGPT%20DeMod.user.js",
+    "code_size": 567492,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

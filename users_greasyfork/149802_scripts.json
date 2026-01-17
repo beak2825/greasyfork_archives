@@ -1,0 +1,200 @@
+[
+  {
+    "id": 478821,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-01T20:49:33.000Z",
+    "code_updated_at": "2023-11-01T20:49:33.000Z",
+    "namespace": "https://teams.microsoft.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149802,
+        "name": "AngeloNdira",
+        "created_at": "2017-08-20T07:48:43.000Z",
+        "url": "https://greasyfork.org/users/149802-angelondira"
+      }
+    ],
+    "name": "Reload teams.microsoft.com",
+    "description": "Reload teams.microsoft.com To Keep Session Alive",
+    "url": "https://greasyfork.org/scripts/478821-reload-teams-microsoft-com",
+    "code_url": "https://update.greasyfork.org/scripts/478821/Reload%20teamsmicrosoftcom.user.js",
+    "code_size": 773,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478820,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-01T20:48:55.000Z",
+    "code_updated_at": "2023-11-01T20:48:55.000Z",
+    "namespace": "https://outlook.office.com/mail/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149802,
+        "name": "AngeloNdira",
+        "created_at": "2017-08-20T07:48:43.000Z",
+        "url": "https://greasyfork.org/users/149802-angelondira"
+      }
+    ],
+    "name": "Reload outlook.office.com/mail",
+    "description": "Reload outlook.office.com/mail To Keep Session Alive",
+    "url": "https://greasyfork.org/scripts/478820-reload-outlook-office-com-mail",
+    "code_url": "https://update.greasyfork.org/scripts/478820/Reload%20outlookofficecommail.user.js",
+    "code_size": 793,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478819,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-01T20:48:19.000Z",
+    "code_updated_at": "2023-11-01T20:48:19.000Z",
+    "namespace": "https://onecognizantbcazrapps.cognizant.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149802,
+        "name": "AngeloNdira",
+        "created_at": "2017-08-20T07:48:43.000Z",
+        "url": "https://greasyfork.org/users/149802-angelondira"
+      }
+    ],
+    "name": "Reload onecognizantbcazrapps.cognizant.com",
+    "description": "Reload onecognizantbcazrapps.cognizant.com To Keep Session Alive",
+    "url": "https://greasyfork.org/scripts/478819-reload-onecognizantbcazrapps-cognizant-com",
+    "code_url": "https://update.greasyfork.org/scripts/478819/Reload%20onecognizantbcazrappscognizantcom.user.js",
+    "code_size": 853,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433371,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-03T16:23:27.000Z",
+    "code_updated_at": "2021-10-03T16:23:27.000Z",
+    "namespace": "https://www.bol.com/nl/nl/l/speelgoed/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149802,
+        "name": "AngeloNdira",
+        "created_at": "2017-08-20T07:48:43.000Z",
+        "url": "https://greasyfork.org/users/149802-angelondira"
+      }
+    ],
+    "name": "Scan bol.com category speelgoed",
+    "description": "This will scan bol.com category speelgoed",
+    "url": "https://greasyfork.org/scripts/433371-scan-bol-com-category-speelgoed",
+    "code_url": "https://update.greasyfork.org/scripts/433371/Scan%20bolcom%20category%20speelgoed.user.js",
+    "code_size": 8482,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 421636,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-12T16:55:28.000Z",
+    "code_updated_at": "2021-02-12T16:55:28.000Z",
+    "namespace": "https://www.etoro.com/people/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149802,
+        "name": "AngeloNdira",
+        "created_at": "2017-08-20T07:48:43.000Z",
+        "url": "https://greasyfork.org/users/149802-angelondira"
+      }
+    ],
+    "name": "Export etoro people stats",
+    "description": "Export etoro people stats!",
+    "url": "https://greasyfork.org/scripts/421636-export-etoro-people-stats",
+    "code_url": "https://update.greasyfork.org/scripts/421636/Export%20etoro%20people%20stats.user.js",
+    "code_size": 2488,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412019,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-26T16:16:46.000Z",
+    "code_updated_at": "2020-09-26T16:16:46.000Z",
+    "namespace": "https://www.quora.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149802,
+        "name": "AngeloNdira",
+        "created_at": "2017-08-20T07:48:43.000Z",
+        "url": "https://greasyfork.org/users/149802-angelondira"
+      }
+    ],
+    "name": "removes quora question page adverts",
+    "description": "removes quora question page adverts spacing_log_question_page_ad",
+    "url": "https://greasyfork.org/scripts/412019-removes-quora-question-page-adverts",
+    "code_url": "https://update.greasyfork.org/scripts/412019/removes%20quora%20question%20page%20adverts.user.js",
+    "code_size": 853,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

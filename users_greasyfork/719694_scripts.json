@@ -1,0 +1,68 @@
+[
+  {
+    "id": 477845,
+    "daily_installs": 0,
+    "total_installs": 1452,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-20T09:15:46.000Z",
+    "code_updated_at": "2023-11-08T10:58:00.000Z",
+    "namespace": "your-namespace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 719694,
+        "name": "吃不吃香菜",
+        "created_at": "2020-12-22T08:39:37.000Z",
+        "url": "https://greasyfork.org/users/719694-%E5%90%83%E4%B8%8D%E5%90%83%E9%A6%99%E8%8F%9C"
+      }
+    ],
+    "name": "抖音隐藏登录弹窗及视频标题",
+    "description": "隐藏抖音登录窗口",
+    "url": "https://greasyfork.org/scripts/477845-%E6%8A%96%E9%9F%B3%E9%9A%90%E8%97%8F%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97%E5%8F%8A%E8%A7%86%E9%A2%91%E6%A0%87%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/477845/%E6%8A%96%E9%9F%B3%E9%9A%90%E8%97%8F%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97%E5%8F%8A%E8%A7%86%E9%A2%91%E6%A0%87%E9%A2%98.user.js",
+    "code_size": 3440,
+    "license": "MIT License",
+    "version": "1.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477647,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-18T03:38:14.000Z",
+    "code_updated_at": "2023-10-18T03:38:14.000Z",
+    "namespace": "http://your-namespace.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 719694,
+        "name": "吃不吃香菜",
+        "created_at": "2020-12-22T08:39:37.000Z",
+        "url": "https://greasyfork.org/users/719694-%E5%90%83%E4%B8%8D%E5%90%83%E9%A6%99%E8%8F%9C"
+      }
+    ],
+    "name": "创建新窗口 with 链接",
+    "description": "在当前页面点击悬浮图标后，在新窗口中打开当前页面的链接",
+    "url": "https://greasyfork.org/scripts/477647-%E5%88%9B%E5%BB%BA%E6%96%B0%E7%AA%97%E5%8F%A3-with-%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/477647/%E5%88%9B%E5%BB%BA%E6%96%B0%E7%AA%97%E5%8F%A3%20with%20%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 2465,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

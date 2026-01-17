@@ -1,0 +1,33 @@
+{
+  "id": 438942,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-21T20:31:44.000Z",
+  "code_updated_at": "2025-11-11T12:30:31.000Z",
+  "namespace": "https://greasyfork.org/fr/scripts/438942-wme-mapsfr",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 429680,
+      "name": "Xavier TXS",
+      "created_at": "2019-12-29T17:04:18.000Z",
+      "url": "https://greasyfork.org/users/429680-xavier-txs"
+    }
+  ],
+  "name": "WME MapsFr",
+  "description": "This script create buttons to permalink page on several Maps.",
+  "url": "https://greasyfork.org/scripts/438942-wme-mapsfr",
+  "code_url": "https://update.greasyfork.org/scripts/438942/WME%20MapsFr.user.js",
+  "code_size": 39697,
+  "license": null,
+  "version": "2025.11.11.001",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 464921,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-26T15:20:10.000Z",
+  "code_updated_at": "2023-04-26T15:20:10.000Z",
+  "namespace": "https://greasyfork.org/users/1045131",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1068408,
+      "name": "kyoyuki",
+      "created_at": "2023-04-26T15:16:49.000Z",
+      "url": "https://greasyfork.org/users/1068408-kyoyuki",
+      "scripts": []
+    }
+  ],
+  "name": "KubeDown",
+  "description": "KubeDown-Script-百度网盘-不限速-下载",
+  "url": "https://greasyfork.org/scripts/464921-kubedown",
+  "code_url": "https://update.greasyfork.org/scripts/464921/KubeDown.user.js",
+  "code_size": 12553,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

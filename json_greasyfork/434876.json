@@ -1,0 +1,33 @@
+{
+  "id": 434876,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-02T14:20:28.000Z",
+  "code_updated_at": "2021-11-02T16:15:57.000Z",
+  "namespace": "https://greasyfork.org/users/592063",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 592063,
+      "name": "wuniversales",
+      "created_at": "2020-06-14T18:03:24.000Z",
+      "url": "https://greasyfork.org/users/592063-wuniversales"
+    }
+  ],
+  "name": "vigalu-server.synology.me (Bot)",
+  "description": "Script automatizado para vigalu-server.synology.me, aumenta tus ganancias.",
+  "url": "https://greasyfork.org/scripts/434876-vigalu-server-synology-me-bot",
+  "code_url": "https://update.greasyfork.org/scripts/434876/vigalu-serversynologyme%20%28Bot%29.user.js",
+  "code_size": 2556,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

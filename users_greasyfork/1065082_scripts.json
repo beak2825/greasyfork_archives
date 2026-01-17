@@ -1,0 +1,35 @@
+[
+  {
+    "id": 478470,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-28T14:23:58.000Z",
+    "code_updated_at": "2023-10-28T18:20:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1065082,
+        "name": "Thomas Koene",
+        "created_at": "2023-04-21T19:08:41.000Z",
+        "url": "https://greasyfork.org/users/1065082-thomas-koene"
+      }
+    ],
+    "name": "Give Url",
+    "description": "Gives you website url",
+    "url": "https://greasyfork.org/scripts/478470-give-url",
+    "code_url": "https://update.greasyfork.org/scripts/478470/Give%20Url.user.js",
+    "code_size": 641,
+    "license": "MIT License",
+    "version": "1.1.00",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -295,5 +295,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 432710,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-20T14:54:29.000Z",
+    "code_updated_at": "2021-09-20T14:56:59.000Z",
+    "namespace": "https://www.torn.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815752,
+        "name": "BillyBourbon",
+        "created_at": "2021-09-15T15:31:29.000Z",
+        "url": "https://greasyfork.org/users/815752-billybourbon"
+      }
+    ],
+    "name": "webhook_test",
+    "description": "logs torns faction chat messages to our discord server",
+    "url": "https://greasyfork.org/scripts/432710-webhook-test",
+    "code_url": "https://update.greasyfork.org/scripts/432710/webhook_test.user.js",
+    "code_size": 531,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432461,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-15T16:00:18.000Z",
+    "code_updated_at": "2021-09-18T15:02:31.000Z",
+    "namespace": "https://www.torn.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815752,
+        "name": "BillyBourbon",
+        "created_at": "2021-09-15T15:31:29.000Z",
+        "url": "https://greasyfork.org/users/815752-billybourbon"
+      }
+    ],
+    "name": "Fac_to_discord",
+    "description": "logs torns faction chat messages to our discord server",
+    "url": "https://greasyfork.org/scripts/432461-fac-to-discord",
+    "code_url": "https://update.greasyfork.org/scripts/432461/Fac_to_discord.user.js",
+    "code_size": 2249,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

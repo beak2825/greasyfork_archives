@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 417794,
+    "daily_installs": 0,
+    "total_installs": 4069,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-12-04T01:20:43.000Z",
+    "code_updated_at": "2020-12-04T01:20:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 712339,
+        "name": "dfshuka",
+        "created_at": "2020-12-04T01:08:36.000Z",
+        "url": "https://greasyfork.org/users/712339-dfshuka"
+      }
+    ],
+    "name": "学习强国答题辅助工具二",
+    "description": "学习强国，自动答题测试工具，可测试每题，每周，专题自动答题，本代码公开无加密，仅用于学习js所用。",
+    "url": "https://greasyfork.org/scripts/417794-%E5%AD%A6%E4%B9%A0%E5%BC%BA%E5%9B%BD%E7%AD%94%E9%A2%98%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7%E4%BA%8C",
+    "code_url": "https://update.greasyfork.org/scripts/417794/%E5%AD%A6%E4%B9%A0%E5%BC%BA%E5%9B%BD%E7%AD%94%E9%A2%98%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7%E4%BA%8C.user.js",
+    "code_size": 8614,
+    "license": null,
+    "version": "0.6.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

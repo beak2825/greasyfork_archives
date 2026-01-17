@@ -1,0 +1,101 @@
+[
+  {
+    "id": 428375,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-24T01:30:55.000Z",
+    "code_updated_at": "2021-06-24T01:30:54.000Z",
+    "namespace": "京东",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4330,
+        "name": "x2009again",
+        "created_at": "2014-08-09T17:40:44.000Z",
+        "url": "https://greasyfork.org/users/4330-x2009again"
+      }
+    ],
+    "name": "【最新】京东抢购秒杀下单助手",
+    "description": "京东秒杀抢购下单助手，可以抢购京东任何商品，超强直接提交订单，请注意手动支付订单！=====原作者吾爱mr.z.j=====",
+    "url": "https://greasyfork.org/scripts/428375-%E6%9C%80%E6%96%B0-%E4%BA%AC%E4%B8%9C%E6%8A%A2%E8%B4%AD%E7%A7%92%E6%9D%80%E4%B8%8B%E5%8D%95%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/428375/%E3%80%90%E6%9C%80%E6%96%B0%E3%80%91%E4%BA%AC%E4%B8%9C%E6%8A%A2%E8%B4%AD%E7%A7%92%E6%9D%80%E4%B8%8B%E5%8D%95%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 12075,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 423948,
+    "daily_installs": 1,
+    "total_installs": 20552,
+    "fan_score": "92.8",
+    "good_ratings": 74,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-03-25T06:38:40.000Z",
+    "code_updated_at": "2021-05-11T13:33:47.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/4330",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4330,
+        "name": "x2009again",
+        "created_at": "2014-08-09T17:40:44.000Z",
+        "url": "https://greasyfork.org/users/4330-x2009again"
+      }
+    ],
+    "name": "天翼云盘大文件直接下载，启用分享功能",
+    "description": "处理大于50M的文件需要客户端下载的问题",
+    "url": "https://greasyfork.org/scripts/423948-%E5%A4%A9%E7%BF%BC%E4%BA%91%E7%9B%98%E5%A4%A7%E6%96%87%E4%BB%B6%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD-%E5%90%AF%E7%94%A8%E5%88%86%E4%BA%AB%E5%8A%9F%E8%83%BD",
+    "code_url": "https://update.greasyfork.org/scripts/423948/%E5%A4%A9%E7%BF%BC%E4%BA%91%E7%9B%98%E5%A4%A7%E6%96%87%E4%BB%B6%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD%EF%BC%8C%E5%90%AF%E7%94%A8%E5%88%86%E4%BA%AB%E5%8A%9F%E8%83%BD.user.js",
+    "code_size": 5039,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423169,
+    "daily_installs": 0,
+    "total_installs": 278,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-13T13:58:46.000Z",
+    "code_updated_at": "2023-02-28T05:55:49.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/4330",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4330,
+        "name": "x2009again",
+        "created_at": "2014-08-09T17:40:44.000Z",
+        "url": "https://greasyfork.org/users/4330-x2009again"
+      }
+    ],
+    "name": "天翼网盘总容量单位显示为G",
+    "description": "修改天翼网盘总容量单位显示为G",
+    "url": "https://greasyfork.org/scripts/423169-%E5%A4%A9%E7%BF%BC%E7%BD%91%E7%9B%98%E6%80%BB%E5%AE%B9%E9%87%8F%E5%8D%95%E4%BD%8D%E6%98%BE%E7%A4%BA%E4%B8%BAg",
+    "code_url": "https://update.greasyfork.org/scripts/423169/%E5%A4%A9%E7%BF%BC%E7%BD%91%E7%9B%98%E6%80%BB%E5%AE%B9%E9%87%8F%E5%8D%95%E4%BD%8D%E6%98%BE%E7%A4%BA%E4%B8%BAG.user.js",
+    "code_size": 2381,
+    "license": null,
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

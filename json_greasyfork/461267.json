@@ -1,0 +1,33 @@
+{
+  "id": 461267,
+  "daily_installs": 0,
+  "total_installs": 958,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-06T04:13:02.000Z",
+  "code_updated_at": "2023-03-06T04:14:13.000Z",
+  "namespace": "telidy",
+  "support_url": "https://github.com/baok1592/ChatGPT-prompt-AI-svelte",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1031955,
+      "name": "baok1592",
+      "created_at": "2023-02-23T17:30:41.000Z",
+      "url": "https://greasyfork.org/users/1031955-baok1592"
+    }
+  ],
+  "name": "ChatGPT-指令助手",
+  "description": "1.直接中文语音交互 2. 有趣的指令prompt收录 3. 折叠功能",
+  "url": "https://greasyfork.org/scripts/461267-chatgpt-%E6%8C%87%E4%BB%A4%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/461267/ChatGPT-%E6%8C%87%E4%BB%A4%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 62090,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

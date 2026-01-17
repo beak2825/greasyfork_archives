@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445361,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-22T04:04:18.000Z",
+    "code_updated_at": "2022-05-22T04:09:27.000Z",
+    "namespace": "somethingthatshouldnotclashwithotherscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 93943,
+        "name": "sz",
+        "created_at": "2017-01-11T12:43:21.000Z",
+        "url": "https://greasyfork.org/users/93943-sz"
+      }
+    ],
+    "name": "novelupdates auto darkmode",
+    "description": "override theme selection on native browser darkmode change. Basic Idea from Reddit Auto Dark Mode",
+    "url": "https://greasyfork.org/scripts/445361-novelupdates-auto-darkmode",
+    "code_url": "https://update.greasyfork.org/scripts/445361/novelupdates%20auto%20darkmode.user.js",
+    "code_size": 2830,
+    "license": "Apache License 2.0",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

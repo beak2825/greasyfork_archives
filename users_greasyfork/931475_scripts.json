@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447363,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-02T19:56:32.000Z",
+    "code_updated_at": "2022-08-07T11:02:56.000Z",
+    "namespace": "https://greasyfork.org/en/users/931475",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931475,
+        "name": "arturhg",
+        "created_at": "2022-07-02T19:40:49.000Z",
+        "url": "https://greasyfork.org/users/931475-arturhg"
+      }
+    ],
+    "name": "social-media-news-cleaner",
+    "description": "Cleans the news sites from the social media posts (for now, only cleans mamul.am from facebook and telegram posts and news.am (without subdomains) from facebook posts)",
+    "url": "https://greasyfork.org/scripts/447363-social-media-news-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/447363/social-media-news-cleaner.user.js",
+    "code_size": 5709,
+    "license": "MIT License",
+    "version": "1.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

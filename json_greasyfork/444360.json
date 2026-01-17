@@ -1,0 +1,34 @@
+{
+  "id": 444360,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-02T12:27:11.000Z",
+  "code_updated_at": "2022-05-02T12:27:11.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 707472,
+      "name": "mogumc",
+      "created_at": "2020-11-21T07:45:08.000Z",
+      "url": "https://greasyfork.org/users/707472-mogumc",
+      "scripts": []
+    }
+  ],
+  "name": "KinhDown获取Key",
+  "description": "点击按钮获取新的key",
+  "url": "https://greasyfork.org/scripts/444360-kinhdown%E8%8E%B7%E5%8F%96key",
+  "code_url": "https://update.greasyfork.org/scripts/444360/KinhDown%E8%8E%B7%E5%8F%96Key.user.js",
+  "code_size": 12936,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

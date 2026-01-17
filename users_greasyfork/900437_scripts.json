@@ -1,0 +1,68 @@
+[
+  {
+    "id": 490916,
+    "daily_installs": 0,
+    "total_installs": 111,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-26T13:27:36.000Z",
+    "code_updated_at": "2024-03-26T13:31:12.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/490916-google-search-maps-buttons",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 900437,
+        "name": "Michael Seitz",
+        "created_at": "2022-04-10T21:05:35.000Z",
+        "url": "https://greasyfork.org/users/900437-michael-seitz"
+      }
+    ],
+    "name": "Google Search Maps Buttons",
+    "description": "Adds maps buttons to Google Search and filters out -site:pinterest.* (modified from Daan Grashoff / Delivator)",
+    "url": "https://greasyfork.org/scripts/490916-google-search-maps-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/490916/Google%20Search%20Maps%20Buttons.user.js",
+    "code_size": 3804,
+    "license": "CC-BY-NC-SA-4.0; https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467983,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-05T14:04:00.000Z",
+    "code_updated_at": "2023-06-05T14:05:46.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 900437,
+        "name": "Michael Seitz",
+        "created_at": "2022-04-10T21:05:35.000Z",
+        "url": "https://greasyfork.org/users/900437-michael-seitz"
+      }
+    ],
+    "name": "rBCI - Reddit Background Click Inhibitor",
+    "description": "Prevents clicks on background that opens postings (accidentally)",
+    "url": "https://greasyfork.org/scripts/467983-rbci-reddit-background-click-inhibitor",
+    "code_url": "https://update.greasyfork.org/scripts/467983/rBCI%20-%20Reddit%20Background%20Click%20Inhibitor.user.js",
+    "code_size": 1476,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

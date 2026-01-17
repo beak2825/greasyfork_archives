@@ -1,0 +1,33 @@
+{
+  "id": 446757,
+  "daily_installs": 0,
+  "total_installs": 306,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-06-20T05:07:50.000Z",
+  "code_updated_at": "2022-06-20T05:07:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 927246,
+      "name": "A1438329629",
+      "created_at": "2022-06-19T12:06:25.000Z",
+      "url": "https://greasyfork.org/users/927246-a1438329629"
+    }
+  ],
+  "name": "洛谷签到转换器",
+  "description": "让你的签到有趣起来",
+  "url": "https://greasyfork.org/scripts/446757-%E6%B4%9B%E8%B0%B7%E7%AD%BE%E5%88%B0%E8%BD%AC%E6%8D%A2%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/446757/%E6%B4%9B%E8%B0%B7%E7%AD%BE%E5%88%B0%E8%BD%AC%E6%8D%A2%E5%99%A8.user.js",
+  "code_size": 1237,
+  "license": "lll",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

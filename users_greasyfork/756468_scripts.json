@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424711,
+    "daily_installs": 0,
+    "total_installs": 178,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-08T16:52:59.000Z",
+    "code_updated_at": "2021-04-24T00:08:26.000Z",
+    "namespace": "smg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 756468,
+        "name": "SMGAnon",
+        "created_at": "2021-04-08T16:50:30.000Z",
+        "url": "https://greasyfork.org/users/756468-smganon"
+      }
+    ],
+    "name": "4chan Bizantine Numbers",
+    "description": "See ticker price right where it's mentioned",
+    "url": "https://greasyfork.org/scripts/424711-4chan-bizantine-numbers",
+    "code_url": "https://update.greasyfork.org/scripts/424711/4chan%20Bizantine%20Numbers.user.js",
+    "code_size": 22045,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

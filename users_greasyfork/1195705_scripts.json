@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477399,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-14T08:09:51.000Z",
+    "code_updated_at": "2023-12-13T09:42:03.000Z",
+    "namespace": "snowkitten.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1195705,
+        "name": "rexwu1104",
+        "created_at": "2023-10-14T08:04:41.000Z",
+        "url": "https://greasyfork.org/users/1195705-rexwu1104"
+      }
+    ],
+    "name": "yblock",
+    "description": "youtube ab blocker",
+    "url": "https://greasyfork.org/scripts/477399-yblock",
+    "code_url": "https://update.greasyfork.org/scripts/477399/yblock.user.js",
+    "code_size": 1316,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

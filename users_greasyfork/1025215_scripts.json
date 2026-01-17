@@ -64,5 +64,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 490699,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-24T04:00:14.000Z",
+    "code_updated_at": "2024-03-24T06:46:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1025215,
+        "name": "Al Arcus",
+        "created_at": "2023-02-11T03:50:37.000Z",
+        "url": "https://greasyfork.org/users/1025215-al-arcus"
+      }
+    ],
+    "name": "better wiktionary",
+    "description": "improving the webpage layout for reader, and adding hideshow button for every language",
+    "url": "https://greasyfork.org/scripts/490699-better-wiktionary",
+    "code_url": "https://update.greasyfork.org/scripts/490699/better%20wiktionary.user.js",
+    "code_size": 3335,
+    "license": "MIT License",
+    "version": "2024-03-24.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 490471,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-21T14:36:37.000Z",
+    "code_updated_at": "2024-03-21T16:29:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1025215,
+        "name": "Al Arcus",
+        "created_at": "2023-02-11T03:50:37.000Z",
+        "url": "https://greasyfork.org/users/1025215-al-arcus"
+      }
+    ],
+    "name": "Wikipedia, set \"float: left\" for <figure> with width over 50 em",
+    "description": "Setting \"float: left\" for <figure> with width over 50 em, avoids texts(left aligned) being squeezed too short.",
+    "url": "https://greasyfork.org/scripts/490471-wikipedia-set-float-left-for-figure-with-width-over-50-em",
+    "code_url": "https://update.greasyfork.org/scripts/490471/Wikipedia%2C%20set%20%22float%3A%20left%22%20for%20%3Cfigure%3E%20with%20width%20over%2050%20em.user.js",
+    "code_size": 1088,
+    "license": "MIT License",
+    "version": "2024-03-21.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

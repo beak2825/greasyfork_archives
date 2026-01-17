@@ -1,0 +1,33 @@
+{
+  "id": 471337,
+  "daily_installs": 0,
+  "total_installs": 64,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-21T08:42:32.000Z",
+  "code_updated_at": "2023-07-21T08:42:32.000Z",
+  "namespace": "http://youtube.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1132181,
+      "name": "fvdfvdffdfrfrefrfrefer",
+      "created_at": "2023-07-21T08:37:47.000Z",
+      "url": "https://greasyfork.org/users/1132181-fvdfvdffdfrfrefrfrefer"
+    }
+  ],
+  "name": "YT Favicon Changer",
+  "description": "Changes Youtube Favicon to 2016/2017.",
+  "url": "https://greasyfork.org/scripts/471337-yt-favicon-changer",
+  "code_url": "https://update.greasyfork.org/scripts/471337/YT%20Favicon%20Changer.user.js",
+  "code_size": 240214,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

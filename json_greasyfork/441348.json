@@ -1,0 +1,34 @@
+{
+  "id": 441348,
+  "daily_installs": 0,
+  "total_installs": 257,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-11T13:25:06.000Z",
+  "code_updated_at": "2024-11-15T01:08:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 575954,
+      "name": "左手天才",
+      "created_at": "2020-05-31T08:18:16.000Z",
+      "url": "https://greasyfork.org/users/575954-%E5%B7%A6%E6%89%8B%E5%A4%A9%E6%89%8D",
+      "scripts": []
+    }
+  ],
+  "name": "2024年《广东省公需课》学习脚本-左手天才",
+  "description": "打开视频播放页面课程",
+  "url": "https://greasyfork.org/scripts/441348-2024%E5%B9%B4-%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%85%AC%E9%9C%80%E8%AF%BE-%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC-%E5%B7%A6%E6%89%8B%E5%A4%A9%E6%89%8D",
+  "code_url": "https://update.greasyfork.org/scripts/441348/2024%E5%B9%B4%E3%80%8A%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%85%AC%E9%9C%80%E8%AF%BE%E3%80%8B%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC-%E5%B7%A6%E6%89%8B%E5%A4%A9%E6%89%8D.user.js",
+  "code_size": 24069,
+  "license": "MIT License",
+  "version": "24.11.15",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

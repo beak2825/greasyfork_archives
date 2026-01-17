@@ -1,0 +1,68 @@
+[
+  {
+    "id": 484040,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-06T10:06:56.000Z",
+    "code_updated_at": "2024-01-06T10:06:56.000Z",
+    "namespace": "Ninkror",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 925861,
+        "name": "在椅子上写C语言的大佬",
+        "created_at": "2022-06-15T11:43:51.000Z",
+        "url": "https://greasyfork.org/users/925861-%E5%9C%A8%E6%A4%85%E5%AD%90%E4%B8%8A%E5%86%99c%E8%AF%AD%E8%A8%80%E7%9A%84%E5%A4%A7%E4%BD%AC"
+      }
+    ],
+    "name": "BetterLeetcode",
+    "description": "力扣 - 页面清理 | 隐藏会员题目 | 隐藏已完成题目 | 窗口宽度限制 | 去除复制的版权信息 | 中二标题",
+    "url": "https://greasyfork.org/scripts/484040-betterleetcode",
+    "code_url": "https://update.greasyfork.org/scripts/484040/BetterLeetcode.user.js",
+    "code_size": 17445,
+    "license": "GPL",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463455,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-07T06:52:08.000Z",
+    "code_updated_at": "2023-04-07T06:52:08.000Z",
+    "namespace": null,
+    "support_url": "https://bbs.tampermonkey.net.cn/thread-2726-1-1.html",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 925861,
+        "name": "在椅子上写C语言的大佬",
+        "created_at": "2022-06-15T11:43:51.000Z",
+        "url": "https://greasyfork.org/users/925861-%E5%9C%A8%E6%A4%85%E5%AD%90%E4%B8%8A%E5%86%99c%E8%AF%AD%E8%A8%80%E7%9A%84%E5%A4%A7%E4%BD%AC"
+      }
+    ],
+    "name": "NElementGetter",
+    "description": "cxxjackie的ElementGetter库",
+    "url": "https://greasyfork.org/scripts/463455-nelementgetter",
+    "code_url": "https://update.greasyfork.org/scripts/463455/1172110/NElementGetter.js",
+    "code_size": 6878,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "sv",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

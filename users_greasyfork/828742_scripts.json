@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434968,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-04T04:12:59.000Z",
+    "code_updated_at": "2021-11-04T23:20:55.000Z",
+    "namespace": "https://greasyfork.org/pl/users/828742-pepperoniss1",
+    "support_url": "https://www.hyipforum.pl/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 828742,
+        "name": "pepperoniss",
+        "created_at": "2021-10-26T01:41:42.000Z",
+        "url": "https://greasyfork.org/users/828742-pepperoniss"
+      }
+    ],
+    "name": "Freebitco.in - AutoRoll for HF",
+    "description": "AutoRoll for HF - Freebitco.in",
+    "url": "https://greasyfork.org/scripts/434968-freebitco-in-autoroll-for-hf",
+    "code_url": "https://update.greasyfork.org/scripts/434968/Freebitcoin%20-%20AutoRoll%20for%20HF.user.js",
+    "code_size": 76396,
+    "license": "GPL",
+    "version": "1.00.HF",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454408,
+    "daily_installs": 0,
+    "total_installs": 327,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-07T13:04:18.000Z",
+    "code_updated_at": "2022-11-07T13:56:35.000Z",
+    "namespace": "leopoldwigbratt.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980373,
+        "name": "leopoldwigbratt",
+        "created_at": "2022-11-07T13:01:38.000Z",
+        "url": "https://greasyfork.org/users/980373-leopoldwigbratt"
+      }
+    ],
+    "name": "GeoGuessr Quick Next Round",
+    "description": "Press the spacebar to start a round or to go to the next round",
+    "url": "https://greasyfork.org/scripts/454408-geoguessr-quick-next-round",
+    "code_url": "https://update.greasyfork.org/scripts/454408/GeoGuessr%20Quick%20Next%20Round.user.js",
+    "code_size": 991,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

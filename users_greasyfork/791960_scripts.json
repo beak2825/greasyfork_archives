@@ -1,0 +1,68 @@
+[
+  {
+    "id": 472869,
+    "daily_installs": 0,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-10T23:51:33.000Z",
+    "code_updated_at": "2025-09-21T09:18:37.000Z",
+    "namespace": "https://github.com/KeyPJ/seelieEx",
+    "support_url": null,
+    "contribution_url": "https://github.com/KeyPJ/seelieEx",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 791960,
+        "name": "KeyPJ",
+        "created_at": "2021-07-09T17:08:08.000Z",
+        "url": "https://greasyfork.org/users/791960-keypj"
+      }
+    ],
+    "name": "hsrSeelieEx",
+    "description": "星铁规划助手导入脚本",
+    "url": "https://greasyfork.org/scripts/472869-hsrseelieex",
+    "code_url": "https://update.greasyfork.org/scripts/472869/hsrSeelieEx.user.js",
+    "code_size": 142535,
+    "license": "MIT License",
+    "version": "6.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 443664,
+    "daily_installs": 0,
+    "total_installs": 537,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-20T05:22:39.000Z",
+    "code_updated_at": "2025-09-21T15:39:09.000Z",
+    "namespace": "https://github.com/KeyPJ/seelieEx",
+    "support_url": null,
+    "contribution_url": "https://github.com/KeyPJ/seelieEx",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 791960,
+        "name": "KeyPJ",
+        "created_at": "2021-07-09T17:08:08.000Z",
+        "url": "https://greasyfork.org/users/791960-keypj"
+      }
+    ],
+    "name": "genshinSeelieEx",
+    "description": "原神规划助手扩展",
+    "url": "https://greasyfork.org/scripts/443664-genshinseelieex",
+    "code_url": "https://update.greasyfork.org/scripts/443664/genshinSeelieEx.user.js",
+    "code_size": 142540,
+    "license": "MIT License",
+    "version": "6.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

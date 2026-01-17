@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420396,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-19T13:10:12.000Z",
+    "code_updated_at": "2021-01-19T13:10:11.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 717586,
+        "name": "Pipe HL",
+        "created_at": "2020-12-16T22:32:18.000Z",
+        "url": "https://greasyfork.org/users/717586-pipe-hl"
+      }
+    ],
+    "name": "Invisible Weapon (CrossBow)",
+    "description": "Press [-] for this invisible weapon! It is called crossbow and it is found in the game files",
+    "url": "https://greasyfork.org/scripts/420396-invisible-weapon-crossbow",
+    "code_url": "https://update.greasyfork.org/scripts/420396/Invisible%20Weapon%20%28CrossBow%29.user.js",
+    "code_size": 699,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

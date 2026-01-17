@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433460,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-05T22:30:23.000Z",
+    "code_updated_at": "2021-10-05T22:31:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 822243,
+        "name": "timfitzzz",
+        "created_at": "2021-10-05T22:27:59.000Z",
+        "url": "https://greasyfork.org/users/822243-timfitzzz"
+      }
+    ],
+    "name": "Disable TheHill.com Dark Patterns and General Sociopathy",
+    "description": "Removes ad nag and infuriating auto-playing videos.",
+    "url": "https://greasyfork.org/scripts/433460-disable-thehill-com-dark-patterns-and-general-sociopathy",
+    "code_url": "https://update.greasyfork.org/scripts/433460/Disable%20TheHillcom%20Dark%20Patterns%20and%20General%20Sociopathy.user.js",
+    "code_size": 1173,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

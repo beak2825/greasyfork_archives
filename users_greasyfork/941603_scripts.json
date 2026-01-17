@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448702,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-31T05:19:35.000Z",
+    "code_updated_at": "2025-04-25T08:15:45.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/448702-automatically-add-cards-on-quizlet",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 941603,
+        "name": "AndrianiP",
+        "created_at": "2022-07-31T05:15:13.000Z",
+        "url": "https://greasyfork.org/users/941603-andrianip"
+      }
+    ],
+    "name": "Add Cards on Quizlet",
+    "description": "Uses a button to add multiple cards at once on Quizlet, instead of having to click the add button for each card individually.",
+    "url": "https://greasyfork.org/scripts/448702-add-cards-on-quizlet",
+    "code_url": "https://update.greasyfork.org/scripts/448702/Add%20Cards%20on%20Quizlet.user.js",
+    "code_size": 3774,
+    "license": null,
+    "version": "1.5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

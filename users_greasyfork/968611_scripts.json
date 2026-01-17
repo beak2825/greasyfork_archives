@@ -1,0 +1,101 @@
+[
+  {
+    "id": 474118,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-29T02:52:09.000Z",
+    "code_updated_at": "2024-03-22T01:18:00.000Z",
+    "namespace": "http://tampermonkey.net/dataphin.customer.ui",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 968611,
+        "name": "AlperLN",
+        "created_at": "2022-10-10T04:10:39.000Z",
+        "url": "https://greasyfork.org/users/968611-alperln"
+      }
+    ],
+    "name": "Dataphin",
+    "description": "dataphin.customer.ui",
+    "url": "https://greasyfork.org/scripts/474118-dataphin",
+    "code_url": "https://update.greasyfork.org/scripts/474118/Dataphin.user.js",
+    "code_size": 69605,
+    "license": null,
+    "version": "0.7.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 460904,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-28T08:33:18.000Z",
+    "code_updated_at": "2023-02-28T08:33:18.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 968611,
+        "name": "AlperLN",
+        "created_at": "2022-10-10T04:10:39.000Z",
+        "url": "https://greasyfork.org/users/968611-alperln"
+      }
+    ],
+    "name": "Canvas2Image",
+    "description": "covert canvas to image and save the image file",
+    "url": "https://greasyfork.org/scripts/460904-canvas2image",
+    "code_url": "https://update.greasyfork.org/scripts/460904/1155383/Canvas2Image.js",
+    "code_size": 9827,
+    "license": null,
+    "version": "0.0.1.20230228083318",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 456797,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-19T02:22:16.000Z",
+    "code_updated_at": "2023-02-27T01:42:53.000Z",
+    "namespace": "http://sdap.logistics.saic-gm.com/carousel2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 968611,
+        "name": "AlperLN",
+        "created_at": "2022-10-10T04:10:39.000Z",
+        "url": "https://greasyfork.org/users/968611-alperln"
+      }
+    ],
+    "name": "核心数据轮播",
+    "description": "轮播脚本描述",
+    "url": "https://greasyfork.org/scripts/456797-%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E8%BD%AE%E6%92%AD",
+    "code_url": "https://update.greasyfork.org/scripts/456797/%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E8%BD%AE%E6%92%AD.user.js",
+    "code_size": 17806,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 443753,
+  "daily_installs": 0,
+  "total_installs": 177,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-21T13:03:29.000Z",
+  "code_updated_at": "2022-04-21T13:43:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 903927,
+      "name": "WilliW",
+      "created_at": "2022-04-18T13:46:17.000Z",
+      "url": "https://greasyfork.org/users/903927-williw"
+    }
+  ],
+  "name": "Idlescape Max Button on Item Dialog",
+  "description": "Adds a button \"Set to max\" to the inventory item dialog",
+  "url": "https://greasyfork.org/scripts/443753-idlescape-max-button-on-item-dialog",
+  "code_url": "https://update.greasyfork.org/scripts/443753/Idlescape%20Max%20Button%20on%20Item%20Dialog.user.js",
+  "code_size": 3380,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

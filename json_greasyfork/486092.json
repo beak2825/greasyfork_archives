@@ -1,0 +1,33 @@
+{
+  "id": 486092,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-30T23:57:22.000Z",
+  "code_updated_at": "2024-01-31T00:07:00.000Z",
+  "namespace": "http https://www.ailyze.com/ailyze/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1174802,
+      "name": "Bear Beckendorf",
+      "created_at": "2023-09-17T04:21:37.000Z",
+      "url": "https://greasyfork.org/users/1174802-bear-beckendorf"
+    }
+  ],
+  "name": "Ailyze Upload Customization",
+  "description": "Adds custom functions to Ailyze upload page",
+  "url": "https://greasyfork.org/scripts/486092-ailyze-upload-customization",
+  "code_url": "https://update.greasyfork.org/scripts/486092/Ailyze%20Upload%20Customization.user.js",
+  "code_size": 1223,
+  "license": null,
+  "version": "0.1",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

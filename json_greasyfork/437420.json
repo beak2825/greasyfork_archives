@@ -1,0 +1,59 @@
+{
+  "id": 437420,
+  "daily_installs": 0,
+  "total_installs": 68,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-22T06:14:30.000Z",
+  "code_updated_at": "2022-03-28T06:37:09.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 844654,
+      "name": "AmirSakov",
+      "created_at": "2021-11-26T10:13:34.000Z",
+      "url": "https://greasyfork.org/users/844654-amirsakov",
+      "scripts": [
+        {
+          "id": 461465,
+          "daily_installs": 0,
+          "total_installs": 49,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-08T17:13:14.000Z",
+          "code_updated_at": "2023-03-08T17:13:14.000Z",
+          "namespace": "http://tampermonkey-script-example",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Quick Answers for Xenforo Forum",
+          "description": "Add buttons for quick answers in a Xenforo forum organized into categories and subcategories",
+          "url": "https://greasyfork.org/scripts/461465-quick-answers-for-xenforo-forum",
+          "code_url": "https://update.greasyfork.org/scripts/461465/Quick%20Answers%20for%20Xenforo%20Forum.user.js",
+          "code_size": 9225,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Forum Script для ГА/ЗГА",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/437420-forum-script-%D0%B4%D0%BB%D1%8F-%D0%B3%D0%B0-%D0%B7%D0%B3%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/437420/Forum%20Script%20%D0%B4%D0%BB%D1%8F%20%D0%93%D0%90%D0%97%D0%93%D0%90.user.js",
+  "code_size": 30707,
+  "license": "MIT License",
+  "version": "2.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

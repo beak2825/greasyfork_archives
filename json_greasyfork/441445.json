@@ -1,0 +1,33 @@
+{
+  "id": 441445,
+  "daily_installs": 0,
+  "total_installs": 190,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-13T07:37:37.000Z",
+  "code_updated_at": "2022-05-02T05:46:10.000Z",
+  "namespace": "https://www.hdsky.me/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 886745,
+      "name": "xinchi H",
+      "created_at": "2022-03-13T07:29:30.000Z",
+      "url": "https://greasyfork.org/users/886745-xinchi-h"
+    }
+  ],
+  "name": "PT站 HDsky 海报插件",
+  "description": "HDsky海报墙",
+  "url": "https://greasyfork.org/scripts/441445-pt%E7%AB%99-hdsky-%E6%B5%B7%E6%8A%A5%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/441445/PT%E7%AB%99%20HDsky%20%E6%B5%B7%E6%8A%A5%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 9190,
+  "license": "3.2.3",
+  "version": "3.2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

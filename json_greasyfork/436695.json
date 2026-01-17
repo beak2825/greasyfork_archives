@@ -1,0 +1,33 @@
+{
+  "id": 436695,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-07T18:12:57.000Z",
+  "code_updated_at": "2022-04-15T18:25:47.000Z",
+  "namespace": "https://greasyfork.org/users/846945",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 846945,
+      "name": "lucassilvas1",
+      "created_at": "2021-12-01T01:35:54.000Z",
+      "url": "https://greasyfork.org/users/846945-lucassilvas1"
+    }
+  ],
+  "name": "MTurk Prod Helper",
+  "description": "Removes ability to submit transcription until video has been fully watched. Insert '(inaudible)' tags with 'Shift Right'. Go back and skip with ';' and '/'.",
+  "url": "https://greasyfork.org/scripts/436695-mturk-prod-helper",
+  "code_url": "https://update.greasyfork.org/scripts/436695/MTurk%20Prod%20Helper.user.js",
+  "code_size": 7439,
+  "license": null,
+  "version": "0.4.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

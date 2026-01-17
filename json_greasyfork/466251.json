@@ -1,0 +1,59 @@
+{
+  "id": 466251,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-14T08:45:01.000Z",
+  "code_updated_at": "2024-04-04T04:04:58.000Z",
+  "namespace": "https://yocjyet.dev/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1078910,
+      "name": "Cjyet Yo",
+      "created_at": "2023-05-14T08:35:59.000Z",
+      "url": "https://greasyfork.org/users/1078910-cjyet-yo",
+      "scripts": [
+        {
+          "id": 466251,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-14T08:45:01.000Z",
+          "code_updated_at": "2024-04-04T04:04:58.000Z",
+          "namespace": "https://yocjyet.dev/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "osaka-auth",
+          "description": "Improve login UI of the authentication system of Osaka University to allow password autocompletion and redesigned on the theme of Sci-Fi to fit modern style.",
+          "url": "https://greasyfork.org/scripts/466251-osaka-auth",
+          "code_url": "https://update.greasyfork.org/scripts/466251/osaka-auth.user.js",
+          "code_size": 18840,
+          "license": "MIT License",
+          "version": "3.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "osaka-auth",
+  "description": "Improve login UI of the authentication system of Osaka University to allow password autocompletion and redesigned on the theme of Sci-Fi to fit modern style.",
+  "url": "https://greasyfork.org/scripts/466251-osaka-auth",
+  "code_url": "https://update.greasyfork.org/scripts/466251/osaka-auth.user.js",
+  "code_size": 18840,
+  "license": "MIT License",
+  "version": "3.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476810,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-10-06T07:19:50.000Z",
+    "code_updated_at": "2025-04-15T05:22:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1189317,
+        "name": "Neiron",
+        "created_at": "2023-10-06T07:09:55.000Z",
+        "url": "https://greasyfork.org/users/1189317-neiron"
+      }
+    ],
+    "name": "Block Yandex Music Ads",
+    "description": "Mute Yandex.Music advertising!",
+    "url": "https://greasyfork.org/scripts/476810-block-yandex-music-ads",
+    "code_url": "https://update.greasyfork.org/scripts/476810/Block%20Yandex%20Music%20Ads.user.js",
+    "code_size": 1461,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

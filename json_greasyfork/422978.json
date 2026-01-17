@@ -1,0 +1,59 @@
+{
+  "id": 422978,
+  "daily_installs": 0,
+  "total_installs": 140,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-10T02:55:26.000Z",
+  "code_updated_at": "2021-03-10T02:55:25.000Z",
+  "namespace": "Youtube Music Continue Watching Auto-Confirmer",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 745458,
+      "name": "Fallstop",
+      "created_at": "2021-03-10T02:46:12.000Z",
+      "url": "https://greasyfork.org/users/745458-fallstop",
+      "scripts": [
+        {
+          "id": 422978,
+          "daily_installs": 0,
+          "total_installs": 140,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-10T02:55:26.000Z",
+          "code_updated_at": "2021-03-10T02:55:25.000Z",
+          "namespace": "Youtube Music Continue Watching Auto-Confirmer",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Youtube Music Continue Watching Auto-Confirmer",
+          "description": "Automatically clicks 'Ok' when the 'Video paused. Continue watching?' dialogue pops up.",
+          "url": "https://greasyfork.org/scripts/422978-youtube-music-continue-watching-auto-confirmer",
+          "code_url": "https://update.greasyfork.org/scripts/422978/Youtube%20Music%20Continue%20Watching%20Auto-Confirmer.user.js",
+          "code_size": 771,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Youtube Music Continue Watching Auto-Confirmer",
+  "description": "Automatically clicks 'Ok' when the 'Video paused. Continue watching?' dialogue pops up.",
+  "url": "https://greasyfork.org/scripts/422978-youtube-music-continue-watching-auto-confirmer",
+  "code_url": "https://update.greasyfork.org/scripts/422978/Youtube%20Music%20Continue%20Watching%20Auto-Confirmer.user.js",
+  "code_size": 771,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

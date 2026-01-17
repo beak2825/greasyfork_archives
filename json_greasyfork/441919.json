@@ -1,0 +1,34 @@
+{
+  "id": 441919,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-22T17:24:44.000Z",
+  "code_updated_at": "2022-03-22T17:24:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 766674,
+      "name": "Nicholas Paul",
+      "created_at": "2021-04-30T01:11:38.000Z",
+      "url": "https://greasyfork.org/users/766674-nicholas-paul",
+      "scripts": []
+    }
+  ],
+  "name": "Normal scrollbar for youtube",
+  "description": "try to get old scroll bar back",
+  "url": "https://greasyfork.org/scripts/441919-normal-scrollbar-for-youtube",
+  "code_url": "https://update.greasyfork.org/scripts/441919/Normal%20scrollbar%20for%20youtube.user.js",
+  "code_size": 902,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

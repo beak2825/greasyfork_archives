@@ -1,0 +1,33 @@
+{
+  "id": 429764,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-23T08:25:37.000Z",
+  "code_updated_at": "2021-07-23T08:28:19.000Z",
+  "namespace": "http://fulicat.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 146343,
+      "name": "qipawa",
+      "created_at": "2017-08-04T02:25:01.000Z",
+      "url": "https://greasyfork.org/users/146343-qipawa"
+    }
+  ],
+  "name": "自动跳过QQ网址拦截",
+  "description": "自动跳过QQ网址拦截,保护隐私，移除QQ号等信息（参数）, F_U_C_K",
+  "url": "https://greasyfork.org/scripts/429764-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87qq%E7%BD%91%E5%9D%80%E6%8B%A6%E6%88%AA",
+  "code_url": "https://update.greasyfork.org/scripts/429764/%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87QQ%E7%BD%91%E5%9D%80%E6%8B%A6%E6%88%AA.user.js",
+  "code_size": 960,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490977,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-27T05:25:41.000Z",
+    "code_updated_at": "2024-03-27T05:27:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279979,
+        "name": "João Gabriel",
+        "created_at": "2024-03-27T05:24:08.000Z",
+        "url": "https://greasyfork.org/users/1279979-jo%C3%A3o-gabriel"
+      }
+    ],
+    "name": "Removedor de anúncio para habblet",
+    "description": "Removedor de anúncios e rádio chatos do habblet.",
+    "url": "https://greasyfork.org/scripts/490977-removedor-de-an%C3%BAncio-para-habblet",
+    "code_url": "https://update.greasyfork.org/scripts/490977/Removedor%20de%20an%C3%BAncio%20para%20habblet.user.js",
+    "code_size": 1572,
+    "license": null,
+    "version": "0.2",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

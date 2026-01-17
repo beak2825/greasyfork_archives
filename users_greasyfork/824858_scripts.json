@@ -1,0 +1,68 @@
+[
+  {
+    "id": 452318,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-01T05:31:35.000Z",
+    "code_updated_at": "2022-10-01T05:31:35.000Z",
+    "namespace": "https://greasyfork.org/users/824858",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824858,
+        "name": "elate",
+        "created_at": "2021-10-13T17:51:26.000Z",
+        "url": "https://greasyfork.org/users/824858-elate"
+      }
+    ],
+    "name": "get discord token",
+    "description": "shows an alert containing your discord token",
+    "url": "https://greasyfork.org/scripts/452318-get-discord-token",
+    "code_url": "https://update.greasyfork.org/scripts/452318/get%20discord%20token.user.js",
+    "code_size": 523,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433848,
+    "daily_installs": 0,
+    "total_installs": 1880,
+    "fan_score": "8.2",
+    "good_ratings": 1,
+    "ok_ratings": 2,
+    "bad_ratings": 4,
+    "created_at": "2021-10-13T17:54:56.000Z",
+    "code_updated_at": "2023-02-24T01:00:36.000Z",
+    "namespace": "https://greasyfork.org/users/824858",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824858,
+        "name": "elate",
+        "created_at": "2021-10-13T17:51:26.000Z",
+        "url": "https://greasyfork.org/users/824858-elate"
+      }
+    ],
+    "name": "Auto Reload on Stake.com - LATEST UPDATE 2023 WORKS FOREVER",
+    "description": "Automatic reloads every 10 minutes. updated for latest Stake website. Will work forever!",
+    "url": "https://greasyfork.org/scripts/433848-auto-reload-on-stake-com-latest-update-2023-works-forever",
+    "code_url": "https://update.greasyfork.org/scripts/433848/Auto%20Reload%20on%20Stakecom%20-%20LATEST%20UPDATE%202023%20WORKS%20FOREVER.user.js",
+    "code_size": 752,
+    "license": null,
+    "version": "2023.14.23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 459395,
+  "daily_installs": 0,
+  "total_installs": 134,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-03T14:43:30.000Z",
+  "code_updated_at": "2023-02-03T14:43:30.000Z",
+  "namespace": "https://xiaohe321.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1021128,
+      "name": "xh321",
+      "created_at": "2023-02-03T13:28:55.000Z",
+      "url": "https://greasyfork.org/users/1021128-xh321",
+      "scripts": [
+        {
+          "id": 459395,
+          "daily_installs": 0,
+          "total_installs": 134,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-03T14:43:30.000Z",
+          "code_updated_at": "2023-02-03T14:43:30.000Z",
+          "namespace": "https://xiaohe321.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bad Apple for Github",
+          "description": "Bad Apple!!!",
+          "url": "https://greasyfork.org/scripts/459395-bad-apple-for-github",
+          "code_url": "https://update.greasyfork.org/scripts/459395/Bad%20Apple%20for%20Github.user.js",
+          "code_size": 5359,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bad Apple for Github",
+  "description": "Bad Apple!!!",
+  "url": "https://greasyfork.org/scripts/459395-bad-apple-for-github",
+  "code_url": "https://update.greasyfork.org/scripts/459395/Bad%20Apple%20for%20Github.user.js",
+  "code_size": 5359,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

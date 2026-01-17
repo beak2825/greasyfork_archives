@@ -1,0 +1,33 @@
+{
+  "id": 411991,
+  "daily_installs": 0,
+  "total_installs": 53,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-26T05:45:34.000Z",
+  "code_updated_at": "2020-11-25T05:46:46.000Z",
+  "namespace": "https://github.com/argit2/tweetdeck-blacklist",
+  "support_url": "https://github.com/argit2/tweetdeck-blacklist",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 469070,
+      "name": "argit2",
+      "created_at": "2020-03-25T21:01:02.000Z",
+      "url": "https://greasyfork.org/users/469070-argit2"
+    }
+  ],
+  "name": "Tweetdeck hide self retweets and more",
+  "description": "Hide self retweets. Blacklist accounts to not see retweets of their posts. Very useful when you have a group of users that retweet each other.",
+  "url": "https://greasyfork.org/scripts/411991-tweetdeck-hide-self-retweets-and-more",
+  "code_url": "https://update.greasyfork.org/scripts/411991/Tweetdeck%20hide%20self%20retweets%20and%20more.user.js",
+  "code_size": 18740,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "0.0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

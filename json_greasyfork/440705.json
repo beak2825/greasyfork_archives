@@ -1,0 +1,34 @@
+{
+  "id": 440705,
+  "daily_installs": 0,
+  "total_installs": 1021,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-28T08:58:06.000Z",
+  "code_updated_at": "2024-04-16T09:53:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 880743,
+      "name": "cyek",
+      "created_at": "2022-02-26T09:33:54.000Z",
+      "url": "https://greasyfork.org/users/880743-cyek",
+      "scripts": []
+    }
+  ],
+  "name": "灿耀易客浏览器工具",
+  "description": "登录灿耀易客，执行商务端业务",
+  "url": "https://greasyfork.org/scripts/440705-%E7%81%BF%E8%80%80%E6%98%93%E5%AE%A2%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/440705/%E7%81%BF%E8%80%80%E6%98%93%E5%AE%A2%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 369391,
+  "license": "End-User License Agreement",
+  "version": "6.4.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

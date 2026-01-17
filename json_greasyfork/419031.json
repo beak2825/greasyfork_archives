@@ -1,0 +1,59 @@
+{
+  "id": 419031,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-22T21:37:35.000Z",
+  "code_updated_at": "2020-12-29T20:59:40.000Z",
+  "namespace": "https://greasyfork.org/users/26725",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 26725,
+      "name": "Jendrej",
+      "created_at": "2016-01-10T06:26:49.000Z",
+      "url": "https://greasyfork.org/users/26725-jendrej",
+      "scripts": [
+        {
+          "id": 419031,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-12-22T21:37:35.000Z",
+          "code_updated_at": "2020-12-29T20:59:40.000Z",
+          "namespace": "https://greasyfork.org/users/26725",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OpenCaching.pl -> GC Linkifier",
+          "description": "Zamienia numer GC na OC.pl w link",
+          "url": "https://greasyfork.org/scripts/419031-opencaching-pl-gc-linkifier",
+          "code_url": "https://update.greasyfork.org/scripts/419031/OpenCachingpl%20-%3E%20GC%20Linkifier.user.js",
+          "code_size": 1285,
+          "license": null,
+          "version": "1.2",
+          "locale": "pl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OpenCaching.pl -> GC Linkifier",
+  "description": "Zamienia numer GC na OC.pl w link",
+  "url": "https://greasyfork.org/scripts/419031-opencaching-pl-gc-linkifier",
+  "code_url": "https://update.greasyfork.org/scripts/419031/OpenCachingpl%20-%3E%20GC%20Linkifier.user.js",
+  "code_size": 1285,
+  "license": null,
+  "version": "1.2",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

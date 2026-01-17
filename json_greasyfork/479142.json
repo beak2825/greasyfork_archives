@@ -1,0 +1,33 @@
+{
+  "id": 479142,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-06T02:54:12.000Z",
+  "code_updated_at": "2023-11-10T16:13:27.000Z",
+  "namespace": "https://github.com/wzshiming/userscripts",
+  "support_url": "https://github.com/wzshiming/userscripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 805524,
+      "name": "wzshiming",
+      "created_at": "2021-08-17T08:27:14.000Z",
+      "url": "https://greasyfork.org/users/805524-wzshiming"
+    }
+  ],
+  "name": "Google URL Shorten",
+  "description": "Mark Google URL Shortest.",
+  "url": "https://greasyfork.org/scripts/479142-google-url-shorten",
+  "code_url": "https://update.greasyfork.org/scripts/479142/Google%20URL%20Shorten.user.js",
+  "code_size": 1973,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 425733,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-30T10:27:20.000Z",
+  "code_updated_at": "2021-05-05T20:09:45.000Z",
+  "namespace": "https://greasyfork.org/users/292830",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 700963,
+      "name": "eterNEETy エタニート",
+      "created_at": "2020-11-03T11:01:43.000Z",
+      "url": "https://greasyfork.org/users/700963-eterneety-%E3%82%A8%E3%82%BF%E3%83%8B%E3%83%BC%E3%83%88"
+    }
+  ],
+  "name": "Duolingo Assistant",
+  "description": "Duolingo Lesson Assistant",
+  "url": "https://greasyfork.org/scripts/425733-duolingo-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/425733/Duolingo%20Assistant.user.js",
+  "code_size": 8606,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

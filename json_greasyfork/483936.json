@@ -1,0 +1,59 @@
+{
+  "id": 483936,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-05T06:44:24.000Z",
+  "code_updated_at": "2024-01-05T06:44:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1243488,
+      "name": "sarahfcader",
+      "created_at": "2024-01-05T06:24:23.000Z",
+      "url": "https://greasyfork.org/users/1243488-sarahfcader",
+      "scripts": [
+        {
+          "id": 483936,
+          "daily_installs": 0,
+          "total_installs": 51,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-05T06:44:24.000Z",
+          "code_updated_at": "2024-01-05T06:44:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Coliseum Familiar Collection Tracker",
+          "description": "Add icons beside the monsters in Stages in the Game Database if the user owns them.",
+          "url": "https://greasyfork.org/scripts/483936-coliseum-familiar-collection-tracker",
+          "code_url": "https://update.greasyfork.org/scripts/483936/Coliseum%20Familiar%20Collection%20Tracker.user.js",
+          "code_size": 1873,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Coliseum Familiar Collection Tracker",
+  "description": "Add icons beside the monsters in Stages in the Game Database if the user owns them.",
+  "url": "https://greasyfork.org/scripts/483936-coliseum-familiar-collection-tracker",
+  "code_url": "https://update.greasyfork.org/scripts/483936/Coliseum%20Familiar%20Collection%20Tracker.user.js",
+  "code_size": 1873,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

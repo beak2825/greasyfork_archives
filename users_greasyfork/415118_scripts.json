@@ -328,5 +328,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 456533,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-13T12:38:14.000Z",
+    "code_updated_at": "2022-12-13T12:38:14.000Z",
+    "namespace": "lly",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 415118,
+        "name": "lly5566",
+        "created_at": "2019-12-10T07:57:10.000Z",
+        "url": "https://greasyfork.org/users/415118-lly5566"
+      }
+    ],
+    "name": "hhykw",
+    "description": "视频自动播放",
+    "url": "https://greasyfork.org/scripts/456533-hhykw",
+    "code_url": "https://update.greasyfork.org/scripts/456533/hhykw.user.js",
+    "code_size": 386,
+    "license": null,
+    "version": "4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 455283,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-23T08:27:30.000Z",
+    "code_updated_at": "2022-12-02T12:29:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 415118,
+        "name": "lly5566",
+        "created_at": "2019-12-10T07:57:10.000Z",
+        "url": "https://greasyfork.org/users/415118-lly5566"
+      }
+    ],
+    "name": "湖南开放大学自动刷课",
+    "description": "学习视频",
+    "url": "https://greasyfork.org/scripts/455283-%E6%B9%96%E5%8D%97%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/455283/%E6%B9%96%E5%8D%97%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE.user.js",
+    "code_size": 3100,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 455243,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-22T11:49:20.000Z",
+    "code_updated_at": "2025-05-02T23:27:49.000Z",
+    "namespace": "咀嚼 代刷+V{lly6655}",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 415118,
+        "name": "lly5566",
+        "created_at": "2019-12-10T07:57:10.000Z",
+        "url": "https://greasyfork.org/users/415118-lly5566"
+      }
+    ],
+    "name": "湖南人才市场公共教育网",
+    "description": "自动切换课程、答题 代刷+V{lly6655}",
+    "url": "https://greasyfork.org/scripts/455243-%E6%B9%96%E5%8D%97%E4%BA%BA%E6%89%8D%E5%B8%82%E5%9C%BA%E5%85%AC%E5%85%B1%E6%95%99%E8%82%B2%E7%BD%91",
+    "code_url": "https://update.greasyfork.org/scripts/455243/%E6%B9%96%E5%8D%97%E4%BA%BA%E6%89%8D%E5%B8%82%E5%9C%BA%E5%85%AC%E5%85%B1%E6%95%99%E8%82%B2%E7%BD%91.user.js",
+    "code_size": 20329,
+    "license": null,
+    "version": "9.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

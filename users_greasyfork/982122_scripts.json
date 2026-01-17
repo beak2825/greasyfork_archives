@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454657,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-11T19:40:56.000Z",
+    "code_updated_at": "2022-11-11T19:40:55.000Z",
+    "namespace": "Niblhenne Swamp",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 982122,
+        "name": "Maguillage",
+        "created_at": "2022-11-11T19:32:06.000Z",
+        "url": "https://greasyfork.org/users/982122-maguillage"
+      }
+    ],
+    "name": "Scale Chatbox with resized sidebar",
+    "description": "Does a thing the title says it does",
+    "url": "https://greasyfork.org/scripts/454657-scale-chatbox-with-resized-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/454657/Scale%20Chatbox%20with%20resized%20sidebar.user.js",
+    "code_size": 1403,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

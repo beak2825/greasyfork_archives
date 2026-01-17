@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460985,
+    "daily_installs": 0,
+    "total_installs": 690,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-01T14:31:14.000Z",
+    "code_updated_at": "2023-03-01T14:31:14.000Z",
+    "namespace": "https://greasyfork.org/en/users/476081-pashka",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034851,
+        "name": "-InVinCibLe-",
+        "created_at": "2023-03-01T14:23:43.000Z",
+        "url": "https://greasyfork.org/users/1034851-invincible"
+      }
+    ],
+    "name": "Force Connect + WS Sender",
+    "description": "Join full servers in moomoo.io",
+    "url": "https://greasyfork.org/scripts/460985-force-connect-ws-sender",
+    "code_url": "https://update.greasyfork.org/scripts/460985/Force%20Connect%20%2B%20WS%20Sender.user.js",
+    "code_size": 998,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

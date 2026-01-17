@@ -1,0 +1,73 @@
+{
+  "id": 492290,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-12T02:35:06.000Z",
+  "code_updated_at": "2025-02-26T01:19:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286869,
+      "name": "kqfan",
+      "created_at": "2024-04-11T11:24:20.000Z",
+      "url": "https://greasyfork.org/users/1286869-kqfan",
+      "scripts": [
+        {
+          "id": 498502,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-21T06:17:32.000Z",
+          "code_updated_at": "2024-06-21T06:29:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "找色差脚本",
+          "description": "玩游戏就得开。。。",
+          "url": "https://greasyfork.org/scripts/498502-%E6%89%BE%E8%89%B2%E5%B7%AE%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/498502/%E6%89%BE%E8%89%B2%E5%B7%AE%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 2172,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    },
+    {
+      "id": 1287139,
+      "name": "zhengxd",
+      "created_at": "2024-04-12T02:42:14.000Z",
+      "url": "https://greasyfork.org/users/1287139-zhengxd",
+      "scripts": []
+    },
+    {
+      "id": 1293263,
+      "name": "Marcellus",
+      "created_at": "2024-04-26T06:15:12.000Z",
+      "url": "https://greasyfork.org/users/1293263-marcellus",
+      "scripts": []
+    }
+  ],
+  "name": "天梯工时查询",
+  "description": "联通内部天梯工时查询使用",
+  "url": "https://greasyfork.org/scripts/492290-%E5%A4%A9%E6%A2%AF%E5%B7%A5%E6%97%B6%E6%9F%A5%E8%AF%A2",
+  "code_url": "https://update.greasyfork.org/scripts/492290/%E5%A4%A9%E6%A2%AF%E5%B7%A5%E6%97%B6%E6%9F%A5%E8%AF%A2.user.js",
+  "code_size": 27197,
+  "license": "MIT License",
+  "version": "2.4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465349,
+    "daily_installs": 1,
+    "total_installs": 1004,
+    "fan_score": "35.6",
+    "good_ratings": 5,
+    "ok_ratings": 1,
+    "bad_ratings": 2,
+    "created_at": "2023-05-02T05:49:56.000Z",
+    "code_updated_at": "2024-09-16T09:16:32.000Z",
+    "namespace": "npm/vite-plugin-monkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1066301,
+        "name": "AnnyTerfect",
+        "created_at": "2023-04-23T14:28:09.000Z",
+        "url": "https://greasyfork.org/users/1066301-annyterfect"
+      }
+    ],
+    "name": "ChatGPT Prompt Helper",
+    "description": "This Tampermonkey script is a highly customizable plugin designed to assist with editing and generating ChatGPT prompts.",
+    "url": "https://greasyfork.org/scripts/465349-chatgpt-prompt-helper",
+    "code_url": "https://update.greasyfork.org/scripts/465349/ChatGPT%20Prompt%20Helper.user.js",
+    "code_size": 800927,
+    "license": "MIT License",
+    "version": "0.0.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 491071,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-28T07:24:09.000Z",
+  "code_updated_at": "2024-04-28T12:29:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1280240,
+      "name": "Manic Mondays",
+      "created_at": "2024-03-27T14:21:54.000Z",
+      "url": "https://greasyfork.org/users/1280240-manic-mondays",
+      "scripts": []
+    }
+  ],
+  "name": "Intercept Facebook Ads Library Requests",
+  "description": "Scrape Facebook ad data on the fly - with CSV export",
+  "url": "https://greasyfork.org/scripts/491071-intercept-facebook-ads-library-requests",
+  "code_url": "https://update.greasyfork.org/scripts/491071/Intercept%20Facebook%20Ads%20Library%20Requests.user.js",
+  "code_size": 14696,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

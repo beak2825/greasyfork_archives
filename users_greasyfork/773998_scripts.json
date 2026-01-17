@@ -1,0 +1,68 @@
+[
+  {
+    "id": 437966,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-03T01:37:40.000Z",
+    "code_updated_at": "2022-01-03T02:35:42.000Z",
+    "namespace": "https://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 773998,
+        "name": "JaneBuzJane",
+        "created_at": "2021-05-19T19:59:52.000Z",
+        "url": "https://greasyfork.org/users/773998-janebuzjane"
+      }
+    ],
+    "name": "Put \"Download CSV\" Button in AO3 Prompt Memes",
+    "description": "Puts a \"Download as CSV\" button on the Prompts page of AO3 Prompt Memes.",
+    "url": "https://greasyfork.org/scripts/437966-put-download-csv-button-in-ao3-prompt-memes",
+    "code_url": "https://update.greasyfork.org/scripts/437966/Put%20%22Download%20CSV%22%20Button%20in%20AO3%20Prompt%20Memes.user.js",
+    "code_size": 1643,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432319,
+    "daily_installs": 1,
+    "total_installs": 510,
+    "fan_score": "29.9",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2021-09-13T00:43:58.000Z",
+    "code_updated_at": "2021-09-13T00:43:57.000Z",
+    "namespace": "https://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 773998,
+        "name": "JaneBuzJane",
+        "created_at": "2021-05-19T19:59:52.000Z",
+        "url": "https://greasyfork.org/users/773998-janebuzjane"
+      }
+    ],
+    "name": "Add AO3 Mark for Later Button to works list",
+    "description": "Puts the \"Marked for Later\" button in a fic blurb when browsing AO3.",
+    "url": "https://greasyfork.org/scripts/432319-add-ao3-mark-for-later-button-to-works-list",
+    "code_url": "https://update.greasyfork.org/scripts/432319/Add%20AO3%20Mark%20for%20Later%20Button%20to%20works%20list.user.js",
+    "code_size": 1135,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

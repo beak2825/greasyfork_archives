@@ -1,0 +1,33 @@
+{
+  "id": 464026,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-14T18:50:43.000Z",
+  "code_updated_at": "2025-09-10T23:04:08.000Z",
+  "namespace": "https://github.com/TZFC",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1060277,
+      "name": "TZFC",
+      "created_at": "2023-04-14T18:46:06.000Z",
+      "url": "https://greasyfork.org/users/1060277-tzfc"
+    }
+  ],
+  "name": "Bilibili Hires Emoji",
+  "description": "Render Bilibili live room emojis in high resolution.",
+  "url": "https://greasyfork.org/scripts/464026-bilibili-hires-emoji",
+  "code_url": "https://update.greasyfork.org/scripts/464026/Bilibili%20Hires%20Emoji.user.js",
+  "code_size": 2505,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

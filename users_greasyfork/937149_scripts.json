@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448099,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-19T07:08:42.000Z",
+    "code_updated_at": "2022-07-19T07:08:41.000Z",
+    "namespace": "Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937149,
+        "name": "sjohnson1021",
+        "created_at": "2022-07-19T07:07:42.000Z",
+        "url": "https://greasyfork.org/users/937149-sjohnson1021"
+      }
+    ],
+    "name": "SkidRow Link Enabler - skidrowreloaded.nl",
+    "description": "7/19/2022, 1:44:52 AM",
+    "url": "https://greasyfork.org/scripts/448099-skidrow-link-enabler-skidrowreloaded-nl",
+    "code_url": "https://update.greasyfork.org/scripts/448099/SkidRow%20Link%20Enabler%20-%20skidrowreloadednl.user.js",
+    "code_size": 412,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

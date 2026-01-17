@@ -97,5 +97,144 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495119,
+    "daily_installs": 0,
+    "total_installs": 491,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-16T05:47:58.000Z",
+    "code_updated_at": "2024-05-16T08:08:04.000Z",
+    "namespace": "https://greasyfork.org/users/1300060",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1300060,
+        "name": "Anh Khoa Phan",
+        "created_at": "2024-05-11T14:51:03.000Z",
+        "url": "https://greasyfork.org/users/1300060-anh-khoa-phan"
+      }
+    ],
+    "name": "YouTube CPU-Tamer Upgrade",
+    "description": "Optimize CPU and GPU usage while watching YouTube videos",
+    "url": "https://greasyfork.org/scripts/495119-youtube-cpu-tamer-upgrade",
+    "code_url": "https://update.greasyfork.org/scripts/495119/YouTube%20CPU-Tamer%20Upgrade.user.js",
+    "code_size": 11964,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 495060,
+    "daily_installs": 1,
+    "total_installs": 1588,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-05-15T16:16:04.000Z",
+    "code_updated_at": "2024-05-16T04:55:57.000Z",
+    "namespace": "https://greasyfork.org/users/1300060",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1300060,
+        "name": "Anh Khoa Phan",
+        "created_at": "2024-05-11T14:51:03.000Z",
+        "url": "https://greasyfork.org/users/1300060-anh-khoa-phan"
+      }
+    ],
+    "name": "CloudFlare Challenge Optimized",
+    "description": "Automates solving Cloudflare Challenges with optimal performance and maintainability",
+    "url": "https://greasyfork.org/scripts/495060-cloudflare-challenge-optimized",
+    "code_url": "https://update.greasyfork.org/scripts/495060/CloudFlare%20Challenge%20Optimized.user.js",
+    "code_size": 1967,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 494801,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-13T04:44:58.000Z",
+    "code_updated_at": "2024-05-13T04:44:58.000Z",
+    "namespace": "https://greasyfork.org/users/1300060",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1300060,
+        "name": "Anh Khoa Phan",
+        "created_at": "2024-05-11T14:51:03.000Z",
+        "url": "https://greasyfork.org/users/1300060-anh-khoa-phan"
+      }
+    ],
+    "name": "NetTruyen Tools (Remake)",
+    "description": "Remove ads and add zoom-out options for NetTruyen",
+    "url": "https://greasyfork.org/scripts/494801-nettruyen-tools-remake",
+    "code_url": "https://update.greasyfork.org/scripts/494801/NetTruyen%20Tools%20%28Remake%29.user.js",
+    "code_size": 2639,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 494676,
+    "daily_installs": 0,
+    "total_installs": 112,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-11T15:10:43.000Z",
+    "code_updated_at": "2024-05-15T15:07:25.000Z",
+    "namespace": "https://greasyfork.org/users/1300060",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1300060,
+        "name": "Anh Khoa Phan",
+        "created_at": "2024-05-11T14:51:03.000Z",
+        "url": "https://greasyfork.org/users/1300060-anh-khoa-phan"
+      }
+    ],
+    "name": "Disable Smooth Scrolling",
+    "description": "Disable smooth scrolling on all websites",
+    "url": "https://greasyfork.org/scripts/494676-disable-smooth-scrolling",
+    "code_url": "https://update.greasyfork.org/scripts/494676/Disable%20Smooth%20Scrolling.user.js",
+    "code_size": 683,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]
+ense",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 465208,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-30T19:50:35.000Z",
+  "code_updated_at": "2023-05-01T19:07:32.000Z",
+  "namespace": "https://kyunso.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1070853,
+      "name": "胡惠策（软件野生君）",
+      "created_at": "2023-04-30T19:39:17.000Z",
+      "url": "https://greasyfork.org/users/1070853-%E8%83%A1%E6%83%A0%E7%AD%96-%E8%BD%AF%E4%BB%B6%E9%87%8E%E7%94%9F%E5%90%9B",
+      "scripts": []
+    }
+  ],
+  "name": "快云搜",
+  "description": "将快云搜 集成到 各种网盘官网上 让搜索更高效、更便捷;同时为了资源的丰富性本插件会把你浏览过的云盘分享链接同步到服务端做缓存方便下次搜索 介意请勿安装1.0以及后续版本！！！ 安装0.3版本以下即可 感谢您的支持与理解",
+  "url": "https://greasyfork.org/scripts/465208-%E5%BF%AB%E4%BA%91%E6%90%9C",
+  "code_url": "https://update.greasyfork.org/scripts/465208/%E5%BF%AB%E4%BA%91%E6%90%9C.user.js",
+  "code_size": 18104,
+  "license": "huhuice",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

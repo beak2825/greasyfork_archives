@@ -1,0 +1,33 @@
+{
+  "id": 463263,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-04T13:30:10.000Z",
+  "code_updated_at": "2026-01-16T14:26:05.000Z",
+  "namespace": "dedeman",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 226933,
+      "name": "Dragoș Nechita",
+      "created_at": "2018-11-19T12:49:33.000Z",
+      "url": "https://greasyfork.org/users/226933-drago%C8%99-nechita"
+    }
+  ],
+  "name": "Magento 2 admin",
+  "description": "all",
+  "url": "https://greasyfork.org/scripts/463263-magento-2-admin",
+  "code_url": "https://update.greasyfork.org/scripts/463263/Magento%202%20admin.user.js",
+  "code_size": 813833,
+  "license": null,
+  "version": "4.23",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

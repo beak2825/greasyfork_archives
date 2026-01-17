@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428746,
+    "daily_installs": 2,
+    "total_installs": 61745,
+    "fan_score": "90.4",
+    "good_ratings": 116,
+    "ok_ratings": 5,
+    "bad_ratings": 3,
+    "created_at": "2021-07-01T05:07:31.000Z",
+    "code_updated_at": "2021-08-27T17:24:46.000Z",
+    "namespace": "https://greasyfork.org/users/789132",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 789132,
+        "name": "yoaan",
+        "created_at": "2021-07-01T03:39:10.000Z",
+        "url": "https://greasyfork.org/users/789132-yoaan"
+      }
+    ],
+    "name": "解锁b站vip视频+弹幕字幕移植",
+    "description": "解除B站大会员观影限制，理论支持番剧和放映厅，不支持的视频请反馈留地址让我修复，或自行在代码搜索‘大会员’并添加识别div与语句。",
+    "url": "https://greasyfork.org/scripts/428746-%E8%A7%A3%E9%94%81b%E7%AB%99vip%E8%A7%86%E9%A2%91-%E5%BC%B9%E5%B9%95%E5%AD%97%E5%B9%95%E7%A7%BB%E6%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/428746/%E8%A7%A3%E9%94%81b%E7%AB%99vip%E8%A7%86%E9%A2%91%2B%E5%BC%B9%E5%B9%95%E5%AD%97%E5%B9%95%E7%A7%BB%E6%A4%8D.user.js",
+    "code_size": 220901,
+    "license": null,
+    "version": "1.13.4.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

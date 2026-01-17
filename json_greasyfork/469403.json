@@ -1,0 +1,33 @@
+{
+  "id": 469403,
+  "daily_installs": 0,
+  "total_installs": 87,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-25T04:00:49.000Z",
+  "code_updated_at": "2023-06-25T04:00:49.000Z",
+  "namespace": "https://github.com/Yanren1225/steampy-cdkdetail-store-link-replacer",
+  "support_url": "https://github.com/Yanren1225/steampy-cdkdetail-store-link-replacer/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 869955,
+      "name": "Yanren1225",
+      "created_at": "2022-01-27T09:57:32.000Z",
+      "url": "https://greasyfork.org/users/869955-yanren1225"
+    }
+  ],
+  "name": "steampy 游戏详情界面 steam 商店链接 div 替换为 a",
+  "description": "steampy Game Details Interface steam Store link div replaced with a",
+  "url": "https://greasyfork.org/scripts/469403-steampy-%E6%B8%B8%E6%88%8F%E8%AF%A6%E6%83%85%E7%95%8C%E9%9D%A2-steam-%E5%95%86%E5%BA%97%E9%93%BE%E6%8E%A5-div-%E6%9B%BF%E6%8D%A2%E4%B8%BA-a",
+  "code_url": "https://update.greasyfork.org/scripts/469403/steampy%20%E6%B8%B8%E6%88%8F%E8%AF%A6%E6%83%85%E7%95%8C%E9%9D%A2%20steam%20%E5%95%86%E5%BA%97%E9%93%BE%E6%8E%A5%20div%20%E6%9B%BF%E6%8D%A2%E4%B8%BA%20a.user.js",
+  "code_size": 1693,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

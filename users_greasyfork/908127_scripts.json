@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 444526,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-06T02:17:50.000Z",
+    "code_updated_at": "2022-05-15T07:26:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 908127,
+        "name": "Kiyuiro",
+        "created_at": "2022-04-28T12:52:58.000Z",
+        "url": "https://greasyfork.org/users/908127-kiyuiro"
+      }
+    ],
+    "name": "思想政治理论实践教学网络平台",
+    "description": "跳过等待和修复无法选择的bug",
+    "url": "https://greasyfork.org/scripts/444526-%E6%80%9D%E6%83%B3%E6%94%BF%E6%B2%BB%E7%90%86%E8%AE%BA%E5%AE%9E%E8%B7%B5%E6%95%99%E5%AD%A6%E7%BD%91%E7%BB%9C%E5%B9%B3%E5%8F%B0",
+    "code_url": "https://update.greasyfork.org/scripts/444526/%E6%80%9D%E6%83%B3%E6%94%BF%E6%B2%BB%E7%90%86%E8%AE%BA%E5%AE%9E%E8%B7%B5%E6%95%99%E5%AD%A6%E7%BD%91%E7%BB%9C%E5%B9%B3%E5%8F%B0.user.js",
+    "code_size": 1175,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 444143,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-28T13:01:43.000Z",
+    "code_updated_at": "2022-05-02T09:05:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 908127,
+        "name": "Kiyuiro",
+        "created_at": "2022-04-28T12:52:58.000Z",
+        "url": "https://greasyfork.org/users/908127-kiyuiro"
+      }
+    ],
+    "name": "形式与政策网络学习平台",
+    "description": "形式与政策网络学习平台跳过等待与自动答题",
+    "url": "https://greasyfork.org/scripts/444143-%E5%BD%A2%E5%BC%8F%E4%B8%8E%E6%94%BF%E7%AD%96%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%B9%B3%E5%8F%B0",
+    "code_url": "https://update.greasyfork.org/scripts/444143/%E5%BD%A2%E5%BC%8F%E4%B8%8E%E6%94%BF%E7%AD%96%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%B9%B3%E5%8F%B0.user.js",
+    "code_size": 3635,
+    "license": "MIT License",
+    "version": "0.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

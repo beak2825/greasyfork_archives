@@ -1,0 +1,68 @@
+[
+  {
+    "id": 450309,
+    "daily_installs": 0,
+    "total_installs": 93,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-28T04:07:28.000Z",
+    "code_updated_at": "2022-08-28T04:07:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 920708,
+        "name": "an0nymooose",
+        "created_at": "2022-05-31T21:58:50.000Z",
+        "url": "https://greasyfork.org/users/920708-an0nymooose"
+      }
+    ],
+    "name": "Google Search Term Suggestion Removal",
+    "description": "removes the new stupid search suggestion terms",
+    "url": "https://greasyfork.org/scripts/450309-google-search-term-suggestion-removal",
+    "code_url": "https://update.greasyfork.org/scripts/450309/Google%20Search%20Term%20Suggestion%20Removal.user.js",
+    "code_size": 908,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445826,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-31T22:22:16.000Z",
+    "code_updated_at": "2022-05-31T22:26:46.000Z",
+    "namespace": "an0nyScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 920708,
+        "name": "an0nymooose",
+        "created_at": "2022-05-31T21:58:50.000Z",
+        "url": "https://greasyfork.org/users/920708-an0nymooose"
+      }
+    ],
+    "name": "ZenMarket Auto Translate Search",
+    "description": "Auto translate search for better results on ZenMarket.",
+    "url": "https://greasyfork.org/scripts/445826-zenmarket-auto-translate-search",
+    "code_url": "https://update.greasyfork.org/scripts/445826/ZenMarket%20Auto%20Translate%20Search.user.js",
+    "code_size": 2871,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

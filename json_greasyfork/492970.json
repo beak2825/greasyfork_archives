@@ -1,0 +1,34 @@
+{
+  "id": 492970,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-19T22:10:44.000Z",
+  "code_updated_at": "2024-04-19T22:10:44.000Z",
+  "namespace": "tembrawar.nsWatcherSpies",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 898813,
+      "name": "Tembrawar",
+      "created_at": "2022-04-07T05:15:05.000Z",
+      "url": "https://greasyfork.org/users/898813-tembrawar",
+      "scripts": []
+    }
+  ],
+  "name": "NS Watcher theme",
+  "description": "dark theme on ns-watcher",
+  "url": "https://greasyfork.org/scripts/492970-ns-watcher-theme",
+  "code_url": "https://update.greasyfork.org/scripts/492970/NS%20Watcher%20theme.user.js",
+  "code_size": 622,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

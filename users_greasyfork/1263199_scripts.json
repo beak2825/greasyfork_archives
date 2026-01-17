@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490578,
+    "daily_installs": 0,
+    "total_installs": 1406,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-22T14:11:35.000Z",
+    "code_updated_at": "2025-12-09T11:56:00.000Z",
+    "namespace": "ff",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1263199,
+        "name": "飞g",
+        "created_at": "2024-02-18T15:47:31.000Z",
+        "url": "https://greasyfork.org/users/1263199-%E9%A3%9Eg"
+      }
+    ],
+    "name": "【超星学习通助手】）打开章节学习界面自动运行，一定要打开学习界面脚本才会运行。支持任务点自动跳转|章节测验、作业、考试全网检索答案",
+    "description": "超星学习通助手۞♡♤，打开章节学习界面自动运行，一定要打开学习界面脚本才会运行，挂机解放时间，无需任何操作自动完成所有任务点。汇集全网免费、付费题库接口支持一键对接，答案更全更靠谱。",
+    "url": "https://greasyfork.org/scripts/490578-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B-%E6%89%93%E5%BC%80%E7%AB%A0%E8%8A%82%E5%AD%A6%E4%B9%A0%E7%95%8C%E9%9D%A2%E8%87%AA%E5%8A%A8%E8%BF%90%E8%A1%8C-%E4%B8%80%E5%AE%9A%E8%A6%81%E6%89%93%E5%BC%80%E5%AD%A6%E4%B9%A0%E7%95%8C%E9%9D%A2%E8%84%9A%E6%9C%AC%E6%89%8D%E4%BC%9A%E8%BF%90%E8%A1%8C-%E6%94%AF%E6%8C%81%E4%BB%BB%E5%8A%A1%E7%82%B9%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC-%E7%AB%A0%E8%8A%82%E6%B5%8B%E9%AA%8C-%E4%BD%9C%E4%B8%9A-%E8%80%83%E8%AF%95%E5%85%A8%E7%BD%91%E6%A3%80%E7%B4%A2%E7%AD%94%E6%A1%88",
+    "code_url": "https://update.greasyfork.org/scripts/490578/%E3%80%90%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B%E3%80%91%EF%BC%89%E6%89%93%E5%BC%80%E7%AB%A0%E8%8A%82%E5%AD%A6%E4%B9%A0%E7%95%8C%E9%9D%A2%E8%87%AA%E5%8A%A8%E8%BF%90%E8%A1%8C%EF%BC%8C%E4%B8%80%E5%AE%9A%E8%A6%81%E6%89%93%E5%BC%80%E5%AD%A6%E4%B9%A0%E7%95%8C%E9%9D%A2%E8%84%9A%E6%9C%AC%E6%89%8D%E4%BC%9A%E8%BF%90%E8%A1%8C%E3%80%82%E6%94%AF%E6%8C%81%E4%BB%BB%E5%8A%A1%E7%82%B9%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%7C%E7%AB%A0%E8%8A%82%E6%B5%8B%E9%AA%8C%E3%80%81%E4%BD%9C%E4%B8%9A%E3%80%81%E8%80%83%E8%AF%95%E5%85%A8%E7%BD%91%E6%A3%80%E7%B4%A2%E7%AD%94%E6%A1%88.user.js",
+    "code_size": 126496,
+    "license": "MIT License",
+    "version": "2.1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

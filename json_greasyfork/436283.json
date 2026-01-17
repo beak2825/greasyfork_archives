@@ -1,0 +1,33 @@
+{
+  "id": 436283,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-29T17:09:17.000Z",
+  "code_updated_at": "2021-11-29T17:41:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 746488,
+      "name": "Bronya-Hacker",
+      "created_at": "2021-03-12T14:09:53.000Z",
+      "url": "https://greasyfork.org/users/746488-bronya-hacker"
+    }
+  ],
+  "name": "战斗吧歌姬！【内群】",
+  "description": "Bilibili直播间，小心心、天选时刻、实物抽奖、活动抽奖、动态抽奖",
+  "url": "https://greasyfork.org/scripts/436283-%E6%88%98%E6%96%97%E5%90%A7%E6%AD%8C%E5%A7%AC-%E5%86%85%E7%BE%A4",
+  "code_url": "https://update.greasyfork.org/scripts/436283/%E6%88%98%E6%96%97%E5%90%A7%E6%AD%8C%E5%A7%AC%EF%BC%81%E3%80%90%E5%86%85%E7%BE%A4%E3%80%91.user.js",
+  "code_size": 539877,
+  "license": "MIT License",
+  "version": "8.0.89",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

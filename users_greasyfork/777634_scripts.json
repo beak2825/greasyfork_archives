@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427217,
+    "daily_installs": 0,
+    "total_installs": 352,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-29T23:23:51.000Z",
+    "code_updated_at": "2023-09-25T20:13:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 777634,
+        "name": "hbliu104",
+        "created_at": "2021-05-29T23:03:58.000Z",
+        "url": "https://greasyfork.org/users/777634-hbliu104"
+      }
+    ],
+    "name": "Sound Limiter for Weibo & Douyin Video Clips",
+    "description": "Limit the default sound volume of video clips on weibo.com to 10%.",
+    "url": "https://greasyfork.org/scripts/427217-sound-limiter-for-weibo-douyin-video-clips",
+    "code_url": "https://update.greasyfork.org/scripts/427217/Sound%20Limiter%20for%20Weibo%20%20Douyin%20Video%20Clips.user.js",
+    "code_size": 3846,
+    "license": null,
+    "version": "0.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

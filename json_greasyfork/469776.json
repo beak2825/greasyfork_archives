@@ -1,0 +1,33 @@
+{
+  "id": 469776,
+  "daily_installs": 0,
+  "total_installs": 80,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-29T18:05:56.000Z",
+  "code_updated_at": "2023-08-29T14:23:31.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1103308,
+      "name": "Leland",
+      "created_at": "2023-06-17T16:56:05.000Z",
+      "url": "https://greasyfork.org/users/1103308-leland"
+    }
+  ],
+  "name": "Ghost Boy Bot",
+  "description": "Bot to MPP",
+  "url": "https://greasyfork.org/scripts/469776-ghost-boy-bot",
+  "code_url": "https://update.greasyfork.org/scripts/469776/Ghost%20Boy%20Bot.user.js",
+  "code_size": 23114,
+  "license": "MIT License",
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

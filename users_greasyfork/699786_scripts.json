@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415092,
+    "daily_installs": 0,
+    "total_installs": 127,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-30T16:17:52.000Z",
+    "code_updated_at": "2020-10-30T16:17:52.000Z",
+    "namespace": "https://github.com/karlicoss/pin-discord-channels",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 699786,
+        "name": "karlicoss",
+        "created_at": "2020-10-30T16:15:01.000Z",
+        "url": "https://greasyfork.org/users/699786-karlicoss"
+      }
+    ],
+    "name": "pin discord channels",
+    "description": "Implements pin/start/favorite channel functionality for Discord by displaying your favorite channels on top",
+    "url": "https://greasyfork.org/scripts/415092-pin-discord-channels",
+    "code_url": "https://update.greasyfork.org/scripts/415092/pin%20discord%20channels.user.js",
+    "code_size": 1302,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

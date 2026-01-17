@@ -1,0 +1,68 @@
+[
+  {
+    "id": 465472,
+    "daily_installs": 1,
+    "total_installs": 591,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T02:42:16.000Z",
+    "code_updated_at": "2025-12-26T03:25:30.000Z",
+    "namespace": "http://dyliveplug.ddwhm.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 459396,
+        "name": "jesenv5",
+        "created_at": "2020-03-15T05:12:42.000Z",
+        "url": "https://greasyfork.org/users/459396-jesenv5"
+      }
+    ],
+    "name": "抖音直播Extend",
+    "description": "抖音直播功能拓展，目前主要功能：追流+横屏。",
+    "url": "https://greasyfork.org/scripts/465472-%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%ADextend",
+    "code_url": "https://update.greasyfork.org/scripts/465472/%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%ADExtend.user.js",
+    "code_size": 2789,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421599,
+    "daily_installs": 2,
+    "total_installs": 6590,
+    "fan_score": "77.7",
+    "good_ratings": 22,
+    "ok_ratings": 3,
+    "bad_ratings": 0,
+    "created_at": "2021-02-11T16:59:07.000Z",
+    "code_updated_at": "2025-10-10T08:57:04.000Z",
+    "namespace": "http://www.baidu.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 459396,
+        "name": "jesenv5",
+        "created_at": "2020-03-15T05:12:42.000Z",
+        "url": "https://greasyfork.org/users/459396-jesenv5"
+      }
+    ],
+    "name": "屏蔽高速下载器",
+    "description": "屏蔽高速下载器，自动去除高速下载器毒瘤，只保留普通下载地址，不会吧不会吧，不会真有人用高速下载器下载东西吧？",
+    "url": "https://greasyfork.org/scripts/421599-%E5%B1%8F%E8%94%BD%E9%AB%98%E9%80%9F%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/421599/%E5%B1%8F%E8%94%BD%E9%AB%98%E9%80%9F%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 14997,
+    "license": "GPL",
+    "version": "2.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

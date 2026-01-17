@@ -1,0 +1,33 @@
+{
+  "id": 448706,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-31T07:57:01.000Z",
+  "code_updated_at": "2024-10-16T23:25:06.000Z",
+  "namespace": "https://greasyfork.org/users/941655",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 941655,
+      "name": "korigamik",
+      "created_at": "2022-07-31T07:49:50.000Z",
+      "url": "https://greasyfork.org/users/941655-korigamik"
+    }
+  ],
+  "name": "NPTEL-Save-Sourse-Content",
+  "description": "Get all content downloads of any nptel course. \\n Adds a button on the nav bar to run the script.",
+  "url": "https://greasyfork.org/scripts/448706-nptel-save-sourse-content",
+  "code_url": "https://update.greasyfork.org/scripts/448706/NPTEL-Save-Sourse-Content.user.js",
+  "code_size": 9111,
+  "license": "MIT License",
+  "version": "0.4.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

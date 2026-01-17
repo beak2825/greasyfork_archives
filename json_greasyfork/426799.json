@@ -1,0 +1,33 @@
+{
+  "id": 426799,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-21T08:37:38.000Z",
+  "code_updated_at": "2021-05-21T08:37:38.000Z",
+  "namespace": "https://www.funstrart.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 773256,
+      "name": "akuya",
+      "created_at": "2021-05-18T01:57:36.000Z",
+      "url": "https://greasyfork.org/users/773256-akuya"
+    }
+  ],
+  "name": "屏蔽B站短视频",
+  "description": "屏蔽时间较短的视频（默认3分钟为标准）",
+  "url": "https://greasyfork.org/scripts/426799-%E5%B1%8F%E8%94%BDb%E7%AB%99%E7%9F%AD%E8%A7%86%E9%A2%91",
+  "code_url": "https://update.greasyfork.org/scripts/426799/%E5%B1%8F%E8%94%BDB%E7%AB%99%E7%9F%AD%E8%A7%86%E9%A2%91.user.js",
+  "code_size": 1947,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

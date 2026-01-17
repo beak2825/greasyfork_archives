@@ -1,0 +1,34 @@
+{
+  "id": 490560,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-22T10:27:15.000Z",
+  "code_updated_at": "2024-03-22T16:12:14.000Z",
+  "namespace": "https://www.nodeseek.com/",
+  "support_url": "https://www.nodeseek.com/post-68803-1",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1277893,
+      "name": "Pepsins",
+      "created_at": "2024-03-22T10:22:27.000Z",
+      "url": "https://greasyfork.org/users/1277893-pepsins",
+      "scripts": []
+    }
+  ],
+  "name": "NodeSeek 表情包增强-Pepsi自用",
+  "description": "为 NodeSeek 添加更多表情包",
+  "url": "https://greasyfork.org/scripts/490560-nodeseek-%E8%A1%A8%E6%83%85%E5%8C%85%E5%A2%9E%E5%BC%BA-pepsi%E8%87%AA%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/490560/NodeSeek%20%E8%A1%A8%E6%83%85%E5%8C%85%E5%A2%9E%E5%BC%BA-Pepsi%E8%87%AA%E7%94%A8.user.js",
+  "code_size": 12126,
+  "license": "MPL-2.0 License",
+  "version": "0.0.5",
+  "locale": "et",
+  "deleted": false,
+  "visibility": "public"
+}

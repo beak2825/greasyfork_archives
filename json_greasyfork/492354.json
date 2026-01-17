@@ -1,0 +1,34 @@
+{
+  "id": 492354,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-12T13:33:31.000Z",
+  "code_updated_at": "2024-04-12T13:58:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1287115,
+      "name": "Orange “organge ink” Inks",
+      "created_at": "2024-04-12T01:31:45.000Z",
+      "url": "https://greasyfork.org/users/1287115-orange-organge-ink-inks",
+      "scripts": []
+    }
+  ],
+  "name": "CookieClicker-Hack",
+  "description": "Any X Global Cookie Gain | Cookies Never Drop",
+  "url": "https://greasyfork.org/scripts/492354-cookieclicker-hack",
+  "code_url": "https://update.greasyfork.org/scripts/492354/CookieClicker-Hack.user.js",
+  "code_size": 3176,
+  "license": null,
+  "version": "2024-04-11 v.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

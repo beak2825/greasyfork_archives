@@ -1,0 +1,59 @@
+{
+  "id": 465976,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-10T23:30:47.000Z",
+  "code_updated_at": "2023-05-10T23:31:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076860,
+      "name": "ii k",
+      "created_at": "2023-05-10T23:16:13.000Z",
+      "url": "https://greasyfork.org/users/1076860-ii-k",
+      "scripts": [
+        {
+          "id": 465976,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-10T23:30:47.000Z",
+          "code_updated_at": "2023-05-10T23:31:57.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "使用 4 键修改多个元素的值（延迟执行）V0.1",
+          "description": "当按下 4 键时，延迟半秒后更改 ID 为 height_value、weight_value 和 long_value 的元素的 value",
+          "url": "https://greasyfork.org/scripts/465976-%E4%BD%BF%E7%94%A8-4-%E9%94%AE%E4%BF%AE%E6%94%B9%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E7%9A%84%E5%80%BC-%E5%BB%B6%E8%BF%9F%E6%89%A7%E8%A1%8C-v0-1",
+          "code_url": "https://update.greasyfork.org/scripts/465976/%E4%BD%BF%E7%94%A8%204%20%E9%94%AE%E4%BF%AE%E6%94%B9%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E7%9A%84%E5%80%BC%EF%BC%88%E5%BB%B6%E8%BF%9F%E6%89%A7%E8%A1%8C%EF%BC%89V01.user.js",
+          "code_size": 1739,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "使用 4 键修改多个元素的值（延迟执行）V0.1",
+  "description": "当按下 4 键时，延迟半秒后更改 ID 为 height_value、weight_value 和 long_value 的元素的 value",
+  "url": "https://greasyfork.org/scripts/465976-%E4%BD%BF%E7%94%A8-4-%E9%94%AE%E4%BF%AE%E6%94%B9%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E7%9A%84%E5%80%BC-%E5%BB%B6%E8%BF%9F%E6%89%A7%E8%A1%8C-v0-1",
+  "code_url": "https://update.greasyfork.org/scripts/465976/%E4%BD%BF%E7%94%A8%204%20%E9%94%AE%E4%BF%AE%E6%94%B9%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E7%9A%84%E5%80%BC%EF%BC%88%E5%BB%B6%E8%BF%9F%E6%89%A7%E8%A1%8C%EF%BC%89V01.user.js",
+  "code_size": 1739,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

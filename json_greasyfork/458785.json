@@ -1,0 +1,33 @@
+{
+  "id": 458785,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-24T15:27:33.000Z",
+  "code_updated_at": "2023-01-24T15:27:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1006972,
+      "name": "bgenia",
+      "created_at": "2023-01-04T16:52:15.000Z",
+      "url": "https://greasyfork.org/users/1006972-bgenia"
+    }
+  ],
+  "name": "S21 CulturedAvatars",
+  "description": "Replaces all blank avatars with random anime women",
+  "url": "https://greasyfork.org/scripts/458785-s21-culturedavatars",
+  "code_url": "https://update.greasyfork.org/scripts/458785/S21%20CulturedAvatars.user.js",
+  "code_size": 2440,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

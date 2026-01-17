@@ -1,0 +1,33 @@
+{
+  "id": 444239,
+  "daily_installs": 0,
+  "total_installs": 427,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-30T06:33:22.000Z",
+  "code_updated_at": "2022-09-07T08:09:32.000Z",
+  "namespace": "com.anwinity.idlepixel",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 665604,
+      "name": "Anwinity",
+      "created_at": "2020-07-11T00:15:39.000Z",
+      "url": "https://greasyfork.org/users/665604-anwinity"
+    }
+  ],
+  "name": "IdlePixel Quick Fight Buttons",
+  "description": "DEPRECATED - Added to SlapChop plugin",
+  "url": "https://greasyfork.org/scripts/444239-idlepixel-quick-fight-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/444239/IdlePixel%20Quick%20Fight%20Buttons.user.js",
+  "code_size": 3526,
+  "license": "MIT License",
+  "version": "1.3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

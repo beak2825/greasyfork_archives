@@ -30,6 +30,105 @@
     "version": "0.8",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 487293,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-14T13:21:16.000Z",
+    "code_updated_at": "2024-02-15T06:22:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1021865,
+        "name": "irebix",
+        "created_at": "2023-02-04T18:34:48.000Z",
+        "url": "https://greasyfork.org/users/1021865-irebix"
+      }
+    ],
+    "name": "autoDL网页闲置提醒",
+    "description": "网页闲置10分钟后提醒",
+    "url": "https://greasyfork.org/scripts/487293-autodl%E7%BD%91%E9%A1%B5%E9%97%B2%E7%BD%AE%E6%8F%90%E9%86%92",
+    "code_url": "https://update.greasyfork.org/scripts/487293/autoDL%E7%BD%91%E9%A1%B5%E9%97%B2%E7%BD%AE%E6%8F%90%E9%86%92.user.js",
+    "code_size": 2847,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479032,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-04T15:02:12.000Z",
+    "code_updated_at": "2023-11-04T15:03:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1021865,
+        "name": "irebix",
+        "created_at": "2023-02-04T18:34:48.000Z",
+        "url": "https://greasyfork.org/users/1021865-irebix"
+      }
+    ],
+    "name": "自动删除乐魔ui的登录弹窗",
+    "description": "Remove the login popup from the webpage",
+    "url": "https://greasyfork.org/scripts/479032-%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E4%B9%90%E9%AD%94ui%E7%9A%84%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/479032/%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E4%B9%90%E9%AD%94ui%E7%9A%84%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97.user.js",
+    "code_size": 660,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459444,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-04T19:15:11.000Z",
+    "code_updated_at": "2023-03-02T09:57:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1021865,
+        "name": "irebix",
+        "created_at": "2023-02-04T18:34:48.000Z",
+        "url": "https://greasyfork.org/users/1021865-irebix"
+      }
+    ],
+    "name": "哔哩私信快捷回复",
+    "description": "哔哩私信快捷回复菜单",
+    "url": "https://greasyfork.org/scripts/459444-%E5%93%94%E5%93%A9%E7%A7%81%E4%BF%A1%E5%BF%AB%E6%8D%B7%E5%9B%9E%E5%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/459444/%E5%93%94%E5%93%A9%E7%A7%81%E4%BF%A1%E5%BF%AB%E6%8D%B7%E5%9B%9E%E5%A4%8D.user.js",
+    "code_size": 3488,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

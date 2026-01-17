@@ -1,0 +1,34 @@
+{
+  "id": 487375,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-15T12:19:14.000Z",
+  "code_updated_at": "2024-02-20T08:35:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed Raif CH Combined Laury Herren",
+  "description": "Perform a one-time reload on specific clicks",
+  "url": "https://greasyfork.org/scripts/487375-ed-raif-ch-combined-laury-herren",
+  "code_url": "https://update.greasyfork.org/scripts/487375/Ed%20Raif%20CH%20Combined%20Laury%20Herren.user.js",
+  "code_size": 51827,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

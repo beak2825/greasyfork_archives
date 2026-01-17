@@ -1,0 +1,59 @@
+{
+  "id": 467187,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-27T00:56:18.000Z",
+  "code_updated_at": "2023-05-27T00:56:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1085291,
+      "name": "DANIEL IGNACIO SALAS PINTO",
+      "created_at": "2023-05-27T00:54:19.000Z",
+      "url": "https://greasyfork.org/users/1085291-daniel-ignacio-salas-pinto",
+      "scripts": [
+        {
+          "id": 467187,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-27T00:56:18.000Z",
+          "code_updated_at": "2023-05-27T00:56:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Lab 4 Cripto",
+          "description": "el coso del cosito",
+          "url": "https://greasyfork.org/scripts/467187-lab-4-cripto",
+          "code_url": "https://update.greasyfork.org/scripts/467187/Lab%204%20Cripto.user.js",
+          "code_size": 2122,
+          "license": null,
+          "version": "0.1",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Lab 4 Cripto",
+  "description": "el coso del cosito",
+  "url": "https://greasyfork.org/scripts/467187-lab-4-cripto",
+  "code_url": "https://update.greasyfork.org/scripts/467187/Lab%204%20Cripto.user.js",
+  "code_size": 2122,
+  "license": null,
+  "version": "0.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

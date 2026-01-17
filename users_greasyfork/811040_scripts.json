@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431746,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-01T10:40:40.000Z",
+    "code_updated_at": "2021-09-01T11:13:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811040,
+        "name": "Meliksah Bozkurt",
+        "created_at": "2021-09-01T10:37:46.000Z",
+        "url": "https://greasyfork.org/users/811040-meliksah-bozkurt"
+      }
+    ],
+    "name": "Map",
+    "description": "tttt",
+    "url": "https://greasyfork.org/scripts/431746-map",
+    "code_url": "https://update.greasyfork.org/scripts/431746/Map.user.js",
+    "code_size": 4841,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

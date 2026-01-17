@@ -1,0 +1,34 @@
+{
+  "id": 424287,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-31T21:01:15.000Z",
+  "code_updated_at": "2021-03-31T21:47:15.000Z",
+  "namespace": "kowsky.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 753526,
+      "name": "donidonadeli",
+      "created_at": "2021-03-31T20:55:08.000Z",
+      "url": "https://greasyfork.org/users/753526-donidonadeli",
+      "scripts": []
+    }
+  ],
+  "name": "Mover Army Minas Ggg donidonadeli",
+  "description": "Imperiaonline movearmy for v5, v6",
+  "url": "https://greasyfork.org/scripts/424287-mover-army-minas-ggg-donidonadeli",
+  "code_url": "https://update.greasyfork.org/scripts/424287/Mover%20Army%20Minas%20Ggg%20donidonadeli.user.js",
+  "code_size": 9134,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 445709,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-29T13:33:46.000Z",
+  "code_updated_at": "2022-05-29T13:33:46.000Z",
+  "namespace": "vivek201",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 919846,
+      "name": "vivek201",
+      "created_at": "2022-05-29T12:51:49.000Z",
+      "url": "https://greasyfork.org/users/919846-vivek201"
+    }
+  ],
+  "name": "https://dotnettutorials.net/ - Marking items complete",
+  "description": "Allows marking lessons as completed in the site: dotnettutorials.net",
+  "url": "https://greasyfork.org/scripts/445709-https-dotnettutorials-net-marking-items-complete",
+  "code_url": "https://update.greasyfork.org/scripts/445709/https%3Adotnettutorialsnet%20-%20Marking%20items%20complete.user.js",
+  "code_size": 2812,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

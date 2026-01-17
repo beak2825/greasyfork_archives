@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421402,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-07T22:17:07.000Z",
+    "code_updated_at": "2021-02-07T22:18:05.000Z",
+    "namespace": "https://greasyfork.org/users/8608",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8608,
+        "name": "srennorj",
+        "created_at": "2015-01-24T15:36:22.000Z",
+        "url": "https://greasyfork.org/users/8608-srennorj"
+      }
+    ],
+    "name": "Google Slides - Hide left panel slide preview",
+    "description": "This hides the left slide panel window on google slides",
+    "url": "https://greasyfork.org/scripts/421402-google-slides-hide-left-panel-slide-preview",
+    "code_url": "https://update.greasyfork.org/scripts/421402/Google%20Slides%20-%20Hide%20left%20panel%20slide%20preview.user.css",
+    "code_size": 392,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

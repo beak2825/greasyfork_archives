@@ -1,0 +1,59 @@
+{
+  "id": 419384,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-30T07:32:46.000Z",
+  "code_updated_at": "2020-12-30T07:32:46.000Z",
+  "namespace": "https://www.npmjs.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 722385,
+      "name": "qier222",
+      "created_at": "2020-12-30T07:30:02.000Z",
+      "url": "https://greasyfork.org/users/722385-qier222",
+      "scripts": [
+        {
+          "id": 419384,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-12-30T07:32:46.000Z",
+          "code_updated_at": "2020-12-30T07:32:46.000Z",
+          "namespace": "https://www.npmjs.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Replace 'npm i' with 'yarn add' in npmjs.com",
+          "description": "Replace 'npm i' with 'yarn add' in npmjs.com,",
+          "url": "https://greasyfork.org/scripts/419384-replace-npm-i-with-yarn-add-in-npmjs-com",
+          "code_url": "https://update.greasyfork.org/scripts/419384/Replace%20%27npm%20i%27%20with%20%27yarn%20add%27%20in%20npmjscom.user.js",
+          "code_size": 505,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Replace 'npm i' with 'yarn add' in npmjs.com",
+  "description": "Replace 'npm i' with 'yarn add' in npmjs.com,",
+  "url": "https://greasyfork.org/scripts/419384-replace-npm-i-with-yarn-add-in-npmjs-com",
+  "code_url": "https://update.greasyfork.org/scripts/419384/Replace%20%27npm%20i%27%20with%20%27yarn%20add%27%20in%20npmjscom.user.js",
+  "code_size": 505,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

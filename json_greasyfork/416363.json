@@ -1,0 +1,59 @@
+{
+  "id": 416363,
+  "daily_installs": 0,
+  "total_installs": 444,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-19T03:08:51.000Z",
+  "code_updated_at": "2020-11-19T03:16:03.000Z",
+  "namespace": "https://github.com/MilikanDia/gbfRelated",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 706725,
+      "name": "MilikanDia",
+      "created_at": "2020-11-19T03:07:02.000Z",
+      "url": "https://greasyfork.org/users/706725-milikandia",
+      "scripts": [
+        {
+          "id": 416363,
+          "daily_installs": 0,
+          "total_installs": 444,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-19T03:08:51.000Z",
+          "code_updated_at": "2020-11-19T03:16:03.000Z",
+          "namespace": "https://github.com/MilikanDia/gbfRelated",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "碧蓝幻想全灭",
+          "description": "提示队伍全灭",
+          "url": "https://greasyfork.org/scripts/416363-%E7%A2%A7%E8%93%9D%E5%B9%BB%E6%83%B3%E5%85%A8%E7%81%AD",
+          "code_url": "https://update.greasyfork.org/scripts/416363/%E7%A2%A7%E8%93%9D%E5%B9%BB%E6%83%B3%E5%85%A8%E7%81%AD.user.js",
+          "code_size": 13079,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "碧蓝幻想全灭",
+  "description": "提示队伍全灭",
+  "url": "https://greasyfork.org/scripts/416363-%E7%A2%A7%E8%93%9D%E5%B9%BB%E6%83%B3%E5%85%A8%E7%81%AD",
+  "code_url": "https://update.greasyfork.org/scripts/416363/%E7%A2%A7%E8%93%9D%E5%B9%BB%E6%83%B3%E5%85%A8%E7%81%AD.user.js",
+  "code_size": 13079,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 427088,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-27T06:56:49.000Z",
+  "code_updated_at": "2021-05-27T07:40:25.000Z",
+  "namespace": "https://fazerog02.dev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 413250,
+      "name": "rog faze",
+      "created_at": "2019-12-07T20:34:58.000Z",
+      "url": "https://greasyfork.org/users/413250-rog-faze",
+      "scripts": [
+        {
+          "id": 443307,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-13T05:36:55.000Z",
+          "code_updated_at": "2022-04-13T05:36:55.000Z",
+          "namespace": "https://fazerog02.dev",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "EES",
+          "description": "This extention makes searching for only sites witten in English easy.",
+          "url": "https://greasyfork.org/scripts/443307-ees",
+          "code_url": "https://update.greasyfork.org/scripts/443307/EES.user.js",
+          "code_size": 3425,
+          "license": "MIT License",
+          "version": "0.0.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TetrioAutoInvite",
+  "description": "when you create new private custom game, this system send message to teams channel",
+  "url": "https://greasyfork.org/scripts/427088-tetrioautoinvite",
+  "code_url": "https://update.greasyfork.org/scripts/427088/TetrioAutoInvite.user.js",
+  "code_size": 1543,
+  "license": null,
+  "version": "0.2",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

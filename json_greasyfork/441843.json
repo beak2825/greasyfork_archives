@@ -1,0 +1,33 @@
+{
+  "id": 441843,
+  "daily_installs": 0,
+  "total_installs": 423,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-21T05:34:13.000Z",
+  "code_updated_at": "2024-08-02T02:57:03.000Z",
+  "namespace": "https://greasyfork.org/users/890176",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 890176,
+      "name": "一方通行404",
+      "created_at": "2022-03-21T05:10:59.000Z",
+      "url": "https://greasyfork.org/users/890176-%E4%B8%80%E6%96%B9%E9%80%9A%E8%A1%8C404"
+    }
+  ],
+  "name": "DIM清理",
+  "description": "一键DIM标记垃圾装备",
+  "url": "https://greasyfork.org/scripts/441843-dim%E6%B8%85%E7%90%86",
+  "code_url": "https://update.greasyfork.org/scripts/441843/DIM%E6%B8%85%E7%90%86.user.js",
+  "code_size": 5863,
+  "license": "MIT License",
+  "version": "1.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

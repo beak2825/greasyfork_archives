@@ -1,0 +1,33 @@
+{
+  "id": 450792,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-05T15:49:49.000Z",
+  "code_updated_at": "2022-10-02T07:21:25.000Z",
+  "namespace": "https://www.cc98.org/user/name/ml98",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 742885,
+      "name": "ml98",
+      "created_at": "2021-03-02T15:56:41.000Z",
+      "url": "https://greasyfork.org/users/742885-ml98"
+    }
+  ],
+  "name": "CC98 Tools - Topic Preview",
+  "description": "CC98 tools for previewing topic.",
+  "url": "https://greasyfork.org/scripts/450792-cc98-tools-topic-preview",
+  "code_url": "https://update.greasyfork.org/scripts/450792/CC98%20Tools%20-%20Topic%20Preview.user.js",
+  "code_size": 13292,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

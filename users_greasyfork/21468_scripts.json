@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421223,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-04T21:56:59.000Z",
+    "code_updated_at": "2021-02-05T04:38:13.000Z",
+    "namespace": "a@b.c",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 21468,
+        "name": "Andy Liu",
+        "created_at": "2015-11-30T07:53:13.000Z",
+        "url": "https://greasyfork.org/users/21468-andy-liu"
+      }
+    ],
+    "name": "论坛帖子按发帖时间排序",
+    "description": "论坛自动按发帖时间排序，支持 discuz 和 phpwind",
+    "url": "https://greasyfork.org/scripts/421223-%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E6%8C%89%E5%8F%91%E5%B8%96%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F",
+    "code_url": "https://update.greasyfork.org/scripts/421223/%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E6%8C%89%E5%8F%91%E5%B8%96%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F.user.js",
+    "code_size": 1334,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

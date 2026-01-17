@@ -1,0 +1,33 @@
+{
+  "id": 487693,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-19T07:54:52.000Z",
+  "code_updated_at": "2024-02-28T15:00:33.000Z",
+  "namespace": "https://github.com/Steve5wutongyu6/v2ex-area-code-conversion",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1263496,
+      "name": "Steve5wutongyu6",
+      "created_at": "2024-02-19T07:49:03.000Z",
+      "url": "https://greasyfork.org/users/1263496-steve5wutongyu6"
+    }
+  ],
+  "name": "V2EX 区号转换器",
+  "description": "将V2EX帖子中的电话区号转换成对应的地点名称",
+  "url": "https://greasyfork.org/scripts/487693-v2ex-%E5%8C%BA%E5%8F%B7%E8%BD%AC%E6%8D%A2%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/487693/V2EX%20%E5%8C%BA%E5%8F%B7%E8%BD%AC%E6%8D%A2%E5%99%A8.user.js",
+  "code_size": 12848,
+  "license": "MIT License",
+  "version": "0.1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

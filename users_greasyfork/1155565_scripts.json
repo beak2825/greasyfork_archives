@@ -1,0 +1,68 @@
+[
+  {
+    "id": 487576,
+    "daily_installs": 0,
+    "total_installs": 199,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-18T06:04:07.000Z",
+    "code_updated_at": "2024-02-20T02:47:41.000Z",
+    "namespace": "https://github.com/xiaoyaoyuxin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1155565,
+        "name": "xiaoyaoyuxin",
+        "created_at": "2023-08-20T13:07:18.000Z",
+        "url": "https://greasyfork.org/users/1155565-xiaoyaoyuxin"
+      }
+    ],
+    "name": "NGA优化摸鱼体验-调整浏览宽度",
+    "description": "自定义NGA列表宽度和贴内宽度",
+    "url": "https://greasyfork.org/scripts/487576-nga%E4%BC%98%E5%8C%96%E6%91%B8%E9%B1%BC%E4%BD%93%E9%AA%8C-%E8%B0%83%E6%95%B4%E6%B5%8F%E8%A7%88%E5%AE%BD%E5%BA%A6",
+    "code_url": "https://update.greasyfork.org/scripts/487576/NGA%E4%BC%98%E5%8C%96%E6%91%B8%E9%B1%BC%E4%BD%93%E9%AA%8C-%E8%B0%83%E6%95%B4%E6%B5%8F%E8%A7%88%E5%AE%BD%E5%BA%A6.user.js",
+    "code_size": 2888,
+    "license": "MIT License",
+    "version": "0.3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486842,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-07T13:08:06.000Z",
+    "code_updated_at": "2024-02-07T13:08:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1155565,
+        "name": "xiaoyaoyuxin",
+        "created_at": "2023-08-20T13:07:18.000Z",
+        "url": "https://greasyfork.org/users/1155565-xiaoyaoyuxin"
+      }
+    ],
+    "name": "西西河字号调整",
+    "description": "调整一下西西河的字号",
+    "url": "https://greasyfork.org/scripts/486842-%E8%A5%BF%E8%A5%BF%E6%B2%B3%E5%AD%97%E5%8F%B7%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/486842/%E8%A5%BF%E8%A5%BF%E6%B2%B3%E5%AD%97%E5%8F%B7%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 732,
+    "license": "MIT License",
+    "version": "0.1.20240206001",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

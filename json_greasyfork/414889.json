@@ -1,0 +1,59 @@
+{
+  "id": 414889,
+  "daily_installs": 0,
+  "total_installs": 2112,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2020-10-28T12:52:24.000Z",
+  "code_updated_at": "2020-10-28T12:52:23.000Z",
+  "namespace": "https://greasyfork.org/en/users/699088-childconsumer69420",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 699088,
+      "name": "childconsumer69420",
+      "created_at": "2020-10-28T12:40:50.000Z",
+      "url": "https://greasyfork.org/users/699088-childconsumer69420",
+      "scripts": [
+        {
+          "id": 414889,
+          "daily_installs": 0,
+          "total_installs": 2112,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2020-10-28T12:52:24.000Z",
+          "code_updated_at": "2020-10-28T12:52:23.000Z",
+          "namespace": "https://greasyfork.org/en/users/699088-childconsumer69420",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Cookie Clicker cheat : Free cookies and sugar lumps.",
+          "description": "How Many stuff You Want LOL",
+          "url": "https://greasyfork.org/scripts/414889-cookie-clicker-cheat-free-cookies-and-sugar-lumps",
+          "code_url": "https://update.greasyfork.org/scripts/414889/Cookie%20Clicker%20cheat%20%3A%20Free%20cookies%20and%20sugar%20lumps.user.js",
+          "code_size": 764,
+          "license": null,
+          "version": "1.4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Cookie Clicker cheat : Free cookies and sugar lumps.",
+  "description": "How Many stuff You Want LOL",
+  "url": "https://greasyfork.org/scripts/414889-cookie-clicker-cheat-free-cookies-and-sugar-lumps",
+  "code_url": "https://update.greasyfork.org/scripts/414889/Cookie%20Clicker%20cheat%20%3A%20Free%20cookies%20and%20sugar%20lumps.user.js",
+  "code_size": 764,
+  "license": null,
+  "version": "1.4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

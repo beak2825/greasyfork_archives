@@ -1,0 +1,59 @@
+{
+  "id": 453437,
+  "daily_installs": 0,
+  "total_installs": 118,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-20T20:24:34.000Z",
+  "code_updated_at": "2022-12-14T01:11:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 551308,
+      "name": "Yao Vanis",
+      "created_at": "2020-05-04T00:48:59.000Z",
+      "url": "https://greasyfork.org/users/551308-yao-vanis",
+      "scripts": [
+        {
+          "id": 453437,
+          "daily_installs": 0,
+          "total_installs": 118,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-20T20:24:34.000Z",
+          "code_updated_at": "2022-12-14T01:11:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Cristmas",
+          "description": "https://discord.gg/UsPCMBDGES",
+          "url": "https://greasyfork.org/scripts/453437-cristmas",
+          "code_url": "https://update.greasyfork.org/scripts/453437/Cristmas.user.js",
+          "code_size": 2803,
+          "license": "N/A",
+          "version": "1.8",
+          "locale": "pl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Cristmas",
+  "description": "https://discord.gg/UsPCMBDGES",
+  "url": "https://greasyfork.org/scripts/453437-cristmas",
+  "code_url": "https://update.greasyfork.org/scripts/453437/Cristmas.user.js",
+  "code_size": 2803,
+  "license": "N/A",
+  "version": "1.8",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

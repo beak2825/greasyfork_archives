@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418155,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-06T02:58:49.000Z",
+    "code_updated_at": "2020-12-06T02:58:48.000Z",
+    "namespace": "https://greasyfork.org/users/713448",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713448,
+        "name": "adubov1",
+        "created_at": "2020-12-06T02:56:50.000Z",
+        "url": "https://greasyfork.org/users/713448-adubov1"
+      }
+    ],
+    "name": "Khan Academy Bot",
+    "description": "ur welcome cheater",
+    "url": "https://greasyfork.org/scripts/418155-khan-academy-bot",
+    "code_url": "https://update.greasyfork.org/scripts/418155/Khan%20Academy%20Bot.user.js",
+    "code_size": 4466,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

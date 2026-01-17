@@ -1,0 +1,34 @@
+{
+  "id": 437709,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-28T21:57:59.000Z",
+  "code_updated_at": "2021-12-28T21:57:59.000Z",
+  "namespace": "FunnyPocketBook",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 858662,
+      "name": "fpo",
+      "created_at": "2021-12-28T21:54:09.000Z",
+      "url": "https://greasyfork.org/users/858662-fpo",
+      "scripts": []
+    }
+  ],
+  "name": "Show total incoming troops in village info",
+  "description": "Shows the total incoming troops (support and attack) in the village info screen",
+  "url": "https://greasyfork.org/scripts/437709-show-total-incoming-troops-in-village-info",
+  "code_url": "https://update.greasyfork.org/scripts/437709/Show%20total%20incoming%20troops%20in%20village%20info.user.js",
+  "code_size": 13294,
+  "license": null,
+  "version": "0.4.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

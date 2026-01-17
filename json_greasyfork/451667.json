@@ -1,0 +1,59 @@
+{
+  "id": 451667,
+  "daily_installs": 0,
+  "total_installs": 117,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-20T04:21:48.000Z",
+  "code_updated_at": "2026-01-04T18:14:23.000Z",
+  "namespace": "https://github.com/ZigZagT",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 961409,
+      "name": "ZigZagT",
+      "created_at": "2022-09-20T04:18:25.000Z",
+      "url": "https://greasyfork.org/users/961409-zigzagt",
+      "scripts": [
+        {
+          "id": 451667,
+          "daily_installs": 0,
+          "total_installs": 117,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-20T04:21:48.000Z",
+          "code_updated_at": "2026-01-04T18:14:23.000Z",
+          "namespace": "https://github.com/ZigZagT",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Plex Playback Speed",
+          "description": "Add playback speed controls to plex web player with keyboard shortcuts",
+          "url": "https://greasyfork.org/scripts/451667-plex-playback-speed",
+          "code_url": "https://update.greasyfork.org/scripts/451667/Plex%20Playback%20Speed.user.js",
+          "code_size": 6153,
+          "license": "MIT License",
+          "version": "1.4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Plex Playback Speed",
+  "description": "Add playback speed controls to plex web player with keyboard shortcuts",
+  "url": "https://greasyfork.org/scripts/451667-plex-playback-speed",
+  "code_url": "https://update.greasyfork.org/scripts/451667/Plex%20Playback%20Speed.user.js",
+  "code_size": 6153,
+  "license": "MIT License",
+  "version": "1.4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 444790,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-10T10:05:17.000Z",
+  "code_updated_at": "2022-05-13T06:44:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 35834,
+      "name": "huyk",
+      "created_at": "2016-03-29T07:18:13.000Z",
+      "url": "https://greasyfork.org/users/35834-huyk",
+      "scripts": [
+        {
+          "id": 18348,
+          "daily_installs": 0,
+          "total_installs": 4178,
+          "fan_score": "94.4",
+          "good_ratings": 81,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2016-03-29T07:25:59.000Z",
+          "code_updated_at": "2017-02-22T16:27:29.000Z",
+          "namespace": "bengda@outlook.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Yinyuetai",
+          "description": "免积分，免登录，既可观看、下载高清MV",
+          "url": "https://greasyfork.org/scripts/18348-yinyuetai",
+          "code_url": "https://update.greasyfork.org/scripts/18348/Yinyuetai.user.js",
+          "code_size": 7757,
+          "license": null,
+          "version": "1.1.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "codesign网站ui规范转换",
+  "description": "对于codesign网站的ui设计稿显示项目对应的ui规范值",
+  "url": "https://greasyfork.org/scripts/444790-codesign%E7%BD%91%E7%AB%99ui%E8%A7%84%E8%8C%83%E8%BD%AC%E6%8D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/444790/codesign%E7%BD%91%E7%AB%99ui%E8%A7%84%E8%8C%83%E8%BD%AC%E6%8D%A2.user.js",
+  "code_size": 28136,
+  "license": "MIT License",
+  "version": "0.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

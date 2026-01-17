@@ -1,0 +1,34 @@
+{
+  "id": 474197,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-30T07:41:34.000Z",
+  "code_updated_at": "2023-08-30T07:41:34.000Z",
+  "namespace": "@izumoti@submarin.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1162691,
+      "name": "izumoti",
+      "created_at": "2023-08-30T07:35:25.000Z",
+      "url": "https://greasyfork.org/users/1162691-izumoti",
+      "scripts": []
+    }
+  ],
+  "name": "読書メーターのステータスをMisskeyインスタンスに投稿する奴",
+  "description": "読書メーターのステータスをMisskeyインスタンスに投稿する",
+  "url": "https://greasyfork.org/scripts/474197-%E8%AA%AD%E6%9B%B8%E3%83%A1%E3%83%BC%E3%82%BF%E3%83%BC%E3%81%AE%E3%82%B9%E3%83%86%E3%83%BC%E3%82%BF%E3%82%B9%E3%82%92misskey%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%81%AB%E6%8A%95%E7%A8%BF%E3%81%99%E3%82%8B%E5%A5%B4",
+  "code_url": "https://update.greasyfork.org/scripts/474197/%E8%AA%AD%E6%9B%B8%E3%83%A1%E3%83%BC%E3%82%BF%E3%83%BC%E3%81%AE%E3%82%B9%E3%83%86%E3%83%BC%E3%82%BF%E3%82%B9%E3%82%92Misskey%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%81%AB%E6%8A%95%E7%A8%BF%E3%81%99%E3%82%8B%E5%A5%B4.user.js",
+  "code_size": 4119,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 460042,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-15T04:40:49.000Z",
+  "code_updated_at": "2023-02-24T23:32:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1027169,
+      "name": "William Rawls",
+      "created_at": "2023-02-15T01:57:14.000Z",
+      "url": "https://greasyfork.org/users/1027169-william-rawls"
+    }
+  ],
+  "name": "AutoSpSk: Auto Speed to 112.5% playback on YTM. Auto skip dislikes",
+  "description": "Increases yourtube music playback speed to 112.5%. Skips when a song is disliked",
+  "url": "https://greasyfork.org/scripts/460042-autospsk-auto-speed-to-112-5-playback-on-ytm-auto-skip-dislikes",
+  "code_url": "https://update.greasyfork.org/scripts/460042/AutoSpSk%3A%20Auto%20Speed%20to%201125%25%20playback%20on%20YTM%20Auto%20skip%20dislikes.user.js",
+  "code_size": 2343,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

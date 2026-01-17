@@ -1,0 +1,33 @@
+{
+  "id": 429461,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-16T06:20:19.000Z",
+  "code_updated_at": "2021-09-30T11:03:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 794071,
+      "name": "不告诉你🤣",
+      "created_at": "2021-07-16T06:19:02.000Z",
+      "url": "https://greasyfork.org/users/794071-%E4%B8%8D%E5%91%8A%E8%AF%89%E4%BD%A0"
+    }
+  ],
+  "name": "Google Meet Student camera checker - @foonyew.edu.my",
+  "description": "Find nasty students without camera",
+  "url": "https://greasyfork.org/scripts/429461-google-meet-student-camera-checker-foonyew-edu-my",
+  "code_url": "https://update.greasyfork.org/scripts/429461/Google%20Meet%20Student%20camera%20checker%20-%20%40foonyewedumy.user.js",
+  "code_size": 6893,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

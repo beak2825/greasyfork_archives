@@ -1,0 +1,59 @@
+{
+  "id": 439582,
+  "daily_installs": 0,
+  "total_installs": 221,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-05T04:14:21.000Z",
+  "code_updated_at": "2022-02-05T05:22:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 872859,
+      "name": "JiangLongLiu",
+      "created_at": "2022-02-05T03:46:34.000Z",
+      "url": "https://greasyfork.org/users/872859-jianglongliu",
+      "scripts": [
+        {
+          "id": 439582,
+          "daily_installs": 0,
+          "total_installs": 221,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-05T04:14:21.000Z",
+          "code_updated_at": "2022-02-05T05:22:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili  获取时间戳URL，以便对照视频记录文字内容",
+          "description": "按 t 就能复制带时间戳的 URL的 markdown连接了",
+          "url": "https://greasyfork.org/scripts/439582-bilibili-%E8%8E%B7%E5%8F%96%E6%97%B6%E9%97%B4%E6%88%B3url-%E4%BB%A5%E4%BE%BF%E5%AF%B9%E7%85%A7%E8%A7%86%E9%A2%91%E8%AE%B0%E5%BD%95%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9",
+          "code_url": "https://update.greasyfork.org/scripts/439582/bilibili%20%20%E8%8E%B7%E5%8F%96%E6%97%B6%E9%97%B4%E6%88%B3URL%EF%BC%8C%E4%BB%A5%E4%BE%BF%E5%AF%B9%E7%85%A7%E8%A7%86%E9%A2%91%E8%AE%B0%E5%BD%95%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9.user.js",
+          "code_size": 1501,
+          "license": "MIT License",
+          "version": "0.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili  获取时间戳URL，以便对照视频记录文字内容",
+  "description": "按 t 就能复制带时间戳的 URL的 markdown连接了",
+  "url": "https://greasyfork.org/scripts/439582-bilibili-%E8%8E%B7%E5%8F%96%E6%97%B6%E9%97%B4%E6%88%B3url-%E4%BB%A5%E4%BE%BF%E5%AF%B9%E7%85%A7%E8%A7%86%E9%A2%91%E8%AE%B0%E5%BD%95%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9",
+  "code_url": "https://update.greasyfork.org/scripts/439582/bilibili%20%20%E8%8E%B7%E5%8F%96%E6%97%B6%E9%97%B4%E6%88%B3URL%EF%BC%8C%E4%BB%A5%E4%BE%BF%E5%AF%B9%E7%85%A7%E8%A7%86%E9%A2%91%E8%AE%B0%E5%BD%95%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9.user.js",
+  "code_size": 1501,
+  "license": "MIT License",
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 420951,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-31T09:12:29.000Z",
+    "code_updated_at": "2021-02-01T21:05:30.000Z",
+    "namespace": "https://greasyfork.org/users/141341",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 141341,
+        "name": "Vilim Lendvaj",
+        "created_at": "2017-07-16T18:18:32.000Z",
+        "url": "https://greasyfork.org/users/141341-vilim-lendvaj"
+      }
+    ],
+    "name": "4chan egg puns",
+    "description": "Wonder Egg Priority shitposting",
+    "url": "https://greasyfork.org/scripts/420951-4chan-egg-puns",
+    "code_url": "https://update.greasyfork.org/scripts/420951/4chan%20egg%20puns.user.js",
+    "code_size": 960,
+    "license": null,
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418818,
+    "daily_installs": 0,
+    "total_installs": 248,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-18T20:55:10.000Z",
+    "code_updated_at": "2020-12-18T22:37:19.000Z",
+    "namespace": "https://greasyfork.org/users/141341",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 141341,
+        "name": "Vilim Lendvaj",
+        "created_at": "2017-07-16T18:18:32.000Z",
+        "url": "https://greasyfork.org/users/141341-vilim-lendvaj"
+      }
+    ],
+    "name": "4chan umineko colored truths",
+    "description": "enable umineko colored truths on 4chan",
+    "url": "https://greasyfork.org/scripts/418818-4chan-umineko-colored-truths",
+    "code_url": "https://update.greasyfork.org/scripts/418818/4chan%20umineko%20colored%20truths.user.js",
+    "code_size": 3087,
+    "license": null,
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

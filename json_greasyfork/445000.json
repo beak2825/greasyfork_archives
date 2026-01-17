@@ -1,0 +1,34 @@
+{
+  "id": 445000,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-15T08:34:16.000Z",
+  "code_updated_at": "2022-05-15T08:50:38.000Z",
+  "namespace": "undefined",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 914466,
+      "name": "j37307",
+      "created_at": "2022-05-15T08:14:19.000Z",
+      "url": "https://greasyfork.org/users/914466-j37307",
+      "scripts": []
+    }
+  ],
+  "name": "KKKKKKK=天猫店铺排序",
+  "description": "————",
+  "url": "https://greasyfork.org/scripts/445000-kkkkkkk-%E5%A4%A9%E7%8C%AB%E5%BA%97%E9%93%BA%E6%8E%92%E5%BA%8F",
+  "code_url": "https://update.greasyfork.org/scripts/445000/KKKKKKK%3D%E5%A4%A9%E7%8C%AB%E5%BA%97%E9%93%BA%E6%8E%92%E5%BA%8F.user.js",
+  "code_size": 1183,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

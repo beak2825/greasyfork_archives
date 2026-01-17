@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472729,
+    "daily_installs": 0,
+    "total_installs": 637,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-08-08T16:33:01.000Z",
+    "code_updated_at": "2023-08-10T10:13:05.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1147052,
+        "name": "PredatorBzh",
+        "created_at": "2023-08-08T15:30:53.000Z",
+        "url": "https://greasyfork.org/users/1147052-predatorbzh"
+      }
+    ],
+    "name": "Freebitco.in Auto Roll, Auto WoF (work with tiers hcaptcha resolver) 08/2023",
+    "description": "Please use my Referal-Link https://freebitco.in/?r=1748546, if you find the script useful and want to donate, please use bc1qwdsgre7gzy4z63ujsev9mfkv68f33jykdzeypj",
+    "url": "https://greasyfork.org/scripts/472729-freebitco-in-auto-roll-auto-wof-work-with-tiers-hcaptcha-resolver-08-2023",
+    "code_url": "https://update.greasyfork.org/scripts/472729/Freebitcoin%20Auto%20Roll%2C%20Auto%20WoF%20%28work%20with%20tiers%20hcaptcha%20resolver%29%20082023.user.js",
+    "code_size": 7252,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

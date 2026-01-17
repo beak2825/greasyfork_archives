@@ -97,5 +97,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492357,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-12T14:12:12.000Z",
+    "code_updated_at": "2024-04-12T14:12:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286528,
+        "name": "袁开宇",
+        "created_at": "2024-04-10T15:59:47.000Z",
+        "url": "https://greasyfork.org/users/1286528-%E8%A2%81%E5%BC%80%E5%AE%87"
+      }
+    ],
+    "name": "隐藏百度内容推荐",
+    "description": "隐藏百度页面右侧的内容推荐",
+    "url": "https://greasyfork.org/scripts/492357-%E9%9A%90%E8%97%8F%E7%99%BE%E5%BA%A6%E5%86%85%E5%AE%B9%E6%8E%A8%E8%8D%90",
+    "code_url": "https://update.greasyfork.org/scripts/492357/%E9%9A%90%E8%97%8F%E7%99%BE%E5%BA%A6%E5%86%85%E5%AE%B9%E6%8E%A8%E8%8D%90.user.js",
+    "code_size": 508,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 492212,
+    "daily_installs": 0,
+    "total_installs": 68,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-11T06:34:53.000Z",
+    "code_updated_at": "2024-12-01T06:57:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286528,
+        "name": "袁开宇",
+        "created_at": "2024-04-10T15:59:47.000Z",
+        "url": "https://greasyfork.org/users/1286528-%E8%A2%81%E5%BC%80%E5%AE%87"
+      }
+    ],
+    "name": "微信懒人翻书",
+    "description": "实现微信读书自动翻书功能",
+    "url": "https://greasyfork.org/scripts/492212-%E5%BE%AE%E4%BF%A1%E6%87%92%E4%BA%BA%E7%BF%BB%E4%B9%A6",
+    "code_url": "https://update.greasyfork.org/scripts/492212/%E5%BE%AE%E4%BF%A1%E6%87%92%E4%BA%BA%E7%BF%BB%E4%B9%A6.user.js",
+    "code_size": 8259,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

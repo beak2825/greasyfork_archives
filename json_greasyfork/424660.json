@@ -1,0 +1,34 @@
+{
+  "id": 424660,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-08T00:14:20.000Z",
+  "code_updated_at": "2021-04-08T00:14:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 756127,
+      "name": "Dylan Baker",
+      "created_at": "2021-04-08T00:11:18.000Z",
+      "url": "https://greasyfork.org/users/756127-dylan-baker",
+      "scripts": []
+    }
+  ],
+  "name": "Twitter Reply Count",
+  "description": "Display the number of replies to tweets on Twitter",
+  "url": "https://greasyfork.org/scripts/424660-twitter-reply-count",
+  "code_url": "https://update.greasyfork.org/scripts/424660/Twitter%20Reply%20Count.user.js",
+  "code_size": 4189,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

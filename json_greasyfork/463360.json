@@ -1,0 +1,33 @@
+{
+  "id": 463360,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-05T19:53:36.000Z",
+  "code_updated_at": "2023-04-05T19:53:35.000Z",
+  "namespace": "lousando",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 664119,
+      "name": "lousando",
+      "created_at": "2020-07-07T00:59:54.000Z",
+      "url": "https://greasyfork.org/users/664119-lousando"
+    }
+  ],
+  "name": "Nutra-Pasta",
+  "description": "Removes copyright banner on article copy",
+  "url": "https://greasyfork.org/scripts/463360-nutra-pasta",
+  "code_url": "https://update.greasyfork.org/scripts/463360/Nutra-Pasta.user.js",
+  "code_size": 668,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

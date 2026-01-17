@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464693,
+    "daily_installs": 0,
+    "total_installs": 203,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-23T13:46:19.000Z",
+    "code_updated_at": "2024-05-31T14:33:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1014972,
+        "name": "estost",
+        "created_at": "2023-01-21T15:12:43.000Z",
+        "url": "https://greasyfork.org/users/1014972-estost"
+      }
+    ],
+    "name": "Letterboxd Enhancer 中文增强显示与搜索：集合啦！数字难民",
+    "description": "Letterboxd全局TMDB中文标题搜索 / 查询bt、字幕源是否存在 / 电影详情页增加显示：电影中文标题｜导演中文名｜中文简介｜演员头像列表（中日韩演员显示中文名）｜豆瓣ID图标｜IMDB电影宽高比、底片格式",
+    "url": "https://greasyfork.org/scripts/464693-letterboxd-enhancer-%E4%B8%AD%E6%96%87%E5%A2%9E%E5%BC%BA%E6%98%BE%E7%A4%BA%E4%B8%8E%E6%90%9C%E7%B4%A2-%E9%9B%86%E5%90%88%E5%95%A6-%E6%95%B0%E5%AD%97%E9%9A%BE%E6%B0%91",
+    "code_url": "https://update.greasyfork.org/scripts/464693/Letterboxd%20Enhancer%20%E4%B8%AD%E6%96%87%E5%A2%9E%E5%BC%BA%E6%98%BE%E7%A4%BA%E4%B8%8E%E6%90%9C%E7%B4%A2%EF%BC%9A%E9%9B%86%E5%90%88%E5%95%A6%EF%BC%81%E6%95%B0%E5%AD%97%E9%9A%BE%E6%B0%91.user.js",
+    "code_size": 150552,
+    "license": null,
+    "version": "0.5.10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

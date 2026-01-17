@@ -1,0 +1,200 @@
+[
+  {
+    "id": 439644,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-06T19:36:03.000Z",
+    "code_updated_at": "2022-02-06T19:36:02.000Z",
+    "namespace": "googlesearchmarginfixer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846358,
+        "name": "Mihály Nagy",
+        "created_at": "2021-11-29T21:22:48.000Z",
+        "url": "https://greasyfork.org/users/846358-mih%C3%A1ly-nagy"
+      }
+    ],
+    "name": "Google Search Margin Fixer",
+    "description": "Fix 44px margin-bottom divs",
+    "url": "https://greasyfork.org/scripts/439644-google-search-margin-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/439644/Google%20Search%20Margin%20Fixer.user.js",
+    "code_size": 1432,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438937,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-21T19:30:33.000Z",
+    "code_updated_at": "2022-01-21T19:48:26.000Z",
+    "namespace": "mediaworkskepletoltes2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846358,
+        "name": "Mihály Nagy",
+        "created_at": "2021-11-29T21:22:48.000Z",
+        "url": "https://greasyfork.org/users/846358-mih%C3%A1ly-nagy"
+      }
+    ],
+    "name": "Mediaworks - Origo, Life, SuliLife, ThatsLife, UniLife - kép letöltés a galériából",
+    "description": "Egyszerű képletöltés a Mediaworks címben felsorolt lapjainak galériájából.",
+    "url": "https://greasyfork.org/scripts/438937-mediaworks-origo-life-sulilife-thatslife-unilife-k%C3%A9p-let%C3%B6lt%C3%A9s-a-gal%C3%A9ri%C3%A1b%C3%B3l",
+    "code_url": "https://update.greasyfork.org/scripts/438937/Mediaworks%20-%20Origo%2C%20Life%2C%20SuliLife%2C%20ThatsLife%2C%20UniLife%20-%20k%C3%A9p%20let%C3%B6lt%C3%A9s%20a%20gal%C3%A9ri%C3%A1b%C3%B3l.user.js",
+    "code_size": 2004,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "hu",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438630,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-16T13:23:26.000Z",
+    "code_updated_at": "2022-01-21T19:49:07.000Z",
+    "namespace": "mediaworkskepletoltes",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846358,
+        "name": "Mihály Nagy",
+        "created_at": "2021-11-29T21:22:48.000Z",
+        "url": "https://greasyfork.org/users/846358-mih%C3%A1ly-nagy"
+      }
+    ],
+    "name": "Mediaworks Megyei Hírlapok - kép letöltés a galériából",
+    "description": "Egyszerű képletöltés a Mediaworks online megyei hírlapjainak galériájából.",
+    "url": "https://greasyfork.org/scripts/438630-mediaworks-megyei-h%C3%ADrlapok-k%C3%A9p-let%C3%B6lt%C3%A9s-a-gal%C3%A9ri%C3%A1b%C3%B3l",
+    "code_url": "https://update.greasyfork.org/scripts/438630/Mediaworks%20Megyei%20H%C3%ADrlapok%20-%20k%C3%A9p%20let%C3%B6lt%C3%A9s%20a%20gal%C3%A9ri%C3%A1b%C3%B3l.user.js",
+    "code_size": 2870,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "hu",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 437695,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-28T13:13:27.000Z",
+    "code_updated_at": "2022-01-14T15:14:08.000Z",
+    "namespace": "onvideohu++",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846358,
+        "name": "Mihály Nagy",
+        "created_at": "2021-11-29T21:22:48.000Z",
+        "url": "https://greasyfork.org/users/846358-mih%C3%A1ly-nagy"
+      }
+    ],
+    "name": "onvideo.hu++",
+    "description": "A fő oldal és a videólejátszó kevesebb felesleges dolgot mutat. Plusz gomb a videólejátszón, amivel meg lehet nyitni a videót új oldalon, a beépített HTML5 lejátszóval.",
+    "url": "https://greasyfork.org/scripts/437695-onvideo-hu",
+    "code_url": "https://update.greasyfork.org/scripts/437695/onvideohu%2B%2B.user.js",
+    "code_size": 4201,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "hu",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 437676,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-28T04:59:55.000Z",
+    "code_updated_at": "2022-01-10T17:58:22.000Z",
+    "namespace": "googledriveaudiohtml5",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846358,
+        "name": "Mihály Nagy",
+        "created_at": "2021-11-29T21:22:48.000Z",
+        "url": "https://greasyfork.org/users/846358-mih%C3%A1ly-nagy"
+      }
+    ],
+    "name": "Google Drive - open audio in the default HTML5 player",
+    "description": "An easy way to open audio in the default HTML5 player directly from Google Drive.",
+    "url": "https://greasyfork.org/scripts/437676-google-drive-open-audio-in-the-default-html5-player",
+    "code_url": "https://update.greasyfork.org/scripts/437676/Google%20Drive%20-%20open%20audio%20in%20the%20default%20HTML5%20player.user.js",
+    "code_size": 13772,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 436817,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-09T21:53:07.000Z",
+    "code_updated_at": "2021-12-09T21:53:07.000Z",
+    "namespace": "SkyfighteerScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846358,
+        "name": "Mihály Nagy",
+        "created_at": "2021-11-29T21:22:48.000Z",
+        "url": "https://greasyfork.org/users/846358-mih%C3%A1ly-nagy"
+      }
+    ],
+    "name": "Back and Skip buttons for HTML5 Audio Player",
+    "description": "Back and Skip buttons right above the HTML5 Audio Player (+ disable auto-play)!",
+    "url": "https://greasyfork.org/scripts/436817-back-and-skip-buttons-for-html5-audio-player",
+    "code_url": "https://update.greasyfork.org/scripts/436817/Back%20and%20Skip%20buttons%20for%20HTML5%20Audio%20Player.user.js",
+    "code_size": 3722,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

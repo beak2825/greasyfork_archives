@@ -1,0 +1,59 @@
+{
+  "id": 462313,
+  "daily_installs": 0,
+  "total_installs": 2140,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-22T08:53:46.000Z",
+  "code_updated_at": "2023-03-22T08:53:45.000Z",
+  "namespace": "https://greasyfork.org/users/1046083",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1046083,
+      "name": "anolir",
+      "created_at": "2023-03-22T08:29:04.000Z",
+      "url": "https://greasyfork.org/users/1046083-anolir",
+      "scripts": [
+        {
+          "id": 462313,
+          "daily_installs": 0,
+          "total_installs": 2140,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-22T08:53:46.000Z",
+          "code_updated_at": "2023-03-22T08:53:45.000Z",
+          "namespace": "https://greasyfork.org/users/1046083",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Close Zhihu Login Popup",
+          "description": "Close the login popup on zhihu.com after page load, now by pressing Esc",
+          "url": "https://greasyfork.org/scripts/462313-close-zhihu-login-popup",
+          "code_url": "https://update.greasyfork.org/scripts/462313/Close%20Zhihu%20Login%20Popup.user.js",
+          "code_size": 599,
+          "license": "GNU General Public License v3.0 or later",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Close Zhihu Login Popup",
+  "description": "Close the login popup on zhihu.com after page load, now by pressing Esc",
+  "url": "https://greasyfork.org/scripts/462313-close-zhihu-login-popup",
+  "code_url": "https://update.greasyfork.org/scripts/462313/Close%20Zhihu%20Login%20Popup.user.js",
+  "code_size": 599,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

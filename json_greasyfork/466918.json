@@ -1,0 +1,59 @@
+{
+  "id": 466918,
+  "daily_installs": 0,
+  "total_installs": 275,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-23T13:21:37.000Z",
+  "code_updated_at": "2023-05-23T13:30:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1083532,
+      "name": "kechang-ll",
+      "created_at": "2023-05-23T13:19:37.000Z",
+      "url": "https://greasyfork.org/users/1083532-kechang-ll",
+      "scripts": [
+        {
+          "id": 466918,
+          "daily_installs": 0,
+          "total_installs": 275,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-23T13:21:37.000Z",
+          "code_updated_at": "2023-05-23T13:30:47.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "谷歌翻译绕过字符块，添加MOOSE文档翻译",
+          "description": "让谷歌翻译插件翻译网页的时候，绕过代码块和一些无需翻译的元素，原作者xiandan",
+          "url": "https://greasyfork.org/scripts/466918-%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E7%BB%95%E8%BF%87%E5%AD%97%E7%AC%A6%E5%9D%97-%E6%B7%BB%E5%8A%A0moose%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91",
+          "code_url": "https://update.greasyfork.org/scripts/466918/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E7%BB%95%E8%BF%87%E5%AD%97%E7%AC%A6%E5%9D%97%EF%BC%8C%E6%B7%BB%E5%8A%A0MOOSE%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91.user.js",
+          "code_size": 2463,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "谷歌翻译绕过字符块，添加MOOSE文档翻译",
+  "description": "让谷歌翻译插件翻译网页的时候，绕过代码块和一些无需翻译的元素，原作者xiandan",
+  "url": "https://greasyfork.org/scripts/466918-%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E7%BB%95%E8%BF%87%E5%AD%97%E7%AC%A6%E5%9D%97-%E6%B7%BB%E5%8A%A0moose%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91",
+  "code_url": "https://update.greasyfork.org/scripts/466918/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E7%BB%95%E8%BF%87%E5%AD%97%E7%AC%A6%E5%9D%97%EF%BC%8C%E6%B7%BB%E5%8A%A0MOOSE%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91.user.js",
+  "code_size": 2463,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

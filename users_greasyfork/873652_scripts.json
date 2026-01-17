@@ -1,0 +1,68 @@
+[
+  {
+    "id": 439666,
+    "daily_installs": 0,
+    "total_installs": 132,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-07T09:19:14.000Z",
+    "code_updated_at": "2022-02-07T09:19:14.000Z",
+    "namespace": "https://greasyfork.org/en/users/873652-blazingfire007",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 873652,
+        "name": "BlazingFire007",
+        "created_at": "2022-02-07T06:00:59.000Z",
+        "url": "https://greasyfork.org/users/873652-blazingfire007"
+      }
+    ],
+    "name": "Twitch and YouTube PiP-Enable for Mac",
+    "description": "Enabled PiP on twitch.tv and youtube.com for macOS only.",
+    "url": "https://greasyfork.org/scripts/439666-twitch-and-youtube-pip-enable-for-mac",
+    "code_url": "https://update.greasyfork.org/scripts/439666/Twitch%20and%20YouTube%20PiP-Enable%20for%20Mac.user.js",
+    "code_size": 1666,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439665,
+    "daily_installs": 0,
+    "total_installs": 268,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-07T08:57:36.000Z",
+    "code_updated_at": "2022-02-10T23:00:37.000Z",
+    "namespace": "https://greasyfork.org/users/873652",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 873652,
+        "name": "BlazingFire007",
+        "created_at": "2022-02-07T06:00:59.000Z",
+        "url": "https://greasyfork.org/users/873652-blazingfire007"
+      }
+    ],
+    "name": "Wordle Hack",
+    "description": "Instantly solves a wordle puzzle... Impress your friends but never actually get the satisfaction of winning!",
+    "url": "https://greasyfork.org/scripts/439665-wordle-hack",
+    "code_url": "https://update.greasyfork.org/scripts/439665/Wordle%20Hack.user.js",
+    "code_size": 1224,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

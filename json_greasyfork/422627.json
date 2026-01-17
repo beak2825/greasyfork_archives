@@ -1,0 +1,59 @@
+{
+  "id": 422627,
+  "daily_installs": 0,
+  "total_installs": 221,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-04T08:36:02.000Z",
+  "code_updated_at": "2021-03-04T21:23:38.000Z",
+  "namespace": "https://github.com/shanyuhai123",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 743478,
+      "name": "shanyuhai123",
+      "created_at": "2021-03-04T08:02:51.000Z",
+      "url": "https://greasyfork.org/users/743478-shanyuhai123",
+      "scripts": [
+        {
+          "id": 422627,
+          "daily_installs": 0,
+          "total_installs": 221,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-04T08:36:02.000Z",
+          "code_updated_at": "2021-03-04T21:23:38.000Z",
+          "namespace": "https://github.com/shanyuhai123",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微信读书注释提取 URL",
+          "description": "从微信读书的注释中提取 URL，使其可点击跳转",
+          "url": "https://greasyfork.org/scripts/422627-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E6%B3%A8%E9%87%8A%E6%8F%90%E5%8F%96-url",
+          "code_url": "https://update.greasyfork.org/scripts/422627/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E6%B3%A8%E9%87%8A%E6%8F%90%E5%8F%96%20URL.user.js",
+          "code_size": 889,
+          "license": null,
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微信读书注释提取 URL",
+  "description": "从微信读书的注释中提取 URL，使其可点击跳转",
+  "url": "https://greasyfork.org/scripts/422627-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E6%B3%A8%E9%87%8A%E6%8F%90%E5%8F%96-url",
+  "code_url": "https://update.greasyfork.org/scripts/422627/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E6%B3%A8%E9%87%8A%E6%8F%90%E5%8F%96%20URL.user.js",
+  "code_size": 889,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

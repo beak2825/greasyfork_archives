@@ -1,0 +1,33 @@
+{
+  "id": 453388,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-19T22:03:35.000Z",
+  "code_updated_at": "2022-10-21T09:34:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972828,
+      "name": "Perlito",
+      "created_at": "2022-10-19T19:23:37.000Z",
+      "url": "https://greasyfork.org/users/972828-perlito"
+    }
+  ],
+  "name": "wh balancer",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/453388-wh-balancer",
+  "code_url": "https://update.greasyfork.org/scripts/453388/wh%20balancer.user.js",
+  "code_size": 1011,
+  "license": null,
+  "version": "0.2",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

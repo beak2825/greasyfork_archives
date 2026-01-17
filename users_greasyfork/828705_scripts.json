@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434474,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-25T20:13:14.000Z",
+    "code_updated_at": "2021-10-26T17:36:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 828705,
+        "name": "丨陌笑颜栀子丨",
+        "created_at": "2021-10-25T20:00:49.000Z",
+        "url": "https://greasyfork.org/users/828705-%E4%B8%A8%E9%99%8C%E7%AC%91%E9%A2%9C%E6%A0%80%E5%AD%90%E4%B8%A8"
+      }
+    ],
+    "name": "横店影视职业学院校园网自动登录",
+    "description": "横店影视职业学院校园网自动登录脚本，大家终于不必因断网而频繁的登陆啦,好耶 ！ ！ ！",
+    "url": "https://greasyfork.org/scripts/434474-%E6%A8%AA%E5%BA%97%E5%BD%B1%E8%A7%86%E8%81%8C%E4%B8%9A%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/434474/%E6%A8%AA%E5%BA%97%E5%BD%B1%E8%A7%86%E8%81%8C%E4%B8%9A%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 8508,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

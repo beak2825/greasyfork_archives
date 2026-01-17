@@ -1,0 +1,59 @@
+{
+  "id": 435922,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-23T03:52:26.000Z",
+  "code_updated_at": "2021-11-23T03:52:25.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 768543,
+      "name": "youngfranko",
+      "created_at": "2021-05-04T23:50:01.000Z",
+      "url": "https://greasyfork.org/users/768543-youngfranko",
+      "scripts": [
+        {
+          "id": 426113,
+          "daily_installs": 0,
+          "total_installs": 104,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-05-07T18:40:55.000Z",
+          "code_updated_at": "2021-06-22T22:11:06.000Z",
+          "namespace": "https://greasyfork.org/users/768543",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Simple Google SERP Scrape (Title, Meta, Link)",
+          "description": "Simply, this script scrapes Google and outputs the Title, Meta, and Link, in a text box which you can copy to a sheet and then separate by the semicolon delimiter.",
+          "url": "https://greasyfork.org/scripts/426113-simple-google-serp-scrape-title-meta-link",
+          "code_url": "https://update.greasyfork.org/scripts/426113/Simple%20Google%20SERP%20Scrape%20%28Title%2C%20Meta%2C%20Link%29.user.js",
+          "code_size": 1510,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Scrape Unusual Whales Hot Tickers",
+  "description": "This script will post Unusual Whales Data to a URL of my choosing.",
+  "url": "https://greasyfork.org/scripts/435922-scrape-unusual-whales-hot-tickers",
+  "code_url": "https://update.greasyfork.org/scripts/435922/Scrape%20Unusual%20Whales%20Hot%20Tickers.user.js",
+  "code_size": 6487,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 459714,
+  "daily_installs": 0,
+  "total_installs": 617,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-09T13:46:36.000Z",
+  "code_updated_at": "2023-02-11T07:07:06.000Z",
+  "namespace": "Vholran.SearchBarOnPalettesPanel",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841616,
+      "name": "Vholran",
+      "created_at": "2021-11-20T12:41:09.000Z",
+      "url": "https://greasyfork.org/users/841616-vholran"
+    }
+  ],
+  "name": "Search Bar on Palettes Panel",
+  "description": "Adds a search bar to the palettes panel.",
+  "url": "https://greasyfork.org/scripts/459714-search-bar-on-palettes-panel",
+  "code_url": "https://update.greasyfork.org/scripts/459714/Search%20Bar%20on%20Palettes%20Panel.user.js",
+  "code_size": 1558,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

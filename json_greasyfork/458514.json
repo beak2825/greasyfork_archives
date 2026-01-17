@@ -1,0 +1,34 @@
+{
+  "id": 458514,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-19T04:36:27.000Z",
+  "code_updated_at": "2023-01-19T04:47:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896390,
+      "name": "Hader Anício de Araújo",
+      "created_at": "2022-04-01T21:36:09.000Z",
+      "url": "https://greasyfork.org/users/896390-hader-an%C3%ADcio-de-ara%C3%BAjo",
+      "scripts": []
+    }
+  ],
+  "name": "Para salvar links twitter",
+  "description": "Script para salvar links twitter",
+  "url": "https://greasyfork.org/scripts/458514-para-salvar-links-twitter",
+  "code_url": "https://update.greasyfork.org/scripts/458514/Para%20salvar%20links%20twitter.user.js",
+  "code_size": 743,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "id",
+  "deleted": false,
+  "visibility": "public"
+}

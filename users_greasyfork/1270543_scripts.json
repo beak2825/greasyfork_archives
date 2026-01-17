@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489051,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-03-05T09:25:03.000Z",
+    "code_updated_at": "2024-03-05T09:25:03.000Z",
+    "namespace": "https://www.allenyou.wang",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1270543,
+        "name": "Allenyou1126",
+        "created_at": "2024-03-05T09:23:54.000Z",
+        "url": "https://greasyfork.org/users/1270543-allenyou1126"
+      }
+    ],
+    "name": "显示洛谷用户个人主页",
+    "description": "显示洛谷用户个人主页中的介绍部分",
+    "url": "https://greasyfork.org/scripts/489051-%E6%98%BE%E7%A4%BA%E6%B4%9B%E8%B0%B7%E7%94%A8%E6%88%B7%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/489051/%E6%98%BE%E7%A4%BA%E6%B4%9B%E8%B0%B7%E7%94%A8%E6%88%B7%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5.user.js",
+    "code_size": 539,
+    "license": "GPLv3",
+    "version": "2024-03-05",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

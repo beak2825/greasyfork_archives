@@ -1,0 +1,134 @@
+[
+  {
+    "id": 487653,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-18T20:19:04.000Z",
+    "code_updated_at": "2024-02-18T20:19:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928688,
+        "name": "Ange Hell",
+        "created_at": "2022-06-24T02:51:19.000Z",
+        "url": "https://greasyfork.org/users/928688-ange-hell"
+      }
+    ],
+    "name": "Dealabs lien direct",
+    "description": "Discord: .fri.",
+    "url": "https://greasyfork.org/scripts/487653-dealabs-lien-direct",
+    "code_url": "https://update.greasyfork.org/scripts/487653/Dealabs%20lien%20direct.user.js",
+    "code_size": 1251,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 480633,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-23T18:40:23.000Z",
+    "code_updated_at": "2023-11-23T22:43:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928688,
+        "name": "Ange Hell",
+        "created_at": "2022-06-24T02:51:19.000Z",
+        "url": "https://greasyfork.org/users/928688-ange-hell"
+      }
+    ],
+    "name": "AutoLike YouTube Videos",
+    "description": "Automatically likes YouTube videos",
+    "url": "https://greasyfork.org/scripts/480633-autolike-youtube-videos",
+    "code_url": "https://update.greasyfork.org/scripts/480633/AutoLike%20YouTube%20Videos.user.js",
+    "code_size": 1983,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 480630,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-23T18:11:34.000Z",
+    "code_updated_at": "2023-11-23T18:11:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928688,
+        "name": "Ange Hell",
+        "created_at": "2022-06-24T02:51:19.000Z",
+        "url": "https://greasyfork.org/users/928688-ange-hell"
+      }
+    ],
+    "name": "skidrowreloaded.com block pub",
+    "description": "This script removes ads and reactivates text selection on the skidrowreloaded.com site",
+    "url": "https://greasyfork.org/scripts/480630-skidrowreloaded-com-block-pub",
+    "code_url": "https://update.greasyfork.org/scripts/480630/skidrowreloadedcom%20block%20pub.user.js",
+    "code_size": 1339,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469676,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-28T22:22:50.000Z",
+    "code_updated_at": "2023-07-01T15:07:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928688,
+        "name": "Ange Hell",
+        "created_at": "2022-06-24T02:51:19.000Z",
+        "url": "https://greasyfork.org/users/928688-ange-hell"
+      }
+    ],
+    "name": "Calculatrice RotopServ.net",
+    "description": "Fais le calcul automatiquement pour voter",
+    "url": "https://greasyfork.org/scripts/469676-calculatrice-rotopserv-net",
+    "code_url": "https://update.greasyfork.org/scripts/469676/Calculatrice%20RotopServnet.user.js",
+    "code_size": 2458,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

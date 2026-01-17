@@ -1,0 +1,59 @@
+{
+  "id": 472069,
+  "daily_installs": 0,
+  "total_installs": 96,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-30T16:16:06.000Z",
+  "code_updated_at": "2023-07-30T16:16:06.000Z",
+  "namespace": "ka7",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1139821,
+      "name": "ka7德",
+      "created_at": "2023-07-30T16:11:26.000Z",
+      "url": "https://greasyfork.org/users/1139821-ka7%E5%BE%B7",
+      "scripts": [
+        {
+          "id": 472069,
+          "daily_installs": 0,
+          "total_installs": 96,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-30T16:16:06.000Z",
+          "code_updated_at": "2023-07-30T16:16:06.000Z",
+          "namespace": "ka7",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "叔叔你喜欢搞荣耀等级勋章是吧，我这就去掉它",
+          "description": "用来处理掉b站直播间新出的万恶的“荣耀勋章”",
+          "url": "https://greasyfork.org/scripts/472069-%E5%8F%94%E5%8F%94%E4%BD%A0%E5%96%9C%E6%AC%A2%E6%90%9E%E8%8D%A3%E8%80%80%E7%AD%89%E7%BA%A7%E5%8B%8B%E7%AB%A0%E6%98%AF%E5%90%A7-%E6%88%91%E8%BF%99%E5%B0%B1%E5%8E%BB%E6%8E%89%E5%AE%83",
+          "code_url": "https://update.greasyfork.org/scripts/472069/%E5%8F%94%E5%8F%94%E4%BD%A0%E5%96%9C%E6%AC%A2%E6%90%9E%E8%8D%A3%E8%80%80%E7%AD%89%E7%BA%A7%E5%8B%8B%E7%AB%A0%E6%98%AF%E5%90%A7%EF%BC%8C%E6%88%91%E8%BF%99%E5%B0%B1%E5%8E%BB%E6%8E%89%E5%AE%83.user.js",
+          "code_size": 700,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "叔叔你喜欢搞荣耀等级勋章是吧，我这就去掉它",
+  "description": "用来处理掉b站直播间新出的万恶的“荣耀勋章”",
+  "url": "https://greasyfork.org/scripts/472069-%E5%8F%94%E5%8F%94%E4%BD%A0%E5%96%9C%E6%AC%A2%E6%90%9E%E8%8D%A3%E8%80%80%E7%AD%89%E7%BA%A7%E5%8B%8B%E7%AB%A0%E6%98%AF%E5%90%A7-%E6%88%91%E8%BF%99%E5%B0%B1%E5%8E%BB%E6%8E%89%E5%AE%83",
+  "code_url": "https://update.greasyfork.org/scripts/472069/%E5%8F%94%E5%8F%94%E4%BD%A0%E5%96%9C%E6%AC%A2%E6%90%9E%E8%8D%A3%E8%80%80%E7%AD%89%E7%BA%A7%E5%8B%8B%E7%AB%A0%E6%98%AF%E5%90%A7%EF%BC%8C%E6%88%91%E8%BF%99%E5%B0%B1%E5%8E%BB%E6%8E%89%E5%AE%83.user.js",
+  "code_size": 700,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

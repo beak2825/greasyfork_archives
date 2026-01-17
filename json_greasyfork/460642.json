@@ -1,0 +1,34 @@
+{
+  "id": 460642,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-24T07:25:38.000Z",
+  "code_updated_at": "2024-02-20T05:04:44.000Z",
+  "namespace": "https://gitee.com/jinxin11112/tampermonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1029850,
+      "name": "jinxin11112",
+      "created_at": "2023-02-19T13:22:50.000Z",
+      "url": "https://greasyfork.org/users/1029850-jinxin11112",
+      "scripts": []
+    }
+  ],
+  "name": "Jinxin Util Button",
+  "description": "界面按钮工具类",
+  "url": "https://greasyfork.org/scripts/460642-jinxin-util-button",
+  "code_url": "https://update.greasyfork.org/scripts/460642/1330385/Jinxin%20Util%20Button.js",
+  "code_size": 1249,
+  "license": "MIT License",
+  "version": "0.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

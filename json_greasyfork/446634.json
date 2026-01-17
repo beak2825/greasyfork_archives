@@ -1,0 +1,59 @@
+{
+  "id": 446634,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-17T21:54:29.000Z",
+  "code_updated_at": "2023-01-01T02:21:19.000Z",
+  "namespace": "hoehleg.userscripts.private",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 13216,
+      "name": "dannysaurus",
+      "created_at": "2015-07-11T17:22:05.000Z",
+      "url": "https://greasyfork.org/users/13216-dannysaurus",
+      "scripts": [
+        {
+          "id": 419077,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-12-23T21:36:04.000Z",
+          "code_updated_at": "2023-04-30T20:35:00.000Z",
+          "namespace": "dannysaurus.camamba",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Camamba Chat Tweaks",
+          "description": "tweaks layout of the chat",
+          "url": "https://greasyfork.org/scripts/419077-camamba-chat-tweaks",
+          "code_url": "https://update.greasyfork.org/scripts/419077/Camamba%20Chat%20Tweaks.user.js",
+          "code_size": 18242,
+          "license": "MIT License",
+          "version": "0.5.14",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Camamba Users Search Library",
+  "description": "fetches Users",
+  "url": "https://greasyfork.org/scripts/446634-camamba-users-search-library",
+  "code_url": "https://update.greasyfork.org/scripts/446634/1133718/Camamba%20Users%20Search%20Library.js",
+  "code_size": 27634,
+  "license": "MIT License",
+  "version": "0.0.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

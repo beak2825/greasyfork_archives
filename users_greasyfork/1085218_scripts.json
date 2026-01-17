@@ -1,0 +1,68 @@
+[
+  {
+    "id": 468458,
+    "daily_installs": 0,
+    "total_installs": 105,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-11T20:38:29.000Z",
+    "code_updated_at": "2023-07-22T22:58:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1085218,
+        "name": "Kam1k4dze",
+        "created_at": "2023-05-26T17:46:28.000Z",
+        "url": "https://greasyfork.org/users/1085218-kam1k4dze"
+      }
+    ],
+    "name": "Pikabu Purifier",
+    "description": "Скрывает посты с рейтингом ниже установленного",
+    "url": "https://greasyfork.org/scripts/468458-pikabu-purifier",
+    "code_url": "https://update.greasyfork.org/scripts/468458/Pikabu%20Purifier.user.js",
+    "code_size": 4275,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467175,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-26T18:31:36.000Z",
+    "code_updated_at": "2023-05-27T13:19:00.000Z",
+    "namespace": "your-namespace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1085218,
+        "name": "Kam1k4dze",
+        "created_at": "2023-05-26T17:46:28.000Z",
+        "url": "https://greasyfork.org/users/1085218-kam1k4dze"
+      }
+    ],
+    "name": "YouTube Video Name Handler",
+    "description": "Adds a \"Start Logging\" button to send the names of YouTube videos to locahost",
+    "url": "https://greasyfork.org/scripts/467175-youtube-video-name-handler",
+    "code_url": "https://update.greasyfork.org/scripts/467175/YouTube%20Video%20Name%20Handler.user.js",
+    "code_size": 4146,
+    "license": "MIT License",
+    "version": "1.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

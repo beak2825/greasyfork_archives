@@ -1,0 +1,34 @@
+{
+  "id": 432164,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-09T23:06:58.000Z",
+  "code_updated_at": "2021-09-09T23:51:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 206502,
+      "name": "TomaszFromasz",
+      "created_at": "2018-08-21T06:06:43.000Z",
+      "url": "https://greasyfork.org/users/206502-tomaszfromasz",
+      "scripts": []
+    }
+  ],
+  "name": "ADAPT_Automat",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/432164-adapt-automat",
+  "code_url": "https://update.greasyfork.org/scripts/432164/ADAPT_Automat.user.js",
+  "code_size": 2773,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

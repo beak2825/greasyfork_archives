@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457996,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-10T17:38:20.000Z",
+    "code_updated_at": "2023-01-10T17:38:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1010069,
+        "name": "Yuandiaodiaodiao",
+        "created_at": "2023-01-10T17:35:19.000Z",
+        "url": "https://greasyfork.org/users/1010069-yuandiaodiaodiao"
+      }
+    ],
+    "name": "b站复用历史稿件限制30解除",
+    "description": "可以使用任意投稿历史作为投稿模板",
+    "url": "https://greasyfork.org/scripts/457996-b%E7%AB%99%E5%A4%8D%E7%94%A8%E5%8E%86%E5%8F%B2%E7%A8%BF%E4%BB%B6%E9%99%90%E5%88%B630%E8%A7%A3%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/457996/b%E7%AB%99%E5%A4%8D%E7%94%A8%E5%8E%86%E5%8F%B2%E7%A8%BF%E4%BB%B6%E9%99%90%E5%88%B630%E8%A7%A3%E9%99%A4.user.js",
+    "code_size": 1261,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

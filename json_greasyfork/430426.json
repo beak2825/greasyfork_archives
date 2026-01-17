@@ -1,0 +1,59 @@
+{
+  "id": 430426,
+  "daily_installs": 0,
+  "total_installs": 86,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-06T13:13:08.000Z",
+  "code_updated_at": "2021-08-17T14:59:44.000Z",
+  "namespace": "https://space.bilibili.com/2649561",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 801017,
+      "name": "Sela",
+      "created_at": "2021-08-06T13:10:03.000Z",
+      "url": "https://greasyfork.org/users/801017-sela",
+      "scripts": [
+        {
+          "id": 430426,
+          "daily_installs": 0,
+          "total_installs": 86,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-08-06T13:13:08.000Z",
+          "code_updated_at": "2021-08-17T14:59:44.000Z",
+          "namespace": "https://space.bilibili.com/2649561",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "枝江反诈骗",
+          "description": "Show titles according to BVs.",
+          "url": "https://greasyfork.org/scripts/430426-%E6%9E%9D%E6%B1%9F%E5%8F%8D%E8%AF%88%E9%AA%97",
+          "code_url": "https://update.greasyfork.org/scripts/430426/%E6%9E%9D%E6%B1%9F%E5%8F%8D%E8%AF%88%E9%AA%97.user.js",
+          "code_size": 2745,
+          "license": null,
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "枝江反诈骗",
+  "description": "Show titles according to BVs.",
+  "url": "https://greasyfork.org/scripts/430426-%E6%9E%9D%E6%B1%9F%E5%8F%8D%E8%AF%88%E9%AA%97",
+  "code_url": "https://update.greasyfork.org/scripts/430426/%E6%9E%9D%E6%B1%9F%E5%8F%8D%E8%AF%88%E9%AA%97.user.js",
+  "code_size": 2745,
+  "license": null,
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

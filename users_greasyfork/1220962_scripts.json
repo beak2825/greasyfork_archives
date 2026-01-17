@@ -97,5 +97,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492560,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-15T06:22:30.000Z",
+    "code_updated_at": "2024-04-15T06:22:30.000Z",
+    "namespace": "NooScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220962,
+        "name": "NooScripts",
+        "created_at": "2023-11-21T04:22:59.000Z",
+        "url": "https://greasyfork.org/users/1220962-nooscripts"
+      }
+    ],
+    "name": "Wallhaven - Fix Inaccessible Subscription Page",
+    "description": "If you're encountering HTML Error Code 500 or a blank page on your Wallhaven \"Subscriptions\" page, this script adds a button to the top of the user menu to clear all subscription notifications, potentially resolving the issue.",
+    "url": "https://greasyfork.org/scripts/492560-wallhaven-fix-inaccessible-subscription-page",
+    "code_url": "https://update.greasyfork.org/scripts/492560/Wallhaven%20-%20Fix%20Inaccessible%20Subscription%20Page.user.js",
+    "code_size": 2010,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 486721,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-06T00:56:33.000Z",
+    "code_updated_at": "2024-02-06T00:56:33.000Z",
+    "namespace": "NooScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220962,
+        "name": "NooScripts",
+        "created_at": "2023-11-21T04:22:59.000Z",
+        "url": "https://greasyfork.org/users/1220962-nooscripts"
+      }
+    ],
+    "name": "IMDB - Reel Faces",
+    "description": "Use some 'reel' magic on any 'Full Credits' page with the 'Reel Faces' Checkbox (When checked, It hides cast/crew that lack a profile picture) – because every movie deserves a picture-perfect cast!",
+    "url": "https://greasyfork.org/scripts/486721-imdb-reel-faces",
+    "code_url": "https://update.greasyfork.org/scripts/486721/IMDB%20-%20Reel%20Faces.user.js",
+    "code_size": 2695,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482509,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-17T22:40:08.000Z",
+    "code_updated_at": "2023-12-17T22:42:11.000Z",
+    "namespace": "NooScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220962,
+        "name": "NooScripts",
+        "created_at": "2023-11-21T04:22:59.000Z",
+        "url": "https://greasyfork.org/users/1220962-nooscripts"
+      }
+    ],
+    "name": "Deku Deals - Better Filter Menu",
+    "description": "Adds buttons to each search filter group to collapse them for easier viewing",
+    "url": "https://greasyfork.org/scripts/482509-deku-deals-better-filter-menu",
+    "code_url": "https://update.greasyfork.org/scripts/482509/Deku%20Deals%20-%20Better%20Filter%20Menu.user.js",
+    "code_size": 4492,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 480428,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-21T05:27:56.000Z",
+    "code_updated_at": "2023-12-27T06:46:22.000Z",
+    "namespace": "NooScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220962,
+        "name": "NooScripts",
+        "created_at": "2023-11-21T04:22:59.000Z",
+        "url": "https://greasyfork.org/users/1220962-nooscripts"
+      }
+    ],
+    "name": "Wallhaven - Hide '0' New Wallpapers From Subscriptions",
+    "description": "Auto hide Subscriptions with '0' new wallpapers, only displaying ones with '1' or more",
+    "url": "https://greasyfork.org/scripts/480428-wallhaven-hide-0-new-wallpapers-from-subscriptions",
+    "code_url": "https://update.greasyfork.org/scripts/480428/Wallhaven%20-%20Hide%20%270%27%20New%20Wallpapers%20From%20Subscriptions.user.js",
+    "code_size": 882,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 480422,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-21T05:04:07.000Z",
+    "code_updated_at": "2023-12-27T06:39:47.000Z",
+    "namespace": "NooScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220962,
+        "name": "NooScripts",
+        "created_at": "2023-11-21T04:22:59.000Z",
+        "url": "https://greasyfork.org/users/1220962-nooscripts"
+      }
+    ],
+    "name": "YTS - Toggle Foreign Titles",
+    "description": "Adds A Button To Toggle Between Displaying English & Foreign Movies Per Page While Browsing.",
+    "url": "https://greasyfork.org/scripts/480422-yts-toggle-foreign-titles",
+    "code_url": "https://update.greasyfork.org/scripts/480422/YTS%20-%20Toggle%20Foreign%20Titles.user.js",
+    "code_size": 2315,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,33 @@
+{
+  "id": 462246,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-21T10:04:17.000Z",
+  "code_updated_at": "2023-03-21T12:04:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896184,
+      "name": "Stavrapid",
+      "created_at": "2022-04-01T09:51:09.000Z",
+      "url": "https://greasyfork.org/users/896184-stavrapid"
+    }
+  ],
+  "name": "Autocomplete",
+  "description": "func acomp",
+  "url": "https://greasyfork.org/scripts/462246-autocomplete",
+  "code_url": "https://update.greasyfork.org/scripts/462246/Autocomplete.user.js",
+  "code_size": 46104,
+  "license": "GNU GPLv3",
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 442815,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-04-05T14:51:49.000Z",
+  "code_updated_at": "2022-04-05T14:51:49.000Z",
+  "namespace": "http://github.com/kylerifqi",
+  "support_url": "https://github.com/kylerifqi/instagram-notification-display/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 898158,
+      "name": "kylerifqi",
+      "created_at": "2022-04-05T14:47:23.000Z",
+      "url": "https://greasyfork.org/users/898158-kylerifqi"
+    }
+  ],
+  "name": "Instagram Notification Displayer",
+  "description": "Display the amount of notifications on Instagram Desktop similair to Discord.",
+  "url": "https://greasyfork.org/scripts/442815-instagram-notification-displayer",
+  "code_url": "https://update.greasyfork.org/scripts/442815/Instagram%20Notification%20Displayer.user.js",
+  "code_size": 6140,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

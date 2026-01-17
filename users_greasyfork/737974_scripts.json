@@ -1,0 +1,35 @@
+[
+  {
+    "id": 425223,
+    "daily_installs": 0,
+    "total_installs": 156,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-19T01:16:55.000Z",
+    "code_updated_at": "2021-04-19T01:16:55.000Z",
+    "namespace": "https://greasyfork.org/users/308136",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 737974,
+        "name": "CrazySoul",
+        "created_at": "2021-02-16T14:24:33.000Z",
+        "url": "https://greasyfork.org/users/737974-crazysoul"
+      }
+    ],
+    "name": "baidu&google：为百度搜索结果页添加Google搜索按钮，为Google添加百度搜索按钮",
+    "description": "为百度搜索结果页添加Google搜索按钮，为Google添加百度搜索按钮",
+    "url": "https://greasyfork.org/scripts/425223-baidu-google-%E4%B8%BA%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E9%A1%B5%E6%B7%BB%E5%8A%A0google%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE-%E4%B8%BAgoogle%E6%B7%BB%E5%8A%A0%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/425223/baidugoogle%EF%BC%9A%E4%B8%BA%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E9%A1%B5%E6%B7%BB%E5%8A%A0Google%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE%EF%BC%8C%E4%B8%BAGoogle%E6%B7%BB%E5%8A%A0%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 4045,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

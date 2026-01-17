@@ -1,0 +1,33 @@
+{
+  "id": 485730,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-26T14:10:20.000Z",
+  "code_updated_at": "2024-01-30T14:18:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1251613,
+      "name": "limesarine",
+      "created_at": "2024-01-22T07:32:50.000Z",
+      "url": "https://greasyfork.org/users/1251613-limesarine"
+    }
+  ],
+  "name": "Luogu Favorites",
+  "description": "Enable a unlimited favourite list",
+  "url": "https://greasyfork.org/scripts/485730-luogu-favorites",
+  "code_url": "https://update.greasyfork.org/scripts/485730/Luogu%20Favorites.user.js",
+  "code_size": 6928,
+  "license": "© 2024 Limesarine. All rights reserved.",
+  "version": "v2.6.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

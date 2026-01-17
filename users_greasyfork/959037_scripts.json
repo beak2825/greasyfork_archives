@@ -1,0 +1,68 @@
+[
+  {
+    "id": 451353,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-14T07:27:59.000Z",
+    "code_updated_at": "2022-09-14T07:27:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 959037,
+        "name": "Shashwati Jha",
+        "created_at": "2022-09-14T06:16:08.000Z",
+        "url": "https://greasyfork.org/users/959037-shashwati-jha"
+      }
+    ],
+    "name": "MouseOverInfo",
+    "description": "Mouseover infor for OHISD issues",
+    "url": "https://greasyfork.org/scripts/451353-mouseoverinfo",
+    "code_url": "https://update.greasyfork.org/scripts/451353/MouseOverInfo.user.js",
+    "code_size": 4217,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451352,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-14T07:25:38.000Z",
+    "code_updated_at": "2022-09-14T07:42:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 959037,
+        "name": "Shashwati Jha",
+        "created_at": "2022-09-14T06:16:08.000Z",
+        "url": "https://greasyfork.org/users/959037-shashwati-jha"
+      }
+    ],
+    "name": "GBUjiraRemoveValues",
+    "description": "Remove Values from Status Dropdown. Testing Update",
+    "url": "https://greasyfork.org/scripts/451352-gbujiraremovevalues",
+    "code_url": "https://update.greasyfork.org/scripts/451352/GBUjiraRemoveValues.user.js",
+    "code_size": 2421,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

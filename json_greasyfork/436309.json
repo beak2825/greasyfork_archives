@@ -1,0 +1,33 @@
+{
+  "id": 436309,
+  "daily_installs": 0,
+  "total_installs": 132,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-30T05:20:48.000Z",
+  "code_updated_at": "2021-11-30T05:20:48.000Z",
+  "namespace": "https://greasyfork.org/users/663478",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 663478,
+      "name": "丹波津（tanbatu）",
+      "created_at": "2020-07-05T03:56:01.000Z",
+      "url": "https://greasyfork.org/users/663478-%E4%B8%B9%E6%B3%A2%E6%B4%A5-tanbatu"
+    }
+  ],
+  "name": "NicoNico Search Plus",
+  "description": "ニコ動検索カスタム",
+  "url": "https://greasyfork.org/scripts/436309-niconico-search-plus",
+  "code_url": "https://update.greasyfork.org/scripts/436309/NicoNico%20Search%20Plus.user.js",
+  "code_size": 1158,
+  "license": "tanbatu",
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

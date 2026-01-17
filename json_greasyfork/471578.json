@@ -1,0 +1,33 @@
+{
+  "id": 471578,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-24T10:06:11.000Z",
+  "code_updated_at": "2023-07-24T10:06:11.000Z",
+  "namespace": "https://rinsuki.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 163419,
+      "name": "rinsuki",
+      "created_at": "2017-12-17T06:09:11.000Z",
+      "url": "https://greasyfork.org/users/163419-rinsuki"
+    }
+  ],
+  "name": "niconico (X)",
+  "description": "https://www.nicovideo.jp/video_top",
+  "url": "https://greasyfork.org/scripts/471578-niconico-x",
+  "code_url": "https://update.greasyfork.org/scripts/471578/niconico%20%28X%29.user.js",
+  "code_size": 960,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

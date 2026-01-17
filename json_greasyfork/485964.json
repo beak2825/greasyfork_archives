@@ -1,0 +1,33 @@
+{
+  "id": 485964,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-29T10:16:00.000Z",
+  "code_updated_at": "2024-01-29T10:58:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1254701,
+      "name": "Skeebadoo",
+      "created_at": "2024-01-29T10:13:29.000Z",
+      "url": "https://greasyfork.org/users/1254701-skeebadoo"
+    }
+  ],
+  "name": "Copy RYM Genres to Clipboard",
+  "description": "Copies genres from RYM to clipboard. Multi-valued genres are separated by semi-colons, primary and secondary are separated by a newline.",
+  "url": "https://greasyfork.org/scripts/485964-copy-rym-genres-to-clipboard",
+  "code_url": "https://update.greasyfork.org/scripts/485964/Copy%20RYM%20Genres%20to%20Clipboard.user.js",
+  "code_size": 2915,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

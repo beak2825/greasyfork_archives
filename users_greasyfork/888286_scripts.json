@@ -1,0 +1,200 @@
+[
+  {
+    "id": 470334,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-07T10:03:47.000Z",
+    "code_updated_at": "2023-07-07T10:20:06.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888286,
+        "name": "Jside",
+        "created_at": "2022-03-16T17:56:57.000Z",
+        "url": "https://greasyfork.org/users/888286-jside"
+      }
+    ],
+    "name": "Monitor Spoofer - webuntis.com",
+    "description": "2.2.2023, 10:00:16",
+    "url": "https://greasyfork.org/scripts/470334-monitor-spoofer-webuntis-com",
+    "code_url": "https://update.greasyfork.org/scripts/470334/Monitor%20Spoofer%20-%20webuntiscom.user.js",
+    "code_size": 3815,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458681,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-22T15:03:21.000Z",
+    "code_updated_at": "2023-01-22T15:05:10.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888286,
+        "name": "Jside",
+        "created_at": "2022-03-16T17:56:57.000Z",
+        "url": "https://greasyfork.org/users/888286-jside"
+      }
+    ],
+    "name": "auto login - taskcards.de",
+    "description": "saves passwords to local storage skips future login form by modifying accesses request",
+    "url": "https://greasyfork.org/scripts/458681-auto-login-taskcards-de",
+    "code_url": "https://update.greasyfork.org/scripts/458681/auto%20login%20-%20taskcardsde.user.js",
+    "code_size": 1664,
+    "license": null,
+    "version": "1.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458430,
+    "daily_installs": 1,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-17T13:45:56.000Z",
+    "code_updated_at": "2023-01-17T13:45:55.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888286,
+        "name": "Jside",
+        "created_at": "2022-03-16T17:56:57.000Z",
+        "url": "https://greasyfork.org/users/888286-jside"
+      }
+    ],
+    "name": "Open raw pdf file",
+    "description": "Click on show content (Inhalt ansehen) and wait for new tab to open",
+    "url": "https://greasyfork.org/scripts/458430-open-raw-pdf-file",
+    "code_url": "https://update.greasyfork.org/scripts/458430/Open%20raw%20pdf%20file.user.js",
+    "code_size": 787,
+    "license": null,
+    "version": "1.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458429,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-17T13:39:47.000Z",
+    "code_updated_at": "2023-01-17T13:39:47.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888286,
+        "name": "Jside",
+        "created_at": "2022-03-16T17:56:57.000Z",
+        "url": "https://greasyfork.org/users/888286-jside"
+      }
+    ],
+    "name": "auto login - taskcards.de",
+    "description": "saves passwords to local storage skips future login form by modifing accesses request",
+    "url": "https://greasyfork.org/scripts/458429-auto-login-taskcards-de",
+    "code_url": "https://update.greasyfork.org/scripts/458429/auto%20login%20-%20taskcardsde.user.js",
+    "code_size": 1662,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 442267,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "12.5",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2022-03-28T19:05:02.000Z",
+    "code_updated_at": "2022-06-06T14:11:40.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888286,
+        "name": "Jside",
+        "created_at": "2022-03-16T17:56:57.000Z",
+        "url": "https://greasyfork.org/users/888286-jside"
+      }
+    ],
+    "name": "Auto unmute Stories",
+    "description": "Automaticly unmute stories / turn story audio on",
+    "url": "https://greasyfork.org/scripts/442267-auto-unmute-stories",
+    "code_url": "https://update.greasyfork.org/scripts/442267/Auto%20unmute%20Stories.user.js",
+    "code_size": 858,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441833,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-20T21:53:51.000Z",
+    "code_updated_at": "2022-03-20T21:53:51.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888286,
+        "name": "Jside",
+        "created_at": "2022-03-16T17:56:57.000Z",
+        "url": "https://greasyfork.org/users/888286-jside"
+      }
+    ],
+    "name": "Hide Explore tab results in mobile mode",
+    "description": "Hide Explore tab results and \"use mobile app\" banner in mobile mode",
+    "url": "https://greasyfork.org/scripts/441833-hide-explore-tab-results-in-mobile-mode",
+    "code_url": "https://update.greasyfork.org/scripts/441833/Hide%20Explore%20tab%20results%20in%20mobile%20mode.user.js",
+    "code_size": 574,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

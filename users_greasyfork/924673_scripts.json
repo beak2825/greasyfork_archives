@@ -1,0 +1,68 @@
+[
+  {
+    "id": 482259,
+    "daily_installs": 0,
+    "total_installs": 784,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-15T03:02:56.000Z",
+    "code_updated_at": "2024-04-05T06:01:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 924673,
+        "name": "cyrus123456",
+        "created_at": "2022-06-12T03:17:20.000Z",
+        "url": "https://greasyfork.org/users/924673-cyrus123456"
+      }
+    ],
+    "name": "学外语视频外挂悬浮可点复制翻译字幕(google搜视频在线播-配合欧路词典),Learn-foreign-language-video-clickable-copying-subtitle",
+    "description": "电脑建议配合欧路词典划词翻译(查看图片展示设置) , 加减按钮调节字幕偏移时间(有的视频插入了广告导致字幕错位) , 显示按钮:电脑鼠标移动或者移动端触摸屏幕 , 字幕内鼠标滑轮滚动视频快进 ,  F全屏快捷键,(暂时不好用后期修复) , (alt + s) 快捷键隐藏字幕 , 移动端建议 (需要魔法-iphone下载stay应用长按视频免费下载MP4视频(safari插件),safari长按浏览器网络视频下载)  , 地址 : https://translation-of-video-subtitles-by-extracting-words.vercel.app/ , iphone 建议使用快捷指令获取剪贴板翻译 , 安卓手机建议使用屏幕取词软件",
+    "url": "https://greasyfork.org/scripts/482259-%E5%AD%A6%E5%A4%96%E8%AF%AD%E8%A7%86%E9%A2%91%E5%A4%96%E6%8C%82%E6%82%AC%E6%B5%AE%E5%8F%AF%E7%82%B9%E5%A4%8D%E5%88%B6%E7%BF%BB%E8%AF%91%E5%AD%97%E5%B9%95-google%E6%90%9C%E8%A7%86%E9%A2%91%E5%9C%A8%E7%BA%BF%E6%92%AD-%E9%85%8D%E5%90%88%E6%AC%A7%E8%B7%AF%E8%AF%8D%E5%85%B8-learn-foreign-language-video-clickable-copying-subtitle",
+    "code_url": "https://update.greasyfork.org/scripts/482259/%E5%AD%A6%E5%A4%96%E8%AF%AD%E8%A7%86%E9%A2%91%E5%A4%96%E6%8C%82%E6%82%AC%E6%B5%AE%E5%8F%AF%E7%82%B9%E5%A4%8D%E5%88%B6%E7%BF%BB%E8%AF%91%E5%AD%97%E5%B9%95%28google%E6%90%9C%E8%A7%86%E9%A2%91%E5%9C%A8%E7%BA%BF%E6%92%AD-%E9%85%8D%E5%90%88%E6%AC%A7%E8%B7%AF%E8%AF%8D%E5%85%B8%29%2CLearn-foreign-language-video-clickable-copying-subtitle.user.js",
+    "code_size": 12889,
+    "license": null,
+    "version": "2024.4.5.14.00.22",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 459692,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-09T04:00:41.000Z",
+    "code_updated_at": "2023-02-11T09:20:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 924673,
+        "name": "cyrus123456",
+        "created_at": "2022-06-12T03:17:20.000Z",
+        "url": "https://greasyfork.org/users/924673-cyrus123456"
+      }
+    ],
+    "name": "新东方词库单词字体放大",
+    "description": "https://www.koolearn.com/单词字体放大",
+    "url": "https://greasyfork.org/scripts/459692-%E6%96%B0%E4%B8%9C%E6%96%B9%E8%AF%8D%E5%BA%93%E5%8D%95%E8%AF%8D%E5%AD%97%E4%BD%93%E6%94%BE%E5%A4%A7",
+    "code_url": "https://update.greasyfork.org/scripts/459692/%E6%96%B0%E4%B8%9C%E6%96%B9%E8%AF%8D%E5%BA%93%E5%8D%95%E8%AF%8D%E5%AD%97%E4%BD%93%E6%94%BE%E5%A4%A7.user.js",
+    "code_size": 4181,
+    "license": "MIT License",
+    "version": "0.3.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

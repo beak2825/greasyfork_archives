@@ -1,0 +1,59 @@
+{
+  "id": 451761,
+  "daily_installs": 0,
+  "total_installs": 330,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-09-21T09:10:05.000Z",
+  "code_updated_at": "2024-01-02T03:57:05.000Z",
+  "namespace": "https://github.com/sakuyaa/gm_scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 961918,
+      "name": "sunjiali",
+      "created_at": "2022-09-21T08:58:32.000Z",
+      "url": "https://greasyfork.org/users/961918-sunjiali",
+      "scripts": [
+        {
+          "id": 451761,
+          "daily_installs": 0,
+          "total_installs": 330,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2022-09-21T09:10:05.000Z",
+          "code_updated_at": "2024-01-02T03:57:05.000Z",
+          "namespace": "https://github.com/sakuyaa/gm_scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibilidanmu",
+          "description": "在哔哩哔哩视频标题下方增加弹幕查看和下载",
+          "url": "https://greasyfork.org/scripts/451761-bilibilidanmu",
+          "code_url": "https://update.greasyfork.org/scripts/451761/bilibilidanmu.user.js",
+          "code_size": 14569,
+          "license": null,
+          "version": "2024.01.02",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibilidanmu",
+  "description": "在哔哩哔哩视频标题下方增加弹幕查看和下载",
+  "url": "https://greasyfork.org/scripts/451761-bilibilidanmu",
+  "code_url": "https://update.greasyfork.org/scripts/451761/bilibilidanmu.user.js",
+  "code_size": 14569,
+  "license": null,
+  "version": "2024.01.02",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

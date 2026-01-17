@@ -1,0 +1,33 @@
+{
+  "id": 413693,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-18T05:06:16.000Z",
+  "code_updated_at": "2023-09-28T12:43:57.000Z",
+  "namespace": "https://greasyfork.org/en/users/91364-hoshiburst",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 91364,
+      "name": "Hoshiburst",
+      "created_at": "2017-01-01T13:43:47.000Z",
+      "url": "https://greasyfork.org/users/91364-hoshiburst"
+    }
+  ],
+  "name": "SubsPlease Time Left Until Release",
+  "description": "Time left until release of shows today and tomorrow",
+  "url": "https://greasyfork.org/scripts/413693-subsplease-time-left-until-release",
+  "code_url": "https://update.greasyfork.org/scripts/413693/SubsPlease%20Time%20Left%20Until%20Release.user.js",
+  "code_size": 4600,
+  "license": "GPL-2.0+; http://www.gnu.org/licenses/gpl-2.0.txt",
+  "version": "1.0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

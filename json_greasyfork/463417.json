@@ -1,0 +1,59 @@
+{
+  "id": 463417,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-06T16:38:50.000Z",
+  "code_updated_at": "2023-04-07T01:24:54.000Z",
+  "namespace": "https://lanhuapp.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1054731,
+      "name": "illuz",
+      "created_at": "2023-04-06T16:36:17.000Z",
+      "url": "https://greasyfork.org/users/1054731-illuz",
+      "scripts": [
+        {
+          "id": 463417,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-06T16:38:50.000Z",
+          "code_updated_at": "2023-04-07T01:24:54.000Z",
+          "namespace": "https://lanhuapp.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LH51",
+          "description": "配合 vite 的插件使用",
+          "url": "https://greasyfork.org/scripts/463417-lh51",
+          "code_url": "https://update.greasyfork.org/scripts/463417/LH51.user.js",
+          "code_size": 7470,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LH51",
+  "description": "配合 vite 的插件使用",
+  "url": "https://greasyfork.org/scripts/463417-lh51",
+  "code_url": "https://update.greasyfork.org/scripts/463417/LH51.user.js",
+  "code_size": 7470,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

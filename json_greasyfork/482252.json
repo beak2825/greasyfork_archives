@@ -1,0 +1,59 @@
+{
+  "id": 482252,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-15T01:58:16.000Z",
+  "code_updated_at": "2023-12-15T01:58:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 967701,
+      "name": "维古斯电热饭盒",
+      "created_at": "2022-10-07T23:52:50.000Z",
+      "url": "https://greasyfork.org/users/967701-%E7%BB%B4%E5%8F%A4%E6%96%AF%E7%94%B5%E7%83%AD%E9%A5%AD%E7%9B%92",
+      "scripts": [
+        {
+          "id": 452639,
+          "daily_installs": 0,
+          "total_installs": 55,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-08T00:04:03.000Z",
+          "code_updated_at": "2024-12-02T05:13:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AutoSign",
+          "description": "无",
+          "url": "https://greasyfork.org/scripts/452639-autosign",
+          "code_url": "https://update.greasyfork.org/scripts/452639/AutoSign.user.js",
+          "code_size": 1775,
+          "license": "MIT License",
+          "version": "3.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ajaxhook",
+  "description": "ajaxhook123",
+  "url": "https://greasyfork.org/scripts/482252-ajaxhook",
+  "code_url": "https://update.greasyfork.org/scripts/482252/1295986/ajaxhook.js",
+  "code_size": 9888,
+  "license": null,
+  "version": "2023-12-15",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

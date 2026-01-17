@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472951,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-12T16:57:24.000Z",
+    "code_updated_at": "2023-08-13T12:41:20.000Z",
+    "namespace": "https://greasyfork.org/users/748165",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905315,
+        "name": "Kuhmann Cow",
+        "created_at": "2022-04-21T20:28:57.000Z",
+        "url": "https://greasyfork.org/users/905315-kuhmann-cow"
+      }
+    ],
+    "name": "MH - Minluck & CRE tool v2.0 Test",
+    "description": "Shows hunt statistics on the camp page",
+    "url": "https://greasyfork.org/scripts/472951-mh-minluck-cre-tool-v2-0-test",
+    "code_url": "https://update.greasyfork.org/scripts/472951/MH%20-%20Minluck%20%20CRE%20tool%20v20%20Test.user.js",
+    "code_size": 201064,
+    "license": "MIT License",
+    "version": "3.3.3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

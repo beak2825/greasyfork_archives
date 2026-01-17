@@ -1,0 +1,34 @@
+{
+  "id": 419764,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-06T17:54:02.000Z",
+  "code_updated_at": "2021-01-06T18:00:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 694293,
+      "name": "Виталий Life",
+      "created_at": "2020-10-12T05:25:37.000Z",
+      "url": "https://greasyfork.org/users/694293-%D0%B2%D0%B8%D1%82%D0%B0%D0%BB%D0%B8%D0%B9-life",
+      "scripts": []
+    }
+  ],
+  "name": "Bang to moder",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/419764-bang-to-moder",
+  "code_url": "https://update.greasyfork.org/scripts/419764/Bang%20to%20moder.user.js",
+  "code_size": 1217,
+  "license": null,
+  "version": "0.111",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

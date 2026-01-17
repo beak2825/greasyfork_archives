@@ -1,0 +1,59 @@
+{
+  "id": 475502,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-17T10:52:01.000Z",
+  "code_updated_at": "2023-09-17T10:54:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1125095,
+      "name": "Emerald Discord",
+      "created_at": "2023-07-12T18:56:29.000Z",
+      "url": "https://greasyfork.org/users/1125095-emerald-discord",
+      "scripts": [
+        {
+          "id": 475502,
+          "daily_installs": 0,
+          "total_installs": 43,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-17T10:52:01.000Z",
+          "code_updated_at": "2023-09-17T10:54:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bypass Missing Information",
+          "description": "Hide the missing information box.",
+          "url": "https://greasyfork.org/scripts/475502-bypass-missing-information",
+          "code_url": "https://update.greasyfork.org/scripts/475502/Bypass%20Missing%20Information.user.js",
+          "code_size": 806,
+          "license": "All Rights Reserved",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bypass Missing Information",
+  "description": "Hide the missing information box.",
+  "url": "https://greasyfork.org/scripts/475502-bypass-missing-information",
+  "code_url": "https://update.greasyfork.org/scripts/475502/Bypass%20Missing%20Information.user.js",
+  "code_size": 806,
+  "license": "All Rights Reserved",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 482393,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-16T12:51:46.000Z",
+  "code_updated_at": "2023-12-18T00:17:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1228717,
+      "name": "Andrew15-5",
+      "created_at": "2023-12-05T14:05:57.000Z",
+      "url": "https://greasyfork.org/users/1228717-andrew15-5"
+    }
+  ],
+  "name": "Discord multimedia dimmer",
+  "description": "Dim images and videos on Discord.",
+  "url": "https://greasyfork.org/scripts/482393-discord-multimedia-dimmer",
+  "code_url": "https://update.greasyfork.org/scripts/482393/Discord%20multimedia%20dimmer.user.js",
+  "code_size": 3012,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "2023-12-18",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 475203,
+    "daily_installs": 0,
+    "total_installs": 4522,
+    "fan_score": "71.7",
+    "good_ratings": 12,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-09-13T10:24:19.000Z",
+    "code_updated_at": "2024-08-18T06:05:14.000Z",
+    "namespace": "http://salt.is.lovely/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 704930,
+        "name": "西瓜吃盐酱",
+        "created_at": "2020-11-14T05:06:22.000Z",
+        "url": "https://greasyfork.org/users/704930-%E8%A5%BF%E7%93%9C%E5%90%83%E7%9B%90%E9%85%B1"
+      }
+    ],
+    "name": "回到旧版B站主页（已失效）",
+    "description": "修改cookie回到旧版B站主页（脚本已失效可以删除）",
+    "url": "https://greasyfork.org/scripts/475203-%E5%9B%9E%E5%88%B0%E6%97%A7%E7%89%88b%E7%AB%99%E4%B8%BB%E9%A1%B5-%E5%B7%B2%E5%A4%B1%E6%95%88",
+    "code_url": "https://update.greasyfork.org/scripts/475203/%E5%9B%9E%E5%88%B0%E6%97%A7%E7%89%88B%E7%AB%99%E4%B8%BB%E9%A1%B5%EF%BC%88%E5%B7%B2%E5%A4%B1%E6%95%88%EF%BC%89.user.js",
+    "code_size": 5320,
+    "license": "MulanPSL2",
+    "version": "0.1.4-tip1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419006,
+    "daily_installs": 0,
+    "total_installs": 406,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-12-22T12:17:22.000Z",
+    "code_updated_at": "2021-05-25T02:07:02.000Z",
+    "namespace": "http://salt.is.lovely/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 704930,
+        "name": "西瓜吃盐酱",
+        "created_at": "2020-11-14T05:06:22.000Z",
+        "url": "https://greasyfork.org/users/704930-%E8%A5%BF%E7%93%9C%E5%90%83%E7%9B%90%E9%85%B1"
+      }
+    ],
+    "name": "saltMCBBS",
+    "description": "salt's MCBBS 拓展",
+    "url": "https://greasyfork.org/scripts/419006-saltmcbbs",
+    "code_url": "https://update.greasyfork.org/scripts/419006/saltMCBBS.user.js",
+    "code_size": 235230,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "0.1.9Pre3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416071,
+    "daily_installs": 0,
+    "total_installs": 113,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-14T05:24:10.000Z",
+    "code_updated_at": "2020-11-14T05:24:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 704930,
+        "name": "西瓜吃盐酱",
+        "created_at": "2020-11-14T05:06:22.000Z",
+        "url": "https://greasyfork.org/users/704930-%E8%A5%BF%E7%93%9C%E5%90%83%E7%9B%90%E9%85%B1"
+      }
+    ],
+    "name": "Salt MCBBS 积分分析",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/416071-salt-mcbbs-%E7%A7%AF%E5%88%86%E5%88%86%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/416071/Salt%20MCBBS%20%E7%A7%AF%E5%88%86%E5%88%86%E6%9E%90.user.js",
+    "code_size": 3553,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

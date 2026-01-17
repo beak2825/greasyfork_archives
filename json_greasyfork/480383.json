@@ -1,0 +1,33 @@
+{
+  "id": 480383,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-20T14:39:27.000Z",
+  "code_updated_at": "2023-11-21T02:20:27.000Z",
+  "namespace": "https://www.amazon.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1197849,
+      "name": "Leon1333",
+      "created_at": "2023-10-17T07:05:47.000Z",
+      "url": "https://greasyfork.org/users/1197849-leon1333"
+    }
+  ],
+  "name": "Amazon Deal Notifier",
+  "description": "Notifies when the claimed percentage exceeds a specified value on Amazon product page",
+  "url": "https://greasyfork.org/scripts/480383-amazon-deal-notifier",
+  "code_url": "https://update.greasyfork.org/scripts/480383/Amazon%20Deal%20Notifier.user.js",
+  "code_size": 6339,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

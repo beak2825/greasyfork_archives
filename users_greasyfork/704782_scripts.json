@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416055,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-13T19:05:13.000Z",
+    "code_updated_at": "2020-11-13T19:05:13.000Z",
+    "namespace": "https://classification.compreconfie.com.br/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 704782,
+        "name": "Breno Sabino",
+        "created_at": "2020-11-13T19:02:54.000Z",
+        "url": "https://greasyfork.org/users/704782-breno-sabino"
+      }
+    ],
+    "name": "Facilita Classificação",
+    "description": "Ajudar o processo de classificação de produtos.",
+    "url": "https://greasyfork.org/scripts/416055-facilita-classifica%C3%A7%C3%A3o",
+    "code_url": "https://update.greasyfork.org/scripts/416055/Facilita%20Classifica%C3%A7%C3%A3o.user.js",
+    "code_size": 8002,
+    "license": null,
+    "version": "0.1",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

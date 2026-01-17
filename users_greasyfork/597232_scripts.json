@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458591,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-20T14:48:16.000Z",
+    "code_updated_at": "2023-01-20T14:48:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 597232,
+        "name": "Nesilar",
+        "created_at": "2020-06-16T22:49:23.000Z",
+        "url": "https://greasyfork.org/users/597232-nesilar"
+      }
+    ],
+    "name": "YT Music image shadow",
+    "description": "Adds \"glowing\" effect for YT Music song images",
+    "url": "https://greasyfork.org/scripts/458591-yt-music-image-shadow",
+    "code_url": "https://update.greasyfork.org/scripts/458591/YT%20Music%20image%20shadow.user.js",
+    "code_size": 1313,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

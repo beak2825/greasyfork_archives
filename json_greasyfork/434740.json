@@ -1,0 +1,34 @@
+{
+  "id": 434740,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-31T13:02:29.000Z",
+  "code_updated_at": "2021-11-01T14:48:49.000Z",
+  "namespace": "k100466jerry",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 830652,
+      "name": "JerryWu",
+      "created_at": "2021-10-31T12:54:31.000Z",
+      "url": "https://greasyfork.org/users/830652-jerrywu",
+      "scripts": []
+    }
+  ],
+  "name": "MySelf 影片背景主題",
+  "description": "MySelf 影片背景主題更新",
+  "url": "https://greasyfork.org/scripts/434740-myself-%E5%BD%B1%E7%89%87%E8%83%8C%E6%99%AF%E4%B8%BB%E9%A1%8C",
+  "code_url": "https://update.greasyfork.org/scripts/434740/MySelf%20%E5%BD%B1%E7%89%87%E8%83%8C%E6%99%AF%E4%B8%BB%E9%A1%8C.user.js",
+  "code_size": 7182,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

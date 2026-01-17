@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454937,
+    "daily_installs": 0,
+    "total_installs": 102,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-16T14:55:47.000Z",
+    "code_updated_at": "2022-11-21T05:51:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984095,
+        "name": "关注大菲柱谢谢喵",
+        "created_at": "2022-11-16T14:51:43.000Z",
+        "url": "https://greasyfork.org/users/984095-%E5%85%B3%E6%B3%A8%E5%A4%A7%E8%8F%B2%E6%9F%B1%E8%B0%A2%E8%B0%A2%E5%96%B5"
+      }
+    ],
+    "name": "微博抽奖小助手（非官方）",
+    "description": "打开微博帖子页面，按L载入转发用户，按S抽奖。",
+    "url": "https://greasyfork.org/scripts/454937-%E5%BE%AE%E5%8D%9A%E6%8A%BD%E5%A5%96%E5%B0%8F%E5%8A%A9%E6%89%8B-%E9%9D%9E%E5%AE%98%E6%96%B9",
+    "code_url": "https://update.greasyfork.org/scripts/454937/%E5%BE%AE%E5%8D%9A%E6%8A%BD%E5%A5%96%E5%B0%8F%E5%8A%A9%E6%89%8B%EF%BC%88%E9%9D%9E%E5%AE%98%E6%96%B9%EF%BC%89.user.js",
+    "code_size": 6933,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

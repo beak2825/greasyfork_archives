@@ -1,0 +1,68 @@
+[
+  {
+    "id": 454541,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-09T23:11:42.000Z",
+    "code_updated_at": "2023-03-06T01:40:37.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957443,
+        "name": "Warp-Master",
+        "created_at": "2022-09-11T10:52:55.000Z",
+        "url": "https://greasyfork.org/users/957443-warp-master"
+      }
+    ],
+    "name": "CourseList formatter - mai.ru",
+    "description": "09.03.2022, 00:18:00",
+    "url": "https://greasyfork.org/scripts/454541-courselist-formatter-mai-ru",
+    "code_url": "https://update.greasyfork.org/scripts/454541/CourseList%20formatter%20-%20mairu.user.js",
+    "code_size": 1765,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451145,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-11T10:58:36.000Z",
+    "code_updated_at": "2022-09-11T10:58:36.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957443,
+        "name": "Warp-Master",
+        "created_at": "2022-09-11T10:52:55.000Z",
+        "url": "https://greasyfork.org/users/957443-warp-master"
+      }
+    ],
+    "name": "wallhaven.cc - fullscreen on f key",
+    "description": "Toggles fullscreen on f keyup",
+    "url": "https://greasyfork.org/scripts/451145-wallhaven-cc-fullscreen-on-f-key",
+    "code_url": "https://update.greasyfork.org/scripts/451145/wallhavencc%20-%20fullscreen%20on%20f%20key.user.js",
+    "code_size": 778,
+    "license": "GNU GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

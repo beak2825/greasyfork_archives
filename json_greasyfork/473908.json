@@ -1,0 +1,34 @@
+{
+  "id": 473908,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-26T02:05:31.000Z",
+  "code_updated_at": "2024-11-27T09:55:43.000Z",
+  "namespace": "redacted.sh",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1108390,
+      "name": "bblvd",
+      "created_at": "2023-06-21T22:54:19.000Z",
+      "url": "https://greasyfork.org/users/1108390-bblvd",
+      "scripts": []
+    }
+  ],
+  "name": "Layer Cake remove logo",
+  "description": "Removes logo at the top",
+  "url": "https://greasyfork.org/scripts/473908-layer-cake-remove-logo",
+  "code_url": "https://update.greasyfork.org/scripts/473908/Layer%20Cake%20remove%20logo.user.css",
+  "code_size": 368,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

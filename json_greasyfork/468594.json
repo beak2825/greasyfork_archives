@@ -1,0 +1,33 @@
+{
+  "id": 468594,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-13T17:52:49.000Z",
+  "code_updated_at": "2023-06-13T17:52:49.000Z",
+  "namespace": "自动答题",
+  "support_url": null,
+  "contribution_url": "https://lyck6.cn/pay",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 925305,
+      "name": "若俊ya",
+      "created_at": "2022-06-13T16:51:32.000Z",
+      "url": "https://greasyfork.org/users/925305-%E8%8B%A5%E4%BF%8Aya"
+    }
+  ],
+  "name": "【万能题海app 爱发电】全平台自动答题脚本",
+  "description": "支持【超星学习通】【智慧树】【职教云系列】【雨课堂】【继续教育类】【小鹅通】【安徽继续教育】 【上海开放大学】 【华侨大学自考网络助学平台】【人卫慕课】【国家开放大学】【浙江省高等学校在线开放课程共享平台】【国地质大学远程与继续教育学院】【浙江省高等教育自学考试网络助学平台】 【湖南高等学历继续教育】 【优学院】 【学起Plus】【青书学堂】 【学堂在线】【英华学堂】【广开网络教学平台】等平台的测验考试，内置题库，自动答题功能全聚合。",
+  "url": "https://greasyfork.org/scripts/468594-%E4%B8%87%E8%83%BD%E9%A2%98%E6%B5%B7app-%E7%88%B1%E5%8F%91%E7%94%B5-%E5%85%A8%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/468594/%E3%80%90%E4%B8%87%E8%83%BD%E9%A2%98%E6%B5%B7app%20%E7%88%B1%E5%8F%91%E7%94%B5%E3%80%91%E5%85%A8%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 193875,
+  "license": "rj",
+  "version": "4.6.8.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

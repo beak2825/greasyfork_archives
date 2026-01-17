@@ -1,0 +1,34 @@
+{
+  "id": 442898,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-06T21:15:45.000Z",
+  "code_updated_at": "2022-04-06T21:15:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 898681,
+      "name": "JO D",
+      "created_at": "2022-04-06T21:10:36.000Z",
+      "url": "https://greasyfork.org/users/898681-jo-d",
+      "scripts": []
+    }
+  ],
+  "name": "GA Live-Feed",
+  "description": "GameAnalytics Live-Feed",
+  "url": "https://greasyfork.org/scripts/442898-ga-live-feed",
+  "code_url": "https://update.greasyfork.org/scripts/442898/GA%20Live-Feed.user.js",
+  "code_size": 3983,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

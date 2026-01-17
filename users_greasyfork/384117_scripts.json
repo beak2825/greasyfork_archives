@@ -1,0 +1,101 @@
+[
+  {
+    "id": 465383,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-02T14:54:40.000Z",
+    "code_updated_at": "2023-05-02T14:54:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 384117,
+        "name": "Minh Hien",
+        "created_at": "2019-10-06T13:19:07.000Z",
+        "url": "https://greasyfork.org/users/384117-minh-hien"
+      }
+    ],
+    "name": "Chat OpenAI shortcut",
+    "description": "Press F8 to open chat page in a new tab.",
+    "url": "https://greasyfork.org/scripts/465383-chat-openai-shortcut",
+    "code_url": "https://update.greasyfork.org/scripts/465383/Chat%20OpenAI%20shortcut.user.js",
+    "code_size": 1521,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 465258,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-01T14:33:40.000Z",
+    "code_updated_at": "2023-05-01T14:41:30.000Z",
+    "namespace": "magicchess.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 384117,
+        "name": "Minh Hien",
+        "created_at": "2019-10-06T13:19:07.000Z",
+        "url": "https://greasyfork.org/users/384117-minh-hien"
+      }
+    ],
+    "name": "Chess.com Magic",
+    "description": "Magic On Chess.Com",
+    "url": "https://greasyfork.org/scripts/465258-chess-com-magic",
+    "code_url": "https://update.greasyfork.org/scripts/465258/Chesscom%20Magic.user.js",
+    "code_size": 1183,
+    "license": "MIT License",
+    "version": "v3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 465256,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-01T14:00:45.000Z",
+    "code_updated_at": "2023-05-01T14:00:45.000Z",
+    "namespace": "Minh Hiển",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 384117,
+        "name": "Minh Hien",
+        "created_at": "2019-10-06T13:19:07.000Z",
+        "url": "https://greasyfork.org/users/384117-minh-hien"
+      }
+    ],
+    "name": "F2 Tắt âm thanh",
+    "description": "Như name",
+    "url": "https://greasyfork.org/scripts/465256-f2-t%E1%BA%AFt-%C3%A2m-thanh",
+    "code_url": "https://update.greasyfork.org/scripts/465256/F2%20T%E1%BA%AFt%20%C3%A2m%20thanh.user.js",
+    "code_size": 1416,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

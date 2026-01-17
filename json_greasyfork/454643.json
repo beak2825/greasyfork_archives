@@ -1,0 +1,59 @@
+{
+  "id": 454643,
+  "daily_installs": 0,
+  "total_installs": 211,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-11T14:00:26.000Z",
+  "code_updated_at": "2024-05-04T02:22:00.000Z",
+  "namespace": "gloryangel",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 776887,
+      "name": "gloryangel",
+      "created_at": "2021-05-27T16:31:58.000Z",
+      "url": "https://greasyfork.org/users/776887-gloryangel",
+      "scripts": [
+        {
+          "id": 454643,
+          "daily_installs": 0,
+          "total_installs": 211,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-11T14:00:26.000Z",
+          "code_updated_at": "2024-05-04T02:22:00.000Z",
+          "namespace": "gloryangel",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "9dm搜索隐藏计算",
+          "description": "9dm搜索自动隐藏计算",
+          "url": "https://greasyfork.org/scripts/454643-9dm%E6%90%9C%E7%B4%A2%E9%9A%90%E8%97%8F%E8%AE%A1%E7%AE%97",
+          "code_url": "https://update.greasyfork.org/scripts/454643/9dm%E6%90%9C%E7%B4%A2%E9%9A%90%E8%97%8F%E8%AE%A1%E7%AE%97.user.js",
+          "code_size": 409,
+          "license": "MIT License",
+          "version": "0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "9dm搜索隐藏计算",
+  "description": "9dm搜索自动隐藏计算",
+  "url": "https://greasyfork.org/scripts/454643-9dm%E6%90%9C%E7%B4%A2%E9%9A%90%E8%97%8F%E8%AE%A1%E7%AE%97",
+  "code_url": "https://update.greasyfork.org/scripts/454643/9dm%E6%90%9C%E7%B4%A2%E9%9A%90%E8%97%8F%E8%AE%A1%E7%AE%97.user.js",
+  "code_size": 409,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

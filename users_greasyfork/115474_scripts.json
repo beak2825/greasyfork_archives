@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428478,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-25T23:56:20.000Z",
+    "code_updated_at": "2021-06-25T23:56:19.000Z",
+    "namespace": "http://fergonez.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 115474,
+        "name": "Fergo",
+        "created_at": "2017-04-07T17:48:07.000Z",
+        "url": "https://greasyfork.org/users/115474-fergo"
+      }
+    ],
+    "name": "Google Line Spacing",
+    "description": "Corrige espacamento dos resultados da busca",
+    "url": "https://greasyfork.org/scripts/428478-google-line-spacing",
+    "code_url": "https://update.greasyfork.org/scripts/428478/Google%20Line%20Spacing.user.js",
+    "code_size": 388,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

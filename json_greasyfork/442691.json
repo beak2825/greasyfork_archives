@@ -1,0 +1,59 @@
+{
+  "id": 442691,
+  "daily_installs": 0,
+  "total_installs": 61,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-04T03:42:34.000Z",
+  "code_updated_at": "2022-04-04T03:42:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 897366,
+      "name": "zX3no",
+      "created_at": "2022-04-04T03:39:25.000Z",
+      "url": "https://greasyfork.org/users/897366-zx3no",
+      "scripts": [
+        {
+          "id": 442691,
+          "daily_installs": 0,
+          "total_installs": 61,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-04T03:42:34.000Z",
+          "code_updated_at": "2022-04-04T03:42:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DGG r/place",
+          "description": "Template overlay for DGG.",
+          "url": "https://greasyfork.org/scripts/442691-dgg-r-place",
+          "code_url": "https://update.greasyfork.org/scripts/442691/DGG%20rplace.user.js",
+          "code_size": 1710,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DGG r/place",
+  "description": "Template overlay for DGG.",
+  "url": "https://greasyfork.org/scripts/442691-dgg-r-place",
+  "code_url": "https://update.greasyfork.org/scripts/442691/DGG%20rplace.user.js",
+  "code_size": 1710,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

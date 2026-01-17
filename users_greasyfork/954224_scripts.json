@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451428,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-15T15:16:03.000Z",
+    "code_updated_at": "2023-04-11T17:19:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 954224,
+        "name": "MaxHjarpe",
+        "created_at": "2022-09-03T16:03:40.000Z",
+        "url": "https://greasyfork.org/users/954224-maxhjarpe"
+      }
+    ],
+    "name": "Wordle Solver!",
+    "description": "A Wordle Solver that plays the game for you. Lean back and get the W!",
+    "url": "https://greasyfork.org/scripts/451428-wordle-solver",
+    "code_url": "https://update.greasyfork.org/scripts/451428/Wordle%20Solver%21.user.js",
+    "code_size": 408078,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

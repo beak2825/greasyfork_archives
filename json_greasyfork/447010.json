@@ -1,0 +1,33 @@
+{
+  "id": 447010,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-25T09:19:32.000Z",
+  "code_updated_at": "2022-07-07T11:20:28.000Z",
+  "namespace": "https://github.com/markus-leben/DCD-Chrome-Advanced-Search/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 928709,
+      "name": "markus-leben",
+      "created_at": "2022-06-24T04:26:29.000Z",
+      "url": "https://greasyfork.org/users/928709-markus-leben"
+    }
+  ],
+  "name": "DCD Searchscript",
+  "description": "A script designed to be used with Chrome Site Search to allow you to use the full Diamond Comics advanced search from your address bar",
+  "url": "https://greasyfork.org/scripts/447010-dcd-searchscript",
+  "code_url": "https://update.greasyfork.org/scripts/447010/DCD%20Searchscript.user.js",
+  "code_size": 8082,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 450686,
+    "daily_installs": 0,
+    "total_installs": 126,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-03T19:14:09.000Z",
+    "code_updated_at": "2022-09-26T13:04:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662249,
+        "name": "fischly",
+        "created_at": "2020-07-01T19:48:43.000Z",
+        "url": "https://greasyfork.org/users/662249-fischly"
+      }
+    ],
+    "name": "Tetr.io advanced stats",
+    "description": "Adds three columns with advanced stats (DS/piece, APP, APP+DS/piece) to the tetra channel's game list.",
+    "url": "https://greasyfork.org/scripts/450686-tetr-io-advanced-stats",
+    "code_url": "https://update.greasyfork.org/scripts/450686/Tetrio%20advanced%20stats.user.js",
+    "code_size": 2446,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

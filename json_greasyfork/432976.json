@@ -1,0 +1,34 @@
+{
+  "id": 432976,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-26T05:32:42.000Z",
+  "code_updated_at": "2021-09-26T05:32:41.000Z",
+  "namespace": "9bf36c681d35d52913b3bda74ddf6127318ed7b0",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 112019,
+      "name": "Joyal Varghese",
+      "created_at": "2017-03-23T02:53:00.000Z",
+      "url": "https://greasyfork.org/users/112019-joyal-varghese",
+      "scripts": []
+    }
+  ],
+  "name": "Reddit Old Layout",
+  "description": "Forces usage of the old reddit version",
+  "url": "https://greasyfork.org/scripts/432976-reddit-old-layout",
+  "code_url": "https://update.greasyfork.org/scripts/432976/Reddit%20Old%20Layout.user.js",
+  "code_size": 1464,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

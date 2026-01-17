@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437516,
+    "daily_installs": 0,
+    "total_installs": 121,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-24T07:25:53.000Z",
+    "code_updated_at": "2021-12-24T09:20:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 506339,
+        "name": "Jacob_K",
+        "created_at": "2020-04-13T09:42:32.000Z",
+        "url": "https://greasyfork.org/users/506339-jacob-k"
+      }
+    ],
+    "name": "恢复百度贴吧吧务删帖按钮",
+    "description": "恢复吧务删帖按钮",
+    "url": "https://greasyfork.org/scripts/437516-%E6%81%A2%E5%A4%8D%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%90%A7%E5%8A%A1%E5%88%A0%E5%B8%96%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/437516/%E6%81%A2%E5%A4%8D%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%90%A7%E5%8A%A1%E5%88%A0%E5%B8%96%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 1197,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 451265,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-12T16:16:01.000Z",
+  "code_updated_at": "2022-09-12T16:16:00.000Z",
+  "namespace": "someone10001",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 958016,
+      "name": "someone10001",
+      "created_at": "2022-09-12T10:21:26.000Z",
+      "url": "https://greasyfork.org/users/958016-someone10001"
+    }
+  ],
+  "name": "三相之力指示器·改",
+  "description": "B站评论区自动标注三相玩家，依据是动态里是否有三相相关内容（改进内容：更方便自定义脚本）",
+  "url": "https://greasyfork.org/scripts/451265-%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B%E6%8C%87%E7%A4%BA%E5%99%A8-%E6%94%B9",
+  "code_url": "https://update.greasyfork.org/scripts/451265/%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B%E6%8C%87%E7%A4%BA%E5%99%A8%C2%B7%E6%94%B9.user.js",
+  "code_size": 3502,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

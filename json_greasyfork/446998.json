@@ -1,0 +1,33 @@
+{
+  "id": 446998,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-25T05:49:11.000Z",
+  "code_updated_at": "2022-06-26T23:19:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 918216,
+      "name": "Swift log",
+      "created_at": "2022-05-25T01:34:26.000Z",
+      "url": "https://greasyfork.org/users/918216-swift-log"
+    }
+  ],
+  "name": "bilibili script",
+  "description": "bilibili网站操作脚本",
+  "url": "https://greasyfork.org/scripts/446998-bilibili-script",
+  "code_url": "https://update.greasyfork.org/scripts/446998/bilibili%20script.user.js",
+  "code_size": 4093,
+  "license": "MIT License",
+  "version": "0.36.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

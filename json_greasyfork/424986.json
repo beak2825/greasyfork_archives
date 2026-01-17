@@ -1,0 +1,59 @@
+{
+  "id": 424986,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-13T17:43:33.000Z",
+  "code_updated_at": "2021-04-14T01:50:58.000Z",
+  "namespace": "https://greasyfork.org/users/758717",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 758717,
+      "name": "dyerai",
+      "created_at": "2021-04-13T17:04:22.000Z",
+      "url": "https://greasyfork.org/users/758717-dyerai",
+      "scripts": [
+        {
+          "id": 424986,
+          "daily_installs": 0,
+          "total_installs": 55,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-13T17:43:33.000Z",
+          "code_updated_at": "2021-04-14T01:50:58.000Z",
+          "namespace": "https://greasyfork.org/users/758717",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RYM Review Hider",
+          "description": "Tired of letting other people's opinions influence your own? This simple userscript hides other user's ratings by default. Already rated a release and want to see what others said? Just press the toggle rating data button.",
+          "url": "https://greasyfork.org/scripts/424986-rym-review-hider",
+          "code_url": "https://update.greasyfork.org/scripts/424986/RYM%20Review%20Hider.user.js",
+          "code_size": 2356,
+          "license": null,
+          "version": "1.02",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RYM Review Hider",
+  "description": "Tired of letting other people's opinions influence your own? This simple userscript hides other user's ratings by default. Already rated a release and want to see what others said? Just press the toggle rating data button.",
+  "url": "https://greasyfork.org/scripts/424986-rym-review-hider",
+  "code_url": "https://update.greasyfork.org/scripts/424986/RYM%20Review%20Hider.user.js",
+  "code_size": 2356,
+  "license": null,
+  "version": "1.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

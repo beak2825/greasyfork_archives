@@ -1,0 +1,59 @@
+{
+  "id": 423757,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-22T08:33:32.000Z",
+  "code_updated_at": "2021-03-23T01:56:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 743520,
+      "name": "Cool-Star",
+      "created_at": "2021-03-04T09:40:20.000Z",
+      "url": "https://greasyfork.org/users/743520-cool-star",
+      "scripts": [
+        {
+          "id": 483042,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-25T03:08:39.000Z",
+          "code_updated_at": "2023-12-25T06:08:31.000Z",
+          "namespace": "https://greasyfork.org/users/743520",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fofa搜索页一键导入GOBY扫描",
+          "description": "将Fofa扫描页的结果一键导入Goby进行扫描",
+          "url": "https://greasyfork.org/scripts/483042-fofa%E6%90%9C%E7%B4%A2%E9%A1%B5%E4%B8%80%E9%94%AE%E5%AF%BC%E5%85%A5goby%E6%89%AB%E6%8F%8F",
+          "code_url": "https://update.greasyfork.org/scripts/483042/Fofa%E6%90%9C%E7%B4%A2%E9%A1%B5%E4%B8%80%E9%94%AE%E5%AF%BC%E5%85%A5GOBY%E6%89%AB%E6%8F%8F.user.js",
+          "code_size": 1512,
+          "license": null,
+          "version": "0.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "一代仁医-云云破解版",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/423757-%E4%B8%80%E4%BB%A3%E4%BB%81%E5%8C%BB-%E4%BA%91%E4%BA%91%E7%A0%B4%E8%A7%A3%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/423757/%E4%B8%80%E4%BB%A3%E4%BB%81%E5%8C%BB-%E4%BA%91%E4%BA%91%E7%A0%B4%E8%A7%A3%E7%89%88.user.js",
+  "code_size": 3176,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

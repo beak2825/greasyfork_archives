@@ -1,0 +1,33 @@
+{
+  "id": 437107,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-15T17:08:40.000Z",
+  "code_updated_at": "2021-12-19T02:57:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 302934,
+      "name": "Toshi",
+      "created_at": "2019-05-18T14:26:41.000Z",
+      "url": "https://greasyfork.org/users/302934-toshi"
+    }
+  ],
+  "name": "TypingTube バックアップ一覧表示",
+  "description": "IndexedDBに保存されているタイピングデータをtableに表示します。",
+  "url": "https://greasyfork.org/scripts/437107-typingtube-%E3%83%90%E3%83%83%E3%82%AF%E3%82%A2%E3%83%83%E3%83%97%E4%B8%80%E8%A6%A7%E8%A1%A8%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/437107/TypingTube%20%E3%83%90%E3%83%83%E3%82%AF%E3%82%A2%E3%83%83%E3%83%97%E4%B8%80%E8%A6%A7%E8%A1%A8%E7%A4%BA.user.js",
+  "code_size": 7733,
+  "license": null,
+  "version": "0.3",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

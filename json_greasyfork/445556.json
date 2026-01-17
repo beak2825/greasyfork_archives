@@ -1,0 +1,59 @@
+{
+  "id": 445556,
+  "daily_installs": 0,
+  "total_installs": 160,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-26T00:00:51.000Z",
+  "code_updated_at": "2022-05-26T12:04:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 918597,
+      "name": "xl5866476",
+      "created_at": "2022-05-25T23:56:42.000Z",
+      "url": "https://greasyfork.org/users/918597-xl5866476",
+      "scripts": [
+        {
+          "id": 445556,
+          "daily_installs": 0,
+          "total_installs": 160,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-26T00:00:51.000Z",
+          "code_updated_at": "2022-05-26T12:04:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "rarbg-magnet-batch-copy",
+          "description": "Display checkboxes and magnet icons on rarbg search result page, you can batch copy magnet links.",
+          "url": "https://greasyfork.org/scripts/445556-rarbg-magnet-batch-copy",
+          "code_url": "https://update.greasyfork.org/scripts/445556/rarbg-magnet-batch-copy.user.js",
+          "code_size": 11386,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "rarbg-magnet-batch-copy",
+  "description": "Display checkboxes and magnet icons on rarbg search result page, you can batch copy magnet links.",
+  "url": "https://greasyfork.org/scripts/445556-rarbg-magnet-batch-copy",
+  "code_url": "https://update.greasyfork.org/scripts/445556/rarbg-magnet-batch-copy.user.js",
+  "code_size": 11386,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,200 @@
+[
+  {
+    "id": 428422,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-24T23:19:35.000Z",
+    "code_updated_at": "2021-06-24T23:34:01.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 252149,
+        "name": "Visua",
+        "created_at": "2019-03-03T14:37:25.000Z",
+        "url": "https://greasyfork.org/users/252149-visua"
+      }
+    ],
+    "name": "Denque",
+    "description": "Extremely fast and lightweight double-ended queue implementation with zero dependencies.",
+    "url": "https://greasyfork.org/scripts/428422-denque",
+    "code_url": "https://update.greasyfork.org/scripts/428422/943850/Denque.js",
+    "code_size": 12171,
+    "license": null,
+    "version": "0.0.1.20210624233401",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 428207,
+    "daily_installs": 0,
+    "total_installs": 83,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-20T00:58:59.000Z",
+    "code_updated_at": "2021-06-20T00:58:59.000Z",
+    "namespace": "Visua",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 252149,
+        "name": "Visua",
+        "created_at": "2019-03-03T14:37:25.000Z",
+        "url": "https://greasyfork.org/users/252149-visua"
+      }
+    ],
+    "name": "Melvor Idle - AutoSlayer",
+    "description": "Automatically reroll and extend slayer tasks for specific monsters",
+    "url": "https://greasyfork.org/scripts/428207-melvor-idle-autoslayer",
+    "code_url": "https://update.greasyfork.org/scripts/428207/Melvor%20Idle%20-%20AutoSlayer.user.js",
+    "code_size": 4385,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427913,
+    "daily_installs": 0,
+    "total_installs": 107,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-13T23:16:32.000Z",
+    "code_updated_at": "2021-11-17T20:17:16.000Z",
+    "namespace": "Visua",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 252149,
+        "name": "Visua",
+        "created_at": "2019-03-03T14:37:25.000Z",
+        "url": "https://greasyfork.org/users/252149-visua"
+      }
+    ],
+    "name": "Melvor Idle - AutoLoot",
+    "description": "Automatically collects loot",
+    "url": "https://greasyfork.org/scripts/427913-melvor-idle-autoloot",
+    "code_url": "https://update.greasyfork.org/scripts/427913/Melvor%20Idle%20-%20AutoLoot.user.js",
+    "code_size": 1026,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427692,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-09T01:47:28.000Z",
+    "code_updated_at": "2021-11-18T01:00:09.000Z",
+    "namespace": "Visua",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 252149,
+        "name": "Visua",
+        "created_at": "2019-03-03T14:37:25.000Z",
+        "url": "https://greasyfork.org/users/252149-visua"
+      }
+    ],
+    "name": "Melvor Idle - AutoFarm",
+    "description": "Automates farming",
+    "url": "https://greasyfork.org/scripts/427692-melvor-idle-autofarm",
+    "code_url": "https://update.greasyfork.org/scripts/427692/Melvor%20Idle%20-%20AutoFarm.user.js",
+    "code_size": 27299,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 414241,
+    "daily_installs": 0,
+    "total_installs": 311,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-23T01:14:08.000Z",
+    "code_updated_at": "2021-11-17T20:17:16.000Z",
+    "namespace": "Visua",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 252149,
+        "name": "Visua",
+        "created_at": "2019-03-03T14:37:25.000Z",
+        "url": "https://greasyfork.org/users/252149-visua"
+      }
+    ],
+    "name": "Melvor Idle - AutoMastery",
+    "description": "Automatically spends mastery when a pool is about to fill up",
+    "url": "https://greasyfork.org/scripts/414241-melvor-idle-automastery",
+    "code_url": "https://update.greasyfork.org/scripts/414241/Melvor%20Idle%20-%20AutoMastery.user.js",
+    "code_size": 8455,
+    "license": null,
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 414199,
+    "daily_installs": 0,
+    "total_installs": 100,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-22T08:33:44.000Z",
+    "code_updated_at": "2021-11-17T20:17:17.000Z",
+    "namespace": "Visua",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 252149,
+        "name": "Visua",
+        "created_at": "2019-03-03T14:37:25.000Z",
+        "url": "https://greasyfork.org/users/252149-visua"
+      }
+    ],
+    "name": "Melvor Idle - Mastery Enhancements",
+    "description": "Adds mastery pool progress bars to skills in the menu",
+    "url": "https://greasyfork.org/scripts/414199-melvor-idle-mastery-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/414199/Melvor%20Idle%20-%20Mastery%20Enhancements.user.js",
+    "code_size": 3164,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

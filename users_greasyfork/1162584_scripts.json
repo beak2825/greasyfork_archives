@@ -1,0 +1,134 @@
+[
+  {
+    "id": 483361,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-29T03:17:08.000Z",
+    "code_updated_at": "2023-12-29T03:17:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1162584,
+        "name": "SceptEver",
+        "created_at": "2023-08-30T03:17:16.000Z",
+        "url": "https://greasyfork.org/users/1162584-sceptever"
+      }
+    ],
+    "name": "ESP辅助脚本2",
+    "description": "ESP辅助脚本",
+    "url": "https://greasyfork.org/scripts/483361-esp%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC2",
+    "code_url": "https://update.greasyfork.org/scripts/483361/ESP%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC2.user.js",
+    "code_size": 1361,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 483360,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-29T03:16:09.000Z",
+    "code_updated_at": "2023-12-29T03:16:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1162584,
+        "name": "SceptEver",
+        "created_at": "2023-08-30T03:17:16.000Z",
+        "url": "https://greasyfork.org/users/1162584-sceptever"
+      }
+    ],
+    "name": "ESP辅助脚本1",
+    "description": "ESP辅助脚本",
+    "url": "https://greasyfork.org/scripts/483360-esp%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC1",
+    "code_url": "https://update.greasyfork.org/scripts/483360/ESP%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC1.user.js",
+    "code_size": 7202,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474202,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-30T09:38:07.000Z",
+    "code_updated_at": "2023-08-30T09:38:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1162584,
+        "name": "SceptEver",
+        "created_at": "2023-08-30T03:17:16.000Z",
+        "url": "https://greasyfork.org/users/1162584-sceptever"
+      }
+    ],
+    "name": "去除水印",
+    "description": "去除页面水印",
+    "url": "https://greasyfork.org/scripts/474202-%E5%8E%BB%E9%99%A4%E6%B0%B4%E5%8D%B0",
+    "code_url": "https://update.greasyfork.org/scripts/474202/%E5%8E%BB%E9%99%A4%E6%B0%B4%E5%8D%B0.user.js",
+    "code_size": 769,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474181,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-30T03:21:51.000Z",
+    "code_updated_at": "2024-01-23T06:06:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1162584,
+        "name": "SceptEver",
+        "created_at": "2023-08-30T03:17:16.000Z",
+        "url": "https://greasyfork.org/users/1162584-sceptever"
+      }
+    ],
+    "name": "自动补全",
+    "description": "自动补全select语句",
+    "url": "https://greasyfork.org/scripts/474181-%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8",
+    "code_url": "https://update.greasyfork.org/scripts/474181/%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8.user.js",
+    "code_size": 26214,
+    "license": "MT",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

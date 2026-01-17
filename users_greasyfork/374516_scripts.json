@@ -31,5 +31,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 494711,
+    "daily_installs": 0,
+    "total_installs": 217,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-12T00:35:08.000Z",
+    "code_updated_at": "2024-05-12T00:35:08.000Z",
+    "namespace": "https://github.com/ArjixWasTaken/my-userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374516,
+        "name": "Arjix",
+        "created_at": "2019-09-21T20:28:14.000Z",
+        "url": "https://greasyfork.org/users/374516-arjix"
+      }
+    ],
+    "name": "Redirect to Freedium",
+    "description": "Automatically redirects medium articles to freedium",
+    "url": "https://greasyfork.org/scripts/494711-redirect-to-freedium",
+    "code_url": "https://update.greasyfork.org/scripts/494711/Redirect%20to%20Freedium.user.js",
+    "code_size": 1033,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418288,
+    "daily_installs": 0,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-07T17:03:07.000Z",
+    "code_updated_at": "2020-12-07T18:36:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374516,
+        "name": "Arjix",
+        "created_at": "2019-09-21T20:28:14.000Z",
+        "url": "https://greasyfork.org/users/374516-arjix"
+      }
+    ],
+    "name": "NSFW thumbnails",
+    "description": "removes warning from nsfw previews of workshop items",
+    "url": "https://greasyfork.org/scripts/418288-nsfw-thumbnails",
+    "code_url": "https://update.greasyfork.org/scripts/418288/NSFW%20thumbnails.user.js",
+    "code_size": 673,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417771,
+    "daily_installs": 0,
+    "total_installs": 353,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-12-03T15:28:33.000Z",
+    "code_updated_at": "2021-05-22T19:10:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374516,
+        "name": "Arjix",
+        "created_at": "2019-09-21T20:28:14.000Z",
+        "url": "https://greasyfork.org/users/374516-arjix"
+      }
+    ],
+    "name": "GogoAnime++",
+    "description": "Replaces the download link with a direct download link.",
+    "url": "https://greasyfork.org/scripts/417771-gogoanime",
+    "code_url": "https://update.greasyfork.org/scripts/417771/GogoAnime%2B%2B.user.js",
+    "code_size": 5834,
+    "license": null,
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417762,
+    "daily_installs": 1,
+    "total_installs": 251,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-03T11:11:54.000Z",
+    "code_updated_at": "2020-12-03T11:11:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374516,
+        "name": "Arjix",
+        "created_at": "2019-09-21T20:28:14.000Z",
+        "url": "https://greasyfork.org/users/374516-arjix"
+      }
+    ],
+    "name": "osu Auto Play",
+    "description": "will try to auto play the song of the current beatmap",
+    "url": "https://greasyfork.org/scripts/417762-osu-auto-play",
+    "code_url": "https://update.greasyfork.org/scripts/417762/osu%20Auto%20Play.user.js",
+    "code_size": 790,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417573,
+    "daily_installs": 0,
+    "total_installs": 298,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-02T16:39:27.000Z",
+    "code_updated_at": "2020-12-09T07:03:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374516,
+        "name": "Arjix",
+        "created_at": "2019-09-21T20:28:14.000Z",
+        "url": "https://greasyfork.org/users/374516-arjix"
+      }
+    ],
+    "name": "NyaaDeadTorrents",
+    "description": "A simple script to remove dead torrents from the browse section of Nyaa.",
+    "url": "https://greasyfork.org/scripts/417573-nyaadeadtorrents",
+    "code_url": "https://update.greasyfork.org/scripts/417573/NyaaDeadTorrents.user.js",
+    "code_size": 3694,
+    "license": null,
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

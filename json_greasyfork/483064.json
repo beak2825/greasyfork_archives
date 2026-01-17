@@ -1,0 +1,33 @@
+{
+  "id": 483064,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-25T09:54:22.000Z",
+  "code_updated_at": "2024-05-28T07:58:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1238989,
+      "name": "mosby-zhou",
+      "created_at": "2023-12-25T09:52:01.000Z",
+      "url": "https://greasyfork.org/users/1238989-mosby-zhou"
+    }
+  ],
+  "name": "Unlock feishu doc copy",
+  "description": "https://gist.github.com/mosby-zhou/e9ecdf19043f8baaed06268b7cc3ad73",
+  "url": "https://greasyfork.org/scripts/483064-unlock-feishu-doc-copy",
+  "code_url": "https://update.greasyfork.org/scripts/483064/Unlock%20feishu%20doc%20copy.user.js",
+  "code_size": 2820,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

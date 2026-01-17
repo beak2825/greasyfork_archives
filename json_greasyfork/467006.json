@@ -1,0 +1,33 @@
+{
+  "id": 467006,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-24T13:57:05.000Z",
+  "code_updated_at": "2023-05-24T14:00:01.000Z",
+  "namespace": "1337",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1084029,
+      "name": "winxpqq955",
+      "created_at": "2023-05-24T13:56:03.000Z",
+      "url": "https://greasyfork.org/users/1084029-winxpqq955"
+    }
+  ],
+  "name": "去你大爷的小黄脸",
+  "description": "把哔哩哔哩小黄脸表情替换成文字",
+  "url": "https://greasyfork.org/scripts/467006-%E5%8E%BB%E4%BD%A0%E5%A4%A7%E7%88%B7%E7%9A%84%E5%B0%8F%E9%BB%84%E8%84%B8",
+  "code_url": "https://update.greasyfork.org/scripts/467006/%E5%8E%BB%E4%BD%A0%E5%A4%A7%E7%88%B7%E7%9A%84%E5%B0%8F%E9%BB%84%E8%84%B8.user.js",
+  "code_size": 762,
+  "license": "CC0",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

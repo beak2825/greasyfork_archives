@@ -1,0 +1,33 @@
+{
+  "id": 447502,
+  "daily_installs": 1,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-06T13:38:18.000Z",
+  "code_updated_at": "2022-07-06T13:38:18.000Z",
+  "namespace": "github.com/istobran",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 932551,
+      "name": "istobran",
+      "created_at": "2022-07-05T08:46:32.000Z",
+      "url": "https://greasyfork.org/users/932551-istobran"
+    }
+  ],
+  "name": "ratotal-userscript",
+  "description": "RAT社区增强脚本，支持录像解析",
+  "url": "https://greasyfork.org/scripts/447502-ratotal-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/447502/ratotal-userscript.user.js",
+  "code_size": 1246940,
+  "license": "MIT License",
+  "version": "0.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

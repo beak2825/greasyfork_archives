@@ -1,0 +1,68 @@
+[
+  {
+    "id": 474537,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-04T18:21:38.000Z",
+    "code_updated_at": "2023-09-04T18:21:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166286,
+        "name": "WallCode",
+        "created_at": "2023-09-04T17:22:26.000Z",
+        "url": "https://greasyfork.org/users/1166286-wallcode"
+      }
+    ],
+    "name": "WallC Ad Blocker",
+    "description": "Thanks to this script, you can play moomoo.io without ads :D",
+    "url": "https://greasyfork.org/scripts/474537-wallc-ad-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/474537/WallC%20Ad%20Blocker.user.js",
+    "code_size": 79666,
+    "license": null,
+    "version": "v.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474536,
+    "daily_installs": 1,
+    "total_installs": 286,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-04T18:05:10.000Z",
+    "code_updated_at": "2023-09-04T18:05:10.000Z",
+    "namespace": "https://greasyfork.org/en/users/752105-w4it",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166286,
+        "name": "WallCode",
+        "created_at": "2023-09-04T17:22:26.000Z",
+        "url": "https://greasyfork.org/users/1166286-wallcode"
+      }
+    ],
+    "name": "pankek mod türkçe",
+    "description": "Bu mod kötü değil, sadece iyi. Kontrolleri öğrenmek için açıklamaya bakın! İyi eğlenceler :>",
+    "url": "https://greasyfork.org/scripts/474536-pankek-mod-t%C3%BCrk%C3%A7e",
+    "code_url": "https://update.greasyfork.org/scripts/474536/pankek%20mod%20t%C3%BCrk%C3%A7e.user.js",
+    "code_size": 124718,
+    "license": null,
+    "version": "v.10.7.1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

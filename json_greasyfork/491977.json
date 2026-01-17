@@ -1,0 +1,59 @@
+{
+  "id": 491977,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-08T12:12:53.000Z",
+  "code_updated_at": "2024-04-08T12:12:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1285492,
+      "name": "Alleyf",
+      "created_at": "2024-04-08T08:55:29.000Z",
+      "url": "https://greasyfork.org/users/1285492-alleyf",
+      "scripts": [
+        {
+          "id": 491977,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-08T12:12:53.000Z",
+          "code_updated_at": "2024-04-08T12:12:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WHUT Campus Network Auto-Login",
+          "description": "Automatically logs into the campus network by fetching saved credentials from localStorage",
+          "url": "https://greasyfork.org/scripts/491977-whut-campus-network-auto-login",
+          "code_url": "https://update.greasyfork.org/scripts/491977/WHUT%20Campus%20Network%20Auto-Login.user.js",
+          "code_size": 11409,
+          "license": "MIT License",
+          "version": "0.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WHUT Campus Network Auto-Login",
+  "description": "Automatically logs into the campus network by fetching saved credentials from localStorage",
+  "url": "https://greasyfork.org/scripts/491977-whut-campus-network-auto-login",
+  "code_url": "https://update.greasyfork.org/scripts/491977/WHUT%20Campus%20Network%20Auto-Login.user.js",
+  "code_size": 11409,
+  "license": "MIT License",
+  "version": "0.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

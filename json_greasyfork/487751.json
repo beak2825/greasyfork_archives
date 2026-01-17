@@ -1,0 +1,33 @@
+{
+  "id": 487751,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-19T19:14:25.000Z",
+  "code_updated_at": "2024-02-21T19:51:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber"
+    }
+  ],
+  "name": "Ed Ban Stat Combined Antonio Menotti",
+  "description": "Modify balances within transactions based on multiple configurations when specific element is present",
+  "url": "https://greasyfork.org/scripts/487751-ed-ban-stat-combined-antonio-menotti",
+  "code_url": "https://update.greasyfork.org/scripts/487751/Ed%20Ban%20Stat%20Combined%20Antonio%20Menotti.user.js",
+  "code_size": 875,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

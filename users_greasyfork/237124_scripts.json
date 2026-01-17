@@ -1,0 +1,68 @@
+[
+  {
+    "id": 468973,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-19T06:34:58.000Z",
+    "code_updated_at": "2023-06-19T06:34:57.000Z",
+    "namespace": "https://github.com/ifeng0188",
+    "support_url": "https://github.com/ifeng0188/GenshinLiveStreamHelper/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 237124,
+        "name": "紫琳秋",
+        "created_at": "2019-01-04T07:22:46.000Z",
+        "url": "https://greasyfork.org/users/237124-%E7%B4%AB%E7%90%B3%E7%A7%8B"
+      }
+    ],
+    "name": "原神直播活动抢码助手",
+    "description": "一款用于原神直播活动的抢码助手，支持哔哩哔哩、虎牙、斗鱼多个平台的自动抢码，附带一些页面优化功能",
+    "url": "https://greasyfork.org/scripts/468973-%E5%8E%9F%E7%A5%9E%E7%9B%B4%E6%92%AD%E6%B4%BB%E5%8A%A8%E6%8A%A2%E7%A0%81%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/468973/%E5%8E%9F%E7%A5%9E%E7%9B%B4%E6%92%AD%E6%B4%BB%E5%8A%A8%E6%8A%A2%E7%A0%81%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 8577,
+    "license": "GPL-3.0 license",
+    "version": "3.5.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 461851,
+    "daily_installs": 0,
+    "total_installs": 788,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-15T06:20:09.000Z",
+    "code_updated_at": "2023-03-15T06:54:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 237124,
+        "name": "紫琳秋",
+        "created_at": "2019-01-04T07:22:46.000Z",
+        "url": "https://greasyfork.org/users/237124-%E7%B4%AB%E7%90%B3%E7%A7%8B"
+      }
+    ],
+    "name": "隐藏 B 站直播间礼物栏",
+    "description": "隐藏 B 站直播间礼物栏, 防止全屏时展示礼物栏",
+    "url": "https://greasyfork.org/scripts/461851-%E9%9A%90%E8%97%8F-b-%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E7%A4%BC%E7%89%A9%E6%A0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/461851/%E9%9A%90%E8%97%8F%20B%20%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E7%A4%BC%E7%89%A9%E6%A0%8F.user.js",
+    "code_size": 641,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

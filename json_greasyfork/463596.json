@@ -1,0 +1,33 @@
+{
+  "id": 463596,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-09T10:55:25.000Z",
+  "code_updated_at": "2024-06-22T13:57:56.000Z",
+  "namespace": "https://greasyfork.org/users/807598",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 807598,
+      "name": "Ahmed Esslaoui",
+      "created_at": "2021-08-23T04:35:33.000Z",
+      "url": "https://greasyfork.org/users/807598-ahmed-esslaoui"
+    }
+  ],
+  "name": "Dynamic Hyperlink by Ahmed /Watch",
+  "description": "Created for internal use only, Created by Ahmed.",
+  "url": "https://greasyfork.org/scripts/463596-dynamic-hyperlink-by-ahmed-watch",
+  "code_url": "https://update.greasyfork.org/scripts/463596/Dynamic%20Hyperlink%20by%20Ahmed%20Watch.user.js",
+  "code_size": 3239,
+  "license": null,
+  "version": "2024.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

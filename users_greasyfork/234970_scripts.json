@@ -1,0 +1,68 @@
+[
+  {
+    "id": 436584,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-05T08:28:01.000Z",
+    "code_updated_at": "2023-02-25T16:09:09.000Z",
+    "namespace": "https://github.com/dyxcloud",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 234970,
+        "name": "dyxcloud",
+        "created_at": "2018-12-25T13:49:49.000Z",
+        "url": "https://greasyfork.org/users/234970-dyxcloud"
+      }
+    ],
+    "name": "biliplus弹幕文件批量下载",
+    "description": "批量从biliplus下载某一个av号下所有分P的弹幕xml文件, 不用再一个一个点了, xml文件名是分P的名称",
+    "url": "https://greasyfork.org/scripts/436584-biliplus%E5%BC%B9%E5%B9%95%E6%96%87%E4%BB%B6%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/436584/biliplus%E5%BC%B9%E5%B9%95%E6%96%87%E4%BB%B6%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 2557,
+    "license": "MIT License",
+    "version": "0.03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424923,
+    "daily_installs": 0,
+    "total_installs": 111,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-12T14:48:44.000Z",
+    "code_updated_at": "2024-11-30T10:38:05.000Z",
+    "namespace": "https://github.com/dyxcloud",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 234970,
+        "name": "dyxcloud",
+        "created_at": "2018-12-25T13:49:49.000Z",
+        "url": "https://greasyfork.org/users/234970-dyxcloud"
+      }
+    ],
+    "name": "B站订阅页面自动筛选\"在看\"番剧和电影(已失效)",
+    "description": "订阅页面的筛选自动选择\"在看\", 在\"追番\"和\"追剧\"两个页面生效",
+    "url": "https://greasyfork.org/scripts/424923-b%E7%AB%99%E8%AE%A2%E9%98%85%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E7%AD%9B%E9%80%89-%E5%9C%A8%E7%9C%8B-%E7%95%AA%E5%89%A7%E5%92%8C%E7%94%B5%E5%BD%B1-%E5%B7%B2%E5%A4%B1%E6%95%88",
+    "code_url": "https://update.greasyfork.org/scripts/424923/B%E7%AB%99%E8%AE%A2%E9%98%85%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E7%AD%9B%E9%80%89%22%E5%9C%A8%E7%9C%8B%22%E7%95%AA%E5%89%A7%E5%92%8C%E7%94%B5%E5%BD%B1%28%E5%B7%B2%E5%A4%B1%E6%95%88%29.user.js",
+    "code_size": 1199,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

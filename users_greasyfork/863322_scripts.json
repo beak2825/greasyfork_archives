@@ -1,0 +1,68 @@
+[
+  {
+    "id": 491179,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-29T14:35:17.000Z",
+    "code_updated_at": "2024-03-29T14:38:44.000Z",
+    "namespace": "ikkevoid.github.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 863322,
+        "name": "Ikkevoid",
+        "created_at": "2022-01-10T22:55:12.000Z",
+        "url": "https://greasyfork.org/users/863322-ikkevoid"
+      }
+    ],
+    "name": "Twitter style restore",
+    "description": "Replace X branding with Twitter",
+    "url": "https://greasyfork.org/scripts/491179-twitter-style-restore",
+    "code_url": "https://update.greasyfork.org/scripts/491179/Twitter%20style%20restore.user.js",
+    "code_size": 1835,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438332,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-10T22:56:15.000Z",
+    "code_updated_at": "2022-01-10T22:56:15.000Z",
+    "namespace": "https://ikke.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 863322,
+        "name": "Ikkevoid",
+        "created_at": "2022-01-10T22:55:12.000Z",
+        "url": "https://greasyfork.org/users/863322-ikkevoid"
+      }
+    ],
+    "name": "A-t.nu fix",
+    "description": "Remove annoying selection and copying prevention",
+    "url": "https://greasyfork.org/scripts/438332-a-t-nu-fix",
+    "code_url": "https://update.greasyfork.org/scripts/438332/A-tnu%20fix.user.js",
+    "code_size": 941,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

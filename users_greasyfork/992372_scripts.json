@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456608,
+    "daily_installs": 0,
+    "total_installs": 98,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-15T06:51:08.000Z",
+    "code_updated_at": "2022-12-15T06:51:07.000Z",
+    "namespace": "https://github.com/denglijuan/TamperMonkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 992372,
+        "name": "denglijuan",
+        "created_at": "2022-12-04T13:43:01.000Z",
+        "url": "https://greasyfork.org/users/992372-denglijuan"
+      }
+    ],
+    "name": "Table-Copy",
+    "description": "Select the data in each column of the table to merge and copy to the pasteboard",
+    "url": "https://greasyfork.org/scripts/456608-table-copy",
+    "code_url": "https://update.greasyfork.org/scripts/456608/Table-Copy.user.js",
+    "code_size": 9293,
+    "license": "MIT License",
+    "version": "1.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

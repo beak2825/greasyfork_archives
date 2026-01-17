@@ -1,0 +1,59 @@
+{
+  "id": 450328,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-28T11:16:41.000Z",
+  "code_updated_at": "2023-11-08T01:15:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 951691,
+      "name": "啊夏",
+      "created_at": "2022-08-28T10:42:33.000Z",
+      "url": "https://greasyfork.org/users/951691-%E5%95%8A%E5%A4%8F",
+      "scripts": [
+        {
+          "id": 510101,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-25T08:21:42.000Z",
+          "code_updated_at": "2024-09-25T08:21:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "uploadImgeToGitlab",
+          "description": "upload imge to gitlab",
+          "url": "https://greasyfork.org/scripts/510101-uploadimgetogitlab",
+          "code_url": "https://update.greasyfork.org/scripts/510101/uploadImgeToGitlab.user.js",
+          "code_size": 24282,
+          "license": "MIT License",
+          "version": "0.12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "swaggerSkipToCustomMethods",
+  "description": "让swagger支持跳转到指定方法位置并打开",
+  "url": "https://greasyfork.org/scripts/450328-swaggerskiptocustommethods",
+  "code_url": "https://update.greasyfork.org/scripts/450328/swaggerSkipToCustomMethods.user.js",
+  "code_size": 21217,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

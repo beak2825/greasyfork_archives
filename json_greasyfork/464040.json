@@ -1,0 +1,34 @@
+{
+  "id": 464040,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-15T01:33:44.000Z",
+  "code_updated_at": "2023-04-15T01:33:43.000Z",
+  "namespace": "myscript",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 807598,
+      "name": "Ahmed Esslaoui",
+      "created_at": "2021-08-23T04:35:33.000Z",
+      "url": "https://greasyfork.org/users/807598-ahmed-esslaoui",
+      "scripts": []
+    }
+  ],
+  "name": "My Script",
+  "description": "Prompt for user info and copy to clipboard",
+  "url": "https://greasyfork.org/scripts/464040-my-script",
+  "code_url": "https://update.greasyfork.org/scripts/464040/My%20Script.user.js",
+  "code_size": 9944,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

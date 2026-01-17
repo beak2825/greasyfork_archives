@@ -1,0 +1,33 @@
+{
+  "id": 450737,
+  "daily_installs": 0,
+  "total_installs": 176,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-04T11:25:19.000Z",
+  "code_updated_at": "2022-09-04T11:25:19.000Z",
+  "namespace": "w8.tools",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 954510,
+      "name": "wi8964",
+      "created_at": "2022-09-04T11:19:55.000Z",
+      "url": "https://greasyfork.org/users/954510-wi8964"
+    }
+  ],
+  "name": "Scenexe Ubuntu Font",
+  "description": "Ubuntu font for scenexe. Not malicious!",
+  "url": "https://greasyfork.org/scripts/450737-scenexe-ubuntu-font",
+  "code_url": "https://update.greasyfork.org/scripts/450737/Scenexe%20Ubuntu%20Font.user.js",
+  "code_size": 2353,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

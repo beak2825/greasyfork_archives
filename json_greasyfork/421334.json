@@ -1,0 +1,33 @@
+{
+  "id": 421334,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-06T18:47:01.000Z",
+  "code_updated_at": "2021-02-06T18:47:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 735204,
+      "name": "Sean V",
+      "created_at": "2021-02-06T18:44:30.000Z",
+      "url": "https://greasyfork.org/users/735204-sean-v"
+    }
+  ],
+  "name": "BIGideas math autro sigh in",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/421334-bigideas-math-autro-sigh-in",
+  "code_url": "https://update.greasyfork.org/scripts/421334/BIGideas%20math%20autro%20sigh%20in.user.js",
+  "code_size": 793,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

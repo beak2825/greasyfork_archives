@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449889,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-20T20:44:31.000Z",
+    "code_updated_at": "2023-06-13T09:07:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 948741,
+        "name": "Contorted Expression",
+        "created_at": "2022-08-20T20:41:38.000Z",
+        "url": "https://greasyfork.org/users/948741-contorted-expression"
+      }
+    ],
+    "name": "MeetToConf",
+    "description": "Create conf title for the day from Google meet participant list",
+    "url": "https://greasyfork.org/scripts/449889-meettoconf",
+    "code_url": "https://update.greasyfork.org/scripts/449889/MeetToConf.user.js",
+    "code_size": 2937,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

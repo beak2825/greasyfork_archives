@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439436,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-31T20:24:03.000Z",
+    "code_updated_at": "2022-01-31T20:24:03.000Z",
+    "namespace": "wildhare.torn.FactionWallBattlestats",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 830049,
+        "name": "J. B.",
+        "created_at": "2021-10-29T20:13:26.000Z",
+        "url": "https://greasyfork.org/users/830049-j-b"
+      }
+    ],
+    "name": "Faction Wall Battlestats",
+    "description": "Show tornstats spies on faction wall page",
+    "url": "https://greasyfork.org/scripts/439436-faction-wall-battlestats",
+    "code_url": "https://update.greasyfork.org/scripts/439436/Faction%20Wall%20Battlestats.user.js",
+    "code_size": 19622,
+    "license": null,
+    "version": "1.24",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

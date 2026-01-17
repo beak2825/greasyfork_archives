@@ -1,0 +1,33 @@
+{
+  "id": 491830,
+  "daily_installs": 0,
+  "total_installs": 97,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-06T20:57:45.000Z",
+  "code_updated_at": "2024-04-06T20:57:45.000Z",
+  "namespace": "http://asleepysamurai.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1175330,
+      "name": "Balaganesh Damodaran",
+      "created_at": "2023-09-17T20:36:24.000Z",
+      "url": "https://greasyfork.org/users/1175330-balaganesh-damodaran"
+    }
+  ],
+  "name": "Show Google Maps in EU Search Pages",
+  "description": "Bring Maps links to Google Search result pages in the EU once again.",
+  "url": "https://greasyfork.org/scripts/491830-show-google-maps-in-eu-search-pages",
+  "code_url": "https://update.greasyfork.org/scripts/491830/Show%20Google%20Maps%20in%20EU%20Search%20Pages.user.js",
+  "code_size": 10369,
+  "license": "BSD Zero Clause License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

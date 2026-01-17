@@ -1,0 +1,33 @@
+{
+  "id": 493907,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-01T13:40:18.000Z",
+  "code_updated_at": "2024-05-01T13:40:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1295623,
+      "name": "michael flake",
+      "created_at": "2024-05-01T13:22:36.000Z",
+      "url": "https://greasyfork.org/users/1295623-michael-flake"
+    }
+  ],
+  "name": "Fortnite Aimbot",
+  "description": "Automatically aim at enemies in Fortnite.",
+  "url": "https://greasyfork.org/scripts/493907-fortnite-aimbot",
+  "code_url": "https://update.greasyfork.org/scripts/493907/Fortnite%20Aimbot.user.js",
+  "code_size": 1528,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

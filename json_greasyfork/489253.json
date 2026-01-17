@@ -1,0 +1,33 @@
+{
+  "id": 489253,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-07T20:38:17.000Z",
+  "code_updated_at": "2024-03-07T20:38:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1271535,
+      "name": "HugovandeVelde",
+      "created_at": "2024-03-07T20:35:29.000Z",
+      "url": "https://greasyfork.org/users/1271535-hugovandevelde"
+    }
+  ],
+  "name": "Huug shortcuts",
+  "description": "Shortcuts for Farm towns and Indexing",
+  "url": "https://greasyfork.org/scripts/489253-huug-shortcuts",
+  "code_url": "https://update.greasyfork.org/scripts/489253/Huug%20shortcuts.user.js",
+  "code_size": 1997,
+  "license": "MIT License",
+  "version": "0.33",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

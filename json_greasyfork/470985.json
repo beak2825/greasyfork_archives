@@ -1,0 +1,59 @@
+{
+  "id": 470985,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-16T18:13:59.000Z",
+  "code_updated_at": "2023-08-10T03:18:57.000Z",
+  "namespace": "http://userscripts.org/users/23652",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1128574,
+      "name": "hoomanhere",
+      "created_at": "2023-07-16T18:12:48.000Z",
+      "url": "https://greasyfork.org/users/1128574-hoomanhere",
+      "scripts": [
+        {
+          "id": 470985,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-16T18:13:59.000Z",
+          "code_updated_at": "2023-08-10T03:18:57.000Z",
+          "namespace": "http://userscripts.org/users/23652",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Replace Text On Webpages",
+          "description": "Replaces text on websites. Now supports wildcards in search queries. Won't replace text in certain tags like links and code blocks",
+          "url": "https://greasyfork.org/scripts/470985-replace-text-on-webpages",
+          "code_url": "https://update.greasyfork.org/scripts/470985/Replace%20Text%20On%20Webpages.user.js",
+          "code_size": 4130,
+          "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/us/",
+          "version": "2.2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Replace Text On Webpages",
+  "description": "Replaces text on websites. Now supports wildcards in search queries. Won't replace text in certain tags like links and code blocks",
+  "url": "https://greasyfork.org/scripts/470985-replace-text-on-webpages",
+  "code_url": "https://update.greasyfork.org/scripts/470985/Replace%20Text%20On%20Webpages.user.js",
+  "code_size": 4130,
+  "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/us/",
+  "version": "2.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

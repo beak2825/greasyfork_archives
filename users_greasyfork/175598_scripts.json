@@ -1,0 +1,101 @@
+[
+  {
+    "id": 427180,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-28T18:44:06.000Z",
+    "code_updated_at": "2021-05-28T18:44:06.000Z",
+    "namespace": "https://greasyfork.org/users/175598",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175598,
+        "name": "N.Y.Boyu",
+        "created_at": "2018-03-20T04:21:07.000Z",
+        "url": "https://greasyfork.org/users/175598-n-y-boyu"
+      }
+    ],
+    "name": "TweetDeck User-Column Replies Filter",
+    "description": "Hides (not retweet or thread) replies in user-column.",
+    "url": "https://greasyfork.org/scripts/427180-tweetdeck-user-column-replies-filter",
+    "code_url": "https://update.greasyfork.org/scripts/427180/TweetDeck%20User-Column%20Replies%20Filter.user.js",
+    "code_size": 3409,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419591,
+    "daily_installs": 0,
+    "total_installs": 743,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-03T17:20:35.000Z",
+    "code_updated_at": "2021-03-07T13:26:43.000Z",
+    "namespace": "https://greasyfork.org/users/175598",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175598,
+        "name": "N.Y.Boyu",
+        "created_at": "2018-03-20T04:21:07.000Z",
+        "url": "https://greasyfork.org/users/175598-n-y-boyu"
+      }
+    ],
+    "name": "Twitch Channel Points Chest Auto Opener",
+    "description": "Automatically click channel points bonus button",
+    "url": "https://greasyfork.org/scripts/419591-twitch-channel-points-chest-auto-opener",
+    "code_url": "https://update.greasyfork.org/scripts/419591/Twitch%20Channel%20Points%20Chest%20Auto%20Opener.user.js",
+    "code_size": 4089,
+    "license": "MIT License",
+    "version": "1.22",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416296,
+    "daily_installs": 0,
+    "total_installs": 752,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-17T16:26:46.000Z",
+    "code_updated_at": "2023-03-01T05:45:36.000Z",
+    "namespace": "https://greasyfork.org/ja/users/175598",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175598,
+        "name": "N.Y.Boyu",
+        "created_at": "2018-03-20T04:21:07.000Z",
+        "url": "https://greasyfork.org/users/175598-n-y-boyu"
+      }
+    ],
+    "name": "Twitter Promotion Filter",
+    "description": "Hides promotion on twitter",
+    "url": "https://greasyfork.org/scripts/416296-twitter-promotion-filter",
+    "code_url": "https://update.greasyfork.org/scripts/416296/Twitter%20Promotion%20Filter.user.js",
+    "code_size": 2478,
+    "license": "MIT License",
+    "version": "23.03.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

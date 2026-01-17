@@ -1,0 +1,101 @@
+[
+  {
+    "id": 433408,
+    "daily_installs": 0,
+    "total_installs": 199,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-04T13:53:38.000Z",
+    "code_updated_at": "2024-01-18T16:40:01.000Z",
+    "namespace": "https://github.com/guihkx",
+    "support_url": "https://github.com/guihkx/user-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 821873,
+        "name": "guihkx",
+        "created_at": "2021-10-04T13:46:37.000Z",
+        "url": "https://greasyfork.org/users/821873-guihkx"
+      }
+    ],
+    "name": "YouTube URL Tracker Remover",
+    "description": "Fixes user-tracking links in the description of YouTube videos",
+    "url": "https://greasyfork.org/scripts/433408-youtube-url-tracker-remover",
+    "code_url": "https://update.greasyfork.org/scripts/433408/YouTube%20URL%20Tracker%20Remover.user.js",
+    "code_size": 4332,
+    "license": "MIT; https://opensource.org/licenses/MIT",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433406,
+    "daily_installs": 0,
+    "total_installs": 248,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-04T13:53:37.000Z",
+    "code_updated_at": "2025-01-03T21:43:43.000Z",
+    "namespace": "https://github.com/guihkx",
+    "support_url": "https://github.com/guihkx/user-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 821873,
+        "name": "guihkx",
+        "created_at": "2021-10-04T13:46:37.000Z",
+        "url": "https://greasyfork.org/users/821873-guihkx"
+      }
+    ],
+    "name": "Proton Mail Signature Remover",
+    "description": "Automatically removes email signature for free users of Proton Mail",
+    "url": "https://greasyfork.org/scripts/433406-proton-mail-signature-remover",
+    "code_url": "https://update.greasyfork.org/scripts/433406/Proton%20Mail%20Signature%20Remover.user.js",
+    "code_size": 9753,
+    "license": "MIT; https://opensource.org/licenses/MIT",
+    "version": "2.0.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433405,
+    "daily_installs": 0,
+    "total_installs": 174,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-04T13:53:36.000Z",
+    "code_updated_at": "2023-02-06T03:47:48.000Z",
+    "namespace": "https://github.com/guihkx",
+    "support_url": "https://github.com/guihkx/user-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 821873,
+        "name": "guihkx",
+        "created_at": "2021-10-04T13:46:37.000Z",
+        "url": "https://greasyfork.org/users/821873-guihkx"
+      }
+    ],
+    "name": "ProtonDB Integration for Steam",
+    "description": "Adds game ratings from ProtonDB to the Steam Store",
+    "url": "https://greasyfork.org/scripts/433405-protondb-integration-for-steam",
+    "code_url": "https://update.greasyfork.org/scripts/433405/ProtonDB%20Integration%20for%20Steam.user.js",
+    "code_size": 7950,
+    "license": "MIT; https://opensource.org/licenses/MIT",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

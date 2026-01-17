@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433373,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-03T16:52:27.000Z",
+    "code_updated_at": "2021-10-03T16:52:27.000Z",
+    "namespace": "virtonomica",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 821610,
+        "name": "Игорь Коркин",
+        "created_at": "2021-10-03T16:42:06.000Z",
+        "url": "https://greasyfork.org/users/821610-%D0%B8%D0%B3%D0%BE%D1%80%D1%8C-%D0%BA%D0%BE%D1%80%D0%BA%D0%B8%D0%BD"
+      }
+    ],
+    "name": "Virtonomica: Quick supply",
+    "description": "Quick supply.",
+    "url": "https://greasyfork.org/scripts/433373-virtonomica-quick-supply",
+    "code_url": "https://update.greasyfork.org/scripts/433373/Virtonomica%3A%20Quick%20supply.user.js",
+    "code_size": 10636,
+    "license": null,
+    "version": "4.06.20211002",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

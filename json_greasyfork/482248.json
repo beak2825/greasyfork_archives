@@ -1,0 +1,34 @@
+{
+  "id": 482248,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-15T01:29:04.000Z",
+  "code_updated_at": "2023-12-15T02:05:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1233972,
+      "name": "Will@BH",
+      "created_at": "2023-12-15T01:26:33.000Z",
+      "url": "https://greasyfork.org/users/1233972-will-bh",
+      "scripts": []
+    }
+  ],
+  "name": "Quotient to Omins Search",
+  "description": "Get a customers name or email from Quotient and search it on Omins",
+  "url": "https://greasyfork.org/scripts/482248-quotient-to-omins-search",
+  "code_url": "https://update.greasyfork.org/scripts/482248/Quotient%20to%20Omins%20Search.user.js",
+  "code_size": 3168,
+  "license": "All Rights Reserved",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

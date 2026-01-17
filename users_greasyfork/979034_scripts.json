@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455984,
+    "daily_installs": 0,
+    "total_installs": 123,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-04T07:46:51.000Z",
+    "code_updated_at": "2022-12-05T03:41:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 979034,
+        "name": "nnfy",
+        "created_at": "2022-11-04T03:25:41.000Z",
+        "url": "https://greasyfork.org/users/979034-nnfy"
+      }
+    ],
+    "name": "黑白灰色网页恢复彩色",
+    "description": "哀悼日，纪念日等黑白，灰色网页色彩恢复。支持所有网页。高性能。",
+    "url": "https://greasyfork.org/scripts/455984-%E9%BB%91%E7%99%BD%E7%81%B0%E8%89%B2%E7%BD%91%E9%A1%B5%E6%81%A2%E5%A4%8D%E5%BD%A9%E8%89%B2",
+    "code_url": "https://update.greasyfork.org/scripts/455984/%E9%BB%91%E7%99%BD%E7%81%B0%E8%89%B2%E7%BD%91%E9%A1%B5%E6%81%A2%E5%A4%8D%E5%BD%A9%E8%89%B2.user.js",
+    "code_size": 1541,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

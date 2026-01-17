@@ -1,0 +1,59 @@
+{
+  "id": 485574,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-24T10:25:21.000Z",
+  "code_updated_at": "2024-01-24T10:26:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1244871,
+      "name": "11111111111ge1",
+      "created_at": "2024-01-08T06:15:30.000Z",
+      "url": "https://greasyfork.org/users/1244871-11111111111ge1",
+      "scripts": [
+        {
+          "id": 485574,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-24T10:25:21.000Z",
+          "code_updated_at": "2024-01-24T10:26:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "将 bangumi 的顶栏搜索替换为 chii.ai 搜索",
+          "description": "将 bgm.tv bangumi.tv 和 chii.in 的顶栏搜索替换为 chii.ai 搜索",
+          "url": "https://greasyfork.org/scripts/485574-%E5%B0%86-bangumi-%E7%9A%84%E9%A1%B6%E6%A0%8F%E6%90%9C%E7%B4%A2%E6%9B%BF%E6%8D%A2%E4%B8%BA-chii-ai-%E6%90%9C%E7%B4%A2",
+          "code_url": "https://update.greasyfork.org/scripts/485574/%E5%B0%86%20bangumi%20%E7%9A%84%E9%A1%B6%E6%A0%8F%E6%90%9C%E7%B4%A2%E6%9B%BF%E6%8D%A2%E4%B8%BA%20chiiai%20%E6%90%9C%E7%B4%A2.user.js",
+          "code_size": 1466,
+          "license": "MIT License",
+          "version": "1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "将 bangumi 的顶栏搜索替换为 chii.ai 搜索",
+  "description": "将 bgm.tv bangumi.tv 和 chii.in 的顶栏搜索替换为 chii.ai 搜索",
+  "url": "https://greasyfork.org/scripts/485574-%E5%B0%86-bangumi-%E7%9A%84%E9%A1%B6%E6%A0%8F%E6%90%9C%E7%B4%A2%E6%9B%BF%E6%8D%A2%E4%B8%BA-chii-ai-%E6%90%9C%E7%B4%A2",
+  "code_url": "https://update.greasyfork.org/scripts/485574/%E5%B0%86%20bangumi%20%E7%9A%84%E9%A1%B6%E6%A0%8F%E6%90%9C%E7%B4%A2%E6%9B%BF%E6%8D%A2%E4%B8%BA%20chiiai%20%E6%90%9C%E7%B4%A2.user.js",
+  "code_size": 1466,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

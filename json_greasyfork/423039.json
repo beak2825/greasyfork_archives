@@ -1,0 +1,34 @@
+{
+  "id": 423039,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-11T04:30:03.000Z",
+  "code_updated_at": "2021-06-15T03:43:54.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/423039-%E7%A5%9E%E7%AD%96%E5%9F%8B%E7%82%B9%E8%A7%A3%E6%9E%90",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 745858,
+      "name": "lvyueyang",
+      "created_at": "2021-03-11T03:30:56.000Z",
+      "url": "https://greasyfork.org/users/745858-lvyueyang",
+      "scripts": []
+    }
+  ],
+  "name": "神策埋点解析",
+  "description": "用于生产环境中实时查看埋点数据的插件",
+  "url": "https://greasyfork.org/scripts/423039-%E7%A5%9E%E7%AD%96%E5%9F%8B%E7%82%B9%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/423039/%E7%A5%9E%E7%AD%96%E5%9F%8B%E7%82%B9%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 5946,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 478048,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-23T07:02:10.000Z",
+  "code_updated_at": "2023-10-23T07:02:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1202438,
+      "name": "typluto",
+      "created_at": "2023-10-23T07:00:13.000Z",
+      "url": "https://greasyfork.org/users/1202438-typluto",
+      "scripts": [
+        {
+          "id": 478048,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-23T07:02:10.000Z",
+          "code_updated_at": "2023-10-23T07:02:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "flask font",
+          "description": "修改 flask 文档网站的默认字体",
+          "url": "https://greasyfork.org/scripts/478048-flask-font",
+          "code_url": "https://update.greasyfork.org/scripts/478048/flask%20font.user.js",
+          "code_size": 479,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "flask font",
+  "description": "修改 flask 文档网站的默认字体",
+  "url": "https://greasyfork.org/scripts/478048-flask-font",
+  "code_url": "https://update.greasyfork.org/scripts/478048/flask%20font.user.js",
+  "code_size": 479,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

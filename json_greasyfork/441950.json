@@ -1,0 +1,34 @@
+{
+  "id": 441950,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-23T09:12:28.000Z",
+  "code_updated_at": "2022-12-22T05:17:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 857375,
+      "name": "S       H",
+      "created_at": "2021-12-25T04:37:36.000Z",
+      "url": "https://greasyfork.org/users/857375-s-h",
+      "scripts": []
+    }
+  ],
+  "name": "SCDXJJWLJY",
+  "description": "scdxjjwljytools",
+  "url": "https://greasyfork.org/scripts/441950-scdxjjwljy",
+  "code_url": "https://update.greasyfork.org/scripts/441950/SCDXJJWLJY.user.js",
+  "code_size": 87163,
+  "license": null,
+  "version": "2.5.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 490043,
+  "daily_installs": 1,
+  "total_installs": 541,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-16T19:22:37.000Z",
+  "code_updated_at": "2024-03-16T19:24:54.000Z",
+  "namespace": "https:www.nitrotype.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1275464,
+      "name": ".scoobed. - on discord",
+      "created_at": "2024-03-16T19:19:55.000Z",
+      "url": "https://greasyfork.org/users/1275464-scoobed-on-discord",
+      "scripts": [
+        {
+          "id": 490043,
+          "daily_installs": 1,
+          "total_installs": 541,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-16T19:22:37.000Z",
+          "code_updated_at": "2024-03-16T19:24:54.000Z",
+          "namespace": "https:www.nitrotype.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chromebot - nitro type bot",
+          "description": "Nitro typer auto typer for chromebooks (works for windows and mac as well)",
+          "url": "https://greasyfork.org/scripts/490043-chromebot-nitro-type-bot",
+          "code_url": "https://update.greasyfork.org/scripts/490043/Chromebot%20-%20nitro%20type%20bot.user.js",
+          "code_size": 4992,
+          "license": "MIT      Scooby doo - .scoobed. on discord",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chromebot - nitro type bot",
+  "description": "Nitro typer auto typer for chromebooks (works for windows and mac as well)",
+  "url": "https://greasyfork.org/scripts/490043-chromebot-nitro-type-bot",
+  "code_url": "https://update.greasyfork.org/scripts/490043/Chromebot%20-%20nitro%20type%20bot.user.js",
+  "code_size": 4992,
+  "license": "MIT      Scooby doo - .scoobed. on discord",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

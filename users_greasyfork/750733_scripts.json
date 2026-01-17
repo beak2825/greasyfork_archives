@@ -1,0 +1,68 @@
+[
+  {
+    "id": 433890,
+    "daily_installs": 0,
+    "total_installs": 1899,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-14T16:59:06.000Z",
+    "code_updated_at": "2021-10-15T13:00:06.000Z",
+    "namespace": "LIGMABALLS",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 750733,
+        "name": "Crabby",
+        "created_at": "2021-03-24T03:19:16.000Z",
+        "url": "https://greasyfork.org/users/750733-crabby"
+      }
+    ],
+    "name": "Public Crabby Script",
+    "description": "10/13/2021, 6:09:45 PM",
+    "url": "https://greasyfork.org/scripts/433890-public-crabby-script",
+    "code_url": "https://update.greasyfork.org/scripts/433890/Public%20Crabby%20Script.user.js",
+    "code_size": 20777,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425867,
+    "daily_installs": 0,
+    "total_installs": 2172,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-05-03T13:05:49.000Z",
+    "code_updated_at": "2021-05-03T13:05:49.000Z",
+    "namespace": "https://greasyfork.org/users/750733",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 750733,
+        "name": "Crabby",
+        "created_at": "2021-03-24T03:19:16.000Z",
+        "url": "https://greasyfork.org/users/750733-crabby"
+      }
+    ],
+    "name": "Turn bullets into Spike",
+    "description": "Turns every tank and bullet into a spike! Legend says they do more damage.",
+    "url": "https://greasyfork.org/scripts/425867-turn-bullets-into-spike",
+    "code_url": "https://update.greasyfork.org/scripts/425867/Turn%20bullets%20into%20Spike.user.js",
+    "code_size": 735,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

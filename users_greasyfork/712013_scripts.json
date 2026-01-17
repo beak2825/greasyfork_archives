@@ -1,0 +1,35 @@
+[
+  {
+    "id": 417730,
+    "daily_installs": 0,
+    "total_installs": 722,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-03T08:08:06.000Z",
+    "code_updated_at": "2020-12-03T08:08:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 712013,
+        "name": "MidsummerDream",
+        "created_at": "2020-12-03T08:00:23.000Z",
+        "url": "https://greasyfork.org/users/712013-midsummerdream"
+      }
+    ],
+    "name": "去除知乎登录",
+    "description": "去除登录Modal",
+    "url": "https://greasyfork.org/scripts/417730-%E5%8E%BB%E9%99%A4%E7%9F%A5%E4%B9%8E%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/417730/%E5%8E%BB%E9%99%A4%E7%9F%A5%E4%B9%8E%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 927,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

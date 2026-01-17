@@ -1,0 +1,59 @@
+{
+  "id": 447342,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-02T12:07:18.000Z",
+  "code_updated_at": "2022-07-03T09:42:37.000Z",
+  "namespace": "无痕",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 931349,
+      "name": "jacky cn",
+      "created_at": "2022-07-02T11:57:32.000Z",
+      "url": "https://greasyfork.org/users/931349-jacky-cn",
+      "scripts": [
+        {
+          "id": 447551,
+          "daily_installs": 0,
+          "total_installs": 43,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-07T08:25:04.000Z",
+          "code_updated_at": "2022-07-08T13:57:33.000Z",
+          "namespace": "score.checking.assistant",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "广东东软学院查分小助手",
+          "description": "广东东软学院查分小助手，安装完脚本打开教务网登录刷新即可，能不能获取到分数看接口有没有被限制 载至7.8号可以正常使用",
+          "url": "https://greasyfork.org/scripts/447551-%E5%B9%BF%E4%B8%9C%E4%B8%9C%E8%BD%AF%E5%AD%A6%E9%99%A2%E6%9F%A5%E5%88%86%E5%B0%8F%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/447551/%E5%B9%BF%E4%B8%9C%E4%B8%9C%E8%BD%AF%E5%AD%A6%E9%99%A2%E6%9F%A5%E5%88%86%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 3470,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "帅地玩编程优化",
+  "description": "开启自动播放下一集，倍速播放",
+  "url": "https://greasyfork.org/scripts/447342-%E5%B8%85%E5%9C%B0%E7%8E%A9%E7%BC%96%E7%A8%8B%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/447342/%E5%B8%85%E5%9C%B0%E7%8E%A9%E7%BC%96%E7%A8%8B%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 5099,
+  "license": "MIT License",
+  "version": "0.5.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

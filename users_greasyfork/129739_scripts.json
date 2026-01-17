@@ -1,0 +1,35 @@
+[
+  {
+    "id": 414543,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-24T14:30:16.000Z",
+    "code_updated_at": "2022-04-04T11:02:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 129739,
+        "name": "Ricardo Constantino (RiCON)",
+        "created_at": "2017-06-05T14:42:20.000Z",
+        "url": "https://greasyfork.org/users/129739-ricardo-constantino-ricon"
+      }
+    ],
+    "name": "ServiceNow - Open BG Iframe",
+    "description": "Open a casual Background Script frame in current List/Form",
+    "url": "https://greasyfork.org/scripts/414543-servicenow-open-bg-iframe",
+    "code_url": "https://update.greasyfork.org/scripts/414543/ServiceNow%20-%20Open%20BG%20Iframe.user.js",
+    "code_size": 3940,
+    "license": "MIT License",
+    "version": "0.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

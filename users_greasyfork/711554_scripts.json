@@ -1,0 +1,200 @@
+[
+  {
+    "id": 418286,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-07T16:27:11.000Z",
+    "code_updated_at": "2020-12-07T16:27:11.000Z",
+    "namespace": "walmart",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 711554,
+        "name": "Akimoto",
+        "created_at": "2020-12-02T15:52:03.000Z",
+        "url": "https://greasyfork.org/users/711554-akimoto"
+      }
+    ],
+    "name": "walmart",
+    "description": "Play a sound if Ring Fit Adventure is in stock",
+    "url": "https://greasyfork.org/scripts/418286-walmart",
+    "code_url": "https://update.greasyfork.org/scripts/418286/walmart.user.js",
+    "code_size": 850,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 417853,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-04T07:12:51.000Z",
+    "code_updated_at": "2020-12-04T07:12:50.000Z",
+    "namespace": "Target",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 711554,
+        "name": "Akimoto",
+        "created_at": "2020-12-02T15:52:03.000Z",
+        "url": "https://greasyfork.org/users/711554-akimoto"
+      }
+    ],
+    "name": "Target",
+    "description": "Play a sound if Ring Fit Adventure is in stock",
+    "url": "https://greasyfork.org/scripts/417853-target",
+    "code_url": "https://update.greasyfork.org/scripts/417853/Target.user.js",
+    "code_size": 918,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 417851,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-04T07:07:11.000Z",
+    "code_updated_at": "2020-12-04T07:07:10.000Z",
+    "namespace": "gamestop",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 711554,
+        "name": "Akimoto",
+        "created_at": "2020-12-02T15:52:03.000Z",
+        "url": "https://greasyfork.org/users/711554-akimoto"
+      }
+    ],
+    "name": "gamestop",
+    "description": "Play a sound if Ring Fit Adventure is in stock",
+    "url": "https://greasyfork.org/scripts/417851-gamestop",
+    "code_url": "https://update.greasyfork.org/scripts/417851/gamestop.user.js",
+    "code_size": 961,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 417569,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-02T16:02:31.000Z",
+    "code_updated_at": "2020-12-02T16:02:30.000Z",
+    "namespace": "亚马逊",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 711554,
+        "name": "Akimoto",
+        "created_at": "2020-12-02T15:52:03.000Z",
+        "url": "https://greasyfork.org/users/711554-akimoto"
+      }
+    ],
+    "name": "亚马逊",
+    "description": "Play a sound if Ring Fit Adventure is in stock",
+    "url": "https://greasyfork.org/scripts/417569-%E4%BA%9A%E9%A9%AC%E9%80%8A",
+    "code_url": "https://update.greasyfork.org/scripts/417569/%E4%BA%9A%E9%A9%AC%E9%80%8A.user.js",
+    "code_size": 854,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 417568,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-02T16:00:58.000Z",
+    "code_updated_at": "2020-12-02T16:00:58.000Z",
+    "namespace": "乐天)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 711554,
+        "name": "Akimoto",
+        "created_at": "2020-12-02T15:52:03.000Z",
+        "url": "https://greasyfork.org/users/711554-akimoto"
+      }
+    ],
+    "name": "乐天",
+    "description": "Play a sound if Ring Fit Adventure is in stock",
+    "url": "https://greasyfork.org/scripts/417568-%E4%B9%90%E5%A4%A9",
+    "code_url": "https://update.greasyfork.org/scripts/417568/%E4%B9%90%E5%A4%A9.user.js",
+    "code_size": 828,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 417567,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-02T15:59:53.000Z",
+    "code_updated_at": "2020-12-02T15:59:53.000Z",
+    "namespace": "AmazonRingFit (X)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 711554,
+        "name": "Akimoto",
+        "created_at": "2020-12-02T15:52:03.000Z",
+        "url": "https://greasyfork.org/users/711554-akimoto"
+      }
+    ],
+    "name": "AmazonRingFit (X)",
+    "description": "Play a sound if Ring Fit Adventure is in stock",
+    "url": "https://greasyfork.org/scripts/417567-amazonringfit-x",
+    "code_url": "https://update.greasyfork.org/scripts/417567/AmazonRingFit%20%28X%29.user.js",
+    "code_size": 849,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

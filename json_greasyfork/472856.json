@@ -1,0 +1,33 @@
+{
+  "id": 472856,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-10T19:15:09.000Z",
+  "code_updated_at": "2023-08-10T19:15:08.000Z",
+  "namespace": "https://github.com/helloyork",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1092843,
+      "name": "York Qu",
+      "created_at": "2023-06-07T01:38:43.000Z",
+      "url": "https://greasyfork.org/users/1092843-york-qu"
+    }
+  ],
+  "name": "NomenChat/Box3",
+  "description": "NomenChat/Box3浮窗",
+  "url": "https://greasyfork.org/scripts/472856-nomenchat-box3",
+  "code_url": "https://update.greasyfork.org/scripts/472856/NomenChatBox3.user.js",
+  "code_size": 2082,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

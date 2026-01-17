@@ -1,0 +1,59 @@
+{
+  "id": 463095,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-02T03:48:58.000Z",
+  "code_updated_at": "2023-04-02T04:01:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1051605,
+      "name": "xietuze",
+      "created_at": "2023-04-01T18:02:08.000Z",
+      "url": "https://greasyfork.org/users/1051605-xietuze",
+      "scripts": [
+        {
+          "id": 463095,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-02T03:48:58.000Z",
+          "code_updated_at": "2023-04-02T04:01:47.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MyScript",
+          "description": "这是存放在gitee的一个测试油猴脚本",
+          "url": "https://greasyfork.org/scripts/463095-myscript",
+          "code_url": "https://update.greasyfork.org/scripts/463095/MyScript.user.js",
+          "code_size": 726,
+          "license": "AGPL License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MyScript",
+  "description": "这是存放在gitee的一个测试油猴脚本",
+  "url": "https://greasyfork.org/scripts/463095-myscript",
+  "code_url": "https://update.greasyfork.org/scripts/463095/MyScript.user.js",
+  "code_size": 726,
+  "license": "AGPL License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

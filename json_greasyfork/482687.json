@@ -1,0 +1,34 @@
+{
+  "id": 482687,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-19T17:05:59.000Z",
+  "code_updated_at": "2024-01-04T13:57:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Req Combined Jan Teves",
+  "description": "Insert multiple transactions with specified details and update balance",
+  "url": "https://greasyfork.org/scripts/482687-req-combined-jan-teves",
+  "code_url": "https://update.greasyfork.org/scripts/482687/Req%20Combined%20Jan%20Teves.user.js",
+  "code_size": 1057,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

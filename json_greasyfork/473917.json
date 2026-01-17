@@ -1,0 +1,34 @@
+{
+  "id": 473917,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-26T03:23:08.000Z",
+  "code_updated_at": "2023-08-26T03:33:51.000Z",
+  "namespace": "orpheus.network",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1108390,
+      "name": "bblvd",
+      "created_at": "2023-06-21T22:54:19.000Z",
+      "url": "https://greasyfork.org/users/1108390-bblvd",
+      "scripts": []
+    }
+  ],
+  "name": "Xanax Cake no logo",
+  "description": "Same as Xanax Cake but without OPS logo at the top",
+  "url": "https://greasyfork.org/scripts/473917-xanax-cake-no-logo",
+  "code_url": "https://update.greasyfork.org/scripts/473917/Xanax%20Cake%20no%20logo.user.css",
+  "code_size": 417,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

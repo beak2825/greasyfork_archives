@@ -1,0 +1,33 @@
+{
+  "id": 457509,
+  "daily_installs": 0,
+  "total_installs": 177,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-02T19:53:47.000Z",
+  "code_updated_at": "2023-01-02T19:53:47.000Z",
+  "namespace": "https://greasyfork.org/users/236434",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 236434,
+      "name": "astrile",
+      "created_at": "2019-01-01T08:10:17.000Z",
+      "url": "https://greasyfork.org/users/236434-astrile"
+    }
+  ],
+  "name": "Bilibili专栏剪贴板复制净化",
+  "description": "去除B站专栏剪贴板复制时被额外添加的字符",
+  "url": "https://greasyfork.org/scripts/457509-bilibili%E4%B8%93%E6%A0%8F%E5%89%AA%E8%B4%B4%E6%9D%BF%E5%A4%8D%E5%88%B6%E5%87%80%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/457509/Bilibili%E4%B8%93%E6%A0%8F%E5%89%AA%E8%B4%B4%E6%9D%BF%E5%A4%8D%E5%88%B6%E5%87%80%E5%8C%96.user.js",
+  "code_size": 1200,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

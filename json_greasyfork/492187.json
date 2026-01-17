@@ -1,0 +1,34 @@
+{
+  "id": 492187,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-10T23:28:38.000Z",
+  "code_updated_at": "2024-05-10T10:30:49.000Z",
+  "namespace": "FLY INC & advertisingexcel walkthrough helper.",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286561,
+      "name": "Renat Tjapkin",
+      "created_at": "2024-04-10T17:36:31.000Z",
+      "url": "https://greasyfork.org/users/1286561-renat-tjapkin",
+      "scripts": []
+    }
+  ],
+  "name": "FLY INC walkthrough*",
+  "description": "Automatically walk through FLY INC link sites",
+  "url": "https://greasyfork.org/scripts/492187-fly-inc-walkthrough",
+  "code_url": "https://update.greasyfork.org/scripts/492187/FLY%20INC%20walkthrough%2A.user.js",
+  "code_size": 6283,
+  "license": "MIT License",
+  "version": "2.1.9",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

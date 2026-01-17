@@ -1,0 +1,59 @@
+{
+  "id": 447819,
+  "daily_installs": 1,
+  "total_installs": 15645,
+  "fan_score": "90.5",
+  "good_ratings": 89,
+  "ok_ratings": 7,
+  "bad_ratings": 0,
+  "created_at": "2022-07-13T15:47:56.000Z",
+  "code_updated_at": "2025-06-01T15:02:01.000Z",
+  "namespace": "http://tampermonkey2.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 877438,
+      "name": "journey3510",
+      "created_at": "2022-02-17T05:37:16.000Z",
+      "url": "https://greasyfork.org/users/877438-journey3510",
+      "scripts": [
+        {
+          "id": 447819,
+          "daily_installs": 1,
+          "total_installs": 15645,
+          "fan_score": "90.5",
+          "good_ratings": 89,
+          "ok_ratings": 7,
+          "bad_ratings": 0,
+          "created_at": "2022-07-13T15:47:56.000Z",
+          "code_updated_at": "2025-06-01T15:02:01.000Z",
+          "namespace": "http://tampermonkey2.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "10图漫",
+          "description": "任意网页提供部分漫画网站搜索；漫画分章节下载(可直接下载/压缩下载/拼接下载)，可用于动漫之家、极速漫画、腾讯漫画、哔哩哔哩等35多个网站；对个别漫画网站修改阅读样式；可按需编写定义规则JSON导入以支持其他漫画网站",
+          "url": "https://greasyfork.org/scripts/447819-10%E5%9B%BE%E6%BC%AB",
+          "code_url": "https://update.greasyfork.org/scripts/447819/10%E5%9B%BE%E6%BC%AB.user.js",
+          "code_size": 297395,
+          "license": "GPLv3",
+          "version": "2.0.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "10图漫",
+  "description": "任意网页提供部分漫画网站搜索；漫画分章节下载(可直接下载/压缩下载/拼接下载)，可用于动漫之家、极速漫画、腾讯漫画、哔哩哔哩等35多个网站；对个别漫画网站修改阅读样式；可按需编写定义规则JSON导入以支持其他漫画网站",
+  "url": "https://greasyfork.org/scripts/447819-10%E5%9B%BE%E6%BC%AB",
+  "code_url": "https://update.greasyfork.org/scripts/447819/10%E5%9B%BE%E6%BC%AB.user.js",
+  "code_size": 297395,
+  "license": "GPLv3",
+  "version": "2.0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

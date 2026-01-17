@@ -1,0 +1,59 @@
+{
+  "id": 444598,
+  "daily_installs": 0,
+  "total_installs": 1037,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-07T08:43:33.000Z",
+  "code_updated_at": "2022-05-11T06:27:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 911385,
+      "name": "sit computer",
+      "created_at": "2022-05-07T08:38:33.000Z",
+      "url": "https://greasyfork.org/users/911385-sit-computer",
+      "scripts": [
+        {
+          "id": 444598,
+          "daily_installs": 0,
+          "total_installs": 1037,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-07T08:43:33.000Z",
+          "code_updated_at": "2022-05-11T06:27:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "超星破解",
+          "description": "破解简答题无法粘贴；破解F12无限Debugger；增加超星双击题目自动隐式复制题目内容。更新于【2022年5月11号下午】",
+          "url": "https://greasyfork.org/scripts/444598-%E8%B6%85%E6%98%9F%E7%A0%B4%E8%A7%A3",
+          "code_url": "https://update.greasyfork.org/scripts/444598/%E8%B6%85%E6%98%9F%E7%A0%B4%E8%A7%A3.user.js",
+          "code_size": 2172,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "超星破解",
+  "description": "破解简答题无法粘贴；破解F12无限Debugger；增加超星双击题目自动隐式复制题目内容。更新于【2022年5月11号下午】",
+  "url": "https://greasyfork.org/scripts/444598-%E8%B6%85%E6%98%9F%E7%A0%B4%E8%A7%A3",
+  "code_url": "https://update.greasyfork.org/scripts/444598/%E8%B6%85%E6%98%9F%E7%A0%B4%E8%A7%A3.user.js",
+  "code_size": 2172,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

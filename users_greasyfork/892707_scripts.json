@@ -1,0 +1,134 @@
+[
+  {
+    "id": 488811,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-02T14:01:13.000Z",
+    "code_updated_at": "2024-03-02T14:01:13.000Z",
+    "namespace": "jvbf Userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892707,
+        "name": "joaovitorbf",
+        "created_at": "2022-03-25T15:48:42.000Z",
+        "url": "https://greasyfork.org/users/892707-joaovitorbf"
+      }
+    ],
+    "name": "eurovisionworld.com times to local time",
+    "description": "3/2/2024, 10:37:36 AM",
+    "url": "https://greasyfork.org/scripts/488811-eurovisionworld-com-times-to-local-time",
+    "code_url": "https://update.greasyfork.org/scripts/488811/eurovisionworldcom%20times%20to%20local%20time.user.js",
+    "code_size": 1493,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 483906,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-04T22:14:26.000Z",
+    "code_updated_at": "2024-03-03T18:11:52.000Z",
+    "namespace": "jvbf Userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892707,
+        "name": "joaovitorbf",
+        "created_at": "2022-03-25T15:48:42.000Z",
+        "url": "https://greasyfork.org/users/892707-joaovitorbf"
+      }
+    ],
+    "name": "Twitter Replies Premium Remover",
+    "description": "Remove Twitter Premium users from the replies of a tweet.",
+    "url": "https://greasyfork.org/scripts/483906-twitter-replies-premium-remover",
+    "code_url": "https://update.greasyfork.org/scripts/483906/Twitter%20Replies%20Premium%20Remover.user.js",
+    "code_size": 1251,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445828,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-01T01:22:49.000Z",
+    "code_updated_at": "2023-05-17T02:18:17.000Z",
+    "namespace": "jvbf Userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892707,
+        "name": "joaovitorbf",
+        "created_at": "2022-03-25T15:48:42.000Z",
+        "url": "https://greasyfork.org/users/892707-joaovitorbf"
+      }
+    ],
+    "name": "Redactle Infinity",
+    "description": "Generate infinite Redactle pages",
+    "url": "https://greasyfork.org/scripts/445828-redactle-infinity",
+    "code_url": "https://update.greasyfork.org/scripts/445828/Redactle%20Infinity.user.js",
+    "code_size": 174733,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 442088,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-25T17:37:45.000Z",
+    "code_updated_at": "2022-03-25T17:38:34.000Z",
+    "namespace": "jvbf Userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892707,
+        "name": "joaovitorbf",
+        "created_at": "2022-03-25T15:48:42.000Z",
+        "url": "https://greasyfork.org/users/892707-joaovitorbf"
+      }
+    ],
+    "name": "Hacker News: Chan Reply Format",
+    "description": "Make Hacker News have a chan style reply structure/format!",
+    "url": "https://greasyfork.org/scripts/442088-hacker-news-chan-reply-format",
+    "code_url": "https://update.greasyfork.org/scripts/442088/Hacker%20News%3A%20Chan%20Reply%20Format.user.js",
+    "code_size": 2739,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

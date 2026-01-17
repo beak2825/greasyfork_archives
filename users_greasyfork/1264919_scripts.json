@@ -1,0 +1,134 @@
+[
+  {
+    "id": 488257,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-25T13:20:54.000Z",
+    "code_updated_at": "2024-02-25T13:36:06.000Z",
+    "namespace": "Devinho_",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264919,
+        "name": "lordwater",
+        "created_at": "2024-02-21T13:50:48.000Z",
+        "url": "https://greasyfork.org/users/1264919-lordwater"
+      }
+    ],
+    "name": "creed auto battle",
+    "description": "https://www.youtube.com/@wdevinho_",
+    "url": "https://greasyfork.org/scripts/488257-creed-auto-battle",
+    "code_url": "https://update.greasyfork.org/scripts/488257/creed%20auto%20battle.user.js",
+    "code_size": 1469,
+    "license": "MIT License",
+    "version": "11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488194,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-24T16:08:40.000Z",
+    "code_updated_at": "2024-02-24T16:12:11.000Z",
+    "namespace": "Devinho_",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264919,
+        "name": "lordwater",
+        "created_at": "2024-02-21T13:50:48.000Z",
+        "url": "https://greasyfork.org/users/1264919-lordwater"
+      }
+    ],
+    "name": "creed auto battle",
+    "description": "https://www.youtube.com/@wdevinho_",
+    "url": "https://greasyfork.org/scripts/488194-creed-auto-battle",
+    "code_url": "https://update.greasyfork.org/scripts/488194/creed%20auto%20battle.user.js",
+    "code_size": 856,
+    "license": "MIT License",
+    "version": "2024-02-2111",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 487973,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-21T22:13:54.000Z",
+    "code_updated_at": "2024-02-24T16:02:11.000Z",
+    "namespace": "Devinho_",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264919,
+        "name": "lordwater",
+        "created_at": "2024-02-21T13:50:48.000Z",
+        "url": "https://greasyfork.org/users/1264919-lordwater"
+      }
+    ],
+    "name": "creed auto battle",
+    "description": "https://www.youtube.com/@wdevinho_",
+    "url": "https://greasyfork.org/scripts/487973-creed-auto-battle",
+    "code_url": "https://update.greasyfork.org/scripts/487973/creed%20auto%20battle.user.js",
+    "code_size": 917,
+    "license": "MIT License",
+    "version": "2024-02-211",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 487941,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-21T13:52:41.000Z",
+    "code_updated_at": "2024-02-21T14:29:50.000Z",
+    "namespace": "Pokemon",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264919,
+        "name": "lordwater",
+        "created_at": "2024-02-21T13:50:48.000Z",
+        "url": "https://greasyfork.org/users/1264919-lordwater"
+      }
+    ],
+    "name": "PokeGenRPG Auto Battle",
+    "description": "Automates battles on PokeGenRPG.com",
+    "url": "https://greasyfork.org/scripts/487941-pokegenrpg-auto-battle",
+    "code_url": "https://update.greasyfork.org/scripts/487941/PokeGenRPG%20Auto%20Battle.user.js",
+    "code_size": 827,
+    "license": "MIT License",
+    "version": "8.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

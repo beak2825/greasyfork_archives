@@ -1,0 +1,59 @@
+{
+  "id": 494887,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-14T06:51:46.000Z",
+  "code_updated_at": "2024-05-14T07:05:47.000Z",
+  "namespace": "https://github.com/93andresen/Userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1301334,
+      "name": "93andresen",
+      "created_at": "2024-05-14T06:27:02.000Z",
+      "url": "https://greasyfork.org/users/1301334-93andresen",
+      "scripts": [
+        {
+          "id": 494887,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-14T06:51:46.000Z",
+          "code_updated_at": "2024-05-14T07:05:47.000Z",
+          "namespace": "https://github.com/93andresen/Userscripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OpenAI Chat Synthesize Interceptor with Advanced Icon Controls",
+          "description": "Capture ChatGPT Synthesize API responses and add advanced playback controls with icons. Forked by Baldoe13 on community.openai.com. Original by Winkelmann.",
+          "url": "https://greasyfork.org/scripts/494887-openai-chat-synthesize-interceptor-with-advanced-icon-controls",
+          "code_url": "https://update.greasyfork.org/scripts/494887/OpenAI%20Chat%20Synthesize%20Interceptor%20with%20Advanced%20Icon%20Controls.user.js",
+          "code_size": 5010,
+          "license": "MIT License",
+          "version": "0.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OpenAI Chat Synthesize Interceptor with Advanced Icon Controls",
+  "description": "Capture ChatGPT Synthesize API responses and add advanced playback controls with icons. Forked by Baldoe13 on community.openai.com. Original by Winkelmann.",
+  "url": "https://greasyfork.org/scripts/494887-openai-chat-synthesize-interceptor-with-advanced-icon-controls",
+  "code_url": "https://update.greasyfork.org/scripts/494887/OpenAI%20Chat%20Synthesize%20Interceptor%20with%20Advanced%20Icon%20Controls.user.js",
+  "code_size": 5010,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

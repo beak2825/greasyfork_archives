@@ -1,0 +1,68 @@
+[
+  {
+    "id": 491605,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-04T02:54:27.000Z",
+    "code_updated_at": "2024-04-04T02:54:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1281169,
+        "name": "exeduh",
+        "created_at": "2024-03-29T13:48:08.000Z",
+        "url": "https://greasyfork.org/users/1281169-exeduh"
+      }
+    ],
+    "name": "Astral Client",
+    "description": "Shift + Z",
+    "url": "https://greasyfork.org/scripts/491605-astral-client",
+    "code_url": "https://update.greasyfork.org/scripts/491605/Astral%20Client.user.js",
+    "code_size": 14050,
+    "license": "OSI",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491177,
+    "daily_installs": 0,
+    "total_installs": 178,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-29T13:53:31.000Z",
+    "code_updated_at": "2024-03-29T13:53:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1281169,
+        "name": "exeduh",
+        "created_at": "2024-03-29T13:48:08.000Z",
+        "url": "https://greasyfork.org/users/1281169-exeduh"
+      }
+    ],
+    "name": "Astral Client's Menu",
+    "description": "none needed",
+    "url": "https://greasyfork.org/scripts/491177-astral-client-s-menu",
+    "code_url": "https://update.greasyfork.org/scripts/491177/Astral%20Client%27s%20Menu.user.js",
+    "code_size": 2520,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

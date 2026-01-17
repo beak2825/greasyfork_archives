@@ -1,0 +1,33 @@
+{
+  "id": 469413,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-25T09:29:41.000Z",
+  "code_updated_at": "2023-06-27T11:31:14.000Z",
+  "namespace": "https://twitter.com/yosshi9990",
+  "support_url": "https://twitter.com/messages/compose?recipient_id=1183000451714703361",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1108987,
+      "name": "元祖のヨッシー",
+      "created_at": "2023-06-22T13:40:33.000Z",
+      "url": "https://greasyfork.org/users/1108987-%E5%85%83%E7%A5%96%E3%81%AE%E3%83%A8%E3%83%83%E3%82%B7%E3%83%BC"
+    }
+  ],
+  "name": "Twitterアフィカス(TwitterBlue)ブロッカー",
+  "description": "公式マークをブロックします",
+  "url": "https://greasyfork.org/scripts/469413-twitter%E3%82%A2%E3%83%95%E3%82%A3%E3%82%AB%E3%82%B9-twitterblue-%E3%83%96%E3%83%AD%E3%83%83%E3%82%AB%E3%83%BC",
+  "code_url": "https://update.greasyfork.org/scripts/469413/Twitter%E3%82%A2%E3%83%95%E3%82%A3%E3%82%AB%E3%82%B9%28TwitterBlue%29%E3%83%96%E3%83%AD%E3%83%83%E3%82%AB%E3%83%BC.user.js",
+  "code_size": 2787,
+  "license": "MIT License",
+  "version": "0.31",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -30,6 +30,138 @@
     "version": "1.0",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 479810,
+    "daily_installs": 0,
+    "total_installs": 165,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-14T05:11:44.000Z",
+    "code_updated_at": "2023-11-14T05:25:10.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 779255,
+        "name": "娶名字真难",
+        "created_at": "2021-06-03T08:27:06.000Z",
+        "url": "https://greasyfork.org/users/779255-%E5%A8%B6%E5%90%8D%E5%AD%97%E7%9C%9F%E9%9A%BE"
+      }
+    ],
+    "name": "路透社弹窗关闭",
+    "description": "2023/11/14 12:35:28",
+    "url": "https://greasyfork.org/scripts/479810-%E8%B7%AF%E9%80%8F%E7%A4%BE%E5%BC%B9%E7%AA%97%E5%85%B3%E9%97%AD",
+    "code_url": "https://update.greasyfork.org/scripts/479810/%E8%B7%AF%E9%80%8F%E7%A4%BE%E5%BC%B9%E7%AA%97%E5%85%B3%E9%97%AD.user.js",
+    "code_size": 1166,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 443357,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-14T05:49:43.000Z",
+    "code_updated_at": "2022-04-14T06:06:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 779255,
+        "name": "娶名字真难",
+        "created_at": "2021-06-03T08:27:06.000Z",
+        "url": "https://greasyfork.org/users/779255-%E5%A8%B6%E5%90%8D%E5%AD%97%E7%9C%9F%E9%9A%BE"
+      }
+    ],
+    "name": "汇贤学堂自动挂时间",
+    "description": "汇贤学堂自动挂时间，每10分钟刷新一次网页",
+    "url": "https://greasyfork.org/scripts/443357-%E6%B1%87%E8%B4%A4%E5%AD%A6%E5%A0%82%E8%87%AA%E5%8A%A8%E6%8C%82%E6%97%B6%E9%97%B4",
+    "code_url": "https://update.greasyfork.org/scripts/443357/%E6%B1%87%E8%B4%A4%E5%AD%A6%E5%A0%82%E8%87%AA%E5%8A%A8%E6%8C%82%E6%97%B6%E9%97%B4.user.js",
+    "code_size": 1457,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 429050,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-08T04:23:45.000Z",
+    "code_updated_at": "2025-08-13T00:55:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 779255,
+        "name": "娶名字真难",
+        "created_at": "2021-06-03T08:27:06.000Z",
+        "url": "https://greasyfork.org/users/779255-%E5%A8%B6%E5%90%8D%E5%AD%97%E7%9C%9F%E9%9A%BE"
+      }
+    ],
+    "name": "测试市场监管总局学习辅助工具。",
+    "description": "本脚本免费使用，长期更新，无需关注、订阅、加入或者额外注册。进入https://www.samrela.com/student/my_course.do?menu=course自动学习项目。如果大家用的还可以，帮忙给个好评，谢谢！",
+    "url": "https://greasyfork.org/scripts/429050-%E6%B5%8B%E8%AF%95%E5%B8%82%E5%9C%BA%E7%9B%91%E7%AE%A1%E6%80%BB%E5%B1%80%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/429050/%E6%B5%8B%E8%AF%95%E5%B8%82%E5%9C%BA%E7%9B%91%E7%AE%A1%E6%80%BB%E5%B1%80%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7%E3%80%82.user.js",
+    "code_size": 31802,
+    "license": "MIT License",
+    "version": "0.80",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 427449,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-03T08:52:07.000Z",
+    "code_updated_at": "2025-08-13T00:54:24.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 779255,
+        "name": "娶名字真难",
+        "created_at": "2021-06-03T08:27:06.000Z",
+        "url": "https://greasyfork.org/users/779255-%E5%A8%B6%E5%90%8D%E5%AD%97%E7%9C%9F%E9%9A%BE"
+      }
+    ],
+    "name": "四川学法考试自用",
+    "description": "2025/6/4 11:44:53",
+    "url": "https://greasyfork.org/scripts/427449-%E5%9B%9B%E5%B7%9D%E5%AD%A6%E6%B3%95%E8%80%83%E8%AF%95%E8%87%AA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/427449/%E5%9B%9B%E5%B7%9D%E5%AD%A6%E6%B3%95%E8%80%83%E8%AF%95%E8%87%AA%E7%94%A8.user.js",
+    "code_size": 4597,
+    "license": null,
+    "version": "4.0",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439867,
+    "daily_installs": 1,
+    "total_installs": 700,
+    "fan_score": "30.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-02-11T10:20:56.000Z",
+    "code_updated_at": "2022-02-11T12:55:18.000Z",
+    "namespace": "https://ulyc.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 865991,
+        "name": "UlyC",
+        "created_at": "2022-01-17T12:31:08.000Z",
+        "url": "https://greasyfork.org/users/865991-ulyc"
+      }
+    ],
+    "name": "豆瓣读书+电影+音乐+游戏+舞台剧导出工具",
+    "description": "将【读过/看过/听过/玩过】的 【读书/电影/音乐/游戏/舞台剧】条目分别导出为 csv 文件",
+    "url": "https://greasyfork.org/scripts/439867-%E8%B1%86%E7%93%A3%E8%AF%BB%E4%B9%A6-%E7%94%B5%E5%BD%B1-%E9%9F%B3%E4%B9%90-%E6%B8%B8%E6%88%8F-%E8%88%9E%E5%8F%B0%E5%89%A7%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/439867/%E8%B1%86%E7%93%A3%E8%AF%BB%E4%B9%A6%2B%E7%94%B5%E5%BD%B1%2B%E9%9F%B3%E4%B9%90%2B%E6%B8%B8%E6%88%8F%2B%E8%88%9E%E5%8F%B0%E5%89%A7%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 18946,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456741,
+    "daily_installs": 0,
+    "total_installs": 452,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-12-17T21:29:48.000Z",
+    "code_updated_at": "2022-12-17T21:29:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 999207,
+        "name": "FreeThrill",
+        "created_at": "2022-12-17T20:19:58.000Z",
+        "url": "https://greasyfork.org/users/999207-freethrill"
+      }
+    ],
+    "name": "powerline.io speed turn",
+    "description": "Replaces inline JS on powerline.io",
+    "url": "https://greasyfork.org/scripts/456741-powerline-io-speed-turn",
+    "code_url": "https://update.greasyfork.org/scripts/456741/powerlineio%20speed%20turn.user.js",
+    "code_size": 1367,
+    "license": null,
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

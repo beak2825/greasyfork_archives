@@ -1,0 +1,34 @@
+{
+  "id": 458163,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-13T08:12:29.000Z",
+  "code_updated_at": "2023-03-23T09:50:04.000Z",
+  "namespace": "https://www.naokr.com/user/87670",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 9861,
+      "name": "ttpehg",
+      "created_at": "2015-03-21T07:17:55.000Z",
+      "url": "https://greasyfork.org/users/9861-ttpehg",
+      "scripts": []
+    }
+  ],
+  "name": "脑壳小助手",
+  "description": "基于多条件隐藏题目和问答, 加强题单功能, 折叠评论区, 隐藏可能剧透的信息等",
+  "url": "https://greasyfork.org/scripts/458163-%E8%84%91%E5%A3%B3%E5%B0%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/458163/%E8%84%91%E5%A3%B3%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 21482,
+  "license": "GPL-3",
+  "version": "20230322.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 486212,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-01T09:41:04.000Z",
+    "code_updated_at": "2025-12-17T15:52:21.000Z",
+    "namespace": "https://github.com/Raclamusi",
+    "support_url": "https://github.com/Raclamusi/OUAutoLogin",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 982487,
+        "name": "Raclamusi",
+        "created_at": "2022-11-12T15:13:50.000Z",
+        "url": "https://greasyfork.org/users/982487-raclamusi"
+      }
+    ],
+    "name": "OU Auto Login",
+    "description": "大阪大学全学 IT 認証基盤サービスに自動でログインします。 Automatically log in to the Osaka University University Campus-wide IT Authentication Platform Service.",
+    "url": "https://greasyfork.org/scripts/486212-ou-auto-login",
+    "code_url": "https://update.greasyfork.org/scripts/486212/OU%20Auto%20Login.user.js",
+    "code_size": 4181,
+    "license": "MIT License",
+    "version": "1.1.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467393,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-29T11:25:55.000Z",
+    "code_updated_at": "2023-05-29T11:25:55.000Z",
+    "namespace": "https://github.com/Raclamusi",
+    "support_url": "https://github.com/Raclamusi/atcoder-registration-autofill",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 982487,
+        "name": "Raclamusi",
+        "created_at": "2022-11-12T15:13:50.000Z",
+        "url": "https://greasyfork.org/users/982487-raclamusi"
+      }
+    ],
+    "name": "AtCoder Registration Autofill",
+    "description": "AtCoderの参加登録情報を保存し、自動入力します。",
+    "url": "https://greasyfork.org/scripts/467393-atcoder-registration-autofill",
+    "code_url": "https://update.greasyfork.org/scripts/467393/AtCoder%20Registration%20Autofill.user.js",
+    "code_size": 2580,
+    "license": "CC0",
+    "version": "1.0.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 454704,
+    "daily_installs": 0,
+    "total_installs": 70,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-12T18:51:54.000Z",
+    "code_updated_at": "2023-08-26T15:04:00.000Z",
+    "namespace": "https://github.com/Raclamusi",
+    "support_url": "https://github.com/Raclamusi/atcoder-duplicate-checker",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 982487,
+        "name": "Raclamusi",
+        "created_at": "2022-11-12T15:13:50.000Z",
+        "url": "https://greasyfork.org/users/982487-raclamusi"
+      }
+    ],
+    "name": "AtCoder Duplicate Checker",
+    "description": "重複提出をチェックします。 Check for duplicate submissions.",
+    "url": "https://greasyfork.org/scripts/454704-atcoder-duplicate-checker",
+    "code_url": "https://update.greasyfork.org/scripts/454704/AtCoder%20Duplicate%20Checker.user.js",
+    "code_size": 3986,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

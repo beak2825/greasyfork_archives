@@ -1,0 +1,33 @@
+{
+  "id": 479364,
+  "daily_installs": 0,
+  "total_installs": 65,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-09T09:59:39.000Z",
+  "code_updated_at": "2023-11-09T09:59:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 235214,
+      "name": "小加盐",
+      "created_at": "2018-12-26T11:37:45.000Z",
+      "url": "https://greasyfork.org/users/235214-%E5%B0%8F%E5%8A%A0%E7%9B%90"
+    }
+  ],
+  "name": "超星Mooc脚本 一键复制视频字幕 ChatGPT助手",
+  "description": "增加一键复制视频字幕按钮",
+  "url": "https://greasyfork.org/scripts/479364-%E8%B6%85%E6%98%9Fmooc%E8%84%9A%E6%9C%AC-%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6%E8%A7%86%E9%A2%91%E5%AD%97%E5%B9%95-chatgpt%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/479364/%E8%B6%85%E6%98%9FMooc%E8%84%9A%E6%9C%AC%20%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6%E8%A7%86%E9%A2%91%E5%AD%97%E5%B9%95%20ChatGPT%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 4436,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

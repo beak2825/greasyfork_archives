@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 487775,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-20T00:49:03.000Z",
+    "code_updated_at": "2024-02-20T00:49:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254635,
+        "name": "哥的冷酷零下八度",
+        "created_at": "2024-01-29T07:20:28.000Z",
+        "url": "https://greasyfork.org/users/1254635-%E5%93%A5%E7%9A%84%E5%86%B7%E9%85%B7%E9%9B%B6%E4%B8%8B%E5%85%AB%E5%BA%A6"
+      }
+    ],
+    "name": "知乎回答图片缩小(网页版)-超轻量级",
+    "description": "Stop social death when biangushiing",
+    "url": "https://greasyfork.org/scripts/487775-%E7%9F%A5%E4%B9%8E%E5%9B%9E%E7%AD%94%E5%9B%BE%E7%89%87%E7%BC%A9%E5%B0%8F-%E7%BD%91%E9%A1%B5%E7%89%88-%E8%B6%85%E8%BD%BB%E9%87%8F%E7%BA%A7",
+    "code_url": "https://update.greasyfork.org/scripts/487775/%E7%9F%A5%E4%B9%8E%E5%9B%9E%E7%AD%94%E5%9B%BE%E7%89%87%E7%BC%A9%E5%B0%8F%28%E7%BD%91%E9%A1%B5%E7%89%88%29-%E8%B6%85%E8%BD%BB%E9%87%8F%E7%BA%A7.user.js",
+    "code_size": 1292,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485950,
+    "daily_installs": 0,
+    "total_installs": 120,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-29T08:08:12.000Z",
+    "code_updated_at": "2024-02-29T07:49:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254635,
+        "name": "哥的冷酷零下八度",
+        "created_at": "2024-01-29T07:20:28.000Z",
+        "url": "https://greasyfork.org/users/1254635-%E5%93%A5%E7%9A%84%E5%86%B7%E9%85%B7%E9%9B%B6%E4%B8%8B%E5%85%AB%E5%BA%A6"
+      }
+    ],
+    "name": "虎扑帖子图片缩小-超轻量级",
+    "description": "Stop social death when fishing",
+    "url": "https://greasyfork.org/scripts/485950-%E8%99%8E%E6%89%91%E5%B8%96%E5%AD%90%E5%9B%BE%E7%89%87%E7%BC%A9%E5%B0%8F-%E8%B6%85%E8%BD%BB%E9%87%8F%E7%BA%A7",
+    "code_url": "https://update.greasyfork.org/scripts/485950/%E8%99%8E%E6%89%91%E5%B8%96%E5%AD%90%E5%9B%BE%E7%89%87%E7%BC%A9%E5%B0%8F-%E8%B6%85%E8%BD%BB%E9%87%8F%E7%BA%A7.user.js",
+    "code_size": 1503,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

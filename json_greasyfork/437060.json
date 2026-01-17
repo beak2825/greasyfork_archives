@@ -1,0 +1,33 @@
+{
+  "id": 437060,
+  "daily_installs": 0,
+  "total_installs": 180,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-15T03:11:47.000Z",
+  "code_updated_at": "2021-12-15T05:07:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 853448,
+      "name": "flarejune",
+      "created_at": "2021-12-15T03:02:47.000Z",
+      "url": "https://greasyfork.org/users/853448-flarejune"
+    }
+  ],
+  "name": "干净斗鱼",
+  "description": "净化斗鱼广告",
+  "url": "https://greasyfork.org/scripts/437060-%E5%B9%B2%E5%87%80%E6%96%97%E9%B1%BC",
+  "code_url": "https://update.greasyfork.org/scripts/437060/%E5%B9%B2%E5%87%80%E6%96%97%E9%B1%BC.user.js",
+  "code_size": 1233,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 440126,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-16T10:56:50.000Z",
+    "code_updated_at": "2022-02-16T10:56:50.000Z",
+    "namespace": "https://greasyfork.org/de/users/771568-gercomsci",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 771568,
+        "name": "Gercomsci",
+        "created_at": "2021-05-13T08:16:15.000Z",
+        "url": "https://greasyfork.org/users/771568-gercomsci"
+      }
+    ],
+    "name": "Twitter spam hider",
+    "description": "Hides \"who to follow\" and \"trending now\" spam on Twitter's web app by scanning the page for it every second.",
+    "url": "https://greasyfork.org/scripts/440126-twitter-spam-hider",
+    "code_url": "https://update.greasyfork.org/scripts/440126/Twitter%20spam%20hider.user.js",
+    "code_size": 1852,
+    "license": "GPL 3.0",
+    "version": "1.0 beta (2022-02-09)",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427543,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-05T18:19:38.000Z",
+    "code_updated_at": "2021-06-05T19:42:26.000Z",
+    "namespace": "gercomsci",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 771568,
+        "name": "Gercomsci",
+        "created_at": "2021-05-13T08:16:15.000Z",
+        "url": "https://greasyfork.org/users/771568-gercomsci"
+      }
+    ],
+    "name": "SoundCloudLog",
+    "description": "Log played SoundCloud tracks in browsing history to avoid losing music. More detailed instructions and logMode setting inside code.",
+    "url": "https://greasyfork.org/scripts/427543-soundcloudlog",
+    "code_url": "https://update.greasyfork.org/scripts/427543/SoundCloudLog.user.js",
+    "code_size": 3899,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

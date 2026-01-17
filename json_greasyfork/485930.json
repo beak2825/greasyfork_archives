@@ -1,0 +1,33 @@
+{
+  "id": 485930,
+  "daily_installs": 0,
+  "total_installs": 105,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-29T02:57:36.000Z",
+  "code_updated_at": "2024-02-02T02:50:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 928565,
+      "name": "azuremistake",
+      "created_at": "2022-06-23T14:31:11.000Z",
+      "url": "https://greasyfork.org/users/928565-azuremistake"
+    }
+  ],
+  "name": "知乎过滤盐选广告",
+  "description": "过滤知乎首页盐选广告",
+  "url": "https://greasyfork.org/scripts/485930-%E7%9F%A5%E4%B9%8E%E8%BF%87%E6%BB%A4%E7%9B%90%E9%80%89%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/485930/%E7%9F%A5%E4%B9%8E%E8%BF%87%E6%BB%A4%E7%9B%90%E9%80%89%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 917,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

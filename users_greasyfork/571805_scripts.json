@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479088,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-05T13:00:42.000Z",
+    "code_updated_at": "2023-11-17T11:51:31.000Z",
+    "namespace": "randomScript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 571805,
+        "name": "SaigyoujiYuyuko233",
+        "created_at": "2020-05-25T01:33:33.000Z",
+        "url": "https://greasyfork.org/users/571805-saigyoujiyuyuko233"
+      }
+    ],
+    "name": "根据 UP 来指定视频起始位置 - bilibili.com",
+    "description": "如果 UP 存在于下面的列表，那么每次看他的视频就会自动从下面设置的时间戳开始播放",
+    "url": "https://greasyfork.org/scripts/479088-%E6%A0%B9%E6%8D%AE-up-%E6%9D%A5%E6%8C%87%E5%AE%9A%E8%A7%86%E9%A2%91%E8%B5%B7%E5%A7%8B%E4%BD%8D%E7%BD%AE-bilibili-com",
+    "code_url": "https://update.greasyfork.org/scripts/479088/%E6%A0%B9%E6%8D%AE%20UP%20%E6%9D%A5%E6%8C%87%E5%AE%9A%E8%A7%86%E9%A2%91%E8%B5%B7%E5%A7%8B%E4%BD%8D%E7%BD%AE%20-%20bilibilicom.user.js",
+    "code_size": 1269,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.0.1-u4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

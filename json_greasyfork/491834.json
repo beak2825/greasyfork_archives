@@ -1,0 +1,33 @@
+{
+  "id": 491834,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-06T22:20:23.000Z",
+  "code_updated_at": "2024-04-07T16:01:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 21527,
+      "name": "jonny h.",
+      "created_at": "2015-11-30T17:35:34.000Z",
+      "url": "https://greasyfork.org/users/21527-jonny-h"
+    }
+  ],
+  "name": "twitter graph",
+  "description": "send tweets somewhere",
+  "url": "https://greasyfork.org/scripts/491834-twitter-graph",
+  "code_url": "https://update.greasyfork.org/scripts/491834/twitter%20graph.user.js",
+  "code_size": 1349,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 412122,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-28T01:13:28.000Z",
+  "code_updated_at": "2020-09-28T01:13:27.000Z",
+  "namespace": "undefined",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 651393,
+      "name": "xiaodongxier",
+      "created_at": "2020-06-26T01:31:17.000Z",
+      "url": "https://greasyfork.org/users/651393-xiaodongxier",
+      "scripts": [
+        {
+          "id": 449154,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-08T06:21:06.000Z",
+          "code_updated_at": "2022-08-10T03:15:40.000Z",
+          "namespace": "www.xiaodongxier.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "边看文档边看视频-上班摸鱼",
+          "description": "本地视频文件夹下启动http-server服务，然后端口设置5555，mac操作 `http-server -p 5555`",
+          "url": "https://greasyfork.org/scripts/449154-%E8%BE%B9%E7%9C%8B%E6%96%87%E6%A1%A3%E8%BE%B9%E7%9C%8B%E8%A7%86%E9%A2%91-%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC",
+          "code_url": "https://update.greasyfork.org/scripts/449154/%E8%BE%B9%E7%9C%8B%E6%96%87%E6%A1%A3%E8%BE%B9%E7%9C%8B%E8%A7%86%E9%A2%91-%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC.user.js",
+          "code_size": 613,
+          "license": "MIT License",
+          "version": "2.0.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PC万能打开",
+  "description": "王永杰PC万能打开插件",
+  "url": "https://greasyfork.org/scripts/412122-pc%E4%B8%87%E8%83%BD%E6%89%93%E5%BC%80",
+  "code_url": "https://update.greasyfork.org/scripts/412122/PC%E4%B8%87%E8%83%BD%E6%89%93%E5%BC%80.user.js",
+  "code_size": 1574,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

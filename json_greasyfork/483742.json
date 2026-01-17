@@ -1,0 +1,59 @@
+{
+  "id": 483742,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-03T05:19:51.000Z",
+  "code_updated_at": "2024-01-03T05:19:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1221405,
+      "name": "N-0-0-B-Coder",
+      "created_at": "2023-11-22T01:40:11.000Z",
+      "url": "https://greasyfork.org/users/1221405-n-0-0-b-coder",
+      "scripts": [
+        {
+          "id": 483742,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-03T05:19:51.000Z",
+          "code_updated_at": "2024-01-03T05:19:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Quick Trade Button for YFT",
+          "description": "Quick Trade Button for YFT (Your Favorite Traders)",
+          "url": "https://greasyfork.org/scripts/483742-quick-trade-button-for-yft",
+          "code_url": "https://update.greasyfork.org/scripts/483742/Quick%20Trade%20Button%20for%20YFT.user.js",
+          "code_size": 8391,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Quick Trade Button for YFT",
+  "description": "Quick Trade Button for YFT (Your Favorite Traders)",
+  "url": "https://greasyfork.org/scripts/483742-quick-trade-button-for-yft",
+  "code_url": "https://update.greasyfork.org/scripts/483742/Quick%20Trade%20Button%20for%20YFT.user.js",
+  "code_size": 8391,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

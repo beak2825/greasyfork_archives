@@ -1,0 +1,59 @@
+{
+  "id": 471573,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-24T09:33:10.000Z",
+  "code_updated_at": "2024-01-13T02:47:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1134633,
+      "name": "JustFig",
+      "created_at": "2023-07-24T09:18:33.000Z",
+      "url": "https://greasyfork.org/users/1134633-justfig",
+      "scripts": [
+        {
+          "id": 471573,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-24T09:33:10.000Z",
+          "code_updated_at": "2024-01-13T02:47:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BOS打卡提醒",
+          "description": "医为BOS打卡提醒",
+          "url": "https://greasyfork.org/scripts/471573-bos%E6%89%93%E5%8D%A1%E6%8F%90%E9%86%92",
+          "code_url": "https://update.greasyfork.org/scripts/471573/BOS%E6%89%93%E5%8D%A1%E6%8F%90%E9%86%92.user.js",
+          "code_size": 10746,
+          "license": "MIT License",
+          "version": "0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BOS打卡提醒",
+  "description": "医为BOS打卡提醒",
+  "url": "https://greasyfork.org/scripts/471573-bos%E6%89%93%E5%8D%A1%E6%8F%90%E9%86%92",
+  "code_url": "https://update.greasyfork.org/scripts/471573/BOS%E6%89%93%E5%8D%A1%E6%8F%90%E9%86%92.user.js",
+  "code_size": 10746,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

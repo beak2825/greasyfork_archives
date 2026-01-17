@@ -493,5 +493,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492973,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-19T22:53:42.000Z",
+    "code_updated_at": "2024-12-29T18:17:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28155,
+        "name": "ElectroKnight22",
+        "created_at": "2016-01-23T16:30:21.000Z",
+        "url": "https://greasyfork.org/users/28155-electroknight22"
+      }
+    ],
+    "name": "Synchronized Bau Bau",
+    "description": "The script to enable synchronized Bau Baus once and for all!",
+    "url": "https://greasyfork.org/scripts/492973-synchronized-bau-bau",
+    "code_url": "https://update.greasyfork.org/scripts/492973/Synchronized%20Bau%20Bau.user.js",
+    "code_size": 2703,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465858,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-09T12:31:08.000Z",
+    "code_updated_at": "2023-09-22T08:50:02.000Z",
+    "namespace": "https://www.ptt.cc/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28155,
+        "name": "ElectroKnight22",
+        "created_at": "2016-01-23T16:30:21.000Z",
+        "url": "https://greasyfork.org/users/28155-electroknight22"
+      }
+    ],
+    "name": "Prettify PTT",
+    "description": "Makes PTT easier on the eyes. 降低PPT造成的視覺壓力。",
+    "url": "https://greasyfork.org/scripts/465858-prettify-ptt",
+    "code_url": "https://update.greasyfork.org/scripts/465858/Prettify%20PTT.user.js",
+    "code_size": 3074,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463207,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-04T05:11:51.000Z",
+    "code_updated_at": "2023-05-09T12:42:26.000Z",
+    "namespace": "https://chat.openai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28155,
+        "name": "ElectroKnight22",
+        "created_at": "2016-01-23T16:30:21.000Z",
+        "url": "https://greasyfork.org/users/28155-electroknight22"
+      }
+    ],
+    "name": "ChatGPT TTS",
+    "description": "Speaks the chatGPT responses. Windows only.",
+    "url": "https://greasyfork.org/scripts/463207-chatgpt-tts",
+    "code_url": "https://update.greasyfork.org/scripts/463207/ChatGPT%20TTS.user.js",
+    "code_size": 13517,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

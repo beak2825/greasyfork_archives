@@ -1,0 +1,35 @@
+[
+  {
+    "id": 425750,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-30T17:40:23.000Z",
+    "code_updated_at": "2022-10-18T20:31:49.000Z",
+    "namespace": "https://greasyfork.org/users/766994",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 766994,
+        "name": "L3N76",
+        "created_at": "2021-04-30T17:26:25.000Z",
+        "url": "https://greasyfork.org/users/766994-l3n76"
+      }
+    ],
+    "name": "Chessable Analysis Translator",
+    "description": "Redirects analysis from Chessable to Lichess",
+    "url": "https://greasyfork.org/scripts/425750-chessable-analysis-translator",
+    "code_url": "https://update.greasyfork.org/scripts/425750/Chessable%20Analysis%20Translator.user.js",
+    "code_size": 511,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

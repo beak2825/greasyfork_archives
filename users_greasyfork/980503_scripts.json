@@ -1,0 +1,101 @@
+[
+  {
+    "id": 469983,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-02T14:37:07.000Z",
+    "code_updated_at": "2023-07-02T15:26:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980503,
+        "name": "iok-1ngc",
+        "created_at": "2022-11-08T00:40:52.000Z",
+        "url": "https://greasyfork.org/users/980503-iok-1ngc"
+      }
+    ],
+    "name": "New Userscript",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/469983-new-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/469983/New%20Userscript.user.js",
+    "code_size": 573,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459347,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-02T22:53:48.000Z",
+    "code_updated_at": "2023-02-02T23:00:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980503,
+        "name": "iok-1ngc",
+        "created_at": "2022-11-08T00:40:52.000Z",
+        "url": "https://greasyfork.org/users/980503-iok-1ngc"
+      }
+    ],
+    "name": "LB cast",
+    "description": "Click on the plaintext Telegram link to make it clickable",
+    "url": "https://greasyfork.org/scripts/459347-lb-cast",
+    "code_url": "https://update.greasyfork.org/scripts/459347/LB%20cast.user.js",
+    "code_size": 713,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454435,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-08T02:40:19.000Z",
+    "code_updated_at": "2022-11-18T23:10:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980503,
+        "name": "iok-1ngc",
+        "created_at": "2022-11-08T00:40:52.000Z",
+        "url": "https://greasyfork.org/users/980503-iok-1ngc"
+      }
+    ],
+    "name": "Clickable Telegram links for Reddit",
+    "description": "Click on the plaintext Telegram link to make it clickable",
+    "url": "https://greasyfork.org/scripts/454435-clickable-telegram-links-for-reddit",
+    "code_url": "https://update.greasyfork.org/scripts/454435/Clickable%20Telegram%20links%20for%20Reddit.user.js",
+    "code_size": 1140,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

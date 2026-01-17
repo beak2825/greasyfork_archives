@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 442290,
+    "daily_installs": 0,
+    "total_installs": 496,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-29T06:22:43.000Z",
+    "code_updated_at": "2023-07-31T01:30:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 894862,
+        "name": "gwokming",
+        "created_at": "2022-03-29T06:15:26.000Z",
+        "url": "https://greasyfork.org/users/894862-gwokming"
+      }
+    ],
+    "name": "虎扑图片缩小",
+    "description": "虎扑帖子图片(楼中楼图)缩小至200px",
+    "url": "https://greasyfork.org/scripts/442290-%E8%99%8E%E6%89%91%E5%9B%BE%E7%89%87%E7%BC%A9%E5%B0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/442290/%E8%99%8E%E6%89%91%E5%9B%BE%E7%89%87%E7%BC%A9%E5%B0%8F.user.js",
+    "code_size": 1629,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

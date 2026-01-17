@@ -1,0 +1,59 @@
+{
+  "id": 450483,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-30T18:38:18.000Z",
+  "code_updated_at": "2022-08-30T18:46:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 952555,
+      "name": "HaMm3r MaN",
+      "created_at": "2022-08-30T14:31:34.000Z",
+      "url": "https://greasyfork.org/users/952555-hamm3r-man",
+      "scripts": [
+        {
+          "id": 450483,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-30T18:38:18.000Z",
+          "code_updated_at": "2022-08-30T18:46:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove It",
+          "description": "lock mouse and remove body & change html to black",
+          "url": "https://greasyfork.org/scripts/450483-remove-it",
+          "code_url": "https://update.greasyfork.org/scripts/450483/Remove%20It.user.js",
+          "code_size": 772,
+          "license": "GPLv3",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove It",
+  "description": "lock mouse and remove body & change html to black",
+  "url": "https://greasyfork.org/scripts/450483-remove-it",
+  "code_url": "https://update.greasyfork.org/scripts/450483/Remove%20It.user.js",
+  "code_size": 772,
+  "license": "GPLv3",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

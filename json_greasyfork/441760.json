@@ -1,0 +1,33 @@
+{
+  "id": 441760,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-03-19T14:46:09.000Z",
+  "code_updated_at": "2022-03-19T14:46:09.000Z",
+  "namespace": "https://twitter.com/yoigara3",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 889570,
+      "name": "yoigara",
+      "created_at": "2022-03-19T14:31:57.000Z",
+      "url": "https://greasyfork.org/users/889570-yoigara"
+    }
+  ],
+  "name": "Twitcasting Ctrl+Enter",
+  "description": "It enable to send comment with ctrl + enter",
+  "url": "https://greasyfork.org/scripts/441760-twitcasting-ctrl-enter",
+  "code_url": "https://update.greasyfork.org/scripts/441760/Twitcasting%20Ctrl%2BEnter.user.js",
+  "code_size": 893,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

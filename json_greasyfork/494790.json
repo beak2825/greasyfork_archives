@@ -1,0 +1,59 @@
+{
+  "id": 494790,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-13T01:52:56.000Z",
+  "code_updated_at": "2024-06-04T07:27:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1298768,
+      "name": "myscriptmonkey",
+      "created_at": "2024-05-09T04:54:56.000Z",
+      "url": "https://greasyfork.org/users/1298768-myscriptmonkey",
+      "scripts": [
+        {
+          "id": 494790,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-13T01:52:56.000Z",
+          "code_updated_at": "2024-06-04T07:27:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网站高分屏优化(By HWlabs)",
+          "description": "几个 AI 网站的高分屏优化",
+          "url": "https://greasyfork.org/scripts/494790-%E7%BD%91%E7%AB%99%E9%AB%98%E5%88%86%E5%B1%8F%E4%BC%98%E5%8C%96-by-hwlabs",
+          "code_url": "https://update.greasyfork.org/scripts/494790/%E7%BD%91%E7%AB%99%E9%AB%98%E5%88%86%E5%B1%8F%E4%BC%98%E5%8C%96%28By%20HWlabs%29.user.js",
+          "code_size": 2012,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网站高分屏优化(By HWlabs)",
+  "description": "几个 AI 网站的高分屏优化",
+  "url": "https://greasyfork.org/scripts/494790-%E7%BD%91%E7%AB%99%E9%AB%98%E5%88%86%E5%B1%8F%E4%BC%98%E5%8C%96-by-hwlabs",
+  "code_url": "https://update.greasyfork.org/scripts/494790/%E7%BD%91%E7%AB%99%E9%AB%98%E5%88%86%E5%B1%8F%E4%BC%98%E5%8C%96%28By%20HWlabs%29.user.js",
+  "code_size": 2012,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

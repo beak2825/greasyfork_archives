@@ -1,0 +1,35 @@
+[
+  {
+    "id": 471458,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-22T16:52:59.000Z",
+    "code_updated_at": "2023-07-23T04:23:13.000Z",
+    "namespace": "website_classifier",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1133429,
+        "name": "MrChill",
+        "created_at": "2023-07-22T16:50:38.000Z",
+        "url": "https://greasyfork.org/users/1133429-mrchill"
+      }
+    ],
+    "name": "涉诈网址检测器",
+    "description": "此插件将检测当前访问的网址是否为涉诈网址",
+    "url": "https://greasyfork.org/scripts/471458-%E6%B6%89%E8%AF%88%E7%BD%91%E5%9D%80%E6%A3%80%E6%B5%8B%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/471458/%E6%B6%89%E8%AF%88%E7%BD%91%E5%9D%80%E6%A3%80%E6%B5%8B%E5%99%A8.user.js",
+    "code_size": 3450,
+    "license": null,
+    "version": "1.1.5",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

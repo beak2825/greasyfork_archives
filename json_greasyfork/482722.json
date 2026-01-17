@@ -1,0 +1,33 @@
+{
+  "id": 482722,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-20T07:15:58.000Z",
+  "code_updated_at": "2025-06-25T11:10:36.000Z",
+  "namespace": "https://survey-studio.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 210304,
+      "name": "il",
+      "created_at": "2018-09-05T05:43:28.000Z",
+      "url": "https://greasyfork.org/users/210304-il"
+    }
+  ],
+  "name": "SurveyStudio. Импорт ответов на нескольких языках",
+  "description": "Позволяет импортировать список ответов сразу на нескольких языках",
+  "url": "https://greasyfork.org/scripts/482722-surveystudio-%D0%B8%D0%BC%D0%BF%D0%BE%D1%80%D1%82-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%BD%D0%B5%D1%81%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%B8%D1%85-%D1%8F%D0%B7%D1%8B%D0%BA%D0%B0%D1%85",
+  "code_url": "https://update.greasyfork.org/scripts/482722/SurveyStudio%20%D0%98%D0%BC%D0%BF%D0%BE%D1%80%D1%82%20%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D0%BE%D0%B2%20%D0%BD%D0%B0%20%D0%BD%D0%B5%D1%81%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%B8%D1%85%20%D1%8F%D0%B7%D1%8B%D0%BA%D0%B0%D1%85.user.js",
+  "code_size": 4798,
+  "license": null,
+  "version": "0.4",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

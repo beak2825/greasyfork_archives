@@ -1,0 +1,59 @@
+{
+  "id": 454437,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-08T03:11:53.000Z",
+  "code_updated_at": "2022-11-15T19:11:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 980533,
+      "name": "Threed Resident",
+      "created_at": "2022-11-08T02:50:54.000Z",
+      "url": "https://greasyfork.org/users/980533-threed-resident",
+      "scripts": [
+        {
+          "id": 454437,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-08T03:11:53.000Z",
+          "code_updated_at": "2022-11-15T19:11:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Daz Interactive License Display",
+          "description": "Displays all interactive licenses purchased. View & Seach at your Account page.",
+          "url": "https://greasyfork.org/scripts/454437-daz-interactive-license-display",
+          "code_url": "https://update.greasyfork.org/scripts/454437/Daz%20Interactive%20License%20Display.user.js",
+          "code_size": 5777,
+          "license": "GNU Affero General Public License v3.0 or later",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Daz Interactive License Display",
+  "description": "Displays all interactive licenses purchased. View & Seach at your Account page.",
+  "url": "https://greasyfork.org/scripts/454437-daz-interactive-license-display",
+  "code_url": "https://update.greasyfork.org/scripts/454437/Daz%20Interactive%20License%20Display.user.js",
+  "code_size": 5777,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

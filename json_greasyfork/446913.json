@@ -1,0 +1,59 @@
+{
+  "id": 446913,
+  "daily_installs": 0,
+  "total_installs": 291,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-23T13:21:34.000Z",
+  "code_updated_at": "2022-06-23T13:27:59.000Z",
+  "namespace": "https://reddit.com/u/AliFurkanY",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 928531,
+      "name": "alifurkany",
+      "created_at": "2022-06-23T12:52:19.000Z",
+      "url": "https://greasyfork.org/users/928531-alifurkany",
+      "scripts": [
+        {
+          "id": 446913,
+          "daily_installs": 0,
+          "total_installs": 291,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-23T13:21:34.000Z",
+          "code_updated_at": "2022-06-23T13:27:59.000Z",
+          "namespace": "https://reddit.com/u/AliFurkanY",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Verbal memory bot - humanbenchmark.com",
+          "description": "Plays the \"verbal memory\" game for you on humanbenchmark.com",
+          "url": "https://greasyfork.org/scripts/446913-verbal-memory-bot-humanbenchmark-com",
+          "code_url": "https://update.greasyfork.org/scripts/446913/Verbal%20memory%20bot%20-%20humanbenchmarkcom.user.js",
+          "code_size": 2522,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Verbal memory bot - humanbenchmark.com",
+  "description": "Plays the \"verbal memory\" game for you on humanbenchmark.com",
+  "url": "https://greasyfork.org/scripts/446913-verbal-memory-bot-humanbenchmark-com",
+  "code_url": "https://update.greasyfork.org/scripts/446913/Verbal%20memory%20bot%20-%20humanbenchmarkcom.user.js",
+  "code_size": 2522,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

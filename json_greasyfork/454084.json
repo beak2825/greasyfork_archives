@@ -1,0 +1,34 @@
+{
+  "id": 454084,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-01T13:14:46.000Z",
+  "code_updated_at": "2022-11-07T02:10:00.000Z",
+  "namespace": "pokeclicker.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 960434,
+      "name": "Nicholas Kiraly",
+      "created_at": "2022-09-17T13:59:33.000Z",
+      "url": "https://greasyfork.org/users/960434-nicholas-kiraly",
+      "scripts": []
+    }
+  ],
+  "name": "PokeClicker+",
+  "description": "PokeClicker plugin framework",
+  "url": "https://greasyfork.org/scripts/454084-pokeclicker",
+  "code_url": "https://update.greasyfork.org/scripts/454084/1114168/PokeClicker%2B.js",
+  "code_size": 29913,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

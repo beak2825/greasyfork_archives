@@ -1,0 +1,68 @@
+[
+  {
+    "id": 425253,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-19T20:51:04.000Z",
+    "code_updated_at": "2021-04-19T20:51:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 761479,
+        "name": "RubyDevil",
+        "created_at": "2021-04-17T23:34:56.000Z",
+        "url": "https://greasyfork.org/users/761479-rubydevil"
+      }
+    ],
+    "name": "ƬɌ✯Team Rivality Theme-Script",
+    "description": "TeamRivality's Official Theme",
+    "url": "https://greasyfork.org/scripts/425253-%C6%AD%C9%8D-team-rivality-theme-script",
+    "code_url": "https://update.greasyfork.org/scripts/425253/%C6%AC%C9%8C%E2%9C%AFTeam%20Rivality%20Theme-Script.user.js",
+    "code_size": 11253,
+    "license": null,
+    "version": "0.0.2[Beta]",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 425181,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-17T23:38:37.000Z",
+    "code_updated_at": "2021-04-17T23:38:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 761479,
+        "name": "RubyDevil",
+        "created_at": "2021-04-17T23:34:56.000Z",
+        "url": "https://greasyfork.org/users/761479-rubydevil"
+      }
+    ],
+    "name": "ƬɌ✯Team Rivality Script",
+    "description": "TeamRivality's Official Theme",
+    "url": "https://greasyfork.org/scripts/425181-%C6%AD%C9%8D-team-rivality-script",
+    "code_url": "https://update.greasyfork.org/scripts/425181/%C6%AC%C9%8C%E2%9C%AFTeam%20Rivality%20Script.user.js",
+    "code_size": 8542,
+    "license": null,
+    "version": "0.0.1[Beta]",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

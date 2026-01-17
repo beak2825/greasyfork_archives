@@ -1,0 +1,34 @@
+{
+  "id": 483866,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-04T15:10:58.000Z",
+  "code_updated_at": "2024-01-07T17:37:59.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1242902,
+      "name": "Morozoov",
+      "created_at": "2024-01-03T21:20:29.000Z",
+      "url": "https://greasyfork.org/users/1242902-morozoov",
+      "scripts": []
+    }
+  ],
+  "name": "KF_script_by_morozoov",
+  "description": "Suggestions for improving the script write here ---> https://vk.com/id640869995",
+  "url": "https://greasyfork.org/scripts/483866-kf-script-by-morozoov",
+  "code_url": "https://update.greasyfork.org/scripts/483866/KF_script_by_morozoov.user.js",
+  "code_size": 140582,
+  "license": "MIT License",
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

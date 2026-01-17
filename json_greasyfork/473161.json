@@ -1,0 +1,59 @@
+{
+  "id": 473161,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-16T07:22:44.000Z",
+  "code_updated_at": "2023-08-16T07:24:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1152509,
+      "name": "JinAlva",
+      "created_at": "2023-08-16T07:20:30.000Z",
+      "url": "https://greasyfork.org/users/1152509-jinalva",
+      "scripts": [
+        {
+          "id": 473161,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-16T07:22:44.000Z",
+          "code_updated_at": "2023-08-16T07:24:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ad_gitlab_code_reviewer_helper",
+          "description": "用于CR提效",
+          "url": "https://greasyfork.org/scripts/473161-ad-gitlab-code-reviewer-helper",
+          "code_url": "https://update.greasyfork.org/scripts/473161/ad_gitlab_code_reviewer_helper.user.js",
+          "code_size": 11896,
+          "license": "no",
+          "version": "1.0.22",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ad_gitlab_code_reviewer_helper",
+  "description": "用于CR提效",
+  "url": "https://greasyfork.org/scripts/473161-ad-gitlab-code-reviewer-helper",
+  "code_url": "https://update.greasyfork.org/scripts/473161/ad_gitlab_code_reviewer_helper.user.js",
+  "code_size": 11896,
+  "license": "no",
+  "version": "1.0.22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

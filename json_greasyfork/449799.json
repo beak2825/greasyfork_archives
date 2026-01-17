@@ -1,0 +1,33 @@
+{
+  "id": 449799,
+  "daily_installs": 0,
+  "total_installs": 52,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-19T01:08:14.000Z",
+  "code_updated_at": "2022-08-19T01:08:14.000Z",
+  "namespace": "https://greasyfork.org/users/915995",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 915995,
+      "name": "Christiam Rz",
+      "created_at": "2022-05-19T06:15:54.000Z",
+      "url": "https://greasyfork.org/users/915995-christiam-rz"
+    }
+  ],
+  "name": "Clean YT Interface",
+  "description": "Remove the texts to some youtube buttons",
+  "url": "https://greasyfork.org/scripts/449799-clean-yt-interface",
+  "code_url": "https://update.greasyfork.org/scripts/449799/Clean%20YT%20Interface.user.js",
+  "code_size": 539,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

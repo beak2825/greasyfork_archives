@@ -1,0 +1,59 @@
+{
+  "id": 458458,
+  "daily_installs": 0,
+  "total_installs": 294,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-18T01:13:51.000Z",
+  "code_updated_at": "2023-01-31T10:09:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1013302,
+      "name": "the_dust_A",
+      "created_at": "2023-01-17T08:13:38.000Z",
+      "url": "https://greasyfork.org/users/1013302-the-dust-a",
+      "scripts": [
+        {
+          "id": 458458,
+          "daily_installs": 0,
+          "total_installs": 294,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-18T01:13:51.000Z",
+          "code_updated_at": "2023-01-31T10:09:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili纯净版-除视频外去除一切内容",
+          "description": "给你纯净视频页面 排除视频页全部的外部干扰 避免学习时被外界打扰 b站沉浸式学习 bilibili沉浸式学习1.1版",
+          "url": "https://greasyfork.org/scripts/458458-bilibili%E7%BA%AF%E5%87%80%E7%89%88-%E9%99%A4%E8%A7%86%E9%A2%91%E5%A4%96%E5%8E%BB%E9%99%A4%E4%B8%80%E5%88%87%E5%86%85%E5%AE%B9",
+          "code_url": "https://update.greasyfork.org/scripts/458458/bilibili%E7%BA%AF%E5%87%80%E7%89%88-%E9%99%A4%E8%A7%86%E9%A2%91%E5%A4%96%E5%8E%BB%E9%99%A4%E4%B8%80%E5%88%87%E5%86%85%E5%AE%B9.user.js",
+          "code_size": 5634,
+          "license": "AGPL License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili纯净版-除视频外去除一切内容",
+  "description": "给你纯净视频页面 排除视频页全部的外部干扰 避免学习时被外界打扰 b站沉浸式学习 bilibili沉浸式学习1.1版",
+  "url": "https://greasyfork.org/scripts/458458-bilibili%E7%BA%AF%E5%87%80%E7%89%88-%E9%99%A4%E8%A7%86%E9%A2%91%E5%A4%96%E5%8E%BB%E9%99%A4%E4%B8%80%E5%88%87%E5%86%85%E5%AE%B9",
+  "code_url": "https://update.greasyfork.org/scripts/458458/bilibili%E7%BA%AF%E5%87%80%E7%89%88-%E9%99%A4%E8%A7%86%E9%A2%91%E5%A4%96%E5%8E%BB%E9%99%A4%E4%B8%80%E5%88%87%E5%86%85%E5%AE%B9.user.js",
+  "code_size": 5634,
+  "license": "AGPL License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

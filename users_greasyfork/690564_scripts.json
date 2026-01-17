@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412006,
+    "daily_installs": 0,
+    "total_installs": 220,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-26T11:49:25.000Z",
+    "code_updated_at": "2020-11-30T10:02:15.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/690564-%E5%9C%A8%E5%90%8C%E4%B8%80%E6%97%B6%E7%A9%BA%E7%9B%B8%E9%81%87",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 690564,
+        "name": "在同一时空相遇",
+        "created_at": "2020-09-26T11:37:09.000Z",
+        "url": "https://greasyfork.org/users/690564-%E5%9C%A8%E5%90%8C%E4%B8%80%E6%97%B6%E7%A9%BA%E7%9B%B8%E9%81%87"
+      }
+    ],
+    "name": "爱心点击特效",
+    "description": "给所有打开的页面添加爱心点击特效",
+    "url": "https://greasyfork.org/scripts/412006-%E7%88%B1%E5%BF%83%E7%82%B9%E5%87%BB%E7%89%B9%E6%95%88",
+    "code_url": "https://update.greasyfork.org/scripts/412006/%E7%88%B1%E5%BF%83%E7%82%B9%E5%87%BB%E7%89%B9%E6%95%88.user.js",
+    "code_size": 5633,
+    "license": "MIT License",
+    "version": "0.2.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

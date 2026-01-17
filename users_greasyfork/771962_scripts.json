@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426459,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-14T09:57:38.000Z",
+    "code_updated_at": "2021-05-14T09:57:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 771962,
+        "name": "SEE LING XUAN",
+        "created_at": "2021-05-14T09:53:09.000Z",
+        "url": "https://greasyfork.org/users/771962-see-ling-xuan"
+      }
+    ],
+    "name": "Utar Pastyear Downloader",
+    "description": "Simple script for Utar students to download all past year papers by one-click",
+    "url": "https://greasyfork.org/scripts/426459-utar-pastyear-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/426459/Utar%20Pastyear%20Downloader.user.js",
+    "code_size": 1595,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

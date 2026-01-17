@@ -1,0 +1,101 @@
+[
+  {
+    "id": 470265,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-06T08:31:24.000Z",
+    "code_updated_at": "2023-07-06T08:33:53.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114119,
+        "name": "Kamil Konior (Obci)",
+        "created_at": "2023-06-28T09:03:33.000Z",
+        "url": "https://greasyfork.org/users/1114119-kamil-konior-obci"
+      }
+    ],
+    "name": "Panel dodatkow obciego",
+    "description": "Panel dodatkow margo",
+    "url": "https://greasyfork.org/scripts/470265-panel-dodatkow-obciego",
+    "code_url": "https://update.greasyfork.org/scripts/470265/Panel%20dodatkow%20obciego.user.js",
+    "code_size": 419722,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469702,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-29T06:54:48.000Z",
+    "code_updated_at": "2023-06-29T06:54:48.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114119,
+        "name": "Kamil Konior (Obci)",
+        "created_at": "2023-06-28T09:03:33.000Z",
+        "url": "https://greasyfork.org/users/1114119-kamil-konior-obci"
+      }
+    ],
+    "name": "usuwanie nie wymaga oceny",
+    "description": "ehms usuwanie niepotrzebnego",
+    "url": "https://greasyfork.org/scripts/469702-usuwanie-nie-wymaga-oceny",
+    "code_url": "https://update.greasyfork.org/scripts/469702/usuwanie%20nie%20wymaga%20oceny.user.js",
+    "code_size": 2304,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469634,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-28T09:07:07.000Z",
+    "code_updated_at": "2025-09-03T05:57:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1114119,
+        "name": "Kamil Konior (Obci)",
+        "created_at": "2023-06-28T09:03:33.000Z",
+        "url": "https://greasyfork.org/users/1114119-kamil-konior-obci"
+      }
+    ],
+    "name": "dark mode portal mpk",
+    "description": "tryb nocny",
+    "url": "https://greasyfork.org/scripts/469634-dark-mode-portal-mpk",
+    "code_url": "https://update.greasyfork.org/scripts/469634/dark%20mode%20portal%20mpk.user.js",
+    "code_size": 7936,
+    "license": "MIT License",
+    "version": "0.29",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

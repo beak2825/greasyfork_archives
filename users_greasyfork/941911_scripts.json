@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448733,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-01T04:20:27.000Z",
+    "code_updated_at": "2022-08-01T05:21:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 941911,
+        "name": "Pengfei Chen",
+        "created_at": "2022-08-01T04:09:50.000Z",
+        "url": "https://greasyfork.org/users/941911-pengfei-chen"
+      }
+    ],
+    "name": "ebay-paas-helper",
+    "description": "ebay cloud pages helper!",
+    "url": "https://greasyfork.org/scripts/448733-ebay-paas-helper",
+    "code_url": "https://update.greasyfork.org/scripts/448733/ebay-paas-helper.user.js",
+    "code_size": 5096,
+    "license": "GPL License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

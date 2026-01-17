@@ -1,0 +1,34 @@
+{
+  "id": 491582,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-03T18:08:05.000Z",
+  "code_updated_at": "2024-04-20T18:42:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1209112,
+      "name": "Faq Groland",
+      "created_at": "2023-11-02T07:27:21.000Z",
+      "url": "https://greasyfork.org/users/1209112-faq-groland",
+      "scripts": []
+    }
+  ],
+  "name": "Tiktokcounter",
+  "description": "renda extra",
+  "url": "https://greasyfork.org/scripts/491582-tiktokcounter",
+  "code_url": "https://update.greasyfork.org/scripts/491582/Tiktokcounter.user.js",
+  "code_size": 19410,
+  "license": null,
+  "version": "0.3",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

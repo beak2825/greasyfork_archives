@@ -1,0 +1,33 @@
+{
+  "id": 476201,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-28T00:27:34.000Z",
+  "code_updated_at": "2023-09-29T22:38:40.000Z",
+  "namespace": "espn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 428309,
+      "name": "kynak",
+      "created_at": "2019-12-25T07:58:17.000Z",
+      "url": "https://greasyfork.org/users/428309-kynak"
+    }
+  ],
+  "name": "WNBA on ESPN",
+  "description": "Removes WNBA articles",
+  "url": "https://greasyfork.org/scripts/476201-wnba-on-espn",
+  "code_url": "https://update.greasyfork.org/scripts/476201/WNBA%20on%20ESPN.user.js",
+  "code_size": 1040,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

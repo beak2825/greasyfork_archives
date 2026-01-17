@@ -1,0 +1,59 @@
+{
+  "id": 426280,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-10T18:26:05.000Z",
+  "code_updated_at": "2021-05-10T18:37:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 423476,
+      "name": "陈胜",
+      "created_at": "2019-12-19T10:19:21.000Z",
+      "url": "https://greasyfork.org/users/423476-%E9%99%88%E8%83%9C",
+      "scripts": [
+        {
+          "id": 426280,
+          "daily_installs": 0,
+          "total_installs": 28,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-05-10T18:26:05.000Z",
+          "code_updated_at": "2021-05-10T18:37:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LeetCode-cn竞赛页面跳转",
+          "description": "从竞赛页面跳转至问题页面",
+          "url": "https://greasyfork.org/scripts/426280-leetcode-cn%E7%AB%9E%E8%B5%9B%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC",
+          "code_url": "https://update.greasyfork.org/scripts/426280/LeetCode-cn%E7%AB%9E%E8%B5%9B%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC.user.js",
+          "code_size": 640,
+          "license": null,
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LeetCode-cn竞赛页面跳转",
+  "description": "从竞赛页面跳转至问题页面",
+  "url": "https://greasyfork.org/scripts/426280-leetcode-cn%E7%AB%9E%E8%B5%9B%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/426280/LeetCode-cn%E7%AB%9E%E8%B5%9B%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 640,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

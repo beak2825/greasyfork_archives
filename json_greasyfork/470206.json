@@ -1,0 +1,33 @@
+{
+  "id": 470206,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-05T08:13:27.000Z",
+  "code_updated_at": "2023-07-05T08:13:26.000Z",
+  "namespace": "https://pxls.space/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1119332,
+      "name": "FurryMasterGithub",
+      "created_at": "2023-07-05T08:10:23.000Z",
+      "url": "https://greasyfork.org/users/1119332-furrymastergithub"
+    }
+  ],
+  "name": "Canvas countdown",
+  "description": "Canvas countdown for pxls.space",
+  "url": "https://greasyfork.org/scripts/470206-canvas-countdown",
+  "code_url": "https://update.greasyfork.org/scripts/470206/Canvas%20countdown.user.js",
+  "code_size": 1406,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

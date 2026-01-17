@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440880,
+    "daily_installs": 0,
+    "total_installs": 93,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-04T05:17:45.000Z",
+    "code_updated_at": "2022-03-04T05:17:45.000Z",
+    "namespace": "arxiv2cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 882703,
+        "name": "陈科研",
+        "created_at": "2022-03-04T05:02:48.000Z",
+        "url": "https://greasyfork.org/users/882703-%E9%99%88%E7%A7%91%E7%A0%94"
+      }
+    ],
+    "name": "arxiv2cn",
+    "description": "An Arxiv Jumper to China Image Source",
+    "url": "https://greasyfork.org/scripts/440880-arxiv2cn",
+    "code_url": "https://update.greasyfork.org/scripts/440880/arxiv2cn.user.js",
+    "code_size": 936,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

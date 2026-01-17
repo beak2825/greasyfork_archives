@@ -1,0 +1,34 @@
+{
+  "id": 426652,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-18T09:27:04.000Z",
+  "code_updated_at": "2021-05-18T09:27:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 256346,
+      "name": "xuehuv",
+      "created_at": "2019-03-08T13:41:40.000Z",
+      "url": "https://greasyfork.org/users/256346-xuehuv",
+      "scripts": []
+    }
+  ],
+  "name": "红领巾",
+  "description": "快速跳过视频，节省时间。",
+  "url": "https://greasyfork.org/scripts/426652-%E7%BA%A2%E9%A2%86%E5%B7%BE",
+  "code_url": "https://update.greasyfork.org/scripts/426652/%E7%BA%A2%E9%A2%86%E5%B7%BE.user.js",
+  "code_size": 1256,
+  "license": null,
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 485490,
+  "daily_installs": 0,
+  "total_installs": 1361782,
+  "fan_score": "15.0",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2024-01-23T07:06:08.000Z",
+  "code_updated_at": "2025-11-19T10:38:01.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1251635-ebsoo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1251635,
+      "name": "ebsoo",
+      "created_at": "2024-01-22T08:20:32.000Z",
+      "url": "https://greasyfork.org/users/1251635-ebsoo",
+      "scripts": [
+        {
+          "id": 485490,
+          "daily_installs": 0,
+          "total_installs": 1361782,
+          "fan_score": "15.0",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2024-01-23T07:06:08.000Z",
+          "code_updated_at": "2025-11-19T10:38:01.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/1251635-ebsoo",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🔍一步搜题，自助查题｜无侵入，更安全｜超星学习通｜智慧树｜成人本科｜继续教育｜复制、截图搜题｜超全题库，专业开发，值得信赖",
+          "description": "一步搜题、自主查题，覆盖范围广，答案全，速度快。安全至上，不侵入主网站网络，不搜集用户信息，不主动提交，安全靠谱有保障，无后顾之忧当。涵盖中学、大学，超星学习通，国家开放大学，智慧树，成人本科，继续教育等题库，支持复制搜题，截图搜题，方便快捷，一步到位，欢迎使用",
+          "url": "https://greasyfork.org/scripts/485490-%E4%B8%80%E6%AD%A5%E6%90%9C%E9%A2%98-%E8%87%AA%E5%8A%A9%E6%9F%A5%E9%A2%98-%E6%97%A0%E4%BE%B5%E5%85%A5-%E6%9B%B4%E5%AE%89%E5%85%A8-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E6%99%BA%E6%85%A7%E6%A0%91-%E6%88%90%E4%BA%BA%E6%9C%AC%E7%A7%91-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E5%A4%8D%E5%88%B6-%E6%88%AA%E5%9B%BE%E6%90%9C%E9%A2%98-%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93-%E4%B8%93%E4%B8%9A%E5%BC%80%E5%8F%91-%E5%80%BC%E5%BE%97%E4%BF%A1%E8%B5%96",
+          "code_url": "https://update.greasyfork.org/scripts/485490/%F0%9F%94%8D%E4%B8%80%E6%AD%A5%E6%90%9C%E9%A2%98%EF%BC%8C%E8%87%AA%E5%8A%A9%E6%9F%A5%E9%A2%98%EF%BD%9C%E6%97%A0%E4%BE%B5%E5%85%A5%EF%BC%8C%E6%9B%B4%E5%AE%89%E5%85%A8%EF%BD%9C%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%EF%BD%9C%E6%99%BA%E6%85%A7%E6%A0%91%EF%BD%9C%E6%88%90%E4%BA%BA%E6%9C%AC%E7%A7%91%EF%BD%9C%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%EF%BD%9C%E5%A4%8D%E5%88%B6%E3%80%81%E6%88%AA%E5%9B%BE%E6%90%9C%E9%A2%98%EF%BD%9C%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93%EF%BC%8C%E4%B8%93%E4%B8%9A%E5%BC%80%E5%8F%91%EF%BC%8C%E5%80%BC%E5%BE%97%E4%BF%A1%E8%B5%96.user.js",
+          "code_size": 42560,
+          "license": null,
+          "version": "1.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🔍一步搜题，自助查题｜无侵入，更安全｜超星学习通｜智慧树｜成人本科｜继续教育｜复制、截图搜题｜超全题库，专业开发，值得信赖",
+  "description": "一步搜题、自主查题，覆盖范围广，答案全，速度快。安全至上，不侵入主网站网络，不搜集用户信息，不主动提交，安全靠谱有保障，无后顾之忧当。涵盖中学、大学，超星学习通，国家开放大学，智慧树，成人本科，继续教育等题库，支持复制搜题，截图搜题，方便快捷，一步到位，欢迎使用",
+  "url": "https://greasyfork.org/scripts/485490-%E4%B8%80%E6%AD%A5%E6%90%9C%E9%A2%98-%E8%87%AA%E5%8A%A9%E6%9F%A5%E9%A2%98-%E6%97%A0%E4%BE%B5%E5%85%A5-%E6%9B%B4%E5%AE%89%E5%85%A8-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E6%99%BA%E6%85%A7%E6%A0%91-%E6%88%90%E4%BA%BA%E6%9C%AC%E7%A7%91-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E5%A4%8D%E5%88%B6-%E6%88%AA%E5%9B%BE%E6%90%9C%E9%A2%98-%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93-%E4%B8%93%E4%B8%9A%E5%BC%80%E5%8F%91-%E5%80%BC%E5%BE%97%E4%BF%A1%E8%B5%96",
+  "code_url": "https://update.greasyfork.org/scripts/485490/%F0%9F%94%8D%E4%B8%80%E6%AD%A5%E6%90%9C%E9%A2%98%EF%BC%8C%E8%87%AA%E5%8A%A9%E6%9F%A5%E9%A2%98%EF%BD%9C%E6%97%A0%E4%BE%B5%E5%85%A5%EF%BC%8C%E6%9B%B4%E5%AE%89%E5%85%A8%EF%BD%9C%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%EF%BD%9C%E6%99%BA%E6%85%A7%E6%A0%91%EF%BD%9C%E6%88%90%E4%BA%BA%E6%9C%AC%E7%A7%91%EF%BD%9C%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%EF%BD%9C%E5%A4%8D%E5%88%B6%E3%80%81%E6%88%AA%E5%9B%BE%E6%90%9C%E9%A2%98%EF%BD%9C%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93%EF%BC%8C%E4%B8%93%E4%B8%9A%E5%BC%80%E5%8F%91%EF%BC%8C%E5%80%BC%E5%BE%97%E4%BF%A1%E8%B5%96.user.js",
+  "code_size": 42560,
+  "license": null,
+  "version": "1.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

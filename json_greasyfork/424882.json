@@ -1,0 +1,33 @@
+{
+  "id": 424882,
+  "daily_installs": 0,
+  "total_installs": 127,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-12T01:44:11.000Z",
+  "code_updated_at": "2024-09-12T05:42:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 231609,
+      "name": "DoveAz",
+      "created_at": "2018-12-10T02:21:35.000Z",
+      "url": "https://greasyfork.org/users/231609-doveaz"
+    }
+  ],
+  "name": "一键复制",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/424882-%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6",
+  "code_url": "https://update.greasyfork.org/scripts/424882/%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6.user.js",
+  "code_size": 3213,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

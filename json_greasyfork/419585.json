@@ -1,0 +1,33 @@
+{
+  "id": 419585,
+  "daily_installs": 0,
+  "total_installs": 52,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-03T13:39:27.000Z",
+  "code_updated_at": "2021-01-03T13:39:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 710928,
+      "name": "qi525",
+      "created_at": "2020-12-01T09:05:30.000Z",
+      "url": "https://greasyfork.org/users/710928-qi525"
+    }
+  ],
+  "name": "bing自动转跳[简化chrometana Pro]",
+  "description": "bing自动转跳,重构 chrometana Pro.crx 的代码",
+  "url": "https://greasyfork.org/scripts/419585-bing%E8%87%AA%E5%8A%A8%E8%BD%AC%E8%B7%B3-%E7%AE%80%E5%8C%96chrometana-pro",
+  "code_url": "https://update.greasyfork.org/scripts/419585/bing%E8%87%AA%E5%8A%A8%E8%BD%AC%E8%B7%B3%5B%E7%AE%80%E5%8C%96chrometana%20Pro%5D.user.js",
+  "code_size": 1085,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

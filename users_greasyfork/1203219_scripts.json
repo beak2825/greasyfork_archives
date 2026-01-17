@@ -1,0 +1,134 @@
+[
+  {
+    "id": 481668,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-08T07:54:58.000Z",
+    "code_updated_at": "2023-12-08T07:54:58.000Z",
+    "namespace": "https://greasyfork.org/users/1203219",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203219,
+        "name": "harutya",
+        "created_at": "2023-10-24T11:24:07.000Z",
+        "url": "https://greasyfork.org/users/1203219-harutya"
+      }
+    ],
+    "name": "booklive-image-redirect",
+    "description": "右键打开 booklive 封面原图",
+    "url": "https://greasyfork.org/scripts/481668-booklive-image-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/481668/booklive-image-redirect.user.js",
+    "code_size": 1373,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 481667,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-08T07:51:00.000Z",
+    "code_updated_at": "2023-12-08T07:50:59.000Z",
+    "namespace": "https://greasyfork.org/users/1203219",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203219,
+        "name": "harutya",
+        "created_at": "2023-10-24T11:24:07.000Z",
+        "url": "https://greasyfork.org/users/1203219-harutya"
+      }
+    ],
+    "name": "super-drag",
+    "description": "超级拖拽",
+    "url": "https://greasyfork.org/scripts/481667-super-drag",
+    "code_url": "https://update.greasyfork.org/scripts/481667/super-drag.user.js",
+    "code_size": 1574,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 481506,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-06T07:23:07.000Z",
+    "code_updated_at": "2023-12-09T11:09:06.000Z",
+    "namespace": "https://greasyfork.org/users/1203219",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203219,
+        "name": "harutya",
+        "created_at": "2023-10-24T11:24:07.000Z",
+        "url": "https://greasyfork.org/users/1203219-harutya"
+      }
+    ],
+    "name": "multi-domain-redirect",
+    "description": "Bangumi 多域名悬浮跳转",
+    "url": "https://greasyfork.org/scripts/481506-multi-domain-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/481506/multi-domain-redirect.user.js",
+    "code_size": 4793,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 478607,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-30T08:32:39.000Z",
+    "code_updated_at": "2025-09-19T23:22:18.000Z",
+    "namespace": "https://greasyfork.org/users/1203219",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203219,
+        "name": "harutya",
+        "created_at": "2023-10-24T11:24:07.000Z",
+        "url": "https://greasyfork.org/users/1203219-harutya"
+      }
+    ],
+    "name": "bangumi-auto-relate-infobox",
+    "description": "帮助 Bangumi 维基人自动关联 infobox 信息",
+    "url": "https://greasyfork.org/scripts/478607-bangumi-auto-relate-infobox",
+    "code_url": "https://update.greasyfork.org/scripts/478607/bangumi-auto-relate-infobox.user.js",
+    "code_size": 12525,
+    "license": "MIT License",
+    "version": "1.2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

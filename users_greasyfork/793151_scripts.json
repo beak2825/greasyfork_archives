@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429304,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-13T12:43:06.000Z",
+    "code_updated_at": "2021-07-13T12:43:06.000Z",
+    "namespace": "https://greasyfork.org/users/793151",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 793151,
+        "name": "MehdiMoi",
+        "created_at": "2021-07-13T12:40:26.000Z",
+        "url": "https://greasyfork.org/users/793151-mehdimoi"
+      }
+    ],
+    "name": "EbayReportHellfest",
+    "description": "Quick report of hellfest ticket on ebay",
+    "url": "https://greasyfork.org/scripts/429304-ebayreporthellfest",
+    "code_url": "https://update.greasyfork.org/scripts/429304/EbayReportHellfest.user.js",
+    "code_size": 6087,
+    "license": null,
+    "version": "0.0.1.20210713124306",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

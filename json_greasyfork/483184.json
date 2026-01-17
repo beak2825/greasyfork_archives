@@ -1,0 +1,33 @@
+{
+  "id": 483184,
+  "daily_installs": 0,
+  "total_installs": 66,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-26T22:58:11.000Z",
+  "code_updated_at": "2023-12-26T22:58:11.000Z",
+  "namespace": "https://twitter.com/griindhouse",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1239606,
+      "name": "Griindhouse",
+      "created_at": "2023-12-26T22:46:03.000Z",
+      "url": "https://greasyfork.org/users/1239606-griindhouse"
+    }
+  ],
+  "name": "nyaa.si anilist search",
+  "description": "Turns the torrent title into a search for the anime on Anilist.",
+  "url": "https://greasyfork.org/scripts/483184-nyaa-si-anilist-search",
+  "code_url": "https://update.greasyfork.org/scripts/483184/nyaasi%20anilist%20search.user.js",
+  "code_size": 1772,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

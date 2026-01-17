@@ -1,0 +1,200 @@
+[
+  {
+    "id": 464181,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-16T20:48:26.000Z",
+    "code_updated_at": "2023-04-16T20:53:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1054981,
+        "name": "tljoshh",
+        "created_at": "2023-04-07T04:37:25.000Z",
+        "url": "https://greasyfork.org/users/1054981-tljoshh"
+      }
+    ],
+    "name": "Foxlinks styled quotes (condensed)",
+    "description": "Format quotes like Foxlinks",
+    "url": "https://greasyfork.org/scripts/464181-foxlinks-styled-quotes-condensed",
+    "code_url": "https://update.greasyfork.org/scripts/464181/Foxlinks%20styled%20quotes%20%28condensed%29.user.js",
+    "code_size": 3593,
+    "license": "MIT License",
+    "version": "0.2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463944,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T01:20:06.000Z",
+    "code_updated_at": "2023-04-14T01:37:02.000Z",
+    "namespace": "https://tljoshh.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1054981,
+        "name": "tljoshh",
+        "created_at": "2023-04-07T04:37:25.000Z",
+        "url": "https://greasyfork.org/users/1054981-tljoshh"
+      }
+    ],
+    "name": "Save unposted text in reply area",
+    "description": "Save unposted text in the reply area before changing pages",
+    "url": "https://greasyfork.org/scripts/463944-save-unposted-text-in-reply-area",
+    "code_url": "https://update.greasyfork.org/scripts/463944/Save%20unposted%20text%20in%20reply%20area.user.js",
+    "code_size": 3803,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463790,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-12T02:04:45.000Z",
+    "code_updated_at": "2023-04-14T01:41:03.000Z",
+    "namespace": "https://tljoshh.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1054981,
+        "name": "tljoshh",
+        "created_at": "2023-04-07T04:37:25.000Z",
+        "url": "https://greasyfork.org/users/1054981-tljoshh"
+      }
+    ],
+    "name": "Auto-embed Imgur links.",
+    "description": "Find Imgur direct links and embed them directly into a post.",
+    "url": "https://greasyfork.org/scripts/463790-auto-embed-imgur-links",
+    "code_url": "https://update.greasyfork.org/scripts/463790/Auto-embed%20Imgur%20links.user.js",
+    "code_size": 3666,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463717,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-11T01:10:15.000Z",
+    "code_updated_at": "2023-05-18T20:41:27.000Z",
+    "namespace": "https://tljoshh.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1054981,
+        "name": "tljoshh",
+        "created_at": "2023-04-07T04:37:25.000Z",
+        "url": "https://greasyfork.org/users/1054981-tljoshh"
+      }
+    ],
+    "name": "Auto-embed Twitter links.",
+    "description": "Find Twitter links and embed them directly into a post.",
+    "url": "https://greasyfork.org/scripts/463717-auto-embed-twitter-links",
+    "code_url": "https://update.greasyfork.org/scripts/463717/Auto-embed%20Twitter%20links.user.js",
+    "code_size": 5089,
+    "license": "MIT License",
+    "version": "0.5.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463635,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-10T02:03:37.000Z",
+    "code_updated_at": "2023-04-11T01:19:45.000Z",
+    "namespace": "https://tljoshh.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1054981,
+        "name": "tljoshh",
+        "created_at": "2023-04-07T04:37:25.000Z",
+        "url": "https://greasyfork.org/users/1054981-tljoshh"
+      }
+    ],
+    "name": "Auto-embed Instagram links.",
+    "description": "Find Instagram links and embed them directly into a post.",
+    "url": "https://greasyfork.org/scripts/463635-auto-embed-instagram-links",
+    "code_url": "https://update.greasyfork.org/scripts/463635/Auto-embed%20Instagram%20links.user.js",
+    "code_size": 3950,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463446,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-07T04:38:44.000Z",
+    "code_updated_at": "2023-05-10T05:10:44.000Z",
+    "namespace": "https://tljoshh.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1054981,
+        "name": "tljoshh",
+        "created_at": "2023-04-07T04:37:25.000Z",
+        "url": "https://greasyfork.org/users/1054981-tljoshh"
+      }
+    ],
+    "name": "Quote specific images in a post.",
+    "description": "Alt + Click on one or more images in a post to quote them.",
+    "url": "https://greasyfork.org/scripts/463446-quote-specific-images-in-a-post",
+    "code_url": "https://update.greasyfork.org/scripts/463446/Quote%20specific%20images%20in%20a%20post.user.js",
+    "code_size": 4830,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

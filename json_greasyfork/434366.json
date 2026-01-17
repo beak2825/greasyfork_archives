@@ -1,0 +1,59 @@
+{
+  "id": 434366,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-24T01:20:08.000Z",
+  "code_updated_at": "2021-10-24T01:20:07.000Z",
+  "namespace": "https://greasyfork.org/users/827970",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 827970,
+      "name": "chev",
+      "created_at": "2021-10-23T09:23:53.000Z",
+      "url": "https://greasyfork.org/users/827970-chev",
+      "scripts": [
+        {
+          "id": 434366,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-24T01:20:08.000Z",
+          "code_updated_at": "2021-10-24T01:20:07.000Z",
+          "namespace": "https://greasyfork.org/users/827970",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "inoagent",
+          "description": "Hide foreign agent banners on popular media websites",
+          "url": "https://greasyfork.org/scripts/434366-inoagent",
+          "code_url": "https://update.greasyfork.org/scripts/434366/inoagent.user.js",
+          "code_size": 1473,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "inoagent",
+  "description": "Hide foreign agent banners on popular media websites",
+  "url": "https://greasyfork.org/scripts/434366-inoagent",
+  "code_url": "https://update.greasyfork.org/scripts/434366/inoagent.user.js",
+  "code_size": 1473,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 465499,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T09:55:36.000Z",
+    "code_updated_at": "2023-05-04T09:55:36.000Z",
+    "namespace": "https://greasyfork.org/users/1070224",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1070224,
+        "name": "Tactical “BAFGA47874”",
+        "created_at": "2023-04-29T17:06:51.000Z",
+        "url": "https://greasyfork.org/users/1070224-tactical-bafga47874"
+      }
+    ],
+    "name": "Synapseli Reverter V2",
+    "description": "This global revert your roblox channel to LIVE",
+    "url": "https://greasyfork.org/scripts/465499-synapseli-reverter-v2",
+    "code_url": "https://update.greasyfork.org/scripts/465499/Synapseli%20Reverter%20V2.user.js",
+    "code_size": 1328,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 465138,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-29T17:10:45.000Z",
+    "code_updated_at": "2023-04-29T17:10:44.000Z",
+    "namespace": "https://greasyfork.org/users/1070224",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1070224,
+        "name": "Tactical “BAFGA47874”",
+        "created_at": "2023-04-29T17:06:51.000Z",
+        "url": "https://greasyfork.org/users/1070224-tactical-bafga47874"
+      }
+    ],
+    "name": "Dogger Reverter",
+    "description": "This will revert roblox channel zwinplayer64 to LIVE for Synapse User or idk",
+    "url": "https://greasyfork.org/scripts/465138-dogger-reverter",
+    "code_url": "https://update.greasyfork.org/scripts/465138/Dogger%20Reverter.user.js",
+    "code_size": 1322,
+    "license": "MIT License",
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

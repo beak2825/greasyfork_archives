@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448362,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-23T10:31:03.000Z",
+    "code_updated_at": "2022-07-23T10:31:03.000Z",
+    "namespace": "https://Alastor.top",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 515186,
+        "name": "UFOAlastor",
+        "created_at": "2020-04-16T03:54:09.000Z",
+        "url": "https://greasyfork.org/users/515186-ufoalastor"
+      }
+    ],
+    "name": "B站/s/页面自动跳转正常页面",
+    "description": "网页搜索有时候会进入www.bilibili.com/s/的无评论区页面，通过这个脚本自动进入去掉/s/类型的正常B站页面",
+    "url": "https://greasyfork.org/scripts/448362-b%E7%AB%99-s-%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E6%AD%A3%E5%B8%B8%E9%A1%B5%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/448362/B%E7%AB%99s%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E6%AD%A3%E5%B8%B8%E9%A1%B5%E9%9D%A2.user.js",
+    "code_size": 656,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

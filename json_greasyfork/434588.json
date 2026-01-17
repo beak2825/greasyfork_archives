@@ -1,0 +1,59 @@
+{
+  "id": 434588,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-28T11:49:31.000Z",
+  "code_updated_at": "2021-11-09T05:16:07.000Z",
+  "namespace": "XiaoIce",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 829621,
+      "name": "Disdjj",
+      "created_at": "2021-10-28T11:43:37.000Z",
+      "url": "https://greasyfork.org/users/829621-disdjj",
+      "scripts": [
+        {
+          "id": 434588,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-28T11:49:31.000Z",
+          "code_updated_at": "2021-11-09T05:16:07.000Z",
+          "namespace": "XiaoIce",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BetterMonitorStatus",
+          "description": "Make /monitor/status text look better for XiaoIce",
+          "url": "https://greasyfork.org/scripts/434588-bettermonitorstatus",
+          "code_url": "https://update.greasyfork.org/scripts/434588/BetterMonitorStatus.user.js",
+          "code_size": 1617,
+          "license": null,
+          "version": "0.1.1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BetterMonitorStatus",
+  "description": "Make /monitor/status text look better for XiaoIce",
+  "url": "https://greasyfork.org/scripts/434588-bettermonitorstatus",
+  "code_url": "https://update.greasyfork.org/scripts/434588/BetterMonitorStatus.user.js",
+  "code_size": 1617,
+  "license": null,
+  "version": "0.1.1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 474490,
+    "daily_installs": 0,
+    "total_installs": 127,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-04T05:31:00.000Z",
+    "code_updated_at": "2023-09-04T05:31:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1155795,
+        "name": "dietrich_wambach",
+        "created_at": "2023-08-20T20:42:11.000Z",
+        "url": "https://greasyfork.org/users/1155795-dietrich-wambach"
+      }
+    ],
+    "name": "Unshort YouTube",
+    "description": "Watch a YouTube Shorts video in the normal YouTube player",
+    "url": "https://greasyfork.org/scripts/474490-unshort-youtube",
+    "code_url": "https://update.greasyfork.org/scripts/474490/Unshort%20YouTube.user.js",
+    "code_size": 1607,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473525,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-20T20:58:32.000Z",
+    "code_updated_at": "2023-08-25T00:48:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1155795,
+        "name": "dietrich_wambach",
+        "created_at": "2023-08-20T20:42:11.000Z",
+        "url": "https://greasyfork.org/users/1155795-dietrich-wambach"
+      }
+    ],
+    "name": "Spoiler Free NBC Athletics",
+    "description": "Remove spoilers for NBC Sports Athletics videos on YouTube",
+    "url": "https://greasyfork.org/scripts/473525-spoiler-free-nbc-athletics",
+    "code_url": "https://update.greasyfork.org/scripts/473525/Spoiler%20Free%20NBC%20Athletics.user.js",
+    "code_size": 4267,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455104,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-19T17:25:33.000Z",
+    "code_updated_at": "2022-11-19T17:25:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 985351,
+        "name": "Jason up",
+        "created_at": "2022-11-19T17:14:37.000Z",
+        "url": "https://greasyfork.org/users/985351-jason-up"
+      }
+    ],
+    "name": "掘金收藏夹辅助 - 搜索",
+    "description": "掘金收藏夹重度用户专用，增加了收藏夹高度，优化输入框样式并支持模糊搜索",
+    "url": "https://greasyfork.org/scripts/455104-%E6%8E%98%E9%87%91%E6%94%B6%E8%97%8F%E5%A4%B9%E8%BE%85%E5%8A%A9-%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/455104/%E6%8E%98%E9%87%91%E6%94%B6%E8%97%8F%E5%A4%B9%E8%BE%85%E5%8A%A9%20-%20%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 1923,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

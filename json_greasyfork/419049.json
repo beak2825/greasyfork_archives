@@ -1,0 +1,33 @@
+{
+  "id": 419049,
+  "daily_installs": 0,
+  "total_installs": 120,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-23T05:40:05.000Z",
+  "code_updated_at": "2021-06-11T20:35:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 697749,
+      "name": "NotCorgan",
+      "created_at": "2020-10-23T20:06:22.000Z",
+      "url": "https://greasyfork.org/users/697749-notcorgan"
+    }
+  ],
+  "name": "Melvor Equipment Menu",
+  "description": "Adds an equipment menu to equipment slots on Combat page and top bar",
+  "url": "https://greasyfork.org/scripts/419049-melvor-equipment-menu",
+  "code_url": "https://update.greasyfork.org/scripts/419049/Melvor%20Equipment%20Menu.user.js",
+  "code_size": 11744,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

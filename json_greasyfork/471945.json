@@ -1,0 +1,33 @@
+{
+  "id": 471945,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-28T17:52:17.000Z",
+  "code_updated_at": "2023-07-28T17:52:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1138236,
+      "name": "Jayden t0mins0n",
+      "created_at": "2023-07-28T17:38:54.000Z",
+      "url": "https://greasyfork.org/users/1138236-jayden-t0mins0n"
+    }
+  ],
+  "name": "Fandm User Rights Changer",
+  "description": "Allows you to change UserRights on Fandm.",
+  "url": "https://greasyfork.org/scripts/471945-fandm-user-rights-changer",
+  "code_url": "https://update.greasyfork.org/scripts/471945/Fandm%20User%20Rights%20Changer.user.js",
+  "code_size": 1041,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

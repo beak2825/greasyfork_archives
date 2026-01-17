@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483734,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-03T02:11:49.000Z",
+    "code_updated_at": "2025-11-09T02:51:11.000Z",
+    "namespace": "https://greasyfork.org/users/1242491",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242491,
+        "name": "h3mul",
+        "created_at": "2024-01-03T02:07:47.000Z",
+        "url": "https://greasyfork.org/users/1242491-h3mul"
+      }
+    ],
+    "name": "Auto Claim Twitch drop",
+    "description": "Auto clicking \"Claim Now\" in the twitch inventory page",
+    "url": "https://greasyfork.org/scripts/483734-auto-claim-twitch-drop",
+    "code_url": "https://update.greasyfork.org/scripts/483734/Auto%20Claim%20Twitch%20drop.user.js",
+    "code_size": 1649,
+    "license": "MIT License",
+    "version": "0.69.700",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

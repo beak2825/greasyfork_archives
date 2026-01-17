@@ -1,0 +1,200 @@
+[
+  {
+    "id": 488430,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-27T12:32:12.000Z",
+    "code_updated_at": "2024-02-27T12:32:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1044039,
+        "name": "HunterQuan",
+        "created_at": "2023-03-18T05:59:27.000Z",
+        "url": "https://greasyfork.org/users/1044039-hunterquan"
+      }
+    ],
+    "name": "2024年寒假教师研修|国家智慧教育公共服务平台|国家中小学智慧教育平台|自动刷视频",
+    "description": "国家智慧教育公共服务平台（国家中小学智慧教育平台）自动刷视频，秒过！",
+    "url": "https://greasyfork.org/scripts/488430-2024%E5%B9%B4%E5%AF%92%E5%81%87%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%AC%E5%85%B1%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0-%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/488430/2024%E5%B9%B4%E5%AF%92%E5%81%87%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%7C%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%AC%E5%85%B1%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%7C%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%7C%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 9341,
+    "license": "MIT License",
+    "version": "2024.02.27",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470034,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-03T09:03:18.000Z",
+    "code_updated_at": "2023-07-03T09:08:32.000Z",
+    "namespace": "挂机刷课",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1044039,
+        "name": "HunterQuan",
+        "created_at": "2023-03-18T05:59:27.000Z",
+        "url": "https://greasyfork.org/users/1044039-hunterquan"
+      }
+    ],
+    "name": "2022年度国培计划“中小学幼儿园骨干教师信息化教学创新能力提升培训”",
+    "description": "进入研修专题，然后选择到你要看课的网址，直接点进去就行，会自动开始刷课和挂机。",
+    "url": "https://greasyfork.org/scripts/470034-2022%E5%B9%B4%E5%BA%A6%E5%9B%BD%E5%9F%B9%E8%AE%A1%E5%88%92-%E4%B8%AD%E5%B0%8F%E5%AD%A6%E5%B9%BC%E5%84%BF%E5%9B%AD%E9%AA%A8%E5%B9%B2%E6%95%99%E5%B8%88%E4%BF%A1%E6%81%AF%E5%8C%96%E6%95%99%E5%AD%A6%E5%88%9B%E6%96%B0%E8%83%BD%E5%8A%9B%E6%8F%90%E5%8D%87%E5%9F%B9%E8%AE%AD",
+    "code_url": "https://update.greasyfork.org/scripts/470034/2022%E5%B9%B4%E5%BA%A6%E5%9B%BD%E5%9F%B9%E8%AE%A1%E5%88%92%E2%80%9C%E4%B8%AD%E5%B0%8F%E5%AD%A6%E5%B9%BC%E5%84%BF%E5%9B%AD%E9%AA%A8%E5%B9%B2%E6%95%99%E5%B8%88%E4%BF%A1%E6%81%AF%E5%8C%96%E6%95%99%E5%AD%A6%E5%88%9B%E6%96%B0%E8%83%BD%E5%8A%9B%E6%8F%90%E5%8D%87%E5%9F%B9%E8%AE%AD%E2%80%9D.user.js",
+    "code_size": 14211,
+    "license": null,
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469301,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-23T14:04:06.000Z",
+    "code_updated_at": "2023-06-23T14:04:05.000Z",
+    "namespace": "代刷vx：shuake345",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1044039,
+        "name": "HunterQuan",
+        "created_at": "2023-03-18T05:59:27.000Z",
+        "url": "https://greasyfork.org/users/1044039-hunterquan"
+      }
+    ],
+    "name": "teacheredu-教师教育网-全员培训",
+    "description": "自动看课程||时间够后自动退||自动切换新课程||————定制代刷vx：shuake345",
+    "url": "https://greasyfork.org/scripts/469301-teacheredu-%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91-%E5%85%A8%E5%91%98%E5%9F%B9%E8%AE%AD",
+    "code_url": "https://update.greasyfork.org/scripts/469301/teacheredu-%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91-%E5%85%A8%E5%91%98%E5%9F%B9%E8%AE%AD.user.js",
+    "code_size": 36889,
+    "license": "hunter",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469300,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-23T14:02:11.000Z",
+    "code_updated_at": "2023-07-14T16:03:34.000Z",
+    "namespace": "挂机刷课",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1044039,
+        "name": "HunterQuan",
+        "created_at": "2023-03-18T05:59:27.000Z",
+        "url": "https://greasyfork.org/users/1044039-hunterquan"
+      }
+    ],
+    "name": "国家智慧教育公共服务平台|国家中小学智慧教育平台|师德研修|自动挂机刷课|自动答题",
+    "description": "进入研修专题，然后选择到你要看课的网址，直接点进去就行，会自动开始刷课和挂机。",
+    "url": "https://greasyfork.org/scripts/469300-%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%AC%E5%85%B1%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0-%E5%B8%88%E5%BE%B7%E7%A0%94%E4%BF%AE-%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA%E5%88%B7%E8%AF%BE-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/469300/%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%AC%E5%85%B1%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%7C%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%7C%E5%B8%88%E5%BE%B7%E7%A0%94%E4%BF%AE%7C%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA%E5%88%B7%E8%AF%BE%7C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98.user.js",
+    "code_size": 27439,
+    "license": "CC BY-NC-SA",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462195,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-20T13:11:30.000Z",
+    "code_updated_at": "2023-03-20T13:12:41.000Z",
+    "namespace": "挂机刷课",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1044039,
+        "name": "HunterQuan",
+        "created_at": "2023-03-18T05:59:27.000Z",
+        "url": "https://greasyfork.org/users/1044039-hunterquan"
+      }
+    ],
+    "name": "国家智慧教育公共服务平台|国家中小学智慧教育平台|教师研修|自动挂机刷课|自动答题|自动16倍速（自用版本，本人非作者）",
+    "description": "进入研修专题，然后选择到你要看课的网址，直接点进去就行，会自动开始刷课和挂机。",
+    "url": "https://greasyfork.org/scripts/462195-%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%AC%E5%85%B1%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0-%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA%E5%88%B7%E8%AF%BE-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E8%87%AA%E5%8A%A816%E5%80%8D%E9%80%9F-%E8%87%AA%E7%94%A8%E7%89%88%E6%9C%AC-%E6%9C%AC%E4%BA%BA%E9%9D%9E%E4%BD%9C%E8%80%85",
+    "code_url": "https://update.greasyfork.org/scripts/462195/%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%AC%E5%85%B1%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%7C%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%7C%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%7C%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA%E5%88%B7%E8%AF%BE%7C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%7C%E8%87%AA%E5%8A%A816%E5%80%8D%E9%80%9F%EF%BC%88%E8%87%AA%E7%94%A8%E7%89%88%E6%9C%AC%EF%BC%8C%E6%9C%AC%E4%BA%BA%E9%9D%9E%E4%BD%9C%E8%80%85%EF%BC%89.user.js",
+    "code_size": 8053,
+    "license": "CC BY-NC-SA",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462194,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-20T13:09:16.000Z",
+    "code_updated_at": "2023-03-20T13:09:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1044039,
+        "name": "HunterQuan",
+        "created_at": "2023-03-18T05:59:27.000Z",
+        "url": "https://greasyfork.org/users/1044039-hunterquan"
+      }
+    ],
+    "name": "不学习何以强国-（自用改编版本，本人非作者，转载自他人）",
+    "description": "问题反馈位置： https://github.com/TechXueXi/techxuexi-js/issues 。读文章,看视频，做习题。",
+    "url": "https://greasyfork.org/scripts/462194-%E4%B8%8D%E5%AD%A6%E4%B9%A0%E4%BD%95%E4%BB%A5%E5%BC%BA%E5%9B%BD-%E8%87%AA%E7%94%A8%E6%94%B9%E7%BC%96%E7%89%88%E6%9C%AC-%E6%9C%AC%E4%BA%BA%E9%9D%9E%E4%BD%9C%E8%80%85-%E8%BD%AC%E8%BD%BD%E8%87%AA%E4%BB%96%E4%BA%BA",
+    "code_url": "https://update.greasyfork.org/scripts/462194/%E4%B8%8D%E5%AD%A6%E4%B9%A0%E4%BD%95%E4%BB%A5%E5%BC%BA%E5%9B%BD-%EF%BC%88%E8%87%AA%E7%94%A8%E6%94%B9%E7%BC%96%E7%89%88%E6%9C%AC%EF%BC%8C%E6%9C%AC%E4%BA%BA%E9%9D%9E%E4%BD%9C%E8%80%85%EF%BC%8C%E8%BD%AC%E8%BD%BD%E8%87%AA%E4%BB%96%E4%BA%BA%EF%BC%89.user.js",
+    "code_size": 52168,
+    "license": null,
+    "version": "20220214",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

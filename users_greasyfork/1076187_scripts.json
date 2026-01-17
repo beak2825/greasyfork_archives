@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465865,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-09T15:37:45.000Z",
+    "code_updated_at": "2023-05-09T15:37:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1076187,
+        "name": "bohwaz",
+        "created_at": "2023-05-09T15:35:14.000Z",
+        "url": "https://greasyfork.org/users/1076187-bohwaz"
+      }
+    ],
+    "name": "Hellobank.fr/BNP Paribas login form: remember username",
+    "description": "Saves your username (number) to localStorage",
+    "url": "https://greasyfork.org/scripts/465865-hellobank-fr-bnp-paribas-login-form-remember-username",
+    "code_url": "https://update.greasyfork.org/scripts/465865/HellobankfrBNP%20Paribas%20login%20form%3A%20remember%20username.user.js",
+    "code_size": 937,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

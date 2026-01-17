@@ -1,0 +1,59 @@
+{
+  "id": 462255,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-21T12:20:14.000Z",
+  "code_updated_at": "2023-03-21T12:20:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 827654,
+      "name": "wish5115",
+      "created_at": "2021-10-22T10:27:15.000Z",
+      "url": "https://greasyfork.org/users/827654-wish5115",
+      "scripts": [
+        {
+          "id": 533009,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-16T10:48:48.000Z",
+          "code_updated_at": "2025-08-03T23:59:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "链滴社区优化",
+          "description": "优化内容：1. 标记打赏用户和黑名单用户；2. 当前窗口打开链接；3.首页标签增加优选、最新回帖、代码片段、创造、新发布、EN等按钮；4.标签、最新、文档列表页显示文档数和分页分割线；5.链滴自动跳转；6. 聊天页面字体大小；7.聊天页面按日期增加分割线和；8.聊天页面右侧按日期增加跳转日期列表",
+          "url": "https://greasyfork.org/scripts/533009-%E9%93%BE%E6%BB%B4%E7%A4%BE%E5%8C%BA%E4%BC%98%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/533009/%E9%93%BE%E6%BB%B4%E7%A4%BE%E5%8C%BA%E4%BC%98%E5%8C%96.user.js",
+          "code_size": 28375,
+          "license": "MIT License",
+          "version": "0.0.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "在线音频编辑器增强插件",
+  "description": "支持c键打开导出片段对话框；x键快速导出片段；增加了菜单”名称“，可以设置导出片段的文件命名",
+  "url": "https://greasyfork.org/scripts/462255-%E5%9C%A8%E7%BA%BF%E9%9F%B3%E9%A2%91%E7%BC%96%E8%BE%91%E5%99%A8%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/462255/%E5%9C%A8%E7%BA%BF%E9%9F%B3%E9%A2%91%E7%BC%96%E8%BE%91%E5%99%A8%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 2360,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

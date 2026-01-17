@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433208,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-30T08:01:42.000Z",
+    "code_updated_at": "2021-09-30T08:11:30.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 820468,
+        "name": "ltybenet",
+        "created_at": "2021-09-30T07:57:45.000Z",
+        "url": "https://greasyfork.org/users/820468-ltybenet"
+      }
+    ],
+    "name": "阅读悦小说,在线收听,自动下一页",
+    "description": "2021-09-30 16:09:45",
+    "url": "https://greasyfork.org/scripts/433208-%E9%98%85%E8%AF%BB%E6%82%A6%E5%B0%8F%E8%AF%B4-%E5%9C%A8%E7%BA%BF%E6%94%B6%E5%90%AC-%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/433208/%E9%98%85%E8%AF%BB%E6%82%A6%E5%B0%8F%E8%AF%B4%2C%E5%9C%A8%E7%BA%BF%E6%94%B6%E5%90%AC%2C%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E9%A1%B5.user.js",
+    "code_size": 2574,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

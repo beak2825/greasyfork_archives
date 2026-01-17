@@ -1,0 +1,33 @@
+{
+  "id": 493799,
+  "daily_installs": 4,
+  "total_installs": 5959,
+  "fan_score": "30.0",
+  "good_ratings": 4,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2024-04-29T21:46:21.000Z",
+  "code_updated_at": "2025-06-01T11:10:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1065804,
+      "name": "Cqmbo__",
+      "created_at": "2023-04-22T22:32:18.000Z",
+      "url": "https://greasyfork.org/users/1065804-cqmbo"
+    }
+  ],
+  "name": "Kirka gun fire rate increase toggleable, Speed hack, Fast Reload, AutoDodge, AutoJump, & AutoSwitch.",
+  "description": "Click X/x to toggle fire rate, B/b to toggle AutoDodge, K/k to toggle AutoWalk, G/g to toggle AutoJump, N/n to toggle KillAura/AutoShoot, L/l to toggle AutoCrouch, M/m to toggle AutoSwitch",
+  "url": "https://greasyfork.org/scripts/493799-kirka-gun-fire-rate-increase-toggleable-speed-hack-fast-reload-autododge-autojump-autoswitch",
+  "code_url": "https://update.greasyfork.org/scripts/493799/Kirka%20gun%20fire%20rate%20increase%20toggleable%2C%20Speed%20hack%2C%20Fast%20Reload%2C%20AutoDodge%2C%20AutoJump%2C%20%20AutoSwitch.user.js",
+  "code_size": 17458,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

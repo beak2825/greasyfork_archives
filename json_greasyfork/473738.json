@@ -1,0 +1,34 @@
+{
+  "id": 473738,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-23T09:54:46.000Z",
+  "code_updated_at": "2023-11-05T10:01:23.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1153709,
+      "name": "Maxim_Bryanskiy",
+      "created_at": "2023-08-17T18:09:07.000Z",
+      "url": "https://greasyfork.org/users/1153709-maxim-bryanskiy",
+      "scripts": []
+    }
+  ],
+  "name": "Moscow | Скрипт для Кураторов Форума \"Жалобы\" [by Maxim_Bryanskiy]",
+  "description": "По вопросам(ВК): https://vk.com/maximdashunin",
+  "url": "https://greasyfork.org/scripts/473738-moscow-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D0%B6%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-by-maxim-bryanskiy",
+  "code_url": "https://update.greasyfork.org/scripts/473738/Moscow%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%22%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B%22%20%5Bby%20Maxim_Bryanskiy%5D.user.js",
+  "code_size": 88387,
+  "license": "MIT License",
+  "version": "7.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

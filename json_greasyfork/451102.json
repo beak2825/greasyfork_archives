@@ -1,0 +1,34 @@
+{
+  "id": 451102,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-10T16:05:05.000Z",
+  "code_updated_at": "2022-09-10T16:05:05.000Z",
+  "namespace": "incelerated",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 780429,
+      "name": "incelerated",
+      "created_at": "2021-06-06T13:57:53.000Z",
+      "url": "https://greasyfork.org/users/780429-incelerated",
+      "scripts": []
+    }
+  ],
+  "name": "Emoji button in main menu",
+  "description": "Puts the emoji button in the main buttons instead of in the 3 dot sub-menu",
+  "url": "https://greasyfork.org/scripts/451102-emoji-button-in-main-menu",
+  "code_url": "https://update.greasyfork.org/scripts/451102/Emoji%20button%20in%20main%20menu.user.js",
+  "code_size": 874,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482326,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-15T19:38:55.000Z",
+    "code_updated_at": "2023-12-15T19:38:55.000Z",
+    "namespace": "https://re146.dev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1234454,
+        "name": "Kopie",
+        "created_at": "2023-12-15T19:37:06.000Z",
+        "url": "https://greasyfork.org/users/1234454-kopie"
+      }
+    ],
+    "name": "Factorio Free Mods Downloader 2",
+    "description": "Changes all the links for download on https://mods.factorio.com/ if you haven't authorized",
+    "url": "https://greasyfork.org/scripts/482326-factorio-free-mods-downloader-2",
+    "code_url": "https://update.greasyfork.org/scripts/482326/Factorio%20Free%20Mods%20Downloader%202.user.js",
+    "code_size": 1176,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

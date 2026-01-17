@@ -1,0 +1,34 @@
+{
+  "id": 485777,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-27T01:04:40.000Z",
+  "code_updated_at": "2024-02-20T00:42:56.000Z",
+  "namespace": "https://greasyfork.org/users/926687",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 926687,
+      "name": "M4tr1x",
+      "created_at": "2022-06-17T21:51:56.000Z",
+      "url": "https://greasyfork.org/users/926687-m4tr1x",
+      "scripts": []
+    }
+  ],
+  "name": "Starblast Client",
+  "description": "All rights reserved, this code may not be reproduced or used in any way without the express written consent of the author.",
+  "url": "https://greasyfork.org/scripts/485777-starblast-client",
+  "code_url": "https://update.greasyfork.org/scripts/485777/Starblast%20Client.user.js",
+  "code_size": 1969,
+  "license": "May not reproduce code in any way without explicit permission from the author.",
+  "version": "4.1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

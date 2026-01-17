@@ -1,0 +1,33 @@
+{
+  "id": 447614,
+  "daily_installs": 1,
+  "total_installs": 620,
+  "fan_score": "13.9",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 3,
+  "created_at": "2022-07-08T20:17:02.000Z",
+  "code_updated_at": "2024-03-21T23:06:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 933798,
+      "name": "xX_LegendCraftd_Xx",
+      "created_at": "2022-07-08T19:58:32.000Z",
+      "url": "https://greasyfork.org/users/933798-xx-legendcraftd-xx"
+    }
+  ],
+  "name": "Youtube - hide \"Download, Clip and Thanks (including Promote)\" buttons",
+  "description": "Hides \"Download\", \"Clip\", \"Thanks\" and \"Promote\" buttons on video. (special thanks to aubymori for the old version of the script)",
+  "url": "https://greasyfork.org/scripts/447614-youtube-hide-download-clip-and-thanks-including-promote-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/447614/Youtube%20-%20hide%20%22Download%2C%20Clip%20and%20Thanks%20%28including%20Promote%29%22%20buttons.user.js",
+  "code_size": 1712,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

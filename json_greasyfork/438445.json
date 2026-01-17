@@ -1,0 +1,59 @@
+{
+  "id": 438445,
+  "daily_installs": 0,
+  "total_installs": 100,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-13T01:55:51.000Z",
+  "code_updated_at": "2022-01-23T01:11:12.000Z",
+  "namespace": "indefined",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 286460,
+      "name": "whsdaks",
+      "created_at": "2019-03-26T03:34:07.000Z",
+      "url": "https://greasyfork.org/users/286460-whsdaks",
+      "scripts": [
+        {
+          "id": 438445,
+          "daily_installs": 0,
+          "total_installs": 100,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-13T01:55:51.000Z",
+          "code_updated_at": "2022-01-23T01:11:12.000Z",
+          "namespace": "indefined",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili网页端每天自动打开一次直播间",
+          "description": "每天自动打开一次直播间（配合直播挂机助手使用）",
+          "url": "https://greasyfork.org/scripts/438445-bilibili%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%AF%8F%E5%A4%A9%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E4%B8%80%E6%AC%A1%E7%9B%B4%E6%92%AD%E9%97%B4",
+          "code_url": "https://update.greasyfork.org/scripts/438445/bilibili%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%AF%8F%E5%A4%A9%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E4%B8%80%E6%AC%A1%E7%9B%B4%E6%92%AD%E9%97%B4.user.js",
+          "code_size": 3045,
+          "license": "MIT License",
+          "version": "0.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili网页端每天自动打开一次直播间",
+  "description": "每天自动打开一次直播间（配合直播挂机助手使用）",
+  "url": "https://greasyfork.org/scripts/438445-bilibili%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%AF%8F%E5%A4%A9%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E4%B8%80%E6%AC%A1%E7%9B%B4%E6%92%AD%E9%97%B4",
+  "code_url": "https://update.greasyfork.org/scripts/438445/bilibili%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%AF%8F%E5%A4%A9%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E4%B8%80%E6%AC%A1%E7%9B%B4%E6%92%AD%E9%97%B4.user.js",
+  "code_size": 3045,
+  "license": "MIT License",
+  "version": "0.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

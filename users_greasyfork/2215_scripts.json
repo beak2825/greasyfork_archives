@@ -1,0 +1,134 @@
+[
+  {
+    "id": 450228,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-26T13:25:20.000Z",
+    "code_updated_at": "2022-09-27T09:36:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2215,
+        "name": "Kempeth",
+        "created_at": "2014-05-26T12:05:32.000Z",
+        "url": "https://greasyfork.org/users/2215-kempeth"
+      }
+    ],
+    "name": "Board Game Geek - One page auction geeklists",
+    "description": "Loads all geeklist items into a single view simmilar to Peyo61's external tool.",
+    "url": "https://greasyfork.org/scripts/450228-board-game-geek-one-page-auction-geeklists",
+    "code_url": "https://update.greasyfork.org/scripts/450228/Board%20Game%20Geek%20-%20One%20page%20auction%20geeklists.user.js",
+    "code_size": 38952,
+    "license": "MIT License",
+    "version": "0.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433596,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-08T14:15:06.000Z",
+    "code_updated_at": "2021-10-08T14:15:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2215,
+        "name": "Kempeth",
+        "created_at": "2014-05-26T12:05:32.000Z",
+        "url": "https://greasyfork.org/users/2215-kempeth"
+      }
+    ],
+    "name": "BGG Preview Upgrade",
+    "description": "improves the BGG Previews, particularly for printing",
+    "url": "https://greasyfork.org/scripts/433596-bgg-preview-upgrade",
+    "code_url": "https://update.greasyfork.org/scripts/433596/BGG%20Preview%20Upgrade.user.js",
+    "code_size": 1659,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425576,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-26T11:06:10.000Z",
+    "code_updated_at": "2021-04-27T07:51:02.000Z",
+    "namespace": "damasch.ch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2215,
+        "name": "Kempeth",
+        "created_at": "2014-05-26T12:05:32.000Z",
+        "url": "https://greasyfork.org/users/2215-kempeth"
+      }
+    ],
+    "name": "Geek Plus",
+    "description": "A growing collection of usability enhancements for BoardGameGeek",
+    "url": "https://greasyfork.org/scripts/425576-geek-plus",
+    "code_url": "https://update.greasyfork.org/scripts/425576/Geek%20Plus.user.js",
+    "code_size": 6520,
+    "license": null,
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424031,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-26T20:50:26.000Z",
+    "code_updated_at": "2021-07-23T11:31:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2215,
+        "name": "Kempeth",
+        "created_at": "2014-05-26T12:05:32.000Z",
+        "url": "https://greasyfork.org/users/2215-kempeth"
+      }
+    ],
+    "name": "BGG Trade Manager",
+    "description": "Modifies the collection view on Board Game Geek to conveniently project shipping costs. Important note: for this script to run you must filter your collection for game with the \"For Trade\" flag, include the columns \"private information\" and \"title\" and then follow the permalink to that view.",
+    "url": "https://greasyfork.org/scripts/424031-bgg-trade-manager",
+    "code_url": "https://update.greasyfork.org/scripts/424031/BGG%20Trade%20Manager.user.js",
+    "code_size": 29306,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

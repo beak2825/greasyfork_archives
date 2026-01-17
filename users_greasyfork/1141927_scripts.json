@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472239,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-02T09:43:51.000Z",
+    "code_updated_at": "2023-08-02T09:43:51.000Z",
+    "namespace": "https://greasyfork.org/users/1141927",
+    "support_url": "https://github.com/Moeyua/jira-helper",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1141927,
+        "name": "Moeyua",
+        "created_at": "2023-08-02T09:18:52.000Z",
+        "url": "https://greasyfork.org/users/1141927-moeyua"
+      }
+    ],
+    "name": "Jira Helper",
+    "description": "Enhance the functionality of the Jira issue tracking system.",
+    "url": "https://greasyfork.org/scripts/472239-jira-helper",
+    "code_url": "https://update.greasyfork.org/scripts/472239/Jira%20Helper.user.js",
+    "code_size": 5514,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

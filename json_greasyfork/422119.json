@@ -1,0 +1,33 @@
+{
+  "id": 422119,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-21T23:59:43.000Z",
+  "code_updated_at": "2021-03-05T09:09:22.000Z",
+  "namespace": "InGame",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 6386,
+      "name": "SirBaconTheWizard",
+      "created_at": "2014-10-28T10:39:00.000Z",
+      "url": "https://greasyfork.org/users/6386-sirbaconthewizard"
+    }
+  ],
+  "name": "SkinBuildings",
+  "description": "Change le skin des batiments dans DC.",
+  "url": "https://greasyfork.org/scripts/422119-skinbuildings",
+  "code_url": "https://update.greasyfork.org/scripts/422119/SkinBuildings.user.js",
+  "code_size": 4212,
+  "license": "DBAD - https://raw.githubusercontent.com/philsturgeon/dbad/master/translations/LICENSE-fr.md",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

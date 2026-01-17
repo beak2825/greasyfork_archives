@@ -1,0 +1,59 @@
+{
+  "id": 442544,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-02T09:57:21.000Z",
+  "code_updated_at": "2022-04-03T04:12:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896586,
+      "name": "猫猫没人要",
+      "created_at": "2022-04-02T09:49:20.000Z",
+      "url": "https://greasyfork.org/users/896586-%E7%8C%AB%E7%8C%AB%E6%B2%A1%E4%BA%BA%E8%A6%81",
+      "scripts": [
+        {
+          "id": 442544,
+          "daily_installs": 0,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-02T09:57:21.000Z",
+          "code_updated_at": "2022-04-03T04:12:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "河职校园网自动登录",
+          "description": "一定要先配置再使用!!",
+          "url": "https://greasyfork.org/scripts/442544-%E6%B2%B3%E8%81%8C%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+          "code_url": "https://update.greasyfork.org/scripts/442544/%E6%B2%B3%E8%81%8C%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+          "code_size": 1011,
+          "license": "Cat",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "河职校园网自动登录",
+  "description": "一定要先配置再使用!!",
+  "url": "https://greasyfork.org/scripts/442544-%E6%B2%B3%E8%81%8C%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/442544/%E6%B2%B3%E8%81%8C%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 1011,
+  "license": "Cat",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 452728,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-09T08:03:52.000Z",
+    "code_updated_at": "2022-10-09T08:03:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858137,
+        "name": "Xecuss",
+        "created_at": "2021-12-27T10:20:19.000Z",
+        "url": "https://greasyfork.org/users/858137-xecuss"
+      }
+    ],
+    "name": "BOF Stat",
+    "description": "在BOF详情页显示投票的地区详情表格",
+    "url": "https://greasyfork.org/scripts/452728-bof-stat",
+    "code_url": "https://update.greasyfork.org/scripts/452728/BOF%20Stat.user.js",
+    "code_size": 7424,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437644,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-27T10:22:35.000Z",
+    "code_updated_at": "2021-12-28T08:47:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858137,
+        "name": "Xecuss",
+        "created_at": "2021-12-27T10:20:19.000Z",
+        "url": "https://greasyfork.org/users/858137-xecuss"
+      }
+    ],
+    "name": "BOF Stat",
+    "description": "在BOF详情页显示投票的地区详情表格",
+    "url": "https://greasyfork.org/scripts/437644-bof-stat",
+    "code_url": "https://update.greasyfork.org/scripts/437644/BOF%20Stat.user.js",
+    "code_size": 7426,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

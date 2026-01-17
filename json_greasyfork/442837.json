@@ -1,0 +1,33 @@
+{
+  "id": 442837,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-06T02:41:13.000Z",
+  "code_updated_at": "2023-08-14T15:06:21.000Z",
+  "namespace": "https://www.nintendolife.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 819916,
+      "name": "xdpirate",
+      "created_at": "2021-09-28T15:32:38.000Z",
+      "url": "https://greasyfork.org/users/819916-xdpirate"
+    }
+  ],
+  "name": "Hookshot Anonymizer",
+  "description": "Anonymize all commenters on Hookshot Media",
+  "url": "https://greasyfork.org/scripts/442837-hookshot-anonymizer",
+  "code_url": "https://update.greasyfork.org/scripts/442837/Hookshot%20Anonymizer.user.js",
+  "code_size": 14258,
+  "license": "GPLv3",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

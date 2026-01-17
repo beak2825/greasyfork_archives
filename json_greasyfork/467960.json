@@ -1,0 +1,33 @@
+{
+  "id": 467960,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-05T08:27:07.000Z",
+  "code_updated_at": "2023-06-05T08:27:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1091391,
+      "name": "tomiolah",
+      "created_at": "2023-06-05T08:13:43.000Z",
+      "url": "https://greasyfork.org/users/1091391-tomiolah"
+    }
+  ],
+  "name": "Songpraise 'Copy for ProPresenter' button",
+  "description": "A userscript that adds a 'Copy for ProPresenter' button to Songpraise - it adds 2 buttons: one for copying and another for re-adding the copy button if something goes wrong (fixed position on the page)",
+  "url": "https://greasyfork.org/scripts/467960-songpraise-copy-for-propresenter-button",
+  "code_url": "https://update.greasyfork.org/scripts/467960/Songpraise%20%27Copy%20for%20ProPresenter%27%20button.user.js",
+  "code_size": 3410,
+  "license": "GNU GPLv3",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

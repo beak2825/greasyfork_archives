@@ -1,0 +1,59 @@
+{
+  "id": 426140,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-08T05:45:03.000Z",
+  "code_updated_at": "2021-05-08T07:31:57.000Z",
+  "namespace": "medivh",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 769768,
+      "name": "crazyonebyone",
+      "created_at": "2021-05-08T05:42:56.000Z",
+      "url": "https://greasyfork.org/users/769768-crazyonebyone",
+      "scripts": [
+        {
+          "id": 426140,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-05-08T05:45:03.000Z",
+          "code_updated_at": "2021-05-08T07:31:57.000Z",
+          "namespace": "medivh",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "小程序体验码生成",
+          "description": "使用pageId生成对应的小程序体验码",
+          "url": "https://greasyfork.org/scripts/426140-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%BD%93%E9%AA%8C%E7%A0%81%E7%94%9F%E6%88%90",
+          "code_url": "https://update.greasyfork.org/scripts/426140/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%BD%93%E9%AA%8C%E7%A0%81%E7%94%9F%E6%88%90.user.js",
+          "code_size": 2769,
+          "license": null,
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "小程序体验码生成",
+  "description": "使用pageId生成对应的小程序体验码",
+  "url": "https://greasyfork.org/scripts/426140-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%BD%93%E9%AA%8C%E7%A0%81%E7%94%9F%E6%88%90",
+  "code_url": "https://update.greasyfork.org/scripts/426140/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%BD%93%E9%AA%8C%E7%A0%81%E7%94%9F%E6%88%90.user.js",
+  "code_size": 2769,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

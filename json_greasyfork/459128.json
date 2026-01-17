@@ -1,0 +1,33 @@
+{
+  "id": 459128,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-30T12:20:28.000Z",
+  "code_updated_at": "2023-01-30T12:22:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1018952,
+      "name": "17vali",
+      "created_at": "2023-01-30T12:17:07.000Z",
+      "url": "https://greasyfork.org/users/1018952-17vali"
+    }
+  ],
+  "name": "IITD Moodle Login Captcha AutoComplete",
+  "description": "AutoCompletes the IITD Moodle Login Captcha",
+  "url": "https://greasyfork.org/scripts/459128-iitd-moodle-login-captcha-autocomplete",
+  "code_url": "https://update.greasyfork.org/scripts/459128/IITD%20Moodle%20Login%20Captcha%20AutoComplete.user.js",
+  "code_size": 1030,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

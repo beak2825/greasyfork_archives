@@ -1,0 +1,34 @@
+{
+  "id": 478019,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-22T18:47:06.000Z",
+  "code_updated_at": "2025-05-26T18:35:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 35147,
+      "name": "LynXHimself",
+      "created_at": "2016-03-25T14:05:49.000Z",
+      "url": "https://greasyfork.org/users/35147-lynxhimself",
+      "scripts": []
+    }
+  ],
+  "name": "Date Extractor and Overlay",
+  "description": "Extract data from Emploi Public Backoffice and show it in overlay",
+  "url": "https://greasyfork.org/scripts/478019-date-extractor-and-overlay",
+  "code_url": "https://update.greasyfork.org/scripts/478019/Date%20Extractor%20and%20Overlay.user.js",
+  "code_size": 4781,
+  "license": null,
+  "version": "1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

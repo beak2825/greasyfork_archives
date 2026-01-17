@@ -691,5 +691,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 490677,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-23T17:34:45.000Z",
+    "code_updated_at": "2026-01-06T18:27:51.000Z",
+    "namespace": "https://greasyfork.org/users/788550",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 788550,
+        "name": "Cyrano68",
+        "created_at": "2021-06-29T08:52:54.000Z",
+        "url": "https://greasyfork.org/users/788550-cyrano68"
+      }
+    ],
+    "name": "MyMovies.it: Hide Annoying popups (the anti-adblock popup and others)",
+    "description": "This script hides the annoying popups (the anti-adblock popup and others) that are shown in the web page.",
+    "url": "https://greasyfork.org/scripts/490677-mymovies-it-hide-annoying-popups-the-anti-adblock-popup-and-others",
+    "code_url": "https://update.greasyfork.org/scripts/490677/MyMoviesit%3A%20Hide%20Annoying%20popups%20%28the%20anti-adblock%20popup%20and%20others%29.user.js",
+    "code_size": 2274,
+    "license": "MIT License",
+    "version": "1.2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 490674,
+    "daily_installs": 0,
+    "total_installs": 78,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-23T17:09:54.000Z",
+    "code_updated_at": "2026-01-06T21:38:39.000Z",
+    "namespace": "https://greasyfork.org/users/788550",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 788550,
+        "name": "Cyrano68",
+        "created_at": "2021-06-29T08:52:54.000Z",
+        "url": "https://greasyfork.org/users/788550-cyrano68"
+      }
+    ],
+    "name": "Repubblica.it: Hide Annoying popups (the anti-adblock popup and others)",
+    "description": "This script hides the annoying popups (the anti-adblock popup and others) that are shown in the web page.",
+    "url": "https://greasyfork.org/scripts/490674-repubblica-it-hide-annoying-popups-the-anti-adblock-popup-and-others",
+    "code_url": "https://update.greasyfork.org/scripts/490674/Repubblicait%3A%20Hide%20Annoying%20popups%20%28the%20anti-adblock%20popup%20and%20others%29.user.js",
+    "code_size": 2585,
+    "license": "MIT License",
+    "version": "1.2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 450050,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-23T20:03:28.000Z",
+    "code_updated_at": "2026-01-06T18:29:43.000Z",
+    "namespace": "https://greasyfork.org/users/788550",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 788550,
+        "name": "Cyrano68",
+        "created_at": "2021-06-29T08:52:54.000Z",
+        "url": "https://greasyfork.org/users/788550-cyrano68"
+      }
+    ],
+    "name": "Repubblica.it: Hide the \"ExitIntent\" popup",
+    "description": "This script hides the \"ExitIntent\" popup that sometimes is shown when you want to exit from the current page of the site.",
+    "url": "https://greasyfork.org/scripts/450050-repubblica-it-hide-the-exitintent-popup",
+    "code_url": "https://update.greasyfork.org/scripts/450050/Repubblicait%3A%20Hide%20the%20%22ExitIntent%22%20popup.user.js",
+    "code_size": 4759,
+    "license": "MIT License",
+    "version": "1.1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429518,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-17T11:29:08.000Z",
+    "code_updated_at": "2026-01-08T19:58:38.000Z",
+    "namespace": "https://greasyfork.org/users/788550",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 788550,
+        "name": "Cyrano68",
+        "created_at": "2021-06-29T08:52:54.000Z",
+        "url": "https://greasyfork.org/users/788550-cyrano68"
+      }
+    ],
+    "name": "FinecoBank.com MyCards: Show only the credit card transactions",
+    "description": "This script adds a button in the page \"My Cards\" of FinecoBank.com that allows to show the list (and the total amount) of the only credit card transactions.",
+    "url": "https://greasyfork.org/scripts/429518-finecobank-com-mycards-show-only-the-credit-card-transactions",
+    "code_url": "https://update.greasyfork.org/scripts/429518/FinecoBankcom%20MyCards%3A%20Show%20only%20the%20credit%20card%20transactions.user.js",
+    "code_size": 14677,
+    "license": "MIT License",
+    "version": "1.3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

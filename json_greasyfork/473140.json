@@ -1,0 +1,59 @@
+{
+  "id": 473140,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-15T20:04:27.000Z",
+  "code_updated_at": "2023-08-15T20:04:26.000Z",
+  "namespace": "https://github.com/Voxalice/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1152250,
+      "name": "Voxalice",
+      "created_at": "2023-08-15T19:58:19.000Z",
+      "url": "https://greasyfork.org/users/1152250-voxalice",
+      "scripts": [
+        {
+          "id": 473140,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-15T20:04:27.000Z",
+          "code_updated_at": "2023-08-15T20:04:26.000Z",
+          "namespace": "https://github.com/Voxalice/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Genius - Bring Back Old Song Page",
+          "description": "Redirects to old song page",
+          "url": "https://greasyfork.org/scripts/473140-genius-bring-back-old-song-page",
+          "code_url": "https://update.greasyfork.org/scripts/473140/Genius%20-%20Bring%20Back%20Old%20Song%20Page.user.js",
+          "code_size": 486,
+          "license": "MIT License",
+          "version": "3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Genius - Bring Back Old Song Page",
+  "description": "Redirects to old song page",
+  "url": "https://greasyfork.org/scripts/473140-genius-bring-back-old-song-page",
+  "code_url": "https://update.greasyfork.org/scripts/473140/Genius%20-%20Bring%20Back%20Old%20Song%20Page.user.js",
+  "code_size": 486,
+  "license": "MIT License",
+  "version": "3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

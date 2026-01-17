@@ -1,0 +1,59 @@
+{
+  "id": 475049,
+  "daily_installs": 0,
+  "total_installs": 172,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-11T18:04:43.000Z",
+  "code_updated_at": "2024-01-24T18:40:49.000Z",
+  "namespace": "a",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1048618,
+      "name": "Bela Gaertner",
+      "created_at": "2023-03-26T18:24:31.000Z",
+      "url": "https://greasyfork.org/users/1048618-bela-gaertner",
+      "scripts": [
+        {
+          "id": 475049,
+          "daily_installs": 0,
+          "total_installs": 172,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-11T18:04:43.000Z",
+          "code_updated_at": "2024-01-24T18:40:49.000Z",
+          "namespace": "a",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MooMoo.io Grey Rain UI",
+          "description": "A script that changes some UI-related things",
+          "url": "https://greasyfork.org/scripts/475049-moomoo-io-grey-rain-ui",
+          "code_url": "https://update.greasyfork.org/scripts/475049/MooMooio%20Grey%20Rain%20UI.user.js",
+          "code_size": 8775,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MooMoo.io Grey Rain UI",
+  "description": "A script that changes some UI-related things",
+  "url": "https://greasyfork.org/scripts/475049-moomoo-io-grey-rain-ui",
+  "code_url": "https://update.greasyfork.org/scripts/475049/MooMooio%20Grey%20Rain%20UI.user.js",
+  "code_size": 8775,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

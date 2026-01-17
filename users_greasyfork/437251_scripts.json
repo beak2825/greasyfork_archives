@@ -1,0 +1,68 @@
+[
+  {
+    "id": 478885,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-02T18:51:13.000Z",
+    "code_updated_at": "2023-12-19T17:52:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 437251,
+        "name": "cgmora12",
+        "created_at": "2020-01-21T09:16:14.000Z",
+        "url": "https://greasyfork.org/users/437251-cgmora12"
+      }
+    ],
+    "name": "WAFRA4WikiTravel",
+    "description": "Web Augmentation Framework for Accessibility (WAFRA) for WikiTravel",
+    "url": "https://greasyfork.org/scripts/478885-wafra4wikitravel",
+    "code_url": "https://update.greasyfork.org/scripts/478885/WAFRA4WikiTravel.user.js",
+    "code_size": 175246,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419908,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-08T20:46:21.000Z",
+    "code_updated_at": "2021-05-19T14:20:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 437251,
+        "name": "cgmora12",
+        "created_at": "2020-01-21T09:16:14.000Z",
+        "url": "https://greasyfork.org/users/437251-cgmora12"
+      }
+    ],
+    "name": "WAFRA4OD",
+    "description": "WAFRA for Open Data (WAFRA4OD)",
+    "url": "https://greasyfork.org/scripts/419908-wafra4od",
+    "code_url": "https://update.greasyfork.org/scripts/419908/WAFRA4OD.user.js",
+    "code_size": 146862,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

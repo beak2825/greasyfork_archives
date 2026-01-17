@@ -1,0 +1,34 @@
+{
+  "id": 467209,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-27T07:16:48.000Z",
+  "code_updated_at": "2023-05-27T07:26:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1085467,
+      "name": "Hdhd Shshd",
+      "created_at": "2023-05-27T07:11:28.000Z",
+      "url": "https://greasyfork.org/users/1085467-hdhd-shshd",
+      "scripts": []
+    }
+  ],
+  "name": "manga all img on 1 page",
+  "description": "This script was written for the user to be able to scroll through the images on the site without switching when you click on them.",
+  "url": "https://greasyfork.org/scripts/467209-manga-all-img-on-1-page",
+  "code_url": "https://update.greasyfork.org/scripts/467209/manga%20all%20img%20on%201%20page.user.js",
+  "code_size": 1954,
+  "license": "MIT License",
+  "version": "0.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

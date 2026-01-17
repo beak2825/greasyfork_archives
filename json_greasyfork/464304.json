@@ -1,0 +1,59 @@
+{
+  "id": 464304,
+  "daily_installs": 0,
+  "total_installs": 48,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-04-18T12:16:22.000Z",
+  "code_updated_at": "2023-04-18T12:16:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1062679,
+      "name": "Lotus L",
+      "created_at": "2023-04-18T12:13:13.000Z",
+      "url": "https://greasyfork.org/users/1062679-lotus-l",
+      "scripts": [
+        {
+          "id": 464304,
+          "daily_installs": 0,
+          "total_installs": 48,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-04-18T12:16:22.000Z",
+          "code_updated_at": "2023-04-18T12:16:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Quora make blur images clear",
+          "description": "Remove the filter attribute from images with the q-box class",
+          "url": "https://greasyfork.org/scripts/464304-quora-make-blur-images-clear",
+          "code_url": "https://update.greasyfork.org/scripts/464304/Quora%20make%20blur%20images%20clear.user.js",
+          "code_size": 2104,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Quora make blur images clear",
+  "description": "Remove the filter attribute from images with the q-box class",
+  "url": "https://greasyfork.org/scripts/464304-quora-make-blur-images-clear",
+  "code_url": "https://update.greasyfork.org/scripts/464304/Quora%20make%20blur%20images%20clear.user.js",
+  "code_size": 2104,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

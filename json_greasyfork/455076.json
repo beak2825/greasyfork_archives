@@ -1,0 +1,34 @@
+{
+  "id": 455076,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-19T05:29:50.000Z",
+  "code_updated_at": "2023-02-11T06:55:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 473672,
+      "name": "hello w",
+      "created_at": "2020-04-02T11:45:27.000Z",
+      "url": "https://greasyfork.org/users/473672-hello-w",
+      "scripts": []
+    }
+  ],
+  "name": "华医网带答案版",
+  "description": "2023华医公需课自动听课和自动考试脚本.华医的其它课程可以自动听课，但没有自动考试.",
+  "url": "https://greasyfork.org/scripts/455076-%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%B8%A6%E7%AD%94%E6%A1%88%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/455076/%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%B8%A6%E7%AD%94%E6%A1%88%E7%89%88.user.js",
+  "code_size": 25111,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

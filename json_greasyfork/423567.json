@@ -1,0 +1,33 @@
+{
+  "id": 423567,
+  "daily_installs": 0,
+  "total_installs": 148,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-19T11:50:17.000Z",
+  "code_updated_at": "2021-03-19T11:50:17.000Z",
+  "namespace": "https://github.com/SeansThings/LastFM-Faded",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 749153,
+      "name": "Revenant",
+      "created_at": "2021-03-19T11:44:17.000Z",
+      "url": "https://greasyfork.org/users/749153-revenant"
+    }
+  ],
+  "name": "Last.fm Faded",
+  "description": "Custom Last.fm theme",
+  "url": "https://greasyfork.org/scripts/423567-last-fm-faded",
+  "code_url": "https://update.greasyfork.org/scripts/423567/Lastfm%20Faded.user.css",
+  "code_size": 105605,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

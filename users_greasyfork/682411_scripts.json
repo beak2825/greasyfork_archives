@@ -30,6 +30,138 @@
     "version": "2.5.7",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451607,
+    "daily_installs": 0,
+    "total_installs": 2106,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-19T02:33:39.000Z",
+    "code_updated_at": "2025-04-22T02:54:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682411,
+        "name": "ooorz",
+        "created_at": "2020-08-25T00:22:59.000Z",
+        "url": "https://greasyfork.org/users/682411-ooorz"
+      }
+    ],
+    "name": "jstris+",
+    "description": "3rd party matchmaking, custom skins/sfx/gfx, and many more improvements to jstris!",
+    "url": "https://greasyfork.org/scripts/451607-jstris",
+    "code_url": "https://update.greasyfork.org/scripts/451607/jstris%2B.user.js",
+    "code_size": 269231,
+    "license": null,
+    "version": "2.5.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 442161,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-26T17:57:46.000Z",
+    "code_updated_at": "2022-03-26T17:57:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682411,
+        "name": "ooorz",
+        "created_at": "2020-08-25T00:22:59.000Z",
+        "url": "https://greasyfork.org/users/682411-ooorz"
+      }
+    ],
+    "name": "Failed Replay Link",
+    "description": "Adds a little link you can click when you get failed replay upload (so like usermodes or bot games or whatever)",
+    "url": "https://greasyfork.org/scripts/442161-failed-replay-link",
+    "code_url": "https://update.greasyfork.org/scripts/442161/Failed%20Replay%20Link.user.js",
+    "code_size": 2612,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412937,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-11T20:08:47.000Z",
+    "code_updated_at": "2020-10-11T20:08:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682411,
+        "name": "ooorz",
+        "created_at": "2020-08-25T00:22:59.000Z",
+        "url": "https://greasyfork.org/users/682411-ooorz"
+      }
+    ],
+    "name": "Very Advanced AI Cheese Bot Script",
+    "description": "hbd iitalics",
+    "url": "https://greasyfork.org/scripts/412937-very-advanced-ai-cheese-bot-script",
+    "code_url": "https://update.greasyfork.org/scripts/412937/Very%20Advanced%20AI%20Cheese%20Bot%20Script.user.js",
+    "code_size": 1772,
+    "license": null,
+    "version": "0.69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412412,
+    "daily_installs": 0,
+    "total_installs": 70,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-04T05:07:14.000Z",
+    "code_updated_at": "2021-02-01T16:25:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682411,
+        "name": "ooorz",
+        "created_at": "2020-08-25T00:22:59.000Z",
+        "url": "https://greasyfork.org/users/682411-ooorz"
+      }
+    ],
+    "name": "APP/PPD script",
+    "description": "shows ppd and app in games and replays",
+    "url": "https://greasyfork.org/scripts/412412-app-ppd-script",
+    "code_url": "https://update.greasyfork.org/scripts/412412/APPPPD%20script.user.js",
+    "code_size": 2183,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

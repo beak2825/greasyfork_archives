@@ -1,0 +1,33 @@
+{
+  "id": 437511,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-24T01:58:29.000Z",
+  "code_updated_at": "2021-12-24T01:58:29.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 840688,
+      "name": "Tenfond",
+      "created_at": "2021-11-18T15:09:07.000Z",
+      "url": "https://greasyfork.org/users/840688-tenfond"
+    }
+  ],
+  "name": "扇贝单词随身听辅助库",
+  "description": "该脚本是，扇贝单词自动听词助手 的一个辅助库",
+  "url": "https://greasyfork.org/scripts/437511-%E6%89%87%E8%B4%9D%E5%8D%95%E8%AF%8D%E9%9A%8F%E8%BA%AB%E5%90%AC%E8%BE%85%E5%8A%A9%E5%BA%93",
+  "code_url": "https://update.greasyfork.org/scripts/437511/1001701/%E6%89%87%E8%B4%9D%E5%8D%95%E8%AF%8D%E9%9A%8F%E8%BA%AB%E5%90%AC%E8%BE%85%E5%8A%A9%E5%BA%93.js",
+  "code_size": 26353,
+  "license": null,
+  "version": "0.0.1.20211224015829",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

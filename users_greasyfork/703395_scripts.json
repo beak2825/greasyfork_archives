@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428560,
+    "daily_installs": 1,
+    "total_installs": 2009,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-27T17:40:55.000Z",
+    "code_updated_at": "2021-06-27T17:43:02.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 703395,
+        "name": "xXHUNTERXx_EvZ [GD]",
+        "created_at": "2020-11-10T00:49:08.000Z",
+        "url": "https://greasyfork.org/users/703395-xxhunterxx-evz-gd"
+      }
+    ],
+    "name": "Moomoo.io Hack (No Ads , Multi Hats and ASWD)",
+    "description": "Moomoo.io Hack",
+    "url": "https://greasyfork.org/scripts/428560-moomoo-io-hack-no-ads-multi-hats-and-aswd",
+    "code_url": "https://update.greasyfork.org/scripts/428560/Moomooio%20Hack%20%28No%20Ads%20%2C%20Multi%20Hats%20and%20ASWD%29.user.js",
+    "code_size": 3721,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 471703,
+  "daily_installs": 0,
+  "total_installs": 63,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-25T15:30:57.000Z",
+  "code_updated_at": "2023-07-25T20:07:13.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1086387,
+      "name": "Evgeniy Burkov",
+      "created_at": "2023-05-28T21:35:55.000Z",
+      "url": "https://greasyfork.org/users/1086387-evgeniy-burkov",
+      "scripts": []
+    }
+  ],
+  "name": "Black Russia Скрипт by Evgeniy_Yurievich | Khabarovsk <3",
+  "description": "Для Кураторов Форума",
+  "url": "https://greasyfork.org/scripts/471703-black-russia-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-by-evgeniy-yurievich-khabarovsk-3",
+  "code_url": "https://update.greasyfork.org/scripts/471703/Black%20Russia%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20by%20Evgeniy_Yurievich%20%7C%20Khabarovsk%20%3C3.user.js",
+  "code_size": 29916,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

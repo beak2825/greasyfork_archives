@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426293,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-11T02:16:14.000Z",
+    "code_updated_at": "2021-05-17T12:57:11.000Z",
+    "namespace": "https://wfb.ink/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770750,
+        "name": "王福博",
+        "created_at": "2021-05-11T01:47:05.000Z",
+        "url": "https://greasyfork.org/users/770750-%E7%8E%8B%E7%A6%8F%E5%8D%9A"
+      }
+    ],
+    "name": "ZJU Health Report",
+    "description": "To submit the health report",
+    "url": "https://greasyfork.org/scripts/426293-zju-health-report",
+    "code_url": "https://update.greasyfork.org/scripts/426293/ZJU%20Health%20Report.user.js",
+    "code_size": 3207,
+    "license": null,
+    "version": "21.05.17.02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

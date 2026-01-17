@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489706,
+    "daily_installs": 0,
+    "total_installs": 249,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-13T08:12:19.000Z",
+    "code_updated_at": "2024-03-13T09:19:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1273917,
+        "name": "khjkhjk",
+        "created_at": "2024-03-13T08:07:18.000Z",
+        "url": "https://greasyfork.org/users/1273917-khjkhjk"
+      }
+    ],
+    "name": "自动适应屏幕大小",
+    "description": "自动将页面宽度调整为适合屏幕大小的宽度",
+    "url": "https://greasyfork.org/scripts/489706-%E8%87%AA%E5%8A%A8%E9%80%82%E5%BA%94%E5%B1%8F%E5%B9%95%E5%A4%A7%E5%B0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/489706/%E8%87%AA%E5%8A%A8%E9%80%82%E5%BA%94%E5%B1%8F%E5%B9%95%E5%A4%A7%E5%B0%8F.user.js",
+    "code_size": 2846,
+    "license": null,
+    "version": "0.63",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

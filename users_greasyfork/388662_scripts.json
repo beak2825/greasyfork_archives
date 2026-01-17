@@ -97,5 +97,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 487814,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-20T09:17:08.000Z",
+    "code_updated_at": "2024-02-20T09:17:08.000Z",
+    "namespace": "https://greasyfork.org/users/920757",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388662,
+        "name": "Eric Mcknight",
+        "created_at": "2019-10-19T13:59:58.000Z",
+        "url": "https://greasyfork.org/users/388662-eric-mcknight"
+      }
+    ],
+    "name": "OpenCD 一键感谢",
+    "description": "OpenCD 一键感谢，,禁止在invites.fun转载，其他随意。",
+    "url": "https://greasyfork.org/scripts/487814-opencd-%E4%B8%80%E9%94%AE%E6%84%9F%E8%B0%A2",
+    "code_url": "https://update.greasyfork.org/scripts/487814/OpenCD%20%E4%B8%80%E9%94%AE%E6%84%9F%E8%B0%A2.user.js",
+    "code_size": 3057,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485975,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-29T14:15:06.000Z",
+    "code_updated_at": "2024-01-29T14:15:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388662,
+        "name": "Eric Mcknight",
+        "created_at": "2019-10-19T13:59:58.000Z",
+        "url": "https://greasyfork.org/users/388662-eric-mcknight"
+      }
+    ],
+    "name": "装b专用",
+    "description": "需要自定义缩略词",
+    "url": "https://greasyfork.org/scripts/485975-%E8%A3%85b%E4%B8%93%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/485975/%E8%A3%85b%E4%B8%93%E7%94%A8.user.js",
+    "code_size": 1862,
+    "license": "MIT License",
+    "version": "2024-01-29",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

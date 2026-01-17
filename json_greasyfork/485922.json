@@ -1,0 +1,59 @@
+{
+  "id": 485922,
+  "daily_installs": 0,
+  "total_installs": 87,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-29T00:48:57.000Z",
+  "code_updated_at": "2024-01-29T00:48:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1254509,
+      "name": "Developer Argo",
+      "created_at": "2024-01-29T00:45:48.000Z",
+      "url": "https://greasyfork.org/users/1254509-developer-argo",
+      "scripts": [
+        {
+          "id": 485922,
+          "daily_installs": 0,
+          "total_installs": 87,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-29T00:48:57.000Z",
+          "code_updated_at": "2024-01-29T00:48:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Krew.io Chat Troll (ORGINAL VERSION)",
+          "description": "Chat Troll for krew.io, hacks, krew.io hacks",
+          "url": "https://greasyfork.org/scripts/485922-krew-io-chat-troll-orginal-version",
+          "code_url": "https://update.greasyfork.org/scripts/485922/Krewio%20Chat%20Troll%20%28ORGINAL%20VERSION%29.user.js",
+          "code_size": 2119,
+          "license": "MIT License",
+          "version": "2024-01-29",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Krew.io Chat Troll (ORGINAL VERSION)",
+  "description": "Chat Troll for krew.io, hacks, krew.io hacks",
+  "url": "https://greasyfork.org/scripts/485922-krew-io-chat-troll-orginal-version",
+  "code_url": "https://update.greasyfork.org/scripts/485922/Krewio%20Chat%20Troll%20%28ORGINAL%20VERSION%29.user.js",
+  "code_size": 2119,
+  "license": "MIT License",
+  "version": "2024-01-29",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

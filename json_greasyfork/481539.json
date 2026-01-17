@@ -1,0 +1,59 @@
+{
+  "id": 481539,
+  "daily_installs": 0,
+  "total_installs": 59,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-06T14:39:37.000Z",
+  "code_updated_at": "2023-12-06T14:39:37.000Z",
+  "namespace": "bing",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1229309,
+      "name": "mofajiang",
+      "created_at": "2023-12-06T14:36:10.000Z",
+      "url": "https://greasyfork.org/users/1229309-mofajiang",
+      "scripts": [
+        {
+          "id": 481539,
+          "daily_installs": 0,
+          "total_installs": 59,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-06T14:39:37.000Z",
+          "code_updated_at": "2023-12-06T14:39:37.000Z",
+          "namespace": "bing",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google Ad Skipper",
+          "description": "A simple script to skip Google ads",
+          "url": "https://greasyfork.org/scripts/481539-google-ad-skipper",
+          "code_url": "https://update.greasyfork.org/scripts/481539/Google%20Ad%20Skipper.user.js",
+          "code_size": 2939,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google Ad Skipper",
+  "description": "A simple script to skip Google ads",
+  "url": "https://greasyfork.org/scripts/481539-google-ad-skipper",
+  "code_url": "https://update.greasyfork.org/scripts/481539/Google%20Ad%20Skipper.user.js",
+  "code_size": 2939,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,167 @@
+[
+  {
+    "id": 425417,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-22T22:14:56.000Z",
+    "code_updated_at": "2021-04-22T22:14:56.000Z",
+    "namespace": "https://pastebin.com/HbQXgJmy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 753172,
+        "name": "MapleHackersoff",
+        "created_at": "2021-03-31T01:50:31.000Z",
+        "url": "https://greasyfork.org/users/753172-maplehackersoff"
+      }
+    ],
+    "name": "OWOT / OurWorldOfText DragonScriptLoader 1.0",
+    "description": "Dragon Script Loader. Discord server: https://www.discord.gg/invite/DnZD7xN4Zd",
+    "url": "https://greasyfork.org/scripts/425417-owot-ourworldoftext-dragonscriptloader-1-0",
+    "code_url": "https://update.greasyfork.org/scripts/425417/OWOT%20%20OurWorldOfText%20DragonScriptLoader%2010.user.js",
+    "code_size": 445,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424400,
+    "daily_installs": 0,
+    "total_installs": 172,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-02T18:49:46.000Z",
+    "code_updated_at": "2021-04-02T18:49:45.000Z",
+    "namespace": "https://pastebin.com/P4iN9cwC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 753172,
+        "name": "MapleHackersoff",
+        "created_at": "2021-03-31T01:50:31.000Z",
+        "url": "https://greasyfork.org/users/753172-maplehackersoff"
+      }
+    ],
+    "name": "OWOT / OurWorldOfText DragonHaxx 5.1",
+    "description": "DragonHaxx 5.1 by suiciThink. Discord server: https://www.discord.gg/invite/DnZD7xN4Zd",
+    "url": "https://greasyfork.org/scripts/424400-owot-ourworldoftext-dragonhaxx-5-1",
+    "code_url": "https://update.greasyfork.org/scripts/424400/OWOT%20%20OurWorldOfText%20DragonHaxx%2051.user.js",
+    "code_size": 443,
+    "license": null,
+    "version": "5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424331,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-01T15:16:57.000Z",
+    "code_updated_at": "2021-04-01T15:16:57.000Z",
+    "namespace": "https://pastebin.com/amUY59Ti",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 753172,
+        "name": "MapleHackersoff",
+        "created_at": "2021-03-31T01:50:31.000Z",
+        "url": "https://greasyfork.org/users/753172-maplehackersoff"
+      }
+    ],
+    "name": "OWOT / OurWorldOfText DragonHaxx",
+    "description": "DragonHaxx 4.0 by suiciThink. Discord server: https://www.discord.gg/invite/DnZD7xN4Zd",
+    "url": "https://greasyfork.org/scripts/424331-owot-ourworldoftext-dragonhaxx",
+    "code_url": "https://update.greasyfork.org/scripts/424331/OWOT%20%20OurWorldOfText%20DragonHaxx.user.js",
+    "code_size": 439,
+    "license": null,
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424290,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-31T22:42:25.000Z",
+    "code_updated_at": "2021-03-31T22:42:24.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 753172,
+        "name": "MapleHackersoff",
+        "created_at": "2021-03-31T01:50:31.000Z",
+        "url": "https://greasyfork.org/users/753172-maplehackersoff"
+      }
+    ],
+    "name": "OWOT / OurWorldOfText DragonHaxx 3.1",
+    "description": "DragonHaxx 3.1 by suiciThink. Discord server: https://www.discord.gg/invite/DnZD7xN4Zd",
+    "url": "https://greasyfork.org/scripts/424290-owot-ourworldoftext-dragonhaxx-3-1",
+    "code_url": "https://update.greasyfork.org/scripts/424290/OWOT%20%20OurWorldOfText%20DragonHaxx%2031.user.js",
+    "code_size": 16302,
+    "license": null,
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424241,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-31T01:57:35.000Z",
+    "code_updated_at": "2021-03-31T01:57:35.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 753172,
+        "name": "MapleHackersoff",
+        "created_at": "2021-03-31T01:50:31.000Z",
+        "url": "https://greasyfork.org/users/753172-maplehackersoff"
+      }
+    ],
+    "name": "DragonHaxx",
+    "description": "DragonHaxx 3.0 by suiciThink. Discord server: https://www.discord.gg/invite/DnZD7xN4Zd",
+    "url": "https://greasyfork.org/scripts/424241-dragonhaxx",
+    "code_url": "https://update.greasyfork.org/scripts/424241/DragonHaxx.user.js",
+    "code_size": 5737,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

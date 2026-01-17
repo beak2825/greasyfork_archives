@@ -1,0 +1,33 @@
+{
+  "id": 412200,
+  "daily_installs": 0,
+  "total_installs": 7692,
+  "fan_score": "67.7",
+  "good_ratings": 14,
+  "ok_ratings": 1,
+  "bad_ratings": 1,
+  "created_at": "2020-09-29T08:33:18.000Z",
+  "code_updated_at": "2025-06-04T16:54:23.000Z",
+  "namespace": "csdn_blog_super_simplification",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 691145,
+      "name": "Xavier Wong",
+      "created_at": "2020-09-29T08:12:06.000Z",
+      "url": "https://greasyfork.org/users/691145-xavier-wong"
+    }
+  ],
+  "name": "CSDN Blog 极致简化",
+  "description": "页面排版调整，仅保留评论区、文章主体、文章目录，免登录增加复制及鼠标框选代码功能，免登录加载评论",
+  "url": "https://greasyfork.org/scripts/412200-csdn-blog-%E6%9E%81%E8%87%B4%E7%AE%80%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/412200/CSDN%20Blog%20%E6%9E%81%E8%87%B4%E7%AE%80%E5%8C%96.user.js",
+  "code_size": 22785,
+  "license": "Xavier Wong",
+  "version": "5.1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

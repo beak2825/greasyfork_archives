@@ -1,0 +1,59 @@
+{
+  "id": 419975,
+  "daily_installs": 0,
+  "total_installs": 208,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-10T14:46:33.000Z",
+  "code_updated_at": "2021-01-10T14:46:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 725831,
+      "name": "朱悟空",
+      "created_at": "2021-01-10T14:18:14.000Z",
+      "url": "https://greasyfork.org/users/725831-%E6%9C%B1%E6%82%9F%E7%A9%BA",
+      "scripts": [
+        {
+          "id": 419975,
+          "daily_installs": 0,
+          "total_installs": 208,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-10T14:46:33.000Z",
+          "code_updated_at": "2021-01-10T14:46:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "淘宝产品上架的最初时间，仅限看C店",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/419975-%E6%B7%98%E5%AE%9D%E4%BA%A7%E5%93%81%E4%B8%8A%E6%9E%B6%E7%9A%84%E6%9C%80%E5%88%9D%E6%97%B6%E9%97%B4-%E4%BB%85%E9%99%90%E7%9C%8Bc%E5%BA%97",
+          "code_url": "https://update.greasyfork.org/scripts/419975/%E6%B7%98%E5%AE%9D%E4%BA%A7%E5%93%81%E4%B8%8A%E6%9E%B6%E7%9A%84%E6%9C%80%E5%88%9D%E6%97%B6%E9%97%B4%EF%BC%8C%E4%BB%85%E9%99%90%E7%9C%8BC%E5%BA%97.user.js",
+          "code_size": 703,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "淘宝产品上架的最初时间，仅限看C店",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/419975-%E6%B7%98%E5%AE%9D%E4%BA%A7%E5%93%81%E4%B8%8A%E6%9E%B6%E7%9A%84%E6%9C%80%E5%88%9D%E6%97%B6%E9%97%B4-%E4%BB%85%E9%99%90%E7%9C%8Bc%E5%BA%97",
+  "code_url": "https://update.greasyfork.org/scripts/419975/%E6%B7%98%E5%AE%9D%E4%BA%A7%E5%93%81%E4%B8%8A%E6%9E%B6%E7%9A%84%E6%9C%80%E5%88%9D%E6%97%B6%E9%97%B4%EF%BC%8C%E4%BB%85%E9%99%90%E7%9C%8BC%E5%BA%97.user.js",
+  "code_size": 703,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

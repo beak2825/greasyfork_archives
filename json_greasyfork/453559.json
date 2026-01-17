@@ -1,0 +1,34 @@
+{
+  "id": 453559,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-22T19:23:22.000Z",
+  "code_updated_at": "2022-10-22T19:23:22.000Z",
+  "namespace": "AgarTool",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 929258,
+      "name": "kierePelea",
+      "created_at": "2022-06-25T20:10:35.000Z",
+      "url": "https://greasyfork.org/users/929258-kierepelea",
+      "scripts": []
+    }
+  ],
+  "name": "Agar Tool M PELEA",
+  "description": "Adds new features to agar.io such as free coins, and unlimited zoom. To see all new features, visit our website at https://www.agartool.io",
+  "url": "https://greasyfork.org/scripts/453559-agar-tool-m-pelea",
+  "code_url": "https://update.greasyfork.org/scripts/453559/Agar%20Tool%20M%20PELEA.user.js",
+  "code_size": 6257,
+  "license": null,
+  "version": "13.04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

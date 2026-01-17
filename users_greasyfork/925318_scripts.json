@@ -1,0 +1,35 @@
+[
+  {
+    "id": 446434,
+    "daily_installs": 0,
+    "total_installs": 109,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-13T18:13:19.000Z",
+    "code_updated_at": "2022-06-13T18:14:22.000Z",
+    "namespace": "https://github.com/dymk/block-google-also-search-for",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 925318,
+        "name": "dymk",
+        "created_at": "2022-06-13T18:06:39.000Z",
+        "url": "https://greasyfork.org/users/925318-dymk"
+      }
+    ],
+    "name": "Google - Block \"People also search for\" & \"People also ask\"",
+    "description": "Block the \"...also search for...\" and \"...also ask\" boxes in Google search results. Does not rely on hardcoded class names, so it's more future proof.",
+    "url": "https://greasyfork.org/scripts/446434-google-block-people-also-search-for-people-also-ask",
+    "code_url": "https://update.greasyfork.org/scripts/446434/Google%20-%20Block%20%22People%20also%20search%20for%22%20%20%22People%20also%20ask%22.user.js",
+    "code_size": 1951,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

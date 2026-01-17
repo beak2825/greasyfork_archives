@@ -1,0 +1,34 @@
+{
+  "id": 447096,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-26T20:23:07.000Z",
+  "code_updated_at": "2022-06-26T20:44:06.000Z",
+  "namespace": "papafru",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 929589,
+      "name": "papafru",
+      "created_at": "2022-06-26T20:17:58.000Z",
+      "url": "https://greasyfork.org/users/929589-papafru",
+      "scripts": []
+    }
+  ],
+  "name": "Efood Category Itemz",
+  "description": "Posa noumerakia?",
+  "url": "https://greasyfork.org/scripts/447096-efood-category-itemz",
+  "code_url": "https://update.greasyfork.org/scripts/447096/Efood%20Category%20Itemz.user.js",
+  "code_size": 1074,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

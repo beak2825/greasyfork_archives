@@ -1,0 +1,101 @@
+[
+  {
+    "id": 477139,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-11T01:34:24.000Z",
+    "code_updated_at": "2023-10-16T09:11:58.000Z",
+    "namespace": "https://3chai.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166006,
+        "name": "chaitongxue",
+        "created_at": "2023-09-04T09:52:24.000Z",
+        "url": "https://greasyfork.org/users/1166006-chaitongxue"
+      }
+    ],
+    "name": "屏蔽飞鸽机器人遮挡测试窗部分 by 3chai",
+    "description": "在飞鸽机器页面上屏蔽遮挡测试窗部分",
+    "url": "https://greasyfork.org/scripts/477139-%E5%B1%8F%E8%94%BD%E9%A3%9E%E9%B8%BD%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%81%AE%E6%8C%A1%E6%B5%8B%E8%AF%95%E7%AA%97%E9%83%A8%E5%88%86-by-3chai",
+    "code_url": "https://update.greasyfork.org/scripts/477139/%E5%B1%8F%E8%94%BD%E9%A3%9E%E9%B8%BD%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%81%AE%E6%8C%A1%E6%B5%8B%E8%AF%95%E7%AA%97%E9%83%A8%E5%88%86%20by%203chai.user.js",
+    "code_size": 1249,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477136,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-11T01:23:41.000Z",
+    "code_updated_at": "2023-10-20T02:16:16.000Z",
+    "namespace": "https://3chai.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166006,
+        "name": "chaitongxue",
+        "created_at": "2023-09-04T09:52:24.000Z",
+        "url": "https://greasyfork.org/users/1166006-chaitongxue"
+      }
+    ],
+    "name": "有赞增强插件 by 3chai",
+    "description": "有赞推送插件,用于增强有赞消息提醒不明显的问题",
+    "url": "https://greasyfork.org/scripts/477136-%E6%9C%89%E8%B5%9E%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6-by-3chai",
+    "code_url": "https://update.greasyfork.org/scripts/477136/%E6%9C%89%E8%B5%9E%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6%20by%203chai.user.js",
+    "code_size": 19729,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 475781,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-21T02:30:38.000Z",
+    "code_updated_at": "2023-10-16T09:12:45.000Z",
+    "namespace": "https://3chai.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166006,
+        "name": "chaitongxue",
+        "created_at": "2023-09-04T09:52:24.000Z",
+        "url": "https://greasyfork.org/users/1166006-chaitongxue"
+      }
+    ],
+    "name": "高亮区分店小蜜关键词和排除词 by 3chai",
+    "description": "为店小蜜关键词和排除词输入区域加入颜色区别,防止误设置",
+    "url": "https://greasyfork.org/scripts/475781-%E9%AB%98%E4%BA%AE%E5%8C%BA%E5%88%86%E5%BA%97%E5%B0%8F%E8%9C%9C%E5%85%B3%E9%94%AE%E8%AF%8D%E5%92%8C%E6%8E%92%E9%99%A4%E8%AF%8D-by-3chai",
+    "code_url": "https://update.greasyfork.org/scripts/475781/%E9%AB%98%E4%BA%AE%E5%8C%BA%E5%88%86%E5%BA%97%E5%B0%8F%E8%9C%9C%E5%85%B3%E9%94%AE%E8%AF%8D%E5%92%8C%E6%8E%92%E9%99%A4%E8%AF%8D%20by%203chai.user.js",
+    "code_size": 1770,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

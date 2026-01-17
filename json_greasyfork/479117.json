@@ -1,0 +1,34 @@
+{
+  "id": 479117,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-05T20:03:09.000Z",
+  "code_updated_at": "2023-11-05T20:03:09.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": "https://vk.com/epushman1",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1207102,
+      "name": "SkayEaglee",
+      "created_at": "2023-10-30T05:13:24.000Z",
+      "url": "https://greasyfork.org/users/1207102-skayeaglee",
+      "scripts": []
+    }
+  ],
+  "name": "Скрипт Кураторов форума by A.Skay and A.Zobnin and D.Thomson",
+  "description": "Suggestions for improving the script write here ---> https://vk.com/epushman1",
+  "url": "https://greasyfork.org/scripts/479117-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-a-skay-and-a-zobnin-and-d-thomson",
+  "code_url": "https://update.greasyfork.org/scripts/479117/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20ASkay%20and%20AZobnin%20and%20DThomson.user.js",
+  "code_size": 168271,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

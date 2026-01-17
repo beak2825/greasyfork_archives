@@ -1,0 +1,59 @@
+{
+  "id": 466531,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-17T22:39:57.000Z",
+  "code_updated_at": "2023-05-17T22:39:57.000Z",
+  "namespace": "https://greasyfork.org/users/1080731",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1080731,
+      "name": "lolzdev1",
+      "created_at": "2023-05-17T22:33:06.000Z",
+      "url": "https://greasyfork.org/users/1080731-lolzdev1",
+      "scripts": [
+        {
+          "id": 466531,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-17T22:39:57.000Z",
+          "code_updated_at": "2023-05-17T22:39:57.000Z",
+          "namespace": "https://greasyfork.org/users/1080731",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LZT Helper",
+          "description": "LZT Helper dev build",
+          "url": "https://greasyfork.org/scripts/466531-lzt-helper",
+          "code_url": "https://update.greasyfork.org/scripts/466531/LZT%20Helper.user.js",
+          "code_size": 126074,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LZT Helper",
+  "description": "LZT Helper dev build",
+  "url": "https://greasyfork.org/scripts/466531-lzt-helper",
+  "code_url": "https://update.greasyfork.org/scripts/466531/LZT%20Helper.user.js",
+  "code_size": 126074,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

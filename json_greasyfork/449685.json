@@ -1,0 +1,34 @@
+{
+  "id": 449685,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-17T02:58:24.000Z",
+  "code_updated_at": "2022-08-17T03:02:41.000Z",
+  "namespace": "https://greasyfork.org/users/694396",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 771135,
+      "name": "蛙来蛙去",
+      "created_at": "2021-05-12T03:42:16.000Z",
+      "url": "https://greasyfork.org/users/771135-%E8%9B%99%E6%9D%A5%E8%9B%99%E5%8E%BB",
+      "scripts": []
+    }
+  ],
+  "name": "美化字体, 滚动条, 指向图片发光, 文本选中样式BY_江小白",
+  "description": "美化字体, 滚动条, 指向图片发光, 文本选中样式。",
+  "url": "https://greasyfork.org/scripts/449685-%E7%BE%8E%E5%8C%96%E5%AD%97%E4%BD%93-%E6%BB%9A%E5%8A%A8%E6%9D%A1-%E6%8C%87%E5%90%91%E5%9B%BE%E7%89%87%E5%8F%91%E5%85%89-%E6%96%87%E6%9C%AC%E9%80%89%E4%B8%AD%E6%A0%B7%E5%BC%8Fby-%E6%B1%9F%E5%B0%8F%E7%99%BD",
+  "code_url": "https://update.greasyfork.org/scripts/449685/%E7%BE%8E%E5%8C%96%E5%AD%97%E4%BD%93%2C%20%E6%BB%9A%E5%8A%A8%E6%9D%A1%2C%20%E6%8C%87%E5%90%91%E5%9B%BE%E7%89%87%E5%8F%91%E5%85%89%2C%20%E6%96%87%E6%9C%AC%E9%80%89%E4%B8%AD%E6%A0%B7%E5%BC%8FBY_%E6%B1%9F%E5%B0%8F%E7%99%BD.user.js",
+  "code_size": 12163,
+  "license": null,
+  "version": "1.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

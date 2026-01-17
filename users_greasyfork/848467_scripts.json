@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436548,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-04T11:27:50.000Z",
+    "code_updated_at": "2021-12-05T05:08:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 848467,
+        "name": "yiukamsum",
+        "created_at": "2021-12-04T11:14:57.000Z",
+        "url": "https://greasyfork.org/users/848467-yiukamsum"
+      }
+    ],
+    "name": "CityU Canvas File Preview Fixer",
+    "description": "Fix CityU Canvas File Preview",
+    "url": "https://greasyfork.org/scripts/436548-cityu-canvas-file-preview-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/436548/CityU%20Canvas%20File%20Preview%20Fixer.user.js",
+    "code_size": 1404,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

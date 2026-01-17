@@ -1,0 +1,68 @@
+[
+  {
+    "id": 453745,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-26T03:59:02.000Z",
+    "code_updated_at": "2025-01-23T09:30:45.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973957,
+        "name": "otc",
+        "created_at": "2022-10-22T15:10:50.000Z",
+        "url": "https://greasyfork.org/users/973957-otc"
+      }
+    ],
+    "name": "SideBarButtonLibrary",
+    "description": "SideBarButtonLibrary 是一个轻量级的 JavaScript 库，用于创建可展开和收起的侧边栏按钮容器，支持自定义吸附方向（左、右、上、下）、按钮排列方式（水平或垂直）以及样式，适用于快速构建侧边栏工具栏或导航菜单。",
+    "url": "https://greasyfork.org/scripts/453745-sidebarbuttonlibrary",
+    "code_url": "https://update.greasyfork.org/scripts/453745/1525524/SideBarButtonLibrary.js",
+    "code_size": 10870,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453566,
+    "daily_installs": 2,
+    "total_installs": 92,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-23T02:19:15.000Z",
+    "code_updated_at": "2023-12-21T02:35:42.000Z",
+    "namespace": "iedu.foxconn.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973957,
+        "name": "otc",
+        "created_at": "2022-10-22T15:10:50.000Z",
+        "url": "https://greasyfork.org/users/973957-otc"
+      }
+    ],
+    "name": "富學寶典視頻一直播",
+    "description": "富學寶典一直播（富学宝典一直播）——無倍速調整（防止被封號）。使用方法：等待10秒，自動開始播放，切換網頁暫停後不用管，10秒後自動播放。",
+    "url": "https://greasyfork.org/scripts/453566-%E5%AF%8C%E5%AD%B8%E5%AF%B6%E5%85%B8%E8%A6%96%E9%A0%BB%E4%B8%80%E7%9B%B4%E6%92%AD",
+    "code_url": "https://update.greasyfork.org/scripts/453566/%E5%AF%8C%E5%AD%B8%E5%AF%B6%E5%85%B8%E8%A6%96%E9%A0%BB%E4%B8%80%E7%9B%B4%E6%92%AD.user.js",
+    "code_size": 1414,
+    "license": "MIT License",
+    "version": "2.0.3",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

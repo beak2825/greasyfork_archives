@@ -1,0 +1,33 @@
+{
+  "id": 437484,
+  "daily_installs": 0,
+  "total_installs": 6013,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-23T12:57:07.000Z",
+  "code_updated_at": "2021-12-23T12:58:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 856879,
+      "name": "Xisney",
+      "created_at": "2021-12-23T12:33:24.000Z",
+      "url": "https://greasyfork.org/users/856879-xisney"
+    }
+  ],
+  "name": "高校邦一键完成，自动答题静音播放",
+  "description": "高校邦自动静音播放，自动答题，一键完成视频",
+  "url": "https://greasyfork.org/scripts/437484-%E9%AB%98%E6%A0%A1%E9%82%A6%E4%B8%80%E9%94%AE%E5%AE%8C%E6%88%90-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E9%9D%99%E9%9F%B3%E6%92%AD%E6%94%BE",
+  "code_url": "https://update.greasyfork.org/scripts/437484/%E9%AB%98%E6%A0%A1%E9%82%A6%E4%B8%80%E9%94%AE%E5%AE%8C%E6%88%90%EF%BC%8C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E9%9D%99%E9%9F%B3%E6%92%AD%E6%94%BE.user.js",
+  "code_size": 4104,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

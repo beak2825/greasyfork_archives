@@ -1,0 +1,33 @@
+{
+  "id": 469919,
+  "daily_installs": 0,
+  "total_installs": 48,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-01T15:36:09.000Z",
+  "code_updated_at": "2023-07-01T15:36:09.000Z",
+  "namespace": "Earn Free Coin Instantly",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 849941,
+      "name": "lotocamion",
+      "created_at": "2021-12-07T15:23:58.000Z",
+      "url": "https://greasyfork.org/users/849941-lotocamion"
+    }
+  ],
+  "name": "Gaminginfos Faucet Rotator",
+  "description": "Earn Free Coin Instantly",
+  "url": "https://greasyfork.org/scripts/469919-gaminginfos-faucet-rotator",
+  "code_url": "https://update.greasyfork.org/scripts/469919/Gaminginfos%20Faucet%20Rotator.user.js",
+  "code_size": 23273,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 493734,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-29T03:27:31.000Z",
+  "code_updated_at": "2024-04-29T03:29:43.000Z",
+  "namespace": "bitmonster",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294558,
+      "name": "madsmith",
+      "created_at": "2024-04-29T03:23:38.000Z",
+      "url": "https://greasyfork.org/users/1294558-madsmith",
+      "scripts": [
+        {
+          "id": 493734,
+          "daily_installs": 0,
+          "total_installs": 49,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-29T03:27:31.000Z",
+          "code_updated_at": "2024-04-29T03:29:43.000Z",
+          "namespace": "bitmonster",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Reddit - No new gallery/video/image urls",
+          "description": "Redirect Reddit media links to their comment section to avoid new reddit.",
+          "url": "https://greasyfork.org/scripts/493734-reddit-no-new-gallery-video-image-urls",
+          "code_url": "https://update.greasyfork.org/scripts/493734/Reddit%20-%20No%20new%20galleryvideoimage%20urls.user.js",
+          "code_size": 2092,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Reddit - No new gallery/video/image urls",
+  "description": "Redirect Reddit media links to their comment section to avoid new reddit.",
+  "url": "https://greasyfork.org/scripts/493734-reddit-no-new-gallery-video-image-urls",
+  "code_url": "https://update.greasyfork.org/scripts/493734/Reddit%20-%20No%20new%20galleryvideoimage%20urls.user.js",
+  "code_size": 2092,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

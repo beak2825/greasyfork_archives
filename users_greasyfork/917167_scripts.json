@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445395,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-22T22:28:46.000Z",
+    "code_updated_at": "2022-05-22T22:28:46.000Z",
+    "namespace": "https://greasyfork.org/users/670183",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 917167,
+        "name": "ExnonuII",
+        "created_at": "2022-05-22T07:41:14.000Z",
+        "url": "https://greasyfork.org/users/917167-exnonuii"
+      }
+    ],
+    "name": "PPIL",
+    "description": "Pixel Place Image Loader",
+    "url": "https://greasyfork.org/scripts/445395-ppil",
+    "code_url": "https://update.greasyfork.org/scripts/445395/PPIL.user.js",
+    "code_size": 4642,
+    "license": "MIT License",
+    "version": "1.6.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

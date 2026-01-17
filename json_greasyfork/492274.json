@@ -1,0 +1,59 @@
+{
+  "id": 492274,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-11T20:13:31.000Z",
+  "code_updated_at": "2024-04-11T20:13:30.000Z",
+  "namespace": "http://www.bing.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1287064,
+      "name": "Rudy Raab",
+      "created_at": "2024-04-11T20:11:36.000Z",
+      "url": "https://greasyfork.org/users/1287064-rudy-raab",
+      "scripts": [
+        {
+          "id": 492274,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-11T20:13:31.000Z",
+          "code_updated_at": "2024-04-11T20:13:30.000Z",
+          "namespace": "http://www.bing.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bing Redirect Remover",
+          "description": "Replace Bing's redirect and rebates links with normal links.",
+          "url": "https://greasyfork.org/scripts/492274-bing-redirect-remover",
+          "code_url": "https://update.greasyfork.org/scripts/492274/Bing%20Redirect%20Remover.user.js",
+          "code_size": 1270,
+          "license": "MIT License",
+          "version": "2024-03-26",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bing Redirect Remover",
+  "description": "Replace Bing's redirect and rebates links with normal links.",
+  "url": "https://greasyfork.org/scripts/492274-bing-redirect-remover",
+  "code_url": "https://update.greasyfork.org/scripts/492274/Bing%20Redirect%20Remover.user.js",
+  "code_size": 1270,
+  "license": "MIT License",
+  "version": "2024-03-26",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

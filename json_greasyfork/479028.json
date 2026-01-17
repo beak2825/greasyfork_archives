@@ -1,0 +1,33 @@
+{
+  "id": 479028,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-04T14:11:50.000Z",
+  "code_updated_at": "2023-11-04T14:11:50.000Z",
+  "namespace": "刷课V软件定制：vx,shuake345",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1072479,
+      "name": "Vxx:shuake345",
+      "created_at": "2023-05-03T17:57:24.000Z",
+      "url": "https://greasyfork.org/users/1072479-vxx-shuake345"
+    }
+  ],
+  "name": "平江县中小学教师信息技术2.0-m",
+  "description": "自动换课|自动学习|刷课VX：shuake345",
+  "url": "https://greasyfork.org/scripts/479028-%E5%B9%B3%E6%B1%9F%E5%8E%BF%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%95%99%E5%B8%88%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF2-0-m",
+  "code_url": "https://update.greasyfork.org/scripts/479028/%E5%B9%B3%E6%B1%9F%E5%8E%BF%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%95%99%E5%B8%88%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF20-m.user.js",
+  "code_size": 8538,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

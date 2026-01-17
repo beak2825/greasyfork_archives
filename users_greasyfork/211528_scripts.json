@@ -96,6 +96,72 @@
     "version": "1.5.2",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492061,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-09T09:03:37.000Z",
+    "code_updated_at": "2025-03-15T00:59:20.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/492061-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%B8%8B%E4%B8%80%E7%AB%A0%E8%8A%82%E8%A7%86%E9%A2%91-%E5%85%B3%E9%97%AD%E8%A7%86%E9%A2%91%E9%9F%B3%E9%87%8F",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 211528,
+        "name": "小楫轻舟",
+        "created_at": "2018-09-09T10:37:05.000Z",
+        "url": "https://greasyfork.org/users/211528-%E5%B0%8F%E6%A5%AB%E8%BD%BB%E8%88%9F"
+      }
+    ],
+    "name": "环安专业课小助手",
+    "description": "自动关闭视频音量和自动播放下一章节视频，同时添加可选倍速功能",
+    "url": "https://greasyfork.org/scripts/492061-%E7%8E%AF%E5%AE%89%E4%B8%93%E4%B8%9A%E8%AF%BE%E5%B0%8F%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/492061/%E7%8E%AF%E5%AE%89%E4%B8%93%E4%B8%9A%E8%AF%BE%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 3682,
+    "license": "MIT License",
+    "version": "1.4.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492025,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-09T00:17:25.000Z",
+    "code_updated_at": "2024-12-07T03:16:36.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/492025-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%AF%84%E5%88%86%E8%84%9A%E6%9C%AC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 211528,
+        "name": "小楫轻舟",
+        "created_at": "2018-09-09T10:37:05.000Z",
+        "url": "https://greasyfork.org/users/211528-%E5%B0%8F%E6%A5%AB%E8%BD%BB%E8%88%9F"
+      }
+    ],
+    "name": "自动填写评分脚本",
+    "description": "自动填写评分并提交结束考核，可切换随机数版本或固定评分版本",
+    "url": "https://greasyfork.org/scripts/492025-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%AF%84%E5%88%86%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/492025/%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%AF%84%E5%88%86%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 5773,
+    "license": "MIT License",
+    "version": "2.2.4",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

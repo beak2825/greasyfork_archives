@@ -1,0 +1,33 @@
+{
+  "id": 471490,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-23T00:38:04.000Z",
+  "code_updated_at": "2023-07-27T06:22:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1133570,
+      "name": "nathanhoel",
+      "created_at": "2023-07-23T00:35:19.000Z",
+      "url": "https://greasyfork.org/users/1133570-nathanhoel"
+    }
+  ],
+  "name": "More Than One Paperclip Client",
+  "description": "Multiplayer leaderboard for Universal Paperclips",
+  "url": "https://greasyfork.org/scripts/471490-more-than-one-paperclip-client",
+  "code_url": "https://update.greasyfork.org/scripts/471490/More%20Than%20One%20Paperclip%20Client.user.js",
+  "code_size": 6484,
+  "license": "MIT License",
+  "version": "1.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

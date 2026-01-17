@@ -1,0 +1,59 @@
+{
+  "id": 444162,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-28T20:22:14.000Z",
+  "code_updated_at": "2022-04-28T22:13:52.000Z",
+  "namespace": "thebiggesttwatontheplanet",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 872097,
+      "name": "SiameseDream",
+      "created_at": "2022-02-02T19:47:09.000Z",
+      "url": "https://greasyfork.org/users/872097-siamesedream",
+      "scripts": [
+        {
+          "id": 444162,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-28T20:22:14.000Z",
+          "code_updated_at": "2022-04-28T22:13:52.000Z",
+          "namespace": "thebiggesttwatontheplanet",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "The trush about Elon Musk",
+          "description": "The truth about Elon Musk",
+          "url": "https://greasyfork.org/scripts/444162-the-trush-about-elon-musk",
+          "code_url": "https://update.greasyfork.org/scripts/444162/The%20trush%20about%20Elon%20Musk.user.js",
+          "code_size": 980,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "The trush about Elon Musk",
+  "description": "The truth about Elon Musk",
+  "url": "https://greasyfork.org/scripts/444162-the-trush-about-elon-musk",
+  "code_url": "https://update.greasyfork.org/scripts/444162/The%20trush%20about%20Elon%20Musk.user.js",
+  "code_size": 980,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

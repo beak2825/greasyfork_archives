@@ -1,0 +1,34 @@
+{
+  "id": 486363,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-03T08:07:41.000Z",
+  "code_updated_at": "2024-11-05T09:02:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1256757,
+      "name": "六角國際餐飲集團烘培央廚",
+      "created_at": "2024-02-03T07:58:05.000Z",
+      "url": "https://greasyfork.org/users/1256757-%E5%85%AD%E8%A7%92%E5%9C%8B%E9%9A%9B%E9%A4%90%E9%A3%B2%E9%9B%86%E5%9C%98%E7%83%98%E5%9F%B9%E5%A4%AE%E5%BB%9A",
+      "scripts": []
+    }
+  ],
+  "name": "Alpha訂單快速查詢",
+  "description": "六角國際公司內部網站Alpha使用的腳本",
+  "url": "https://greasyfork.org/scripts/486363-alpha%E8%A8%82%E5%96%AE%E5%BF%AB%E9%80%9F%E6%9F%A5%E8%A9%A2",
+  "code_url": "https://update.greasyfork.org/scripts/486363/Alpha%E8%A8%82%E5%96%AE%E5%BF%AB%E9%80%9F%E6%9F%A5%E8%A9%A2.user.js",
+  "code_size": 4366,
+  "license": null,
+  "version": "1.5.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

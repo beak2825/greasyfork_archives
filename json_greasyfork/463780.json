@@ -1,0 +1,33 @@
+{
+  "id": 463780,
+  "daily_installs": 0,
+  "total_installs": 199,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-11T18:49:17.000Z",
+  "code_updated_at": "2023-04-11T19:07:51.000Z",
+  "namespace": "lbtechnology.info",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1030473,
+      "name": "Lux-Ferre",
+      "created_at": "2023-02-21T00:58:10.000Z",
+      "url": "https://greasyfork.org/users/1030473-lux-ferre"
+    }
+  ],
+  "name": "IdlePixel Armour Uncrafter",
+  "description": "Uses needle to uncraft all armour pieces.",
+  "url": "https://greasyfork.org/scripts/463780-idlepixel-armour-uncrafter",
+  "code_url": "https://update.greasyfork.org/scripts/463780/IdlePixel%20Armour%20Uncrafter.user.js",
+  "code_size": 3881,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

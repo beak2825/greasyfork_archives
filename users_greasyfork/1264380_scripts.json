@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487838,
+    "daily_installs": 0,
+    "total_installs": 157,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-20T15:10:36.000Z",
+    "code_updated_at": "2024-02-20T15:13:19.000Z",
+    "namespace": "https://greasyfork.org/users/1259036",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264380,
+        "name": "鱼踪",
+        "created_at": "2024-02-20T14:57:07.000Z",
+        "url": "https://greasyfork.org/users/1264380-%E9%B1%BC%E8%B8%AA"
+      }
+    ],
+    "name": "B站直播去除马赛克（游戏区ID和聊天框）",
+    "description": "去除马游戏区直播间 ID和聊天框 的马赛克",
+    "url": "https://greasyfork.org/scripts/487838-b%E7%AB%99%E7%9B%B4%E6%92%AD%E5%8E%BB%E9%99%A4%E9%A9%AC%E8%B5%9B%E5%85%8B-%E6%B8%B8%E6%88%8F%E5%8C%BAid%E5%92%8C%E8%81%8A%E5%A4%A9%E6%A1%86",
+    "code_url": "https://update.greasyfork.org/scripts/487838/B%E7%AB%99%E7%9B%B4%E6%92%AD%E5%8E%BB%E9%99%A4%E9%A9%AC%E8%B5%9B%E5%85%8B%EF%BC%88%E6%B8%B8%E6%88%8F%E5%8C%BAID%E5%92%8C%E8%81%8A%E5%A4%A9%E6%A1%86%EF%BC%89.user.js",
+    "code_size": 634,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

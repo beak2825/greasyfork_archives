@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419892,
+    "daily_installs": 0,
+    "total_installs": 321,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-08T14:58:44.000Z",
+    "code_updated_at": "2021-05-14T05:19:45.000Z",
+    "namespace": "SteamCurrencyConvert",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 293709,
+        "name": "ilovemonkey",
+        "created_at": "2019-04-21T08:16:22.000Z",
+        "url": "https://greasyfork.org/users/293709-ilovemonkey"
+      }
+    ],
+    "name": "Steam Currency Convert: Convert ARS to CNY only",
+    "description": "A simple way to make Steam Argentine user perceive the low prices. Convert ARS to CNY only，for now.",
+    "url": "https://greasyfork.org/scripts/419892-steam-currency-convert-convert-ars-to-cny-only",
+    "code_url": "https://update.greasyfork.org/scripts/419892/Steam%20Currency%20Convert%3A%20Convert%20ARS%20to%20CNY%20only.user.js",
+    "code_size": 2017,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

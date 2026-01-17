@@ -1,0 +1,33 @@
+{
+  "id": 441873,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-21T16:34:47.000Z",
+  "code_updated_at": "2022-03-21T16:34:46.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 447976,
+      "name": "涛之雨",
+      "created_at": "2020-02-21T10:11:34.000Z",
+      "url": "https://greasyfork.org/users/447976-%E6%B6%9B%E4%B9%8B%E9%9B%A8"
+    }
+  ],
+  "name": "zip.js",
+  "description": "Source code from https://gildas-lormeau.github.io/zip.js/",
+  "url": "https://greasyfork.org/scripts/441873-zip-js",
+  "code_url": "https://update.greasyfork.org/scripts/441873/1030820/zipjs.js",
+  "code_size": 305391,
+  "license": null,
+  "version": "0.0.1.20220321163446",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

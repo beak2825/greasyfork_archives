@@ -1,0 +1,68 @@
+[
+  {
+    "id": 428511,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-26T17:03:33.000Z",
+    "code_updated_at": "2021-06-27T17:04:14.000Z",
+    "namespace": "com.dobydigital.userscripts.wod",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 785137,
+        "name": "XaeroDegreaz",
+        "created_at": "2021-06-19T15:10:05.000Z",
+        "url": "https://greasyfork.org/users/785137-xaerodegreaz"
+      }
+    ],
+    "name": "[WoD] Display Skill Rolls",
+    "description": "Calculates skill rolls, and adds a new table column on the skills page.",
+    "url": "https://greasyfork.org/scripts/428511-wod-display-skill-rolls",
+    "code_url": "https://update.greasyfork.org/scripts/428511/%5BWoD%5D%20Display%20Skill%20Rolls.user.js",
+    "code_size": 9064,
+    "license": null,
+    "version": "2021.06.27.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 428192,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-19T15:13:11.000Z",
+    "code_updated_at": "2021-06-27T15:25:35.000Z",
+    "namespace": "com.dobydigital.userscripts.wod",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 785137,
+        "name": "XaeroDegreaz",
+        "created_at": "2021-06-19T15:10:05.000Z",
+        "url": "https://greasyfork.org/users/785137-xaerodegreaz"
+      }
+    ],
+    "name": "[WoD] Hero Switcher Dropdown",
+    "description": "Adds a hero selection dropdown at the top of all World of Dungeons pages. Not all skins are supported.",
+    "url": "https://greasyfork.org/scripts/428192-wod-hero-switcher-dropdown",
+    "code_url": "https://update.greasyfork.org/scripts/428192/%5BWoD%5D%20Hero%20Switcher%20Dropdown.user.js",
+    "code_size": 6191,
+    "license": null,
+    "version": "2021.06.27.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

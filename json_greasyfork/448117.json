@@ -1,0 +1,33 @@
+{
+  "id": 448117,
+  "daily_installs": 0,
+  "total_installs": 864,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-19T12:16:38.000Z",
+  "code_updated_at": "2023-02-20T17:09:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 928895,
+      "name": "mopsfl",
+      "created_at": "2022-06-24T16:14:10.000Z",
+      "url": "https://greasyfork.org/users/928895-mopsfl"
+    }
+  ],
+  "name": "Discord Developer Mode [FIXED 2023]",
+  "description": "Enables the discord developer settings",
+  "url": "https://greasyfork.org/scripts/448117-discord-developer-mode-fixed-2023",
+  "code_url": "https://update.greasyfork.org/scripts/448117/Discord%20Developer%20Mode%20%5BFIXED%202023%5D.user.js",
+  "code_size": 1095,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

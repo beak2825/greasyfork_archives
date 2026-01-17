@@ -1,0 +1,68 @@
+[
+  {
+    "id": 425180,
+    "daily_installs": 0,
+    "total_installs": 229,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-17T23:09:29.000Z",
+    "code_updated_at": "2021-04-17T23:09:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 761474,
+        "name": "Aria0001",
+        "created_at": "2021-04-17T23:03:13.000Z",
+        "url": "https://greasyfork.org/users/761474-aria0001"
+      }
+    ],
+    "name": "Auto-expand gallery preview on Pixiv.net",
+    "description": "Automatically expand galleries and show thumbnail view on Pixiv.net",
+    "url": "https://greasyfork.org/scripts/425180-auto-expand-gallery-preview-on-pixiv-net",
+    "code_url": "https://update.greasyfork.org/scripts/425180/Auto-expand%20gallery%20preview%20on%20Pixivnet.user.js",
+    "code_size": 770,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425179,
+    "daily_installs": 0,
+    "total_installs": 243,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-17T23:07:10.000Z",
+    "code_updated_at": "2021-04-17T23:08:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 761474,
+        "name": "Aria0001",
+        "created_at": "2021-04-17T23:03:13.000Z",
+        "url": "https://greasyfork.org/users/761474-aria0001"
+      }
+    ],
+    "name": "Auto load images on Pixiv.net",
+    "description": "Automatically load highest resolution picture on Pixiv.net and auto expand galleries",
+    "url": "https://greasyfork.org/scripts/425179-auto-load-images-on-pixiv-net",
+    "code_url": "https://update.greasyfork.org/scripts/425179/Auto%20load%20images%20on%20Pixivnet.user.js",
+    "code_size": 873,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

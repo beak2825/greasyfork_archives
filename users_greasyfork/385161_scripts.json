@@ -1,0 +1,101 @@
+[
+  {
+    "id": 429711,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-22T03:12:28.000Z",
+    "code_updated_at": "2021-07-22T03:14:35.000Z",
+    "namespace": "https://github.com/wangrongding/ding-script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385161,
+        "name": "汪荣顶",
+        "created_at": "2019-10-09T04:57:15.000Z",
+        "url": "https://greasyfork.org/users/385161-%E6%B1%AA%E8%8D%A3%E9%A1%B6"
+      }
+    ],
+    "name": "无限循环刷新相应的页面",
+    "description": "(需要自己改写match地址,默认匹配规则是所有URL)",
+    "url": "https://greasyfork.org/scripts/429711-%E6%97%A0%E9%99%90%E5%BE%AA%E7%8E%AF%E5%88%B7%E6%96%B0%E7%9B%B8%E5%BA%94%E7%9A%84%E9%A1%B5%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/429711/%E6%97%A0%E9%99%90%E5%BE%AA%E7%8E%AF%E5%88%B7%E6%96%B0%E7%9B%B8%E5%BA%94%E7%9A%84%E9%A1%B5%E9%9D%A2.user.js",
+    "code_size": 750,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429698,
+    "daily_installs": 0,
+    "total_installs": 4318,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-21T15:33:38.000Z",
+    "code_updated_at": "2022-01-26T06:34:33.000Z",
+    "namespace": "https://github.com/wangrongding/ding-script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385161,
+        "name": "汪荣顶",
+        "created_at": "2019-10-09T04:57:15.000Z",
+        "url": "https://greasyfork.org/users/385161-%E6%B1%AA%E8%8D%A3%E9%A1%B6"
+      }
+    ],
+    "name": "github一键在线编辑",
+    "description": "github一键跳转在线编辑,实现在网页端上通过线上vsCode直观的对代码进行浏览与编译",
+    "url": "https://greasyfork.org/scripts/429698-github%E4%B8%80%E9%94%AE%E5%9C%A8%E7%BA%BF%E7%BC%96%E8%BE%91",
+    "code_url": "https://update.greasyfork.org/scripts/429698/github%E4%B8%80%E9%94%AE%E5%9C%A8%E7%BA%BF%E7%BC%96%E8%BE%91.user.js",
+    "code_size": 1725,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429599,
+    "daily_installs": 0,
+    "total_installs": 318,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-19T08:12:18.000Z",
+    "code_updated_at": "2022-03-03T08:49:38.000Z",
+    "namespace": "https://github.com/wangrongding/ding-script.git",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385161,
+        "name": "汪荣顶",
+        "created_at": "2019-10-09T04:57:15.000Z",
+        "url": "https://greasyfork.org/users/385161-%E6%B1%AA%E8%8D%A3%E9%A1%B6"
+      }
+    ],
+    "name": "谷歌翻译忽略代码块和指定元素",
+    "description": "使用谷歌翻译插件翻译网页时，忽略代码块和一些指定的无需翻译的元素(Use Google translation plugin page, ignore the code block and some elements of the specified without translation.)",
+    "url": "https://greasyfork.org/scripts/429599-%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E5%BF%BD%E7%95%A5%E4%BB%A3%E7%A0%81%E5%9D%97%E5%92%8C%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0",
+    "code_url": "https://update.greasyfork.org/scripts/429599/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E5%BF%BD%E7%95%A5%E4%BB%A3%E7%A0%81%E5%9D%97%E5%92%8C%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0.user.js",
+    "code_size": 2654,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481578,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-07T04:30:50.000Z",
+    "code_updated_at": "2023-12-21T06:51:38.000Z",
+    "namespace": "http://falcon.ictbda.cn:89/yoriko/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229356,
+        "name": "Jiangyuan-L",
+        "created_at": "2023-12-06T15:42:10.000Z",
+        "url": "https://greasyfork.org/users/1229356-jiangyuan-l"
+      }
+    ],
+    "name": "算法思维树",
+    "description": "添加快捷指令（prompts）",
+    "url": "https://greasyfork.org/scripts/481578-%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E6%A0%91",
+    "code_url": "https://update.greasyfork.org/scripts/481578/%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E6%A0%91.user.js",
+    "code_size": 15093,
+    "license": "MIT License",
+    "version": "0.52",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

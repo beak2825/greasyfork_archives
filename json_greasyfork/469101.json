@@ -1,0 +1,34 @@
+{
+  "id": 469101,
+  "daily_installs": 0,
+  "total_installs": 50,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-20T20:30:56.000Z",
+  "code_updated_at": "2023-06-23T05:31:13.000Z",
+  "namespace": "http://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1050491,
+      "name": "Moses Maloney",
+      "created_at": "2023-03-30T13:51:16.000Z",
+      "url": "https://greasyfork.org/users/1050491-moses-maloney",
+      "scripts": []
+    }
+  ],
+  "name": "GGn Inventory Favorites",
+  "description": "Adds a Favorite Tab to the Inventory Page of GGn",
+  "url": "https://greasyfork.org/scripts/469101-ggn-inventory-favorites",
+  "code_url": "https://update.greasyfork.org/scripts/469101/GGn%20Inventory%20Favorites.user.js",
+  "code_size": 17964,
+  "license": "MIT License",
+  "version": "1.22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

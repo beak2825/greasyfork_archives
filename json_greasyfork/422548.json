@@ -1,0 +1,33 @@
+{
+  "id": 422548,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-02T17:37:09.000Z",
+  "code_updated_at": "2021-03-02T17:37:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 662577,
+      "name": "vincenttjia",
+      "created_at": "2020-07-02T14:11:50.000Z",
+      "url": "https://greasyfork.org/users/662577-vincenttjia"
+    }
+  ],
+  "name": "Auto Login Myclass",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/422548-auto-login-myclass",
+  "code_url": "https://update.greasyfork.org/scripts/422548/Auto%20Login%20Myclass.user.js",
+  "code_size": 497,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 434503,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-26T09:46:32.000Z",
+  "code_updated_at": "2022-03-04T02:32:44.000Z",
+  "namespace": "poke52_mianmian_script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 688256,
+      "name": "JamLin",
+      "created_at": "2020-09-17T06:33:42.000Z",
+      "url": "https://greasyfork.org/users/688256-jamlin"
+    }
+  ],
+  "name": "神奇宝贝百科脚本",
+  "description": "神奇宝贝百科脚本，能够为神奇宝贝百科搜索框增加一个在Bing搜索的按钮，方便使用Bing搜索神奇宝贝百科",
+  "url": "https://greasyfork.org/scripts/434503-%E7%A5%9E%E5%A5%87%E5%AE%9D%E8%B4%9D%E7%99%BE%E7%A7%91%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/434503/%E7%A5%9E%E5%A5%87%E5%AE%9D%E8%B4%9D%E7%99%BE%E7%A7%91%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 1292,
+  "license": "MIT License",
+  "version": "0.30",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

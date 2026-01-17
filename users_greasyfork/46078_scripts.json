@@ -96,6 +96,105 @@
     "version": "2025-01-16",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 466902,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-23T10:02:36.000Z",
+    "code_updated_at": "2023-05-23T10:49:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46078,
+        "name": "Dimava",
+        "created_at": "2016-05-28T22:57:23.000Z",
+        "url": "https://greasyfork.org/users/46078-dimava"
+      }
+    ],
+    "name": "HaveIt Style",
+    "description": "style",
+    "url": "https://greasyfork.org/scripts/466902-haveit-style",
+    "code_url": "https://update.greasyfork.org/scripts/466902/HaveIt%20Style.user.js",
+    "code_size": 1675,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 455993,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-04T11:47:49.000Z",
+    "code_updated_at": "2022-12-04T11:47:49.000Z",
+    "namespace": "http://itch.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46078,
+        "name": "Dimava",
+        "created_at": "2016-05-28T22:57:23.000Z",
+        "url": "https://greasyfork.org/users/46078-dimava"
+      }
+    ],
+    "name": "Itch \"Open in App\" button",
+    "description": "Add \"Open in App\" button to most of itch.io pages",
+    "url": "https://greasyfork.org/scripts/455993-itch-open-in-app-button",
+    "code_url": "https://update.greasyfork.org/scripts/455993/Itch%20%22Open%20in%20App%22%20button.user.js",
+    "code_size": 753,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439153,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-26T08:49:45.000Z",
+    "code_updated_at": "2022-01-26T08:49:44.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46078,
+        "name": "Dimava",
+        "created_at": "2016-05-28T22:57:23.000Z",
+        "url": "https://greasyfork.org/users/46078-dimava"
+      }
+    ],
+    "name": "PoopJs",
+    "description": "Dimava's library for simplifying userscripting",
+    "url": "https://greasyfork.org/scripts/439153-poopjs",
+    "code_url": "https://update.greasyfork.org/scripts/439153/1012736/PoopJs.js",
+    "code_size": 328269,
+    "license": null,
+    "version": "0.0.1.20220126084944",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

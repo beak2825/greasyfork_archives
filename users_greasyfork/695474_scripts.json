@@ -1,0 +1,35 @@
+[
+  {
+    "id": 413429,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-16T04:29:11.000Z",
+    "code_updated_at": "2020-12-01T05:18:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695474,
+        "name": "ImmortalsSS",
+        "created_at": "2020-10-16T04:16:24.000Z",
+        "url": "https://greasyfork.org/users/695474-immortalsss"
+      }
+    ],
+    "name": "预约实验",
+    "description": "//lgy",
+    "url": "https://greasyfork.org/scripts/413429-%E9%A2%84%E7%BA%A6%E5%AE%9E%E9%AA%8C",
+    "code_url": "https://update.greasyfork.org/scripts/413429/%E9%A2%84%E7%BA%A6%E5%AE%9E%E9%AA%8C.user.js",
+    "code_size": 3365,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 440422,
+  "daily_installs": 0,
+  "total_installs": 114,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-22T02:38:32.000Z",
+  "code_updated_at": "2022-02-22T02:38:32.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 41237,
+      "name": "Aron Mlodkowski",
+      "created_at": "2016-04-30T23:01:55.000Z",
+      "url": "https://greasyfork.org/users/41237-aron-mlodkowski",
+      "scripts": [
+        {
+          "id": 440422,
+          "daily_installs": 0,
+          "total_installs": 114,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-22T02:38:32.000Z",
+          "code_updated_at": "2022-02-22T02:38:32.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove Ads from Fextra",
+          "description": "2/21/2022",
+          "url": "https://greasyfork.org/scripts/440422-remove-ads-from-fextra",
+          "code_url": "https://update.greasyfork.org/scripts/440422/Remove%20Ads%20from%20Fextra.user.js",
+          "code_size": 733,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove Ads from Fextra",
+  "description": "2/21/2022",
+  "url": "https://greasyfork.org/scripts/440422-remove-ads-from-fextra",
+  "code_url": "https://update.greasyfork.org/scripts/440422/Remove%20Ads%20from%20Fextra.user.js",
+  "code_size": 733,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 438192,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-08T03:56:40.000Z",
+  "code_updated_at": "2022-01-08T04:21:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 862299,
+      "name": "Xxxx Norza",
+      "created_at": "2022-01-08T03:49:37.000Z",
+      "url": "https://greasyfork.org/users/862299-xxxx-norza",
+      "scripts": [
+        {
+          "id": 438192,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-08T03:56:40.000Z",
+          "code_updated_at": "2022-01-08T04:21:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide Numbers",
+          "description": "Hide Twitter followers count on your page",
+          "url": "https://greasyfork.org/scripts/438192-hide-numbers",
+          "code_url": "https://update.greasyfork.org/scripts/438192/Hide%20Numbers.user.js",
+          "code_size": 1111,
+          "license": "MIT License",
+          "version": "0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide Numbers",
+  "description": "Hide Twitter followers count on your page",
+  "url": "https://greasyfork.org/scripts/438192-hide-numbers",
+  "code_url": "https://update.greasyfork.org/scripts/438192/Hide%20Numbers.user.js",
+  "code_size": 1111,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

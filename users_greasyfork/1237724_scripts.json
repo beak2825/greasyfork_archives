@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494386,
+    "daily_installs": 2,
+    "total_installs": 7642,
+    "fan_score": "4.6",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 3,
+    "created_at": "2024-05-08T10:24:34.000Z",
+    "code_updated_at": "2024-05-08T10:31:19.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1237724,
+        "name": "HackPrivateGG",
+        "created_at": "2023-12-22T10:26:58.000Z",
+        "url": "https://greasyfork.org/users/1237724-hackprivategg"
+      }
+    ],
+    "name": "Moomoo.io ๖ۣۜℱ₴Ⱨ 𝕞𝕠𝕕 Private Version",
+    "description": "Best Auto Heal Mod ( Esc to open menu )",
+    "url": "https://greasyfork.org/scripts/494386-moomoo-io-%E0%B9%96%DB%A3%DB%9C%E2%84%B1-%E2%B1%A8-%F0%9D%95%9E%F0%9D%95%A0%F0%9D%95%95-private-version",
+    "code_url": "https://update.greasyfork.org/scripts/494386/Moomooio%20%E0%B9%96%DB%A3%DB%9C%E2%84%B1%E2%82%B4%E2%B1%A7%20%F0%9D%95%9E%F0%9D%95%A0%F0%9D%95%95%20Private%20Version.user.js",
+    "code_size": 51540,
+    "license": "MIT License",
+    "version": "3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

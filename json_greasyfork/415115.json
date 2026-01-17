@@ -1,0 +1,33 @@
+{
+  "id": 415115,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-31T01:48:31.000Z",
+  "code_updated_at": "2020-10-31T01:48:31.000Z",
+  "namespace": "https://greasyfork.org/users/699847",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 699847,
+      "name": "f-carraro",
+      "created_at": "2020-10-31T01:32:45.000Z",
+      "url": "https://greasyfork.org/users/699847-f-carraro"
+    }
+  ],
+  "name": "right click + scroll up/down == left/right",
+  "description": "useful for any site with galleries, hold right click and scroll to cycle images",
+  "url": "https://greasyfork.org/scripts/415115-right-click-scroll-up-down-left-right",
+  "code_url": "https://update.greasyfork.org/scripts/415115/right%20click%20%2B%20scroll%20updown%20%3D%3D%20leftright.user.js",
+  "code_size": 1062,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

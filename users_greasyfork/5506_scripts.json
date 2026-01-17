@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438529,
+    "daily_installs": 0,
+    "total_installs": 296,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-14T11:33:39.000Z",
+    "code_updated_at": "2022-03-11T13:32:24.000Z",
+    "namespace": "https://greasyfork.org/users/5506",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5506,
+        "name": "midpoint",
+        "created_at": "2014-09-21T14:03:44.000Z",
+        "url": "https://greasyfork.org/users/5506-midpoint"
+      }
+    ],
+    "name": "微信公众号文章阅读模式",
+    "description": "对微信公众号文章进行重新排版，方便阅读",
+    "url": "https://greasyfork.org/scripts/438529-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E6%A8%A1%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/438529/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E6%A8%A1%E5%BC%8F.user.js",
+    "code_size": 878,
+    "license": null,
+    "version": "1.0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473108,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-15T07:54:44.000Z",
+    "code_updated_at": "2023-08-15T07:57:23.000Z",
+    "namespace": "https://github.com/redble",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1151866,
+        "name": "redble",
+        "created_at": "2023-08-15T07:53:10.000Z",
+        "url": "https://greasyfork.org/users/1151866-redble"
+      }
+    ],
+    "name": "拼多多图床 For ZHC",
+    "description": "拼多多图床 基于hook输入框可以粘贴上传",
+    "url": "https://greasyfork.org/scripts/473108-%E6%8B%BC%E5%A4%9A%E5%A4%9A%E5%9B%BE%E5%BA%8A-for-zhc",
+    "code_url": "https://update.greasyfork.org/scripts/473108/%E6%8B%BC%E5%A4%9A%E5%A4%9A%E5%9B%BE%E5%BA%8A%20For%20ZHC.user.js",
+    "code_size": 3040,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

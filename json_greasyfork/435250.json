@@ -1,0 +1,33 @@
+{
+  "id": 435250,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-09T08:59:04.000Z",
+  "code_updated_at": "2021-11-09T08:59:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 112194,
+      "name": "gdqb521",
+      "created_at": "2017-03-24T00:52:41.000Z",
+      "url": "https://greasyfork.org/users/112194-gdqb521"
+    }
+  ],
+  "name": "Graphpad-Prism8/9英文在线帮助替换为中文网址",
+  "description": "在Graphpad软件中点击帮助后，链接转跳到浏览器打开帮助页，帮助页为英文，本脚本实现将帮助地址自动转换为中文地址",
+  "url": "https://greasyfork.org/scripts/435250-graphpad-prism8-9%E8%8B%B1%E6%96%87%E5%9C%A8%E7%BA%BF%E5%B8%AE%E5%8A%A9%E6%9B%BF%E6%8D%A2%E4%B8%BA%E4%B8%AD%E6%96%87%E7%BD%91%E5%9D%80",
+  "code_url": "https://update.greasyfork.org/scripts/435250/Graphpad-Prism89%E8%8B%B1%E6%96%87%E5%9C%A8%E7%BA%BF%E5%B8%AE%E5%8A%A9%E6%9B%BF%E6%8D%A2%E4%B8%BA%E4%B8%AD%E6%96%87%E7%BD%91%E5%9D%80.user.js",
+  "code_size": 1357,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

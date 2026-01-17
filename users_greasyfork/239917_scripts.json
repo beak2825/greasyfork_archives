@@ -1,0 +1,68 @@
+[
+  {
+    "id": 476150,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-27T07:05:48.000Z",
+    "code_updated_at": "2023-09-27T08:46:13.000Z",
+    "namespace": "https://greasyfork.org/users/239917",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239917,
+        "name": "ListeningLTG",
+        "created_at": "2019-01-16T08:05:47.000Z",
+        "url": "https://greasyfork.org/users/239917-listeningltg"
+      }
+    ],
+    "name": "QQ空间自动删除主页内容",
+    "description": "一键删除QQ空间主页内容。不可恢复，慎用！",
+    "url": "https://greasyfork.org/scripts/476150-qq%E7%A9%BA%E9%97%B4%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E4%B8%BB%E9%A1%B5%E5%86%85%E5%AE%B9",
+    "code_url": "https://update.greasyfork.org/scripts/476150/QQ%E7%A9%BA%E9%97%B4%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E4%B8%BB%E9%A1%B5%E5%86%85%E5%AE%B9.user.js",
+    "code_size": 3380,
+    "license": "The Unlicense",
+    "version": "0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 475655,
+    "daily_installs": 0,
+    "total_installs": 165,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-19T08:49:26.000Z",
+    "code_updated_at": "2023-09-26T08:32:36.000Z",
+    "namespace": "ListeningLTG",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239917,
+        "name": "ListeningLTG",
+        "created_at": "2019-01-16T08:05:47.000Z",
+        "url": "https://greasyfork.org/users/239917-listeningltg"
+      }
+    ],
+    "name": "斗鱼直播间精简",
+    "description": "提供简洁的界面，只为安心看直播。",
+    "url": "https://greasyfork.org/scripts/475655-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E7%B2%BE%E7%AE%80",
+    "code_url": "https://update.greasyfork.org/scripts/475655/%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E7%B2%BE%E7%AE%80.user.js",
+    "code_size": 6325,
+    "license": "MIT License",
+    "version": "2023.09.26",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

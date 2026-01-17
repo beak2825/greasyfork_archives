@@ -30,6 +30,39 @@
     "version": "0.8",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 464518,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-21T03:44:28.000Z",
+    "code_updated_at": "2023-06-21T02:25:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1064498,
+        "name": "WinterSun2284",
+        "created_at": "2023-04-21T03:19:09.000Z",
+        "url": "https://greasyfork.org/users/1064498-wintersun2284"
+      }
+    ],
+    "name": "京东自营自动补充数据的脚本",
+    "description": "京东自营自动补充数据的脚本!",
+    "url": "https://greasyfork.org/scripts/464518-%E4%BA%AC%E4%B8%9C%E8%87%AA%E8%90%A5%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%85%E6%95%B0%E6%8D%AE%E7%9A%84%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/464518/%E4%BA%AC%E4%B8%9C%E8%87%AA%E8%90%A5%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%85%E6%95%B0%E6%8D%AE%E7%9A%84%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 57638,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

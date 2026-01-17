@@ -1,0 +1,59 @@
+{
+  "id": 448924,
+  "daily_installs": 0,
+  "total_installs": 48,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-04T12:15:34.000Z",
+  "code_updated_at": "2023-08-12T10:21:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 943003,
+      "name": "Funny Joker",
+      "created_at": "2022-08-04T11:58:14.000Z",
+      "url": "https://greasyfork.org/users/943003-funny-joker",
+      "scripts": [
+        {
+          "id": 448924,
+          "daily_installs": 0,
+          "total_installs": 48,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-04T12:15:34.000Z",
+          "code_updated_at": "2023-08-12T10:21:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "空中课堂辅助包",
+          "description": "空中课堂修改包！无产阶级必将走向胜利！",
+          "url": "https://greasyfork.org/scripts/448924-%E7%A9%BA%E4%B8%AD%E8%AF%BE%E5%A0%82%E8%BE%85%E5%8A%A9%E5%8C%85",
+          "code_url": "https://update.greasyfork.org/scripts/448924/%E7%A9%BA%E4%B8%AD%E8%AF%BE%E5%A0%82%E8%BE%85%E5%8A%A9%E5%8C%85.user.js",
+          "code_size": 5752,
+          "license": "MIT License",
+          "version": "4.2.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "空中课堂辅助包",
+  "description": "空中课堂修改包！无产阶级必将走向胜利！",
+  "url": "https://greasyfork.org/scripts/448924-%E7%A9%BA%E4%B8%AD%E8%AF%BE%E5%A0%82%E8%BE%85%E5%8A%A9%E5%8C%85",
+  "code_url": "https://update.greasyfork.org/scripts/448924/%E7%A9%BA%E4%B8%AD%E8%AF%BE%E5%A0%82%E8%BE%85%E5%8A%A9%E5%8C%85.user.js",
+  "code_size": 5752,
+  "license": "MIT License",
+  "version": "4.2.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

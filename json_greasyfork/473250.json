@@ -1,0 +1,59 @@
+{
+  "id": 473250,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-17T06:55:41.000Z",
+  "code_updated_at": "2023-08-17T07:03:45.000Z",
+  "namespace": "https://greasyfork.org/users/1153239",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1153239,
+      "name": "Karthick OC",
+      "created_at": "2023-08-17T06:46:29.000Z",
+      "url": "https://greasyfork.org/users/1153239-karthick-oc",
+      "scripts": [
+        {
+          "id": 473250,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-17T06:55:41.000Z",
+          "code_updated_at": "2023-08-17T07:03:45.000Z",
+          "namespace": "https://greasyfork.org/users/1153239",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Github Issue to Originator",
+          "description": "Assigns github issues to originator",
+          "url": "https://greasyfork.org/scripts/473250-github-issue-to-originator",
+          "code_url": "https://update.greasyfork.org/scripts/473250/Github%20Issue%20to%20Originator.user.js",
+          "code_size": 1059,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Github Issue to Originator",
+  "description": "Assigns github issues to originator",
+  "url": "https://greasyfork.org/scripts/473250-github-issue-to-originator",
+  "code_url": "https://update.greasyfork.org/scripts/473250/Github%20Issue%20to%20Originator.user.js",
+  "code_size": 1059,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

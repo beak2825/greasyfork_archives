@@ -1,0 +1,33 @@
+{
+  "id": 437561,
+  "daily_installs": 0,
+  "total_installs": 1864,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-25T06:34:46.000Z",
+  "code_updated_at": "2025-12-06T00:47:52.000Z",
+  "namespace": "https://greasyfork.org/users/826975",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 826975,
+      "name": "BluBonk",
+      "created_at": "2021-10-20T07:49:02.000Z",
+      "url": "https://greasyfork.org/users/826975-blubonk"
+    }
+  ],
+  "name": "bonk-pool",
+  "description": "A userscript to add custom gamemode Pool to bonk.io",
+  "url": "https://greasyfork.org/scripts/437561-bonk-pool",
+  "code_url": "https://update.greasyfork.org/scripts/437561/bonk-pool.user.js",
+  "code_size": 247816,
+  "license": null,
+  "version": "1.0.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

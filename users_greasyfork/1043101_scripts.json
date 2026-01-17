@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461946,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-16T11:54:44.000Z",
+    "code_updated_at": "2023-03-16T11:54:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043101,
+        "name": "Bright Day",
+        "created_at": "2023-03-16T11:41:19.000Z",
+        "url": "https://greasyfork.org/users/1043101-bright-day"
+      }
+    ],
+    "name": "Website Navigation Menu",
+    "description": "Adds a menu to help navigate to other websites easily on the Google Search website",
+    "url": "https://greasyfork.org/scripts/461946-website-navigation-menu",
+    "code_url": "https://update.greasyfork.org/scripts/461946/Website%20Navigation%20Menu.user.js",
+    "code_size": 1533,
+    "license": "Bright Day",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

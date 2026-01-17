@@ -1,0 +1,35 @@
+[
+  {
+    "id": 414209,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-22T13:45:36.000Z",
+    "code_updated_at": "2020-10-22T13:45:35.000Z",
+    "namespace": "https://greasyfork.org/users/697378-reiver",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 697378,
+        "name": "Reiver",
+        "created_at": "2020-10-22T13:02:47.000Z",
+        "url": "https://greasyfork.org/users/697378-reiver"
+      }
+    ],
+    "name": "Prevent middle click Javascript void tab",
+    "description": "Stops web browser from opening blank javascript:void(0) tabs when middle clicking on Javascipt links.",
+    "url": "https://greasyfork.org/scripts/414209-prevent-middle-click-javascript-void-tab",
+    "code_url": "https://update.greasyfork.org/scripts/414209/Prevent%20middle%20click%20Javascript%20void%20tab.user.js",
+    "code_size": 490,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

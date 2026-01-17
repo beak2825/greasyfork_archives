@@ -1,0 +1,59 @@
+{
+  "id": 453335,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-19T07:01:00.000Z",
+  "code_updated_at": "2022-10-19T07:01:00.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/972532-meng33333",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972532,
+      "name": "tingtyuy",
+      "created_at": "2022-10-19T03:09:45.000Z",
+      "url": "https://greasyfork.org/users/972532-tingtyuy",
+      "scripts": [
+        {
+          "id": 453335,
+          "daily_installs": 0,
+          "total_installs": 33,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-19T07:01:00.000Z",
+          "code_updated_at": "2022-10-19T07:01:00.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/972532-meng33333",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "文字拷贝",
+          "description": "拷贝文字时去除站点信息",
+          "url": "https://greasyfork.org/scripts/453335-%E6%96%87%E5%AD%97%E6%8B%B7%E8%B4%9D",
+          "code_url": "https://update.greasyfork.org/scripts/453335/%E6%96%87%E5%AD%97%E6%8B%B7%E8%B4%9D.user.js",
+          "code_size": 1015,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "文字拷贝",
+  "description": "拷贝文字时去除站点信息",
+  "url": "https://greasyfork.org/scripts/453335-%E6%96%87%E5%AD%97%E6%8B%B7%E8%B4%9D",
+  "code_url": "https://update.greasyfork.org/scripts/453335/%E6%96%87%E5%AD%97%E6%8B%B7%E8%B4%9D.user.js",
+  "code_size": 1015,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

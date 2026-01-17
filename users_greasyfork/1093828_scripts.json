@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468185,
+    "daily_installs": 0,
+    "total_installs": 3059,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-08T08:01:36.000Z",
+    "code_updated_at": "2023-09-09T04:48:52.000Z",
+    "namespace": "https://github.com/bazingaW/ucas_class_enrollment_assistant",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093828,
+        "name": "bazingaW",
+        "created_at": "2023-06-08T07:38:21.000Z",
+        "url": "https://greasyfork.org/users/1093828-bazingaw"
+      }
+    ],
+    "name": "UCAS Class Enrollment Assistant",
+    "description": "这是一个方便抢课界面操作的辅助工具。包括的功能有：1. 🚪直达战场： 进入选课系统后，自动跳转到选课页面。（如需查看通知公告 需要临时把本工具禁用） 2. 🚀一键跳转： 点击小火箭，想去哪里点哪里！更有高亮与自动滚动，帮助快速定位课程。 3. ✔快速提交： 不想滚到底部才能提交选课？验证码和提交选课按钮直接整合到面板！ 3.1. 选课、学位课复选框添加到面板中； 3.2. 修复了原版选课系统点击\"切换验证码\"没反应的bug，现在可以点击验证码图片更新没有加载出来的验证码了； 3.3. 提交选课时自动跳过\"确认提交吗\"对话框。 4. 🎨标注课程状态： 绿色表示已选上的课程，红色表示已满员的课程。（只有进入选课页面才会更新课程是否已满员）",
+    "url": "https://greasyfork.org/scripts/468185-ucas-class-enrollment-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/468185/UCAS%20Class%20Enrollment%20Assistant.user.js",
+    "code_size": 29351,
+    "license": "MIT License",
+    "version": "1.7.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

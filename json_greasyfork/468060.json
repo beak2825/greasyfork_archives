@@ -1,0 +1,59 @@
+{
+  "id": 468060,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-06T12:26:52.000Z",
+  "code_updated_at": "2023-06-29T01:56:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1092465,
+      "name": "TheMrRedSlime",
+      "created_at": "2023-06-06T12:22:07.000Z",
+      "url": "https://greasyfork.org/users/1092465-themrredslime",
+      "scripts": [
+        {
+          "id": 468060,
+          "daily_installs": 0,
+          "total_installs": 42,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-06T12:26:52.000Z",
+          "code_updated_at": "2023-06-29T01:56:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Redz Ad Skipper",
+          "description": "Skipz Ads For You!",
+          "url": "https://greasyfork.org/scripts/468060-redz-ad-skipper",
+          "code_url": "https://update.greasyfork.org/scripts/468060/Redz%20Ad%20Skipper.user.js",
+          "code_size": 1128,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Redz Ad Skipper",
+  "description": "Skipz Ads For You!",
+  "url": "https://greasyfork.org/scripts/468060-redz-ad-skipper",
+  "code_url": "https://update.greasyfork.org/scripts/468060/Redz%20Ad%20Skipper.user.js",
+  "code_size": 1128,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

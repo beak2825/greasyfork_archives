@@ -1,0 +1,59 @@
+{
+  "id": 449295,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-10T08:13:24.000Z",
+  "code_updated_at": "2023-08-18T02:23:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 944944,
+      "name": "jielahou",
+      "created_at": "2022-08-10T07:37:30.000Z",
+      "url": "https://greasyfork.org/users/944944-jielahou",
+      "scripts": [
+        {
+          "id": 449295,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-10T08:13:24.000Z",
+          "code_updated_at": "2023-08-18T02:23:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "哈工大本科教务选课页面提取上课时间",
+          "description": "【解析结果仅供参考】本脚本的意义在于：在选课前/选课后提取出来想要上的课的时间，提取后可自行或者使用俺写的一个小工具来判断课程间是否冲突&预查看课表。",
+          "url": "https://greasyfork.org/scripts/449295-%E5%93%88%E5%B7%A5%E5%A4%A7%E6%9C%AC%E7%A7%91%E6%95%99%E5%8A%A1%E9%80%89%E8%AF%BE%E9%A1%B5%E9%9D%A2%E6%8F%90%E5%8F%96%E4%B8%8A%E8%AF%BE%E6%97%B6%E9%97%B4",
+          "code_url": "https://update.greasyfork.org/scripts/449295/%E5%93%88%E5%B7%A5%E5%A4%A7%E6%9C%AC%E7%A7%91%E6%95%99%E5%8A%A1%E9%80%89%E8%AF%BE%E9%A1%B5%E9%9D%A2%E6%8F%90%E5%8F%96%E4%B8%8A%E8%AF%BE%E6%97%B6%E9%97%B4.user.js",
+          "code_size": 8180,
+          "license": "MIT License",
+          "version": "0.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "哈工大本科教务选课页面提取上课时间",
+  "description": "【解析结果仅供参考】本脚本的意义在于：在选课前/选课后提取出来想要上的课的时间，提取后可自行或者使用俺写的一个小工具来判断课程间是否冲突&预查看课表。",
+  "url": "https://greasyfork.org/scripts/449295-%E5%93%88%E5%B7%A5%E5%A4%A7%E6%9C%AC%E7%A7%91%E6%95%99%E5%8A%A1%E9%80%89%E8%AF%BE%E9%A1%B5%E9%9D%A2%E6%8F%90%E5%8F%96%E4%B8%8A%E8%AF%BE%E6%97%B6%E9%97%B4",
+  "code_url": "https://update.greasyfork.org/scripts/449295/%E5%93%88%E5%B7%A5%E5%A4%A7%E6%9C%AC%E7%A7%91%E6%95%99%E5%8A%A1%E9%80%89%E8%AF%BE%E9%A1%B5%E9%9D%A2%E6%8F%90%E5%8F%96%E4%B8%8A%E8%AF%BE%E6%97%B6%E9%97%B4.user.js",
+  "code_size": 8180,
+  "license": "MIT License",
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

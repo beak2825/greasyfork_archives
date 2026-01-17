@@ -1,0 +1,34 @@
+{
+  "id": 441104,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-08T02:01:40.000Z",
+  "code_updated_at": "2022-03-14T05:12:05.000Z",
+  "namespace": "http://stab.ai/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 884239,
+      "name": "Shawn Tabai",
+      "created_at": "2022-03-08T01:59:48.000Z",
+      "url": "https://greasyfork.org/users/884239-shawn-tabai",
+      "scripts": []
+    }
+  ],
+  "name": "Play Store Scrape",
+  "description": "Scrape a Play Store app page for reviews",
+  "url": "https://greasyfork.org/scripts/441104-play-store-scrape",
+  "code_url": "https://update.greasyfork.org/scripts/441104/Play%20Store%20Scrape.user.js",
+  "code_size": 5642,
+  "license": "MIT License",
+  "version": "0.2.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

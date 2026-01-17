@@ -1,0 +1,35 @@
+[
+  {
+    "id": 478168,
+    "daily_installs": 0,
+    "total_installs": 46285,
+    "fan_score": "76.9",
+    "good_ratings": 36,
+    "ok_ratings": 5,
+    "bad_ratings": 2,
+    "created_at": "2023-10-24T14:38:21.000Z",
+    "code_updated_at": "2025-11-07T05:14:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1151050,
+        "name": "nuisbihsaf",
+        "created_at": "2023-08-14T05:36:58.000Z",
+        "url": "https://greasyfork.org/users/1151050-nuisbihsaf"
+      }
+    ],
+    "name": "📌📌📌【2025光影】网络教育、🪅专业技术、🎯继续教育等视频学习伴侣",
+    "description": "🤖自动挂机📺高倍数🔥继续教育🎗️远程教育🚩专业技术人员💂‍♀️西南大学、北京科技大学🎀西南交通，湖北第二师范🥩电子科技，成都市中小学🍿华东师范大学，江西专技学习网，安徽专技网,建投学堂、温州继续教育网、山东青年政治学院,🛎河南教师培训网,重庆大学网络教育学院，黑龙江省网络助学平台，青岛市，🌈浙里学习、山东干部网络学院，河北教师教育网、隆泰达培训🎊东营市继续教育网、百年树人、会计人员🥇深i学、济宁市高级职业学校、基础教育进修网、高等学历继续教育👨‍🚒河南专技培训、青岛大学、和学在线、湖南农民大学生⏩全国煤炭行业现代❤️浙江文化干部🤖新营造❤️贵州省建设行业职业技能管理中心、广州市干部培训❤️长春工业大学🎉西安工业大学168网校🥇在线壹佰分🎉一点通🎉上海开放大学📺卫生健康人才职业、好医生、广州新教师✅株洲教师教育1️⃣安徽专业技术人员🔥广东省教师继续教育信息管理平台🎗️河北干部网络学院↗️广东医科大学、河南华夏基础😉九江学院🎉国家开放大学🧠青书学堂、云南省执业药师、马鞍山市、湖南师范大学、教师专业发展培训网,贵州省党员干部网络学院，河南省专业技术人员，企安全、夏邑县小学教师、蕴瑜课堂、新疆",
+    "url": "https://greasyfork.org/scripts/478168-2025%E5%85%89%E5%BD%B1-%E7%BD%91%E7%BB%9C%E6%95%99%E8%82%B2-%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E7%AD%89%E8%A7%86%E9%A2%91%E5%AD%A6%E4%B9%A0%E4%BC%B4%E4%BE%A3",
+    "code_url": "https://update.greasyfork.org/scripts/478168/%F0%9F%93%8C%F0%9F%93%8C%F0%9F%93%8C%E3%80%902025%E5%85%89%E5%BD%B1%E3%80%91%E7%BD%91%E7%BB%9C%E6%95%99%E8%82%B2%E3%80%81%F0%9F%AA%85%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E3%80%81%F0%9F%8E%AF%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E7%AD%89%E8%A7%86%E9%A2%91%E5%AD%A6%E4%B9%A0%E4%BC%B4%E4%BE%A3.user.js",
+    "code_size": 298458,
+    "license": "MIT License",
+    "version": "6.7.8.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

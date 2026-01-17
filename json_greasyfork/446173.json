@@ -1,0 +1,59 @@
+{
+  "id": 446173,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-08T05:26:19.000Z",
+  "code_updated_at": "2022-06-08T05:28:57.000Z",
+  "namespace": "https://www.muyuanhuck.cn/archives/312",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 923271,
+      "name": "爱吃花椒的胖头鱼",
+      "created_at": "2022-06-08T05:13:41.000Z",
+      "url": "https://greasyfork.org/users/923271-%E7%88%B1%E5%90%83%E8%8A%B1%E6%A4%92%E7%9A%84%E8%83%96%E5%A4%B4%E9%B1%BC",
+      "scripts": [
+        {
+          "id": 446173,
+          "daily_installs": 0,
+          "total_installs": 34,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-08T05:26:19.000Z",
+          "code_updated_at": "2022-06-08T05:28:57.000Z",
+          "namespace": "https://www.muyuanhuck.cn/archives/312",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "e2ds高中URP教务系统助手",
+          "description": "URP教务系统进行教学评估",
+          "url": "https://greasyfork.org/scripts/446173-e2ds%E9%AB%98%E4%B8%ADurp%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/446173/e2ds%E9%AB%98%E4%B8%ADURP%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 1296,
+          "license": "GNU General Public License v3.0",
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "e2ds高中URP教务系统助手",
+  "description": "URP教务系统进行教学评估",
+  "url": "https://greasyfork.org/scripts/446173-e2ds%E9%AB%98%E4%B8%ADurp%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/446173/e2ds%E9%AB%98%E4%B8%ADURP%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 1296,
+  "license": "GNU General Public License v3.0",
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 474289,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-31T12:16:25.000Z",
+    "code_updated_at": "2023-08-31T12:16:25.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994126,
+        "name": "JaredJacobsen",
+        "created_at": "2022-12-07T15:45:33.000Z",
+        "url": "https://greasyfork.org/users/994126-jaredjacobsen"
+      }
+    ],
+    "name": "Hide blue checks on twitter",
+    "description": "Hide blue checks on twitter.com",
+    "url": "https://greasyfork.org/scripts/474289-hide-blue-checks-on-twitter",
+    "code_url": "https://update.greasyfork.org/scripts/474289/Hide%20blue%20checks%20on%20twitter.user.js",
+    "code_size": 461,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456206,
+    "daily_installs": 0,
+    "total_installs": 337,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-07T16:04:27.000Z",
+    "code_updated_at": "2022-12-07T16:04:26.000Z",
+    "namespace": "https://greasyfork.org/users/994126",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994126,
+        "name": "JaredJacobsen",
+        "created_at": "2022-12-07T15:45:33.000Z",
+        "url": "https://greasyfork.org/users/994126-jaredjacobsen"
+      }
+    ],
+    "name": "chat-gpt-voice-recognition-userscript",
+    "description": "A userscript to add voice recognition to Chat GPT",
+    "url": "https://greasyfork.org/scripts/456206-chat-gpt-voice-recognition-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/456206/chat-gpt-voice-recognition-userscript.user.js",
+    "code_size": 1573,
+    "license": "MIT License",
+    "version": "2022.12.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -229,5 +229,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 486322,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-02T17:30:11.000Z",
+    "code_updated_at": "2024-02-03T02:35:44.000Z",
+    "namespace": "https://github.com/wzj042/hide-zhihu-comment",
+    "support_url": "https://github.com/wzj042/hide-zhihu-comment",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 953715,
+        "name": "wzj042",
+        "created_at": "2022-09-02T11:35:36.000Z",
+        "url": "https://greasyfork.org/users/953715-wzj042"
+      }
+    ],
+    "name": "隐藏知乎评论",
+    "description": "隐藏低信息量的评论，如单纯表情类评论",
+    "url": "https://greasyfork.org/scripts/486322-%E9%9A%90%E8%97%8F%E7%9F%A5%E4%B9%8E%E8%AF%84%E8%AE%BA",
+    "code_url": "https://update.greasyfork.org/scripts/486322/%E9%9A%90%E8%97%8F%E7%9F%A5%E4%B9%8E%E8%AF%84%E8%AE%BA.user.js",
+    "code_size": 5161,
+    "license": "MIT License",
+    "version": "0.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 478749,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-01T01:56:39.000Z",
+    "code_updated_at": "2023-11-01T01:56:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 953715,
+        "name": "wzj042",
+        "created_at": "2022-09-02T11:35:36.000Z",
+        "url": "https://greasyfork.org/users/953715-wzj042"
+      }
+    ],
+    "name": "YoudaoDictQuickSelect",
+    "description": "click bold text to quick select the word",
+    "url": "https://greasyfork.org/scripts/478749-youdaodictquickselect",
+    "code_url": "https://update.greasyfork.org/scripts/478749/YoudaoDictQuickSelect.user.js",
+    "code_size": 745,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473732,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-23T07:50:16.000Z",
+    "code_updated_at": "2024-11-27T09:35:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 953715,
+        "name": "wzj042",
+        "created_at": "2022-09-02T11:35:36.000Z",
+        "url": "https://greasyfork.org/users/953715-wzj042"
+      }
+    ],
+    "name": "微信读书移动端笔记列表增强",
+    "description": "添加打开/隐藏笔记面板按钮、笔记列表自动匹配当前章节进度、双击笔记跳转下一个笔记",
+    "url": "https://greasyfork.org/scripts/473732-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%AC%94%E8%AE%B0%E5%88%97%E8%A1%A8%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/473732/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%AC%94%E8%AE%B0%E5%88%97%E8%A1%A8%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 15980,
+    "license": "MIT License",
+    "version": "0.7.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

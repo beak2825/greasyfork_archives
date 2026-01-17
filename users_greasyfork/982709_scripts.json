@@ -1,0 +1,80 @@
+[
+  {
+    "id": 470480,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-09T12:14:53.000Z",
+    "code_updated_at": "2023-07-26T15:31:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 982709,
+        "name": "Rey5",
+        "created_at": "2022-11-13T08:06:02.000Z",
+        "url": "https://greasyfork.org/users/982709-rey5"
+      },
+      {
+        "id": 1133038,
+        "name": "zhoubanxian",
+        "created_at": "2023-07-22T08:07:45.000Z",
+        "url": "https://greasyfork.org/users/1133038-zhoubanxian"
+      },
+      {
+        "id": 1123907,
+        "name": "CosmoGao",
+        "created_at": "2023-07-11T08:11:05.000Z",
+        "url": "https://greasyfork.org/users/1123907-cosmogao"
+      }
+    ],
+    "name": "Red Leaves Games Assistant",
+    "description": "Red Leaves Games Section Helper",
+    "url": "https://greasyfork.org/scripts/470480-red-leaves-games-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/470480/Red%20Leaves%20Games%20Assistant.user.js",
+    "code_size": 15008,
+    "license": null,
+    "version": "0.1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454732,
+    "daily_installs": 0,
+    "total_installs": 667,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-13T10:13:27.000Z",
+    "code_updated_at": "2024-04-06T07:46:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 982709,
+        "name": "Rey5",
+        "created_at": "2022-11-13T08:06:02.000Z",
+        "url": "https://greasyfork.org/users/982709-rey5"
+      }
+    ],
+    "name": "Red Leaves Batch Claim",
+    "description": "红叶批量认领脚本",
+    "url": "https://greasyfork.org/scripts/454732-red-leaves-batch-claim",
+    "code_url": "https://update.greasyfork.org/scripts/454732/Red%20Leaves%20Batch%20Claim.user.js",
+    "code_size": 10569,
+    "license": null,
+    "version": "0.4.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

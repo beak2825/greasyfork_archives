@@ -1,0 +1,59 @@
+{
+  "id": 488079,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-23T07:55:04.000Z",
+  "code_updated_at": "2024-03-14T12:27:23.000Z",
+  "namespace": "https://www.ketangpai.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 792935,
+      "name": "Twist Mark",
+      "created_at": "2021-07-13T01:09:42.000Z",
+      "url": "https://greasyfork.org/users/792935-twist-mark",
+      "scripts": [
+        {
+          "id": 556363,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-20T07:55:21.000Z",
+          "code_updated_at": "2025-11-20T07:55:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chaoxing Downloader",
+          "description": "用于下载超星学习通课件",
+          "url": "https://greasyfork.org/scripts/556363-chaoxing-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/556363/Chaoxing%20Downloader.user.js",
+          "code_size": 7746,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "课堂派PPT保存脚本",
+  "description": "在点击按钮时保存指定位置的图片，并停止保存最后一张图片。",
+  "url": "https://greasyfork.org/scripts/488079-%E8%AF%BE%E5%A0%82%E6%B4%BEppt%E4%BF%9D%E5%AD%98%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/488079/%E8%AF%BE%E5%A0%82%E6%B4%BEPPT%E4%BF%9D%E5%AD%98%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 3386,
+  "license": "GNU GPLv3",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

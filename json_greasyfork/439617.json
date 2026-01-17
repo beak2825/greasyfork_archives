@@ -1,0 +1,34 @@
+{
+  "id": 439617,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-05T23:07:22.000Z",
+  "code_updated_at": "2022-02-05T23:07:21.000Z",
+  "namespace": "charlesr",
+  "support_url": null,
+  "contribution_url": "https://www.tore.moe/post/bilibili-massage-cleaner",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 752338,
+      "name": "charlesr",
+      "created_at": "2021-03-28T13:45:24.000Z",
+      "url": "https://greasyfork.org/users/752338-charlesr",
+      "scripts": []
+    }
+  ],
+  "name": "BiliBili 消息清理助手（私信）",
+  "description": "清理b站私信",
+  "url": "https://greasyfork.org/scripts/439617-bilibili-%E6%B6%88%E6%81%AF%E6%B8%85%E7%90%86%E5%8A%A9%E6%89%8B-%E7%A7%81%E4%BF%A1",
+  "code_url": "https://update.greasyfork.org/scripts/439617/BiliBili%20%E6%B6%88%E6%81%AF%E6%B8%85%E7%90%86%E5%8A%A9%E6%89%8B%EF%BC%88%E7%A7%81%E4%BF%A1%EF%BC%89.user.js",
+  "code_size": 4754,
+  "license": "GPL v3",
+  "version": "0.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

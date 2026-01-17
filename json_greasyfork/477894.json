@@ -1,0 +1,34 @@
+{
+  "id": 477894,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-20T20:05:44.000Z",
+  "code_updated_at": "2023-10-21T10:18:31.000Z",
+  "namespace": "https://greasyfork.org/users/780470",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1200583,
+      "name": "MJA1",
+      "created_at": "2023-10-20T19:34:41.000Z",
+      "url": "https://greasyfork.org/users/1200583-mja1",
+      "scripts": []
+    }
+  ],
+  "name": "Neopets Quicklinks",
+  "description": "Adds quick links to Neopets. Works on both the old and new layout. Forked from Eckankar's Neopets Sidebar Quicklinks.",
+  "url": "https://greasyfork.org/scripts/477894-neopets-quicklinks",
+  "code_url": "https://update.greasyfork.org/scripts/477894/Neopets%20Quicklinks.user.js",
+  "code_size": 5803,
+  "license": "MIT License",
+  "version": "3.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

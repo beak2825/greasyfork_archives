@@ -1,0 +1,33 @@
+{
+  "id": 488361,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-26T17:47:31.000Z",
+  "code_updated_at": "2024-02-26T17:53:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 695986,
+      "name": "Threeskimo",
+      "created_at": "2020-10-17T20:15:24.000Z",
+      "url": "https://greasyfork.org/users/695986-threeskimo"
+    }
+  ],
+  "name": "Reddit - Move Thumbnails to Left (LG V60)",
+  "description": "Simply move all thumbnails to the left for easier access.",
+  "url": "https://greasyfork.org/scripts/488361-reddit-move-thumbnails-to-left-lg-v60",
+  "code_url": "https://update.greasyfork.org/scripts/488361/Reddit%20-%20Move%20Thumbnails%20to%20Left%20%28LG%20V60%29.user.js",
+  "code_size": 1436,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

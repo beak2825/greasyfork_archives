@@ -1,0 +1,34 @@
+{
+  "id": 432431,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-15T01:21:06.000Z",
+  "code_updated_at": "2021-09-15T01:21:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 815506,
+      "name": "山田山田",
+      "created_at": "2021-09-15T00:39:35.000Z",
+      "url": "https://greasyfork.org/users/815506-%E5%B1%B1%E7%94%B0%E5%B1%B1%E7%94%B0",
+      "scripts": []
+    }
+  ],
+  "name": "コスモ石油ナポリタン",
+  "description": "寝たきり",
+  "url": "https://greasyfork.org/scripts/432431-%E3%82%B3%E3%82%B9%E3%83%A2%E7%9F%B3%E6%B2%B9%E3%83%8A%E3%83%9D%E3%83%AA%E3%82%BF%E3%83%B3",
+  "code_url": "https://update.greasyfork.org/scripts/432431/%E3%82%B3%E3%82%B9%E3%83%A2%E7%9F%B3%E6%B2%B9%E3%83%8A%E3%83%9D%E3%83%AA%E3%82%BF%E3%83%B3.user.js",
+  "code_size": 2385,
+  "license": null,
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

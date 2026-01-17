@@ -1,0 +1,59 @@
+{
+  "id": 489162,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-06T13:25:06.000Z",
+  "code_updated_at": "2024-03-06T13:25:06.000Z",
+  "namespace": "https://greasyfork.org/users/234148",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 234148,
+      "name": "igorw",
+      "created_at": "2018-12-21T10:52:07.000Z",
+      "url": "https://greasyfork.org/users/234148-igorw",
+      "scripts": [
+        {
+          "id": 489162,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-06T13:25:06.000Z",
+          "code_updated_at": "2024-03-06T13:25:06.000Z",
+          "namespace": "https://greasyfork.org/users/234148",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "维基百科优先简体中文（或繁体）continued",
+          "description": "Wikipedia 维基百科中文优先选择地区 简/繁 中文。",
+          "url": "https://greasyfork.org/scripts/489162-%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E4%BC%98%E5%85%88%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-%E6%88%96%E7%B9%81%E4%BD%93-continued",
+          "code_url": "https://update.greasyfork.org/scripts/489162/%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E4%BC%98%E5%85%88%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%EF%BC%88%E6%88%96%E7%B9%81%E4%BD%93%EF%BC%89continued.user.js",
+          "code_size": 1482,
+          "license": "MIT License",
+          "version": "0.20",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "维基百科优先简体中文（或繁体）continued",
+  "description": "Wikipedia 维基百科中文优先选择地区 简/繁 中文。",
+  "url": "https://greasyfork.org/scripts/489162-%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E4%BC%98%E5%85%88%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-%E6%88%96%E7%B9%81%E4%BD%93-continued",
+  "code_url": "https://update.greasyfork.org/scripts/489162/%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E4%BC%98%E5%85%88%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%EF%BC%88%E6%88%96%E7%B9%81%E4%BD%93%EF%BC%89continued.user.js",
+  "code_size": 1482,
+  "license": "MIT License",
+  "version": "0.20",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

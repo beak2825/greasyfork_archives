@@ -1,0 +1,33 @@
+{
+  "id": 479454,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-10T13:59:37.000Z",
+  "code_updated_at": "2023-11-10T14:04:06.000Z",
+  "namespace": "tampermonkey-example",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1214768,
+      "name": "AkumuKernel",
+      "created_at": "2023-11-10T13:56:14.000Z",
+      "url": "https://greasyfork.org/users/1214768-akumukernel"
+    }
+  ],
+  "name": "CryptoJS",
+  "description": "Laboratorio 4 criptografia y seguridad en redes.",
+  "url": "https://greasyfork.org/scripts/479454-cryptojs",
+  "code_url": "https://update.greasyfork.org/scripts/479454/CryptoJS.user.js",
+  "code_size": 2928,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

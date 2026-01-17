@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431257,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-23T17:23:10.000Z",
+    "code_updated_at": "2021-08-24T14:57:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 807865,
+        "name": "Guilherme Giffoni",
+        "created_at": "2021-08-23T17:19:07.000Z",
+        "url": "https://greasyfork.org/users/807865-guilherme-giffoni"
+      }
+    ],
+    "name": "hideLeftPanel",
+    "description": "Esconde o painel esquerdo de conversas do WhatsApp. Apenas pressione Ctrl + Alt ou Alt + Ctrl",
+    "url": "https://greasyfork.org/scripts/431257-hideleftpanel",
+    "code_url": "https://update.greasyfork.org/scripts/431257/hideLeftPanel.user.js",
+    "code_size": 973,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

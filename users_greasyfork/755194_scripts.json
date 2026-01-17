@@ -1,0 +1,68 @@
+[
+  {
+    "id": 424992,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-13T20:13:02.000Z",
+    "code_updated_at": "2021-04-13T20:13:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 755194,
+        "name": "Dave#3150",
+        "created_at": "2021-04-05T13:14:39.000Z",
+        "url": "https://greasyfork.org/users/755194-dave-3150"
+      }
+    ],
+    "name": "Zotac Auto-Login",
+    "description": "Keeps you logged in at the Zotac store.",
+    "url": "https://greasyfork.org/scripts/424992-zotac-auto-login",
+    "code_url": "https://update.greasyfork.org/scripts/424992/Zotac%20Auto-Login.user.js",
+    "code_size": 3357,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 424834,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-11T03:04:38.000Z",
+    "code_updated_at": "2021-05-05T20:34:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 755194,
+        "name": "Dave#3150",
+        "created_at": "2021-04-05T13:14:39.000Z",
+        "url": "https://greasyfork.org/users/755194-dave-3150"
+      }
+    ],
+    "name": "Zotac Error 1020 Detector",
+    "description": "Sounds an alarm once it detects that the Zotacstore is throwing error 1020, which might indicate a drop is coming.",
+    "url": "https://greasyfork.org/scripts/424834-zotac-error-1020-detector",
+    "code_url": "https://update.greasyfork.org/scripts/424834/Zotac%20Error%201020%20Detector.user.js",
+    "code_size": 3452,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

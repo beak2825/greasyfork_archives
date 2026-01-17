@@ -130,5 +130,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 464775,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-24T21:15:47.000Z",
+    "code_updated_at": "2025-06-20T14:03:36.000Z",
+    "namespace": "https://greasyfork.org/en/users/221281-klaufir",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 221281,
+        "name": "klaufir",
+        "created_at": "2018-10-24T12:27:46.000Z",
+        "url": "https://greasyfork.org/users/221281-klaufir"
+      }
+    ],
+    "name": "AudioBook Bay - Add Magnet Link",
+    "description": "Add an easy to use magnet link to the top of the page",
+    "url": "https://greasyfork.org/scripts/464775-audiobook-bay-add-magnet-link",
+    "code_url": "https://update.greasyfork.org/scripts/464775/AudioBook%20Bay%20-%20Add%20Magnet%20Link.user.js",
+    "code_size": 2525,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434527,
+    "daily_installs": 1,
+    "total_installs": 414,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-26T22:37:14.000Z",
+    "code_updated_at": "2024-01-27T10:41:21.000Z",
+    "namespace": "https://greasyfork.org/en/users/221281-klaufir",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 221281,
+        "name": "klaufir",
+        "created_at": "2018-10-24T12:27:46.000Z",
+        "url": "https://greasyfork.org/users/221281-klaufir"
+      }
+    ],
+    "name": "Youtube: Remove Overlays",
+    "description": "04/26/2023, 11:35:27 AM",
+    "url": "https://greasyfork.org/scripts/434527-youtube-remove-overlays",
+    "code_url": "https://update.greasyfork.org/scripts/434527/Youtube%3A%20Remove%20Overlays.user.js",
+    "code_size": 1674,
+    "license": null,
+    "version": "1.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

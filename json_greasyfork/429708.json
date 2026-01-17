@@ -1,0 +1,34 @@
+{
+  "id": 429708,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-22T00:35:07.000Z",
+  "code_updated_at": "2021-07-22T00:35:06.000Z",
+  "namespace": "Fake115Upload@Never4Ever",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 794794,
+      "name": "zhuangsange",
+      "created_at": "2021-07-18T05:26:48.000Z",
+      "url": "https://greasyfork.org/users/794794-zhuangsange",
+      "scripts": []
+    }
+  ],
+  "name": "115转存助手ui优化版v2.2",
+  "description": "115文件转存（(based on Fake115Upload 1.4.3 @T3rry)）",
+  "url": "https://greasyfork.org/scripts/429708-115%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8Bui%E4%BC%98%E5%8C%96%E7%89%88v2-2",
+  "code_url": "https://update.greasyfork.org/scripts/429708/115%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8Bui%E4%BC%98%E5%8C%96%E7%89%88v22.user.js",
+  "code_size": 54190,
+  "license": null,
+  "version": "1.4.3.20210422.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

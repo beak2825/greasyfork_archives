@@ -1,0 +1,33 @@
+{
+  "id": 419739,
+  "daily_installs": 0,
+  "total_installs": 186,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-06T05:24:29.000Z",
+  "code_updated_at": "2021-01-06T05:25:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 724428,
+      "name": "xAlcahest",
+      "created_at": "2021-01-06T05:18:38.000Z",
+      "url": "https://greasyfork.org/users/724428-xalcahest"
+    }
+  ],
+  "name": "Google Drive | wget copy&paste command creator - EN Version",
+  "description": "A easy tool to use to use your terminal to download your files from Google Drive!",
+  "url": "https://greasyfork.org/scripts/419739-google-drive-wget-copy-paste-command-creator-en-version",
+  "code_url": "https://update.greasyfork.org/scripts/419739/Google%20Drive%20%7C%20wget%20copypaste%20command%20creator%20-%20EN%20Version.user.js",
+  "code_size": 1200,
+  "license": null,
+  "version": "Final-2021",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

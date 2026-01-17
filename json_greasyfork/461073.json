@@ -1,0 +1,34 @@
+{
+  "id": 461073,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-03T01:52:45.000Z",
+  "code_updated_at": "2023-05-06T17:04:16.000Z",
+  "namespace": "https://github.com/buiawpkgew1/github-chinese",
+  "support_url": "https://github.com/buiawpkgew1/github-chinese/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 827879,
+      "name": "buiawpkgew1",
+      "created_at": "2021-10-23T04:40:04.000Z",
+      "url": "https://greasyfork.org/users/827879-buiawpkgew1",
+      "scripts": []
+    }
+  ],
+  "name": "GitHub 中文插件",
+  "description": "中文化 GitHub 界面的部分菜单及内容。",
+  "url": "https://greasyfork.org/scripts/461073-github-%E4%B8%AD%E6%96%87%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/461073/GitHub%20%E4%B8%AD%E6%96%87%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 16614,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

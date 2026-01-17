@@ -1,0 +1,34 @@
+{
+  "id": 454221,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-04T00:45:54.000Z",
+  "code_updated_at": "2022-11-20T11:03:32.000Z",
+  "namespace": "http://swren.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 978741,
+      "name": "348960743@qq.com",
+      "created_at": "2022-11-03T09:11:23.000Z",
+      "url": "https://greasyfork.org/users/978741-348960743-qq-com",
+      "scripts": []
+    }
+  ],
+  "name": "vip",
+  "description": "本脚本精选解析线路",
+  "url": "https://greasyfork.org/scripts/454221-vip",
+  "code_url": "https://update.greasyfork.org/scripts/454221/vip.user.js",
+  "code_size": 2701,
+  "license": "GPL-3.0 License",
+  "version": "6.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 471692,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-25T13:20:42.000Z",
+    "code_updated_at": "2023-07-25T13:20:42.000Z",
+    "namespace": "https://greasyfork.org/en/users/1124342-rur",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1124342,
+        "name": "Rur",
+        "created_at": "2023-07-11T19:12:03.000Z",
+        "url": "https://greasyfork.org/users/1124342-rur"
+      }
+    ],
+    "name": "Udemy course sidebar to the left",
+    "description": "Moves the course content sidebar to the left of the screen",
+    "url": "https://greasyfork.org/scripts/471692-udemy-course-sidebar-to-the-left",
+    "code_url": "https://update.greasyfork.org/scripts/471692/Udemy%20course%20sidebar%20to%20the%20left.user.js",
+    "code_size": 1119,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470621,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-11T19:14:55.000Z",
+    "code_updated_at": "2025-09-07T17:19:53.000Z",
+    "namespace": "gabdem",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1124342,
+        "name": "Rur",
+        "created_at": "2023-07-11T19:12:03.000Z",
+        "url": "https://greasyfork.org/users/1124342-rur"
+      }
+    ],
+    "name": "AccesD CC Transactions",
+    "description": "Adds a button to format CC transactions and copy to clipboard",
+    "url": "https://greasyfork.org/scripts/470621-accesd-cc-transactions",
+    "code_url": "https://update.greasyfork.org/scripts/470621/AccesD%20CC%20Transactions.user.js",
+    "code_size": 3936,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

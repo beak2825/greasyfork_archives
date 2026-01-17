@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492917,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-19T10:20:48.000Z",
+    "code_updated_at": "2025-10-26T03:12:23.000Z",
+    "namespace": "https://github.com/Ailzr/bilibili_comment_hide",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1042243,
+        "name": "Ailzr",
+        "created_at": "2023-03-15T01:23:18.000Z",
+        "url": "https://greasyfork.org/users/1042243-ailzr"
+      }
+    ],
+    "name": "Bilibili 评论区隐藏",
+    "description": "用于隐藏b站的评论区",
+    "url": "https://greasyfork.org/scripts/492917-bilibili-%E8%AF%84%E8%AE%BA%E5%8C%BA%E9%9A%90%E8%97%8F",
+    "code_url": "https://update.greasyfork.org/scripts/492917/Bilibili%20%E8%AF%84%E8%AE%BA%E5%8C%BA%E9%9A%90%E8%97%8F.user.js",
+    "code_size": 3173,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448281,
+    "daily_installs": 0,
+    "total_installs": 122,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-22T08:13:01.000Z",
+    "code_updated_at": "2022-11-30T03:07:21.000Z",
+    "namespace": "csdn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 938157,
+        "name": "HZHEN",
+        "created_at": "2022-07-22T07:48:06.000Z",
+        "url": "https://greasyfork.org/users/938157-hzhen"
+      }
+    ],
+    "name": "csdn不关注展开全部",
+    "description": "csdn不需要关注 就展开全部",
+    "url": "https://greasyfork.org/scripts/448281-csdn%E4%B8%8D%E5%85%B3%E6%B3%A8%E5%B1%95%E5%BC%80%E5%85%A8%E9%83%A8",
+    "code_url": "https://update.greasyfork.org/scripts/448281/csdn%E4%B8%8D%E5%85%B3%E6%B3%A8%E5%B1%95%E5%BC%80%E5%85%A8%E9%83%A8.user.js",
+    "code_size": 539,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 488321,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-26T10:40:51.000Z",
+  "code_updated_at": "2024-02-26T10:40:51.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1244729,
+      "name": "Maxim Makarevich",
+      "created_at": "2024-01-07T20:47:57.000Z",
+      "url": "https://greasyfork.org/users/1244729-maxim-makarevich"
+    }
+  ],
+  "name": "Script for complaining about players",
+  "description": "Специально для BlackRussia Curator Forum",
+  "url": "https://greasyfork.org/scripts/488321-script-for-complaining-about-players",
+  "code_url": "https://update.greasyfork.org/scripts/488321/Script%20for%20complaining%20about%20players.user.js",
+  "code_size": 139048,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

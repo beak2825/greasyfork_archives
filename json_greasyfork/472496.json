@@ -1,0 +1,59 @@
+{
+  "id": 472496,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-05T14:21:55.000Z",
+  "code_updated_at": "2023-10-09T14:06:01.000Z",
+  "namespace": "https://github.com/Xhofe/auto-continue-visit",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 437031,
+      "name": "xhofe",
+      "created_at": "2020-01-20T12:45:48.000Z",
+      "url": "https://greasyfork.org/users/437031-xhofe",
+      "scripts": [
+        {
+          "id": 472496,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-05T14:21:55.000Z",
+          "code_updated_at": "2023-10-09T14:06:01.000Z",
+          "namespace": "https://github.com/Xhofe/auto-continue-visit",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "auto-continue-visit",
+          "description": "A Tampermonkey script that help you to automatically continue to visit.",
+          "url": "https://greasyfork.org/scripts/472496-auto-continue-visit",
+          "code_url": "https://update.greasyfork.org/scripts/472496/auto-continue-visit.user.js",
+          "code_size": 3618,
+          "license": "MIT License",
+          "version": "0.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "auto-continue-visit",
+  "description": "A Tampermonkey script that help you to automatically continue to visit.",
+  "url": "https://greasyfork.org/scripts/472496-auto-continue-visit",
+  "code_url": "https://update.greasyfork.org/scripts/472496/auto-continue-visit.user.js",
+  "code_size": 3618,
+  "license": "MIT License",
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 474288,
+  "daily_installs": 0,
+  "total_installs": 60,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-31T11:59:35.000Z",
+  "code_updated_at": "2024-06-01T21:39:29.000Z",
+  "namespace": "https://greasyfork.org/users/1163486",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1163486,
+      "name": "AnnMarie Conway",
+      "created_at": "2023-08-31T11:51:47.000Z",
+      "url": "https://greasyfork.org/users/1163486-annmarie-conway"
+    }
+  ],
+  "name": "Reddit Render Compact 2023",
+  "description": "a way to render the reddit compact page",
+  "url": "https://greasyfork.org/scripts/474288-reddit-render-compact-2023",
+  "code_url": "https://update.greasyfork.org/scripts/474288/Reddit%20Render%20Compact%202023.user.js",
+  "code_size": 636,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

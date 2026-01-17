@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484700,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-13T01:25:52.000Z",
+    "code_updated_at": "2024-01-16T20:23:16.000Z",
+    "namespace": "https://zelenka.guru/urmom/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1237043,
+        "name": "Интерпол",
+        "created_at": "2023-12-21T01:08:55.000Z",
+        "url": "https://greasyfork.org/users/1237043-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BF%D0%BE%D0%BB"
+      }
+    ],
+    "name": "LZTClown",
+    "description": "Персональный список клоунов на форуме LolzTeam",
+    "url": "https://greasyfork.org/scripts/484700-lztclown",
+    "code_url": "https://update.greasyfork.org/scripts/484700/LZTClown.user.js",
+    "code_size": 14303,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

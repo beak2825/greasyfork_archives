@@ -1,0 +1,101 @@
+[
+  {
+    "id": 462896,
+    "daily_installs": 0,
+    "total_installs": 128,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-30T05:11:01.000Z",
+    "code_updated_at": "2024-09-29T13:33:58.000Z",
+    "namespace": "https://www.neopets.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394566,
+        "name": "baffleblend",
+        "created_at": "2019-11-03T14:37:50.000Z",
+        "url": "https://greasyfork.org/users/394566-baffleblend"
+      }
+    ],
+    "name": "Neopets - Training ATK/DEF Boost Indicator",
+    "description": "Provides more info about stats in training schools.",
+    "url": "https://greasyfork.org/scripts/462896-neopets-training-atk-def-boost-indicator",
+    "code_url": "https://update.greasyfork.org/scripts/462896/Neopets%20-%20Training%20ATKDEF%20Boost%20Indicator.user.js",
+    "code_size": 5353,
+    "license": "MIT License",
+    "version": "2024-09-30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431501,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-27T23:39:45.000Z",
+    "code_updated_at": "2021-08-27T23:39:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394566,
+        "name": "baffleblend",
+        "created_at": "2019-11-03T14:37:50.000Z",
+        "url": "https://greasyfork.org/users/394566-baffleblend"
+      }
+    ],
+    "name": "Custom TierMaker List",
+    "description": "Use to define tier lists for categories that wouldn't otherwise merit a template.",
+    "url": "https://greasyfork.org/scripts/431501-custom-tiermaker-list",
+    "code_url": "https://update.greasyfork.org/scripts/431501/Custom%20TierMaker%20List.user.js",
+    "code_size": 3513,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 428417,
+    "daily_installs": 0,
+    "total_installs": 125,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-06-24T20:26:44.000Z",
+    "code_updated_at": "2021-06-24T20:26:44.000Z",
+    "namespace": "https://greasyfork.org/users/394566",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394566,
+        "name": "baffleblend",
+        "created_at": "2019-11-03T14:37:50.000Z",
+        "url": "https://greasyfork.org/users/394566-baffleblend"
+      }
+    ],
+    "name": "Neopets - Pet Lookup / Quick Ref  Post-Flash Fix",
+    "description": "Replaces that annoying end-of-Flash-support tombstone with the pet image",
+    "url": "https://greasyfork.org/scripts/428417-neopets-pet-lookup-quick-ref-post-flash-fix",
+    "code_url": "https://update.greasyfork.org/scripts/428417/Neopets%20-%20Pet%20Lookup%20%20Quick%20Ref%20%20Post-Flash%20Fix.user.js",
+    "code_size": 1703,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

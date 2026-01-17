@@ -162,6 +162,171 @@
     "version": "0.0.11",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 446787,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-20T16:55:28.000Z",
+    "code_updated_at": "2022-06-30T12:24:38.000Z",
+    "namespace": "urn://com.typeform.cms-links",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 180365,
+        "name": "George Gillams",
+        "created_at": "2018-04-16T12:07:21.000Z",
+        "url": "https://greasyfork.org/users/180365-george-gillams"
+      }
+    ],
+    "name": "CMS links",
+    "description": "Provides links from your site to Contentful.",
+    "url": "https://greasyfork.org/scripts/446787-cms-links",
+    "code_url": "https://update.greasyfork.org/scripts/446787/CMS%20links.user.js",
+    "code_size": 14679,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439931,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-12T20:34:40.000Z",
+    "code_updated_at": "2023-06-06T19:44:07.000Z",
+    "namespace": "urn://https://www.georgegillams.co.uk/api/greasemonkey/notion_sidebar_expander",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 180365,
+        "name": "George Gillams",
+        "created_at": "2018-04-16T12:07:21.000Z",
+        "url": "https://greasyfork.org/users/180365-george-gillams"
+      }
+    ],
+    "name": "Notion Sidebar Expander",
+    "description": "Reveals the current page in the sidebar",
+    "url": "https://greasyfork.org/scripts/439931-notion-sidebar-expander",
+    "code_url": "https://update.greasyfork.org/scripts/439931/Notion%20Sidebar%20Expander.user.js",
+    "code_size": 7385,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423770,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-22T12:40:32.000Z",
+    "code_updated_at": "2021-03-22T12:42:21.000Z",
+    "namespace": "urn://https://www.georgegillams.co.uk/api/greasemonkey/jira_done_count",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 180365,
+        "name": "George Gillams",
+        "created_at": "2018-04-16T12:07:21.000Z",
+        "url": "https://greasyfork.org/users/180365-george-gillams"
+      }
+    ],
+    "name": "Jira done count",
+    "description": "Adds done-count to sprint description.",
+    "url": "https://greasyfork.org/scripts/423770-jira-done-count",
+    "code_url": "https://update.greasyfork.org/scripts/423770/Jira%20done%20count.user.js",
+    "code_size": 1248,
+    "license": null,
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422238,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-24T10:24:50.000Z",
+    "code_updated_at": "2021-05-12T10:48:32.000Z",
+    "namespace": "urn://https://www.georgegillams.co.uk/api/greasemonkey/aqa_select_all",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 180365,
+        "name": "George Gillams",
+        "created_at": "2018-04-16T12:07:21.000Z",
+        "url": "https://greasyfork.org/users/180365-george-gillams"
+      }
+    ],
+    "name": "AQA select all",
+    "description": "Allows you to select all issues currently visible",
+    "url": "https://greasyfork.org/scripts/422238-aqa-select-all",
+    "code_url": "https://update.greasyfork.org/scripts/422238/AQA%20select%20all.user.js",
+    "code_size": 2163,
+    "license": null,
+    "version": "3.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418194,
+    "daily_installs": 0,
+    "total_installs": 378,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-12-06T17:14:16.000Z",
+    "code_updated_at": "2020-12-06T17:14:16.000Z",
+    "namespace": "urn://https://www.georgegillams.co.uk/api/greasemonkey/google_meet_auto_admit",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 180365,
+        "name": "George Gillams",
+        "created_at": "2018-04-16T12:07:21.000Z",
+        "url": "https://greasyfork.org/users/180365-george-gillams"
+      }
+    ],
+    "name": "Google Meet auto-admit",
+    "description": "Automatically admits Google Meet participants",
+    "url": "https://greasyfork.org/scripts/418194-google-meet-auto-admit",
+    "code_url": "https://update.greasyfork.org/scripts/418194/Google%20Meet%20auto-admit.user.js",
+    "code_size": 866,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

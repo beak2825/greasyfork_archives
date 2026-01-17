@@ -1,0 +1,59 @@
+{
+  "id": 422313,
+  "daily_installs": 1,
+  "total_installs": 114,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-26T06:23:10.000Z",
+  "code_updated_at": "2021-02-26T06:23:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 741306,
+      "name": "EroSora",
+      "created_at": "2021-02-26T05:47:44.000Z",
+      "url": "https://greasyfork.org/users/741306-erosora",
+      "scripts": [
+        {
+          "id": 422313,
+          "daily_installs": 1,
+          "total_installs": 114,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-26T06:23:10.000Z",
+          "code_updated_at": "2021-02-26T06:23:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mother Fucker Telegram Group Spammer",
+          "description": "屏蔽 Telegram 群组成员，在下方 * 号处填入昵称然后保存即可。",
+          "url": "https://greasyfork.org/scripts/422313-mother-telegram-group-spammer",
+          "code_url": "https://update.greasyfork.org/scripts/422313/Mother%20Fucker%20Telegram%20Group%20Spammer.user.js",
+          "code_size": 2025,
+          "license": null,
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mother Fucker Telegram Group Spammer",
+  "description": "屏蔽 Telegram 群组成员，在下方 * 号处填入昵称然后保存即可。",
+  "url": "https://greasyfork.org/scripts/422313-mother-telegram-group-spammer",
+  "code_url": "https://update.greasyfork.org/scripts/422313/Mother%20Fucker%20Telegram%20Group%20Spammer.user.js",
+  "code_size": 2025,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

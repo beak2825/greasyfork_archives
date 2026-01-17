@@ -1,0 +1,68 @@
+[
+  {
+    "id": 429554,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-18T07:48:30.000Z",
+    "code_updated_at": "2021-07-18T09:06:43.000Z",
+    "namespace": "https://greasyfork.org/users/159960",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 159960,
+        "name": "Shikikan",
+        "created_at": "2017-11-19T13:53:28.000Z",
+        "url": "https://greasyfork.org/users/159960-shikikan"
+      }
+    ],
+    "name": "Curseforge All Files Link",
+    "description": "Change CurseForge's download buttons to file list buttons. Optionally, you can show only Fabric mods.",
+    "url": "https://greasyfork.org/scripts/429554-curseforge-all-files-link",
+    "code_url": "https://update.greasyfork.org/scripts/429554/Curseforge%20All%20Files%20Link.user.js",
+    "code_size": 1628,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 423922,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-24T19:56:09.000Z",
+    "code_updated_at": "2021-03-24T20:12:51.000Z",
+    "namespace": "https://greasyfork.org/users/159960",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 159960,
+        "name": "Shikikan",
+        "created_at": "2017-11-19T13:53:28.000Z",
+        "url": "https://greasyfork.org/users/159960-shikikan"
+      }
+    ],
+    "name": "Second Browser Protocol",
+    "description": "レジストリで指定したプロトコルを利用して別のブラウザにリダイレクトします。",
+    "url": "https://greasyfork.org/scripts/423922-second-browser-protocol",
+    "code_url": "https://update.greasyfork.org/scripts/423922/Second%20Browser%20Protocol.user.js",
+    "code_size": 2792,
+    "license": null,
+    "version": "0.0.0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

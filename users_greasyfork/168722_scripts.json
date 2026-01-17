@@ -1,0 +1,167 @@
+[
+  {
+    "id": 465651,
+    "daily_installs": 0,
+    "total_installs": 153,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-06T09:58:38.000Z",
+    "code_updated_at": "2023-05-06T10:08:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 168722,
+        "name": "kj863257",
+        "created_at": "2018-01-30T06:38:09.000Z",
+        "url": "https://greasyfork.org/users/168722-kj863257"
+      }
+    ],
+    "name": "讯飞星火助手",
+    "description": "讯飞星火助手工具",
+    "url": "https://greasyfork.org/scripts/465651-%E8%AE%AF%E9%A3%9E%E6%98%9F%E7%81%AB%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/465651/%E8%AE%AF%E9%A3%9E%E6%98%9F%E7%81%AB%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 1321,
+    "license": "MIT License",
+    "version": "0.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462166,
+    "daily_installs": 0,
+    "total_installs": 399,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-20T05:27:02.000Z",
+    "code_updated_at": "2023-03-26T06:44:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 168722,
+        "name": "kj863257",
+        "created_at": "2018-01-30T06:38:09.000Z",
+        "url": "https://greasyfork.org/users/168722-kj863257"
+      }
+    ],
+    "name": "文心一言去码工具",
+    "description": "文心一言去除页面水印工具。后续将不再更新。",
+    "url": "https://greasyfork.org/scripts/462166-%E6%96%87%E5%BF%83%E4%B8%80%E8%A8%80%E5%8E%BB%E7%A0%81%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/462166/%E6%96%87%E5%BF%83%E4%B8%80%E8%A8%80%E5%8E%BB%E7%A0%81%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 4605,
+    "license": "MIT License",
+    "version": "0.3.19",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440368,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-21T01:36:33.000Z",
+    "code_updated_at": "2022-04-14T09:59:01.000Z",
+    "namespace": "https://greasyfork.org/users/168722",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 168722,
+        "name": "kj863257",
+        "created_at": "2018-01-30T06:38:09.000Z",
+        "url": "https://greasyfork.org/users/168722-kj863257"
+      }
+    ],
+    "name": "fsofso.com / fsoufsou.com 隐身窗口自动登录",
+    "description": "fsofso.com / fsoufsou.com 内测用户已经可以使用了，但是现在的fsou只能登录才能使用，在切换隐身窗口时不能直接使用，还得登录。这个脚本可以让登录信息自动同步。（前提是在普通窗口已经登录了。）",
+    "url": "https://greasyfork.org/scripts/440368-fsofso-com-fsoufsou-com-%E9%9A%90%E8%BA%AB%E7%AA%97%E5%8F%A3%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/440368/fsofsocom%20%20fsoufsoucom%20%E9%9A%90%E8%BA%AB%E7%AA%97%E5%8F%A3%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 1501,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440111,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-16T03:54:52.000Z",
+    "code_updated_at": "2022-05-16T05:03:26.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/440111",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 168722,
+        "name": "kj863257",
+        "created_at": "2018-01-30T06:38:09.000Z",
+        "url": "https://greasyfork.org/users/168722-kj863257"
+      }
+    ],
+    "name": "gitee 统计",
+    "description": "为 gitee 贡献者列表添加扇形统计图",
+    "url": "https://greasyfork.org/scripts/440111-gitee-%E7%BB%9F%E8%AE%A1",
+    "code_url": "https://update.greasyfork.org/scripts/440111/gitee%20%E7%BB%9F%E8%AE%A1.user.js",
+    "code_size": 1939,
+    "license": "MIT License",
+    "version": "0.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432380,
+    "daily_installs": 0,
+    "total_installs": 296,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-09-14T03:03:25.000Z",
+    "code_updated_at": "2023-11-20T01:09:51.000Z",
+    "namespace": "https://greasyfork.org/users/168722",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 168722,
+        "name": "kj863257",
+        "created_at": "2018-01-30T06:38:09.000Z",
+        "url": "https://greasyfork.org/users/168722-kj863257"
+      }
+    ],
+    "name": "修复阮一峰博客广告拦截器问题",
+    "description": "修复阮一峰博客中广告拦截器导致的显示问题，并提供解决方案以移除提示信息。",
+    "url": "https://greasyfork.org/scripts/432380-%E4%BF%AE%E5%A4%8D%E9%98%AE%E4%B8%80%E5%B3%B0%E5%8D%9A%E5%AE%A2%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E5%99%A8%E9%97%AE%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/432380/%E4%BF%AE%E5%A4%8D%E9%98%AE%E4%B8%80%E5%B3%B0%E5%8D%9A%E5%AE%A2%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E5%99%A8%E9%97%AE%E9%A2%98.user.js",
+    "code_size": 3322,
+    "license": null,
+    "version": "0.6.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

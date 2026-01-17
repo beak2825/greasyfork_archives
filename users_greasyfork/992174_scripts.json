@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455978,
+    "daily_installs": 0,
+    "total_installs": 621,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-12-04T06:55:46.000Z",
+    "code_updated_at": "2022-12-04T06:55:46.000Z",
+    "namespace": "SignedBy.hUwUtao",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 992174,
+        "name": "hUwUtao",
+        "created_at": "2022-12-04T06:44:55.000Z",
+        "url": "https://greasyfork.org/users/992174-huwutao"
+      }
+    ],
+    "name": "Traffic1s.com skipper",
+    "description": "time is golden, not for ya",
+    "url": "https://greasyfork.org/scripts/455978-traffic1s-com-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/455978/Traffic1scom%20skipper.user.js",
+    "code_size": 1001,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

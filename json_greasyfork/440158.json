@@ -1,0 +1,59 @@
+{
+  "id": 440158,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-16T21:41:38.000Z",
+  "code_updated_at": "2022-03-04T20:08:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 877330,
+      "name": "wut cho",
+      "created_at": "2022-02-16T21:40:36.000Z",
+      "url": "https://greasyfork.org/users/877330-wut-cho",
+      "scripts": [
+        {
+          "id": 440158,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-16T21:41:38.000Z",
+          "code_updated_at": "2022-03-04T20:08:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Top comments in the bottom of osnova platforms' articles.",
+          "description": "osnova, why did you do that? :(",
+          "url": "https://greasyfork.org/scripts/440158-top-comments-in-the-bottom-of-osnova-platforms-articles",
+          "code_url": "https://update.greasyfork.org/scripts/440158/Top%20comments%20in%20the%20bottom%20of%20osnova%20platforms%27%20articles.user.js",
+          "code_size": 6523,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Top comments in the bottom of osnova platforms' articles.",
+  "description": "osnova, why did you do that? :(",
+  "url": "https://greasyfork.org/scripts/440158-top-comments-in-the-bottom-of-osnova-platforms-articles",
+  "code_url": "https://update.greasyfork.org/scripts/440158/Top%20comments%20in%20the%20bottom%20of%20osnova%20platforms%27%20articles.user.js",
+  "code_size": 6523,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

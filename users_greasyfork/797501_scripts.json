@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429912,
+    "daily_installs": 0,
+    "total_installs": 123,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-26T22:20:58.000Z",
+    "code_updated_at": "2021-07-26T22:53:34.000Z",
+    "namespace": "http://www.w3.org/1999/xhtml",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 797501,
+        "name": "Hay Geydarov",
+        "created_at": "2021-07-26T22:20:24.000Z",
+        "url": "https://greasyfork.org/users/797501-hay-geydarov"
+      }
+    ],
+    "name": "Set User-agent",
+    "description": "User agent windows 10",
+    "url": "https://greasyfork.org/scripts/429912-set-user-agent",
+    "code_url": "https://update.greasyfork.org/scripts/429912/Set%20User-agent.user.js",
+    "code_size": 1123,
+    "license": null,
+    "version": "0.0.12",
+    "locale": "ro",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

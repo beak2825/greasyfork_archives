@@ -163,5 +163,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 477936,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-10-21T12:53:02.000Z",
+    "code_updated_at": "2025-04-24T02:15:58.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "pixiv share helper",
+    "description": "Convert sharing link to text with format: title | creator  link",
+    "url": "https://greasyfork.org/scripts/477936-pixiv-share-helper",
+    "code_url": "https://update.greasyfork.org/scripts/477936/pixiv%20share%20helper.user.js",
+    "code_size": 6310,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473751,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-23T12:59:21.000Z",
+    "code_updated_at": "2023-08-23T12:59:21.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "Clean Britannica Dictionary UI",
+    "description": "Clear elements at the top and add some buttons.",
+    "url": "https://greasyfork.org/scripts/473751-clean-britannica-dictionary-ui",
+    "code_url": "https://update.greasyfork.org/scripts/473751/Clean%20Britannica%20Dictionary%20UI.user.js",
+    "code_size": 5238,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457677,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-05T09:19:37.000Z",
+    "code_updated_at": "2023-01-05T09:19:37.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "zerojudge 隱藏標籤",
+    "description": "不顯示題目標籤，按下「顯示標籤」後再顯示",
+    "url": "https://greasyfork.org/scripts/457677-zerojudge-%E9%9A%B1%E8%97%8F%E6%A8%99%E7%B1%A4",
+    "code_url": "https://update.greasyfork.org/scripts/457677/zerojudge%20%E9%9A%B1%E8%97%8F%E6%A8%99%E7%B1%A4.user.js",
+    "code_size": 741,
+    "license": "GNU General Public License v2.0 only",
+    "version": "0.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456982,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-22T03:07:04.000Z",
+    "code_updated_at": "2023-12-03T14:33:14.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "Auto start LeetCode timer",
+    "description": "Automatically start LeetCode official timer.",
+    "url": "https://greasyfork.org/scripts/456982-auto-start-leetcode-timer",
+    "code_url": "https://update.greasyfork.org/scripts/456982/Auto%20start%20LeetCode%20timer.user.js",
+    "code_size": 1046,
+    "license": "GNU General Public License v2.0 only",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 455352,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-24T13:53:42.000Z",
+    "code_updated_at": "2022-11-24T14:06:24.000Z",
+    "namespace": "https://github.com/zica87",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "樂詞網自動選擇顯示 50 筆",
+    "description": "每頁筆數自動選擇 50",
+    "url": "https://greasyfork.org/scripts/455352-%E6%A8%82%E8%A9%9E%E7%B6%B2%E8%87%AA%E5%8B%95%E9%81%B8%E6%93%87%E9%A1%AF%E7%A4%BA-50-%E7%AD%86",
+    "code_url": "https://update.greasyfork.org/scripts/455352/%E6%A8%82%E8%A9%9E%E7%B6%B2%E8%87%AA%E5%8B%95%E9%81%B8%E6%93%87%E9%A1%AF%E7%A4%BA%2050%20%E7%AD%86.user.js",
+    "code_size": 663,
+    "license": "GNU General Public License v2.0 only",
+    "version": "0.1.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 454906,
+    "daily_installs": 0,
+    "total_installs": 78,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-11-16T02:54:04.000Z",
+    "code_updated_at": "2024-06-24T09:53:52.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "顯示動畫瘋封面 & 視覺圖",
+    "description": "在動畫瘋網站顯示該集封面 & 視覺圖",
+    "url": "https://greasyfork.org/scripts/454906-%E9%A1%AF%E7%A4%BA%E5%8B%95%E7%95%AB%E7%98%8B%E5%B0%81%E9%9D%A2-%E8%A6%96%E8%A6%BA%E5%9C%96",
+    "code_url": "https://update.greasyfork.org/scripts/454906/%E9%A1%AF%E7%A4%BA%E5%8B%95%E7%95%AB%E7%98%8B%E5%B0%81%E9%9D%A2%20%20%E8%A6%96%E8%A6%BA%E5%9C%96.user.js",
+    "code_size": 2771,
+    "license": "GNU General Public License v2.0 only",
+    "version": "1.2.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

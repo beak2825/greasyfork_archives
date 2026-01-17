@@ -1,0 +1,33 @@
+{
+  "id": 443973,
+  "daily_installs": 0,
+  "total_installs": 15011,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-25T09:11:00.000Z",
+  "code_updated_at": "2022-05-30T03:21:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 899779,
+      "name": "MintLatte",
+      "created_at": "2022-04-09T08:41:07.000Z",
+      "url": "https://greasyfork.org/users/899779-mintlatte"
+    }
+  ],
+  "name": "云班课解锁拖动进度条",
+  "description": "云班课视频资料解锁不可拖动进度条（火狐浏览器暂时不可用）",
+  "url": "https://greasyfork.org/scripts/443973-%E4%BA%91%E7%8F%AD%E8%AF%BE%E8%A7%A3%E9%94%81%E6%8B%96%E5%8A%A8%E8%BF%9B%E5%BA%A6%E6%9D%A1",
+  "code_url": "https://update.greasyfork.org/scripts/443973/%E4%BA%91%E7%8F%AD%E8%AF%BE%E8%A7%A3%E9%94%81%E6%8B%96%E5%8A%A8%E8%BF%9B%E5%BA%A6%E6%9D%A1.user.js",
+  "code_size": 955,
+  "license": "MintLatte",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

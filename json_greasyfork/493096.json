@@ -1,0 +1,59 @@
+{
+  "id": 493096,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-21T15:54:51.000Z",
+  "code_updated_at": "2024-04-21T15:54:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1291401,
+      "name": "정광영 (LazyMoon)",
+      "created_at": "2024-04-21T15:53:35.000Z",
+      "url": "https://greasyfork.org/users/1291401-%EC%A0%95%EA%B4%91%EC%98%81-lazymoon",
+      "scripts": [
+        {
+          "id": 493096,
+          "daily_installs": 0,
+          "total_installs": 41,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-21T15:54:51.000Z",
+          "code_updated_at": "2024-04-21T15:54:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "치지직 채팅 숨기기",
+          "description": "hide chat",
+          "url": "https://greasyfork.org/scripts/493096-%EC%B9%98%EC%A7%80%EC%A7%81-%EC%B1%84%ED%8C%85-%EC%88%A8%EA%B8%B0%EA%B8%B0",
+          "code_url": "https://update.greasyfork.org/scripts/493096/%EC%B9%98%EC%A7%80%EC%A7%81%20%EC%B1%84%ED%8C%85%20%EC%88%A8%EA%B8%B0%EA%B8%B0.user.js",
+          "code_size": 672,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "치지직 채팅 숨기기",
+  "description": "hide chat",
+  "url": "https://greasyfork.org/scripts/493096-%EC%B9%98%EC%A7%80%EC%A7%81-%EC%B1%84%ED%8C%85-%EC%88%A8%EA%B8%B0%EA%B8%B0",
+  "code_url": "https://update.greasyfork.org/scripts/493096/%EC%B9%98%EC%A7%80%EC%A7%81%20%EC%B1%84%ED%8C%85%20%EC%88%A8%EA%B8%B0%EA%B8%B0.user.js",
+  "code_size": 672,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,167 @@
+[
+  {
+    "id": 444765,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-05-10T02:06:44.000Z",
+    "code_updated_at": "2022-05-12T21:32:54.000Z",
+    "namespace": "https://github.com/deltabravozulu/usefulUserScripts",
+    "support_url": "https://github.com/deltabravozulu/usefulUserScripts",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774364,
+        "name": "deltabravozulu",
+        "created_at": "2021-05-20T21:56:55.000Z",
+        "url": "https://greasyfork.org/users/774364-deltabravozulu"
+      }
+    ],
+    "name": "amazonReviewWall",
+    "description": "View Amazon review images in a zoomable wall",
+    "url": "https://greasyfork.org/scripts/444765-amazonreviewwall",
+    "code_url": "https://update.greasyfork.org/scripts/444765/amazonReviewWall.user.js",
+    "code_size": 28401,
+    "license": "PayMe",
+    "version": "420.69.2022-05-12T14:28:42",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440286,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-19T06:42:43.000Z",
+    "code_updated_at": "2022-05-10T06:29:53.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774364,
+        "name": "deltabravozulu",
+        "created_at": "2021-05-20T21:56:55.000Z",
+        "url": "https://greasyfork.org/users/774364-deltabravozulu"
+      }
+    ],
+    "name": "WhichFaceIsReal Score Keeper",
+    "description": "Test your human identification skills! This script keeps score for you on whichfaceisreal.com since they don't have that built in",
+    "url": "https://greasyfork.org/scripts/440286-whichfaceisreal-score-keeper",
+    "code_url": "https://update.greasyfork.org/scripts/440286/WhichFaceIsReal%20Score%20Keeper.user.js",
+    "code_size": 4023,
+    "license": "PayMe",
+    "version": "4.20.69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438580,
+    "daily_installs": 0,
+    "total_installs": 134,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-01-15T08:23:15.000Z",
+    "code_updated_at": "2022-05-23T22:16:29.000Z",
+    "namespace": "https://github.com/deltabravozulu/usefulUserScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774364,
+        "name": "deltabravozulu",
+        "created_at": "2021-05-20T21:56:55.000Z",
+        "url": "https://greasyfork.org/users/774364-deltabravozulu"
+      }
+    ],
+    "name": "githubForkz",
+    "description": "Adds a button to find active and useful forks on Github",
+    "url": "https://greasyfork.org/scripts/438580-githubforkz",
+    "code_url": "https://update.greasyfork.org/scripts/438580/githubForkz.user.js",
+    "code_size": 10190,
+    "license": "PayMe",
+    "version": "4.20.69.2022-05-09T22:04:20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435345,
+    "daily_installs": 2,
+    "total_installs": 1361,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-11T02:48:07.000Z",
+    "code_updated_at": "2022-05-10T17:07:08.000Z",
+    "namespace": "https://github.com/deltabravozulu/usefulUserScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774364,
+        "name": "deltabravozulu",
+        "created_at": "2021-05-20T21:56:55.000Z",
+        "url": "https://greasyfork.org/users/774364-deltabravozulu"
+      }
+    ],
+    "name": "pimeyesJS",
+    "description": "Mods to make pimeyes.com work better for both premium and free users",
+    "url": "https://greasyfork.org/scripts/435345-pimeyesjs",
+    "code_url": "https://update.greasyfork.org/scripts/435345/pimeyesJS.user.js",
+    "code_size": 37306,
+    "license": "PayMe",
+    "version": "9.6.9_420.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 426804,
+    "daily_installs": 0,
+    "total_installs": 196,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-21T09:28:37.000Z",
+    "code_updated_at": "2021-05-21T09:59:26.000Z",
+    "namespace": "https://greasyfork.org/users/774364",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774364,
+        "name": "deltabravozulu",
+        "created_at": "2021-05-20T21:56:55.000Z",
+        "url": "https://greasyfork.org/users/774364-deltabravozulu"
+      }
+    ],
+    "name": "Instagram full-size media scroll wall",
+    "description": "Creates a scrollable wall of full-size images from any user's instagram page. Just click the \"Load Images\" button at the top.",
+    "url": "https://greasyfork.org/scripts/426804-instagram-full-size-media-scroll-wall",
+    "code_url": "https://update.greasyfork.org/scripts/426804/Instagram%20full-size%20media%20scroll%20wall.user.js",
+    "code_size": 13515,
+    "license": null,
+    "version": "0.2.0[deltabravozulu]",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

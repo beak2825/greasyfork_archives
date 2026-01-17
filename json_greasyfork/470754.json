@@ -1,0 +1,34 @@
+{
+  "id": 470754,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-13T16:39:21.000Z",
+  "code_updated_at": "2024-03-27T14:27:16.000Z",
+  "namespace": "htiac",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 10767,
+      "name": "Ryan McLean",
+      "created_at": "2015-04-22T21:50:08.000Z",
+      "url": "https://greasyfork.org/users/10767-ryan-mclean",
+      "scripts": []
+    }
+  ],
+  "name": "heartland title - netteller session timeout defeater",
+  "description": "Defeats the netteller session timeout",
+  "url": "https://greasyfork.org/scripts/470754-heartland-title-netteller-session-timeout-defeater",
+  "code_url": "https://update.greasyfork.org/scripts/470754/heartland%20title%20-%20netteller%20session%20timeout%20defeater.user.js",
+  "code_size": 294133,
+  "license": null,
+  "version": "1.5.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

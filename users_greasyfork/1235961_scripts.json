@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482589,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-18T17:11:42.000Z",
+    "code_updated_at": "2024-01-20T20:20:30.000Z",
+    "namespace": "https://greasyfork.org/en/users/1235961-420",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1235961,
+        "name": "_420_",
+        "created_at": "2023-12-18T17:08:47.000Z",
+        "url": "https://greasyfork.org/users/1235961-420"
+      }
+    ],
+    "name": "Tinychat Enhancement Suite (TES)",
+    "description": "Fixes some Tinychat room shortcomings and adds useful features.",
+    "url": "https://greasyfork.org/scripts/482589-tinychat-enhancement-suite-tes",
+    "code_url": "https://update.greasyfork.org/scripts/482589/Tinychat%20Enhancement%20Suite%20%28TES%29.user.js",
+    "code_size": 243616,
+    "license": null,
+    "version": "2024.20.01v3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

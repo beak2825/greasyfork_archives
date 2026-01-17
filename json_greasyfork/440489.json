@@ -1,0 +1,59 @@
+{
+  "id": 440489,
+  "daily_installs": 0,
+  "total_installs": 54,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-23T08:33:07.000Z",
+  "code_updated_at": "2022-09-05T13:44:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 724447,
+      "name": "ygowill",
+      "created_at": "2021-01-06T06:40:13.000Z",
+      "url": "https://greasyfork.org/users/724447-ygowill",
+      "scripts": [
+        {
+          "id": 440489,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-23T08:33:07.000Z",
+          "code_updated_at": "2022-09-05T13:44:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "UESTC 研究生课表ics导出",
+          "description": "一键导出课表的ics文件，方便各系统加入原生日历应用",
+          "url": "https://greasyfork.org/scripts/440489-uestc-%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E8%A1%A8ics%E5%AF%BC%E5%87%BA",
+          "code_url": "https://update.greasyfork.org/scripts/440489/UESTC%20%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E8%A1%A8ics%E5%AF%BC%E5%87%BA.user.js",
+          "code_size": 8831,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "UESTC 研究生课表ics导出",
+  "description": "一键导出课表的ics文件，方便各系统加入原生日历应用",
+  "url": "https://greasyfork.org/scripts/440489-uestc-%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E8%A1%A8ics%E5%AF%BC%E5%87%BA",
+  "code_url": "https://update.greasyfork.org/scripts/440489/UESTC%20%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E8%A1%A8ics%E5%AF%BC%E5%87%BA.user.js",
+  "code_size": 8831,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

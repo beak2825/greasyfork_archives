@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447324,
+    "daily_installs": 0,
+    "total_installs": 271,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-02T03:00:27.000Z",
+    "code_updated_at": "2022-07-02T03:01:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 663482,
+        "name": "jpabon",
+        "created_at": "2020-07-05T04:06:29.000Z",
+        "url": "https://greasyfork.org/users/663482-jpabon"
+      }
+    ],
+    "name": "Alo - csgoclicker.net (OP AUTO FARM, AUTO MISSIONS, AUTO CASES HACK)",
+    "description": "OP AUTO FARM, AUTO SELL, AUTO MISSIONS, AUTO CASE, ETC...",
+    "url": "https://greasyfork.org/scripts/447324-alo-csgoclicker-net-op-auto-farm-auto-missions-auto-cases-hack",
+    "code_url": "https://update.greasyfork.org/scripts/447324/Alo%20-%20csgoclickernet%20%28OP%20AUTO%20FARM%2C%20AUTO%20MISSIONS%2C%20AUTO%20CASES%20HACK%29.user.js",
+    "code_size": 15036,
+    "license": "MIT License",
+    "version": "v0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

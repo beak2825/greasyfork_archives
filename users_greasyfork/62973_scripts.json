@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419587,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-03T15:16:26.000Z",
+    "code_updated_at": "2021-01-03T15:33:47.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/374715-aliexpress-min-price",
+    "support_url": "https://kulam.pl/kontakt",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 62973,
+        "name": "MateuszKula",
+        "created_at": "2016-08-29T12:17:33.000Z",
+        "url": "https://greasyfork.org/users/62973-mateuszkula"
+      }
+    ],
+    "name": "Aliexpress min price firefox test",
+    "description": "Update minimum available price",
+    "url": "https://greasyfork.org/scripts/419587-aliexpress-min-price-firefox-test",
+    "code_url": "https://update.greasyfork.org/scripts/419587/Aliexpress%20min%20price%20firefox%20test.user.js",
+    "code_size": 3423,
+    "license": null,
+    "version": "0.2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

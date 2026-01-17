@@ -1,0 +1,68 @@
+[
+  {
+    "id": 490046,
+    "daily_installs": 9,
+    "total_installs": 4625,
+    "fan_score": "77.6",
+    "good_ratings": 30,
+    "ok_ratings": 4,
+    "bad_ratings": 1,
+    "created_at": "2024-03-16T20:23:21.000Z",
+    "code_updated_at": "2026-01-11T09:21:48.000Z",
+    "namespace": "RedditPlusPlus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 771384,
+        "name": "lnm95",
+        "created_at": "2021-05-12T17:09:34.000Z",
+        "url": "https://greasyfork.org/users/771384-lnm95"
+      }
+    ],
+    "name": "Reddit++",
+    "description": "A lot of enhancements for new design of reddit.com like unwrapped feed buttons, bigger fonts, view images without redirect, filtering content by keywords and many more...",
+    "url": "https://greasyfork.org/scripts/490046-reddit",
+    "code_url": "https://update.greasyfork.org/scripts/490046/Reddit%2B%2B.user.js",
+    "code_size": 321065,
+    "license": "MIT License",
+    "version": "1.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 426379,
+    "daily_installs": 0,
+    "total_installs": 804,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-13T01:36:26.000Z",
+    "code_updated_at": "2022-04-24T11:44:37.000Z",
+    "namespace": "pikabuUIPlusPlus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 771384,
+        "name": "lnm95",
+        "created_at": "2021-05-12T17:09:34.000Z",
+        "url": "https://greasyfork.org/users/771384-lnm95"
+      }
+    ],
+    "name": "Pikabu UI++",
+    "description": "Улучшение интерфейса",
+    "url": "https://greasyfork.org/scripts/426379-pikabu-ui",
+    "code_url": "https://update.greasyfork.org/scripts/426379/Pikabu%20UI%2B%2B.user.js",
+    "code_size": 47019,
+    "license": "Creative Commons Attribution Share Alike 4.0 International",
+    "version": "1.60",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

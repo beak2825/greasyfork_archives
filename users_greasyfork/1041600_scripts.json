@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491747,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-05T19:58:58.000Z",
+    "code_updated_at": "2024-04-05T20:23:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1041600,
+        "name": "Oian",
+        "created_at": "2023-03-13T14:03:18.000Z",
+        "url": "https://greasyfork.org/users/1041600-oian"
+      }
+    ],
+    "name": "JPDB Stroke Order Remover",
+    "description": "Removes stroke order on JPDB Kanji",
+    "url": "https://greasyfork.org/scripts/491747-jpdb-stroke-order-remover",
+    "code_url": "https://update.greasyfork.org/scripts/491747/JPDB%20Stroke%20Order%20Remover.user.js",
+    "code_size": 1105,
+    "license": "CC BY 4.0",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

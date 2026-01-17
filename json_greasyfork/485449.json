@@ -1,0 +1,34 @@
+{
+  "id": 485449,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-22T15:23:26.000Z",
+  "code_updated_at": "2024-01-22T15:23:26.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": "https://vk.com/dxx_uz",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1251819,
+      "name": "Sayraks",
+      "created_at": "2024-01-22T15:20:20.000Z",
+      "url": "https://greasyfork.org/users/1251819-sayraks",
+      "scripts": []
+    }
+  ],
+  "name": "💚GROZNY💚 | СХ",
+  "description": "Предложения по улучшению скрипта писать сюда ---> https://vk.com/dxx_uz",
+  "url": "https://greasyfork.org/scripts/485449-grozny-%D1%81%D1%85",
+  "code_url": "https://update.greasyfork.org/scripts/485449/%F0%9F%92%9AGROZNY%F0%9F%92%9A%20%7C%20%D0%A1%D0%A5.user.js",
+  "code_size": 91650,
+  "license": "MIT License",
+  "version": "777",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

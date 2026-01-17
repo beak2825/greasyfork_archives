@@ -1,0 +1,34 @@
+{
+  "id": 462922,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-30T11:53:50.000Z",
+  "code_updated_at": "2023-04-27T21:20:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 949556,
+      "name": "jacobgantzpolyglot",
+      "created_at": "2022-08-22T15:53:47.000Z",
+      "url": "https://greasyfork.org/users/949556-jacobgantzpolyglot",
+      "scripts": []
+    }
+  ],
+  "name": "auto unready",
+  "description": "auto unready when calls are holding",
+  "url": "https://greasyfork.org/scripts/462922-auto-unready",
+  "code_url": "https://update.greasyfork.org/scripts/462922/auto%20unready.user.js",
+  "code_size": 5391,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

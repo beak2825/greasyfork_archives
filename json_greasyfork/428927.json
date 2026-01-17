@@ -1,0 +1,34 @@
+{
+  "id": 428927,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-05T07:19:06.000Z",
+  "code_updated_at": "2021-07-05T07:21:00.000Z",
+  "namespace": "https://gitee.com/zaiMoe/greasemonkey",
+  "support_url": "https://www.baiduyun.wiki",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 790505,
+      "name": "rick sun",
+      "created_at": "2021-07-05T07:17:09.000Z",
+      "url": "https://greasyfork.org/users/790505-rick-sun",
+      "scripts": []
+    }
+  ],
+  "name": "网盘直链下载助手（改）-rick备份",
+  "description": "基于【网盘直链下载助手】改，原作者：https://www.baiduyun.wiki/，个人使用，去掉了一些广告之类的东西",
+  "url": "https://greasyfork.org/scripts/428927-%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-%E6%94%B9-rick%E5%A4%87%E4%BB%BD",
+  "code_url": "https://update.greasyfork.org/scripts/428927/%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%EF%BC%88%E6%94%B9%EF%BC%89-rick%E5%A4%87%E4%BB%BD.user.js",
+  "code_size": 51764,
+  "license": "AGPL",
+  "version": "4.4.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

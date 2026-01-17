@@ -1,0 +1,59 @@
+{
+  "id": 483192,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-27T02:52:30.000Z",
+  "code_updated_at": "2024-11-22T07:41:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1238900,
+      "name": "xkplan",
+      "created_at": "2023-12-25T06:09:53.000Z",
+      "url": "https://greasyfork.org/users/1238900-xkplan",
+      "scripts": [
+        {
+          "id": 483192,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-27T02:52:30.000Z",
+          "code_updated_at": "2024-11-22T07:41:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "统计数据",
+          "description": "是否接口上线后查询日志麻烦，统计繁琐，使用本插件可以直接一次性查询",
+          "url": "https://greasyfork.org/scripts/483192-%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE",
+          "code_url": "https://update.greasyfork.org/scripts/483192/%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE.user.js",
+          "code_size": 27415,
+          "license": "GNU GPLv3",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "统计数据",
+  "description": "是否接口上线后查询日志麻烦，统计繁琐，使用本插件可以直接一次性查询",
+  "url": "https://greasyfork.org/scripts/483192-%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE",
+  "code_url": "https://update.greasyfork.org/scripts/483192/%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE.user.js",
+  "code_size": 27415,
+  "license": "GNU GPLv3",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

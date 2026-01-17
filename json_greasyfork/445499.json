@@ -1,0 +1,59 @@
+{
+  "id": 445499,
+  "daily_installs": 0,
+  "total_installs": 4017,
+  "fan_score": "39.6",
+  "good_ratings": 3,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-05-25T03:25:33.000Z",
+  "code_updated_at": "2022-10-08T01:21:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 915076,
+      "name": "wulai",
+      "created_at": "2022-05-17T01:30:26.000Z",
+      "url": "https://greasyfork.org/users/915076-wulai",
+      "scripts": [
+        {
+          "id": 445499,
+          "daily_installs": 0,
+          "total_installs": 4017,
+          "fan_score": "39.6",
+          "good_ratings": 3,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-05-25T03:25:33.000Z",
+          "code_updated_at": "2022-10-08T01:21:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "青书学堂答案一键填充",
+          "description": "青书学堂答案一键填充助手",
+          "url": "https://greasyfork.org/scripts/445499-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E7%AD%94%E6%A1%88%E4%B8%80%E9%94%AE%E5%A1%AB%E5%85%85",
+          "code_url": "https://update.greasyfork.org/scripts/445499/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E7%AD%94%E6%A1%88%E4%B8%80%E9%94%AE%E5%A1%AB%E5%85%85.user.js",
+          "code_size": 7480,
+          "license": null,
+          "version": "2.2.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "青书学堂答案一键填充",
+  "description": "青书学堂答案一键填充助手",
+  "url": "https://greasyfork.org/scripts/445499-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E7%AD%94%E6%A1%88%E4%B8%80%E9%94%AE%E5%A1%AB%E5%85%85",
+  "code_url": "https://update.greasyfork.org/scripts/445499/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E7%AD%94%E6%A1%88%E4%B8%80%E9%94%AE%E5%A1%AB%E5%85%85.user.js",
+  "code_size": 7480,
+  "license": null,
+  "version": "2.2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 455298,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-23T15:04:13.000Z",
+  "code_updated_at": "2022-11-23T15:04:13.000Z",
+  "namespace": "outrowed",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972021,
+      "name": "outrowed",
+      "created_at": "2022-10-17T14:53:39.000Z",
+      "url": "https://greasyfork.org/users/972021-outrowed",
+      "scripts": [
+        {
+          "id": 455298,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-23T15:04:13.000Z",
+          "code_updated_at": "2022-11-23T15:04:13.000Z",
+          "namespace": "outrowed",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Preview Handle",
+          "description": "This userscript will preview/show handle right next to channel name.",
+          "url": "https://greasyfork.org/scripts/455298-youtube-preview-handle",
+          "code_url": "https://update.greasyfork.org/scripts/455298/YouTube%20Preview%20Handle.user.js",
+          "code_size": 3731,
+          "license": "GNU General Public License v3.0 or later",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Preview Handle",
+  "description": "This userscript will preview/show handle right next to channel name.",
+  "url": "https://greasyfork.org/scripts/455298-youtube-preview-handle",
+  "code_url": "https://update.greasyfork.org/scripts/455298/YouTube%20Preview%20Handle.user.js",
+  "code_size": 3731,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

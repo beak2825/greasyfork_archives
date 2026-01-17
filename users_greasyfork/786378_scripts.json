@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428328,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-23T02:42:43.000Z",
+    "code_updated_at": "2021-06-23T02:42:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 786378,
+        "name": "tu botao",
+        "created_at": "2021-06-23T02:41:10.000Z",
+        "url": "https://greasyfork.org/users/786378-tu-botao"
+      }
+    ],
+    "name": "钉钉查看表格",
+    "description": "钉钉查看表格一览",
+    "url": "https://greasyfork.org/scripts/428328-%E9%92%89%E9%92%89%E6%9F%A5%E7%9C%8B%E8%A1%A8%E6%A0%BC",
+    "code_url": "https://update.greasyfork.org/scripts/428328/%E9%92%89%E9%92%89%E6%9F%A5%E7%9C%8B%E8%A1%A8%E6%A0%BC.user.js",
+    "code_size": 893,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

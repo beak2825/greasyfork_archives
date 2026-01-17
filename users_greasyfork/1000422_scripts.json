@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456894,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-20T15:26:47.000Z",
+    "code_updated_at": "2022-12-20T15:27:58.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1000422,
+        "name": "jdqo",
+        "created_at": "2022-12-20T12:46:57.000Z",
+        "url": "https://greasyfork.org/users/1000422-jdqo"
+      }
+    ],
+    "name": "Nordnet use username and password in login",
+    "description": "12/20/2022",
+    "url": "https://greasyfork.org/scripts/456894-nordnet-use-username-and-password-in-login",
+    "code_url": "https://update.greasyfork.org/scripts/456894/Nordnet%20use%20username%20and%20password%20in%20login.user.js",
+    "code_size": 652,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

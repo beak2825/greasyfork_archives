@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473767,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-23T16:36:30.000Z",
+    "code_updated_at": "2023-08-23T16:36:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1157730,
+        "name": "Jayrock09",
+        "created_at": "2023-08-23T16:28:58.000Z",
+        "url": "https://greasyfork.org/users/1157730-jayrock09"
+      }
+    ],
+    "name": "Word Spreading Susifier",
+    "description": "Gradually turns webpage text into \"sus\" variations for fun.",
+    "url": "https://greasyfork.org/scripts/473767-word-spreading-susifier",
+    "code_url": "https://update.greasyfork.org/scripts/473767/Word%20Spreading%20Susifier.user.js",
+    "code_size": 1511,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

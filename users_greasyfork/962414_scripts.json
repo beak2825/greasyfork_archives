@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451821,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-22T15:27:33.000Z",
+    "code_updated_at": "2022-09-22T15:27:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 962414,
+        "name": "cityboy001",
+        "created_at": "2022-09-22T15:22:24.000Z",
+        "url": "https://greasyfork.org/users/962414-cityboy001"
+      }
+    ],
+    "name": "YouHouDownLoadTableInfoTest",
+    "description": "download yg page info",
+    "url": "https://greasyfork.org/scripts/451821-youhoudownloadtableinfotest",
+    "code_url": "https://update.greasyfork.org/scripts/451821/YouHouDownLoadTableInfoTest.user.js",
+    "code_size": 486,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

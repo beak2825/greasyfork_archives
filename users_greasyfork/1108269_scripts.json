@@ -1,0 +1,35 @@
+[
+  {
+    "id": 469169,
+    "daily_installs": 0,
+    "total_installs": 922,
+    "fan_score": "50.9",
+    "good_ratings": 7,
+    "ok_ratings": 5,
+    "bad_ratings": 0,
+    "created_at": "2023-06-21T16:21:38.000Z",
+    "code_updated_at": "2023-12-26T05:11:17.000Z",
+    "namespace": "https://thesimplecorner.org/c/lemmytools",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1108269,
+        "name": "howdy-tsc",
+        "created_at": "2023-06-21T16:20:19.000Z",
+        "url": "https://greasyfork.org/users/1108269-howdy-tsc"
+      }
+    ],
+    "name": "LemmyTools",
+    "description": "A small suite of tools to make Lemmy easier.",
+    "url": "https://greasyfork.org/scripts/469169-lemmytools",
+    "code_url": "https://update.greasyfork.org/scripts/469169/LemmyTools.user.js",
+    "code_size": 126556,
+    "license": null,
+    "version": "0.2.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 437924,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-02T05:44:58.000Z",
+  "code_updated_at": "2022-01-02T05:44:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841274,
+      "name": "weiv",
+      "created_at": "2021-11-20T02:01:35.000Z",
+      "url": "https://greasyfork.org/users/841274-weiv",
+      "scripts": []
+    }
+  ],
+  "name": "真不卡去广告",
+  "description": "将广告移动到看不到地方。",
+  "url": "https://greasyfork.org/scripts/437924-%E7%9C%9F%E4%B8%8D%E5%8D%A1%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/437924/%E7%9C%9F%E4%B8%8D%E5%8D%A1%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 1181,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 425470,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-24T05:27:54.000Z",
+    "code_updated_at": "2021-04-24T05:27:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695183,
+        "name": "wangyw6716",
+        "created_at": "2020-10-15T07:31:55.000Z",
+        "url": "https://greasyfork.org/users/695183-wangyw6716"
+      }
+    ],
+    "name": "123kanfang_saveBtn",
+    "description": "123kanfang_saveBtn!",
+    "url": "https://greasyfork.org/scripts/425470-123kanfang-savebtn",
+    "code_url": "https://update.greasyfork.org/scripts/425470/123kanfang_saveBtn.user.js",
+    "code_size": 674,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418659,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-15T12:56:39.000Z",
+    "code_updated_at": "2020-12-15T12:56:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695183,
+        "name": "wangyw6716",
+        "created_at": "2020-10-15T07:31:55.000Z",
+        "url": "https://greasyfork.org/users/695183-wangyw6716"
+      }
+    ],
+    "name": "BBU自动登录",
+    "description": "蚌埠学院BBU自动登录",
+    "url": "https://greasyfork.org/scripts/418659-bbu%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/418659/BBU%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 572,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 413283,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-15T07:44:18.000Z",
+    "code_updated_at": "2020-10-15T07:44:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695183,
+        "name": "wangyw6716",
+        "created_at": "2020-10-15T07:31:55.000Z",
+        "url": "https://greasyfork.org/users/695183-wangyw6716"
+      }
+    ],
+    "name": "BBU流量显示优化",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/413283-bbu%E6%B5%81%E9%87%8F%E6%98%BE%E7%A4%BA%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/413283/BBU%E6%B5%81%E9%87%8F%E6%98%BE%E7%A4%BA%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 976,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

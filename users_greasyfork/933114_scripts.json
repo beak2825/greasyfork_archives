@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447522,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-06T20:58:12.000Z",
+    "code_updated_at": "2022-07-06T20:58:12.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 933114,
+        "name": "Petr Leo Compel",
+        "created_at": "2022-07-06T20:53:51.000Z",
+        "url": "https://greasyfork.org/users/933114-petr-leo-compel"
+      }
+    ],
+    "name": "Fullscreen production - satisfactory-calculator.com",
+    "description": "06/07/2022, 21:48:04",
+    "url": "https://greasyfork.org/scripts/447522-fullscreen-production-satisfactory-calculator-com",
+    "code_url": "https://update.greasyfork.org/scripts/447522/Fullscreen%20production%20-%20satisfactory-calculatorcom.user.js",
+    "code_size": 1668,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

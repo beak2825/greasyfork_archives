@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443964,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-25T06:51:40.000Z",
+    "code_updated_at": "2022-04-26T10:01:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906624,
+        "name": "kevinmaaa",
+        "created_at": "2022-04-25T06:11:07.000Z",
+        "url": "https://greasyfork.org/users/906624-kevinmaaa"
+      }
+    ],
+    "name": "秦宇宙",
+    "description": "秦宇宙脚本",
+    "url": "https://greasyfork.org/scripts/443964-%E7%A7%A6%E5%AE%87%E5%AE%99",
+    "code_url": "https://update.greasyfork.org/scripts/443964/%E7%A7%A6%E5%AE%87%E5%AE%99.user.js",
+    "code_size": 4318,
+    "license": "MIT License",
+    "version": "1.1.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

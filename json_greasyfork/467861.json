@@ -1,0 +1,34 @@
+{
+  "id": 467861,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-04T07:36:56.000Z",
+  "code_updated_at": "2024-08-03T18:13:41.000Z",
+  "namespace": "https://greasyfork.org/ru/users/1090548-reyzitwo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1090548,
+      "name": "reyzitwo",
+      "created_at": "2023-06-04T07:22:59.000Z",
+      "url": "https://greasyfork.org/users/1090548-reyzitwo",
+      "scripts": []
+    }
+  ],
+  "name": "VK Bugtracker opens reports in a new tab",
+  "description": "Add 'target=_blank' on vk.com/bugs results page",
+  "url": "https://greasyfork.org/scripts/467861-vk-bugtracker-opens-reports-in-a-new-tab",
+  "code_url": "https://update.greasyfork.org/scripts/467861/VK%20Bugtracker%20opens%20reports%20in%20a%20new%20tab.user.js",
+  "code_size": 1083,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

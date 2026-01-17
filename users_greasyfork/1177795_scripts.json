@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487448,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-16T09:14:35.000Z",
+    "code_updated_at": "2024-02-16T09:20:47.000Z",
+    "namespace": "https://greasyfork.org/users/1177795",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177795,
+        "name": "Đạo Nguyệt",
+        "created_at": "2023-09-21T14:05:48.000Z",
+        "url": "https://greasyfork.org/users/1177795-%C4%91%E1%BA%A1o-nguy%E1%BB%87t"
+      }
+    ],
+    "name": "Great Fork - Xem nguồn trang web",
+    "description": "Hiển thị mã nguồn của trang web hiện tại và cho phép đóng cửa sổ mã nguồn",
+    "url": "https://greasyfork.org/scripts/487448-great-fork-xem-ngu%E1%BB%93n-trang-web",
+    "code_url": "https://update.greasyfork.org/scripts/487448/Great%20Fork%20-%20Xem%20ngu%E1%BB%93n%20trang%20web.user.js",
+    "code_size": 1832,
+    "license": null,
+    "version": "0.3",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 485319,
+  "daily_installs": 0,
+  "total_installs": 239,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-01-20T14:55:28.000Z",
+  "code_updated_at": "2024-01-20T14:55:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1250940,
+      "name": "无心tongxue",
+      "created_at": "2024-01-20T14:52:17.000Z",
+      "url": "https://greasyfork.org/users/1250940-%E6%97%A0%E5%BF%83tongxue",
+      "scripts": [
+        {
+          "id": 485319,
+          "daily_installs": 0,
+          "total_installs": 239,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-01-20T14:55:28.000Z",
+          "code_updated_at": "2024-01-20T14:55:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "阿里云盘播放异常解决脚本",
+          "description": "解决阿里云盘在线播放经常出现异常",
+          "url": "https://greasyfork.org/scripts/485319-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E6%92%AD%E6%94%BE%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/485319/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E6%92%AD%E6%94%BE%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 2341,
+          "license": "GPL License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "阿里云盘播放异常解决脚本",
+  "description": "解决阿里云盘在线播放经常出现异常",
+  "url": "https://greasyfork.org/scripts/485319-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E6%92%AD%E6%94%BE%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/485319/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E6%92%AD%E6%94%BE%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 2341,
+  "license": "GPL License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

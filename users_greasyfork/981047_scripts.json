@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454505,
+    "daily_installs": 0,
+    "total_installs": 108,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-09T07:54:36.000Z",
+    "code_updated_at": "2022-11-09T07:54:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 981047,
+        "name": "eryisan",
+        "created_at": "2022-11-09T07:44:42.000Z",
+        "url": "https://greasyfork.org/users/981047-eryisan"
+      }
+    ],
+    "name": "彩云小译翻译字体高亮",
+    "description": "高亮彩云小译翻译字体的颜色。",
+    "url": "https://greasyfork.org/scripts/454505-%E5%BD%A9%E4%BA%91%E5%B0%8F%E8%AF%91%E7%BF%BB%E8%AF%91%E5%AD%97%E4%BD%93%E9%AB%98%E4%BA%AE",
+    "code_url": "https://update.greasyfork.org/scripts/454505/%E5%BD%A9%E4%BA%91%E5%B0%8F%E8%AF%91%E7%BF%BB%E8%AF%91%E5%AD%97%E4%BD%93%E9%AB%98%E4%BA%AE.user.js",
+    "code_size": 630,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

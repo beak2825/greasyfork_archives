@@ -1,0 +1,33 @@
+{
+  "id": 448352,
+  "daily_installs": 0,
+  "total_installs": 203,
+  "fan_score": "37.6",
+  "good_ratings": 3,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2022-07-23T06:20:07.000Z",
+  "code_updated_at": "2023-05-26T01:02:50.000Z",
+  "namespace": "https://mr-metasequoia.github.io/tools/YYGQ/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 937931,
+      "name": "Mr-metasequoia",
+      "created_at": "2022-07-21T12:43:00.000Z",
+      "url": "https://greasyfork.org/users/937931-mr-metasequoia"
+    }
+  ],
+  "name": "Ctrl+X键阴阳人屏蔽器",
+  "description": "在各大内容平台（默认支持知乎、微博和贴吧）展开评论区后，按下Ctrl+X键(或⌘+X键)屏蔽某些不友善言论。折叠评论区并再次打开以恢复原貌。判定规则丰富合理🤔，屏蔽词及敏感值可调。不妨点进来看看？",
+  "url": "https://greasyfork.org/scripts/448352-ctrl-x%E9%94%AE%E9%98%B4%E9%98%B3%E4%BA%BA%E5%B1%8F%E8%94%BD%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/448352/Ctrl%2BX%E9%94%AE%E9%98%B4%E9%98%B3%E4%BA%BA%E5%B1%8F%E8%94%BD%E5%99%A8.user.js",
+  "code_size": 23983,
+  "license": "MPL",
+  "version": "0.8.16",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

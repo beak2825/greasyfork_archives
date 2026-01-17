@@ -1,0 +1,134 @@
+[
+  {
+    "id": 423920,
+    "daily_installs": 0,
+    "total_installs": 171,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-24T18:46:15.000Z",
+    "code_updated_at": "2024-05-19T23:38:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 723691,
+        "name": "jack0lantern",
+        "created_at": "2021-01-04T01:29:19.000Z",
+        "url": "https://greasyfork.org/users/723691-jack0lantern"
+      }
+    ],
+    "name": "Kad Timekeeper",
+    "description": "Kad timekeeper",
+    "url": "https://greasyfork.org/scripts/423920-kad-timekeeper",
+    "code_url": "https://update.greasyfork.org/scripts/423920/Kad%20Timekeeper.user.js",
+    "code_size": 9938,
+    "license": null,
+    "version": "2024-05-18",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423914,
+    "daily_installs": 0,
+    "total_installs": 128,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-24T16:02:35.000Z",
+    "code_updated_at": "2021-03-24T16:03:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 723691,
+        "name": "jack0lantern",
+        "created_at": "2021-01-04T01:29:19.000Z",
+        "url": "https://greasyfork.org/users/723691-jack0lantern"
+      }
+    ],
+    "name": "Kad helper",
+    "description": "Highlight kads you can quickly feed and timekeep",
+    "url": "https://greasyfork.org/scripts/423914-kad-helper",
+    "code_url": "https://update.greasyfork.org/scripts/423914/Kad%20helper.user.js",
+    "code_size": 12071,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 421338,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-06T21:01:05.000Z",
+    "code_updated_at": "2021-02-06T21:01:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 723691,
+        "name": "jack0lantern",
+        "created_at": "2021-01-04T01:29:19.000Z",
+        "url": "https://greasyfork.org/users/723691-jack0lantern"
+      }
+    ],
+    "name": "Travian Troops autofill",
+    "description": "Send attacks based on a template",
+    "url": "https://greasyfork.org/scripts/421338-travian-troops-autofill",
+    "code_url": "https://update.greasyfork.org/scripts/421338/Travian%20Troops%20autofill.user.js",
+    "code_size": 1598,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 419602,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-04T01:31:18.000Z",
+    "code_updated_at": "2021-01-09T05:39:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 723691,
+        "name": "jack0lantern",
+        "created_at": "2021-01-04T01:29:19.000Z",
+        "url": "https://greasyfork.org/users/723691-jack0lantern"
+      }
+    ],
+    "name": "Trade route quick activate",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/419602-trade-route-quick-activate",
+    "code_url": "https://update.greasyfork.org/scripts/419602/Trade%20route%20quick%20activate.user.js",
+    "code_size": 907,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

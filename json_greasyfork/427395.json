@@ -1,0 +1,33 @@
+{
+  "id": 427395,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-02T10:40:40.000Z",
+  "code_updated_at": "2021-06-23T09:11:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 778908,
+      "name": "lsdsjy",
+      "created_at": "2021-06-02T10:30:55.000Z",
+      "url": "https://greasyfork.org/users/778908-lsdsjy"
+    }
+  ],
+  "name": "AutoComponent",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/427395-autocomponent",
+  "code_url": "https://update.greasyfork.org/scripts/427395/AutoComponent.user.js",
+  "code_size": 1443,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

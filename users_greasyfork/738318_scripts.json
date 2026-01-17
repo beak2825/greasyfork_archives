@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421899,
+    "daily_installs": 0,
+    "total_installs": 796,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-17T16:54:05.000Z",
+    "code_updated_at": "2021-02-17T16:55:46.000Z",
+    "namespace": "https://github.com/SunnyBingoMe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 738318,
+        "name": "Sunny Bingo Me",
+        "created_at": "2021-02-17T15:36:45.000Z",
+        "url": "https://greasyfork.org/users/738318-sunny-bingo-me"
+      }
+    ],
+    "name": "知网 参考文献 to bibtex",
+    "description": "从知网中直接复制bibtex, Hao同学的版本不能被Zotero识别且无法pull-reques，因此另开repo。",
+    "url": "https://greasyfork.org/scripts/421899-%E7%9F%A5%E7%BD%91-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE-to-bibtex",
+    "code_url": "https://update.greasyfork.org/scripts/421899/%E7%9F%A5%E7%BD%91%20%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE%20to%20bibtex.user.js",
+    "code_size": 4185,
+    "license": null,
+    "version": "2.1",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

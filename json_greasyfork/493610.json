@@ -1,0 +1,59 @@
+{
+  "id": 493610,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-27T14:06:26.000Z",
+  "code_updated_at": "2024-11-16T15:16:08.000Z",
+  "namespace": "http://umamusume.jp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1293936,
+      "name": "yingyingying qwq",
+      "created_at": "2024-04-27T13:38:14.000Z",
+      "url": "https://greasyfork.org/users/1293936-yingyingying-qwq",
+      "scripts": [
+        {
+          "id": 493610,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-27T14:06:26.000Z",
+          "code_updated_at": "2024-11-16T15:16:08.000Z",
+          "namespace": "http://umamusume.jp/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "赛马娘官网中文翻译",
+          "description": "为赛马娘官网内容提供中文翻译。",
+          "url": "https://greasyfork.org/scripts/493610-%E8%B5%9B%E9%A9%AC%E5%A8%98%E5%AE%98%E7%BD%91%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91",
+          "code_url": "https://update.greasyfork.org/scripts/493610/%E8%B5%9B%E9%A9%AC%E5%A8%98%E5%AE%98%E7%BD%91%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91.user.js",
+          "code_size": 8454,
+          "license": null,
+          "version": "1.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "赛马娘官网中文翻译",
+  "description": "为赛马娘官网内容提供中文翻译。",
+  "url": "https://greasyfork.org/scripts/493610-%E8%B5%9B%E9%A9%AC%E5%A8%98%E5%AE%98%E7%BD%91%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91",
+  "code_url": "https://update.greasyfork.org/scripts/493610/%E8%B5%9B%E9%A9%AC%E5%A8%98%E5%AE%98%E7%BD%91%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91.user.js",
+  "code_size": 8454,
+  "license": null,
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

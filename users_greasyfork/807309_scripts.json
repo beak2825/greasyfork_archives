@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431179,
+    "daily_installs": 0,
+    "total_installs": 74,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-22T09:41:51.000Z",
+    "code_updated_at": "2021-08-22T09:41:51.000Z",
+    "namespace": "https://cwd316.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 807309,
+        "name": "chenwenda316",
+        "created_at": "2021-08-22T09:27:41.000Z",
+        "url": "https://greasyfork.org/users/807309-chenwenda316"
+      }
+    ],
+    "name": "火狐洛谷测评补丁",
+    "description": "to successfully show judge status",
+    "url": "https://greasyfork.org/scripts/431179-%E7%81%AB%E7%8B%90%E6%B4%9B%E8%B0%B7%E6%B5%8B%E8%AF%84%E8%A1%A5%E4%B8%81",
+    "code_url": "https://update.greasyfork.org/scripts/431179/%E7%81%AB%E7%8B%90%E6%B4%9B%E8%B0%B7%E6%B5%8B%E8%AF%84%E8%A1%A5%E4%B8%81.user.js",
+    "code_size": 1541,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

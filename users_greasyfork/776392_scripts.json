@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443011,
+    "daily_installs": 0,
+    "total_installs": 2206,
+    "fan_score": "62.9",
+    "good_ratings": 8,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-04-08T21:20:15.000Z",
+    "code_updated_at": "2024-06-27T11:23:54.000Z",
+    "namespace": "mailto:auxermen@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 776392,
+        "name": "auxermen",
+        "created_at": "2021-05-26T11:40:55.000Z",
+        "url": "https://greasyfork.org/users/776392-auxermen"
+      }
+    ],
+    "name": "Emojis for old reddit",
+    "description": "Enables subreddit specific emoji display on old reddit.",
+    "url": "https://greasyfork.org/scripts/443011-emojis-for-old-reddit",
+    "code_url": "https://update.greasyfork.org/scripts/443011/Emojis%20for%20old%20reddit.user.js",
+    "code_size": 3599,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

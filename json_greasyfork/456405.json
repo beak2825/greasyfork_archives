@@ -1,0 +1,59 @@
+{
+  "id": 456405,
+  "daily_installs": 0,
+  "total_installs": 60,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-10T17:42:31.000Z",
+  "code_updated_at": "2024-01-02T12:23:27.000Z",
+  "namespace": "*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 995584,
+      "name": "DarkWiiPlayer",
+      "created_at": "2022-12-10T16:31:14.000Z",
+      "url": "https://greasyfork.org/users/995584-darkwiiplayer",
+      "scripts": [
+        {
+          "id": 456405,
+          "daily_installs": 0,
+          "total_installs": 60,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-10T17:42:31.000Z",
+          "code_updated_at": "2024-01-02T12:23:27.000Z",
+          "namespace": "*",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Nitterify",
+          "description": "Turns all twitter.com links into nitter.net links",
+          "url": "https://greasyfork.org/scripts/456405-nitterify",
+          "code_url": "https://update.greasyfork.org/scripts/456405/Nitterify.user.js",
+          "code_size": 3012,
+          "license": "The Unlicense",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Nitterify",
+  "description": "Turns all twitter.com links into nitter.net links",
+  "url": "https://greasyfork.org/scripts/456405-nitterify",
+  "code_url": "https://update.greasyfork.org/scripts/456405/Nitterify.user.js",
+  "code_size": 3012,
+  "license": "The Unlicense",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

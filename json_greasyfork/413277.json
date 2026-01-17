@@ -1,0 +1,33 @@
+{
+  "id": 413277,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-15T06:16:35.000Z",
+  "code_updated_at": "2020-12-23T04:16:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 35817,
+      "name": "孟子易",
+      "created_at": "2016-03-29T05:20:57.000Z",
+      "url": "https://greasyfork.org/users/35817-%E5%AD%9F%E5%AD%90%E6%98%93"
+    }
+  ],
+  "name": "Better Search",
+  "description": "Better Search 加强搜索功能",
+  "url": "https://greasyfork.org/scripts/413277-better-search",
+  "code_url": "https://update.greasyfork.org/scripts/413277/Better%20Search.user.js",
+  "code_size": 15905,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

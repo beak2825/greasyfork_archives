@@ -1,0 +1,68 @@
+[
+  {
+    "id": 481273,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-02T23:47:19.000Z",
+    "code_updated_at": "2023-12-02T23:47:19.000Z",
+    "namespace": "https://www.52dzd.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1080063,
+        "name": "心雨纷扬",
+        "created_at": "2023-05-16T13:38:08.000Z",
+        "url": "https://greasyfork.org/users/1080063-%E5%BF%83%E9%9B%A8%E7%BA%B7%E6%89%AC"
+      }
+    ],
+    "name": "reader for 69shuba",
+    "description": "make 69shuba reader fullscreen",
+    "url": "https://greasyfork.org/scripts/481273-reader-for-69shuba",
+    "code_url": "https://update.greasyfork.org/scripts/481273/reader%20for%2069shuba.user.js",
+    "code_size": 768,
+    "license": "Apache License 2.0",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466427,
+    "daily_installs": 0,
+    "total_installs": 128,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-16T13:42:39.000Z",
+    "code_updated_at": "2023-10-06T09:23:10.000Z",
+    "namespace": "https://www.52dzd.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1080063,
+        "name": "心雨纷扬",
+        "created_at": "2023-05-16T13:38:08.000Z",
+        "url": "https://greasyfork.org/users/1080063-%E5%BF%83%E9%9B%A8%E7%BA%B7%E6%89%AC"
+      }
+    ],
+    "name": "起点pc阅读全屏",
+    "description": "make qidian read with fullwidth",
+    "url": "https://greasyfork.org/scripts/466427-%E8%B5%B7%E7%82%B9pc%E9%98%85%E8%AF%BB%E5%85%A8%E5%B1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/466427/%E8%B5%B7%E7%82%B9pc%E9%98%85%E8%AF%BB%E5%85%A8%E5%B1%8F.user.js",
+    "code_size": 3705,
+    "license": "Apache License 2.0",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 486106,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-31T05:20:36.000Z",
+  "code_updated_at": "2024-01-31T05:20:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1255426,
+      "name": "Benjamin Tine",
+      "created_at": "2024-01-31T05:16:11.000Z",
+      "url": "https://greasyfork.org/users/1255426-benjamin-tine",
+      "scripts": []
+    }
+  ],
+  "name": "EvoWorld.io Gems Cheat",
+  "description": "Set gems to 9999999 when 'M' key is pressed on EvoWorld.io",
+  "url": "https://greasyfork.org/scripts/486106-evoworld-io-gems-cheat",
+  "code_url": "https://update.greasyfork.org/scripts/486106/EvoWorldio%20Gems%20Cheat.user.js",
+  "code_size": 1051,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

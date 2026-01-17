@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418736,
+    "daily_installs": 0,
+    "total_installs": 322,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-12-17T08:26:40.000Z",
+    "code_updated_at": "2020-12-18T03:09:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 717761,
+        "name": "ch li",
+        "created_at": "2020-12-17T08:17:07.000Z",
+        "url": "https://greasyfork.org/users/717761-ch-li"
+      }
+    ],
+    "name": "超苦逼冒险者修改",
+    "description": "修改:1 出行不耗时间、 2背包大小20、 3建造不消耗资源，消耗时间0.1、 4技能加成*100、 5所有采集点产出*1000采集时间0.1、 6溪流的树木产出水晶和地牢钥匙和魔王之血",
+    "url": "https://greasyfork.org/scripts/418736-%E8%B6%85%E8%8B%A6%E9%80%BC%E5%86%92%E9%99%A9%E8%80%85%E4%BF%AE%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/418736/%E8%B6%85%E8%8B%A6%E9%80%BC%E5%86%92%E9%99%A9%E8%80%85%E4%BF%AE%E6%94%B9.user.js",
+    "code_size": 3167,
+    "license": null,
+    "version": "0.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

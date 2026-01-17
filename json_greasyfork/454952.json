@@ -1,0 +1,59 @@
+{
+  "id": 454952,
+  "daily_installs": 0,
+  "total_installs": 140,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-16T22:43:57.000Z",
+  "code_updated_at": "2022-12-16T08:27:30.000Z",
+  "namespace": "Grepo trade (beta)",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 299093,
+      "name": "doggerip",
+      "created_at": "2019-05-07T17:00:36.000Z",
+      "url": "https://greasyfork.org/users/299093-doggerip",
+      "scripts": [
+        {
+          "id": 454952,
+          "daily_installs": 0,
+          "total_installs": 140,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-16T22:43:57.000Z",
+          "code_updated_at": "2022-12-16T08:27:30.000Z",
+          "namespace": "Grepo trade (beta)",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Grepo Market trade (beta)",
+          "description": "description",
+          "url": "https://greasyfork.org/scripts/454952-grepo-market-trade-beta",
+          "code_url": "https://update.greasyfork.org/scripts/454952/Grepo%20Market%20trade%20%28beta%29.user.js",
+          "code_size": 4409,
+          "license": "GNU General Public License v3.0 only",
+          "version": "0.0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Grepo Market trade (beta)",
+  "description": "description",
+  "url": "https://greasyfork.org/scripts/454952-grepo-market-trade-beta",
+  "code_url": "https://update.greasyfork.org/scripts/454952/Grepo%20Market%20trade%20%28beta%29.user.js",
+  "code_size": 4409,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

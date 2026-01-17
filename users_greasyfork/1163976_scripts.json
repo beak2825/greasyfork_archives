@@ -1,0 +1,101 @@
+[
+  {
+    "id": 481439,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-05T08:12:25.000Z",
+    "code_updated_at": "2023-12-05T08:12:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163976,
+        "name": "Gohon Saputro",
+        "created_at": "2023-09-01T08:00:53.000Z",
+        "url": "https://greasyfork.org/users/1163976-gohon-saputro"
+      }
+    ],
+    "name": "dordorkiw",
+    "description": "Mencari dia",
+    "url": "https://greasyfork.org/scripts/481439-dordorkiw",
+    "code_url": "https://update.greasyfork.org/scripts/481439/dordorkiw.user.js",
+    "code_size": 2211,
+    "license": null,
+    "version": "0.1",
+    "locale": "sq",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477929,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-21T11:35:23.000Z",
+    "code_updated_at": "2023-10-21T11:35:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163976,
+        "name": "Gohon Saputro",
+        "created_at": "2023-09-01T08:00:53.000Z",
+        "url": "https://greasyfork.org/users/1163976-gohon-saputro"
+      }
+    ],
+    "name": "Fantasi Gaming Script",
+    "description": "Script to perform actions on fantasigaming.com",
+    "url": "https://greasyfork.org/scripts/477929-fantasi-gaming-script",
+    "code_url": "https://update.greasyfork.org/scripts/477929/Fantasi%20Gaming%20Script.user.js",
+    "code_size": 1386,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474508,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-04T11:16:52.000Z",
+    "code_updated_at": "2023-11-26T22:22:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163976,
+        "name": "Gohon Saputro",
+        "created_at": "2023-09-01T08:00:53.000Z",
+        "url": "https://greasyfork.org/users/1163976-gohon-saputro"
+      }
+    ],
+    "name": "Kesuksesan2",
+    "description": "mencari dia seorang",
+    "url": "https://greasyfork.org/scripts/474508-kesuksesan2",
+    "code_url": "https://update.greasyfork.org/scripts/474508/Kesuksesan2.user.js",
+    "code_size": 4350,
+    "license": null,
+    "version": "0.7",
+    "locale": "ms",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

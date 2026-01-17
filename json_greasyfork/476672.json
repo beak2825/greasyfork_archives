@@ -1,0 +1,59 @@
+{
+  "id": 476672,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-04T10:01:05.000Z",
+  "code_updated_at": "2023-10-04T10:01:05.000Z",
+  "namespace": "https://greasyfork.org/users/1187802",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1187802,
+      "name": "Nathan Ruser",
+      "created_at": "2023-10-04T09:59:38.000Z",
+      "url": "https://greasyfork.org/users/1187802-nathan-ruser",
+      "scripts": [
+        {
+          "id": 476672,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-04T10:01:05.000Z",
+          "code_updated_at": "2023-10-04T10:01:05.000Z",
+          "namespace": "https://greasyfork.org/users/1187802",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "iNaturalist Geomodel Viewier",
+          "description": "Add a link to the Geomodel result for iNaturalist taxa",
+          "url": "https://greasyfork.org/scripts/476672-inaturalist-geomodel-viewier",
+          "code_url": "https://update.greasyfork.org/scripts/476672/iNaturalist%20Geomodel%20Viewier.user.js",
+          "code_size": 1540,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "iNaturalist Geomodel Viewier",
+  "description": "Add a link to the Geomodel result for iNaturalist taxa",
+  "url": "https://greasyfork.org/scripts/476672-inaturalist-geomodel-viewier",
+  "code_url": "https://update.greasyfork.org/scripts/476672/iNaturalist%20Geomodel%20Viewier.user.js",
+  "code_size": 1540,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

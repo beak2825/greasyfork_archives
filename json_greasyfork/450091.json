@@ -1,0 +1,59 @@
+{
+  "id": 450091,
+  "daily_installs": 0,
+  "total_installs": 1593,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-24T12:07:54.000Z",
+  "code_updated_at": "2023-10-08T12:48:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 950183,
+      "name": "zhanghua65",
+      "created_at": "2022-08-24T08:08:16.000Z",
+      "url": "https://greasyfork.org/users/950183-zhanghua65",
+      "scripts": [
+        {
+          "id": 450091,
+          "daily_installs": 0,
+          "total_installs": 1593,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-24T12:07:54.000Z",
+          "code_updated_at": "2023-10-08T12:48:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "慕享刷课",
+          "description": "慕享自动刷课脚本",
+          "url": "https://greasyfork.org/scripts/450091-%E6%85%95%E4%BA%AB%E5%88%B7%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/450091/%E6%85%95%E4%BA%AB%E5%88%B7%E8%AF%BE.user.js",
+          "code_size": 8666,
+          "license": "MIT License",
+          "version": "0.1.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "慕享刷课",
+  "description": "慕享自动刷课脚本",
+  "url": "https://greasyfork.org/scripts/450091-%E6%85%95%E4%BA%AB%E5%88%B7%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/450091/%E6%85%95%E4%BA%AB%E5%88%B7%E8%AF%BE.user.js",
+  "code_size": 8666,
+  "license": "MIT License",
+  "version": "0.1.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

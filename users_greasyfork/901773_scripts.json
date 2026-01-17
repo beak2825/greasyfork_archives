@@ -1,0 +1,134 @@
+[
+  {
+    "id": 460020,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-14T14:39:27.000Z",
+    "code_updated_at": "2024-04-09T06:13:06.000Z",
+    "namespace": "tonyu_balabala_03e6ea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 901773,
+        "name": "cs_tony",
+        "created_at": "2022-04-13T15:21:50.000Z",
+        "url": "https://greasyfork.org/users/901773-cs-tony"
+      }
+    ],
+    "name": "bilibili视频显示时间",
+    "description": "bilibili视频窗口显示当前时间",
+    "url": "https://greasyfork.org/scripts/460020-bilibili%E8%A7%86%E9%A2%91%E6%98%BE%E7%A4%BA%E6%97%B6%E9%97%B4",
+    "code_url": "https://update.greasyfork.org/scripts/460020/bilibili%E8%A7%86%E9%A2%91%E6%98%BE%E7%A4%BA%E6%97%B6%E9%97%B4.user.js",
+    "code_size": 3657,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 459428,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-04T11:47:08.000Z",
+    "code_updated_at": "2024-12-08T14:08:48.000Z",
+    "namespace": "tonyu_balabala_03e6ea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 901773,
+        "name": "cs_tony",
+        "created_at": "2022-04-13T15:21:50.000Z",
+        "url": "https://greasyfork.org/users/901773-cs-tony"
+      }
+    ],
+    "name": "bilibili关闭提示",
+    "description": "bilibili关闭提示（黄色）",
+    "url": "https://greasyfork.org/scripts/459428-bilibili%E5%85%B3%E9%97%AD%E6%8F%90%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/459428/bilibili%E5%85%B3%E9%97%AD%E6%8F%90%E7%A4%BA.user.js",
+    "code_size": 2381,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445705,
+    "daily_installs": 0,
+    "total_installs": 246,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-29T12:06:04.000Z",
+    "code_updated_at": "2024-04-09T06:07:50.000Z",
+    "namespace": "tonyu_balabala_03e6ea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 901773,
+        "name": "cs_tony",
+        "created_at": "2022-04-13T15:21:50.000Z",
+        "url": "https://greasyfork.org/users/901773-cs-tony"
+      }
+    ],
+    "name": "bilibili倍速快捷键【增强】+记忆",
+    "description": "bilibili倍速快捷键+记忆(可自定义设置快捷键，自定义一个额外倍速按钮，设置记忆模式)",
+    "url": "https://greasyfork.org/scripts/445705-bilibili%E5%80%8D%E9%80%9F%E5%BF%AB%E6%8D%B7%E9%94%AE-%E5%A2%9E%E5%BC%BA-%E8%AE%B0%E5%BF%86",
+    "code_url": "https://update.greasyfork.org/scripts/445705/bilibili%E5%80%8D%E9%80%9F%E5%BF%AB%E6%8D%B7%E9%94%AE%E3%80%90%E5%A2%9E%E5%BC%BA%E3%80%91%2B%E8%AE%B0%E5%BF%86.user.js",
+    "code_size": 70736,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 443332,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-13T16:01:53.000Z",
+    "code_updated_at": "2024-04-22T14:36:08.000Z",
+    "namespace": "tonyu_balabala_03e6ea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 901773,
+        "name": "cs_tony",
+        "created_at": "2022-04-13T15:21:50.000Z",
+        "url": "https://greasyfork.org/users/901773-cs-tony"
+      }
+    ],
+    "name": "bilibili弹幕隐藏快捷键(临时隐藏)",
+    "description": "bilibili弹幕隐藏快捷键(临时隐藏，默认为 N 键，不是网页自带开关机制，网页自带开关快捷键为 D 键)",
+    "url": "https://greasyfork.org/scripts/443332-bilibili%E5%BC%B9%E5%B9%95%E9%9A%90%E8%97%8F%E5%BF%AB%E6%8D%B7%E9%94%AE-%E4%B8%B4%E6%97%B6%E9%9A%90%E8%97%8F",
+    "code_url": "https://update.greasyfork.org/scripts/443332/bilibili%E5%BC%B9%E5%B9%95%E9%9A%90%E8%97%8F%E5%BF%AB%E6%8D%B7%E9%94%AE%28%E4%B8%B4%E6%97%B6%E9%9A%90%E8%97%8F%29.user.js",
+    "code_size": 54013,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

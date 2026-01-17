@@ -1,0 +1,34 @@
+{
+  "id": 472508,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-05T18:23:42.000Z",
+  "code_updated_at": "2023-08-05T18:23:42.000Z",
+  "namespace": "https://gazellegames.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1050491,
+      "name": "Moses Maloney",
+      "created_at": "2023-03-30T13:51:16.000Z",
+      "url": "https://greasyfork.org/users/1050491-moses-maloney",
+      "scripts": []
+    }
+  ],
+  "name": "GazelleGames Nintendo Uploady",
+  "description": "Uploady for Nintendo sites",
+  "url": "https://greasyfork.org/scripts/472508-gazellegames-nintendo-uploady",
+  "code_url": "https://update.greasyfork.org/scripts/472508/GazelleGames%20Nintendo%20Uploady.user.js",
+  "code_size": 7424,
+  "license": "MIT License",
+  "version": "1.1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

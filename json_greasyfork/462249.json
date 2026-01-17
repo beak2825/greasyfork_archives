@@ -1,0 +1,33 @@
+{
+  "id": 462249,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-21T10:35:45.000Z",
+  "code_updated_at": "2023-03-21T10:35:45.000Z",
+  "namespace": "https://atlassian.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1024280,
+      "name": "Floo L214",
+      "created_at": "2023-02-09T11:15:37.000Z",
+      "url": "https://greasyfork.org/users/1024280-floo-l214"
+    }
+  ],
+  "name": "Jira open externals links in a new tab",
+  "description": "Script for Jira to make externals links open in a new tab. #IHateJira",
+  "url": "https://greasyfork.org/scripts/462249-jira-open-externals-links-in-a-new-tab",
+  "code_url": "https://update.greasyfork.org/scripts/462249/Jira%20open%20externals%20links%20in%20a%20new%20tab.user.js",
+  "code_size": 1173,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

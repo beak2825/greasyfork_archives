@@ -1,0 +1,34 @@
+{
+  "id": 439501,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-02T19:38:13.000Z",
+  "code_updated_at": "2022-02-02T19:38:13.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 871957,
+      "name": "krutiy",
+      "created_at": "2022-02-02T11:59:28.000Z",
+      "url": "https://greasyfork.org/users/871957-krutiy",
+      "scripts": []
+    }
+  ],
+  "name": "For GS or ZGS | ADM Script",
+  "description": "Always remember who you are!",
+  "url": "https://greasyfork.org/scripts/439501-for-gs-or-zgs-adm-script",
+  "code_url": "https://update.greasyfork.org/scripts/439501/For%20GS%20or%20ZGS%20%7C%20ADM%20Script.user.js",
+  "code_size": 10759,
+  "license": "MIT License",
+  "version": "1.0.0.00",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

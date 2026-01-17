@@ -1,0 +1,101 @@
+[
+  {
+    "id": 461303,
+    "daily_installs": 0,
+    "total_installs": 256,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-06T13:08:16.000Z",
+    "code_updated_at": "2023-03-11T10:06:08.000Z",
+    "namespace": "https://greasyfork.org/users/448274",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448274,
+        "name": "xiaopc",
+        "created_at": "2020-02-22T06:14:03.000Z",
+        "url": "https://greasyfork.org/users/448274-xiaopc"
+      }
+    ],
+    "name": "GM_CORS",
+    "description": "CORS on test drive via GM_xmlhttpRequest",
+    "url": "https://greasyfork.org/scripts/461303-gm-cors",
+    "code_url": "https://update.greasyfork.org/scripts/461303/GM_CORS.user.js",
+    "code_size": 1824,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 452453,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-04T03:57:24.000Z",
+    "code_updated_at": "2022-10-04T03:57:24.000Z",
+    "namespace": "https://xpc.im",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448274,
+        "name": "xiaopc",
+        "created_at": "2020-02-22T06:14:03.000Z",
+        "url": "https://greasyfork.org/users/448274-xiaopc"
+      }
+    ],
+    "name": "恢复百度地图标记点文本编辑",
+    "description": "同上",
+    "url": "https://greasyfork.org/scripts/452453-%E6%81%A2%E5%A4%8D%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E6%A0%87%E8%AE%B0%E7%82%B9%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91",
+    "code_url": "https://update.greasyfork.org/scripts/452453/%E6%81%A2%E5%A4%8D%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E6%A0%87%E8%AE%B0%E7%82%B9%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91.user.js",
+    "code_size": 462,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 452135,
+    "daily_installs": 0,
+    "total_installs": 434,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-09-28T03:04:30.000Z",
+    "code_updated_at": "2024-09-30T03:24:10.000Z",
+    "namespace": "https://github.com/xiaopc/tradingview-ashare",
+    "support_url": "https://github.com/xiaopc/tradingview-ashare/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448274,
+        "name": "xiaopc",
+        "created_at": "2020-02-22T06:14:03.000Z",
+        "url": "https://greasyfork.org/users/448274-xiaopc"
+      }
+    ],
+    "name": "Tradingview A股助手",
+    "description": "给 Tradingview 增加同花顺同步、拼音搜索等功能",
+    "url": "https://greasyfork.org/scripts/452135-tradingview-a%E8%82%A1%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/452135/Tradingview%20A%E8%82%A1%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 29347,
+    "license": null,
+    "version": "0.7.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485444,
+    "daily_installs": 0,
+    "total_installs": 189,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-22T14:01:04.000Z",
+    "code_updated_at": "2025-07-24T13:58:04.000Z",
+    "namespace": "https://github.com/qiqi20020612/NovelAI-zh_CN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1251776,
+        "name": "qiqi20020612",
+        "created_at": "2024-01-22T14:00:01.000Z",
+        "url": "https://greasyfork.org/users/1251776-qiqi20020612"
+      }
+    ],
+    "name": "NovelAI图像生成汉化",
+    "description": "NovelAI图像生成的简体中文汉化脚本",
+    "url": "https://greasyfork.org/scripts/485444-novelai%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90%E6%B1%89%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/485444/NovelAI%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90%E6%B1%89%E5%8C%96.user.js",
+    "code_size": 38660,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "3.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

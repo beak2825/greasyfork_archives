@@ -1,0 +1,33 @@
+{
+  "id": 431488,
+  "daily_installs": 0,
+  "total_installs": 5104,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-27T14:58:54.000Z",
+  "code_updated_at": "2024-06-02T13:58:18.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 24050,
+      "name": "heckles",
+      "created_at": "2015-12-20T15:50:22.000Z",
+      "url": "https://greasyfork.org/users/24050-heckles"
+    }
+  ],
+  "name": "【自用】YoutubeTools",
+  "description": "1.恢复页面布局，2.增加按钮，方便IDM下载（配合IDM使用）【需配合Local YouTube Downloader使用】,3.增加按钮，一键重绘下载png格式的cover，4.增加按钮生成合并命令行，5.用clipboard,火狐v99之后抽风",
+  "url": "https://greasyfork.org/scripts/431488-%E8%87%AA%E7%94%A8-youtubetools",
+  "code_url": "https://update.greasyfork.org/scripts/431488/%E3%80%90%E8%87%AA%E7%94%A8%E3%80%91YoutubeTools.user.js",
+  "code_size": 18450,
+  "license": null,
+  "version": "2024.06.02-01（with LYD v0.9.55）",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

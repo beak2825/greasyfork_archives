@@ -1,0 +1,33 @@
+{
+  "id": 486330,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-02T19:47:06.000Z",
+  "code_updated_at": "2024-02-03T23:38:49.000Z",
+  "namespace": "HashCrusher",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1256119,
+      "name": "HashCrusher",
+      "created_at": "2024-02-01T15:55:06.000Z",
+      "url": "https://greasyfork.org/users/1256119-hashcrusher"
+    }
+  ],
+  "name": "hidemy.io export/copy IP:PORT to json,excel,plain text",
+  "description": "copy ip:port to clipboard or export to txt, export ip table to excel, ip table copy/export to json",
+  "url": "https://greasyfork.org/scripts/486330-hidemy-io-export-copy-ip-port-to-json-excel-plain-text",
+  "code_url": "https://update.greasyfork.org/scripts/486330/hidemyio%20exportcopy%20IP%3APORT%20to%20json%2Cexcel%2Cplain%20text.user.js",
+  "code_size": 8264,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

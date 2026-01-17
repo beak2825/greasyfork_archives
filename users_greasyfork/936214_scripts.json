@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447941,
+    "daily_installs": 0,
+    "total_installs": 290,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-16T06:08:07.000Z",
+    "code_updated_at": "2022-07-16T07:58:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 936214,
+        "name": "CKboss",
+        "created_at": "2022-07-16T05:57:16.000Z",
+        "url": "https://greasyfork.org/users/936214-ckboss"
+      }
+    ],
+    "name": "微信读书Web版显示优化",
+    "description": "给微信读书更好的阅读体验!!!",
+    "url": "https://greasyfork.org/scripts/447941-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6web%E7%89%88%E6%98%BE%E7%A4%BA%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/447941/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6Web%E7%89%88%E6%98%BE%E7%A4%BA%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 3619,
+    "license": "GPLv3",
+    "version": "0.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

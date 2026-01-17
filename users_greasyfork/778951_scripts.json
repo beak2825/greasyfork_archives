@@ -1,0 +1,68 @@
+[
+  {
+    "id": 427818,
+    "daily_installs": 0,
+    "total_installs": 421,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-11T22:55:06.000Z",
+    "code_updated_at": "2021-06-12T00:50:51.000Z",
+    "namespace": "https://www.youtube.com/channel/UCgZDJZnndc9LNcVzhD85csw",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 778951,
+        "name": "Kramozin Maker",
+        "created_at": "2021-06-02T12:27:01.000Z",
+        "url": "https://greasyfork.org/users/778951-kramozin-maker"
+      }
+    ],
+    "name": "WhatsApp BombText Button",
+    "description": "Creates a button that when pressed copies and pastes the text written in the chatbox",
+    "url": "https://greasyfork.org/scripts/427818-whatsapp-bombtext-button",
+    "code_url": "https://update.greasyfork.org/scripts/427818/WhatsApp%20BombText%20Button.user.js",
+    "code_size": 3685,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427400,
+    "daily_installs": 1,
+    "total_installs": 1727,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-06-02T12:35:00.000Z",
+    "code_updated_at": "2021-06-02T12:35:00.000Z",
+    "namespace": "https://www.youtube.com/channel/UCgZDJZnndc9LNcVzhD85csw",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 778951,
+        "name": "Kramozin Maker",
+        "created_at": "2021-06-02T12:27:01.000Z",
+        "url": "https://greasyfork.org/users/778951-kramozin-maker"
+      }
+    ],
+    "name": "2048 Script AutoWin",
+    "description": "This script gives you an instant victory in game 2048, and gives you an infinite score, it basically changes the gaming saved data, so whenever you restart the page it will restart the hacker",
+    "url": "https://greasyfork.org/scripts/427400-2048-script-autowin",
+    "code_url": "https://update.greasyfork.org/scripts/427400/2048%20Script%20AutoWin.user.js",
+    "code_size": 1389,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

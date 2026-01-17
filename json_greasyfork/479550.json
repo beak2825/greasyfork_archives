@@ -1,0 +1,59 @@
+{
+  "id": 479550,
+  "daily_installs": 0,
+  "total_installs": 192,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-11T17:10:12.000Z",
+  "code_updated_at": "2023-11-12T09:59:05.000Z",
+  "namespace": "https://greasyfork.org/users/1215479",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1215479,
+      "name": "Arka",
+      "created_at": "2023-11-11T14:16:58.000Z",
+      "url": "https://greasyfork.org/users/1215479-arka",
+      "scripts": [
+        {
+          "id": 479550,
+          "daily_installs": 0,
+          "total_installs": 192,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-11T17:10:12.000Z",
+          "code_updated_at": "2023-11-12T09:59:05.000Z",
+          "namespace": "https://greasyfork.org/users/1215479",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bypass Youtube Video Player Blocker",
+          "description": "Bypass Youtube's Adblocker detector by embedding videos and playlists",
+          "url": "https://greasyfork.org/scripts/479550-bypass-youtube-video-player-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/479550/Bypass%20Youtube%20Video%20Player%20Blocker.user.js",
+          "code_size": 2259,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bypass Youtube Video Player Blocker",
+  "description": "Bypass Youtube's Adblocker detector by embedding videos and playlists",
+  "url": "https://greasyfork.org/scripts/479550-bypass-youtube-video-player-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/479550/Bypass%20Youtube%20Video%20Player%20Blocker.user.js",
+  "code_size": 2259,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

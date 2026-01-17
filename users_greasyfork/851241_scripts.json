@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438773,
+    "daily_installs": 0,
+    "total_installs": 4455,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-01-19T05:58:28.000Z",
+    "code_updated_at": "2022-01-19T09:57:51.000Z",
+    "namespace": "https://greasyfork.org/users/851241",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 851241,
+        "name": "Mr_Puu",
+        "created_at": "2021-12-10T09:48:25.000Z",
+        "url": "https://greasyfork.org/users/851241-mr-puu"
+      }
+    ],
+    "name": "VIP视频全网解析",
+    "description": "支持腾讯视频、爱奇艺、优酷、土豆、芒果TV、搜狐视频、乐视视频、PPTV、风行、华数TV、哔哩哔哩等，支持多个解析接口切换，自动解析视频，支持视频广告跳过。",
+    "url": "https://greasyfork.org/scripts/438773-vip%E8%A7%86%E9%A2%91%E5%85%A8%E7%BD%91%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/438773/VIP%E8%A7%86%E9%A2%91%E5%85%A8%E7%BD%91%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 15952,
+    "license": "GPL License",
+    "version": "1.0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

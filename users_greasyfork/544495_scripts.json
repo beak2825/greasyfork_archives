@@ -1,0 +1,101 @@
+[
+  {
+    "id": 451696,
+    "daily_installs": 0,
+    "total_installs": 121,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-20T12:51:08.000Z",
+    "code_updated_at": "2022-09-21T14:16:56.000Z",
+    "namespace": "https://github.com/Coki628/ac-submission-timer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 544495,
+        "name": "Coki628",
+        "created_at": "2020-04-28T05:51:11.000Z",
+        "url": "https://greasyfork.org/users/544495-coki628"
+      }
+    ],
+    "name": "AtCoder Submission Timer",
+    "description": "AtCoderの問題画面にタイマーをセットして、指定時間後にコードを提出します。",
+    "url": "https://greasyfork.org/scripts/451696-atcoder-submission-timer",
+    "code_url": "https://update.greasyfork.org/scripts/451696/AtCoder%20Submission%20Timer.user.js",
+    "code_size": 3176,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439442,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-01T06:57:25.000Z",
+    "code_updated_at": "2022-09-05T01:04:26.000Z",
+    "namespace": "https://github.com/Coki628/clist-contest-filter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 544495,
+        "name": "Coki628",
+        "created_at": "2020-04-28T05:51:11.000Z",
+        "url": "https://greasyfork.org/users/544495-coki628"
+      }
+    ],
+    "name": "CLIST Contest Filter",
+    "description": "You can choose and filter any favorite contests at homepage on CLIST",
+    "url": "https://greasyfork.org/scripts/439442-clist-contest-filter",
+    "code_url": "https://update.greasyfork.org/scripts/439442/CLIST%20Contest%20Filter.user.js",
+    "code_size": 5008,
+    "license": "MIT License",
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429485,
+    "daily_installs": 0,
+    "total_installs": 79,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-16T18:47:41.000Z",
+    "code_updated_at": "2021-07-16T18:49:39.000Z",
+    "namespace": "https://github.com/Coki628/ac-problems-ranking-colorizer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 544495,
+        "name": "Coki628",
+        "created_at": "2020-04-28T05:51:11.000Z",
+        "url": "https://greasyfork.org/users/544495-coki628"
+      }
+    ],
+    "name": "AC Problems Ranking Colorizer",
+    "description": "You can see your ratings on AtCoder Problems!",
+    "url": "https://greasyfork.org/scripts/429485-ac-problems-ranking-colorizer",
+    "code_url": "https://update.greasyfork.org/scripts/429485/AC%20Problems%20Ranking%20Colorizer.user.js",
+    "code_size": 5715,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

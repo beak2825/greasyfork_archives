@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433054,
+    "daily_installs": 0,
+    "total_installs": 324,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-27T17:21:28.000Z",
+    "code_updated_at": "2022-02-07T09:39:30.000Z",
+    "namespace": "https://github.com/yuaErha",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 581496,
+        "name": "yuaErha",
+        "created_at": "2020-06-06T06:47:23.000Z",
+        "url": "https://greasyfork.org/users/581496-yuaerha"
+      }
+    ],
+    "name": "弹幕插件",
+    "description": "爬取主流视频网站弹幕显示到第三方播放器中",
+    "url": "https://greasyfork.org/scripts/433054-%E5%BC%B9%E5%B9%95%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/433054/%E5%BC%B9%E5%B9%95%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 14111,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

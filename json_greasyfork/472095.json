@@ -1,0 +1,59 @@
+{
+  "id": 472095,
+  "daily_installs": 0,
+  "total_installs": 118,
+  "fan_score": "20.8",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-07-30T22:34:21.000Z",
+  "code_updated_at": "2023-08-17T22:04:02.000Z",
+  "namespace": "https://chat.openai.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1139790,
+      "name": "Jakub Fidler",
+      "created_at": "2023-07-30T15:32:23.000Z",
+      "url": "https://greasyfork.org/users/1139790-jakub-fidler",
+      "scripts": [
+        {
+          "id": 472095,
+          "daily_installs": 0,
+          "total_installs": 118,
+          "fan_score": "20.8",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-07-30T22:34:21.000Z",
+          "code_updated_at": "2023-08-17T22:04:02.000Z",
+          "namespace": "https://chat.openai.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT - Collapsible Messages",
+          "description": "Makes ChatGPT messages collapsible. The script adds a button to each chat message that lets you collapse it (and un-collapse it).",
+          "url": "https://greasyfork.org/scripts/472095-chatgpt-collapsible-messages",
+          "code_url": "https://update.greasyfork.org/scripts/472095/ChatGPT%20-%20Collapsible%20Messages.user.js",
+          "code_size": 2957,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT - Collapsible Messages",
+  "description": "Makes ChatGPT messages collapsible. The script adds a button to each chat message that lets you collapse it (and un-collapse it).",
+  "url": "https://greasyfork.org/scripts/472095-chatgpt-collapsible-messages",
+  "code_url": "https://update.greasyfork.org/scripts/472095/ChatGPT%20-%20Collapsible%20Messages.user.js",
+  "code_size": 2957,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

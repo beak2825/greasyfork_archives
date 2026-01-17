@@ -1,0 +1,101 @@
+[
+  {
+    "id": 491930,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T22:49:30.000Z",
+    "code_updated_at": "2024-04-07T22:49:30.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229534,
+        "name": "script.",
+        "created_at": "2023-12-07T02:20:24.000Z",
+        "url": "https://greasyfork.org/users/1229534-script"
+      }
+    ],
+    "name": "Show Item Price In Trades",
+    "description": "Shows the price of items in trades.",
+    "url": "https://greasyfork.org/scripts/491930-show-item-price-in-trades",
+    "code_url": "https://update.greasyfork.org/scripts/491930/Show%20Item%20Price%20In%20Trades.user.js",
+    "code_size": 1150,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 491927,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T21:41:14.000Z",
+    "code_updated_at": "2024-04-07T21:41:14.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229534,
+        "name": "script.",
+        "created_at": "2023-12-07T02:20:24.000Z",
+        "url": "https://greasyfork.org/users/1229534-script"
+      }
+    ],
+    "name": "Join Game Button",
+    "description": "Add's a \"Join Game\" button to users' profiles.",
+    "url": "https://greasyfork.org/scripts/491927-join-game-button",
+    "code_url": "https://update.greasyfork.org/scripts/491927/Join%20Game%20Button.user.js",
+    "code_size": 6353,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 491774,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-06T06:53:55.000Z",
+    "code_updated_at": "2024-04-06T06:53:55.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229534,
+        "name": "script.",
+        "created_at": "2023-12-07T02:20:24.000Z",
+        "url": "https://greasyfork.org/users/1229534-script"
+      }
+    ],
+    "name": "Swap Receiving/Giving Items",
+    "description": "Swap items giving and items receiving in trades.",
+    "url": "https://greasyfork.org/scripts/491774-swap-receiving-giving-items",
+    "code_url": "https://update.greasyfork.org/scripts/491774/Swap%20ReceivingGiving%20Items.user.js",
+    "code_size": 857,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 426050,
+  "daily_installs": 0,
+  "total_installs": 3001,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-06T13:20:04.000Z",
+  "code_updated_at": "2021-05-06T13:46:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 763226,
+      "name": "CodeLorin",
+      "created_at": "2021-04-22T03:22:31.000Z",
+      "url": "https://greasyfork.org/users/763226-codelorin"
+    }
+  ],
+  "name": "问卷星自动随机答题",
+  "description": "问卷星自动答题脚本",
+  "url": "https://greasyfork.org/scripts/426050-%E9%97%AE%E5%8D%B7%E6%98%9F%E8%87%AA%E5%8A%A8%E9%9A%8F%E6%9C%BA%E7%AD%94%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/426050/%E9%97%AE%E5%8D%B7%E6%98%9F%E8%87%AA%E5%8A%A8%E9%9A%8F%E6%9C%BA%E7%AD%94%E9%A2%98.user.js",
+  "code_size": 13568,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

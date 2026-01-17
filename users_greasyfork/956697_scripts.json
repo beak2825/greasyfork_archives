@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451068,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-09T20:55:37.000Z",
+    "code_updated_at": "2022-09-09T21:32:59.000Z",
+    "namespace": "https://klima.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 956697,
+        "name": "Christopher Orr",
+        "created_at": "2022-09-09T20:52:23.000Z",
+        "url": "https://greasyfork.org/users/956697-christopher-orr"
+      }
+    ],
+    "name": "CleverTap session extender",
+    "description": "Protects against irritating and dangerously short session inactivity timeouts, which can lead to losing progress when editing campaigns.",
+    "url": "https://greasyfork.org/scripts/451068-clevertap-session-extender",
+    "code_url": "https://update.greasyfork.org/scripts/451068/CleverTap%20session%20extender.user.js",
+    "code_size": 1268,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

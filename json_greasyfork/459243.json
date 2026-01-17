@@ -1,0 +1,59 @@
+{
+  "id": 459243,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-01T09:27:41.000Z",
+  "code_updated_at": "2023-02-01T09:27:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1019921,
+      "name": "WebNoob",
+      "created_at": "2023-02-01T09:24:43.000Z",
+      "url": "https://greasyfork.org/users/1019921-webnoob",
+      "scripts": [
+        {
+          "id": 459243,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-01T09:27:41.000Z",
+          "code_updated_at": "2023-02-01T09:27:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "知乎去掉视频",
+          "description": "去掉知乎的包含视频的问题",
+          "url": "https://greasyfork.org/scripts/459243-%E7%9F%A5%E4%B9%8E%E5%8E%BB%E6%8E%89%E8%A7%86%E9%A2%91",
+          "code_url": "https://update.greasyfork.org/scripts/459243/%E7%9F%A5%E4%B9%8E%E5%8E%BB%E6%8E%89%E8%A7%86%E9%A2%91.user.js",
+          "code_size": 968,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "知乎去掉视频",
+  "description": "去掉知乎的包含视频的问题",
+  "url": "https://greasyfork.org/scripts/459243-%E7%9F%A5%E4%B9%8E%E5%8E%BB%E6%8E%89%E8%A7%86%E9%A2%91",
+  "code_url": "https://update.greasyfork.org/scripts/459243/%E7%9F%A5%E4%B9%8E%E5%8E%BB%E6%8E%89%E8%A7%86%E9%A2%91.user.js",
+  "code_size": 968,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

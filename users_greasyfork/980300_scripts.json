@@ -1,0 +1,200 @@
+[
+  {
+    "id": 489141,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-06T09:50:26.000Z",
+    "code_updated_at": "2024-03-06T09:50:26.000Z",
+    "namespace": "https://github.com/tekinosman/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980300,
+        "name": "tekinosman",
+        "created_at": "2022-11-07T09:20:14.000Z",
+        "url": "https://greasyfork.org/users/980300-tekinosman"
+      }
+    ],
+    "name": "Uniform HN comment color",
+    "description": "Makes all HN comments the same color",
+    "url": "https://greasyfork.org/scripts/489141-uniform-hn-comment-color",
+    "code_url": "https://update.greasyfork.org/scripts/489141/1338571/Uniform%20HN%20comment%20color.js",
+    "code_size": 553,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 460786,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-26T13:45:46.000Z",
+    "code_updated_at": "2023-02-26T13:45:46.000Z",
+    "namespace": "https://github.com/tekinosman/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980300,
+        "name": "tekinosman",
+        "created_at": "2022-11-07T09:20:14.000Z",
+        "url": "https://greasyfork.org/users/980300-tekinosman"
+      }
+    ],
+    "name": "Halve HN comment's indentation",
+    "description": "Halves indentation of HN comments",
+    "url": "https://greasyfork.org/scripts/460786-halve-hn-comment-s-indentation",
+    "code_url": "https://update.greasyfork.org/scripts/460786/1154528/Halve%20HN%20comment%27s%20indentation.js",
+    "code_size": 686,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 460785,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-26T13:36:27.000Z",
+    "code_updated_at": "2023-02-26T13:36:27.000Z",
+    "namespace": "https://github.com/tekinosman/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980300,
+        "name": "tekinosman",
+        "created_at": "2022-11-07T09:20:14.000Z",
+        "url": "https://greasyfork.org/users/980300-tekinosman"
+      }
+    ],
+    "name": "Fix HN comment length",
+    "description": "Sets HN comment length to 50-75 characters",
+    "url": "https://greasyfork.org/scripts/460785-fix-hn-comment-length",
+    "code_url": "https://update.greasyfork.org/scripts/460785/1154524/Fix%20HN%20comment%20length.js",
+    "code_size": 607,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 460783,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-26T13:23:49.000Z",
+    "code_updated_at": "2023-02-27T14:51:00.000Z",
+    "namespace": "https://github.com/tekinosman/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980300,
+        "name": "tekinosman",
+        "created_at": "2022-11-07T09:20:14.000Z",
+        "url": "https://greasyfork.org/users/980300-tekinosman"
+      }
+    ],
+    "name": "HN sans votes",
+    "description": "Removes vote arrows and score from Hacker News",
+    "url": "https://greasyfork.org/scripts/460783-hn-sans-votes",
+    "code_url": "https://update.greasyfork.org/scripts/460783/1154997/HN%20sans%20votes.js",
+    "code_size": 520,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 460657,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-24T14:12:13.000Z",
+    "code_updated_at": "2023-02-26T13:04:44.000Z",
+    "namespace": "https://github.com/tekinosman/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980300,
+        "name": "tekinosman",
+        "created_at": "2022-11-07T09:20:14.000Z",
+        "url": "https://greasyfork.org/users/980300-tekinosman"
+      }
+    ],
+    "name": "HN Highlight Original Poster",
+    "description": "Highlights original poster's name on Hacker News",
+    "url": "https://greasyfork.org/scripts/460657-hn-highlight-original-poster",
+    "code_url": "https://update.greasyfork.org/scripts/460657/HN%20Highlight%20Original%20Poster.user.js",
+    "code_size": 782,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 454396,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-07T09:36:47.000Z",
+    "code_updated_at": "2022-11-07T09:37:40.000Z",
+    "namespace": "https://github.com/tekinosman/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980300,
+        "name": "tekinosman",
+        "created_at": "2022-11-07T09:20:14.000Z",
+        "url": "https://greasyfork.org/users/980300-tekinosman"
+      }
+    ],
+    "name": "YouMath cliccabile",
+    "description": "Rende cliccabili gli elementi presenti nelle pagine (collegamenti, testo ecc.) di YouMath",
+    "url": "https://greasyfork.org/scripts/454396-youmath-cliccabile",
+    "code_url": "https://update.greasyfork.org/scripts/454396/YouMath%20cliccabile.user.js",
+    "code_size": 645,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "it",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

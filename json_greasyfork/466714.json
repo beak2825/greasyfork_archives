@@ -1,0 +1,33 @@
+{
+  "id": 466714,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-20T13:38:46.000Z",
+  "code_updated_at": "2023-05-20T13:38:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1082068,
+      "name": "No1IrishStig",
+      "created_at": "2023-05-20T13:36:10.000Z",
+      "url": "https://greasyfork.org/users/1082068-no1irishstig"
+    }
+  ],
+  "name": "Russian Roulette Timeout",
+  "description": "Adds Timeout timer to new Russian Roulette Games",
+  "url": "https://greasyfork.org/scripts/466714-russian-roulette-timeout",
+  "code_url": "https://update.greasyfork.org/scripts/466714/Russian%20Roulette%20Timeout.user.js",
+  "code_size": 4557,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

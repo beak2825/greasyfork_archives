@@ -1,0 +1,34 @@
+{
+  "id": 466554,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-18T07:35:05.000Z",
+  "code_updated_at": "2024-03-30T05:43:41.000Z",
+  "namespace": "qwquqwq",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1080884,
+      "name": "qwquqwq",
+      "created_at": "2023-05-18T06:48:58.000Z",
+      "url": "https://greasyfork.org/users/1080884-qwquqwq",
+      "scripts": []
+    }
+  ],
+  "name": "gdufe校园网自动登录",
+  "description": "这是一条描述",
+  "url": "https://greasyfork.org/scripts/466554-gdufe%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/466554/gdufe%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 844,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

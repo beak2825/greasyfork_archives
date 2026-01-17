@@ -1,0 +1,59 @@
+{
+  "id": 412684,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-08T08:08:48.000Z",
+  "code_updated_at": "2020-10-08T08:08:47.000Z",
+  "namespace": "https://fazerog02.dev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 413250,
+      "name": "rog faze",
+      "created_at": "2019-12-07T20:34:58.000Z",
+      "url": "https://greasyfork.org/users/413250-rog-faze",
+      "scripts": [
+        {
+          "id": 443307,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-13T05:36:55.000Z",
+          "code_updated_at": "2022-04-13T05:36:55.000Z",
+          "namespace": "https://fazerog02.dev",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "EES",
+          "description": "This extention makes searching for only sites witten in English easy.",
+          "url": "https://greasyfork.org/scripts/443307-ees",
+          "code_url": "https://update.greasyfork.org/scripts/443307/EES.user.js",
+          "code_size": 3425,
+          "license": "MIT License",
+          "version": "0.0.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Disable Ctrl+S on fastidea",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/412684-disable-ctrl-s-on-fastidea",
+  "code_url": "https://update.greasyfork.org/scripts/412684/Disable%20Ctrl%2BS%20on%20fastidea.user.js",
+  "code_size": 493,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

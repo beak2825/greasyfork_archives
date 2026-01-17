@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480281,
+    "daily_installs": 1,
+    "total_installs": 950,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-19T12:49:00.000Z",
+    "code_updated_at": "2025-11-03T12:01:30.000Z",
+    "namespace": "https://github.com/cpuopt/DLsite-Play-Downloader",
+    "support_url": "https://github.com/cpuopt/DLsite-Play-Downloader/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 740517,
+        "name": "cpufan ran",
+        "created_at": "2021-02-24T02:33:06.000Z",
+        "url": "https://greasyfork.org/users/740517-cpufan-ran"
+      }
+    ],
+    "name": "DLsite Play Downloader",
+    "description": "在浏览器完成DLsite Play漫画的下载、拼图或解密和保存",
+    "url": "https://greasyfork.org/scripts/480281-dlsite-play-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/480281/DLsite%20Play%20Downloader.user.js",
+    "code_size": 211752,
+    "license": "MIT License",
+    "version": "2.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

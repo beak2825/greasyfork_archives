@@ -1,0 +1,59 @@
+{
+  "id": 448404,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-24T16:31:24.000Z",
+  "code_updated_at": "2022-07-24T16:31:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 938932,
+      "name": "Zeerox",
+      "created_at": "2022-07-24T16:22:35.000Z",
+      "url": "https://greasyfork.org/users/938932-zeerox",
+      "scripts": [
+        {
+          "id": 448404,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-24T16:31:24.000Z",
+          "code_updated_at": "2022-07-24T16:31:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Default Vermillion logo",
+          "description": "get v3rm logo back",
+          "url": "https://greasyfork.org/scripts/448404-default-vermillion-logo",
+          "code_url": "https://update.greasyfork.org/scripts/448404/Default%20Vermillion%20logo.user.js",
+          "code_size": 463,
+          "license": "MIT License",
+          "version": "6.6.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Default Vermillion logo",
+  "description": "get v3rm logo back",
+  "url": "https://greasyfork.org/scripts/448404-default-vermillion-logo",
+  "code_url": "https://update.greasyfork.org/scripts/448404/Default%20Vermillion%20logo.user.js",
+  "code_size": 463,
+  "license": "MIT License",
+  "version": "6.6.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

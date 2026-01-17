@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429790,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-23T21:04:50.000Z",
+    "code_updated_at": "2021-07-23T21:25:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 454646,
+        "name": "Kronzky",
+        "created_at": "2020-03-05T21:42:23.000Z",
+        "url": "https://greasyfork.org/users/454646-kronzky"
+      }
+    ],
+    "name": "Substack User Block",
+    "description": "Hide spammers/trolls",
+    "url": "https://greasyfork.org/scripts/429790-substack-user-block",
+    "code_url": "https://update.greasyfork.org/scripts/429790/Substack%20User%20Block.user.js",
+    "code_size": 2427,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

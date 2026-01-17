@@ -1,0 +1,33 @@
+{
+  "id": 462532,
+  "daily_installs": 0,
+  "total_installs": 157,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-25T06:44:39.000Z",
+  "code_updated_at": "2023-04-01T10:07:42.000Z",
+  "namespace": "https://greasyfork.org/users/20361",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 20361,
+      "name": "德克斯DEX",
+      "created_at": "2015-11-17T20:01:33.000Z",
+      "url": "https://greasyfork.org/users/20361-%E5%BE%B7%E5%85%8B%E6%96%AFdex"
+    }
+  ],
+  "name": "Mangabz閱讀輔助",
+  "description": "Mangabz瀑布流閱讀連續載入圖片(自用)。",
+  "url": "https://greasyfork.org/scripts/462532-mangabz%E9%96%B1%E8%AE%80%E8%BC%94%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/462532/Mangabz%E9%96%B1%E8%AE%80%E8%BC%94%E5%8A%A9.user.js",
+  "code_size": 12526,
+  "license": "MIT License",
+  "version": "0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

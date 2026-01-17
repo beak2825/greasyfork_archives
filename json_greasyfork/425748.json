@@ -1,0 +1,34 @@
+{
+  "id": 425748,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-30T17:30:31.000Z",
+  "code_updated_at": "2021-04-30T17:30:31.000Z",
+  "namespace": "https://greasyfork.org/users/21792",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 21792,
+      "name": "Hunterwashere",
+      "created_at": "2015-12-02T22:53:46.000Z",
+      "url": "https://greasyfork.org/users/21792-hunterwashere",
+      "scripts": []
+    }
+  ],
+  "name": "Races",
+  "description": "Hybrid Races",
+  "url": "https://greasyfork.org/scripts/425748-races",
+  "code_url": "https://update.greasyfork.org/scripts/425748/Races.user.js",
+  "code_size": 1316,
+  "license": null,
+  "version": "0.0.1.20210430173031",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 454880,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-15T12:38:47.000Z",
+    "code_updated_at": "2024-04-16T12:10:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 945372,
+        "name": "nb li",
+        "created_at": "2022-08-11T13:30:54.000Z",
+        "url": "https://greasyfork.org/users/945372-nb-li"
+      }
+    ],
+    "name": "Youtube优化",
+    "description": "youtube优化",
+    "url": "https://greasyfork.org/scripts/454880-youtube%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/454880/Youtube%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 3479,
+    "license": "GPL",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454339,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-06T07:41:44.000Z",
+    "code_updated_at": "2024-04-16T16:16:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 945372,
+        "name": "nb li",
+        "created_at": "2022-08-11T13:30:54.000Z",
+        "url": "https://greasyfork.org/users/945372-nb-li"
+      }
+    ],
+    "name": "链接识别",
+    "description": "链接跳转",
+    "url": "https://greasyfork.org/scripts/454339-%E9%93%BE%E6%8E%A5%E8%AF%86%E5%88%AB",
+    "code_url": "https://update.greasyfork.org/scripts/454339/%E9%93%BE%E6%8E%A5%E8%AF%86%E5%88%AB.user.js",
+    "code_size": 3366,
+    "license": "GPL",
+    "version": "0.0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454337,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-06T07:40:08.000Z",
+    "code_updated_at": "2024-09-25T07:30:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 945372,
+        "name": "nb li",
+        "created_at": "2022-08-11T13:30:54.000Z",
+        "url": "https://greasyfork.org/users/945372-nb-li"
+      }
+    ],
+    "name": "一键到顶/到底",
+    "description": "页面到顶",
+    "url": "https://greasyfork.org/scripts/454337-%E4%B8%80%E9%94%AE%E5%88%B0%E9%A1%B6-%E5%88%B0%E5%BA%95",
+    "code_url": "https://update.greasyfork.org/scripts/454337/%E4%B8%80%E9%94%AE%E5%88%B0%E9%A1%B6%E5%88%B0%E5%BA%95.user.js",
+    "code_size": 1961,
+    "license": "GPL",
+    "version": "0.1.28",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

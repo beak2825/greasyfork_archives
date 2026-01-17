@@ -1,0 +1,59 @@
+{
+  "id": 458559,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-19T20:00:39.000Z",
+  "code_updated_at": "2023-01-19T20:00:39.000Z",
+  "namespace": "http://wh6675.web1.maze-host.ru/index.php",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1014381,
+      "name": "Pavel Ranshofen",
+      "created_at": "2023-01-19T19:45:11.000Z",
+      "url": "https://greasyfork.org/users/1014381-pavel-ranshofen",
+      "scripts": [
+        {
+          "id": 458559,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-19T20:00:39.000Z",
+          "code_updated_at": "2023-01-19T20:00:39.000Z",
+          "namespace": "http://wh6675.web1.maze-host.ru/index.php",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Форумный скрипт для К.А | ЗГА | ГА | BEAR RUSSIA",
+          "description": "Always remember who you are!",
+          "url": "https://greasyfork.org/scripts/458559-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%BD%D1%8B%D0%B9-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA-%D0%B0-%D0%B7%D0%B3%D0%B0-%D0%B3%D0%B0-bear-russia",
+          "code_url": "https://update.greasyfork.org/scripts/458559/%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%BD%D1%8B%D0%B9%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D0%90%20%7C%20%D0%97%D0%93%D0%90%20%7C%20%D0%93%D0%90%20%7C%20BEAR%20RUSSIA.user.js",
+          "code_size": 36477,
+          "license": "MIT License",
+          "version": "4.5",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Форумный скрипт для К.А | ЗГА | ГА | BEAR RUSSIA",
+  "description": "Always remember who you are!",
+  "url": "https://greasyfork.org/scripts/458559-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%BD%D1%8B%D0%B9-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA-%D0%B0-%D0%B7%D0%B3%D0%B0-%D0%B3%D0%B0-bear-russia",
+  "code_url": "https://update.greasyfork.org/scripts/458559/%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%BD%D1%8B%D0%B9%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D0%90%20%7C%20%D0%97%D0%93%D0%90%20%7C%20%D0%93%D0%90%20%7C%20BEAR%20RUSSIA.user.js",
+  "code_size": 36477,
+  "license": "MIT License",
+  "version": "4.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

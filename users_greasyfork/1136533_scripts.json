@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474674,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-06T12:32:59.000Z",
+    "code_updated_at": "2023-09-06T12:32:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1136533,
+        "name": "duyb",
+        "created_at": "2023-07-26T15:37:53.000Z",
+        "url": "https://greasyfork.org/users/1136533-duyb"
+      }
+    ],
+    "name": "百度网盘播放器",
+    "description": "倍速+高清观看视频",
+    "url": "https://greasyfork.org/scripts/474674-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%92%AD%E6%94%BE%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/474674/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%92%AD%E6%94%BE%E5%99%A8.user.js",
+    "code_size": 64439,
+    "license": null,
+    "version": "0.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

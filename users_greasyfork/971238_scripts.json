@@ -1,0 +1,68 @@
+[
+  {
+    "id": 453116,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-15T16:44:14.000Z",
+    "code_updated_at": "2022-10-15T16:44:42.000Z",
+    "namespace": "SUD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 971238,
+        "name": "Eric Decker",
+        "created_at": "2022-10-15T16:39:58.000Z",
+        "url": "https://greasyfork.org/users/971238-eric-decker"
+      }
+    ],
+    "name": "[LWAF] Retrieve TC Products",
+    "description": "Monitors ThriveCart products and permits opening all in tabs",
+    "url": "https://greasyfork.org/scripts/453116-lwaf-retrieve-tc-products",
+    "code_url": "https://update.greasyfork.org/scripts/453116/%5BLWAF%5D%20Retrieve%20TC%20Products.user.js",
+    "code_size": 7978,
+    "license": "MIT License",
+    "version": "10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453115,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-15T16:41:27.000Z",
+    "code_updated_at": "2022-10-15T16:41:26.000Z",
+    "namespace": "LWAF",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 971238,
+        "name": "Eric Decker",
+        "created_at": "2022-10-15T16:39:58.000Z",
+        "url": "https://greasyfork.org/users/971238-eric-decker"
+      }
+    ],
+    "name": "[LWAF] Open Saved Searches & Hide",
+    "description": "Opens AC saved searches & hide recently active",
+    "url": "https://greasyfork.org/scripts/453115-lwaf-open-saved-searches-hide",
+    "code_url": "https://update.greasyfork.org/scripts/453115/%5BLWAF%5D%20Open%20Saved%20Searches%20%20Hide.user.js",
+    "code_size": 14114,
+    "license": "MIT License",
+    "version": "7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

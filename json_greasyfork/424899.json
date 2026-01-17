@@ -1,0 +1,59 @@
+{
+  "id": 424899,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-12T06:01:14.000Z",
+  "code_updated_at": "2021-04-12T06:39:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 711833,
+      "name": "webwss",
+      "created_at": "2020-12-03T04:15:50.000Z",
+      "url": "https://greasyfork.org/users/711833-webwss",
+      "scripts": [
+        {
+          "id": 424899,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-12T06:01:14.000Z",
+          "code_updated_at": "2021-04-12T06:39:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "安师大准考证查询",
+          "description": "提前查询准考证信息",
+          "url": "https://greasyfork.org/scripts/424899-%E5%AE%89%E5%B8%88%E5%A4%A7%E5%87%86%E8%80%83%E8%AF%81%E6%9F%A5%E8%AF%A2",
+          "code_url": "https://update.greasyfork.org/scripts/424899/%E5%AE%89%E5%B8%88%E5%A4%A7%E5%87%86%E8%80%83%E8%AF%81%E6%9F%A5%E8%AF%A2.user.js",
+          "code_size": 614,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "安师大准考证查询",
+  "description": "提前查询准考证信息",
+  "url": "https://greasyfork.org/scripts/424899-%E5%AE%89%E5%B8%88%E5%A4%A7%E5%87%86%E8%80%83%E8%AF%81%E6%9F%A5%E8%AF%A2",
+  "code_url": "https://update.greasyfork.org/scripts/424899/%E5%AE%89%E5%B8%88%E5%A4%A7%E5%87%86%E8%80%83%E8%AF%81%E6%9F%A5%E8%AF%A2.user.js",
+  "code_size": 614,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

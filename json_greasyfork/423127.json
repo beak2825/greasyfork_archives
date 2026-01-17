@@ -1,0 +1,34 @@
+{
+  "id": 423127,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-12T14:07:46.000Z",
+  "code_updated_at": "2021-03-12T14:07:46.000Z",
+  "namespace": "Ticpo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 746482,
+      "name": "Anton Eevee",
+      "created_at": "2021-03-12T13:56:28.000Z",
+      "url": "https://greasyfork.org/users/746482-anton-eevee",
+      "scripts": []
+    }
+  ],
+  "name": "Just Dance 2021 Style",
+  "description": "Mimicks the ui of JD2021 for JDN",
+  "url": "https://greasyfork.org/scripts/423127-just-dance-2021-style",
+  "code_url": "https://update.greasyfork.org/scripts/423127/Just%20Dance%202021%20Style.user.css",
+  "code_size": 18611,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

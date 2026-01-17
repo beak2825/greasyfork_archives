@@ -1,0 +1,59 @@
+{
+  "id": 482570,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-18T13:12:38.000Z",
+  "code_updated_at": "2023-12-18T13:12:38.000Z",
+  "namespace": "https://greasyfork.org/users/843119",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1235841,
+      "name": "Dobmod",
+      "created_at": "2023-12-18T13:05:06.000Z",
+      "url": "https://greasyfork.org/users/1235841-dobmod",
+      "scripts": [
+        {
+          "id": 482570,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-18T13:12:38.000Z",
+          "code_updated_at": "2023-12-18T13:12:38.000Z",
+          "namespace": "https://greasyfork.org/users/843119",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "UPC中国石油大学（华东）教务系统自动评教",
+          "description": "适用于UPC中国石油大学（华东）教务系统（强智教务），自动打分，随机生成教学评价。",
+          "url": "https://greasyfork.org/scripts/482570-upc%E4%B8%AD%E5%9B%BD%E7%9F%B3%E6%B2%B9%E5%A4%A7%E5%AD%A6-%E5%8D%8E%E4%B8%9C-%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+          "code_url": "https://update.greasyfork.org/scripts/482570/UPC%E4%B8%AD%E5%9B%BD%E7%9F%B3%E6%B2%B9%E5%A4%A7%E5%AD%A6%EF%BC%88%E5%8D%8E%E4%B8%9C%EF%BC%89%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+          "code_size": 6244,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "UPC中国石油大学（华东）教务系统自动评教",
+  "description": "适用于UPC中国石油大学（华东）教务系统（强智教务），自动打分，随机生成教学评价。",
+  "url": "https://greasyfork.org/scripts/482570-upc%E4%B8%AD%E5%9B%BD%E7%9F%B3%E6%B2%B9%E5%A4%A7%E5%AD%A6-%E5%8D%8E%E4%B8%9C-%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/482570/UPC%E4%B8%AD%E5%9B%BD%E7%9F%B3%E6%B2%B9%E5%A4%A7%E5%AD%A6%EF%BC%88%E5%8D%8E%E4%B8%9C%EF%BC%89%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+  "code_size": 6244,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

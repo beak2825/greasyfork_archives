@@ -1,0 +1,59 @@
+{
+  "id": 446850,
+  "daily_installs": 0,
+  "total_installs": 209,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-22T07:20:08.000Z",
+  "code_updated_at": "2022-06-22T07:20:08.000Z",
+  "namespace": "https://greasyfork.org/users/928131",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 928131,
+      "name": "吃酸菜鱼这么大",
+      "created_at": "2022-06-22T07:15:42.000Z",
+      "url": "https://greasyfork.org/users/928131-%E5%90%83%E9%85%B8%E8%8F%9C%E9%B1%BC%E8%BF%99%E4%B9%88%E5%A4%A7",
+      "scripts": [
+        {
+          "id": 446850,
+          "daily_installs": 0,
+          "total_installs": 209,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-22T07:20:08.000Z",
+          "code_updated_at": "2022-06-22T07:20:08.000Z",
+          "namespace": "https://greasyfork.org/users/928131",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Disable Weibo Article FollowMask",
+          "description": "用来解除部分微博文章要求关注作者才能阅读全文的限制",
+          "url": "https://greasyfork.org/scripts/446850-disable-weibo-article-followmask",
+          "code_url": "https://update.greasyfork.org/scripts/446850/Disable%20Weibo%20Article%20FollowMask.user.js",
+          "code_size": 949,
+          "license": null,
+          "version": "1.03",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Disable Weibo Article FollowMask",
+  "description": "用来解除部分微博文章要求关注作者才能阅读全文的限制",
+  "url": "https://greasyfork.org/scripts/446850-disable-weibo-article-followmask",
+  "code_url": "https://update.greasyfork.org/scripts/446850/Disable%20Weibo%20Article%20FollowMask.user.js",
+  "code_size": 949,
+  "license": null,
+  "version": "1.03",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

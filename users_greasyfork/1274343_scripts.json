@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489787,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-14T07:58:42.000Z",
+    "code_updated_at": "2024-03-14T07:58:42.000Z",
+    "namespace": "http://violetmonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1274343,
+        "name": "Alessio Rapisarda",
+        "created_at": "2024-03-14T07:44:04.000Z",
+        "url": "https://greasyfork.org/users/1274343-alessio-rapisarda"
+      }
+    ],
+    "name": "ClassMarker Tastiera Risposte",
+    "description": "Utilizza i tasti della tastiera \"1, 2, 3, 4\" per selezionare le risposte \"A\", \"B\", \"C\", \"D\" su ClassMarker",
+    "url": "https://greasyfork.org/scripts/489787-classmarker-tastiera-risposte",
+    "code_url": "https://update.greasyfork.org/scripts/489787/ClassMarker%20Tastiera%20Risposte.user.js",
+    "code_size": 856,
+    "license": null,
+    "version": "0.1",
+    "locale": "it",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

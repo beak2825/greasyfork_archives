@@ -1,0 +1,59 @@
+{
+  "id": 420840,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-28T23:19:05.000Z",
+  "code_updated_at": "2021-01-28T23:19:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 83633,
+      "name": "zhouhuajdsh",
+      "created_at": "2016-11-29T03:13:40.000Z",
+      "url": "https://greasyfork.org/users/83633-zhouhuajdsh",
+      "scripts": [
+        {
+          "id": 36139,
+          "daily_installs": 0,
+          "total_installs": 737,
+          "fan_score": "86.2",
+          "good_ratings": 24,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2017-12-08T07:48:50.000Z",
+          "code_updated_at": "2017-12-09T23:01:59.000Z",
+          "namespace": "https://greasyfork.org/scripts/36139-next-page",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Next Page",
+          "description": "使用左右方向键来翻页 [Ver 0.1.7.3+]",
+          "url": "https://greasyfork.org/scripts/36139-next-page",
+          "code_url": "https://update.greasyfork.org/scripts/36139/Next%20Page.user.js",
+          "code_size": 18434,
+          "license": null,
+          "version": "0.1.7.3.004",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Discuz自动回复",
+  "description": "Discuz自动回复按钮，可自选回复语句。修改自https://greasyfork.org/scripts/4635   使用https://github.com/cnwhy/GBK.js 进行GBK转码",
+  "url": "https://greasyfork.org/scripts/420840-discuz%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D",
+  "code_url": "https://update.greasyfork.org/scripts/420840/Discuz%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D.user.js",
+  "code_size": 41667,
+  "license": "GPL License",
+  "version": "1.82",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

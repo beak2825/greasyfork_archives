@@ -1,0 +1,34 @@
+{
+  "id": 454335,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-06T07:02:42.000Z",
+  "code_updated_at": "2023-07-03T13:54:25.000Z",
+  "namespace": "https://greasyfork.org/users/670183",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 935180,
+      "name": "Kalzer Sumilihig (Daven)",
+      "created_at": "2022-07-13T06:27:09.000Z",
+      "url": "https://greasyfork.org/users/935180-kalzer-sumilihig-daven",
+      "scripts": []
+    }
+  ],
+  "name": "Pixelplace' New Colours Bypass",
+  "description": "PPlace' Config B",
+  "url": "https://greasyfork.org/scripts/454335-pixelplace-new-colours-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/454335/1214778/Pixelplace%27%20New%20Colours%20Bypass.js",
+  "code_size": 1719,
+  "license": "MIT License",
+  "version": "1.6.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

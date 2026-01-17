@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457046,
+    "daily_installs": 0,
+    "total_installs": 385,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-23T12:10:29.000Z",
+    "code_updated_at": "2023-02-24T18:29:42.000Z",
+    "namespace": "自动化辅助",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1001785,
+        "name": "冷博文",
+        "created_at": "2022-12-23T12:04:38.000Z",
+        "url": "https://greasyfork.org/users/1001785-%E5%86%B7%E5%8D%9A%E6%96%87"
+      }
+    ],
+    "name": "沈阳市信息工程学校雨课堂/学堂云平台刷课脚本",
+    "description": "校网课型公共基础课线上平台自动化辅助",
+    "url": "https://greasyfork.org/scripts/457046-%E6%B2%88%E9%98%B3%E5%B8%82%E4%BF%A1%E6%81%AF%E5%B7%A5%E7%A8%8B%E5%AD%A6%E6%A0%A1%E9%9B%A8%E8%AF%BE%E5%A0%82-%E5%AD%A6%E5%A0%82%E4%BA%91%E5%B9%B3%E5%8F%B0%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/457046/%E6%B2%88%E9%98%B3%E5%B8%82%E4%BF%A1%E6%81%AF%E5%B7%A5%E7%A8%8B%E5%AD%A6%E6%A0%A1%E9%9B%A8%E8%AF%BE%E5%A0%82%E5%AD%A6%E5%A0%82%E4%BA%91%E5%B9%B3%E5%8F%B0%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 6497,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

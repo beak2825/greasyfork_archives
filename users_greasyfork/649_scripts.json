@@ -1,0 +1,68 @@
+[
+  {
+    "id": 439389,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-30T22:01:32.000Z",
+    "code_updated_at": "2023-01-11T04:09:29.000Z",
+    "namespace": "https://greasyfork.org/users/649",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 649,
+        "name": "kufii",
+        "created_at": "2014-05-09T02:52:41.000Z",
+        "url": "https://greasyfork.org/users/649-kufii"
+      }
+    ],
+    "name": "Truffle TV Channel Points Claimer",
+    "description": "Auto claim point on Truffle TV enabled streams.",
+    "url": "https://greasyfork.org/scripts/439389-truffle-tv-channel-points-claimer",
+    "code_url": "https://update.greasyfork.org/scripts/439389/Truffle%20TV%20Channel%20Points%20Claimer.user.js",
+    "code_size": 714,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420706,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-26T17:09:01.000Z",
+    "code_updated_at": "2024-05-25T04:05:09.000Z",
+    "namespace": "https://greasyfork.org/users/649",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 649,
+        "name": "kufii",
+        "created_at": "2014-05-09T02:52:41.000Z",
+        "url": "https://greasyfork.org/users/649-kufii"
+      }
+    ],
+    "name": "Kitsu External Links",
+    "description": "adds a link to myanimelist and anilist on Kitsu entries",
+    "url": "https://greasyfork.org/scripts/420706-kitsu-external-links",
+    "code_url": "https://update.greasyfork.org/scripts/420706/Kitsu%20External%20Links.user.js",
+    "code_size": 2937,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

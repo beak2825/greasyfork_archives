@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 477119,
+    "daily_installs": 1,
+    "total_installs": 694,
+    "fan_score": "72.2",
+    "good_ratings": 10,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-10T15:37:08.000Z",
+    "code_updated_at": "2025-10-22T18:51:10.000Z",
+    "namespace": "https://gist.github.com/4lrick/cf14cf267684f06c1b7bc559ddf2b943",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1153549,
+        "name": "4lrick",
+        "created_at": "2023-08-17T14:06:26.000Z",
+        "url": "https://greasyfork.org/users/1153549-4lrick"
+      }
+    ],
+    "name": "YouTube - Time Indicators",
+    "description": "Shows remaining or end time in the YouTube player, taking into account the playback speed.",
+    "url": "https://greasyfork.org/scripts/477119-youtube-time-indicators",
+    "code_url": "https://update.greasyfork.org/scripts/477119/YouTube%20-%20Time%20Indicators.user.js",
+    "code_size": 5482,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473288,
+    "daily_installs": 1,
+    "total_installs": 1061,
+    "fan_score": "37.6",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-08-17T14:12:40.000Z",
+    "code_updated_at": "2026-01-10T16:12:27.000Z",
+    "namespace": "https://gist.github.com/4lrick/bedb39b069be0e4c94dc20214137c9f5",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1153549,
+        "name": "4lrick",
+        "created_at": "2023-08-17T14:06:26.000Z",
+        "url": "https://greasyfork.org/users/1153549-4lrick"
+      }
+    ],
+    "name": "Auto Refresh Twitter (X) Timeline",
+    "description": "Automatically refreshes the Twitter (X) timeline every 5 seconds without refreshing the tab.",
+    "url": "https://greasyfork.org/scripts/473288-auto-refresh-twitter-x-timeline",
+    "code_url": "https://update.greasyfork.org/scripts/473288/Auto%20Refresh%20Twitter%20%28X%29%20Timeline.user.js",
+    "code_size": 3695,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

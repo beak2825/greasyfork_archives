@@ -1,0 +1,34 @@
+{
+  "id": 430608,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-10T20:10:18.000Z",
+  "code_updated_at": "2021-08-12T02:07:39.000Z",
+  "namespace": "kiwicolin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 803184,
+      "name": "Colin Burgess",
+      "created_at": "2021-08-10T20:02:37.000Z",
+      "url": "https://greasyfork.org/users/803184-colin-burgess",
+      "scripts": []
+    }
+  ],
+  "name": "Not so fast!",
+  "description": "Prevents hitting the enter key too quickly during reviews!",
+  "url": "https://greasyfork.org/scripts/430608-not-so-fast",
+  "code_url": "https://update.greasyfork.org/scripts/430608/Not%20so%20fast%21.user.js",
+  "code_size": 5440,
+  "license": null,
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

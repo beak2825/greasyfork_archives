@@ -1,0 +1,34 @@
+{
+  "id": 436252,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-29T07:05:41.000Z",
+  "code_updated_at": "2024-12-09T10:12:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 785435,
+      "name": "hloodelbn",
+      "created_at": "2021-06-20T12:35:14.000Z",
+      "url": "https://greasyfork.org/users/785435-hloodelbn",
+      "scripts": []
+    }
+  ],
+  "name": "淘宝旺铺-页面装修-模块ID与功能匹配",
+  "description": "描述：淘宝旺铺-页面装修-模块ID与功能匹配",
+  "url": "https://greasyfork.org/scripts/436252-%E6%B7%98%E5%AE%9D%E6%97%BA%E9%93%BA-%E9%A1%B5%E9%9D%A2%E8%A3%85%E4%BF%AE-%E6%A8%A1%E5%9D%97id%E4%B8%8E%E5%8A%9F%E8%83%BD%E5%8C%B9%E9%85%8D",
+  "code_url": "https://update.greasyfork.org/scripts/436252/%E6%B7%98%E5%AE%9D%E6%97%BA%E9%93%BA-%E9%A1%B5%E9%9D%A2%E8%A3%85%E4%BF%AE-%E6%A8%A1%E5%9D%97ID%E4%B8%8E%E5%8A%9F%E8%83%BD%E5%8C%B9%E9%85%8D.user.js",
+  "code_size": 43241,
+  "license": null,
+  "version": "0.27",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

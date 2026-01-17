@@ -1,0 +1,33 @@
+{
+  "id": 453224,
+  "daily_installs": 0,
+  "total_installs": 60,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-17T14:26:05.000Z",
+  "code_updated_at": "2025-03-18T13:32:56.000Z",
+  "namespace": "https://github.com/userElaina/this-is-the-China-website",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 970955,
+      "name": "userElaina",
+      "created_at": "2022-10-15T05:42:33.000Z",
+      "url": "https://greasyfork.org/users/970955-userelaina"
+    }
+  ],
+  "name": "GitHub 伪装成 Gitee (码云)",
+  "description": "中国人就用码云",
+  "url": "https://greasyfork.org/scripts/453224-github-%E4%BC%AA%E8%A3%85%E6%88%90-gitee-%E7%A0%81%E4%BA%91",
+  "code_url": "https://update.greasyfork.org/scripts/453224/GitHub%20%E4%BC%AA%E8%A3%85%E6%88%90%20Gitee%20%28%E7%A0%81%E4%BA%91%29.user.js",
+  "code_size": 3012,
+  "license": "MIT License",
+  "version": "2025.03.18.01",
+  "locale": "ca",
+  "deleted": false,
+  "visibility": "public"
+}

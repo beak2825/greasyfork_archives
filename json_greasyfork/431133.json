@@ -1,0 +1,33 @@
+{
+  "id": 431133,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-21T09:04:57.000Z",
+  "code_updated_at": "2021-08-21T09:15:15.000Z",
+  "namespace": "-",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 193606,
+      "name": "Hanz",
+      "created_at": "2018-06-28T09:15:20.000Z",
+      "url": "https://greasyfork.org/users/193606-hanz"
+    }
+  ],
+  "name": "GMail Auto Reader",
+  "description": "Fast GMail auto reader, not for spams email though",
+  "url": "https://greasyfork.org/scripts/431133-gmail-auto-reader",
+  "code_url": "https://update.greasyfork.org/scripts/431133/GMail%20Auto%20Reader.user.js",
+  "code_size": 1596,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433491,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-06T13:50:37.000Z",
+    "code_updated_at": "2021-10-07T08:38:15.000Z",
+    "namespace": "http://artificialworlds.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 822472,
+        "name": "Andy Balaam",
+        "created_at": "2021-10-06T13:45:30.000Z",
+        "url": "https://greasyfork.org/users/822472-andy-balaam"
+      }
+    ],
+    "name": "Jitsi always show toolbox",
+    "description": "Prevent the Jitsi toolbox from sliding away",
+    "url": "https://greasyfork.org/scripts/433491-jitsi-always-show-toolbox",
+    "code_url": "https://update.greasyfork.org/scripts/433491/Jitsi%20always%20show%20toolbox.user.js",
+    "code_size": 1627,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

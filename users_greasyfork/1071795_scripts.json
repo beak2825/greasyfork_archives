@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465378,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-02T13:37:34.000Z",
+    "code_updated_at": "2023-05-02T13:37:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1071795,
+        "name": "btqj",
+        "created_at": "2023-05-02T13:35:43.000Z",
+        "url": "https://greasyfork.org/users/1071795-btqj"
+      }
+    ],
+    "name": "Netquel auto repair",
+    "description": "netquel auto repair script",
+    "url": "https://greasyfork.org/scripts/465378-netquel-auto-repair",
+    "code_url": "https://update.greasyfork.org/scripts/465378/Netquel%20auto%20repair.user.js",
+    "code_size": 2239,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

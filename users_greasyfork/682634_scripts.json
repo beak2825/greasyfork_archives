@@ -1,0 +1,101 @@
+[
+  {
+    "id": 453554,
+    "daily_installs": 0,
+    "total_installs": 149,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-22T17:07:13.000Z",
+    "code_updated_at": "2022-10-22T17:07:13.000Z",
+    "namespace": "https://github.com/earthplusthree/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682634,
+        "name": "earthplusthree",
+        "created_at": "2020-08-26T01:46:16.000Z",
+        "url": "https://greasyfork.org/users/682634-earthplusthree"
+      }
+    ],
+    "name": "Sugaroo Link Conversion",
+    "description": "Converts Taobao and Weidan links on r/FashionReps to Sugaroo links, but Pandabuy best agent, ok? I pull up at the afterparty",
+    "url": "https://greasyfork.org/scripts/453554-sugaroo-link-conversion",
+    "code_url": "https://update.greasyfork.org/scripts/453554/Sugaroo%20Link%20Conversion.user.js",
+    "code_size": 895,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 452079,
+    "daily_installs": 0,
+    "total_installs": 689,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-27T02:03:23.000Z",
+    "code_updated_at": "2022-09-27T02:03:23.000Z",
+    "namespace": "https://github.com/earthplusthree/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682634,
+        "name": "earthplusthree",
+        "created_at": "2020-08-26T01:46:16.000Z",
+        "url": "https://greasyfork.org/users/682634-earthplusthree"
+      }
+    ],
+    "name": "Pandabuy Best Agent",
+    "description": "Converts Taobao and Weidan links on r/FashionReps to Pandabuy links, because Pandabuy best agent, ok? I pull up at the afterparty",
+    "url": "https://greasyfork.org/scripts/452079-pandabuy-best-agent",
+    "code_url": "https://update.greasyfork.org/scripts/452079/Pandabuy%20Best%20Agent.user.js",
+    "code_size": 803,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444051,
+    "daily_installs": 0,
+    "total_installs": 611,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-26T19:10:34.000Z",
+    "code_updated_at": "2022-04-26T19:10:34.000Z",
+    "namespace": "https://github.com/earthplusthree/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682634,
+        "name": "earthplusthree",
+        "created_at": "2020-08-26T01:46:16.000Z",
+        "url": "https://greasyfork.org/users/682634-earthplusthree"
+      }
+    ],
+    "name": "IGG-Games Anti-Anti Adblock",
+    "description": "Watches for and removes 'Disable Adblock' popup on igg-games.com. Working 4/26/22.",
+    "url": "https://greasyfork.org/scripts/444051-igg-games-anti-anti-adblock",
+    "code_url": "https://update.greasyfork.org/scripts/444051/IGG-Games%20Anti-Anti%20Adblock.user.js",
+    "code_size": 714,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

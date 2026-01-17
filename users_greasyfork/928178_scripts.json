@@ -1,0 +1,134 @@
+[
+  {
+    "id": 451114,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-10T17:48:07.000Z",
+    "code_updated_at": "2022-09-10T17:48:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928178,
+        "name": "boynextdesk",
+        "created_at": "2022-06-22T10:11:56.000Z",
+        "url": "https://greasyfork.org/users/928178-boynextdesk"
+      }
+    ],
+    "name": "让b站播放器摇起来",
+    "description": "开启后会让b站播放器像摇篮一样摇起来",
+    "url": "https://greasyfork.org/scripts/451114-%E8%AE%A9b%E7%AB%99%E6%92%AD%E6%94%BE%E5%99%A8%E6%91%87%E8%B5%B7%E6%9D%A5",
+    "code_url": "https://update.greasyfork.org/scripts/451114/%E8%AE%A9b%E7%AB%99%E6%92%AD%E6%94%BE%E5%99%A8%E6%91%87%E8%B5%B7%E6%9D%A5.user.js",
+    "code_size": 2741,
+    "license": "GPL v3.0",
+    "version": "0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 447357,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-02T18:15:27.000Z",
+    "code_updated_at": "2023-01-09T14:20:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928178,
+        "name": "boynextdesk",
+        "created_at": "2022-06-22T10:11:56.000Z",
+        "url": "https://greasyfork.org/users/928178-boynextdesk"
+      }
+    ],
+    "name": "人生只若如初见",
+    "description": "让TA们重新走进你的生活。",
+    "url": "https://greasyfork.org/scripts/447357-%E4%BA%BA%E7%94%9F%E5%8F%AA%E8%8B%A5%E5%A6%82%E5%88%9D%E8%A7%81",
+    "code_url": "https://update.greasyfork.org/scripts/447357/%E4%BA%BA%E7%94%9F%E5%8F%AA%E8%8B%A5%E5%A6%82%E5%88%9D%E8%A7%81.user.js",
+    "code_size": 42110,
+    "license": "GPL V3.0",
+    "version": "1.6.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 447263,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-30T13:01:45.000Z",
+    "code_updated_at": "2022-06-30T13:01:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928178,
+        "name": "boynextdesk",
+        "created_at": "2022-06-22T10:11:56.000Z",
+        "url": "https://greasyfork.org/users/928178-boynextdesk"
+      }
+    ],
+    "name": "夏日重现-铃煲",
+    "description": "好像又回到那一刻。",
+    "url": "https://greasyfork.org/scripts/447263-%E5%A4%8F%E6%97%A5%E9%87%8D%E7%8E%B0-%E9%93%83%E7%85%B2",
+    "code_url": "https://update.greasyfork.org/scripts/447263/%E5%A4%8F%E6%97%A5%E9%87%8D%E7%8E%B0-%E9%93%83%E7%85%B2.user.js",
+    "code_size": 2536,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 446858,
+    "daily_installs": 0,
+    "total_installs": 827,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-22T10:26:41.000Z",
+    "code_updated_at": "2022-06-24T04:19:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928178,
+        "name": "boynextdesk",
+        "created_at": "2022-06-22T10:11:56.000Z",
+        "url": "https://greasyfork.org/users/928178-boynextdesk"
+      }
+    ],
+    "name": "2048bot",
+    "description": "Lie back and watch the dumb bot play!",
+    "url": "https://greasyfork.org/scripts/446858-2048bot",
+    "code_url": "https://update.greasyfork.org/scripts/446858/2048bot.user.js",
+    "code_size": 6982,
+    "license": "GNU General Public License v3.0",
+    "version": "0.9415",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

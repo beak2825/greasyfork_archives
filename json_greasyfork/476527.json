@@ -1,0 +1,59 @@
+{
+  "id": 476527,
+  "daily_installs": 0,
+  "total_installs": 142,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-02T03:30:31.000Z",
+  "code_updated_at": "2023-10-04T03:32:49.000Z",
+  "namespace": "https://github.com/Steve0Greatness/MovedFromFandomDB",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1185694,
+      "name": "Steve0Greatness",
+      "created_at": "2023-10-02T03:28:48.000Z",
+      "url": "https://greasyfork.org/users/1185694-steve0greatness",
+      "scripts": [
+        {
+          "id": 476527,
+          "daily_installs": 0,
+          "total_installs": 142,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-02T03:30:31.000Z",
+          "code_updated_at": "2023-10-04T03:32:49.000Z",
+          "namespace": "https://github.com/Steve0Greatness/MovedFromFandomDB",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fandom Redirect",
+          "description": "A script that automatically redirects from Fandom wikis to their new non-Fandom homes.",
+          "url": "https://greasyfork.org/scripts/476527-fandom-redirect",
+          "code_url": "https://update.greasyfork.org/scripts/476527/Fandom%20Redirect.user.js",
+          "code_size": 737,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fandom Redirect",
+  "description": "A script that automatically redirects from Fandom wikis to their new non-Fandom homes.",
+  "url": "https://greasyfork.org/scripts/476527-fandom-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/476527/Fandom%20Redirect.user.js",
+  "code_size": 737,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

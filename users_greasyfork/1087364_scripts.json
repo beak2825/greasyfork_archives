@@ -1,0 +1,35 @@
+[
+  {
+    "id": 467780,
+    "daily_installs": 3,
+    "total_installs": 3670,
+    "fan_score": "72.2",
+    "good_ratings": 10,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-03T07:38:49.000Z",
+    "code_updated_at": "2025-11-22T12:46:58.000Z",
+    "namespace": "https://github.com/komomoo/dylive-prune",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1087364,
+        "name": "koomo",
+        "created_at": "2023-05-30T15:06:03.000Z",
+        "url": "https://greasyfork.org/users/1087364-koomo"
+      }
+    ],
+    "name": "抖音直播精简",
+    "description": "移除相关直播、移除礼物栏、移除用户进入直播间消息、移除粉丝牌&礼物弹幕、移除点赞动画、自动屏蔽礼物特效、移除顶栏客户端&快捷访问按钮、自动网页全屏、自动切原画画质。源代码https://github.com/komomoo/dylive-prune，欢迎pr👏",
+    "url": "https://greasyfork.org/scripts/467780-%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E7%B2%BE%E7%AE%80",
+    "code_url": "https://update.greasyfork.org/scripts/467780/%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E7%B2%BE%E7%AE%80.user.js",
+    "code_size": 3898,
+    "license": null,
+    "version": "0.40",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

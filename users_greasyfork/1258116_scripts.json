@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486754,
+    "daily_installs": 0,
+    "total_installs": 200,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-06T08:47:20.000Z",
+    "code_updated_at": "2024-02-06T08:47:20.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1258116-yanchong-xiao",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1258116,
+        "name": "yanchong xiao",
+        "created_at": "2024-02-06T08:44:05.000Z",
+        "url": "https://greasyfork.org/users/1258116-yanchong-xiao"
+      }
+    ],
+    "name": "Bilibili Auto Quality",
+    "description": "自动选择最高清晰度播放Bilibili视频",
+    "url": "https://greasyfork.org/scripts/486754-bilibili-auto-quality",
+    "code_url": "https://update.greasyfork.org/scripts/486754/Bilibili%20Auto%20Quality.user.js",
+    "code_size": 2405,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

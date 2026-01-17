@@ -1,0 +1,34 @@
+{
+  "id": 493121,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-21T19:32:58.000Z",
+  "code_updated_at": "2024-04-26T15:55:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1165610,
+      "name": "Hac Ker",
+      "created_at": "2023-09-03T15:14:13.000Z",
+      "url": "https://greasyfork.org/users/1165610-hac-ker",
+      "scripts": []
+    }
+  ],
+  "name": "网易刷量养号",
+  "description": "网易云音乐协议刷量脚本!",
+  "url": "https://greasyfork.org/scripts/493121-%E7%BD%91%E6%98%93%E5%88%B7%E9%87%8F%E5%85%BB%E5%8F%B7",
+  "code_url": "https://update.greasyfork.org/scripts/493121/%E7%BD%91%E6%98%93%E5%88%B7%E9%87%8F%E5%85%BB%E5%8F%B7.user.js",
+  "code_size": 10610,
+  "license": "MIT License",
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

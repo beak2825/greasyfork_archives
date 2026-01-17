@@ -1,0 +1,33 @@
+{
+  "id": 481318,
+  "daily_installs": 0,
+  "total_installs": 728,
+  "fan_score": "30.1",
+  "good_ratings": 2,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2023-12-03T14:55:40.000Z",
+  "code_updated_at": "2023-12-03T14:55:40.000Z",
+  "namespace": "nickhoo.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1227551,
+      "name": "krtti",
+      "created_at": "2023-12-03T14:47:21.000Z",
+      "url": "https://greasyfork.org/users/1227551-krtti"
+    }
+  ],
+  "name": "JellyfinMorePlayer",
+  "description": "jellyfin calls an external player, mobile style optimization + Safari compatibility, based on [Jellyfin Launch Potplayer](https://greasyfork.org/en/scripts/452398-jellyfinlaunchpotplayer).",
+  "url": "https://greasyfork.org/scripts/481318-jellyfinmoreplayer",
+  "code_url": "https://update.greasyfork.org/scripts/481318/JellyfinMorePlayer.user.js",
+  "code_size": 15138,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

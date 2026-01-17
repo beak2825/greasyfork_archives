@@ -1,0 +1,33 @@
+{
+  "id": 438622,
+  "daily_installs": 0,
+  "total_installs": 315,
+  "fan_score": "61.0",
+  "good_ratings": 6,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-16T08:35:49.000Z",
+  "code_updated_at": "2022-04-16T18:31:52.000Z",
+  "namespace": "https://github.com/CheckCoder",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 864704,
+      "name": "CheckCoder",
+      "created_at": "2022-01-14T06:53:54.000Z",
+      "url": "https://greasyfork.org/users/864704-checkcoder"
+    }
+  ],
+  "name": "链接预览助手",
+  "description": "功能1：长按链接将打开内置窗口预览。Esc 可以关闭窗口。按住 Shift 或者 Alt 或者 Ctrl 或者 Command 键 或者 鼠标移动，长按时不会打开预览。功能2：鼠标中键 + （Shift 或者 Alt 或者 Ctrl 或者 Command 键），新窗口打开链接。",
+  "url": "https://greasyfork.org/scripts/438622-%E9%93%BE%E6%8E%A5%E9%A2%84%E8%A7%88%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/438622/%E9%93%BE%E6%8E%A5%E9%A2%84%E8%A7%88%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 4927,
+  "license": "GPL",
+  "version": "0.8.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

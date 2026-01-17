@@ -1,0 +1,68 @@
+[
+  {
+    "id": 475588,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-18T13:24:41.000Z",
+    "code_updated_at": "2023-09-18T13:25:34.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/475588-reddit-comment-delete",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1175772,
+        "name": "ObsceneNameHere",
+        "created_at": "2023-09-18T13:17:01.000Z",
+        "url": "https://greasyfork.org/users/1175772-obscenenamehere"
+      }
+    ],
+    "name": "Reddit Comment Delete",
+    "description": "Automatically removes all comments one-by-one from the reddit profile page. THIS WILL RUN IF THE SCRIPT IS ENABLED!",
+    "url": "https://greasyfork.org/scripts/475588-reddit-comment-delete",
+    "code_url": "https://update.greasyfork.org/scripts/475588/Reddit%20Comment%20Delete.user.js",
+    "code_size": 1150,
+    "license": "GNU GPLv3",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 475587,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-18T13:22:29.000Z",
+    "code_updated_at": "2023-09-18T13:22:29.000Z",
+    "namespace": "null",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1175772,
+        "name": "ObsceneNameHere",
+        "created_at": "2023-09-18T13:17:01.000Z",
+        "url": "https://greasyfork.org/users/1175772-obscenenamehere"
+      }
+    ],
+    "name": "SiriusXM Auto Play",
+    "description": "Auto plays music on page load, checks & clears idle checks then refreshes page.",
+    "url": "https://greasyfork.org/scripts/475587-siriusxm-auto-play",
+    "code_url": "https://update.greasyfork.org/scripts/475587/SiriusXM%20Auto%20Play.user.js",
+    "code_size": 3859,
+    "license": "GNU GPLv3",
+    "version": "2.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

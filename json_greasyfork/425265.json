@@ -1,0 +1,34 @@
+{
+  "id": 425265,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-20T02:03:14.000Z",
+  "code_updated_at": "2021-04-20T02:03:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 759939,
+      "name": "yhara",
+      "created_at": "2021-04-16T05:35:43.000Z",
+      "url": "https://greasyfork.org/users/759939-yhara",
+      "scripts": []
+    }
+  ],
+  "name": "Garoon show refrences",
+  "description": "Garoonで返信先表示",
+  "url": "https://greasyfork.org/scripts/425265-garoon-show-refrences",
+  "code_url": "https://update.greasyfork.org/scripts/425265/Garoon%20show%20refrences.user.js",
+  "code_size": 10643,
+  "license": null,
+  "version": "1.0",
+  "locale": "eu",
+  "deleted": false,
+  "visibility": "public"
+}

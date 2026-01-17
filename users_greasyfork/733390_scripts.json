@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420987,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-01T08:48:35.000Z",
+    "code_updated_at": "2021-02-01T08:48:34.000Z",
+    "namespace": "❤",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 733390,
+        "name": "GAO-xulang",
+        "created_at": "2021-02-01T08:41:02.000Z",
+        "url": "https://greasyfork.org/users/733390-gao-xulang"
+      }
+    ],
+    "name": "UVM下载助手",
+    "description": "正确解析PKPMPDF格式下载地址",
+    "url": "https://greasyfork.org/scripts/420987-uvm%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/420987/UVM%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 271,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

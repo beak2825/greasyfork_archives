@@ -1,0 +1,33 @@
+{
+  "id": 484041,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-06T10:09:07.000Z",
+  "code_updated_at": "2024-01-06T10:09:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1091510,
+      "name": "Martin Kaprál",
+      "created_at": "2023-06-05T10:22:05.000Z",
+      "url": "https://greasyfork.org/users/1091510-martin-kapr%C3%A1l"
+    }
+  ],
+  "name": "Hokej Liiga - GK Subs",
+  "description": "Count and display goalie changes for home and away teams",
+  "url": "https://greasyfork.org/scripts/484041-hokej-liiga-gk-subs",
+  "code_url": "https://update.greasyfork.org/scripts/484041/Hokej%20Liiga%20-%20GK%20Subs.user.js",
+  "code_size": 3099,
+  "license": "none",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

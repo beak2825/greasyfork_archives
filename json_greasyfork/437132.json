@@ -1,0 +1,34 @@
+{
+  "id": 437132,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-16T07:51:21.000Z",
+  "code_updated_at": "2021-12-16T07:51:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 771595,
+      "name": "kocoler",
+      "created_at": "2021-05-13T09:41:21.000Z",
+      "url": "https://greasyfork.org/users/771595-kocoler",
+      "scripts": []
+    }
+  ],
+  "name": "ccnu-spoc Evolved",
+  "description": "auto refresh the session of ccnu-spoc",
+  "url": "https://greasyfork.org/scripts/437132-ccnu-spoc-evolved",
+  "code_url": "https://update.greasyfork.org/scripts/437132/ccnu-spoc%20Evolved.user.js",
+  "code_size": 6056,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

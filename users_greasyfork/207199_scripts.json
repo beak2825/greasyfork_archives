@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448196,
+    "daily_installs": 0,
+    "total_installs": 120,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-07-21T00:20:32.000Z",
+    "code_updated_at": "2022-07-21T00:35:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 207199,
+        "name": "thinkido",
+        "created_at": "2018-08-24T04:38:35.000Z",
+        "url": "https://greasyfork.org/users/207199-thinkido"
+      }
+    ],
+    "name": "电子书思维导图-书图图",
+    "description": "微信读书思维导图工具。需要配合chrome插件Alalways Disable Content-Security-Policy使用，否则可以在控制台看到报错（Refused to load the script '<URL>'），无法加载关键js代码文件。",
+    "url": "https://greasyfork.org/scripts/448196-%E7%94%B5%E5%AD%90%E4%B9%A6%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE-%E4%B9%A6%E5%9B%BE%E5%9B%BE",
+    "code_url": "https://update.greasyfork.org/scripts/448196/%E7%94%B5%E5%AD%90%E4%B9%A6%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE-%E4%B9%A6%E5%9B%BE%E5%9B%BE.user.js",
+    "code_size": 7344,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

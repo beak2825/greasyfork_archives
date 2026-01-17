@@ -1,0 +1,59 @@
+{
+  "id": 488742,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-01T20:30:04.000Z",
+  "code_updated_at": "2024-03-01T20:39:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1269028,
+      "name": "Incconu _two",
+      "created_at": "2024-03-01T20:27:55.000Z",
+      "url": "https://greasyfork.org/users/1269028-incconu-two",
+      "scripts": [
+        {
+          "id": 488742,
+          "daily_installs": 0,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-01T20:30:04.000Z",
+          "code_updated_at": "2024-03-01T20:39:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Reddit Redirect Enhanced",
+          "description": "Redirect reddit.com and its subdomains to new.reddit.com, preserving URL path and query parameters, without creating an infinite loop",
+          "url": "https://greasyfork.org/scripts/488742-reddit-redirect-enhanced",
+          "code_url": "https://update.greasyfork.org/scripts/488742/Reddit%20Redirect%20Enhanced.user.js",
+          "code_size": 912,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Reddit Redirect Enhanced",
+  "description": "Redirect reddit.com and its subdomains to new.reddit.com, preserving URL path and query parameters, without creating an infinite loop",
+  "url": "https://greasyfork.org/scripts/488742-reddit-redirect-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/488742/Reddit%20Redirect%20Enhanced.user.js",
+  "code_size": 912,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

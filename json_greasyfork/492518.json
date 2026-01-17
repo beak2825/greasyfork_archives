@@ -1,0 +1,33 @@
+{
+  "id": 492518,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-14T15:29:16.000Z",
+  "code_updated_at": "2024-05-21T14:23:12.000Z",
+  "namespace": "https://greasyfork.org/users/1288122",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1288122,
+      "name": "senerio",
+      "created_at": "2024-04-14T07:23:46.000Z",
+      "url": "https://greasyfork.org/users/1288122-senerio"
+    }
+  ],
+  "name": "Neopets - Last SW Price",
+  "description": "Indicates your last SW/SSW search price on various pages",
+  "url": "https://greasyfork.org/scripts/492518-neopets-last-sw-price",
+  "code_url": "https://update.greasyfork.org/scripts/492518/Neopets%20-%20Last%20SW%20Price.user.js",
+  "code_size": 7913,
+  "license": null,
+  "version": "2024-05-21",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

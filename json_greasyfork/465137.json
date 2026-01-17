@@ -1,0 +1,34 @@
+{
+  "id": 465137,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-29T17:08:46.000Z",
+  "code_updated_at": "2023-04-29T17:08:45.000Z",
+  "namespace": "https://www.diegopavan.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1070183,
+      "name": "Diego Pavan",
+      "created_at": "2023-04-29T16:03:21.000Z",
+      "url": "https://greasyfork.org/users/1070183-diego-pavan",
+      "scripts": []
+    }
+  ],
+  "name": "Take Screenshot - Magnews",
+  "description": "Script to download screenshot of newsletter",
+  "url": "https://greasyfork.org/scripts/465137-take-screenshot-magnews",
+  "code_url": "https://update.greasyfork.org/scripts/465137/Take%20Screenshot%20-%20Magnews.user.js",
+  "code_size": 1366,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 427696,
+  "daily_installs": 0,
+  "total_installs": 73965,
+  "fan_score": "39.6",
+  "good_ratings": 3,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-06-09T02:45:38.000Z",
+  "code_updated_at": "2021-06-09T02:45:37.000Z",
+  "namespace": "huanghaha_space",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 781424,
+      "name": "huanghaha",
+      "created_at": "2021-06-09T02:44:02.000Z",
+      "url": "https://greasyfork.org/users/781424-huanghaha"
+    }
+  ],
+  "name": "超星/学习通助手，自动挂机查题可用（改良版）",
+  "description": "自动挂机看尔雅MOOC，支持视频、音频、文档、图书自动完成，章节测验自动答题提交，支持自动切换任务点、挂机阅读时长、自动登录等，解除各类功能限制，开放自定义参数",
+  "url": "https://greasyfork.org/scripts/427696-%E8%B6%85%E6%98%9F-%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B-%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA%E6%9F%A5%E9%A2%98%E5%8F%AF%E7%94%A8-%E6%94%B9%E8%89%AF%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/427696/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA%E6%9F%A5%E9%A2%98%E5%8F%AF%E7%94%A8%EF%BC%88%E6%94%B9%E8%89%AF%E7%89%88%EF%BC%89.user.js",
+  "code_size": 29523,
+  "license": "MIT License",
+  "version": "5.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 489120,
+  "daily_installs": 0,
+  "total_installs": 690,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-03-06T04:11:03.000Z",
+  "code_updated_at": "2024-03-06T04:11:03.000Z",
+  "namespace": "https://greasyfork.org/users/449798",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 890908,
+      "name": "brayde lindell",
+      "created_at": "2022-03-22T14:49:57.000Z",
+      "url": "https://greasyfork.org/users/890908-brayde-lindell"
+    }
+  ],
+  "name": "actually gives free nitro",
+  "description": "free nitro but you might get banned",
+  "url": "https://greasyfork.org/scripts/489120-actually-gives-free-nitro",
+  "code_url": "https://update.greasyfork.org/scripts/489120/actually%20gives%20free%20nitro.user.js",
+  "code_size": 5940,
+  "license": "MIT License",
+  "version": "2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

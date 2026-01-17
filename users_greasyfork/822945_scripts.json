@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433581,
+    "daily_installs": 0,
+    "total_installs": 110,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-08T06:34:52.000Z",
+    "code_updated_at": "2021-12-03T04:24:32.000Z",
+    "namespace": "http://stu3.zstu.edu.cn/webroot/decision",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 822945,
+        "name": "ymq19",
+        "created_at": "2021-10-08T06:24:25.000Z",
+        "url": "https://greasyfork.org/users/822945-ymq19"
+      }
+    ],
+    "name": "dailyReport Automator",
+    "description": "Automatically completes the health daily report",
+    "url": "https://greasyfork.org/scripts/433581-dailyreport-automator",
+    "code_url": "https://update.greasyfork.org/scripts/433581/dailyReport%20Automator.user.js",
+    "code_size": 9132,
+    "license": null,
+    "version": "0.04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

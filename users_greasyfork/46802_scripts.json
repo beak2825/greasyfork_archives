@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 485672,
+    "daily_installs": 0,
+    "total_installs": 175,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-25T23:05:43.000Z",
+    "code_updated_at": "2024-07-25T17:00:12.000Z",
+    "namespace": "https://en.y2mate.is/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46802,
+        "name": "Vexe",
+        "created_at": "2016-06-01T16:35:07.000Z",
+        "url": "https://greasyfork.org/users/46802-vexe"
+      }
+    ],
+    "name": "Y2Mate.is",
+    "description": "Mirror of official Y2Mate userscript",
+    "url": "https://greasyfork.org/scripts/485672-y2mate-is",
+    "code_url": "https://update.greasyfork.org/scripts/485672/Y2Mateis.user.js",
+    "code_size": 1963,
+    "license": null,
+    "version": "2.1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467123,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-26T01:04:46.000Z",
+    "code_updated_at": "2024-05-23T18:35:28.000Z",
+    "namespace": "http://marytcusack.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46802,
+        "name": "Vexe",
+        "created_at": "2016-06-01T16:35:07.000Z",
+        "url": "https://greasyfork.org/users/46802-vexe"
+      }
+    ],
+    "name": "Mary T. Cusack Tarot Archives",
+    "description": "Fixes missing galleries and bad image names",
+    "url": "https://greasyfork.org/scripts/467123-mary-t-cusack-tarot-archives",
+    "code_url": "https://update.greasyfork.org/scripts/467123/Mary%20T%20Cusack%20Tarot%20Archives.user.js",
+    "code_size": 13113,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467103,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-25T15:59:04.000Z",
+    "code_updated_at": "2023-05-25T15:59:04.000Z",
+    "namespace": "https://www.amazon.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46802,
+        "name": "Vexe",
+        "created_at": "2016-06-01T16:35:07.000Z",
+        "url": "https://greasyfork.org/users/46802-vexe"
+      }
+    ],
+    "name": "Amazon package tracking",
+    "description": "show Amazon package tracking on the main tracking page",
+    "url": "https://greasyfork.org/scripts/467103-amazon-package-tracking",
+    "code_url": "https://update.greasyfork.org/scripts/467103/Amazon%20package%20tracking.user.js",
+    "code_size": 969,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

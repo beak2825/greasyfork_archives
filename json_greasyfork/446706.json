@@ -1,0 +1,33 @@
+{
+  "id": 446706,
+  "daily_installs": 0,
+  "total_installs": 1528,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-19T08:39:25.000Z",
+  "code_updated_at": "2022-06-19T10:25:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 392758,
+      "name": "Sean529",
+      "created_at": "2019-10-28T09:51:01.000Z",
+      "url": "https://greasyfork.org/users/392758-sean529"
+    }
+  ],
+  "name": "小鹅通h5视频播放快捷键",
+  "description": "支持使用快捷键控制视频：1.播放/暂停 Space；2.前进 ArrowRight；3.后退 ArrowLeft；4.全屏 Escape / Enter；5.提速 c；6.降速 x；7.还原速度 z",
+  "url": "https://greasyfork.org/scripts/446706-%E5%B0%8F%E9%B9%85%E9%80%9Ah5%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%BF%AB%E6%8D%B7%E9%94%AE",
+  "code_url": "https://update.greasyfork.org/scripts/446706/%E5%B0%8F%E9%B9%85%E9%80%9Ah5%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%BF%AB%E6%8D%B7%E9%94%AE.user.js",
+  "code_size": 5157,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

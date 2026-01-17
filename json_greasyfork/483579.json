@@ -1,0 +1,33 @@
+{
+  "id": 483579,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-01T01:55:33.000Z",
+  "code_updated_at": "2026-01-15T19:56:15.000Z",
+  "namespace": "https://greasyfork.org/en/users/39779",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 39779,
+      "name": "Elie Cheng",
+      "created_at": "2016-04-21T04:28:02.000Z",
+      "url": "https://greasyfork.org/users/39779-elie-cheng"
+    }
+  ],
+  "name": "MyMHUI",
+  "description": "my mh ui modify",
+  "url": "https://greasyfork.org/scripts/483579-mymhui",
+  "code_url": "https://update.greasyfork.org/scripts/483579/MyMHUI.user.js",
+  "code_size": 97297,
+  "license": "GPL-3.0+; http://www.gnu.org/copyleft/gpl.html",
+  "version": "2.2.30.15.14",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

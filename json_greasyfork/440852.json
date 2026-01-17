@@ -1,0 +1,59 @@
+{
+  "id": 440852,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-03T11:44:40.000Z",
+  "code_updated_at": "2022-03-03T11:44:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 882458,
+      "name": "lsfe",
+      "created_at": "2022-03-03T10:38:22.000Z",
+      "url": "https://greasyfork.org/users/882458-lsfe",
+      "scripts": [
+        {
+          "id": 440852,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-03T11:44:40.000Z",
+          "code_updated_at": "2022-03-03T11:44:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Observador Premium",
+          "description": "Unblocks the articles, suppresses the ads about premium and removes the AdBlock detection",
+          "url": "https://greasyfork.org/scripts/440852-observador-premium",
+          "code_url": "https://update.greasyfork.org/scripts/440852/Observador%20Premium.user.js",
+          "code_size": 1933,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Observador Premium",
+  "description": "Unblocks the articles, suppresses the ads about premium and removes the AdBlock detection",
+  "url": "https://greasyfork.org/scripts/440852-observador-premium",
+  "code_url": "https://update.greasyfork.org/scripts/440852/Observador%20Premium.user.js",
+  "code_size": 1933,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

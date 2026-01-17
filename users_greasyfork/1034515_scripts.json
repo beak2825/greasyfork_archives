@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460953,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-01T02:41:49.000Z",
+    "code_updated_at": "2024-03-04T19:50:48.000Z",
+    "namespace": "mailto:daegon.xzing@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034515,
+        "name": "Daegon Xzing",
+        "created_at": "2023-03-01T02:37:27.000Z",
+        "url": "https://greasyfork.org/users/1034515-daegon-xzing"
+      }
+    ],
+    "name": "Blue Archive: Ranking List",
+    "description": "Convert character profiles into modals that pop up when you click their name. Greatly improves readability. https://www.levelwinner.com/blue-archive-tier-list-ranking-the-best-students-in-the-game/",
+    "url": "https://greasyfork.org/scripts/460953-blue-archive-ranking-list",
+    "code_url": "https://update.greasyfork.org/scripts/460953/Blue%20Archive%3A%20Ranking%20List.user.js",
+    "code_size": 7125,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

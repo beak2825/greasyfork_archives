@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482043,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-12T16:59:03.000Z",
+    "code_updated_at": "2023-12-13T16:34:45.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203426,
+        "name": "bhvsh",
+        "created_at": "2023-10-24T16:41:28.000Z",
+        "url": "https://greasyfork.org/users/1203426-bhvsh"
+      }
+    ],
+    "name": "Countdown with days - yeezy.com",
+    "description": "12/12/2023, 10:13:11 PM",
+    "url": "https://greasyfork.org/scripts/482043-countdown-with-days-yeezy-com",
+    "code_url": "https://update.greasyfork.org/scripts/482043/Countdown%20with%20days%20-%20yeezycom.user.js",
+    "code_size": 1337,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -63,6 +63,105 @@
     "version": "0.1",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492619,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-16T00:05:53.000Z",
+    "code_updated_at": "2024-04-17T00:04:57.000Z",
+    "namespace": "http://your.website.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2701,
+        "name": "Yitan",
+        "created_at": "2014-06-10T07:47:53.000Z",
+        "url": "https://greasyfork.org/users/2701-yitan"
+      }
+    ],
+    "name": "去除新赚客吧返利链接",
+    "description": "Restore original links after removing auto redirect",
+    "url": "https://greasyfork.org/scripts/492619-%E5%8E%BB%E9%99%A4%E6%96%B0%E8%B5%9A%E5%AE%A2%E5%90%A7%E8%BF%94%E5%88%A9%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/492619/%E5%8E%BB%E9%99%A4%E6%96%B0%E8%B5%9A%E5%AE%A2%E5%90%A7%E8%BF%94%E5%88%A9%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 860,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492618,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-16T00:04:01.000Z",
+    "code_updated_at": "2024-07-25T05:48:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2701,
+        "name": "Yitan",
+        "created_at": "2014-06-10T07:47:53.000Z",
+        "url": "https://greasyfork.org/users/2701-yitan"
+      }
+    ],
+    "name": "V2EX Image Redirector",
+    "description": "Redirects specific image URLs on V2EX to a different URL.",
+    "url": "https://greasyfork.org/scripts/492618-v2ex-image-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/492618/V2EX%20Image%20Redirector.user.js",
+    "code_size": 1535,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 492581,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-15T11:24:51.000Z",
+    "code_updated_at": "2024-04-15T11:29:58.000Z",
+    "namespace": "http://your.website.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2701,
+        "name": "Yitan",
+        "created_at": "2014-06-10T07:47:53.000Z",
+        "url": "https://greasyfork.org/users/2701-yitan"
+      }
+    ],
+    "name": "Restore Original Links (Mobile)",
+    "description": "Restore original links after removing auto redirect (Mobile)",
+    "url": "https://greasyfork.org/scripts/492581-restore-original-links-mobile",
+    "code_url": "https://update.greasyfork.org/scripts/492581/Restore%20Original%20Links%20%28Mobile%29.user.js",
+    "code_size": 930,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

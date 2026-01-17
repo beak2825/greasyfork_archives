@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418646,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-15T06:24:44.000Z",
+    "code_updated_at": "2020-12-15T16:12:04.000Z",
+    "namespace": "https://greasyfork.org/users/572366",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 572366,
+        "name": "daniele_veneno",
+        "created_at": "2020-05-26T01:14:57.000Z",
+        "url": "https://greasyfork.org/users/572366-daniele-veneno"
+      }
+    ],
+    "name": "Google [DEC 2020] - Hide Ad results in google search",
+    "description": "🔊 [DEC 2020] One line script to hide Ad tedious results in google search",
+    "url": "https://greasyfork.org/scripts/418646-google-dec-2020-hide-ad-results-in-google-search",
+    "code_url": "https://update.greasyfork.org/scripts/418646/Google%20%5BDEC%202020%5D%20-%20Hide%20Ad%20results%20in%20google%20search.user.js",
+    "code_size": 737,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

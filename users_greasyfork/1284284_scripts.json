@@ -31,5 +31,203 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 491767,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-06T04:31:09.000Z",
+    "code_updated_at": "2024-11-05T11:36:14.000Z",
+    "namespace": "https://greasyfork.org/users/1284284",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284284,
+        "name": "喃哓盐主",
+        "created_at": "2024-04-05T14:14:21.000Z",
+        "url": "https://greasyfork.org/users/1284284-%E5%96%83%E5%93%93%E7%9B%90%E4%B8%BB"
+      }
+    ],
+    "name": "49直接跳packname页",
+    "description": "49游戏链接直接跳packname页",
+    "url": "https://greasyfork.org/scripts/491767-49%E7%9B%B4%E6%8E%A5%E8%B7%B3packname%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/491767/49%E7%9B%B4%E6%8E%A5%E8%B7%B3packname%E9%A1%B5.user.js",
+    "code_size": 1104,
+    "license": null,
+    "version": "3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491764,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-06T03:48:18.000Z",
+    "code_updated_at": "2024-04-06T04:33:39.000Z",
+    "namespace": "https://greasyfork.org/users/1284284",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284284,
+        "name": "喃哓盐主",
+        "created_at": "2024-04-05T14:14:21.000Z",
+        "url": "https://greasyfork.org/users/1284284-%E5%96%83%E5%93%93%E7%9B%90%E4%B8%BB"
+      }
+    ],
+    "name": "vivo直接跳packname页",
+    "description": "vivo游戏链接直接跳packname页",
+    "url": "https://greasyfork.org/scripts/491764-vivo%E7%9B%B4%E6%8E%A5%E8%B7%B3packname%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/491764/vivo%E7%9B%B4%E6%8E%A5%E8%B7%B3packname%E9%A1%B5.user.js",
+    "code_size": 861,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491763,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-06T03:47:23.000Z",
+    "code_updated_at": "2024-04-06T04:33:15.000Z",
+    "namespace": "https://greasyfork.org/users/1284284",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284284,
+        "name": "喃哓盐主",
+        "created_at": "2024-04-05T14:14:21.000Z",
+        "url": "https://greasyfork.org/users/1284284-%E5%96%83%E5%93%93%E7%9B%90%E4%B8%BB"
+      }
+    ],
+    "name": "oppo直接跳到packname页",
+    "description": "oppo游戏论坛链接直接跳到该游戏的packname页",
+    "url": "https://greasyfork.org/scripts/491763-oppo%E7%9B%B4%E6%8E%A5%E8%B7%B3%E5%88%B0packname%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/491763/oppo%E7%9B%B4%E6%8E%A5%E8%B7%B3%E5%88%B0packname%E9%A1%B5.user.js",
+    "code_size": 801,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491739,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-05T17:57:14.000Z",
+    "code_updated_at": "2024-04-06T04:32:08.000Z",
+    "namespace": "https://greasyfork.org/users/1284284",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284284,
+        "name": "喃哓盐主",
+        "created_at": "2024-04-05T14:14:21.000Z",
+        "url": "https://greasyfork.org/users/1284284-%E5%96%83%E5%93%93%E7%9B%90%E4%B8%BB"
+      }
+    ],
+    "name": "kb直接跳packname页",
+    "description": "kb游戏链接直接跳到packname页",
+    "url": "https://greasyfork.org/scripts/491739-kb%E7%9B%B4%E6%8E%A5%E8%B7%B3packname%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/491739/kb%E7%9B%B4%E6%8E%A5%E8%B7%B3packname%E9%A1%B5.user.js",
+    "code_size": 876,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491721,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-05T14:56:37.000Z",
+    "code_updated_at": "2024-04-05T15:23:00.000Z",
+    "namespace": "https://greasyfork.org/users/1284284",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284284,
+        "name": "喃哓盐主",
+        "created_at": "2024-04-05T14:14:21.000Z",
+        "url": "https://greasyfork.org/users/1284284-%E5%96%83%E5%93%93%E7%9B%90%E4%B8%BB"
+      }
+    ],
+    "name": "49lottery自动跳名单页",
+    "description": "49lottery链接打开自动跳名单页",
+    "url": "https://greasyfork.org/scripts/491721-49lottery%E8%87%AA%E5%8A%A8%E8%B7%B3%E5%90%8D%E5%8D%95%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/491721/49lottery%E8%87%AA%E5%8A%A8%E8%B7%B3%E5%90%8D%E5%8D%95%E9%A1%B5.user.js",
+    "code_size": 840,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491720,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-05T14:56:10.000Z",
+    "code_updated_at": "2024-04-05T15:24:19.000Z",
+    "namespace": "https://greasyfork.org/users/1284284",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284284,
+        "name": "喃哓盐主",
+        "created_at": "2024-04-05T14:14:21.000Z",
+        "url": "https://greasyfork.org/users/1284284-%E5%96%83%E5%93%93%E7%9B%90%E4%B8%BB"
+      }
+    ],
+    "name": "49lottery页简化",
+    "description": "lottery页简化只剩人和奖",
+    "url": "https://greasyfork.org/scripts/491720-49lottery%E9%A1%B5%E7%AE%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/491720/49lottery%E9%A1%B5%E7%AE%80%E5%8C%96.user.js",
+    "code_size": 827,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

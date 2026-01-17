@@ -1,0 +1,59 @@
+{
+  "id": 423853,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-23T18:12:05.000Z",
+  "code_updated_at": "2021-05-12T05:11:25.000Z",
+  "namespace": "https://github.com/sunilkumarba",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 750617,
+      "name": "Sunil Kumar B A",
+      "created_at": "2021-03-23T16:32:55.000Z",
+      "url": "https://greasyfork.org/users/750617-sunil-kumar-b-a",
+      "scripts": [
+        {
+          "id": 423853,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-23T18:12:05.000Z",
+          "code_updated_at": "2021-05-12T05:11:25.000Z",
+          "namespace": "https://github.com/sunilkumarba",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Onestop Strategy News Scroll",
+          "description": "Auto fetch Onestop Strategy news items on scroll, instead of user having to click \"Next Page\" button",
+          "url": "https://greasyfork.org/scripts/423853-onestop-strategy-news-scroll",
+          "code_url": "https://update.greasyfork.org/scripts/423853/Onestop%20Strategy%20News%20Scroll.user.js",
+          "code_size": 9425,
+          "license": "MIT License",
+          "version": "0.25",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Onestop Strategy News Scroll",
+  "description": "Auto fetch Onestop Strategy news items on scroll, instead of user having to click \"Next Page\" button",
+  "url": "https://greasyfork.org/scripts/423853-onestop-strategy-news-scroll",
+  "code_url": "https://update.greasyfork.org/scripts/423853/Onestop%20Strategy%20News%20Scroll.user.js",
+  "code_size": 9425,
+  "license": "MIT License",
+  "version": "0.25",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

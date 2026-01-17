@@ -1,0 +1,33 @@
+{
+  "id": 456707,
+  "daily_installs": 1,
+  "total_installs": 550,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-17T04:31:14.000Z",
+  "code_updated_at": "2022-12-21T15:36:36.000Z",
+  "namespace": "https://greasyfork.org/en/users/962705",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 962705,
+      "name": "rrreddd",
+      "created_at": "2022-09-23T13:34:01.000Z",
+      "url": "https://greasyfork.org/users/962705-rrreddd"
+    }
+  ],
+  "name": "Automatic Re-Join · Bonk.io",
+  "description": "This script will automatically attempt to rejoin a full room.",
+  "url": "https://greasyfork.org/scripts/456707-automatic-re-join-bonk-io",
+  "code_url": "https://update.greasyfork.org/scripts/456707/Automatic%20Re-Join%20%C2%B7%20Bonkio.user.js",
+  "code_size": 1456,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

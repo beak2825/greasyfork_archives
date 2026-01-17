@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476767,
+    "daily_installs": 0,
+    "total_installs": 586,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-10-05T16:34:55.000Z",
+    "code_updated_at": "2024-10-21T16:24:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1188905,
+        "name": "Nick Shen",
+        "created_at": "2023-10-05T16:27:23.000Z",
+        "url": "https://greasyfork.org/users/1188905-nick-shen"
+      }
+    ],
+    "name": "财经M平方去掉图片墙",
+    "description": "去掉财经M平方的图片水印",
+    "url": "https://greasyfork.org/scripts/476767-%E8%B4%A2%E7%BB%8Fm%E5%B9%B3%E6%96%B9%E5%8E%BB%E6%8E%89%E5%9B%BE%E7%89%87%E5%A2%99",
+    "code_url": "https://update.greasyfork.org/scripts/476767/%E8%B4%A2%E7%BB%8FM%E5%B9%B3%E6%96%B9%E5%8E%BB%E6%8E%89%E5%9B%BE%E7%89%87%E5%A2%99.user.js",
+    "code_size": 3659,
+    "license": "MIT License",
+    "version": "0.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

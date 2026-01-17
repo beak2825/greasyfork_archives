@@ -1,0 +1,59 @@
+{
+  "id": 469918,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-01T15:35:30.000Z",
+  "code_updated_at": "2023-08-05T03:35:19.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1027214,
+      "name": "X-ing-Ci",
+      "created_at": "2023-02-15T04:22:35.000Z",
+      "url": "https://greasyfork.org/users/1027214-x-ing-ci",
+      "scripts": [
+        {
+          "id": 469125,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-21T05:06:54.000Z",
+          "code_updated_at": "2023-07-06T10:41:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "更好用的NXU",
+          "description": "让NXU更好用！",
+          "url": "https://greasyfork.org/scripts/469125-%E6%9B%B4%E5%A5%BD%E7%94%A8%E7%9A%84nxu",
+          "code_url": "https://update.greasyfork.org/scripts/469125/%E6%9B%B4%E5%A5%BD%E7%94%A8%E7%9A%84NXU.user.js",
+          "code_size": 28616,
+          "license": "Apache Licence",
+          "version": "0.0.7.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "学习储存库",
+  "description": "用于储存“学习，学习！”所需要的HTML、CSS等信息",
+  "url": "https://greasyfork.org/scripts/469918-%E5%AD%A6%E4%B9%A0%E5%82%A8%E5%AD%98%E5%BA%93",
+  "code_url": "https://update.greasyfork.org/scripts/469918/1230705/%E5%AD%A6%E4%B9%A0%E5%82%A8%E5%AD%98%E5%BA%93.js",
+  "code_size": 588456,
+  "license": null,
+  "version": "0.0.1.20230805033519",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

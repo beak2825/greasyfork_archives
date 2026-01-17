@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443082,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-09T19:59:39.000Z",
+    "code_updated_at": "2022-04-10T10:31:59.000Z",
+    "namespace": "https://greasyfork.org/pl/scripts/443082-mod-katana-and-musket",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 900002,
+        "name": "ddddsiogvhs",
+        "created_at": "2022-04-09T19:42:31.000Z",
+        "url": "https://greasyfork.org/users/900002-ddddsiogvhs"
+      }
+    ],
+    "name": "Just mod",
+    "description": "Pancake mod, edited by Viruster! It's now one of the best mods of all time! (includes worlds best anti-insta, the fastest insta, many features and the best of all... It was made with 5 days and THIS IS ONLY THE SECOND VERSION!!",
+    "url": "https://greasyfork.org/scripts/443082-just-mod",
+    "code_url": "https://update.greasyfork.org/scripts/443082/Just%20mod.user.js",
+    "code_size": 484603,
+    "license": null,
+    "version": "version.1.679",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

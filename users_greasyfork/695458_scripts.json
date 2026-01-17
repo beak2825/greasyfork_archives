@@ -1,0 +1,35 @@
+[
+  {
+    "id": 413424,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-16T03:23:33.000Z",
+    "code_updated_at": "2020-10-16T03:23:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695458,
+        "name": "wolingzong",
+        "created_at": "2020-10-16T03:08:14.000Z",
+        "url": "https://greasyfork.org/users/695458-wolingzong"
+      }
+    ],
+    "name": "搬单助手",
+    "description": "浙江理工大学易班优课YOOC测试、刷题",
+    "url": "https://greasyfork.org/scripts/413424-%E6%90%AC%E5%8D%95%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/413424/%E6%90%AC%E5%8D%95%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 4698,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

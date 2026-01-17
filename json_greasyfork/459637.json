@@ -1,0 +1,59 @@
+{
+  "id": 459637,
+  "daily_installs": 0,
+  "total_installs": 137,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-08T06:18:58.000Z",
+  "code_updated_at": "2023-02-08T06:19:38.000Z",
+  "namespace": "namespace",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1023509,
+      "name": "Darkness-Bright",
+      "created_at": "2023-02-08T06:07:52.000Z",
+      "url": "https://greasyfork.org/users/1023509-darkness-bright",
+      "scripts": [
+        {
+          "id": 459637,
+          "daily_installs": 0,
+          "total_installs": 137,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-08T06:18:58.000Z",
+          "code_updated_at": "2023-02-08T06:19:38.000Z",
+          "namespace": "namespace",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Disguise website as ChatGPT",
+          "description": "Change website's title and icon to ChatGPT's, as a disguise. By default, this applies to discord.com. Add as many @match lines as you want.",
+          "url": "https://greasyfork.org/scripts/459637-disguise-website-as-chatgpt",
+          "code_url": "https://update.greasyfork.org/scripts/459637/Disguise%20website%20as%20ChatGPT.user.js",
+          "code_size": 55423,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Disguise website as ChatGPT",
+  "description": "Change website's title and icon to ChatGPT's, as a disguise. By default, this applies to discord.com. Add as many @match lines as you want.",
+  "url": "https://greasyfork.org/scripts/459637-disguise-website-as-chatgpt",
+  "code_url": "https://update.greasyfork.org/scripts/459637/Disguise%20website%20as%20ChatGPT.user.js",
+  "code_size": 55423,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

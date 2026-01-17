@@ -1,0 +1,101 @@
+[
+  {
+    "id": 439789,
+    "daily_installs": 0,
+    "total_installs": 90,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-02-09T18:52:33.000Z",
+    "code_updated_at": "2022-03-09T18:07:49.000Z",
+    "namespace": "https://quartzwarrior.xyz/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 808950,
+        "name": "QuartzWarrior",
+        "created_at": "2021-08-26T17:33:36.000Z",
+        "url": "https://greasyfork.org/users/808950-quartzwarrior"
+      }
+    ],
+    "name": "Mod Menu for discord",
+    "description": "Mod Menu for Discord. Click the TamperMonkey Icon to use.",
+    "url": "https://greasyfork.org/scripts/439789-mod-menu-for-discord",
+    "code_url": "https://update.greasyfork.org/scripts/439789/Mod%20Menu%20for%20discord.user.js",
+    "code_size": 98411,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 439174,
+    "daily_installs": 0,
+    "total_installs": 107,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-26T17:37:07.000Z",
+    "code_updated_at": "2022-01-26T17:37:07.000Z",
+    "namespace": "https://quartzwarrior.xyz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 808950,
+        "name": "QuartzWarrior",
+        "created_at": "2021-08-26T17:33:36.000Z",
+        "url": "https://greasyfork.org/users/808950-quartzwarrior"
+      }
+    ],
+    "name": "Better CallOfWar",
+    "description": "Redirect the current call of war game for a better screen.",
+    "url": "https://greasyfork.org/scripts/439174-better-callofwar",
+    "code_url": "https://update.greasyfork.org/scripts/439174/Better%20CallOfWar.user.js",
+    "code_size": 16481,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438881,
+    "daily_installs": 0,
+    "total_installs": 1632,
+    "fan_score": "15.0",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2022-01-20T18:28:27.000Z",
+    "code_updated_at": "2022-01-20T18:28:27.000Z",
+    "namespace": "https://gitlab.com/An0/DiscordFreeEmojis",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 808950,
+        "name": "QuartzWarrior",
+        "created_at": "2021-08-26T17:33:36.000Z",
+        "url": "https://greasyfork.org/users/808950-quartzwarrior"
+      }
+    ],
+    "name": "DiscordFreeEmojis",
+    "description": "Link emojis if you don't have nitro!",
+    "url": "https://greasyfork.org/scripts/438881-discordfreeemojis",
+    "code_url": "https://update.greasyfork.org/scripts/438881/DiscordFreeEmojis.user.js",
+    "code_size": 6381,
+    "license": "LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt",
+    "version": "1.6.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

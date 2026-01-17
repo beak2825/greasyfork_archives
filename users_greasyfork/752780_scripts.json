@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434565,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-27T22:27:45.000Z",
+    "code_updated_at": "2022-03-23T20:13:11.000Z",
+    "namespace": "https://github.com/XelaNimed",
+    "support_url": "https://github.com/XelaNimed/dillinger-io-user-script/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 752780,
+        "name": "XelaNimed",
+        "created_at": "2021-03-29T21:49:43.000Z",
+        "url": "https://greasyfork.org/users/752780-xelanimed"
+      }
+    ],
+    "name": "Dillinger.io",
+    "description": "Adds the ability to export and import documents from local storage in raw format (see \"Export as\" and \"Import from\" menus). When exporting documents, you can select the option to automatically delete documents after exporting.",
+    "url": "https://greasyfork.org/scripts/434565-dillinger-io",
+    "code_url": "https://update.greasyfork.org/scripts/434565/Dillingerio.user.js",
+    "code_size": 5877,
+    "license": "MIT; https://raw.githubusercontent.com/XelaNimed/dillinger-io-user-script/master/LICENSE",
+    "version": "0.1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 439876,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-11T15:32:20.000Z",
+  "code_updated_at": "2022-02-11T15:33:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 875495,
+      "name": "Bambuuh",
+      "created_at": "2022-02-11T15:26:26.000Z",
+      "url": "https://greasyfork.org/users/875495-bambuuh",
+      "scripts": [
+        {
+          "id": 439876,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-11T15:32:20.000Z",
+          "code_updated_at": "2022-02-11T15:33:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Test Bank ID Autofill",
+          "description": "Automatically fills out the form for test bank id.",
+          "url": "https://greasyfork.org/scripts/439876-test-bank-id-autofill",
+          "code_url": "https://update.greasyfork.org/scripts/439876/Test%20Bank%20ID%20Autofill.user.js",
+          "code_size": 954,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Test Bank ID Autofill",
+  "description": "Automatically fills out the form for test bank id.",
+  "url": "https://greasyfork.org/scripts/439876-test-bank-id-autofill",
+  "code_url": "https://update.greasyfork.org/scripts/439876/Test%20Bank%20ID%20Autofill.user.js",
+  "code_size": 954,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

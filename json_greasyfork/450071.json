@@ -1,0 +1,59 @@
+{
+  "id": 450071,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-24T06:48:49.000Z",
+  "code_updated_at": "2022-08-24T08:35:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 950137,
+      "name": "SupanJJ",
+      "created_at": "2022-08-24T06:30:09.000Z",
+      "url": "https://greasyfork.org/users/950137-supanjj",
+      "scripts": [
+        {
+          "id": 450071,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-24T06:48:49.000Z",
+          "code_updated_at": "2022-08-24T08:35:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "我的测试Supan",
+          "description": "自行测试，哈哈哈哈",
+          "url": "https://greasyfork.org/scripts/450071-%E6%88%91%E7%9A%84%E6%B5%8B%E8%AF%95supan",
+          "code_url": "https://update.greasyfork.org/scripts/450071/%E6%88%91%E7%9A%84%E6%B5%8B%E8%AF%95Supan.user.js",
+          "code_size": 2628,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "我的测试Supan",
+  "description": "自行测试，哈哈哈哈",
+  "url": "https://greasyfork.org/scripts/450071-%E6%88%91%E7%9A%84%E6%B5%8B%E8%AF%95supan",
+  "code_url": "https://update.greasyfork.org/scripts/450071/%E6%88%91%E7%9A%84%E6%B5%8B%E8%AF%95Supan.user.js",
+  "code_size": 2628,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

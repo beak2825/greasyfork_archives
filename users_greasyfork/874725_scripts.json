@@ -1,0 +1,68 @@
+[
+  {
+    "id": 460065,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-15T12:48:25.000Z",
+    "code_updated_at": "2023-04-13T01:41:47.000Z",
+    "namespace": "https://lisnote.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 874725,
+        "name": "lisnote",
+        "created_at": "2022-02-09T21:12:41.000Z",
+        "url": "https://greasyfork.org/users/874725-lisnote"
+      }
+    ],
+    "name": "简易开发者工具",
+    "description": "给总监拿来切换后端的小玩具",
+    "url": "https://greasyfork.org/scripts/460065-%E7%AE%80%E6%98%93%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/460065/%E7%AE%80%E6%98%93%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 326294,
+    "license": "MIT License",
+    "version": "1.5.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 443472,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-16T12:26:34.000Z",
+    "code_updated_at": "2022-05-09T19:08:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 874725,
+        "name": "lisnote",
+        "created_at": "2022-02-09T21:12:41.000Z",
+        "url": "https://greasyfork.org/users/874725-lisnote"
+      }
+    ],
+    "name": "Sync video",
+    "description": "通用视频同步工具",
+    "url": "https://greasyfork.org/scripts/443472-sync-video",
+    "code_url": "https://update.greasyfork.org/scripts/443472/Sync%20video.user.js",
+    "code_size": 109315,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

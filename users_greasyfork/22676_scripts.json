@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461702,
+    "daily_installs": 0,
+    "total_installs": 167,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-12T13:54:39.000Z",
+    "code_updated_at": "2025-03-20T06:31:54.000Z",
+    "namespace": "neko0-web-tools",
+    "support_url": "https://t.me/+FANQrUGRV7A0YmM9",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 22676,
+        "name": "jojuniori",
+        "created_at": "2015-12-10T05:09:42.000Z",
+        "url": "https://greasyfork.org/users/22676-jojuniori"
+      }
+    ],
+    "name": "[Neko0] VRChat Limitless Favorite Avatar",
+    "description": "More than 300! Expand your VRChat avatar collection to infinity!",
+    "url": "https://greasyfork.org/scripts/461702-neko0-vrchat-limitless-favorite-avatar",
+    "code_url": "https://update.greasyfork.org/scripts/461702/%5BNeko0%5D%20VRChat%20Limitless%20Favorite%20Avatar.user.js",
+    "code_size": 39332,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

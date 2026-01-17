@@ -1,0 +1,34 @@
+{
+  "id": 481964,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-11T18:07:35.000Z",
+  "code_updated_at": "2023-12-11T18:07:34.000Z",
+  "namespace": "sak32009-gaxvyvrguokgtog",
+  "support_url": "https://github.com/Sak32009/GetDLCInfoFromSteamDB/issues/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1232374,
+      "name": "black_Wolf 2326",
+      "created_at": "2023-12-11T18:05:57.000Z",
+      "url": "https://greasyfork.org/users/1232374-black-wolf-2326",
+      "scripts": []
+    }
+  ],
+  "name": "Get Data from Steam / SteamDB",
+  "description": "Get Data from Steam / SteamDB (ex Get DLC Info from SteamDB) it is a userscript that extracts all the information needed to generate the list of dlc and achievements in the chosen format, it generates the hashes list of the depots in sha1 to check the integrity and the appmanifest.acf of the Steam games.",
+  "url": "https://greasyfork.org/scripts/481964-get-data-from-steam-steamdb",
+  "code_url": "https://update.greasyfork.org/scripts/481964/1294010/Get%20Data%20from%20Steam%20%20SteamDB.js",
+  "code_size": 215455,
+  "license": "MIT License",
+  "version": "5.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

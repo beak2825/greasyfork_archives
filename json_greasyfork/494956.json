@@ -1,0 +1,59 @@
+{
+  "id": 494956,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-14T16:43:48.000Z",
+  "code_updated_at": "2024-05-14T23:38:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1301631,
+      "name": "SpiderKingWynn Phasmaruo",
+      "created_at": "2024-05-14T16:33:24.000Z",
+      "url": "https://greasyfork.org/users/1301631-spiderkingwynn-phasmaruo",
+      "scripts": [
+        {
+          "id": 494956,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-14T16:43:48.000Z",
+          "code_updated_at": "2024-05-14T23:38:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Instagram Virus Link Killer",
+          "description": "Checking and modifying high-risk links in Twitter",
+          "url": "https://greasyfork.org/scripts/494956-instagram-virus-link-killer",
+          "code_url": "https://update.greasyfork.org/scripts/494956/Instagram%20Virus%20Link%20Killer.user.js",
+          "code_size": 1291,
+          "license": "GNU General Public License v3.0",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Instagram Virus Link Killer",
+  "description": "Checking and modifying high-risk links in Twitter",
+  "url": "https://greasyfork.org/scripts/494956-instagram-virus-link-killer",
+  "code_url": "https://update.greasyfork.org/scripts/494956/Instagram%20Virus%20Link%20Killer.user.js",
+  "code_size": 1291,
+  "license": "GNU General Public License v3.0",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

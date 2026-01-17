@@ -1,0 +1,59 @@
+{
+  "id": 456174,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-07T10:23:27.000Z",
+  "code_updated_at": "2022-12-07T10:23:27.000Z",
+  "namespace": "https://greasyfork.org/users/993871",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 993871,
+      "name": "James-Tuppen",
+      "created_at": "2022-12-07T07:40:01.000Z",
+      "url": "https://greasyfork.org/users/993871-james-tuppen",
+      "scripts": [
+        {
+          "id": 456174,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-07T10:23:27.000Z",
+          "code_updated_at": "2022-12-07T10:23:27.000Z",
+          "namespace": "https://greasyfork.org/users/993871",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Write That Essay quiz completer",
+          "description": "Add a button that automatically gets 100% on a Write That Essay quiz",
+          "url": "https://greasyfork.org/scripts/456174-write-that-essay-quiz-completer",
+          "code_url": "https://update.greasyfork.org/scripts/456174/Write%20That%20Essay%20quiz%20completer.user.js",
+          "code_size": 4430,
+          "license": "MIT License",
+          "version": "0.0.1.20221207102327",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Write That Essay quiz completer",
+  "description": "Add a button that automatically gets 100% on a Write That Essay quiz",
+  "url": "https://greasyfork.org/scripts/456174-write-that-essay-quiz-completer",
+  "code_url": "https://update.greasyfork.org/scripts/456174/Write%20That%20Essay%20quiz%20completer.user.js",
+  "code_size": 4430,
+  "license": "MIT License",
+  "version": "0.0.1.20221207102327",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

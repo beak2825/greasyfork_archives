@@ -1,0 +1,233 @@
+[
+  {
+    "id": 431396,
+    "daily_installs": 0,
+    "total_installs": 185,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-26T05:04:59.000Z",
+    "code_updated_at": "2021-09-16T17:52:16.000Z",
+    "namespace": "Ticpo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729867,
+        "name": "Ticpo",
+        "created_at": "2021-01-21T19:28:16.000Z",
+        "url": "https://greasyfork.org/users/729867-ticpo"
+      }
+    ],
+    "name": "Style Menu Assets",
+    "description": "An organized way of updating assets for (almost) all my styles",
+    "url": "https://greasyfork.org/scripts/431396-style-menu-assets",
+    "code_url": "https://update.greasyfork.org/scripts/431396/Style%20Menu%20Assets.user.css",
+    "code_size": 236198,
+    "license": null,
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 430175,
+    "daily_installs": 0,
+    "total_installs": 217,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-31T21:17:06.000Z",
+    "code_updated_at": "2021-08-30T07:28:30.000Z",
+    "namespace": "Ticpo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729867,
+        "name": "Ticpo",
+        "created_at": "2021-01-21T19:28:16.000Z",
+        "url": "https://greasyfork.org/users/729867-ticpo"
+      }
+    ],
+    "name": "JDNU! | Custom Profile >",
+    "description": "Pre-Release Build for Just Dance Now Ultimate",
+    "url": "https://greasyfork.org/scripts/430175-jdnu-custom-profile",
+    "code_url": "https://update.greasyfork.org/scripts/430175/JDNU%21%20%7C%20Custom%20Profile%20%3E.user.css",
+    "code_size": 68090,
+    "license": null,
+    "version": "0.0.31",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 426922,
+    "daily_installs": 0,
+    "total_installs": 278,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-23T19:00:56.000Z",
+    "code_updated_at": "2021-06-06T20:48:43.000Z",
+    "namespace": "Ticpo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729867,
+        "name": "Ticpo",
+        "created_at": "2021-01-21T19:28:16.000Z",
+        "url": "https://greasyfork.org/users/729867-ticpo"
+      }
+    ],
+    "name": "JD18 Style for JDN (REALLY EARLY BUILD)",
+    "description": "REALLY EARLY BUILD! Don't be confused on why so many things are broken!",
+    "url": "https://greasyfork.org/scripts/426922-jd18-style-for-jdn-really-early-build",
+    "code_url": "https://update.greasyfork.org/scripts/426922/JD18%20Style%20for%20JDN%20%28REALLY%20EARLY%20BUILD%29.user.css",
+    "code_size": 85458,
+    "license": null,
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 425468,
+    "daily_installs": 0,
+    "total_installs": 290,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-24T03:52:21.000Z",
+    "code_updated_at": "2021-08-18T06:21:12.000Z",
+    "namespace": "Ticpo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729867,
+        "name": "Ticpo",
+        "created_at": "2021-01-21T19:28:16.000Z",
+        "url": "https://greasyfork.org/users/729867-ticpo"
+      }
+    ],
+    "name": "Just Dance 2021 Revamped (Dark Mode)",
+    "description": "An overhaul for my 2021 style",
+    "url": "https://greasyfork.org/scripts/425468-just-dance-2021-revamped-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/425468/Just%20Dance%202021%20Revamped%20%28Dark%20Mode%29.user.css",
+    "code_size": 270195,
+    "license": null,
+    "version": "1.1.45",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 425320,
+    "daily_installs": 0,
+    "total_installs": 301,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-21T04:22:04.000Z",
+    "code_updated_at": "2021-08-18T06:21:16.000Z",
+    "namespace": "Ticpo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729867,
+        "name": "Ticpo",
+        "created_at": "2021-01-21T19:28:16.000Z",
+        "url": "https://greasyfork.org/users/729867-ticpo"
+      }
+    ],
+    "name": "Just Dance 2021 Revamped",
+    "description": "An overhaul for my 2021 style",
+    "url": "https://greasyfork.org/scripts/425320-just-dance-2021-revamped",
+    "code_url": "https://update.greasyfork.org/scripts/425320/Just%20Dance%202021%20Revamped.user.css",
+    "code_size": 270190,
+    "license": null,
+    "version": "1.1.45",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 424267,
+    "daily_installs": 0,
+    "total_installs": 219,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-31T14:49:14.000Z",
+    "code_updated_at": "2021-03-31T14:49:14.000Z",
+    "namespace": "Ticpo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729867,
+        "name": "Ticpo",
+        "created_at": "2021-01-21T19:28:16.000Z",
+        "url": "https://greasyfork.org/users/729867-ticpo"
+      }
+    ],
+    "name": "Minecraft Style for JDN",
+    "description": "Adds the Minecraft ui for JDN!",
+    "url": "https://greasyfork.org/scripts/424267-minecraft-style-for-jdn",
+    "code_url": "https://update.greasyfork.org/scripts/424267/Minecraft%20Style%20for%20JDN.user.css",
+    "code_size": 20404,
+    "license": null,
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420516,
+    "daily_installs": 0,
+    "total_installs": 176,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-21T19:47:07.000Z",
+    "code_updated_at": "2021-01-21T19:47:54.000Z",
+    "namespace": "Ticpo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729867,
+        "name": "Ticpo",
+        "created_at": "2021-01-21T19:28:16.000Z",
+        "url": "https://greasyfork.org/users/729867-ticpo"
+      }
+    ],
+    "name": "JDN Polished",
+    "description": "Cleans up the Just Dance Now ui for a more cleaner look",
+    "url": "https://greasyfork.org/scripts/420516-jdn-polished",
+    "code_url": "https://update.greasyfork.org/scripts/420516/JDN%20Polished.user.css",
+    "code_size": 12856,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

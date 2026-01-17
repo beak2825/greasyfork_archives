@@ -1,0 +1,33 @@
+{
+  "id": 472207,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-02T00:28:13.000Z",
+  "code_updated_at": "2023-08-02T00:28:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1141573,
+      "name": "Bas Blanken",
+      "created_at": "2023-08-02T00:17:39.000Z",
+      "url": "https://greasyfork.org/users/1141573-bas-blanken"
+    }
+  ],
+  "name": "Wikipedia Decent Layout",
+  "description": "Wikipedia classic (vector) layout",
+  "url": "https://greasyfork.org/scripts/472207-wikipedia-decent-layout",
+  "code_url": "https://update.greasyfork.org/scripts/472207/Wikipedia%20Decent%20Layout.user.js",
+  "code_size": 1290,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

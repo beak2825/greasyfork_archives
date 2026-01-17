@@ -1,0 +1,59 @@
+{
+  "id": 449379,
+  "daily_installs": 0,
+  "total_installs": 78,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-11T17:27:36.000Z",
+  "code_updated_at": "2024-12-16T22:20:48.000Z",
+  "namespace": "heroesm",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 945345,
+      "name": "John_Smith",
+      "created_at": "2022-08-11T11:46:33.000Z",
+      "url": "https://greasyfork.org/users/945345-john-smith",
+      "scripts": [
+        {
+          "id": 449379,
+          "daily_installs": 0,
+          "total_installs": 78,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-11T17:27:36.000Z",
+          "code_updated_at": "2024-12-16T22:20:48.000Z",
+          "namespace": "heroesm",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili notify+",
+          "description": "自动监听bilibili直播推送信息，当所关注者（包括悄悄关注）开启直播时自动打开直播网页的javascript脚本。30s获取一次关注列表的开播情况。自动开启一次后若主播不更改直播间标题、超过一定时间(可通过TimeOutMin设置)、重新设定白名单则不会再次打开。使用方法：在白名单模式（本修改仅限白名单模式）下输入想要自动开启的关注的主播的名字确认。",
+          "url": "https://greasyfork.org/scripts/449379-bilibili-notify",
+          "code_url": "https://update.greasyfork.org/scripts/449379/bilibili%20notify%2B.user.js",
+          "code_size": 11293,
+          "license": null,
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili notify+",
+  "description": "自动监听bilibili直播推送信息，当所关注者（包括悄悄关注）开启直播时自动打开直播网页的javascript脚本。30s获取一次关注列表的开播情况。自动开启一次后若主播不更改直播间标题、超过一定时间(可通过TimeOutMin设置)、重新设定白名单则不会再次打开。使用方法：在白名单模式（本修改仅限白名单模式）下输入想要自动开启的关注的主播的名字确认。",
+  "url": "https://greasyfork.org/scripts/449379-bilibili-notify",
+  "code_url": "https://update.greasyfork.org/scripts/449379/bilibili%20notify%2B.user.js",
+  "code_size": 11293,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

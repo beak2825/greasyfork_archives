@@ -1,0 +1,33 @@
+{
+  "id": 465901,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-10T06:13:44.000Z",
+  "code_updated_at": "2025-10-07T00:22:10.000Z",
+  "namespace": "MyReview",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670188,
+      "name": "hacker09",
+      "created_at": "2020-07-25T20:51:35.000Z",
+      "url": "https://greasyfork.org/users/670188-hacker09"
+    }
+  ],
+  "name": "My Review - MAL",
+  "description": "Open your own review on any entry with a single click!",
+  "url": "https://greasyfork.org/scripts/465901-my-review-mal",
+  "code_url": "https://update.greasyfork.org/scripts/465901/My%20Review%20-%20MAL.user.js",
+  "code_size": 1226,
+  "license": null,
+  "version": "6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 470201,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-05T07:27:16.000Z",
+  "code_updated_at": "2023-07-05T07:27:16.000Z",
+  "namespace": "http://www.wanikani.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 160259,
+      "name": "Pacharapol Withayasakpunt (Pol)",
+      "created_at": "2017-11-21T16:13:22.000Z",
+      "url": "https://greasyfork.org/users/160259-pacharapol-withayasakpunt-pol"
+    }
+  ],
+  "name": "WaniKani Answer Checker",
+  "description": "Modifiable answer checker in reviews and lessons",
+  "url": "https://greasyfork.org/scripts/470201-wanikani-answer-checker",
+  "code_url": "https://update.greasyfork.org/scripts/470201/1215595/WaniKani%20Answer%20Checker.js",
+  "code_size": 3074,
+  "license": "MIT License",
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

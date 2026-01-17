@@ -1,0 +1,34 @@
+{
+  "id": 493784,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-29T17:25:58.000Z",
+  "code_updated_at": "2024-11-03T16:02:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294856,
+      "name": "manoflaser",
+      "created_at": "2024-04-29T17:04:20.000Z",
+      "url": "https://greasyfork.org/users/1294856-manoflaser",
+      "scripts": []
+    }
+  ],
+  "name": "4chan Catalog Flags with base64 BF sprite + sort + overview (toggle) (url fix) (cssfix)",
+  "description": "Various features for showing OP flags in 4chan catalog page",
+  "url": "https://greasyfork.org/scripts/493784-4chan-catalog-flags-with-base64-bf-sprite-sort-overview-toggle-url-fix-cssfix",
+  "code_url": "https://update.greasyfork.org/scripts/493784/4chan%20Catalog%20Flags%20with%20base64%20BF%20sprite%20%2B%20sort%20%2B%20overview%20%28toggle%29%20%28url%20fix%29%20%28cssfix%29.user.js",
+  "code_size": 12365,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

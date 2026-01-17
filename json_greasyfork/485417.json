@@ -1,0 +1,34 @@
+{
+  "id": 485417,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-22T07:22:08.000Z",
+  "code_updated_at": "2024-01-22T07:22:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1173765,
+      "name": "TheM1sty",
+      "created_at": "2023-09-15T15:24:32.000Z",
+      "url": "https://greasyfork.org/users/1173765-them1sty",
+      "scripts": []
+    }
+  ],
+  "name": "Geoguessr UI Cleaner",
+  "description": "Remove specified elements from Geoguessr.com",
+  "url": "https://greasyfork.org/scripts/485417-geoguessr-ui-cleaner",
+  "code_url": "https://update.greasyfork.org/scripts/485417/Geoguessr%20UI%20Cleaner.user.js",
+  "code_size": 2115,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

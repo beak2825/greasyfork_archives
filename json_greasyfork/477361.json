@@ -1,0 +1,33 @@
+{
+  "id": 477361,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-13T12:51:58.000Z",
+  "code_updated_at": "2023-10-13T12:51:58.000Z",
+  "namespace": "https://greasyfork.org/users/1195172-remypottierfr",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1195172,
+      "name": "RemyPottierFr",
+      "created_at": "2023-10-13T12:48:25.000Z",
+      "url": "https://greasyfork.org/users/1195172-remypottierfr"
+    }
+  ],
+  "name": "Google Drive Direct Links To Clipboard",
+  "description": "Direct link to clipboard for Google Drive",
+  "url": "https://greasyfork.org/scripts/477361-google-drive-direct-links-to-clipboard",
+  "code_url": "https://update.greasyfork.org/scripts/477361/Google%20Drive%20Direct%20Links%20To%20Clipboard.user.js",
+  "code_size": 3228,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

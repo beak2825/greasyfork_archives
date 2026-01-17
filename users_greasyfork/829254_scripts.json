@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444168,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-29T01:26:01.000Z",
+    "code_updated_at": "2022-04-29T01:26:01.000Z",
+    "namespace": "Muketool",
+    "support_url": "http://docs.muketool.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 829254,
+        "name": "lrc146",
+        "created_at": "2021-10-27T11:24:28.000Z",
+        "url": "https://greasyfork.org/users/829254-lrc146"
+      }
+    ],
+    "name": "超星学习通网课助手text",
+    "description": "【🥇操作简单】超星尔雅MOOC自动挂机，无需配置安装即可使用。【🔊功能齐全】支持视频、音频、文档、图书自动完成；章节测验自动答题、自动提交，支持自动切换任务点、挂机阅读时长、自动登录等。【📔独家题库】独家丰富试题库，精准识别，答案全对。【✨功能扩展】解除各类功能限制，支持下载视频、pdf文档，开放自定义参数",
+    "url": "https://greasyfork.org/scripts/444168-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8Btext",
+    "code_url": "https://update.greasyfork.org/scripts/444168/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8Btext.user.js",
+    "code_size": 40094,
+    "license": "MIT License",
+    "version": "1.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

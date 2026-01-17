@@ -1,0 +1,101 @@
+[
+  {
+    "id": 442127,
+    "daily_installs": 0,
+    "total_installs": 535,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-26T11:11:16.000Z",
+    "code_updated_at": "2023-04-01T08:11:28.000Z",
+    "namespace": "https://t.me/jsday",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 585298,
+        "name": "Jones Miller",
+        "created_at": "2020-06-12T04:53:21.000Z",
+        "url": "https://greasyfork.org/users/585298-jones-miller"
+      }
+    ],
+    "name": "安乐净 - 1. 起点",
+    "description": "可隐藏页面部分元素 - app下载、阅读ad、评论等...；电脑端、移动端通用。",
+    "url": "https://greasyfork.org/scripts/442127-%E5%AE%89%E4%B9%90%E5%87%80-1-%E8%B5%B7%E7%82%B9",
+    "code_url": "https://update.greasyfork.org/scripts/442127/%E5%AE%89%E4%B9%90%E5%87%80%20-%201%20%E8%B5%B7%E7%82%B9.user.js",
+    "code_size": 2102,
+    "license": null,
+    "version": "23.04.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 428174,
+    "daily_installs": 0,
+    "total_installs": 380,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-19T08:47:07.000Z",
+    "code_updated_at": "2023-04-01T08:11:21.000Z",
+    "namespace": "https://t.me/jsday",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 585298,
+        "name": "Jones Miller",
+        "created_at": "2020-06-12T04:53:21.000Z",
+        "url": "https://greasyfork.org/users/585298-jones-miller"
+      }
+    ],
+    "name": "安乐码",
+    "description": "网页生成二维码；电脑端、移动端通用。",
+    "url": "https://greasyfork.org/scripts/428174-%E5%AE%89%E4%B9%90%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/428174/%E5%AE%89%E4%B9%90%E7%A0%81.user.js",
+    "code_size": 1446,
+    "license": null,
+    "version": "23.04.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412041,
+    "daily_installs": 0,
+    "total_installs": 322,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-27T07:07:06.000Z",
+    "code_updated_at": "2023-04-01T08:11:09.000Z",
+    "namespace": "https://t.me/jsday",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 585298,
+        "name": "Jones Miller",
+        "created_at": "2020-06-12T04:53:21.000Z",
+        "url": "https://greasyfork.org/users/585298-jones-miller"
+      }
+    ],
+    "name": "安乐滚",
+    "description": "Chromium 窄滚动条。",
+    "url": "https://greasyfork.org/scripts/412041-%E5%AE%89%E4%B9%90%E6%BB%9A",
+    "code_url": "https://update.greasyfork.org/scripts/412041/%E5%AE%89%E4%B9%90%E6%BB%9A.user.js",
+    "code_size": 907,
+    "license": null,
+    "version": "23.04.01",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

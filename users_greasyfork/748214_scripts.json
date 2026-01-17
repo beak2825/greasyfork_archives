@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423403,
+    "daily_installs": 0,
+    "total_installs": 1323,
+    "fan_score": "48.7",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-03-17T09:12:10.000Z",
+    "code_updated_at": "2025-09-24T07:17:48.000Z",
+    "namespace": "https://github.com/erase2004/add-members-only-videos-list-button",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 748214,
+        "name": "erase2004",
+        "created_at": "2021-03-17T08:30:31.000Z",
+        "url": "https://greasyfork.org/users/748214-erase2004"
+      }
+    ],
+    "name": "增加會限清單分頁連結",
+    "description": "增加YouTube會限清單分頁連結到頻道主頁上",
+    "url": "https://greasyfork.org/scripts/423403-%E5%A2%9E%E5%8A%A0%E6%9C%83%E9%99%90%E6%B8%85%E5%96%AE%E5%88%86%E9%A0%81%E9%80%A3%E7%B5%90",
+    "code_url": "https://update.greasyfork.org/scripts/423403/%E5%A2%9E%E5%8A%A0%E6%9C%83%E9%99%90%E6%B8%85%E5%96%AE%E5%88%86%E9%A0%81%E9%80%A3%E7%B5%90.user.js",
+    "code_size": 4193,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

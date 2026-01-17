@@ -1,0 +1,34 @@
+{
+  "id": 491840,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-07T01:09:39.000Z",
+  "code_updated_at": "2024-04-07T01:10:42.000Z",
+  "namespace": "https://greasyfork.org/en/users/1284871",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1284871,
+      "name": "goldenstranger",
+      "created_at": "2024-04-07T00:47:42.000Z",
+      "url": "https://greasyfork.org/users/1284871-goldenstranger",
+      "scripts": []
+    }
+  ],
+  "name": "Item Highlighter - Ice Crystals",
+  "description": "Finds items you specify in Ice Crystals Shop.",
+  "url": "https://greasyfork.org/scripts/491840-item-highlighter-ice-crystals",
+  "code_url": "https://update.greasyfork.org/scripts/491840/Item%20Highlighter%20-%20Ice%20Crystals.user.js",
+  "code_size": 3996,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

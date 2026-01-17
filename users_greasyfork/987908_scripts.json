@@ -1,0 +1,68 @@
+[
+  {
+    "id": 481558,
+    "daily_installs": 0,
+    "total_installs": 95,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-12-06T21:14:00.000Z",
+    "code_updated_at": "2023-12-06T21:13:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 987908,
+        "name": "cleuton",
+        "created_at": "2022-11-25T16:26:28.000Z",
+        "url": "https://greasyfork.org/users/987908-cleuton"
+      }
+    ],
+    "name": "mypikpak - automatic download",
+    "description": "Automatically clicks on the \"high-speed cloud download\" button",
+    "url": "https://greasyfork.org/scripts/481558-mypikpak-automatic-download",
+    "code_url": "https://update.greasyfork.org/scripts/481558/mypikpak%20-%20automatic%20download.user.js",
+    "code_size": 2037,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 481553,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-06T20:06:35.000Z",
+    "code_updated_at": "2023-12-06T20:51:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 987908,
+        "name": "cleuton",
+        "created_at": "2022-11-25T16:26:28.000Z",
+        "url": "https://greasyfork.org/users/987908-cleuton"
+      }
+    ],
+    "name": "mypikpak - open folders with one click",
+    "description": "open folders with one click in the web version of mypikpak",
+    "url": "https://greasyfork.org/scripts/481553-mypikpak-open-folders-with-one-click",
+    "code_url": "https://update.greasyfork.org/scripts/481553/mypikpak%20-%20open%20folders%20with%20one%20click.user.js",
+    "code_size": 1323,
+    "license": null,
+    "version": "1.02",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

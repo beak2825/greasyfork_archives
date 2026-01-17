@@ -1,0 +1,34 @@
+{
+  "id": 471713,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-25T17:45:26.000Z",
+  "code_updated_at": "2023-07-25T17:48:00.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1135766,
+      "name": "Матвей Воронов",
+      "created_at": "2023-07-25T17:44:11.000Z",
+      "url": "https://greasyfork.org/users/1135766-%D0%BC%D0%B0%D1%82%D0%B2%D0%B5%D0%B9-%D0%B2%D0%BE%D1%80%D0%BE%D0%BD%D0%BE%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "Кураторы Форума(Раздел жалоб)",
+  "description": "Специально для кураторов форума за жалобами игроков.",
+  "url": "https://greasyfork.org/scripts/471713-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D1%80%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB-%D0%B6%D0%B0%D0%BB%D0%BE%D0%B1",
+  "code_url": "https://update.greasyfork.org/scripts/471713/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%28%D0%A0%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB%20%D0%B6%D0%B0%D0%BB%D0%BE%D0%B1%29.user.js",
+  "code_size": 181687,
+  "license": "MIT License",
+  "version": "2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

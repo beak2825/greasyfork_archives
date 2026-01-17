@@ -1,0 +1,59 @@
+{
+  "id": 455356,
+  "daily_installs": 0,
+  "total_installs": 1039,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-24T15:47:06.000Z",
+  "code_updated_at": "2023-04-27T08:25:21.000Z",
+  "namespace": "https://yinghuaonline.aoaostar.com",
+  "support_url": "https://www.aoaostar.com",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 950544,
+      "name": "zhansdcc",
+      "created_at": "2022-08-25T06:25:05.000Z",
+      "url": "https://greasyfork.org/users/950544-zhansdcc",
+      "scripts": [
+        {
+          "id": 455356,
+          "daily_installs": 0,
+          "total_installs": 1039,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-24T15:47:06.000Z",
+          "code_updated_at": "2023-04-27T08:25:21.000Z",
+          "namespace": "https://yinghuaonline.aoaostar.com",
+          "support_url": "https://www.aoaostar.com",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "银川科技学院英华学堂在线",
+          "description": "英华学堂在线网课全自动挂机脚本",
+          "url": "https://greasyfork.org/scripts/455356-%E9%93%B6%E5%B7%9D%E7%A7%91%E6%8A%80%E5%AD%A6%E9%99%A2%E8%8B%B1%E5%8D%8E%E5%AD%A6%E5%A0%82%E5%9C%A8%E7%BA%BF",
+          "code_url": "https://update.greasyfork.org/scripts/455356/%E9%93%B6%E5%B7%9D%E7%A7%91%E6%8A%80%E5%AD%A6%E9%99%A2%E8%8B%B1%E5%8D%8E%E5%AD%A6%E5%A0%82%E5%9C%A8%E7%BA%BF.user.js",
+          "code_size": 9103,
+          "license": "GPL-3.0 License",
+          "version": "2.4.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "银川科技学院英华学堂在线",
+  "description": "英华学堂在线网课全自动挂机脚本",
+  "url": "https://greasyfork.org/scripts/455356-%E9%93%B6%E5%B7%9D%E7%A7%91%E6%8A%80%E5%AD%A6%E9%99%A2%E8%8B%B1%E5%8D%8E%E5%AD%A6%E5%A0%82%E5%9C%A8%E7%BA%BF",
+  "code_url": "https://update.greasyfork.org/scripts/455356/%E9%93%B6%E5%B7%9D%E7%A7%91%E6%8A%80%E5%AD%A6%E9%99%A2%E8%8B%B1%E5%8D%8E%E5%AD%A6%E5%A0%82%E5%9C%A8%E7%BA%BF.user.js",
+  "code_size": 9103,
+  "license": "GPL-3.0 License",
+  "version": "2.4.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

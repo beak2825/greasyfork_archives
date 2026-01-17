@@ -1,0 +1,33 @@
+{
+  "id": 439481,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-02T09:21:54.000Z",
+  "code_updated_at": "2022-02-05T21:11:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 290424,
+      "name": "Rohit Mahajan",
+      "created_at": "2019-04-09T04:07:51.000Z",
+      "url": "https://greasyfork.org/users/290424-rohit-mahajan"
+    }
+  ],
+  "name": "manga-raw.club Ads Space Remove",
+  "description": "Removes ads space from manga-raw.club",
+  "url": "https://greasyfork.org/scripts/439481-manga-raw-club-ads-space-remove",
+  "code_url": "https://update.greasyfork.org/scripts/439481/manga-rawclub%20Ads%20Space%20Remove.user.js",
+  "code_size": 1132,
+  "license": "MIT License",
+  "version": "3.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

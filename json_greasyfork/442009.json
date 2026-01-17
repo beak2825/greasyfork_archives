@@ -1,0 +1,59 @@
+{
+  "id": 442009,
+  "daily_installs": 0,
+  "total_installs": 97,
+  "fan_score": "20.8",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-03-24T10:35:50.000Z",
+  "code_updated_at": "2022-03-24T10:35:50.000Z",
+  "namespace": "lcomplete",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 891725,
+      "name": "lcomplete",
+      "created_at": "2022-03-24T10:26:36.000Z",
+      "url": "https://greasyfork.org/users/891725-lcomplete",
+      "scripts": [
+        {
+          "id": 442009,
+          "daily_installs": 0,
+          "total_installs": 97,
+          "fan_score": "20.8",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2022-03-24T10:35:50.000Z",
+          "code_updated_at": "2022-03-24T10:35:50.000Z",
+          "namespace": "lcomplete",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Inoreader Auto-Load Full Article By Selected Sites",
+          "description": "Automatically load full content by selected sites when opening an article in Inoreader; 提升 Inoreader 的使用体验，根据选择的网站决定在阅读时是否自动加载全文。",
+          "url": "https://greasyfork.org/scripts/442009-inoreader-auto-load-full-article-by-selected-sites",
+          "code_url": "https://update.greasyfork.org/scripts/442009/Inoreader%20Auto-Load%20Full%20Article%20By%20Selected%20Sites.user.js",
+          "code_size": 2087,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Inoreader Auto-Load Full Article By Selected Sites",
+  "description": "Automatically load full content by selected sites when opening an article in Inoreader; 提升 Inoreader 的使用体验，根据选择的网站决定在阅读时是否自动加载全文。",
+  "url": "https://greasyfork.org/scripts/442009-inoreader-auto-load-full-article-by-selected-sites",
+  "code_url": "https://update.greasyfork.org/scripts/442009/Inoreader%20Auto-Load%20Full%20Article%20By%20Selected%20Sites.user.js",
+  "code_size": 2087,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

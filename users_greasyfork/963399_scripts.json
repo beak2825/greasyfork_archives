@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452011,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-25T14:57:21.000Z",
+    "code_updated_at": "2022-09-26T14:40:14.000Z",
+    "namespace": "http://23765.xyz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 963399,
+        "name": "xiao liao",
+        "created_at": "2022-09-25T12:42:44.000Z",
+        "url": "https://greasyfork.org/users/963399-xiao-liao"
+      }
+    ],
+    "name": "锐捷校园网登入",
+    "description": "通过控制台抓取curl",
+    "url": "https://greasyfork.org/scripts/452011-%E9%94%90%E6%8D%B7%E6%A0%A1%E5%9B%AD%E7%BD%91%E7%99%BB%E5%85%A5",
+    "code_url": "https://update.greasyfork.org/scripts/452011/%E9%94%90%E6%8D%B7%E6%A0%A1%E5%9B%AD%E7%BD%91%E7%99%BB%E5%85%A5.user.js",
+    "code_size": 423,
+    "license": "GPL License",
+    "version": "1.5.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

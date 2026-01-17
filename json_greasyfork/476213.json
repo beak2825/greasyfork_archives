@@ -1,0 +1,33 @@
+{
+  "id": 476213,
+  "daily_installs": 0,
+  "total_installs": 81,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-28T03:39:05.000Z",
+  "code_updated_at": "2023-09-28T03:39:05.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1182529,
+      "name": "mindspray",
+      "created_at": "2023-09-28T03:37:40.000Z",
+      "url": "https://greasyfork.org/users/1182529-mindspray"
+    }
+  ],
+  "name": "New script - yodayo.com",
+  "description": "9/27/2023, 10:50:38 PM",
+  "url": "https://greasyfork.org/scripts/476213-new-script-yodayo-com",
+  "code_url": "https://update.greasyfork.org/scripts/476213/New%20script%20-%20yodayocom.user.js",
+  "code_size": 614,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

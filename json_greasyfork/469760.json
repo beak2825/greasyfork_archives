@@ -1,0 +1,33 @@
+{
+  "id": 469760,
+  "daily_installs": 1,
+  "total_installs": 1933,
+  "fan_score": "36.5",
+  "good_ratings": 3,
+  "ok_ratings": 3,
+  "bad_ratings": 0,
+  "created_at": "2023-06-29T13:43:02.000Z",
+  "code_updated_at": "2025-02-06T20:19:27.000Z",
+  "namespace": "tampermonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1115027,
+      "name": "Agreasyforkuser",
+      "created_at": "2023-06-29T12:11:18.000Z",
+      "url": "https://greasyfork.org/users/1115027-agreasyforkuser"
+    }
+  ],
+  "name": "Reddit Old Mobile 📱",
+  "description": "Mobile-friendly design for Reddit Old",
+  "url": "https://greasyfork.org/scripts/469760-reddit-old-mobile",
+  "code_url": "https://update.greasyfork.org/scripts/469760/Reddit%20Old%20Mobile%20%F0%9F%93%B1.user.js",
+  "code_size": 15288,
+  "license": "MIT License",
+  "version": "6.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

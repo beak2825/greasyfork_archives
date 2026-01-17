@@ -1,0 +1,59 @@
+{
+  "id": 433830,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-13T10:37:37.000Z",
+  "code_updated_at": "2021-10-13T10:37:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 799991,
+      "name": "CoderOJ",
+      "created_at": "2021-08-03T14:07:57.000Z",
+      "url": "https://greasyfork.org/users/799991-coderoj",
+      "scripts": [
+        {
+          "id": 430301,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-08-03T14:11:34.000Z",
+          "code_updated_at": "2021-08-03T14:11:34.000Z",
+          "namespace": "https://greasyfork.org/users/799991",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Luogu Comment Filter",
+          "description": "过滤洛谷无意义评论",
+          "url": "https://greasyfork.org/scripts/430301-luogu-comment-filter",
+          "code_url": "https://update.greasyfork.org/scripts/430301/Luogu%20Comment%20Filter.user.js",
+          "code_size": 1384,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "xsss",
+  "description": "you know what",
+  "url": "https://greasyfork.org/scripts/433830-xsss",
+  "code_url": "https://update.greasyfork.org/scripts/433830/xsss.user.js",
+  "code_size": 1591,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

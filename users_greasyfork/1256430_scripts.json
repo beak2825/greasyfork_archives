@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486300,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-02T11:47:02.000Z",
+    "code_updated_at": "2024-02-02T11:47:02.000Z",
+    "namespace": "https://github.com/WinLinQ/info_flow_block",
+    "support_url": "https://github.com/WinLinQ/info_flow_block/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1256430,
+        "name": "冬林Breeze",
+        "created_at": "2024-02-02T11:46:18.000Z",
+        "url": "https://greasyfork.org/users/1256430-%E5%86%AC%E6%9E%97breeze"
+      }
+    ],
+    "name": "信息流屏蔽工具",
+    "description": "帮助用户在工作/学习查询资料时屏蔽信息流以使用户更加专注。",
+    "url": "https://greasyfork.org/scripts/486300-%E4%BF%A1%E6%81%AF%E6%B5%81%E5%B1%8F%E8%94%BD%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/486300/%E4%BF%A1%E6%81%AF%E6%B5%81%E5%B1%8F%E8%94%BD%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 5239,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

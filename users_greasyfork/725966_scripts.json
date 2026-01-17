@@ -1,0 +1,200 @@
+[
+  {
+    "id": 447509,
+    "daily_installs": 0,
+    "total_installs": 207,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-06T15:11:03.000Z",
+    "code_updated_at": "2022-11-20T12:25:49.000Z",
+    "namespace": "https://greasyfork.org/users/725966",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725966,
+        "name": "noahcoolboy",
+        "created_at": "2021-01-11T01:31:51.000Z",
+        "url": "https://greasyfork.org/users/725966-noahcoolboy"
+      }
+    ],
+    "name": "Bloxflip Spam Blocker",
+    "description": "Block repeated messages in the bloxflip chat",
+    "url": "https://greasyfork.org/scripts/447509-bloxflip-spam-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/447509/Bloxflip%20Spam%20Blocker.user.js",
+    "code_size": 1987,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437445,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-22T19:32:05.000Z",
+    "code_updated_at": "2021-12-22T19:32:05.000Z",
+    "namespace": "https://greasyfork.org/users/725966",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725966,
+        "name": "noahcoolboy",
+        "created_at": "2021-01-11T01:31:51.000Z",
+        "url": "https://greasyfork.org/users/725966-noahcoolboy"
+      }
+    ],
+    "name": "Brick Hill Better Pages",
+    "description": "This script allows you to enter a page number in user crates.",
+    "url": "https://greasyfork.org/scripts/437445-brick-hill-better-pages",
+    "code_url": "https://update.greasyfork.org/scripts/437445/Brick%20Hill%20Better%20Pages.user.js",
+    "code_size": 2848,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435700,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-18T18:59:20.000Z",
+    "code_updated_at": "2021-11-18T18:59:20.000Z",
+    "namespace": "https://greasyfork.org/users/725966",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725966,
+        "name": "noahcoolboy",
+        "created_at": "2021-01-11T01:31:51.000Z",
+        "url": "https://greasyfork.org/users/725966-noahcoolboy"
+      }
+    ],
+    "name": "Brick Hill Avatar Preview",
+    "description": "Check out you or others' avatars in 3d!",
+    "url": "https://greasyfork.org/scripts/435700-brick-hill-avatar-preview",
+    "code_url": "https://update.greasyfork.org/scripts/435700/Brick%20Hill%20Avatar%20Preview.user.js",
+    "code_size": 2190,
+    "license": null,
+    "version": "0.0.1.20211118185920",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422791,
+    "daily_installs": 0,
+    "total_installs": 157,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-06T19:35:37.000Z",
+    "code_updated_at": "2022-08-09T18:20:08.000Z",
+    "namespace": "https://greasyfork.org/users/725966",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725966,
+        "name": "noahcoolboy",
+        "created_at": "2021-01-11T01:31:51.000Z",
+        "url": "https://greasyfork.org/users/725966-noahcoolboy"
+      }
+    ],
+    "name": "Brick Hill Outfit Randomizer",
+    "description": "Adds a button to randomize your avatar",
+    "url": "https://greasyfork.org/scripts/422791-brick-hill-outfit-randomizer",
+    "code_url": "https://update.greasyfork.org/scripts/422791/Brick%20Hill%20Outfit%20Randomizer.user.js",
+    "code_size": 8360,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419989,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-11T01:41:33.000Z",
+    "code_updated_at": "2021-01-11T01:41:49.000Z",
+    "namespace": "https://greasyfork.org/users/725966",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725966,
+        "name": "noahcoolboy",
+        "created_at": "2021-01-11T01:31:51.000Z",
+        "url": "https://greasyfork.org/users/725966-noahcoolboy"
+      }
+    ],
+    "name": "Brick Hill Refresh on error",
+    "description": "Automatically refreshes when encountering an error",
+    "url": "https://greasyfork.org/scripts/419989-brick-hill-refresh-on-error",
+    "code_url": "https://update.greasyfork.org/scripts/419989/Brick%20Hill%20Refresh%20on%20error.user.js",
+    "code_size": 410,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419988,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-11T01:39:10.000Z",
+    "code_updated_at": "2021-04-12T10:31:34.000Z",
+    "namespace": "https://greasyfork.org/users/725966",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725966,
+        "name": "noahcoolboy",
+        "created_at": "2021-01-11T01:31:51.000Z",
+        "url": "https://greasyfork.org/users/725966-noahcoolboy"
+      }
+    ],
+    "name": "Brick Hill Forum link button",
+    "description": "Allows you to link a forum post directly",
+    "url": "https://greasyfork.org/scripts/419988-brick-hill-forum-link-button",
+    "code_url": "https://update.greasyfork.org/scripts/419988/Brick%20Hill%20Forum%20link%20button.user.js",
+    "code_size": 1277,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 465000,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-27T17:31:17.000Z",
+  "code_updated_at": "2023-04-27T17:31:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1069043,
+      "name": "remmy89",
+      "created_at": "2023-04-27T17:28:49.000Z",
+      "url": "https://greasyfork.org/users/1069043-remmy89",
+      "scripts": [
+        {
+          "id": 465000,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-27T17:31:17.000Z",
+          "code_updated_at": "2023-04-27T17:31:17.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide Wattpad Bottom Banner",
+          "description": "Hides the bottom banner on Wattpad.com",
+          "url": "https://greasyfork.org/scripts/465000-hide-wattpad-bottom-banner",
+          "code_url": "https://update.greasyfork.org/scripts/465000/Hide%20Wattpad%20Bottom%20Banner.user.js",
+          "code_size": 589,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide Wattpad Bottom Banner",
+  "description": "Hides the bottom banner on Wattpad.com",
+  "url": "https://greasyfork.org/scripts/465000-hide-wattpad-bottom-banner",
+  "code_url": "https://update.greasyfork.org/scripts/465000/Hide%20Wattpad%20Bottom%20Banner.user.js",
+  "code_size": 589,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

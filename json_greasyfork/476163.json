@@ -1,0 +1,59 @@
+{
+  "id": 476163,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-27T11:32:52.000Z",
+  "code_updated_at": "2023-11-14T07:50:19.000Z",
+  "namespace": "范文助手",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 313602,
+      "name": "dongchengtao",
+      "created_at": "2019-06-26T15:11:47.000Z",
+      "url": "https://greasyfork.org/users/313602-dongchengtao",
+      "scripts": [
+        {
+          "id": 387073,
+          "daily_installs": 0,
+          "total_installs": 139,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-07-02T07:11:03.000Z",
+          "code_updated_at": "2021-03-02T02:20:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "树维日志助手",
+          "description": "树维日志助手；自动选择；自动填写部分内容；",
+          "url": "https://greasyfork.org/scripts/387073-%E6%A0%91%E7%BB%B4%E6%97%A5%E5%BF%97%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/387073/%E6%A0%91%E7%BB%B4%E6%97%A5%E5%BF%97%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 1238,
+          "license": null,
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "范文助手",
+  "description": "绕过收费，支持网站：www.diyifanwen.com、www.77cn.com.cn、www.fanwenwang.com、www.cnfla.com、fanwen.chazidian.com、www.liuxue86.com、www.xuefen.com.cn",
+  "url": "https://greasyfork.org/scripts/476163-%E8%8C%83%E6%96%87%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/476163/%E8%8C%83%E6%96%87%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 4150,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "cy",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 429871,
+  "daily_installs": 0,
+  "total_installs": 318,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-26T01:14:35.000Z",
+  "code_updated_at": "2022-09-02T22:03:04.000Z",
+  "namespace": "forum.snahp.it",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 797170,
+      "name": "Genome",
+      "created_at": "2021-07-26T00:28:01.000Z",
+      "url": "https://greasyfork.org/users/797170-genome",
+      "scripts": []
+    }
+  ],
+  "name": "snahp.it - Add Decode Button",
+  "description": "Adds a 'decode' button to code elements. Can be clicked repeatedly.",
+  "url": "https://greasyfork.org/scripts/429871-snahp-it-add-decode-button",
+  "code_url": "https://update.greasyfork.org/scripts/429871/snahpit%20-%20Add%20Decode%20Button.user.js",
+  "code_size": 6973,
+  "license": "MIT License",
+  "version": "0.5.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

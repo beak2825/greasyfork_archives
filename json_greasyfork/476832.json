@@ -1,0 +1,33 @@
+{
+  "id": 476832,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-06T14:22:25.000Z",
+  "code_updated_at": "2023-10-06T14:22:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1065972,
+      "name": "rong zheng",
+      "created_at": "2023-04-23T05:33:29.000Z",
+      "url": "https://greasyfork.org/users/1065972-rong-zheng"
+    }
+  ],
+  "name": "禅道内容统计",
+  "description": "统计禅道任务用",
+  "url": "https://greasyfork.org/scripts/476832-%E7%A6%85%E9%81%93%E5%86%85%E5%AE%B9%E7%BB%9F%E8%AE%A1",
+  "code_url": "https://update.greasyfork.org/scripts/476832/%E7%A6%85%E9%81%93%E5%86%85%E5%AE%B9%E7%BB%9F%E8%AE%A1.user.js",
+  "code_size": 1734,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

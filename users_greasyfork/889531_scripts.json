@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 441756,
+    "daily_installs": 1,
+    "total_installs": 4143,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-19T13:08:06.000Z",
+    "code_updated_at": "2024-08-31T12:48:41.000Z",
+    "namespace": "https://www.velhlkj.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 889531,
+        "name": "龍翔翎",
+        "created_at": "2022-03-19T12:59:27.000Z",
+        "url": "https://greasyfork.org/users/889531-%E9%BE%8D%E7%BF%94%E7%BF%8E"
+      }
+    ],
+    "name": "網站頁面翻譯補釘",
+    "description": "此腳本用於在網站翻譯前對部份問題進行修復，例如鏈接失效或消失、下拉列表框因翻譯而導致值不匹配、翻譯後換行丟失內容堆在一起等問題。相容於動態更新的頁面內容。",
+    "url": "https://greasyfork.org/scripts/441756-%E7%B6%B2%E7%AB%99%E9%A0%81%E9%9D%A2%E7%BF%BB%E8%AD%AF%E8%A3%9C%E9%87%98",
+    "code_url": "https://update.greasyfork.org/scripts/441756/%E7%B6%B2%E7%AB%99%E9%A0%81%E9%9D%A2%E7%BF%BB%E8%AD%AF%E8%A3%9C%E9%87%98.user.js",
+    "code_size": 14037,
+    "license": "MIT License",
+    "version": "5.7.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

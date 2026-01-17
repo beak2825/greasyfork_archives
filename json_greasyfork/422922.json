@@ -1,0 +1,59 @@
+{
+  "id": 422922,
+  "daily_installs": 0,
+  "total_installs": 48,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-09T07:39:23.000Z",
+  "code_updated_at": "2021-03-09T07:39:23.000Z",
+  "namespace": "https://github.com/CangShui/BT-removal-login",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 745156,
+      "name": "CangShui",
+      "created_at": "2021-03-09T07:24:18.000Z",
+      "url": "https://greasyfork.org/users/745156-cangshui",
+      "scripts": [
+        {
+          "id": 422922,
+          "daily_installs": 0,
+          "total_installs": 48,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-09T07:39:23.000Z",
+          "code_updated_at": "2021-03-09T07:39:23.000Z",
+          "namespace": "https://github.com/CangShui/BT-removal-login",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BT去登录弹窗",
+          "description": "手动编辑下面的@match后面的IP地址为你的宝塔面板地址IP即可",
+          "url": "https://greasyfork.org/scripts/422922-bt%E5%8E%BB%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97",
+          "code_url": "https://update.greasyfork.org/scripts/422922/BT%E5%8E%BB%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97.user.js",
+          "code_size": 1448,
+          "license": null,
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BT去登录弹窗",
+  "description": "手动编辑下面的@match后面的IP地址为你的宝塔面板地址IP即可",
+  "url": "https://greasyfork.org/scripts/422922-bt%E5%8E%BB%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97",
+  "code_url": "https://update.greasyfork.org/scripts/422922/BT%E5%8E%BB%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97.user.js",
+  "code_size": 1448,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474382,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-01T21:04:47.000Z",
+    "code_updated_at": "2023-09-01T21:07:16.000Z",
+    "namespace": "Turkeychopio",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1164371,
+        "name": "Connor Berkeley",
+        "created_at": "2023-09-01T21:01:19.000Z",
+        "url": "https://greasyfork.org/users/1164371-connor-berkeley"
+      }
+    ],
+    "name": "Button Display Notification",
+    "description": "Will send a windows notification when you images are finished generating",
+    "url": "https://greasyfork.org/scripts/474382-button-display-notification",
+    "code_url": "https://update.greasyfork.org/scripts/474382/Button%20Display%20Notification.user.js",
+    "code_size": 1092,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

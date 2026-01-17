@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422580,
+    "daily_installs": 0,
+    "total_installs": 578,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-03T09:36:36.000Z",
+    "code_updated_at": "2021-06-23T08:03:57.000Z",
+    "namespace": "https://www.retzero.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743168,
+        "name": "Jun Jack",
+        "created_at": "2021-03-03T09:34:43.000Z",
+        "url": "https://greasyfork.org/users/743168-jun-jack"
+      }
+    ],
+    "name": "BaiduYunHack",
+    "description": "Hack",
+    "url": "https://greasyfork.org/scripts/422580-baiduyunhack",
+    "code_url": "https://update.greasyfork.org/scripts/422580/BaiduYunHack.user.js",
+    "code_size": 3172,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

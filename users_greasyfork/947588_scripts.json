@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449748,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-18T05:14:29.000Z",
+    "code_updated_at": "2022-08-18T05:14:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 947588,
+        "name": "Osiris B",
+        "created_at": "2022-08-17T21:24:21.000Z",
+        "url": "https://greasyfork.org/users/947588-osiris-b"
+      }
+    ],
+    "name": "Scratch Random Brute",
+    "description": "Bruteforcer Scratch Users to See if login is valid. (RANDOM)",
+    "url": "https://greasyfork.org/scripts/449748-scratch-random-brute",
+    "code_url": "https://update.greasyfork.org/scripts/449748/Scratch%20Random%20Brute.user.js",
+    "code_size": 1897,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

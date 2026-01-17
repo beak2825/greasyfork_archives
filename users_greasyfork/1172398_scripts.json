@@ -1,0 +1,35 @@
+[
+  {
+    "id": 475223,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-13T15:56:44.000Z",
+    "code_updated_at": "2023-09-13T16:06:13.000Z",
+    "namespace": "NoCasinoWarning",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1172398,
+        "name": "Steven Seale",
+        "created_at": "2023-09-13T15:50:16.000Z",
+        "url": "https://greasyfork.org/users/1172398-steven-seale"
+      }
+    ],
+    "name": "NoCasinoRefill",
+    "description": "Provides a warning when the Casino refill button is pressed",
+    "url": "https://greasyfork.org/scripts/475223-nocasinorefill",
+    "code_url": "https://update.greasyfork.org/scripts/475223/NoCasinoRefill.user.js",
+    "code_size": 637,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

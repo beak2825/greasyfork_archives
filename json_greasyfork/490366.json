@@ -1,0 +1,59 @@
+{
+  "id": 490366,
+  "daily_installs": 0,
+  "total_installs": 106,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-20T15:42:25.000Z",
+  "code_updated_at": "2024-03-20T15:42:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1276289,
+      "name": "Adam Boubaouch",
+      "created_at": "2024-03-18T19:00:20.000Z",
+      "url": "https://greasyfork.org/users/1276289-adam-boubaouch",
+      "scripts": [
+        {
+          "id": 490366,
+          "daily_installs": 0,
+          "total_installs": 106,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-20T15:42:25.000Z",
+          "code_updated_at": "2024-03-20T15:42:25.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Epic Games Captcha Bypasser",
+          "description": "Bypass Captcha on Epic Games website",
+          "url": "https://greasyfork.org/scripts/490366-epic-games-captcha-bypasser",
+          "code_url": "https://update.greasyfork.org/scripts/490366/Epic%20Games%20Captcha%20Bypasser.user.js",
+          "code_size": 592,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Epic Games Captcha Bypasser",
+  "description": "Bypass Captcha on Epic Games website",
+  "url": "https://greasyfork.org/scripts/490366-epic-games-captcha-bypasser",
+  "code_url": "https://update.greasyfork.org/scripts/490366/Epic%20Games%20Captcha%20Bypasser.user.js",
+  "code_size": 592,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

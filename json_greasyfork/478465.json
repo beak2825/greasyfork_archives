@@ -1,0 +1,59 @@
+{
+  "id": 478465,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-28T13:02:36.000Z",
+  "code_updated_at": "2023-10-28T13:14:01.000Z",
+  "namespace": "NoBitches?!",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1205894,
+      "name": "big chongus",
+      "created_at": "2023-10-28T12:51:30.000Z",
+      "url": "https://greasyfork.org/users/1205894-big-chongus",
+      "scripts": [
+        {
+          "id": 478465,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-28T13:02:36.000Z",
+          "code_updated_at": "2023-10-28T13:14:01.000Z",
+          "namespace": "NoBitches?!",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "discord real custom icon.",
+          "description": "Just read the desc on page.",
+          "url": "https://greasyfork.org/scripts/478465-discord-real-custom-icon",
+          "code_url": "https://update.greasyfork.org/scripts/478465/discord%20real%20custom%20icon.user.js",
+          "code_size": 4990,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "discord real custom icon.",
+  "description": "Just read the desc on page.",
+  "url": "https://greasyfork.org/scripts/478465-discord-real-custom-icon",
+  "code_url": "https://update.greasyfork.org/scripts/478465/discord%20real%20custom%20icon.user.js",
+  "code_size": 4990,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,200 @@
+[
+  {
+    "id": 490439,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-21T09:23:57.000Z",
+    "code_updated_at": "2025-03-12T08:14:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864791,
+        "name": "951220533",
+        "created_at": "2022-01-14T09:39:52.000Z",
+        "url": "https://greasyfork.org/users/864791-951220533"
+      }
+    ],
+    "name": "万达图书系统扩展集合线上",
+    "description": "万达图书系统扩展集合线上描述",
+    "url": "https://greasyfork.org/scripts/490439-%E4%B8%87%E8%BE%BE%E5%9B%BE%E4%B9%A6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%B1%95%E9%9B%86%E5%90%88%E7%BA%BF%E4%B8%8A",
+    "code_url": "https://update.greasyfork.org/scripts/490439/%E4%B8%87%E8%BE%BE%E5%9B%BE%E4%B9%A6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%B1%95%E9%9B%86%E5%90%88%E7%BA%BF%E4%B8%8A.user.js",
+    "code_size": 2952,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 483756,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-03T09:15:37.000Z",
+    "code_updated_at": "2024-01-05T02:58:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864791,
+        "name": "951220533",
+        "created_at": "2022-01-14T09:39:52.000Z",
+        "url": "https://greasyfork.org/users/864791-951220533"
+      }
+    ],
+    "name": "mant扩展集合",
+    "description": "mant扩展集合的插件",
+    "url": "https://greasyfork.org/scripts/483756-mant%E6%89%A9%E5%B1%95%E9%9B%86%E5%90%88",
+    "code_url": "https://update.greasyfork.org/scripts/483756/mant%E6%89%A9%E5%B1%95%E9%9B%86%E5%90%88.user.js",
+    "code_size": 2205,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478049,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-23T07:41:28.000Z",
+    "code_updated_at": "2023-10-26T07:05:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864791,
+        "name": "951220533",
+        "created_at": "2022-01-14T09:39:52.000Z",
+        "url": "https://greasyfork.org/users/864791-951220533"
+      }
+    ],
+    "name": "202310mant下单",
+    "description": "202310mant下单description",
+    "url": "https://greasyfork.org/scripts/478049-202310mant%E4%B8%8B%E5%8D%95",
+    "code_url": "https://update.greasyfork.org/scripts/478049/202310mant%E4%B8%8B%E5%8D%95.user.js",
+    "code_size": 4648,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 467678,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-02T02:05:04.000Z",
+    "code_updated_at": "2023-06-05T11:57:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864791,
+        "name": "951220533",
+        "created_at": "2022-01-14T09:39:52.000Z",
+        "url": "https://greasyfork.org/users/864791-951220533"
+      }
+    ],
+    "name": "新mant下单",
+    "description": "新mant快速下单",
+    "url": "https://greasyfork.org/scripts/467678-%E6%96%B0mant%E4%B8%8B%E5%8D%95",
+    "code_url": "https://update.greasyfork.org/scripts/467678/%E6%96%B0mant%E4%B8%8B%E5%8D%95.user.js",
+    "code_size": 4039,
+    "license": "MIT License",
+    "version": "1.0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 460779,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-26T12:08:09.000Z",
+    "code_updated_at": "2023-02-26T12:08:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864791,
+        "name": "951220533",
+        "created_at": "2022-01-14T09:39:52.000Z",
+        "url": "https://greasyfork.org/users/864791-951220533"
+      }
+    ],
+    "name": "采集到新系统",
+    "description": "采集到新系统发布",
+    "url": "https://greasyfork.org/scripts/460779-%E9%87%87%E9%9B%86%E5%88%B0%E6%96%B0%E7%B3%BB%E7%BB%9F",
+    "code_url": "https://update.greasyfork.org/scripts/460779/%E9%87%87%E9%9B%86%E5%88%B0%E6%96%B0%E7%B3%BB%E7%BB%9F.user.js",
+    "code_size": 2603,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438528,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-14T11:25:58.000Z",
+    "code_updated_at": "2022-04-01T09:09:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864791,
+        "name": "951220533",
+        "created_at": "2022-01-14T09:39:52.000Z",
+        "url": "https://greasyfork.org/users/864791-951220533"
+      }
+    ],
+    "name": "下单",
+    "description": "快速下单",
+    "url": "https://greasyfork.org/scripts/438528-%E4%B8%8B%E5%8D%95",
+    "code_url": "https://update.greasyfork.org/scripts/438528/%E4%B8%8B%E5%8D%95.user.js",
+    "code_size": 4014,
+    "license": "MIT License",
+    "version": "1.0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

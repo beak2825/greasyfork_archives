@@ -1,0 +1,33 @@
+{
+  "id": 482770,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-20T17:22:38.000Z",
+  "code_updated_at": "2024-08-19T14:01:48.000Z",
+  "namespace": "https://github.com/UnluckyNinja",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 30356,
+      "name": "UnluckyNinja",
+      "created_at": "2016-02-14T22:33:02.000Z",
+      "url": "https://greasyfork.org/users/30356-unluckyninja"
+    }
+  ],
+  "name": "石之家楼层显示fflogs数据",
+  "description": "队伍招募时便捷查询，请勿滥用",
+  "url": "https://greasyfork.org/scripts/482770-%E7%9F%B3%E4%B9%8B%E5%AE%B6%E6%A5%BC%E5%B1%82%E6%98%BE%E7%A4%BAfflogs%E6%95%B0%E6%8D%AE",
+  "code_url": "https://update.greasyfork.org/scripts/482770/%E7%9F%B3%E4%B9%8B%E5%AE%B6%E6%A5%BC%E5%B1%82%E6%98%BE%E7%A4%BAfflogs%E6%95%B0%E6%8D%AE.user.js",
+  "code_size": 199070,
+  "license": "MIT License",
+  "version": "2024.8.19.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

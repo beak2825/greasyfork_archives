@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431111,
+    "daily_installs": 0,
+    "total_installs": 3181,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-20T14:58:28.000Z",
+    "code_updated_at": "2021-08-23T15:54:27.000Z",
+    "namespace": "https://greasyfork.org/users/431111",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 806666,
+        "name": "turkopticon.net",
+        "created_at": "2021-08-20T14:51:47.000Z",
+        "url": "https://greasyfork.org/users/806666-turkopticon-net"
+      }
+    ],
+    "name": "turkopticon.net",
+    "description": "Review requesters on Amazon Mechanical Turk",
+    "url": "https://greasyfork.org/scripts/431111-turkopticon-net",
+    "code_url": "https://update.greasyfork.org/scripts/431111/turkopticonnet.user.js",
+    "code_size": 9799,
+    "license": null,
+    "version": "2021.08.23.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 486323,
+  "daily_installs": 0,
+  "total_installs": 208,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-02T17:37:53.000Z",
+  "code_updated_at": "2025-05-21T00:48:48.000Z",
+  "namespace": "https://github.com/AHCorn/Bilibili-Batch-Unsubscribe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1252870,
+      "name": "AHCorn",
+      "created_at": "2024-01-25T03:47:53.000Z",
+      "url": "https://greasyfork.org/users/1252870-ahcorn"
+    }
+  ],
+  "name": "哔哩哔哩订阅管理 / 批量取消订阅合集",
+  "description": "批量管理哔哩哔哩订阅，可实现一键取消所有订阅。",
+  "url": "https://greasyfork.org/scripts/486323-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%AE%A2%E9%98%85%E7%AE%A1%E7%90%86-%E6%89%B9%E9%87%8F%E5%8F%96%E6%B6%88%E8%AE%A2%E9%98%85%E5%90%88%E9%9B%86",
+  "code_url": "https://update.greasyfork.org/scripts/486323/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%AE%A2%E9%98%85%E7%AE%A1%E7%90%86%20%20%E6%89%B9%E9%87%8F%E5%8F%96%E6%B6%88%E8%AE%A2%E9%98%85%E5%90%88%E9%9B%86.user.js",
+  "code_size": 48740,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

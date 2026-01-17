@@ -1,0 +1,33 @@
+{
+  "id": 472846,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-10T15:24:19.000Z",
+  "code_updated_at": "2023-08-13T16:17:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1125872,
+      "name": "Ginyang",
+      "created_at": "2023-07-13T16:03:58.000Z",
+      "url": "https://greasyfork.org/users/1125872-ginyang"
+    }
+  ],
+  "name": "斗鱼屏蔽ID消息（blockspeech）",
+  "description": "根据ID屏蔽直播间的发言（持久化存储、傻瓜式使用/管理）",
+  "url": "https://greasyfork.org/scripts/472846-%E6%96%97%E9%B1%BC%E5%B1%8F%E8%94%BDid%E6%B6%88%E6%81%AF-blockspeech",
+  "code_url": "https://update.greasyfork.org/scripts/472846/%E6%96%97%E9%B1%BC%E5%B1%8F%E8%94%BDID%E6%B6%88%E6%81%AF%EF%BC%88blockspeech%EF%BC%89.user.js",
+  "code_size": 24109,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

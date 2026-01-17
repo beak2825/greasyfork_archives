@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 486580,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-04T14:29:00.000Z",
+    "code_updated_at": "2024-02-04T14:29:00.000Z",
+    "namespace": "https://lers.fun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957202,
+        "name": "1412150209",
+        "created_at": "2022-09-11T05:27:53.000Z",
+        "url": "https://greasyfork.org/users/957202-1412150209"
+      }
+    ],
+    "name": "芒果题库试卷下载",
+    "description": "下载芒果题库的题",
+    "url": "https://greasyfork.org/scripts/486580-%E8%8A%92%E6%9E%9C%E9%A2%98%E5%BA%93%E8%AF%95%E5%8D%B7%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/486580/%E8%8A%92%E6%9E%9C%E9%A2%98%E5%BA%93%E8%AF%95%E5%8D%B7%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 6070,
+    "license": "MIT License",
+    "version": "2024-02-01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451127,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-11T05:53:13.000Z",
+    "code_updated_at": "2022-10-05T04:54:40.000Z",
+    "namespace": "https://lers.top",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957202,
+        "name": "1412150209",
+        "created_at": "2022-09-11T05:27:53.000Z",
+        "url": "https://greasyfork.org/users/957202-1412150209"
+      }
+    ],
+    "name": "西大课表转ics",
+    "description": "西南大学课程表转.ics",
+    "url": "https://greasyfork.org/scripts/451127-%E8%A5%BF%E5%A4%A7%E8%AF%BE%E8%A1%A8%E8%BD%ACics",
+    "code_url": "https://update.greasyfork.org/scripts/451127/%E8%A5%BF%E5%A4%A7%E8%AF%BE%E8%A1%A8%E8%BD%ACics.user.js",
+    "code_size": 9924,
+    "license": "BSD",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

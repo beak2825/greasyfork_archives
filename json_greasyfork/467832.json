@@ -1,0 +1,34 @@
+{
+  "id": 467832,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-03T20:54:48.000Z",
+  "code_updated_at": "2023-06-20T20:42:09.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 888721,
+      "name": "Скрытая личность",
+      "created_at": "2022-03-17T16:22:48.000Z",
+      "url": "https://greasyfork.org/users/888721-%D1%81%D0%BA%D1%80%D1%8B%D1%82%D0%B0%D1%8F-%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D1%81%D1%82%D1%8C",
+      "scripts": []
+    }
+  ],
+  "name": "TECH",
+  "description": "типа важно",
+  "url": "https://greasyfork.org/scripts/467832-tech",
+  "code_url": "https://update.greasyfork.org/scripts/467832/TECH.user.js",
+  "code_size": 53453,
+  "license": "MIT License",
+  "version": "1.31",
+  "locale": "sr",
+  "deleted": false,
+  "visibility": "public"
+}

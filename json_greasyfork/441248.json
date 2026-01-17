@@ -1,0 +1,34 @@
+{
+  "id": 441248,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-10T00:55:22.000Z",
+  "code_updated_at": "2022-03-10T00:55:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 666310,
+      "name": "Myung Jiwoon",
+      "created_at": "2020-07-13T04:48:51.000Z",
+      "url": "https://greasyfork.org/users/666310-myung-jiwoon",
+      "scripts": []
+    }
+  ],
+  "name": "Krunker.IO AimLock",
+  "description": "Locks aim to the nearest player in krunker.io",
+  "url": "https://greasyfork.org/scripts/441248-krunker-io-aimlock",
+  "code_url": "https://update.greasyfork.org/scripts/441248/KrunkerIO%20AimLock.user.js",
+  "code_size": 4912,
+  "license": null,
+  "version": "304.77",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

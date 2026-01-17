@@ -1,0 +1,33 @@
+{
+  "id": 479297,
+  "daily_installs": 0,
+  "total_installs": 47,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-08T10:28:04.000Z",
+  "code_updated_at": "2024-10-10T19:31:48.000Z",
+  "namespace": "Invidious",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1097146,
+      "name": "ccuser44",
+      "created_at": "2023-06-12T12:28:01.000Z",
+      "url": "https://greasyfork.org/users/1097146-ccuser44"
+    }
+  ],
+  "name": "Return YouTube Dislike for Invidious",
+  "description": "Show dislikes for a video on all invidious instances. https://nlion.nl/",
+  "url": "https://greasyfork.org/scripts/479297-return-youtube-dislike-for-invidious",
+  "code_url": "https://update.greasyfork.org/scripts/479297/Return%20YouTube%20Dislike%20for%20Invidious.user.js",
+  "code_size": 5012,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

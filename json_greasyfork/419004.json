@@ -1,0 +1,33 @@
+{
+  "id": 419004,
+  "daily_installs": 1,
+  "total_installs": 5512,
+  "fan_score": "72.2",
+  "good_ratings": 18,
+  "ok_ratings": 4,
+  "bad_ratings": 0,
+  "created_at": "2020-12-22T11:31:36.000Z",
+  "code_updated_at": "2021-06-02T20:05:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 170515,
+      "name": "jason huang",
+      "created_at": "2018-02-12T20:40:14.000Z",
+      "url": "https://greasyfork.org/users/170515-jason-huang"
+    }
+  ],
+  "name": "双语对照网页翻译(英文网页双语对照自动翻译)",
+  "description": "本插件开发的初心在于《自动翻译，解放双手》。双语对照网页翻译(国外英文网页,双语对照自动翻译)!English web pages, Chinese English automatic translation by Caiyun smart translation！",
+  "url": "https://greasyfork.org/scripts/419004-%E5%8F%8C%E8%AF%AD%E5%AF%B9%E7%85%A7%E7%BD%91%E9%A1%B5%E7%BF%BB%E8%AF%91-%E8%8B%B1%E6%96%87%E7%BD%91%E9%A1%B5%E5%8F%8C%E8%AF%AD%E5%AF%B9%E7%85%A7%E8%87%AA%E5%8A%A8%E7%BF%BB%E8%AF%91",
+  "code_url": "https://update.greasyfork.org/scripts/419004/%E5%8F%8C%E8%AF%AD%E5%AF%B9%E7%85%A7%E7%BD%91%E9%A1%B5%E7%BF%BB%E8%AF%91%28%E8%8B%B1%E6%96%87%E7%BD%91%E9%A1%B5%E5%8F%8C%E8%AF%AD%E5%AF%B9%E7%85%A7%E8%87%AA%E5%8A%A8%E7%BF%BB%E8%AF%91%29.user.js",
+  "code_size": 2231,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

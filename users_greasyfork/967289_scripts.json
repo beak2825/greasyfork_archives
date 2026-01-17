@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452570,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-06T16:33:11.000Z",
+    "code_updated_at": "2025-11-26T15:08:10.000Z",
+    "namespace": "http://www.frc.utn.edu.ar/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 967289,
+        "name": "Leonardo Giordano",
+        "created_at": "2022-10-06T16:31:02.000Z",
+        "url": "https://greasyfork.org/users/967289-leonardo-giordano"
+      }
+    ],
+    "name": "Cargador de Notas",
+    "description": "Carga de notas en Autogestión",
+    "url": "https://greasyfork.org/scripts/452570-cargador-de-notas",
+    "code_url": "https://update.greasyfork.org/scripts/452570/Cargador%20de%20Notas.user.js",
+    "code_size": 66450,
+    "license": "MIT License",
+    "version": "3.17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

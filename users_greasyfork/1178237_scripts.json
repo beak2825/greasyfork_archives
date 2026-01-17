@@ -1,0 +1,35 @@
+[
+  {
+    "id": 475867,
+    "daily_installs": 0,
+    "total_installs": 398,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-22T06:25:50.000Z",
+    "code_updated_at": "2025-12-24T06:17:45.000Z",
+    "namespace": "https://github.com/injahow",
+    "support_url": "https://github.com/injahow/user.js/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1178237,
+        "name": "mathlrz for ent",
+        "created_at": "2023-09-22T06:24:39.000Z",
+        "url": "https://greasyfork.org/users/1178237-mathlrz-for-ent"
+      }
+    ],
+    "name": "bilibili视频下载",
+    "description": "支持Web、RPC、Blob、Aria等下载方式；支持下载flv、dash、mp4视频格式；支持下载港区番剧；支持下载字幕弹幕；支持换源播放等功能",
+    "url": "https://greasyfork.org/scripts/475867-bilibili%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/475867/bilibili%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 257665,
+    "license": "MIT License",
+    "version": "2.9.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427292,
+    "daily_installs": 0,
+    "total_installs": 88,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-31T11:33:05.000Z",
+    "code_updated_at": "2021-06-03T18:45:02.000Z",
+    "namespace": "https://github.com/Zallist",
+    "support_url": "https://github.com/Zallist/cleanup-youtube-chat/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4494,
+        "name": "Zallist",
+        "created_at": "2014-08-15T19:41:03.000Z",
+        "url": "https://greasyfork.org/users/4494-zallist"
+      }
+    ],
+    "name": "Cleanup YouTube live chat for spam (r9k mode)",
+    "description": "Cleans up youtube live chat for simple spam - Repeated messages, overused emojis",
+    "url": "https://greasyfork.org/scripts/427292-cleanup-youtube-live-chat-for-spam-r9k-mode",
+    "code_url": "https://update.greasyfork.org/scripts/427292/Cleanup%20YouTube%20live%20chat%20for%20spam%20%28r9k%20mode%29.user.js",
+    "code_size": 9222,
+    "license": null,
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 465626,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-06T03:37:09.000Z",
+  "code_updated_at": "2023-05-06T03:37:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1073981,
+      "name": "阿荧",
+      "created_at": "2023-05-06T03:13:12.000Z",
+      "url": "https://greasyfork.org/users/1073981-%E9%98%BF%E8%8D%A7",
+      "scripts": [
+        {
+          "id": 465626,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-06T03:37:09.000Z",
+          "code_updated_at": "2023-05-06T03:37:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "你才买身份证读取器！",
+          "description": "去除云筑网没有读取器不能录资料的限制。",
+          "url": "https://greasyfork.org/scripts/465626-%E4%BD%A0%E6%89%8D%E4%B9%B0%E8%BA%AB%E4%BB%BD%E8%AF%81%E8%AF%BB%E5%8F%96%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/465626/%E4%BD%A0%E6%89%8D%E4%B9%B0%E8%BA%AB%E4%BB%BD%E8%AF%81%E8%AF%BB%E5%8F%96%E5%99%A8%EF%BC%81.user.js",
+          "code_size": 671,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "你才买身份证读取器！",
+  "description": "去除云筑网没有读取器不能录资料的限制。",
+  "url": "https://greasyfork.org/scripts/465626-%E4%BD%A0%E6%89%8D%E4%B9%B0%E8%BA%AB%E4%BB%BD%E8%AF%81%E8%AF%BB%E5%8F%96%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/465626/%E4%BD%A0%E6%89%8D%E4%B9%B0%E8%BA%AB%E4%BB%BD%E8%AF%81%E8%AF%BB%E5%8F%96%E5%99%A8%EF%BC%81.user.js",
+  "code_size": 671,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

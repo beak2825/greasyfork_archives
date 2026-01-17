@@ -1,0 +1,59 @@
+{
+  "id": 475680,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-19T13:28:02.000Z",
+  "code_updated_at": "2025-04-20T03:36:16.000Z",
+  "namespace": "s",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 318567,
+      "name": "Start of End",
+      "created_at": "2019-07-18T02:43:28.000Z",
+      "url": "https://greasyfork.org/users/318567-start-of-end",
+      "scripts": [
+        {
+          "id": 475680,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-19T13:28:02.000Z",
+          "code_updated_at": "2025-04-20T03:36:16.000Z",
+          "namespace": "s",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "قطار الاصدقاء السريع خاص",
+          "description": "Abu Nasser",
+          "url": "https://greasyfork.org/scripts/475680-%D9%82%D8%B7%D8%A7%D8%B1-%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D9%82%D8%A7%D8%A1-%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9-%D8%AE%D8%A7%D8%B5",
+          "code_url": "https://update.greasyfork.org/scripts/475680/%D9%82%D8%B7%D8%A7%D8%B1%20%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D9%82%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9%20%D8%AE%D8%A7%D8%B5.user.js",
+          "code_size": 14261,
+          "license": "5l",
+          "version": "2.98",
+          "locale": "ar",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "قطار الاصدقاء السريع خاص",
+  "description": "Abu Nasser",
+  "url": "https://greasyfork.org/scripts/475680-%D9%82%D8%B7%D8%A7%D8%B1-%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D9%82%D8%A7%D8%A1-%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9-%D8%AE%D8%A7%D8%B5",
+  "code_url": "https://update.greasyfork.org/scripts/475680/%D9%82%D8%B7%D8%A7%D8%B1%20%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D9%82%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9%20%D8%AE%D8%A7%D8%B5.user.js",
+  "code_size": 14261,
+  "license": "5l",
+  "version": "2.98",
+  "locale": "ar",
+  "deleted": false,
+  "visibility": "public"
+}

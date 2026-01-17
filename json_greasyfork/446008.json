@@ -1,0 +1,34 @@
+{
+  "id": 446008,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-05T01:50:41.000Z",
+  "code_updated_at": "2022-07-29T18:38:10.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 921793,
+      "name": "Mihail Grozniy",
+      "created_at": "2022-06-04T02:23:03.000Z",
+      "url": "https://greasyfork.org/users/921793-mihail-grozniy",
+      "scripts": []
+    }
+  ],
+  "name": "Blue OPG Moderators",
+  "description": "Скрипт для Модераторов Форума | Black Russia BLUE by M.Grozniy",
+  "url": "https://greasyfork.org/scripts/446008-blue-opg-moderators",
+  "code_url": "https://update.greasyfork.org/scripts/446008/Blue%20OPG%20Moderators.user.js",
+  "code_size": 95287,
+  "license": "MIT License",
+  "version": "4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

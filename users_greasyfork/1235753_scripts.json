@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482545,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-18T10:15:13.000Z",
+    "code_updated_at": "2023-12-18T10:17:18.000Z",
+    "namespace": "https://greasyfork.org/users/1235753",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1235753,
+        "name": "UneBaguette",
+        "created_at": "2023-12-18T10:14:23.000Z",
+        "url": "https://greasyfork.org/users/1235753-unebaguette"
+      }
+    ],
+    "name": "Manu Macron Démission",
+    "description": "manu test",
+    "url": "https://greasyfork.org/scripts/482545-manu-macron-d%C3%A9mission",
+    "code_url": "https://update.greasyfork.org/scripts/482545/Manu%20Macron%20D%C3%A9mission.user.js",
+    "code_size": 3046,
+    "license": null,
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

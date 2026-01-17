@@ -1,0 +1,59 @@
+{
+  "id": 453514,
+  "daily_installs": 4,
+  "total_installs": 3517,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2022-10-22T00:45:28.000Z",
+  "code_updated_at": "2022-10-22T00:52:04.000Z",
+  "namespace": "https://greasyfork.org/en/users/752105-w4it",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 805662,
+      "name": "Thiago_game",
+      "created_at": "2021-08-17T16:55:43.000Z",
+      "url": "https://greasyfork.org/users/805662-thiago-game",
+      "scripts": [
+        {
+          "id": 453514,
+          "daily_installs": 4,
+          "total_installs": 3517,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2022-10-22T00:45:28.000Z",
+          "code_updated_at": "2022-10-22T00:52:04.000Z",
+          "namespace": "https://greasyfork.org/en/users/752105-w4it",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mega mod | Katana + Musket | AUTOHEAL |  Anti-Insta  |  starter resources and more!!",
+          "description": "This mod is not bad, its just ok. To know the controls, look in the description! Enjoy :>",
+          "url": "https://greasyfork.org/scripts/453514-mega-mod-katana-musket-autoheal-anti-insta-starter-resources-and-more",
+          "code_url": "https://update.greasyfork.org/scripts/453514/Mega%20mod%20%7C%20Katana%20%2B%20Musket%20%7C%20AUTOHEAL%20%7C%20%20Anti-Insta%20%20%7C%20%20starter%20resources%20and%20more%21%21.user.js",
+          "code_size": 53504,
+          "license": null,
+          "version": "v.10.6.4",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mega mod | Katana + Musket | AUTOHEAL |  Anti-Insta  |  starter resources and more!!",
+  "description": "This mod is not bad, its just ok. To know the controls, look in the description! Enjoy :>",
+  "url": "https://greasyfork.org/scripts/453514-mega-mod-katana-musket-autoheal-anti-insta-starter-resources-and-more",
+  "code_url": "https://update.greasyfork.org/scripts/453514/Mega%20mod%20%7C%20Katana%20%2B%20Musket%20%7C%20AUTOHEAL%20%7C%20%20Anti-Insta%20%20%7C%20%20starter%20resources%20and%20more%21%21.user.js",
+  "code_size": 53504,
+  "license": null,
+  "version": "v.10.6.4",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -30,6 +30,72 @@
     "version": "1.0.3",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474396,
+    "daily_installs": 0,
+    "total_installs": 76,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-02T06:58:46.000Z",
+    "code_updated_at": "2025-06-27T10:44:11.000Z",
+    "namespace": "https://www.liuzhixi.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952732,
+        "name": "tmidc",
+        "created_at": "2022-08-31T03:39:13.000Z",
+        "url": "https://greasyfork.org/users/952732-tmidc"
+      }
+    ],
+    "name": "【自用】站长类广告净化",
+    "description": "站长工具，爱站,测速网等广告净化去除",
+    "url": "https://greasyfork.org/scripts/474396-%E8%87%AA%E7%94%A8-%E7%AB%99%E9%95%BF%E7%B1%BB%E5%B9%BF%E5%91%8A%E5%87%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/474396/%E3%80%90%E8%87%AA%E7%94%A8%E3%80%91%E7%AB%99%E9%95%BF%E7%B1%BB%E5%B9%BF%E5%91%8A%E5%87%80%E5%8C%96.user.js",
+    "code_size": 20512,
+    "license": "GPL License",
+    "version": "1.5.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 451413,
+    "daily_installs": 0,
+    "total_installs": 260,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-15T10:49:32.000Z",
+    "code_updated_at": "2025-06-02T10:21:37.000Z",
+    "namespace": "https://www.liuzhixi.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952732,
+        "name": "tmidc",
+        "created_at": "2022-08-31T03:39:13.000Z",
+        "url": "https://greasyfork.org/users/952732-tmidc"
+      }
+    ],
+    "name": "www.baidu.com页面美化",
+    "description": "美化搜索框,去除顶部菜单栏的背景颜色去除底部版权栏",
+    "url": "https://greasyfork.org/scripts/451413-www-baidu-com%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/451413/wwwbaiducom%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96.user.js",
+    "code_size": 8419,
+    "license": "GPL License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

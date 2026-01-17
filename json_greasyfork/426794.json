@@ -1,0 +1,34 @@
+{
+  "id": 426794,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-21T04:27:56.000Z",
+  "code_updated_at": "2023-09-22T16:55:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 774344,
+      "name": "lydia-theda",
+      "created_at": "2021-05-20T19:46:29.000Z",
+      "url": "https://greasyfork.org/users/774344-lydia-theda",
+      "scripts": []
+    }
+  ],
+  "name": "[AO3-PAC] Zoho New Tickets",
+  "description": "Auto-fills some of the new ticket fields to make sending letters a little easier",
+  "url": "https://greasyfork.org/scripts/426794-ao3-pac-zoho-new-tickets",
+  "code_url": "https://update.greasyfork.org/scripts/426794/%5BAO3-PAC%5D%20Zoho%20New%20Tickets.user.js",
+  "code_size": 4485,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

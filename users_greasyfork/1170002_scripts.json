@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474951,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-10T08:59:59.000Z",
+    "code_updated_at": "2023-09-19T20:45:16.000Z",
+    "namespace": "https://minuskube.fr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1170002,
+        "name": "Arucane",
+        "created_at": "2023-09-10T05:51:58.000Z",
+        "url": "https://greasyfork.org/users/1170002-arucane"
+      }
+    ],
+    "name": "z/place (ZUnivers)",
+    "description": "Overlay pour le place de ZUnivers",
+    "url": "https://greasyfork.org/scripts/474951-z-place-zunivers",
+    "code_url": "https://update.greasyfork.org/scripts/474951/zplace%20%28ZUnivers%29.user.js",
+    "code_size": 3811,
+    "license": "MIT License",
+    "version": "4.016",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

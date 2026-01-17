@@ -1,0 +1,59 @@
+{
+  "id": 445429,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-23T13:11:40.000Z",
+  "code_updated_at": "2022-05-23T13:11:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 911759,
+      "name": "Mr.jiang",
+      "created_at": "2022-05-08T07:20:37.000Z",
+      "url": "https://greasyfork.org/users/911759-mr-jiang",
+      "scripts": [
+        {
+          "id": 462388,
+          "daily_installs": 0,
+          "total_installs": 400,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-23T08:58:41.000Z",
+          "code_updated_at": "2023-03-23T09:06:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "南京继续教育 2023公需课 专业课 全自动学习+答题助手",
+          "description": "注意：使用插件存在风险，2023年南京学时继续教育已经添加了作弊检测机制，专门检测插件作弊，第一次封号48小时，第二次学时清零，影响评审。想无后顾之忧，可联系代学，VX：Mr13815880447",
+          "url": "https://greasyfork.org/scripts/462388-%E5%8D%97%E4%BA%AC%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-2023%E5%85%AC%E9%9C%80%E8%AF%BE-%E4%B8%93%E4%B8%9A%E8%AF%BE-%E5%85%A8%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0-%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/462388/%E5%8D%97%E4%BA%AC%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%202023%E5%85%AC%E9%9C%80%E8%AF%BE%20%E4%B8%93%E4%B8%9A%E8%AF%BE%20%E5%85%A8%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%2B%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 5579,
+          "license": "MIT License",
+          "version": "6.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "南京继续教育 专业课 公需课 全自动学习+答题助手_商业版",
+  "description": "注意：本插件需付费后才能正常使用。按账号结算，详细请联系淘宝客服！",
+  "url": "https://greasyfork.org/scripts/445429-%E5%8D%97%E4%BA%AC%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E4%B8%93%E4%B8%9A%E8%AF%BE-%E5%85%AC%E9%9C%80%E8%AF%BE-%E5%85%A8%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0-%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B-%E5%95%86%E4%B8%9A%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/445429/%E5%8D%97%E4%BA%AC%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%20%E4%B8%93%E4%B8%9A%E8%AF%BE%20%E5%85%AC%E9%9C%80%E8%AF%BE%20%E5%85%A8%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%2B%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B_%E5%95%86%E4%B8%9A%E7%89%88.user.js",
+  "code_size": 5746,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

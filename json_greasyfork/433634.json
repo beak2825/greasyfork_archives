@@ -1,0 +1,34 @@
+{
+  "id": 433634,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-09T17:21:02.000Z",
+  "code_updated_at": "2021-10-09T17:38:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 823497,
+      "name": "Jeff Conner",
+      "created_at": "2021-10-09T17:14:08.000Z",
+      "url": "https://greasyfork.org/users/823497-jeff-conner",
+      "scripts": []
+    }
+  ],
+  "name": "Nix Posted",
+  "description": "Removes the posted grades columns from the Infinite Campus Gradebook for Iowa City Community School District teachers",
+  "url": "https://greasyfork.org/scripts/433634-nix-posted",
+  "code_url": "https://update.greasyfork.org/scripts/433634/Nix%20Posted.user.js",
+  "code_size": 1058,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 415850,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-10T02:53:38.000Z",
+  "code_updated_at": "2020-11-10T02:53:38.000Z",
+  "namespace": "https://greasyfork.org/users/703429",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 703429,
+      "name": "Josiah Hopkins",
+      "created_at": "2020-11-10T02:27:50.000Z",
+      "url": "https://greasyfork.org/users/703429-josiah-hopkins",
+      "scripts": [
+        {
+          "id": 415848,
+          "daily_installs": 0,
+          "total_installs": 45,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-10T02:38:43.000Z",
+          "code_updated_at": "2020-11-10T02:38:43.000Z",
+          "namespace": "https://greasyfork.org/users/703429",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Constructor Skin v2",
+          "description": "press ` to toggle auto select",
+          "url": "https://greasyfork.org/scripts/415848-constructor-skin-v2",
+          "code_url": "https://update.greasyfork.org/scripts/415848/Constructor%20Skin%20v2.user.js",
+          "code_size": 679,
+          "license": null,
+          "version": "0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Constructor Skin v2",
+  "description": "press ` to toggle auto select",
+  "url": "https://greasyfork.org/scripts/415850-constructor-skin-v2",
+  "code_url": "https://update.greasyfork.org/scripts/415850/Constructor%20Skin%20v2.user.js",
+  "code_size": 684,
+  "license": null,
+  "version": "0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

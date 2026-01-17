@@ -1,0 +1,134 @@
+[
+  {
+    "id": 446059,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-06T03:03:35.000Z",
+    "code_updated_at": "2023-01-28T04:50:15.000Z",
+    "namespace": "https://toastpro.herokuapp.com/",
+    "support_url": "https://www.reddit.com/message/compose/?to=-Electron-",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165127,
+        "name": "Hydrosaur",
+        "created_at": "2018-01-01T00:21:25.000Z",
+        "url": "https://greasyfork.org/users/165127-hydrosaur"
+      }
+    ],
+    "name": "ToastPro",
+    "description": "A script to go with your EggPro",
+    "url": "https://greasyfork.org/scripts/446059-toastpro",
+    "code_url": "https://update.greasyfork.org/scripts/446059/ToastPro.user.js",
+    "code_size": 23508,
+    "license": "MIT License",
+    "version": "0.1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425507,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-25T04:06:39.000Z",
+    "code_updated_at": "2021-04-25T04:06:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165127,
+        "name": "Hydrosaur",
+        "created_at": "2018-01-01T00:21:25.000Z",
+        "url": "https://greasyfork.org/users/165127-hydrosaur"
+      }
+    ],
+    "name": "TP Maptest U-M button",
+    "description": "Adds a button to the tagpro-test map test page to test a map from a U-M ID.",
+    "url": "https://greasyfork.org/scripts/425507-tp-maptest-u-m-button",
+    "code_url": "https://update.greasyfork.org/scripts/425507/TP%20Maptest%20U-M%20button.user.js",
+    "code_size": 2134,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 414910,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-28T20:58:48.000Z",
+    "code_updated_at": "2020-12-05T23:41:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165127,
+        "name": "Hydrosaur",
+        "created_at": "2018-01-01T00:21:25.000Z",
+        "url": "https://greasyfork.org/users/165127-hydrosaur"
+      }
+    ],
+    "name": "Unfortunate-Maps RES Preview Image Proxy",
+    "description": "Fixes u-m preview images not loading in RES expandos.",
+    "url": "https://greasyfork.org/scripts/414910-unfortunate-maps-res-preview-image-proxy",
+    "code_url": "https://update.greasyfork.org/scripts/414910/Unfortunate-Maps%20RES%20Preview%20Image%20Proxy.user.js",
+    "code_size": 1605,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 414908,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-28T20:40:57.000Z",
+    "code_updated_at": "2020-10-28T20:40:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165127,
+        "name": "Hydrosaur",
+        "created_at": "2018-01-01T00:21:25.000Z",
+        "url": "https://greasyfork.org/users/165127-hydrosaur"
+      }
+    ],
+    "name": "Group Map Preview",
+    "description": "Fixes U-M previews in groups",
+    "url": "https://greasyfork.org/scripts/414908-group-map-preview",
+    "code_url": "https://update.greasyfork.org/scripts/414908/Group%20Map%20Preview.user.js",
+    "code_size": 957,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

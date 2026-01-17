@@ -1,0 +1,33 @@
+{
+  "id": 415947,
+  "daily_installs": 0,
+  "total_installs": 1298,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-11T15:23:11.000Z",
+  "code_updated_at": "2020-11-11T15:23:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 676435,
+      "name": "d1y",
+      "created_at": "2020-08-15T09:56:33.000Z",
+      "url": "https://greasyfork.org/users/676435-d1y"
+    }
+  ],
+  "name": "Github加速clone",
+  "description": "Github 加速 clone",
+  "url": "https://greasyfork.org/scripts/415947-github%E5%8A%A0%E9%80%9Fclone",
+  "code_url": "https://update.greasyfork.org/scripts/415947/Github%E5%8A%A0%E9%80%9Fclone.user.js",
+  "code_size": 5457,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 488683,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-01T09:02:21.000Z",
+    "code_updated_at": "2024-03-05T20:58:37.000Z",
+    "namespace": "http://dartcounter.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257969,
+        "name": "mrdarts180",
+        "created_at": "2024-02-05T22:15:43.000Z",
+        "url": "https://greasyfork.org/users/1257969-mrdarts180"
+      }
+    ],
+    "name": "DartCounter OnlyCam",
+    "description": "Filter games in online lobby by Cam Only matches.",
+    "url": "https://greasyfork.org/scripts/488683-dartcounter-onlycam",
+    "code_url": "https://update.greasyfork.org/scripts/488683/DartCounter%20OnlyCam.user.js",
+    "code_size": 3681,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486713,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-05T22:43:14.000Z",
+    "code_updated_at": "2025-03-13T17:44:00.000Z",
+    "namespace": "http://dartcounter.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257969,
+        "name": "mrdarts180",
+        "created_at": "2024-02-05T22:15:43.000Z",
+        "url": "https://greasyfork.org/users/1257969-mrdarts180"
+      }
+    ],
+    "name": "DartCounter Calculator",
+    "description": "Support maths for DartCounter score entry.",
+    "url": "https://greasyfork.org/scripts/486713-dartcounter-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/486713/DartCounter%20Calculator.user.js",
+    "code_size": 2977,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

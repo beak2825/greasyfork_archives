@@ -1,0 +1,33 @@
+{
+  "id": 441743,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-19T09:09:54.000Z",
+  "code_updated_at": "2022-03-20T08:02:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 889438,
+      "name": "thisDart",
+      "created_at": "2022-03-19T09:08:20.000Z",
+      "url": "https://greasyfork.org/users/889438-thisdart"
+    }
+  ],
+  "name": "自动跳过校园网提醒",
+  "description": "自动跳过湖北工业大学校园网公告提醒",
+  "url": "https://greasyfork.org/scripts/441743-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87%E6%A0%A1%E5%9B%AD%E7%BD%91%E6%8F%90%E9%86%92",
+  "code_url": "https://update.greasyfork.org/scripts/441743/%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87%E6%A0%A1%E5%9B%AD%E7%BD%91%E6%8F%90%E9%86%92.user.js",
+  "code_size": 503,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

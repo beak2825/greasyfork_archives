@@ -1,0 +1,33 @@
+{
+  "id": 482910,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-22T21:56:35.000Z",
+  "code_updated_at": "2023-12-22T22:44:11.000Z",
+  "namespace": "Play Shorts in the normal video player",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1237932,
+      "name": "soph104",
+      "created_at": "2023-12-22T21:52:01.000Z",
+      "url": "https://greasyfork.org/users/1237932-soph104"
+    }
+  ],
+  "name": "No Youtube Shorts Player",
+  "description": "on the Subscription page. Desktop & Mobile.",
+  "url": "https://greasyfork.org/scripts/482910-no-youtube-shorts-player",
+  "code_url": "https://update.greasyfork.org/scripts/482910/No%20Youtube%20Shorts%20Player.user.js",
+  "code_size": 1463,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "id": 473912,
+    "daily_installs": 1,
+    "total_installs": 2329,
+    "fan_score": "79.1",
+    "good_ratings": 25,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2023-08-26T02:58:07.000Z",
+    "code_updated_at": "2025-07-07T11:59:36.000Z",
+    "namespace": "https://github.com/BonjourFeng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1025142,
+        "name": "danicaStarR",
+        "created_at": "2023-02-11T00:29:05.000Z",
+        "url": "https://greasyfork.org/users/1025142-danicastarr"
+      },
+      {
+        "id": 1228457,
+        "name": "BonjourFeng",
+        "created_at": "2023-12-05T05:55:10.000Z",
+        "url": "https://greasyfork.org/users/1228457-bonjourfeng"
+      }
+    ],
+    "name": "Github搜索净化",
+    "description": "净化Github搜索页，屏蔽cirosantilli等400+人的敏感仓库。",
+    "url": "https://greasyfork.org/scripts/473912-github%E6%90%9C%E7%B4%A2%E5%87%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/473912/Github%E6%90%9C%E7%B4%A2%E5%87%80%E5%8C%96.user.js",
+    "code_size": 39359,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461366,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-07T08:58:21.000Z",
+    "code_updated_at": "2023-03-07T08:58:20.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1025142,
+        "name": "danicaStarR",
+        "created_at": "2023-02-11T00:29:05.000Z",
+        "url": "https://greasyfork.org/users/1025142-danicastarr"
+      }
+    ],
+    "name": "蓝奏云登录界面修改",
+    "description": "适用于移动端",
+    "url": "https://greasyfork.org/scripts/461366-%E8%93%9D%E5%A5%8F%E4%BA%91%E7%99%BB%E5%BD%95%E7%95%8C%E9%9D%A2%E4%BF%AE%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/461366/%E8%93%9D%E5%A5%8F%E4%BA%91%E7%99%BB%E5%BD%95%E7%95%8C%E9%9D%A2%E4%BF%AE%E6%94%B9.user.js",
+    "code_size": 781,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 428167,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-19T07:09:34.000Z",
+  "code_updated_at": "2021-06-19T07:09:34.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 9440,
+      "name": "princomp",
+      "created_at": "2015-02-28T16:37:33.000Z",
+      "url": "https://greasyfork.org/users/9440-princomp",
+      "scripts": []
+    }
+  ],
+  "name": "Remove Ext Limit",
+  "description": "Violentmonkey Scripts",
+  "url": "https://greasyfork.org/scripts/428167-remove-ext-limit",
+  "code_url": "https://update.greasyfork.org/scripts/428167/Remove%20Ext%20Limit.user.js",
+  "code_size": 1341,
+  "license": null,
+  "version": "0.0.1.20210619070934",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

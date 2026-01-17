@@ -1,0 +1,59 @@
+{
+  "id": 434753,
+  "daily_installs": 0,
+  "total_installs": 94,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-31T17:53:08.000Z",
+  "code_updated_at": "2021-10-31T17:53:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 830742,
+      "name": "Mannix Wu",
+      "created_at": "2021-10-31T17:49:48.000Z",
+      "url": "https://greasyfork.org/users/830742-mannix-wu",
+      "scripts": [
+        {
+          "id": 434753,
+          "daily_installs": 0,
+          "total_installs": 94,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-31T17:53:08.000Z",
+          "code_updated_at": "2021-10-31T17:53:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "哔哩哔哩不打开新窗口",
+          "description": "本脚本禁止了QQ以新窗口方式打开超链接，而在本窗口打开。至于意义何在，这样你就可以使用浏览器的WebK功能",
+          "url": "https://greasyfork.org/scripts/434753-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%B8%8D%E6%89%93%E5%BC%80%E6%96%B0%E7%AA%97%E5%8F%A3",
+          "code_url": "https://update.greasyfork.org/scripts/434753/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%B8%8D%E6%89%93%E5%BC%80%E6%96%B0%E7%AA%97%E5%8F%A3.user.js",
+          "code_size": 744,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "哔哩哔哩不打开新窗口",
+  "description": "本脚本禁止了QQ以新窗口方式打开超链接，而在本窗口打开。至于意义何在，这样你就可以使用浏览器的WebK功能",
+  "url": "https://greasyfork.org/scripts/434753-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%B8%8D%E6%89%93%E5%BC%80%E6%96%B0%E7%AA%97%E5%8F%A3",
+  "code_url": "https://update.greasyfork.org/scripts/434753/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%B8%8D%E6%89%93%E5%BC%80%E6%96%B0%E7%AA%97%E5%8F%A3.user.js",
+  "code_size": 744,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

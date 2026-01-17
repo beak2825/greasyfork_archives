@@ -1,0 +1,34 @@
+{
+  "id": 459231,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-01T05:32:50.000Z",
+  "code_updated_at": "2023-02-01T06:20:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816924,
+      "name": "Grizon",
+      "created_at": "2021-09-19T08:38:44.000Z",
+      "url": "https://greasyfork.org/users/816924-grizon",
+      "scripts": []
+    }
+  ],
+  "name": "Эмулятор обмена 1С - РМС",
+  "description": "Эмулятор",
+  "url": "https://greasyfork.org/scripts/459231-%D1%8D%D0%BC%D1%83%D0%BB%D1%8F%D1%82%D0%BE%D1%80-%D0%BE%D0%B1%D0%BC%D0%B5%D0%BD%D0%B0-1%D1%81-%D1%80%D0%BC%D1%81",
+  "code_url": "https://update.greasyfork.org/scripts/459231/%D0%AD%D0%BC%D1%83%D0%BB%D1%8F%D1%82%D0%BE%D1%80%20%D0%BE%D0%B1%D0%BC%D0%B5%D0%BD%D0%B0%201%D0%A1%20-%20%D0%A0%D0%9C%D0%A1.user.js",
+  "code_size": 1859,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

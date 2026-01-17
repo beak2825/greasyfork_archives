@@ -1,0 +1,33 @@
+{
+  "id": 490463,
+  "daily_installs": 1,
+  "total_installs": 178,
+  "fan_score": "30.1",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-03-21T13:11:30.000Z",
+  "code_updated_at": "2024-03-21T14:20:58.000Z",
+  "namespace": "Anong0u0",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 436980,
+      "name": "Anong0u0",
+      "created_at": "2020-01-20T10:01:06.000Z",
+      "url": "https://greasyfork.org/users/436980-anong0u0"
+    }
+  ],
+  "name": "動畫瘋-動畫封面顯示",
+  "description": "一個簡單的腳本，讓你可以欣賞巴哈為你精心挑選的封面",
+  "url": "https://greasyfork.org/scripts/490463-%E5%8B%95%E7%95%AB%E7%98%8B-%E5%8B%95%E7%95%AB%E5%B0%81%E9%9D%A2%E9%A1%AF%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/490463/%E5%8B%95%E7%95%AB%E7%98%8B-%E5%8B%95%E7%95%AB%E5%B0%81%E9%9D%A2%E9%A1%AF%E7%A4%BA.user.js",
+  "code_size": 2469,
+  "license": "Beerware License",
+  "version": "0.1.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

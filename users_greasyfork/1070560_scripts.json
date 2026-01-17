@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465178,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-30T08:51:04.000Z",
+    "code_updated_at": "2023-05-08T08:49:30.000Z",
+    "namespace": "https://falwipbfyygy.rth1.one/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1070560,
+        "name": "Pureheart Phoenix",
+        "created_at": "2023-04-30T08:45:05.000Z",
+        "url": "https://greasyfork.org/users/1070560-pureheart-phoenix"
+      }
+    ],
+    "name": "赖于凡你干嘛哎呦😏",
+    "description": "墨墨选中",
+    "url": "https://greasyfork.org/scripts/465178-%E8%B5%96%E4%BA%8E%E5%87%A1%E4%BD%A0%E5%B9%B2%E5%98%9B%E5%93%8E%E5%91%A6",
+    "code_url": "https://update.greasyfork.org/scripts/465178/%E8%B5%96%E4%BA%8E%E5%87%A1%E4%BD%A0%E5%B9%B2%E5%98%9B%E5%93%8E%E5%91%A6%F0%9F%98%8F.user.js",
+    "code_size": 1523,
+    "license": "MIT License",
+    "version": "4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 488596,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-29T05:53:34.000Z",
+  "code_updated_at": "2025-01-02T00:25:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1268304,
+      "name": "Envy Chen",
+      "created_at": "2024-02-29T05:41:27.000Z",
+      "url": "https://greasyfork.org/users/1268304-envy-chen",
+      "scripts": [
+        {
+          "id": 488596,
+          "daily_installs": 0,
+          "total_installs": 45,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-29T05:53:34.000Z",
+          "code_updated_at": "2025-01-02T00:25:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "51nb-style",
+          "description": "ibmnb.com (green style)",
+          "url": "https://greasyfork.org/scripts/488596-51nb-style",
+          "code_url": "https://update.greasyfork.org/scripts/488596/51nb-style.user.js",
+          "code_size": 35035,
+          "license": null,
+          "version": "2025-1-2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "51nb-style",
+  "description": "ibmnb.com (green style)",
+  "url": "https://greasyfork.org/scripts/488596-51nb-style",
+  "code_url": "https://update.greasyfork.org/scripts/488596/51nb-style.user.js",
+  "code_size": 35035,
+  "license": null,
+  "version": "2025-1-2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

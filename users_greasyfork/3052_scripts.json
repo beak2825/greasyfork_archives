@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491160,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-29T08:54:15.000Z",
+    "code_updated_at": "2024-04-27T14:13:38.000Z",
+    "namespace": "https://github.com/xxxily/h5player",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3052,
+        "name": "骑驴骡子马",
+        "created_at": "2014-06-26T07:06:17.000Z",
+        "url": "https://greasyfork.org/users/3052-%E9%AA%91%E9%A9%B4%E9%AA%A1%E5%AD%90%E9%A9%AC"
+      }
+    ],
+    "name": "HTML5视频播放器增强脚本",
+    "description": "视频增强脚本，支持所有H5视频网站，例如：B站、抖音、腾讯视频、优酷、爱奇艺、西瓜视频、油管（YouTube）、微博视频、知乎视频、搜狐视频、网易公开课、百度网盘、阿里云盘、ted、instagram、twitter等。全程快捷键控制，支持：倍速播放/加速播放、视频画面截图、画中画、网页全屏、调节亮度、饱和度、对比度、自定义配置功能增强等功能，为你提供愉悦的在线视频播放体验。还有视频广告快进、在线教程/教育视频倍速快学、视频文件下载等能力",
+    "url": "https://greasyfork.org/scripts/491160-html5%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/491160/HTML5%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 556736,
+    "license": "GPL",
+    "version": "4.2.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

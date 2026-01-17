@@ -1,0 +1,33 @@
+{
+  "id": 458869,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-25T22:31:04.000Z",
+  "code_updated_at": "2023-01-25T22:31:03.000Z",
+  "namespace": "redacted",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1016226,
+      "name": "amazingAkita",
+      "created_at": "2023-01-24T20:23:34.000Z",
+      "url": "https://greasyfork.org/users/1016226-amazingakita"
+    }
+  ],
+  "name": "tap the time",
+  "description": "clicking the time",
+  "url": "https://greasyfork.org/scripts/458869-tap-the-time",
+  "code_url": "https://update.greasyfork.org/scripts/458869/tap%20the%20time.user.js",
+  "code_size": 3457,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

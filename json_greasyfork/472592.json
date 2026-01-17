@@ -1,0 +1,59 @@
+{
+  "id": 472592,
+  "daily_installs": 1,
+  "total_installs": 153,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-06T21:04:22.000Z",
+  "code_updated_at": "2023-08-06T21:04:22.000Z",
+  "namespace": "left paren",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1145110,
+      "name": "Blood Manipulator",
+      "created_at": "2023-08-06T05:08:57.000Z",
+      "url": "https://greasyfork.org/users/1145110-blood-manipulator",
+      "scripts": [
+        {
+          "id": 472592,
+          "daily_installs": 1,
+          "total_installs": 153,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-06T21:04:22.000Z",
+          "code_updated_at": "2023-08-06T21:04:22.000Z",
+          "namespace": "left paren",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mobile Mode V2 - Bonk.io",
+          "description": "Allows you to use bonk.io on mobile devices with improved controls.",
+          "url": "https://greasyfork.org/scripts/472592-mobile-mode-v2-bonk-io",
+          "code_url": "https://update.greasyfork.org/scripts/472592/Mobile%20Mode%20V2%20-%20Bonkio.user.js",
+          "code_size": 5427,
+          "license": "The Unlicense",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mobile Mode V2 - Bonk.io",
+  "description": "Allows you to use bonk.io on mobile devices with improved controls.",
+  "url": "https://greasyfork.org/scripts/472592-mobile-mode-v2-bonk-io",
+  "code_url": "https://update.greasyfork.org/scripts/472592/Mobile%20Mode%20V2%20-%20Bonkio.user.js",
+  "code_size": 5427,
+  "license": "The Unlicense",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

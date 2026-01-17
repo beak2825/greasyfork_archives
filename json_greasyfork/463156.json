@@ -1,0 +1,34 @@
+{
+  "id": 463156,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-03T09:03:57.000Z",
+  "code_updated_at": "2023-06-19T03:43:12.000Z",
+  "namespace": "http://www.xueyidian.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 241471,
+      "name": "邹宏达",
+      "created_at": "2019-01-23T09:34:28.000Z",
+      "url": "https://greasyfork.org/users/241471-%E9%82%B9%E5%AE%8F%E8%BE%BE",
+      "scripts": []
+    }
+  ],
+  "name": "WebFuture模板配置助手",
+  "description": "动易软件设计部内部使用的脚本",
+  "url": "https://greasyfork.org/scripts/463156-webfuture%E6%A8%A1%E6%9D%BF%E9%85%8D%E7%BD%AE%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/463156/WebFuture%E6%A8%A1%E6%9D%BF%E9%85%8D%E7%BD%AE%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 8660,
+  "license": null,
+  "version": "2.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

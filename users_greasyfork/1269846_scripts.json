@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488897,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-03T16:11:27.000Z",
+    "code_updated_at": "2024-03-11T14:57:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1269846,
+        "name": "PIuztQgnI0M9bfKuvR0bfCNuX",
+        "created_at": "2024-03-03T16:03:31.000Z",
+        "url": "https://greasyfork.org/users/1269846-piuztqgni0m9bfkuvr0bfcnux"
+      }
+    ],
+    "name": "Blur Bunpro English examples",
+    "description": "Blurs English example sentences on Bunpro without mouse hover",
+    "url": "https://greasyfork.org/scripts/488897-blur-bunpro-english-examples",
+    "code_url": "https://update.greasyfork.org/scripts/488897/Blur%20Bunpro%20English%20examples.user.js",
+    "code_size": 627,
+    "license": "MIT License",
+    "version": "2024-03-11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

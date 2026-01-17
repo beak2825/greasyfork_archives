@@ -1,0 +1,34 @@
+{
+  "id": 491199,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-29T19:33:07.000Z",
+  "code_updated_at": "2024-03-29T19:33:07.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 995510,
+      "name": "Sad-M",
+      "created_at": "2022-12-10T13:57:23.000Z",
+      "url": "https://greasyfork.org/users/995510-sad-m",
+      "scripts": []
+    }
+  ],
+  "name": "CourseShare",
+  "description": "Share submission link with others",
+  "url": "https://greasyfork.org/scripts/491199-courseshare",
+  "code_url": "https://update.greasyfork.org/scripts/491199/CourseShare.user.js",
+  "code_size": 2432,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

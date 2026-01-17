@@ -1,0 +1,101 @@
+[
+  {
+    "id": 440256,
+    "daily_installs": 0,
+    "total_installs": 193,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-18T12:54:28.000Z",
+    "code_updated_at": "2022-02-21T01:19:00.000Z",
+    "namespace": "Douxt Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795141,
+        "name": "douxt",
+        "created_at": "2021-07-19T08:30:23.000Z",
+        "url": "https://greasyfork.org/users/795141-douxt"
+      }
+    ],
+    "name": "NEO Rating By Liu&Zone - 17lands.com",
+    "description": "2021/7/16下午6:58:30  想学轮抓的菜鸡，做个工具提高轮抓学习效率。大佬请无视。",
+    "url": "https://greasyfork.org/scripts/440256-neo-rating-by-liu-zone-17lands-com",
+    "code_url": "https://update.greasyfork.org/scripts/440256/NEO%20Rating%20By%20LiuZone%20-%2017landscom.user.js",
+    "code_size": 115584,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435473,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-14T01:16:48.000Z",
+    "code_updated_at": "2021-11-16T00:43:42.000Z",
+    "namespace": "Douxt Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795141,
+        "name": "douxt",
+        "created_at": "2021-07-19T08:30:23.000Z",
+        "url": "https://greasyfork.org/users/795141-douxt"
+      }
+    ],
+    "name": "VOW Rating By Liu&Zone - 17lands.com",
+    "description": "2021/7/16下午6:58:30  想学轮抓的菜鸡，做个工具提高轮抓学习效率。大佬请无视。",
+    "url": "https://greasyfork.org/scripts/435473-vow-rating-by-liu-zone-17lands-com",
+    "code_url": "https://update.greasyfork.org/scripts/435473/VOW%20Rating%20By%20LiuZone%20-%2017landscom.user.js",
+    "code_size": 110432,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433391,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-04T09:35:21.000Z",
+    "code_updated_at": "2021-10-04T09:35:20.000Z",
+    "namespace": "Douxt Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795141,
+        "name": "douxt",
+        "created_at": "2021-07-19T08:30:23.000Z",
+        "url": "https://greasyfork.org/users/795141-douxt"
+      }
+    ],
+    "name": "Rating Grab - 17lands.com",
+    "description": "2021/7/16下午6:58:30  抓取17lands评分，在console打印出来",
+    "url": "https://greasyfork.org/scripts/433391-rating-grab-17lands-com",
+    "code_url": "https://update.greasyfork.org/scripts/433391/Rating%20Grab%20-%2017landscom.user.js",
+    "code_size": 8208,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

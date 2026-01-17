@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438514,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-14T07:23:56.000Z",
+    "code_updated_at": "2022-03-30T02:34:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864715,
+        "name": "yuanyuan yan",
+        "created_at": "2022-01-14T07:13:31.000Z",
+        "url": "https://greasyfork.org/users/864715-yuanyuan-yan"
+      }
+    ],
+    "name": "Cocos Github UserName",
+    "description": "Github UserName for Cocos",
+    "url": "https://greasyfork.org/scripts/438514-cocos-github-username",
+    "code_url": "https://update.greasyfork.org/scripts/438514/Cocos%20Github%20UserName.user.js",
+    "code_size": 2417,
+    "license": null,
+    "version": "0.2.1",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

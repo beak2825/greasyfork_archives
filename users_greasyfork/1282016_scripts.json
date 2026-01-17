@@ -1,0 +1,68 @@
+[
+  {
+    "id": 491319,
+    "daily_installs": 1,
+    "total_installs": 784,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-31T10:28:41.000Z",
+    "code_updated_at": "2024-03-31T10:28:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282016,
+        "name": "Doxon Mamanazarov",
+        "created_at": "2024-03-31T10:17:31.000Z",
+        "url": "https://greasyfork.org/users/1282016-doxon-mamanazarov"
+      }
+    ],
+    "name": "Celestial Client Remix",
+    "description": "A Bloxd.io custom client.",
+    "url": "https://greasyfork.org/scripts/491319-celestial-client-remix",
+    "code_url": "https://update.greasyfork.org/scripts/491319/Celestial%20Client%20Remix.user.js",
+    "code_size": 17389,
+    "license": "GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491318,
+    "daily_installs": 0,
+    "total_installs": 404,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-31T10:26:11.000Z",
+    "code_updated_at": "2024-03-31T10:26:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282016,
+        "name": "Doxon Mamanazarov",
+        "created_at": "2024-03-31T10:17:31.000Z",
+        "url": "https://greasyfork.org/users/1282016-doxon-mamanazarov"
+      }
+    ],
+    "name": "Custom Cursor",
+    "description": "Custom Bloxd Cursor",
+    "url": "https://greasyfork.org/scripts/491318-custom-cursor",
+    "code_url": "https://update.greasyfork.org/scripts/491318/Custom%20Cursor.user.js",
+    "code_size": 1162,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

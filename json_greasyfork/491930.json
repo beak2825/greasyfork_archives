@@ -1,0 +1,59 @@
+{
+  "id": 491930,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-07T22:49:30.000Z",
+  "code_updated_at": "2024-04-07T22:49:30.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1229534,
+      "name": "script.",
+      "created_at": "2023-12-07T02:20:24.000Z",
+      "url": "https://greasyfork.org/users/1229534-script",
+      "scripts": [
+        {
+          "id": 481568,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-07T02:21:31.000Z",
+          "code_updated_at": "2023-12-07T02:21:31.000Z",
+          "namespace": "https://v3rm.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "V3rm Bloxflip Ad Remover",
+          "description": "Remove those ads that show up on every thread.",
+          "url": "https://greasyfork.org/scripts/481568-v3rm-bloxflip-ad-remover",
+          "code_url": "https://update.greasyfork.org/scripts/481568/V3rm%20Bloxflip%20Ad%20Remover.user.js",
+          "code_size": 503,
+          "license": "MIT License",
+          "version": "2023-12-07",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Show Item Price In Trades",
+  "description": "Shows the price of items in trades.",
+  "url": "https://greasyfork.org/scripts/491930-show-item-price-in-trades",
+  "code_url": "https://update.greasyfork.org/scripts/491930/Show%20Item%20Price%20In%20Trades.user.js",
+  "code_size": 1150,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 479125,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-05T21:20:34.000Z",
+  "code_updated_at": "2023-11-05T23:50:17.000Z",
+  "namespace": "https://greasyfork.org/tr/users/976572",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 976572,
+      "name": "Yusuf Can",
+      "created_at": "2022-10-29T05:16:38.000Z",
+      "url": "https://greasyfork.org/users/976572-yusuf-can",
+      "scripts": []
+    }
+  ],
+  "name": "MyBot CWSS",
+  "description": "MyBot WebSocket Sniffer",
+  "url": "https://greasyfork.org/scripts/479125-mybot-cwss",
+  "code_url": "https://update.greasyfork.org/scripts/479125/1275822/MyBot%20CWSS.js",
+  "code_size": 3781,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

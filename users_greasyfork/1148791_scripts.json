@@ -31,5 +31,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 474083,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-28T12:16:34.000Z",
+    "code_updated_at": "2023-08-28T12:16:34.000Z",
+    "namespace": "https://greasyfork.org/en/users/1148791-vuccala",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148791,
+        "name": "Vuccala",
+        "created_at": "2023-08-11T04:22:08.000Z",
+        "url": "https://greasyfork.org/users/1148791-vuccala"
+      }
+    ],
+    "name": "Followy back/close button",
+    "description": "Inserts a back + close button that approaches your mouse pointer as you move it.",
+    "url": "https://greasyfork.org/scripts/474083-followy-back-close-button",
+    "code_url": "https://update.greasyfork.org/scripts/474083/Followy%20backclose%20button.user.js",
+    "code_size": 2412,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473082,
+    "daily_installs": 0,
+    "total_installs": 161,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-14T22:56:12.000Z",
+    "code_updated_at": "2025-10-24T12:51:23.000Z",
+    "namespace": "https://greasyfork.org/en/users/1148791-vuccala",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148791,
+        "name": "Vuccala",
+        "created_at": "2023-08-11T04:22:08.000Z",
+        "url": "https://greasyfork.org/users/1148791-vuccala"
+      }
+    ],
+    "name": "YouTube /embed/ forwarder",
+    "description": "Forwards YouTube links to the youtube.com/embed/* page, so there's just the video in your window and nothing else.",
+    "url": "https://greasyfork.org/scripts/473082-youtube-embed-forwarder",
+    "code_url": "https://update.greasyfork.org/scripts/473082/YouTube%20embed%20forwarder.user.js",
+    "code_size": 3809,
+    "license": "whatever",
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472930,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-12T02:52:38.000Z",
+    "code_updated_at": "2023-11-16T11:48:00.000Z",
+    "namespace": "https://greasyfork.org/en/users/1148791-vuccala",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148791,
+        "name": "Vuccala",
+        "created_at": "2023-08-11T04:22:08.000Z",
+        "url": "https://greasyfork.org/users/1148791-vuccala"
+      }
+    ],
+    "name": "De-spamify FurAffinity Search",
+    "description": "Removes 99% of YCH/Reminder/Adoptables/etc. spam from FurAffinity searches by appending a carefully crafted negation string to the end of your search.",
+    "url": "https://greasyfork.org/scripts/472930-de-spamify-furaffinity-search",
+    "code_url": "https://update.greasyfork.org/scripts/472930/De-spamify%20FurAffinity%20Search.user.js",
+    "code_size": 2292,
+    "license": "MIT License",
+    "version": "0.63",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472918,
+    "daily_installs": 0,
+    "total_installs": 121,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-11T18:39:43.000Z",
+    "code_updated_at": "2023-08-11T18:39:43.000Z",
+    "namespace": "https://greasyfork.org/en/users/1148791-vuccala",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148791,
+        "name": "Vuccala",
+        "created_at": "2023-08-11T04:22:08.000Z",
+        "url": "https://greasyfork.org/users/1148791-vuccala"
+      }
+    ],
+    "name": "Flickr Pro Nag Remover",
+    "description": "Removes the obnoxious \"Upgrade to Flickr Pro to hide these ads\" nag screen (that normally appears every 6 image slides) by deleting the 'adCounter' cookie that tracks your slideshow clicks.",
+    "url": "https://greasyfork.org/scripts/472918-flickr-pro-nag-remover",
+    "code_url": "https://update.greasyfork.org/scripts/472918/Flickr%20Pro%20Nag%20Remover.user.js",
+    "code_size": 1388,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

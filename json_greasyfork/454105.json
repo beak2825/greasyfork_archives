@@ -1,0 +1,59 @@
+{
+  "id": 454105,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-01T21:30:51.000Z",
+  "code_updated_at": "2022-11-01T21:30:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 978162,
+      "name": "unoqaz",
+      "created_at": "2022-11-01T20:53:42.000Z",
+      "url": "https://greasyfork.org/users/978162-unoqaz",
+      "scripts": [
+        {
+          "id": 454105,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-01T21:30:51.000Z",
+          "code_updated_at": "2022-11-01T21:30:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Laravel docs sidebar",
+          "description": "Move the table of contents in laravel docs to a sidebar!",
+          "url": "https://greasyfork.org/scripts/454105-laravel-docs-sidebar",
+          "code_url": "https://update.greasyfork.org/scripts/454105/Laravel%20docs%20sidebar.user.js",
+          "code_size": 3799,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Laravel docs sidebar",
+  "description": "Move the table of contents in laravel docs to a sidebar!",
+  "url": "https://greasyfork.org/scripts/454105-laravel-docs-sidebar",
+  "code_url": "https://update.greasyfork.org/scripts/454105/Laravel%20docs%20sidebar.user.js",
+  "code_size": 3799,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

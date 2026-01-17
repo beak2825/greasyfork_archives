@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445816,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-31T16:17:31.000Z",
+    "code_updated_at": "2022-05-31T16:17:31.000Z",
+    "namespace": "https://github.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 920640,
+        "name": "Macho_Muchcho",
+        "created_at": "2022-05-31T15:20:18.000Z",
+        "url": "https://greasyfork.org/users/920640-macho-muchcho"
+      }
+    ],
+    "name": "Узнать номер клиента",
+    "description": "Позволяет узнать номер клиента по ID",
+    "url": "https://greasyfork.org/scripts/445816-%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C-%D0%BD%D0%BE%D0%BC%D0%B5%D1%80-%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/445816/%D0%A3%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D0%BD%D0%BE%D0%BC%D0%B5%D1%80%20%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0.user.js",
+    "code_size": 961,
+    "license": "MIT License",
+    "version": "1.3.5",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

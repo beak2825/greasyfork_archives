@@ -1,0 +1,59 @@
+{
+  "id": 435665,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-18T04:00:02.000Z",
+  "code_updated_at": "2021-11-18T04:00:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 840399,
+      "name": "RazaJin",
+      "created_at": "2021-11-18T03:53:06.000Z",
+      "url": "https://greasyfork.org/users/840399-razajin",
+      "scripts": [
+        {
+          "id": 435665,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-18T04:00:02.000Z",
+          "code_updated_at": "2021-11-18T04:00:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SHKT",
+          "description": "刷课",
+          "url": "https://greasyfork.org/scripts/435665-shkt",
+          "code_url": "https://update.greasyfork.org/scripts/435665/SHKT.user.js",
+          "code_size": 2075,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SHKT",
+  "description": "刷课",
+  "url": "https://greasyfork.org/scripts/435665-shkt",
+  "code_url": "https://update.greasyfork.org/scripts/435665/SHKT.user.js",
+  "code_size": 2075,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

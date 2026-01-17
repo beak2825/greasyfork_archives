@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416045,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-13T15:13:21.000Z",
+    "code_updated_at": "2020-11-18T21:33:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 704732,
+        "name": "geode-booster",
+        "created_at": "2020-11-13T14:57:20.000Z",
+        "url": "https://greasyfork.org/users/704732-geode-booster"
+      }
+    ],
+    "name": "stonehub_jvc",
+    "description": "add some chat features : jvc stickers, jvc smileys and youtube videos directly integrated into Idlescape",
+    "url": "https://greasyfork.org/scripts/416045-stonehub-jvc",
+    "code_url": "https://update.greasyfork.org/scripts/416045/stonehub_jvc.user.js",
+    "code_size": 21337,
+    "license": null,
+    "version": "1.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

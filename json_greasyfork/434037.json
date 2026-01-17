@@ -1,0 +1,33 @@
+{
+  "id": 434037,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-17T15:04:34.000Z",
+  "code_updated_at": "2021-12-29T06:58:15.000Z",
+  "namespace": "https://epiano.jp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 826162,
+      "name": "peko",
+      "created_at": "2021-10-17T15:03:33.000Z",
+      "url": "https://greasyfork.org/users/826162-peko"
+    }
+  ],
+  "name": "epiano",
+  "description": "chin-chin",
+  "url": "https://greasyfork.org/scripts/434037-epiano",
+  "code_url": "https://update.greasyfork.org/scripts/434037/epiano.user.js",
+  "code_size": 65427,
+  "license": null,
+  "version": "2.60",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429257,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-12T13:06:01.000Z",
+    "code_updated_at": "2021-09-19T22:21:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 792812,
+        "name": "Gidotty",
+        "created_at": "2021-07-12T12:53:32.000Z",
+        "url": "https://greasyfork.org/users/792812-gidotty"
+      }
+    ],
+    "name": "Auto-Roll bot",
+    "description": "Roll when Captcha is solved",
+    "url": "https://greasyfork.org/scripts/429257-auto-roll-bot",
+    "code_url": "https://update.greasyfork.org/scripts/429257/Auto-Roll%20bot.user.js",
+    "code_size": 701,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

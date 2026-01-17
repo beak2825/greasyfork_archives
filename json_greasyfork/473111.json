@@ -1,0 +1,33 @@
+{
+  "id": 473111,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-15T08:46:06.000Z",
+  "code_updated_at": "2024-01-18T08:17:00.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/424132-auto-feed",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1117749,
+      "name": "Excepti0n",
+      "created_at": "2023-07-03T05:40:18.000Z",
+      "url": "https://greasyfork.org/users/1117749-excepti0n"
+    }
+  ],
+  "name": "auto_feed",
+  "description": "PT一键转种脚本",
+  "url": "https://greasyfork.org/scripts/473111-auto-feed",
+  "code_url": "https://update.greasyfork.org/scripts/473111/auto_feed.user.js",
+  "code_size": 1369977,
+  "license": "GPL-3.0 License",
+  "version": "2.0.5.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

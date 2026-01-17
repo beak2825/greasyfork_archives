@@ -1,0 +1,33 @@
+{
+  "id": 412585,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-06T14:52:29.000Z",
+  "code_updated_at": "2020-10-27T13:37:38.000Z",
+  "namespace": "College",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 521189,
+      "name": "aexe",
+      "created_at": "2020-04-18T07:37:49.000Z",
+      "url": "https://greasyfork.org/users/521189-aexe"
+    }
+  ],
+  "name": "WebinarDownloadAndAnytime",
+  "description": "Скачивание презентаций, всегда онлайн на вебинаре",
+  "url": "https://greasyfork.org/scripts/412585-webinardownloadandanytime",
+  "code_url": "https://update.greasyfork.org/scripts/412585/WebinarDownloadAndAnytime.user.js",
+  "code_size": 26647,
+  "license": null,
+  "version": "1.0.2.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

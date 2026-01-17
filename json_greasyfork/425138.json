@@ -1,0 +1,34 @@
+{
+  "id": 425138,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-16T22:04:37.000Z",
+  "code_updated_at": "2021-08-01T01:44:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 206502,
+      "name": "TomaszFromasz",
+      "created_at": "2018-08-21T06:06:43.000Z",
+      "url": "https://greasyfork.org/users/206502-tomaszfromasz",
+      "scripts": []
+    }
+  ],
+  "name": "KTW4_Tracker",
+  "description": "Skrypt do śledzenia rozładunków towaru z KTW4.",
+  "url": "https://greasyfork.org/scripts/425138-ktw4-tracker",
+  "code_url": "https://update.greasyfork.org/scripts/425138/KTW4_Tracker.user.js",
+  "code_size": 13439,
+  "license": null,
+  "version": "2",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

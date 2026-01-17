@@ -1,0 +1,59 @@
+{
+  "id": 493383,
+  "daily_installs": 0,
+  "total_installs": 311,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-24T18:07:03.000Z",
+  "code_updated_at": "2024-04-24T18:07:02.000Z",
+  "namespace": "http://fb.blooket.com/c/firebase/id",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1292692,
+      "name": "Bfnrnnr",
+      "created_at": "2024-04-24T18:02:02.000Z",
+      "url": "https://greasyfork.org/users/1292692-bfnrnnr",
+      "scripts": [
+        {
+          "id": 493383,
+          "daily_installs": 0,
+          "total_installs": 311,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-24T18:07:03.000Z",
+          "code_updated_at": "2024-04-24T18:07:02.000Z",
+          "namespace": "http://fb.blooket.com/c/firebase/id",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Blooket Random Game",
+          "description": "this may or may not be bannable lol!",
+          "url": "https://greasyfork.org/scripts/493383-blooket-random-game",
+          "code_url": "https://update.greasyfork.org/scripts/493383/Blooket%20Random%20Game.user.js",
+          "code_size": 1220,
+          "license": null,
+          "version": "0.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Blooket Random Game",
+  "description": "this may or may not be bannable lol!",
+  "url": "https://greasyfork.org/scripts/493383-blooket-random-game",
+  "code_url": "https://update.greasyfork.org/scripts/493383/Blooket%20Random%20Game.user.js",
+  "code_size": 1220,
+  "license": null,
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

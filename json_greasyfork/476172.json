@@ -1,0 +1,34 @@
+{
+  "id": 476172,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-27T13:57:20.000Z",
+  "code_updated_at": "2023-12-01T09:21:04.000Z",
+  "namespace": "capture_records_id",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1182004,
+      "name": "daiy",
+      "created_at": "2023-09-27T11:07:38.000Z",
+      "url": "https://greasyfork.org/users/1182004-daiy",
+      "scripts": []
+    }
+  ],
+  "name": "查询capture_record_ID兼容新旧版后台",
+  "description": "capture_records_id",
+  "url": "https://greasyfork.org/scripts/476172-%E6%9F%A5%E8%AF%A2capture-record-id%E5%85%BC%E5%AE%B9%E6%96%B0%E6%97%A7%E7%89%88%E5%90%8E%E5%8F%B0",
+  "code_url": "https://update.greasyfork.org/scripts/476172/%E6%9F%A5%E8%AF%A2capture_record_ID%E5%85%BC%E5%AE%B9%E6%96%B0%E6%97%A7%E7%89%88%E5%90%8E%E5%8F%B0.user.js",
+  "code_size": 5747,
+  "license": "MIT License",
+  "version": "0.0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

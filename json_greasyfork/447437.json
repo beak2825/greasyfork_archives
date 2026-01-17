@@ -1,0 +1,34 @@
+{
+  "id": 447437,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-04T23:50:44.000Z",
+  "code_updated_at": "2022-07-05T00:01:49.000Z",
+  "namespace": "userscript.wsbmr.skeb.moredata",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 932146,
+      "name": "wsbmr",
+      "created_at": "2022-07-04T23:45:22.000Z",
+      "url": "https://greasyfork.org/users/932146-wsbmr",
+      "scripts": []
+    }
+  ],
+  "name": "Skeb More Data",
+  "description": "Skeb ヘビーリクエスター向け UserScript",
+  "url": "https://greasyfork.org/scripts/447437-skeb-more-data",
+  "code_url": "https://update.greasyfork.org/scripts/447437/Skeb%20More%20Data.user.js",
+  "code_size": 3999,
+  "license": null,
+  "version": "0.2.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

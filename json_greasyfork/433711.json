@@ -1,0 +1,33 @@
+{
+  "id": 433711,
+  "daily_installs": 0,
+  "total_installs": 80,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-11T05:07:43.000Z",
+  "code_updated_at": "2021-10-11T05:07:42.000Z",
+  "namespace": "https://gist.github.com/Devil-Z/1c68b4eee9b28164dbad64c8890ca089",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 752852,
+      "name": "DoraTiger",
+      "created_at": "2021-03-30T04:36:14.000Z",
+      "url": "https://greasyfork.org/users/752852-doratiger"
+    }
+  ],
+  "name": "byrbt趣味盒图片放大v2",
+  "description": "放大byrbt主页和历史趣味盒图片,基于byr社区的原始版本进行修改,支持更换域名后的byr和新版主页地址,添加了开源协议.",
+  "url": "https://greasyfork.org/scripts/433711-byrbt%E8%B6%A3%E5%91%B3%E7%9B%92%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7v2",
+  "code_url": "https://update.greasyfork.org/scripts/433711/byrbt%E8%B6%A3%E5%91%B3%E7%9B%92%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7v2.user.js",
+  "code_size": 1672,
+  "license": "Apache Licence 2.0",
+  "version": "1.2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

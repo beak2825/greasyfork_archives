@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 463592,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-09T10:13:24.000Z",
+    "code_updated_at": "2023-04-09T10:37:51.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1056780,
+        "name": "jumgemini",
+        "created_at": "2023-04-09T10:07:21.000Z",
+        "url": "https://greasyfork.org/users/1056780-jumgemini"
+      }
+    ],
+    "name": "魂斗罗30命",
+    "description": "自动输入\"上上下下左右左右BA\"",
+    "url": "https://greasyfork.org/scripts/463592-%E9%AD%82%E6%96%97%E7%BD%9730%E5%91%BD",
+    "code_url": "https://update.greasyfork.org/scripts/463592/%E9%AD%82%E6%96%97%E7%BD%9730%E5%91%BD.user.js",
+    "code_size": 1383,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

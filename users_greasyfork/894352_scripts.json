@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442211,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-27T23:59:59.000Z",
+    "code_updated_at": "2022-03-27T23:59:59.000Z",
+    "namespace": "btc1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 894352,
+        "name": "Person of Interest",
+        "created_at": "2022-03-27T23:48:31.000Z",
+        "url": "https://greasyfork.org/users/894352-person-of-interest"
+      }
+    ],
+    "name": "bitchute",
+    "description": "fix bitchute videos on seamonkey and palemoon",
+    "url": "https://greasyfork.org/scripts/442211-bitchute",
+    "code_url": "https://update.greasyfork.org/scripts/442211/bitchute.user.js",
+    "code_size": 851,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 459792,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-10T18:10:44.000Z",
+  "code_updated_at": "2025-11-04T16:57:10.000Z",
+  "namespace": "https://github.com/rybak/atlassian-tweaks",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 951503,
+      "name": "andrybak",
+      "created_at": "2022-08-27T23:56:27.000Z",
+      "url": "https://greasyfork.org/users/951503-andrybak"
+    }
+  ],
+  "name": "Confluence: better monospace",
+  "description": "Adds a border and a background to monospace text, making it easier to read.",
+  "url": "https://greasyfork.org/scripts/459792-confluence-better-monospace",
+  "code_url": "https://update.greasyfork.org/scripts/459792/Confluence%3A%20better%20monospace.user.css",
+  "code_size": 2377,
+  "license": "MIT License",
+  "version": "8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445507,
+    "daily_installs": 0,
+    "total_installs": 97,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-25T06:18:21.000Z",
+    "code_updated_at": "2022-05-27T08:18:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918281,
+        "name": "Driss_Angel",
+        "created_at": "2022-05-25T05:24:41.000Z",
+        "url": "https://greasyfork.org/users/918281-driss-angel"
+      }
+    ],
+    "name": "太翼自动播放Plus",
+    "description": "通过调用接口模拟学习过程",
+    "url": "https://greasyfork.org/scripts/445507-%E5%A4%AA%E7%BF%BC%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BEplus",
+    "code_url": "https://update.greasyfork.org/scripts/445507/%E5%A4%AA%E7%BF%BC%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BEPlus.user.js",
+    "code_size": 6047,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

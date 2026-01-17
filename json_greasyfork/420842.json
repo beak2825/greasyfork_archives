@@ -1,0 +1,59 @@
+{
+  "id": 420842,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-29T00:06:16.000Z",
+  "code_updated_at": "2021-05-05T03:42:06.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 316436,
+      "name": "DanDanDan",
+      "created_at": "2019-07-09T01:58:28.000Z",
+      "url": "https://greasyfork.org/users/316436-dandandan",
+      "scripts": [
+        {
+          "id": 387312,
+          "daily_installs": 19,
+          "total_installs": 18259,
+          "fan_score": "75.6",
+          "good_ratings": 42,
+          "ok_ratings": 10,
+          "bad_ratings": 2,
+          "created_at": "2019-07-09T02:11:55.000Z",
+          "code_updated_at": "2025-10-02T01:51:20.000Z",
+          "namespace": "ImageBoardEnhancer",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Image Board Enhancer (Rule34, Gelbooru, e621, and more)",
+          "description": "Auto Resize images and video on multiple image boards and enlarges thumbnails on mouse hover and adds content type icons to them.",
+          "url": "https://greasyfork.org/scripts/387312-image-board-enhancer-rule34-gelbooru-e621-and-more",
+          "code_url": "https://update.greasyfork.org/scripts/387312/Image%20Board%20Enhancer%20%28Rule34%2C%20Gelbooru%2C%20e621%2C%20and%20more%29.user.js",
+          "code_size": 120840,
+          "license": null,
+          "version": "1.5.20",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "vanilla-js-wheel-zoom",
+  "description": "Image resizing using mouse wheel + drag scrollable image (as well as any HTML content)",
+  "url": "https://greasyfork.org/scripts/420842-vanilla-js-wheel-zoom",
+  "code_url": "https://update.greasyfork.org/scripts/420842/927891/vanilla-js-wheel-zoom.js",
+  "code_size": 30402,
+  "license": null,
+  "version": "0.0.1.20210505034206",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

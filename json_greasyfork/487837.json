@@ -1,0 +1,59 @@
+{
+  "id": 487837,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-20T15:00:49.000Z",
+  "code_updated_at": "2024-02-20T15:00:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1264376,
+      "name": "SeekingLight233",
+      "created_at": "2024-02-20T14:49:57.000Z",
+      "url": "https://greasyfork.org/users/1264376-seekinglight233",
+      "scripts": [
+        {
+          "id": 487837,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-20T15:00:49.000Z",
+          "code_updated_at": "2024-02-20T15:00:49.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "copy-chatgpt-input",
+          "description": "chatgpt发送前自动复制输入框内容到剪切板",
+          "url": "https://greasyfork.org/scripts/487837-copy-chatgpt-input",
+          "code_url": "https://update.greasyfork.org/scripts/487837/copy-chatgpt-input.user.js",
+          "code_size": 1716,
+          "license": "MIT License",
+          "version": "2024-02-20",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "copy-chatgpt-input",
+  "description": "chatgpt发送前自动复制输入框内容到剪切板",
+  "url": "https://greasyfork.org/scripts/487837-copy-chatgpt-input",
+  "code_url": "https://update.greasyfork.org/scripts/487837/copy-chatgpt-input.user.js",
+  "code_size": 1716,
+  "license": "MIT License",
+  "version": "2024-02-20",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

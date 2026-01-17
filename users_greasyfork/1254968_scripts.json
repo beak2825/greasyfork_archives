@@ -1,0 +1,68 @@
+[
+  {
+    "id": 486075,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-30T16:21:39.000Z",
+    "code_updated_at": "2024-02-05T17:50:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254968,
+        "name": "EnB-Doctor",
+        "created_at": "2024-01-30T03:11:37.000Z",
+        "url": "https://greasyfork.org/users/1254968-enb-doctor"
+      }
+    ],
+    "name": "Net-7 Account Vault Filters",
+    "description": "Adds visual filters to the Account Vault page for the Earth & Beyond emulator run by net-7.",
+    "url": "https://greasyfork.org/scripts/486075-net-7-account-vault-filters",
+    "code_url": "https://update.greasyfork.org/scripts/486075/Net-7%20Account%20Vault%20Filters.user.js",
+    "code_size": 41531,
+    "license": "CC BY-NC",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486024,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-30T03:30:35.000Z",
+    "code_updated_at": "2024-01-30T03:30:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254968,
+        "name": "EnB-Doctor",
+        "created_at": "2024-01-30T03:11:37.000Z",
+        "url": "https://greasyfork.org/users/1254968-enb-doctor"
+      }
+    ],
+    "name": "Enhanced Vault Interaction with Checkboxes",
+    "description": "Enhance interactions in the vault using checkboxes for a toggleable filter by level",
+    "url": "https://greasyfork.org/scripts/486024-enhanced-vault-interaction-with-checkboxes",
+    "code_url": "https://update.greasyfork.org/scripts/486024/Enhanced%20Vault%20Interaction%20with%20Checkboxes.user.js",
+    "code_size": 5984,
+    "license": "CC BY-NC",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

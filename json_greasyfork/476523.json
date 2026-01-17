@@ -1,0 +1,59 @@
+{
+  "id": 476523,
+  "daily_installs": 0,
+  "total_installs": 128,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-02T00:24:41.000Z",
+  "code_updated_at": "2023-10-02T00:24:41.000Z",
+  "namespace": "https://tampermonkey.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1185620,
+      "name": "Kapeika",
+      "created_at": "2023-10-02T00:19:40.000Z",
+      "url": "https://greasyfork.org/users/1185620-kapeika",
+      "scripts": [
+        {
+          "id": 476523,
+          "daily_installs": 0,
+          "total_installs": 128,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-02T00:24:41.000Z",
+          "code_updated_at": "2023-10-02T00:24:41.000Z",
+          "namespace": "https://tampermonkey.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Rustclash.com - Text to Link",
+          "description": "This script will replace all \"battle/1234567\" text messages to clickable links.",
+          "url": "https://greasyfork.org/scripts/476523-rustclash-com-text-to-link",
+          "code_url": "https://update.greasyfork.org/scripts/476523/Rustclashcom%20-%20Text%20to%20Link.user.js",
+          "code_size": 947,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Rustclash.com - Text to Link",
+  "description": "This script will replace all \"battle/1234567\" text messages to clickable links.",
+  "url": "https://greasyfork.org/scripts/476523-rustclash-com-text-to-link",
+  "code_url": "https://update.greasyfork.org/scripts/476523/Rustclashcom%20-%20Text%20to%20Link.user.js",
+  "code_size": 947,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

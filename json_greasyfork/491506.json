@@ -1,0 +1,34 @@
+{
+  "id": 491506,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-02T21:12:25.000Z",
+  "code_updated_at": "2024-04-03T15:49:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1283076,
+      "name": "crueltekk",
+      "created_at": "2024-04-02T21:09:12.000Z",
+      "url": "https://greasyfork.org/users/1283076-crueltekk",
+      "scripts": []
+    }
+  ],
+  "name": "HoU Recolor",
+  "description": "Einfaches recolor von HoU, ihr könnt hinter background-color eure eigenen Hex Farbcodes setzen :)",
+  "url": "https://greasyfork.org/scripts/491506-hou-recolor",
+  "code_url": "https://update.greasyfork.org/scripts/491506/HoU%20Recolor.user.js",
+  "code_size": 1326,
+  "license": "MIT License",
+  "version": "2024-04-03",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

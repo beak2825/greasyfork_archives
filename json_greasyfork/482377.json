@@ -1,0 +1,59 @@
+{
+  "id": 482377,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-16T09:44:53.000Z",
+  "code_updated_at": "2023-12-16T09:44:53.000Z",
+  "namespace": "https://github.com/SakibulHasaan",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1231054,
+      "name": "Md Sakibul Hasan",
+      "created_at": "2023-12-09T11:56:06.000Z",
+      "url": "https://greasyfork.org/users/1231054-md-sakibul-hasan",
+      "scripts": [
+        {
+          "id": 482377,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-16T09:44:53.000Z",
+          "code_updated_at": "2023-12-16T09:44:53.000Z",
+          "namespace": "https://github.com/SakibulHasaan",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PHero Next Prev Button on Full Screen",
+          "description": "This script adds next and previous buttons for the web.programmming-hero.com site.",
+          "url": "https://greasyfork.org/scripts/482377-phero-next-prev-button-on-full-screen",
+          "code_url": "https://update.greasyfork.org/scripts/482377/PHero%20Next%20Prev%20Button%20on%20Full%20Screen.user.js",
+          "code_size": 4706,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PHero Next Prev Button on Full Screen",
+  "description": "This script adds next and previous buttons for the web.programmming-hero.com site.",
+  "url": "https://greasyfork.org/scripts/482377-phero-next-prev-button-on-full-screen",
+  "code_url": "https://update.greasyfork.org/scripts/482377/PHero%20Next%20Prev%20Button%20on%20Full%20Screen.user.js",
+  "code_size": 4706,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

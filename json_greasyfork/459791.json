@@ -1,0 +1,33 @@
+{
+  "id": 459791,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-10T18:10:04.000Z",
+  "code_updated_at": "2023-02-10T18:11:06.000Z",
+  "namespace": "https://github.com/Huoyuuu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 987377,
+      "name": "Huoyuuu",
+      "created_at": "2022-11-24T14:57:34.000Z",
+      "url": "https://greasyfork.org/users/987377-huoyuuu"
+    }
+  ],
+  "name": "chatGPT 删除upgrade按钮",
+  "description": "延时3秒自动删除upgrade按钮（这脚本确实没太大用，直接把代码拷贝到已有的脚本里面就成）",
+  "url": "https://greasyfork.org/scripts/459791-chatgpt-%E5%88%A0%E9%99%A4upgrade%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/459791/chatGPT%20%E5%88%A0%E9%99%A4upgrade%E6%8C%89%E9%92%AE.user.js",
+  "code_size": 1062,
+  "license": "The MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

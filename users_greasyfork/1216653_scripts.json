@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479717,
+    "daily_installs": 0,
+    "total_installs": 175,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-13T09:26:12.000Z",
+    "code_updated_at": "2023-11-13T09:26:12.000Z",
+    "namespace": "http://framist.top/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1216653,
+        "name": "framist",
+        "created_at": "2023-11-13T08:50:21.000Z",
+        "url": "https://greasyfork.org/users/1216653-framist"
+      }
+    ],
+    "name": "兵器网络教育平台刷课助手",
+    "description": "兵器网络教育平台刷课助手，自动并快速刷课，一个草草的初期版本",
+    "url": "https://greasyfork.org/scripts/479717-%E5%85%B5%E5%99%A8%E7%BD%91%E7%BB%9C%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E5%88%B7%E8%AF%BE%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/479717/%E5%85%B5%E5%99%A8%E7%BD%91%E7%BB%9C%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E5%88%B7%E8%AF%BE%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 1555,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

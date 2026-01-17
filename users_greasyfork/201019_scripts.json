@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426911,
+    "daily_installs": 0,
+    "total_installs": 122,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-23T12:58:47.000Z",
+    "code_updated_at": "2021-05-23T13:38:55.000Z",
+    "namespace": "https://greasyfork.org/users/201019",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201019,
+        "name": "Eug1ena",
+        "created_at": "2018-08-04T09:34:58.000Z",
+        "url": "https://greasyfork.org/users/201019-eug1ena"
+      }
+    ],
+    "name": "HighlightAtCoderContestNot2100",
+    "description": "highlight in red AtCoder rated contests whose start time is not 21:00.",
+    "url": "https://greasyfork.org/scripts/426911-highlightatcodercontestnot2100",
+    "code_url": "https://update.greasyfork.org/scripts/426911/HighlightAtCoderContestNot2100.user.js",
+    "code_size": 1925,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

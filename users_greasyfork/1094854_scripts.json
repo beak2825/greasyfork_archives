@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468547,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-13T06:10:39.000Z",
+    "code_updated_at": "2023-06-14T07:44:54.000Z",
+    "namespace": "lfyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1094854,
+        "name": "Fantasy u",
+        "created_at": "2023-06-09T13:43:53.000Z",
+        "url": "https://greasyfork.org/users/1094854-fantasy-u"
+      }
+    ],
+    "name": "CICD Sort Tool",
+    "description": "i want sort!",
+    "url": "https://greasyfork.org/scripts/468547-cicd-sort-tool",
+    "code_url": "https://update.greasyfork.org/scripts/468547/CICD%20Sort%20Tool.user.js",
+    "code_size": 16166,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

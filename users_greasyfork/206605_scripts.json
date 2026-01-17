@@ -130,5 +130,170 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 481454,
+    "daily_installs": 0,
+    "total_installs": 145,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-05T13:25:57.000Z",
+    "code_updated_at": "2024-10-14T08:34:00.000Z",
+    "namespace": "http://bmmmd.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 206605,
+        "name": "热心市民可达鸭",
+        "created_at": "2018-08-21T14:21:50.000Z",
+        "url": "https://greasyfork.org/users/206605-%E7%83%AD%E5%BF%83%E5%B8%82%E6%B0%91%E5%8F%AF%E8%BE%BE%E9%B8%AD"
+      }
+    ],
+    "name": "禁止百度QJ我剪贴板!",
+    "description": "禁止狗贼百度QJ我剪贴板!",
+    "url": "https://greasyfork.org/scripts/481454-%E7%A6%81%E6%AD%A2%E7%99%BE%E5%BA%A6qj%E6%88%91%E5%89%AA%E8%B4%B4%E6%9D%BF",
+    "code_url": "https://update.greasyfork.org/scripts/481454/%E7%A6%81%E6%AD%A2%E7%99%BE%E5%BA%A6QJ%E6%88%91%E5%89%AA%E8%B4%B4%E6%9D%BF%21.user.js",
+    "code_size": 806,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474968,
+    "daily_installs": 0,
+    "total_installs": 858,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-10T16:25:02.000Z",
+    "code_updated_at": "2023-12-30T09:18:01.000Z",
+    "namespace": "http://bmmmd.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 206605,
+        "name": "热心市民可达鸭",
+        "created_at": "2018-08-21T14:21:50.000Z",
+        "url": "https://greasyfork.org/users/206605-%E7%83%AD%E5%BF%83%E5%B8%82%E6%B0%91%E5%8F%AF%E8%BE%BE%E9%B8%AD"
+      }
+    ],
+    "name": "取消爱奇艺暂停广告",
+    "description": "fuck爱奇艺暂停广告",
+    "url": "https://greasyfork.org/scripts/474968-%E5%8F%96%E6%B6%88%E7%88%B1%E5%A5%87%E8%89%BA%E6%9A%82%E5%81%9C%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/474968/%E5%8F%96%E6%B6%88%E7%88%B1%E5%A5%87%E8%89%BA%E6%9A%82%E5%81%9C%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 1770,
+    "license": "GPL v3",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462831,
+    "daily_installs": 5,
+    "total_installs": 8190,
+    "fan_score": "77.2",
+    "good_ratings": 13,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-29T08:47:47.000Z",
+    "code_updated_at": "2025-06-03T14:54:38.000Z",
+    "namespace": "https://bmmmd.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 206605,
+        "name": "热心市民可达鸭",
+        "created_at": "2018-08-21T14:21:50.000Z",
+        "url": "https://greasyfork.org/users/206605-%E7%83%AD%E5%BF%83%E5%B8%82%E6%B0%91%E5%8F%AF%E8%BE%BE%E9%B8%AD"
+      }
+    ],
+    "name": "猫抓 - 深度搜索",
+    "description": "猫抓扩展提取出来的深度搜索脚本。",
+    "url": "https://greasyfork.org/scripts/462831-%E7%8C%AB%E6%8A%93-%E6%B7%B1%E5%BA%A6%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/462831/%E7%8C%AB%E6%8A%93%20-%20%E6%B7%B1%E5%BA%A6%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 28007,
+    "license": "GPL v3",
+    "version": "2.6.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461963,
+    "daily_installs": 3,
+    "total_installs": 17217,
+    "fan_score": "79.1",
+    "good_ratings": 18,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-03-16T15:17:09.000Z",
+    "code_updated_at": "2023-12-19T08:31:30.000Z",
+    "namespace": "https://94cat.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 206605,
+        "name": "热心市民可达鸭",
+        "created_at": "2018-08-21T14:21:50.000Z",
+        "url": "https://greasyfork.org/users/206605-%E7%83%AD%E5%BF%83%E5%B8%82%E6%B0%91%E5%8F%AF%E8%BE%BE%E9%B8%AD"
+      }
+    ],
+    "name": "小鹅通 通用m3u8获取",
+    "description": "获取某鹅通m3u8内容 重新拼装真实ts地址和解密真实密钥 发送给扩展",
+    "url": "https://greasyfork.org/scripts/461963-%E5%B0%8F%E9%B9%85%E9%80%9A-%E9%80%9A%E7%94%A8m3u8%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/461963/%E5%B0%8F%E9%B9%85%E9%80%9A%20%E9%80%9A%E7%94%A8m3u8%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 8145,
+    "license": "GPL v3",
+    "version": "0.10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456150,
+    "daily_installs": 2,
+    "total_installs": 945,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-06T21:46:04.000Z",
+    "code_updated_at": "2022-12-06T23:47:28.000Z",
+    "namespace": "https://bmmmd.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 206605,
+        "name": "热心市民可达鸭",
+        "created_at": "2018-08-21T14:21:50.000Z",
+        "url": "https://greasyfork.org/users/206605-%E7%83%AD%E5%BF%83%E5%B8%82%E6%B0%91%E5%8F%AF%E8%BE%BE%E9%B8%AD"
+      }
+    ],
+    "name": "向猫抓发送一条资源的示例",
+    "description": "示例 向猫抓发送一条资源",
+    "url": "https://greasyfork.org/scripts/456150-%E5%90%91%E7%8C%AB%E6%8A%93%E5%8F%91%E9%80%81%E4%B8%80%E6%9D%A1%E8%B5%84%E6%BA%90%E7%9A%84%E7%A4%BA%E4%BE%8B",
+    "code_url": "https://update.greasyfork.org/scripts/456150/%E5%90%91%E7%8C%AB%E6%8A%93%E5%8F%91%E9%80%81%E4%B8%80%E6%9D%A1%E8%B5%84%E6%BA%90%E7%9A%84%E7%A4%BA%E4%BE%8B.user.js",
+    "code_size": 1788,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

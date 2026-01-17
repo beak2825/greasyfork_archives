@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420842,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-29T00:06:16.000Z",
+    "code_updated_at": "2021-05-05T03:42:06.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 316436,
+        "name": "DanDanDan",
+        "created_at": "2019-07-09T01:58:28.000Z",
+        "url": "https://greasyfork.org/users/316436-dandandan"
+      }
+    ],
+    "name": "vanilla-js-wheel-zoom",
+    "description": "Image resizing using mouse wheel + drag scrollable image (as well as any HTML content)",
+    "url": "https://greasyfork.org/scripts/420842-vanilla-js-wheel-zoom",
+    "code_url": "https://update.greasyfork.org/scripts/420842/927891/vanilla-js-wheel-zoom.js",
+    "code_size": 30402,
+    "license": null,
+    "version": "0.0.1.20210505034206",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

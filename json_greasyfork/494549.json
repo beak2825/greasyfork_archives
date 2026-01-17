@@ -1,0 +1,59 @@
+{
+  "id": 494549,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-10T04:38:08.000Z",
+  "code_updated_at": "2024-05-10T04:38:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1299252,
+      "name": "soda3x",
+      "created_at": "2024-05-10T04:36:17.000Z",
+      "url": "https://greasyfork.org/users/1299252-soda3x",
+      "scripts": [
+        {
+          "id": 494549,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-10T04:38:08.000Z",
+          "code_updated_at": "2024-05-10T04:38:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Append UwU Parameter to .dev Domains",
+          "description": "Appends /?uwu=true to any .dev domain URLs",
+          "url": "https://greasyfork.org/scripts/494549-append-uwu-parameter-to-dev-domains",
+          "code_url": "https://update.greasyfork.org/scripts/494549/Append%20UwU%20Parameter%20to%20dev%20Domains.user.js",
+          "code_size": 639,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Append UwU Parameter to .dev Domains",
+  "description": "Appends /?uwu=true to any .dev domain URLs",
+  "url": "https://greasyfork.org/scripts/494549-append-uwu-parameter-to-dev-domains",
+  "code_url": "https://update.greasyfork.org/scripts/494549/Append%20UwU%20Parameter%20to%20dev%20Domains.user.js",
+  "code_size": 639,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

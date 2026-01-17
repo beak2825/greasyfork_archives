@@ -1,0 +1,35 @@
+[
+  {
+    "id": 453290,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-18T14:01:25.000Z",
+    "code_updated_at": "2022-10-19T03:11:46.000Z",
+    "namespace": "https://github.com/sankoshine/gm-public",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972125,
+        "name": "SanKo S",
+        "created_at": "2022-10-18T01:52:54.000Z",
+        "url": "https://greasyfork.org/users/972125-sanko-s"
+      }
+    ],
+    "name": "朕知道了",
+    "description": "需要二次确认时，自动填入项目名称",
+    "url": "https://greasyfork.org/scripts/453290-%E6%9C%95%E7%9F%A5%E9%81%93%E4%BA%86",
+    "code_url": "https://update.greasyfork.org/scripts/453290/%E6%9C%95%E7%9F%A5%E9%81%93%E4%BA%86.user.js",
+    "code_size": 2598,
+    "license": null,
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

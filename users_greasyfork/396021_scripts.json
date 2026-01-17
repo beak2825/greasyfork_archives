@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416492,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-20T20:58:04.000Z",
+    "code_updated_at": "2020-11-20T21:01:43.000Z",
+    "namespace": "https://greasyfork.org/users/396021",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 396021,
+        "name": "indraf",
+        "created_at": "2019-11-08T08:08:43.000Z",
+        "url": "https://greasyfork.org/users/396021-indraf"
+      }
+    ],
+    "name": "load_allpages",
+    "description": "tadinya buat tribun doang",
+    "url": "https://greasyfork.org/scripts/416492-load-allpages",
+    "code_url": "https://update.greasyfork.org/scripts/416492/load_allpages.user.js",
+    "code_size": 1005,
+    "license": null,
+    "version": "0.2",
+    "locale": "id",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

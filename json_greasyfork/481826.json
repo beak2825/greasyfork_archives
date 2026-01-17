@@ -1,0 +1,34 @@
+{
+  "id": 481826,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-09T23:04:54.000Z",
+  "code_updated_at": "2023-12-09T23:04:54.000Z",
+  "namespace": "Youtube Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 806742,
+      "name": "Shrike00",
+      "created_at": "2021-08-21T00:22:50.000Z",
+      "url": "https://greasyfork.org/users/806742-shrike00",
+      "scripts": []
+    }
+  ],
+  "name": "Youtube - Link to Full Video from Short",
+  "description": "Adds a link to the full video from a short.",
+  "url": "https://greasyfork.org/scripts/481826-youtube-link-to-full-video-from-short",
+  "code_url": "https://update.greasyfork.org/scripts/481826/Youtube%20-%20Link%20to%20Full%20Video%20from%20Short.user.js",
+  "code_size": 2133,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

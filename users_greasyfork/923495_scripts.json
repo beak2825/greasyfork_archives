@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489448,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-10T04:30:44.000Z",
+    "code_updated_at": "2024-03-10T04:39:42.000Z",
+    "namespace": "http://nowhere.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 923495,
+        "name": "李占",
+        "created_at": "2022-06-08T15:09:41.000Z",
+        "url": "https://greasyfork.org/users/923495-%E6%9D%8E%E5%8D%A0"
+      }
+    ],
+    "name": "THU-Thesis-Download",
+    "description": "only for study thesis!",
+    "url": "https://greasyfork.org/scripts/489448-thu-thesis-download",
+    "code_url": "https://update.greasyfork.org/scripts/489448/THU-Thesis-Download.user.js",
+    "code_size": 948,
+    "license": "MIT License",
+    "version": "2024-02-26 v3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

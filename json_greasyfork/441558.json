@@ -1,0 +1,34 @@
+{
+  "id": 441558,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-15T15:32:43.000Z",
+  "code_updated_at": "2023-02-16T17:09:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 887822,
+      "name": "wcbf1314",
+      "created_at": "2022-03-15T14:28:54.000Z",
+      "url": "https://greasyfork.org/users/887822-wcbf1314",
+      "scripts": []
+    }
+  ],
+  "name": "抓取电商数据",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/441558-%E6%8A%93%E5%8F%96%E7%94%B5%E5%95%86%E6%95%B0%E6%8D%AE",
+  "code_url": "https://update.greasyfork.org/scripts/441558/%E6%8A%93%E5%8F%96%E7%94%B5%E5%95%86%E6%95%B0%E6%8D%AE.user.js",
+  "code_size": 8174,
+  "license": null,
+  "version": "0.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

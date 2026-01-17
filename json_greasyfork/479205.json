@@ -1,0 +1,33 @@
+{
+  "id": 479205,
+  "daily_installs": 0,
+  "total_installs": 216,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-06T23:35:59.000Z",
+  "code_updated_at": "2023-11-06T23:35:59.000Z",
+  "namespace": "https://greasyfork.org/users/1212309",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1212309,
+      "name": "octaviablodrein",
+      "created_at": "2023-11-06T23:32:51.000Z",
+      "url": "https://greasyfork.org/users/1212309-octaviablodrein"
+    }
+  ],
+  "name": "YouTube Remove Ambient",
+  "description": "Removes ambient mode around video player on YouTube.",
+  "url": "https://greasyfork.org/scripts/479205-youtube-remove-ambient",
+  "code_url": "https://update.greasyfork.org/scripts/479205/YouTube%20Remove%20Ambient.user.css",
+  "code_size": 269,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

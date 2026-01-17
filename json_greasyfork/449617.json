@@ -1,0 +1,59 @@
+{
+  "id": 449617,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-16T02:09:23.000Z",
+  "code_updated_at": "2022-08-16T02:09:23.000Z",
+  "namespace": "https://mail.yahoo.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 946864,
+      "name": "TolstoyDotCom",
+      "created_at": "2022-08-16T01:47:28.000Z",
+      "url": "https://greasyfork.org/users/946864-tolstoydotcom",
+      "scripts": [
+        {
+          "id": 449617,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-16T02:09:23.000Z",
+          "code_updated_at": "2022-08-16T02:09:23.000Z",
+          "namespace": "https://mail.yahoo.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Yahoo mail new message highlighter",
+          "description": "Make new/unread messages in Yahoo mail obvious. Enhancements to make it look like the previous version of Yahoo mail are welcome.",
+          "url": "https://greasyfork.org/scripts/449617-yahoo-mail-new-message-highlighter",
+          "code_url": "https://update.greasyfork.org/scripts/449617/Yahoo%20mail%20new%20message%20highlighter.user.js",
+          "code_size": 724,
+          "license": "Apache2",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Yahoo mail new message highlighter",
+  "description": "Make new/unread messages in Yahoo mail obvious. Enhancements to make it look like the previous version of Yahoo mail are welcome.",
+  "url": "https://greasyfork.org/scripts/449617-yahoo-mail-new-message-highlighter",
+  "code_url": "https://update.greasyfork.org/scripts/449617/Yahoo%20mail%20new%20message%20highlighter.user.js",
+  "code_size": 724,
+  "license": "Apache2",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

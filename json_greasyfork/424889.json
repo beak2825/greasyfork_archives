@@ -1,0 +1,33 @@
+{
+  "id": 424889,
+  "daily_installs": 0,
+  "total_installs": 53,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-12T04:16:55.000Z",
+  "code_updated_at": "2021-04-13T03:20:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 583416,
+      "name": "auro",
+      "created_at": "2020-06-09T23:17:42.000Z",
+      "url": "https://greasyfork.org/users/583416-auro"
+    }
+  ],
+  "name": "Better Twitter Monkey Edition",
+  "description": "Low effort port of the Better Twitter Chrome Extension.",
+  "url": "https://greasyfork.org/scripts/424889-better-twitter-monkey-edition",
+  "code_url": "https://update.greasyfork.org/scripts/424889/Better%20Twitter%20Monkey%20Edition.user.js",
+  "code_size": 7163,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 446337,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-11T08:19:21.000Z",
+    "code_updated_at": "2022-06-11T08:19:21.000Z",
+    "namespace": "http://terrace.ink/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 924432,
+        "name": "TerraceCN",
+        "created_at": "2022-06-11T08:17:40.000Z",
+        "url": "https://greasyfork.org/users/924432-terracecn"
+      }
+    ],
+    "name": "EOL iFrame样式修正",
+    "description": "修正落后的EOL系统中一些奇怪的样式",
+    "url": "https://greasyfork.org/scripts/446337-eol-iframe%E6%A0%B7%E5%BC%8F%E4%BF%AE%E6%AD%A3",
+    "code_url": "https://update.greasyfork.org/scripts/446337/EOL%20iFrame%E6%A0%B7%E5%BC%8F%E4%BF%AE%E6%AD%A3.user.js",
+    "code_size": 962,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

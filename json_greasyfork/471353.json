@@ -1,0 +1,34 @@
+{
+  "id": 471353,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-21T10:17:00.000Z",
+  "code_updated_at": "2023-07-21T10:17:00.000Z",
+  "namespace": "http://tampermonkey/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 815179,
+      "name": "12358940",
+      "created_at": "2021-09-14T02:14:34.000Z",
+      "url": "https://greasyfork.org/users/815179-12358940",
+      "scripts": []
+    }
+  ],
+  "name": "h5st",
+  "description": "Example of using CryptoJS in Tampermonkey script",
+  "url": "https://greasyfork.org/scripts/471353-h5st",
+  "code_url": "https://update.greasyfork.org/scripts/471353/h5st.user.js",
+  "code_size": 4186,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 474742,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-07T08:51:01.000Z",
+  "code_updated_at": "2023-09-08T03:45:09.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1144522,
+      "name": "Don Kalashnikov",
+      "created_at": "2023-08-05T10:19:35.000Z",
+      "url": "https://greasyfork.org/users/1144522-don-kalashnikov",
+      "scripts": []
+    }
+  ],
+  "name": "Black Russia | Скрипт для Кураторов Форума | KURSK By Don.Kalashnikov",
+  "description": "Скрипт для Кураторов Форума.by D.Kalashnikov",
+  "url": "https://greasyfork.org/scripts/474742-black-russia-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-kursk-by-don-kalashnikov",
+  "code_url": "https://update.greasyfork.org/scripts/474742/Black%20Russia%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%7C%20KURSK%20By%20DonKalashnikov.user.js",
+  "code_size": 181780,
+  "license": "none",
+  "version": "1.124",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

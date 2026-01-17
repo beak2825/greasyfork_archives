@@ -460,5 +460,71 @@
     "locale": "de",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 471989,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-07-29T15:01:37.000Z",
+    "code_updated_at": "2026-01-02T16:27:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 863740,
+        "name": "Horst Wittlich",
+        "created_at": "2022-01-11T20:28:14.000Z",
+        "url": "https://greasyfork.org/users/863740-horst-wittlich"
+      }
+    ],
+    "name": "WME RTC Plus",
+    "description": "RTC Management mit Kreisen, Perimeter-Sperrungen, GPX Import/Export",
+    "url": "https://greasyfork.org/scripts/471989-wme-rtc-plus",
+    "code_url": "https://update.greasyfork.org/scripts/471989/WME%20RTC%20Plus.user.js",
+    "code_size": 198730,
+    "license": "MIT License",
+    "version": "2026.01.11",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448195,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-20T23:35:14.000Z",
+    "code_updated_at": "2022-07-22T15:59:51.000Z",
+    "namespace": "https://greasyfork.org/de/users/863740-horst-wittlich",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 863740,
+        "name": "Horst Wittlich",
+        "created_at": "2022-01-11T20:28:14.000Z",
+        "url": "https://greasyfork.org/users/863740-horst-wittlich"
+      }
+    ],
+    "name": "WME Permalink to several Maps CH",
+    "description": "WME P2SM für die Schweiz",
+    "url": "https://greasyfork.org/scripts/448195-wme-permalink-to-several-maps-ch",
+    "code_url": "https://update.greasyfork.org/scripts/448195/WME%20Permalink%20to%20several%20Maps%20CH.user.js",
+    "code_size": 23358,
+    "license": "MIT License",
+    "version": "2022.22.07.01",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468614,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-14T01:11:41.000Z",
+    "code_updated_at": "2023-06-14T01:11:41.000Z",
+    "namespace": "http://www.51gongjuxiang.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097885,
+        "name": "1502138311",
+        "created_at": "2023-06-13T12:23:25.000Z",
+        "url": "https://greasyfork.org/users/1097885-1502138311"
+      }
+    ],
+    "name": "艾宾浩斯收藏夹",
+    "description": "多终端同步收藏夹，支持艾宾浩斯提醒功能，防止在收藏夹中吃灰。",
+    "url": "https://greasyfork.org/scripts/468614-%E8%89%BE%E5%AE%BE%E6%B5%A9%E6%96%AF%E6%94%B6%E8%97%8F%E5%A4%B9",
+    "code_url": "https://update.greasyfork.org/scripts/468614/%E8%89%BE%E5%AE%BE%E6%B5%A9%E6%96%AF%E6%94%B6%E8%97%8F%E5%A4%B9.user.js",
+    "code_size": 27234,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

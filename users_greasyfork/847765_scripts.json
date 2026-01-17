@@ -129,6 +129,138 @@
     "version": "0.2",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 472676,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-07T23:51:26.000Z",
+    "code_updated_at": "2023-08-07T23:51:26.000Z",
+    "namespace": "Flare0n",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 847765,
+        "name": "shash",
+        "created_at": "2021-12-02T22:11:40.000Z",
+        "url": "https://greasyfork.org/users/847765-shash"
+      }
+    ],
+    "name": "AutoSave to Internet Archive - Wayback Machine - Enhanced Edition",
+    "description": "Automatically save the page you visited and all links on the page to the Internet Archive's Wayback Machine.",
+    "url": "https://greasyfork.org/scripts/472676-autosave-to-internet-archive-wayback-machine-enhanced-edition",
+    "code_url": "https://update.greasyfork.org/scripts/472676/AutoSave%20to%20Internet%20Archive%20-%20Wayback%20Machine%20-%20Enhanced%20Edition.user.js",
+    "code_size": 5194,
+    "license": null,
+    "version": "1.0.3e",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 460874,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-27T19:46:17.000Z",
+    "code_updated_at": "2023-09-13T00:24:58.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/395902-ao3-floating-comment-box",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 847765,
+        "name": "shash",
+        "created_at": "2021-12-02T22:11:40.000Z",
+        "url": "https://greasyfork.org/users/847765-shash"
+      }
+    ],
+    "name": "AO3 Floating Formatted Comment Box V2 (shash)",
+    "description": "Floating comment box with formatting options for AO3 (mobile-friendly)",
+    "url": "https://greasyfork.org/scripts/460874-ao3-floating-formatted-comment-box-v2-shash",
+    "code_url": "https://update.greasyfork.org/scripts/460874/AO3%20Floating%20Formatted%20Comment%20Box%20V2%20%28shash%29.user.js",
+    "code_size": 17198,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 457471,
+    "daily_installs": 0,
+    "total_installs": 152,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-02T03:01:03.000Z",
+    "code_updated_at": "2023-01-02T03:01:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 847765,
+        "name": "shash",
+        "created_at": "2021-12-02T22:11:40.000Z",
+        "url": "https://greasyfork.org/users/847765-shash"
+      }
+    ],
+    "name": "AO3 Bookmark Improver",
+    "description": "Bookmark a work directly from any page and go back from bookmarking to browsing quickly",
+    "url": "https://greasyfork.org/scripts/457471-ao3-bookmark-improver",
+    "code_url": "https://update.greasyfork.org/scripts/457471/AO3%20Bookmark%20Improver.user.js",
+    "code_size": 18322,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444036,
+    "daily_installs": 0,
+    "total_installs": 110,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-26T14:03:01.000Z",
+    "code_updated_at": "2022-04-26T14:03:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 847765,
+        "name": "shash",
+        "created_at": "2021-12-02T22:11:40.000Z",
+        "url": "https://greasyfork.org/users/847765-shash"
+      }
+    ],
+    "name": "AO3 Bookmark Back Button",
+    "description": "Add a back button to the bookmark page on AO3",
+    "url": "https://greasyfork.org/scripts/444036-ao3-bookmark-back-button",
+    "code_url": "https://update.greasyfork.org/scripts/444036/AO3%20Bookmark%20Back%20Button.user.js",
+    "code_size": 1827,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 453558,
+  "daily_installs": 0,
+  "total_installs": 82,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-22T18:51:47.000Z",
+  "code_updated_at": "2022-10-22T18:51:46.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 974009,
+      "name": "EX7TT",
+      "created_at": "2022-10-22T18:47:36.000Z",
+      "url": "https://greasyfork.org/users/974009-ex7tt",
+      "scripts": []
+    }
+  ],
+  "name": "Arzamas | Script for forum curators",
+  "description": "Скрипт для Кураторов Форума | Black Russia Arzamas",
+  "url": "https://greasyfork.org/scripts/453558-arzamas-script-for-forum-curators",
+  "code_url": "https://update.greasyfork.org/scripts/453558/Arzamas%20%7C%20Script%20for%20forum%20curators.user.js",
+  "code_size": 96712,
+  "license": "MIT License",
+  "version": "4.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

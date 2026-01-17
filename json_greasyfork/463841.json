@@ -1,0 +1,59 @@
+{
+  "id": 463841,
+  "daily_installs": 0,
+  "total_installs": 124,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-12T14:59:11.000Z",
+  "code_updated_at": "2023-04-14T04:45:49.000Z",
+  "namespace": "azite.cn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1058916,
+      "name": "Aziteee",
+      "created_at": "2023-04-12T14:48:52.000Z",
+      "url": "https://greasyfork.org/users/1058916-aziteee",
+      "scripts": [
+        {
+          "id": 463841,
+          "daily_installs": 0,
+          "total_installs": 124,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-12T14:59:11.000Z",
+          "code_updated_at": "2023-04-14T04:45:49.000Z",
+          "namespace": "azite.cn",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "淋语化",
+          "description": "将网页上的文字都变成淋语~",
+          "url": "https://greasyfork.org/scripts/463841-%E6%B7%8B%E8%AF%AD%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/463841/%E6%B7%8B%E8%AF%AD%E5%8C%96.user.js",
+          "code_size": 6670,
+          "license": "MIT License",
+          "version": "0.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "淋语化",
+  "description": "将网页上的文字都变成淋语~",
+  "url": "https://greasyfork.org/scripts/463841-%E6%B7%8B%E8%AF%AD%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/463841/%E6%B7%8B%E8%AF%AD%E5%8C%96.user.js",
+  "code_size": 6670,
+  "license": "MIT License",
+  "version": "0.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

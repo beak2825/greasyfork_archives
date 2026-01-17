@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454372,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-06T20:01:54.000Z",
+    "code_updated_at": "2022-11-06T20:01:54.000Z",
+    "namespace": "https://github.com/hash-dev/OpenSteamURL",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980072,
+        "name": "hash-dev",
+        "created_at": "2022-11-06T15:28:40.000Z",
+        "url": "https://greasyfork.org/users/980072-hash-dev"
+      }
+    ],
+    "name": "Open Steam URL",
+    "description": "Adds a button next to the \"Install Steam\" button to open the current URL in the Steam client",
+    "url": "https://greasyfork.org/scripts/454372-open-steam-url",
+    "code_url": "https://update.greasyfork.org/scripts/454372/Open%20Steam%20URL.user.js",
+    "code_size": 2406,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

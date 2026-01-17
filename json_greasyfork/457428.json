@@ -1,0 +1,33 @@
+{
+  "id": 457428,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-01T04:25:43.000Z",
+  "code_updated_at": "2023-01-01T04:25:43.000Z",
+  "namespace": "https://evgo2017.com/purify-page",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 314220,
+      "name": "evgo2017",
+      "created_at": "2019-06-29T08:15:37.000Z",
+      "url": "https://greasyfork.org/users/314220-evgo2017"
+    }
+  ],
+  "name": "极致净化 CSDN 社区",
+  "description": "完美阅读体验，去除广告、推荐等一系列和阅读无关的内容",
+  "url": "https://greasyfork.org/scripts/457428-%E6%9E%81%E8%87%B4%E5%87%80%E5%8C%96-csdn-%E7%A4%BE%E5%8C%BA",
+  "code_url": "https://update.greasyfork.org/scripts/457428/%E6%9E%81%E8%87%B4%E5%87%80%E5%8C%96%20CSDN%20%E7%A4%BE%E5%8C%BA.user.js",
+  "code_size": 2324,
+  "license": "GNU GPLv2",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

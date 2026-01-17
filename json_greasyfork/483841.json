@@ -1,0 +1,34 @@
+{
+  "id": 483841,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-04T10:03:27.000Z",
+  "code_updated_at": "2024-01-22T06:32:28.000Z",
+  "namespace": "rj",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1097638,
+      "name": "張榮傑",
+      "created_at": "2023-06-13T06:16:04.000Z",
+      "url": "https://greasyfork.org/users/1097638-%E5%BC%B5%E6%A6%AE%E5%82%91",
+      "scripts": []
+    }
+  ],
+  "name": "Quick Copy Issue",
+  "description": "Create copy issues and link in the parent issue, Promote to Epic (keep links)",
+  "url": "https://greasyfork.org/scripts/483841-quick-copy-issue",
+  "code_url": "https://update.greasyfork.org/scripts/483841/Quick%20Copy%20Issue.user.js",
+  "code_size": 19353,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

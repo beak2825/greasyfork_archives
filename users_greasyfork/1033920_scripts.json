@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460864,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-27T16:22:19.000Z",
+    "code_updated_at": "2023-02-27T16:48:57.000Z",
+    "namespace": "https://greasyfork.org/users/1033920",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1033920,
+        "name": "Sîn-iông Tè",
+        "created_at": "2023-02-27T16:11:11.000Z",
+        "url": "https://greasyfork.org/users/1033920-s%C3%AEn-i%C3%B4ng-t%C3%A8"
+      }
+    ],
+    "name": "kartinfo.me auto check-in",
+    "description": "auto check-in",
+    "url": "https://greasyfork.org/scripts/460864-kartinfo-me-auto-check-in",
+    "code_url": "https://update.greasyfork.org/scripts/460864/kartinfome%20auto%20check-in.user.js",
+    "code_size": 612,
+    "license": "MIT License",
+    "version": "0.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

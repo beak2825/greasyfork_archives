@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492579,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-15T10:41:12.000Z",
+    "code_updated_at": "2024-05-17T11:48:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 21527,
+        "name": "jonny h.",
+        "created_at": "2015-11-30T17:35:34.000Z",
+        "url": "https://greasyfork.org/users/21527-jonny-h"
+      }
+    ],
+    "name": "Twitter hide unreplyable posts",
+    "description": "hide all tweets that cant be replied to",
+    "url": "https://greasyfork.org/scripts/492579-twitter-hide-unreplyable-posts",
+    "code_url": "https://update.greasyfork.org/scripts/492579/Twitter%20hide%20unreplyable%20posts.user.js",
+    "code_size": 924,
+    "license": "MIT License",
+    "version": "2024-05-15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 492088,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-09T17:12:24.000Z",
+    "code_updated_at": "2024-07-28T10:42:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 21527,
+        "name": "jonny h.",
+        "created_at": "2015-11-30T17:35:34.000Z",
+        "url": "https://greasyfork.org/users/21527-jonny-h"
+      }
+    ],
+    "name": "twitter localize dates",
+    "description": "convert mentions of dates/times in tweet to local",
+    "url": "https://greasyfork.org/scripts/492088-twitter-localize-dates",
+    "code_url": "https://update.greasyfork.org/scripts/492088/twitter%20localize%20dates.user.js",
+    "code_size": 2674,
+    "license": "MIT License",
+    "version": "2024.07.28",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

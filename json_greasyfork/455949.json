@@ -1,0 +1,59 @@
+{
+  "id": 455949,
+  "daily_installs": 0,
+  "total_installs": 288,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-03T18:04:21.000Z",
+  "code_updated_at": "2025-12-10T20:49:29.000Z",
+  "namespace": "lolzteam_new_year",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 960801,
+      "name": "niksdev09",
+      "created_at": "2022-09-18T13:26:24.000Z",
+      "url": "https://greasyfork.org/users/960801-niksdev09",
+      "scripts": [
+        {
+          "id": 455625,
+          "daily_installs": 0,
+          "total_installs": 75,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-29T20:00:20.000Z",
+          "code_updated_at": "2022-11-29T20:00:20.000Z",
+          "namespace": "snow_lzt",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Snow Lolzteam",
+          "description": "Снежный фон для форума Lolzteam",
+          "url": "https://greasyfork.org/scripts/455625-snow-lolzteam",
+          "code_url": "https://update.greasyfork.org/scripts/455625/Snow%20Lolzteam.user.js",
+          "code_size": 2636,
+          "license": null,
+          "version": "1.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Lolzteam NY Edition",
+  "description": "Новогоднее оформление Lolzteam",
+  "url": "https://greasyfork.org/scripts/455949-lolzteam-ny-edition",
+  "code_url": "https://update.greasyfork.org/scripts/455949/Lolzteam%20NY%20Edition.user.js",
+  "code_size": 124598,
+  "license": null,
+  "version": "10.12.2025",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

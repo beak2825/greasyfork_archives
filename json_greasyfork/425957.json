@@ -1,0 +1,34 @@
+{
+  "id": 425957,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-04T23:19:40.000Z",
+  "code_updated_at": "2021-05-04T23:21:03.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/425957-spreadsheet-worker-turbomkt-fork",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 133027,
+      "name": "Turbomkt - Mike",
+      "created_at": "2017-06-15T23:42:01.000Z",
+      "url": "https://greasyfork.org/users/133027-turbomkt-mike",
+      "scripts": []
+    }
+  ],
+  "name": "Spreadsheet Worker - Turbomkt Fork",
+  "description": "makes working spreadsheet projects easier",
+  "url": "https://greasyfork.org/scripts/425957-spreadsheet-worker-turbomkt-fork",
+  "code_url": "https://update.greasyfork.org/scripts/425957/Spreadsheet%20Worker%20-%20Turbomkt%20Fork.user.js",
+  "code_size": 17859,
+  "license": null,
+  "version": "2021.05.04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

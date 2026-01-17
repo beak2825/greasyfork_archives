@@ -1,0 +1,33 @@
+{
+  "id": 422214,
+  "daily_installs": 0,
+  "total_installs": 241,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-23T20:41:50.000Z",
+  "code_updated_at": "2021-02-23T20:56:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 740451,
+      "name": "drive dd",
+      "created_at": "2021-02-23T18:41:05.000Z",
+      "url": "https://greasyfork.org/users/740451-drive-dd"
+    }
+  ],
+  "name": "Quora expand all the more buttons and comments",
+  "description": "Quora more buttons and answer's comments automatically expanded on mouse scroll",
+  "url": "https://greasyfork.org/scripts/422214-quora-expand-all-the-more-buttons-and-comments",
+  "code_url": "https://update.greasyfork.org/scripts/422214/Quora%20expand%20all%20the%20more%20buttons%20and%20comments.user.js",
+  "code_size": 832,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

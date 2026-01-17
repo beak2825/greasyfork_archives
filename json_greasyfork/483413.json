@@ -1,0 +1,34 @@
+{
+  "id": 483413,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-29T23:47:58.000Z",
+  "code_updated_at": "2025-08-12T01:10:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1240924,
+      "name": "Nathan R",
+      "created_at": "2023-12-29T23:45:27.000Z",
+      "url": "https://greasyfork.org/users/1240924-nathan-r",
+      "scripts": []
+    }
+  ],
+  "name": "LeadPerfection Enhancer",
+  "description": "Dispo sort on Issue pages; inline “Copy” next to each phone; “Copy Text Msg” below; pulls your LP first name; full-width container; robust polling on SPA nav.",
+  "url": "https://greasyfork.org/scripts/483413-leadperfection-enhancer",
+  "code_url": "https://update.greasyfork.org/scripts/483413/LeadPerfection%20Enhancer.user.js",
+  "code_size": 7632,
+  "license": "MIT License",
+  "version": "4.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

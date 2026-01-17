@@ -1,0 +1,34 @@
+{
+  "id": 454010,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-31T06:44:45.000Z",
+  "code_updated_at": "2022-10-31T06:44:45.000Z",
+  "namespace": "https://item.taobao.com/item.htm?id=670749376549",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 522027,
+      "name": "gomg007",
+      "created_at": "2020-04-19T03:16:06.000Z",
+      "url": "https://greasyfork.org/users/522027-gomg007",
+      "scripts": []
+    }
+  ],
+  "name": "虎牙直播间自动跑房发弹幕_休息时间",
+  "description": "自动打开直播间发送指定弹幕后自动进入下个直播间【淘宝店铺（因稀有才珍贵）制作】_休息时间_1.7.1211",
+  "url": "https://greasyfork.org/scripts/454010-%E8%99%8E%E7%89%99%E7%9B%B4%E6%92%AD%E9%97%B4%E8%87%AA%E5%8A%A8%E8%B7%91%E6%88%BF%E5%8F%91%E5%BC%B9%E5%B9%95-%E4%BC%91%E6%81%AF%E6%97%B6%E9%97%B4",
+  "code_url": "https://update.greasyfork.org/scripts/454010/%E8%99%8E%E7%89%99%E7%9B%B4%E6%92%AD%E9%97%B4%E8%87%AA%E5%8A%A8%E8%B7%91%E6%88%BF%E5%8F%91%E5%BC%B9%E5%B9%95_%E4%BC%91%E6%81%AF%E6%97%B6%E9%97%B4.user.js",
+  "code_size": 940,
+  "license": "因稀有才珍贵",
+  "version": "1.7.1211.01",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 433910,
+  "daily_installs": 0,
+  "total_installs": 17520,
+  "fan_score": "13.7",
+  "good_ratings": 2,
+  "ok_ratings": 2,
+  "bad_ratings": 4,
+  "created_at": "2021-10-15T06:09:26.000Z",
+  "code_updated_at": "2021-10-27T01:17:41.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 823917,
+      "name": "(GLW) why",
+      "created_at": "2021-10-11T03:21:01.000Z",
+      "url": "https://greasyfork.org/users/823917-glw-why",
+      "scripts": [
+        {
+          "id": 433910,
+          "daily_installs": 0,
+          "total_installs": 17520,
+          "fan_score": "13.7",
+          "good_ratings": 2,
+          "ok_ratings": 2,
+          "bad_ratings": 4,
+          "created_at": "2021-10-15T06:09:26.000Z",
+          "code_updated_at": "2021-10-27T01:17:41.000Z",
+          "namespace": "none",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MooMooMod Last! (Modified by (GLW) why)",
+          "description": "v8-FixBigPing, SaveChat, FastInsta, AutoCoordWalk, AFKMode, R-InstaKill, AutoHeal, AutoAntiBull, AntiInsta, FollowAnimals, AutoFarmResource, M-TripleWASDMills, UpArrow-Katana+Musket, H-Turret, N-Mill, V-spike, F-Trap, Z-TankGear, Shift-BiomeHats, Esc-BetterMenu, AutoAntiBull, MouseClicks, BetterHotBar, OneTickInsta. Please rate this script in the comments! I'm trying really hard! Give me your support!",
+          "url": "https://greasyfork.org/scripts/433910-moomoomod-last-modified-by-glw-why",
+          "code_url": "https://update.greasyfork.org/scripts/433910/MooMooMod%20Last%21%20%28Modified%20by%20%28GLW%29%20why%29.user.js",
+          "code_size": 119613,
+          "license": null,
+          "version": "10.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MooMooMod Last! (Modified by (GLW) why)",
+  "description": "v8-FixBigPing, SaveChat, FastInsta, AutoCoordWalk, AFKMode, R-InstaKill, AutoHeal, AutoAntiBull, AntiInsta, FollowAnimals, AutoFarmResource, M-TripleWASDMills, UpArrow-Katana+Musket, H-Turret, N-Mill, V-spike, F-Trap, Z-TankGear, Shift-BiomeHats, Esc-BetterMenu, AutoAntiBull, MouseClicks, BetterHotBar, OneTickInsta. Please rate this script in the comments! I'm trying really hard! Give me your support!",
+  "url": "https://greasyfork.org/scripts/433910-moomoomod-last-modified-by-glw-why",
+  "code_url": "https://update.greasyfork.org/scripts/433910/MooMooMod%20Last%21%20%28Modified%20by%20%28GLW%29%20why%29.user.js",
+  "code_size": 119613,
+  "license": null,
+  "version": "10.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 413163,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-14T03:34:54.000Z",
+  "code_updated_at": "2020-10-14T03:34:54.000Z",
+  "namespace": "history",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 694758,
+      "name": "bin jiang",
+      "created_at": "2020-10-13T15:31:11.000Z",
+      "url": "https://greasyfork.org/users/694758-bin-jiang"
+    }
+  ],
+  "name": "history",
+  "description": "history1",
+  "url": "https://greasyfork.org/scripts/413163-history",
+  "code_url": "https://update.greasyfork.org/scripts/413163/history.user.js",
+  "code_size": 10972,
+  "license": null,
+  "version": "1602645928197",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

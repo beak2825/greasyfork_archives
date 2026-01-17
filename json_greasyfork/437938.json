@@ -1,0 +1,59 @@
+{
+  "id": 437938,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-02T11:12:18.000Z",
+  "code_updated_at": "2022-01-02T11:12:17.000Z",
+  "namespace": "https://github.com/Synaelle/ElementaryOS-nopaywall",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 860302,
+      "name": "Synaelle",
+      "created_at": "2022-01-02T11:03:52.000Z",
+      "url": "https://greasyfork.org/users/860302-synaelle",
+      "scripts": [
+        {
+          "id": 437938,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-02T11:12:18.000Z",
+          "code_updated_at": "2022-01-02T11:12:17.000Z",
+          "namespace": "https://github.com/Synaelle/ElementaryOS-nopaywall",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ElementaryOS - Remove paywall",
+          "description": "It removes the fake paywall on ElementaryOS website",
+          "url": "https://greasyfork.org/scripts/437938-elementaryos-remove-paywall",
+          "code_url": "https://update.greasyfork.org/scripts/437938/ElementaryOS%20-%20Remove%20paywall.user.js",
+          "code_size": 1030,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.02",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ElementaryOS - Remove paywall",
+  "description": "It removes the fake paywall on ElementaryOS website",
+  "url": "https://greasyfork.org/scripts/437938-elementaryos-remove-paywall",
+  "code_url": "https://update.greasyfork.org/scripts/437938/ElementaryOS%20-%20Remove%20paywall.user.js",
+  "code_size": 1030,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

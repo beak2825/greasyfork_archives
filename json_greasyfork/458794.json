@@ -1,0 +1,34 @@
+{
+  "id": 458794,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-24T18:23:58.000Z",
+  "code_updated_at": "2023-01-24T18:23:58.000Z",
+  "namespace": "https://www.theprabhakar.in/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1016198,
+      "name": "Tayo Lam",
+      "created_at": "2023-01-24T18:18:58.000Z",
+      "url": "https://greasyfork.org/users/1016198-tayo-lam",
+      "scripts": []
+    }
+  ],
+  "name": "Nitro Typer",
+  "description": "Browser counterpart of Nitro Typer 5",
+  "url": "https://greasyfork.org/scripts/458794-nitro-typer",
+  "code_url": "https://update.greasyfork.org/scripts/458794/Nitro%20Typer.user.js",
+  "code_size": 7746,
+  "license": null,
+  "version": "6.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 488634,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-29T18:07:31.000Z",
+  "code_updated_at": "2024-02-29T18:07:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1046183,
+      "name": "Profe UOC",
+      "created_at": "2023-03-22T12:30:16.000Z",
+      "url": "https://greasyfork.org/users/1046183-profe-uoc",
+      "scripts": []
+    }
+  ],
+  "name": "BluePrint warning_message",
+  "description": "Elimina la barra blava d'avís de l'aula d'edició",
+  "url": "https://greasyfork.org/scripts/488634-blueprint-warning-message",
+  "code_url": "https://update.greasyfork.org/scripts/488634/BluePrint%20warning_message.user.js",
+  "code_size": 498,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440046,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-14T21:10:14.000Z",
+    "code_updated_at": "2022-02-17T15:39:12.000Z",
+    "namespace": "https://fair.kaliburg.de/#",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 876267,
+        "name": "LynnCinnamon",
+        "created_at": "2022-02-13T21:45:44.000Z",
+        "url": "https://greasyfork.org/users/876267-lynncinnamon"
+      }
+    ],
+    "name": "Lynns Fair Game QoL Extension",
+    "description": "Fair Game QOL Enhancements",
+    "url": "https://greasyfork.org/scripts/440046-lynns-fair-game-qol-extension",
+    "code_url": "https://update.greasyfork.org/scripts/440046/Lynns%20Fair%20Game%20QoL%20Extension.user.js",
+    "code_size": 25784,
+    "license": "MIT License",
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 483165,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-26T16:29:13.000Z",
+  "code_updated_at": "2023-12-26T16:29:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1219290,
+      "name": "BovBrew",
+      "created_at": "2023-11-17T22:49:37.000Z",
+      "url": "https://greasyfork.org/users/1219290-bovbrew"
+    }
+  ],
+  "name": "PTP - Add & Filter All Releases",
+  "description": "add releases from other trackers",
+  "url": "https://greasyfork.org/scripts/483165-ptp-add-filter-all-releases",
+  "code_url": "https://update.greasyfork.org/scripts/483165/PTP%20-%20Add%20%20Filter%20All%20Releases.user.js",
+  "code_size": 76126,
+  "license": null,
+  "version": "3.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

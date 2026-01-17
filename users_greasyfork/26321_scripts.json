@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420233,
+    "daily_installs": 0,
+    "total_installs": 10014,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-01-15T11:32:30.000Z",
+    "code_updated_at": "2022-06-12T13:24:23.000Z",
+    "namespace": "ShowMe12306TicketHelper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 26321,
+        "name": "maidmeow4",
+        "created_at": "2016-01-06T13:52:02.000Z",
+        "url": "https://greasyfork.org/users/26321-maidmeow4"
+      }
+    ],
+    "name": "显示被隐藏的 12306 订票帮手",
+    "description": "显示被隐藏的12306订票帮手",
+    "url": "https://greasyfork.org/scripts/420233-%E6%98%BE%E7%A4%BA%E8%A2%AB%E9%9A%90%E8%97%8F%E7%9A%84-12306-%E8%AE%A2%E7%A5%A8%E5%B8%AE%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/420233/%E6%98%BE%E7%A4%BA%E8%A2%AB%E9%9A%90%E8%97%8F%E7%9A%84%2012306%20%E8%AE%A2%E7%A5%A8%E5%B8%AE%E6%89%8B.user.js",
+    "code_size": 659,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

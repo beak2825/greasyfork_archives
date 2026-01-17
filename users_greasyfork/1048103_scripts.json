@@ -1,0 +1,68 @@
+[
+  {
+    "id": 462686,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-27T08:20:44.000Z",
+    "code_updated_at": "2023-03-27T15:21:20.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1048103,
+        "name": "Oliver_Wilson",
+        "created_at": "2023-03-25T21:37:23.000Z",
+        "url": "https://greasyfork.org/users/1048103-oliver-wilson"
+      }
+    ],
+    "name": "СКРИПТ КФ",
+    "description": "none",
+    "url": "https://greasyfork.org/scripts/462686-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%BA%D1%84",
+    "code_url": "https://update.greasyfork.org/scripts/462686/%D0%A1%D0%9A%D0%A0%D0%98%D0%9F%D0%A2%20%D0%9A%D0%A4.user.js",
+    "code_size": 99870,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "sr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462577,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-25T21:41:47.000Z",
+    "code_updated_at": "2023-03-25T22:08:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1048103,
+        "name": "Oliver_Wilson",
+        "created_at": "2023-03-25T21:37:23.000Z",
+        "url": "https://greasyfork.org/users/1048103-oliver-wilson"
+      }
+    ],
+    "name": "КФ | SPB",
+    "description": "Curator_Forum",
+    "url": "https://greasyfork.org/scripts/462577-%D0%BA%D1%84-spb",
+    "code_url": "https://update.greasyfork.org/scripts/462577/%D0%9A%D0%A4%20%7C%20SPB.user.js",
+    "code_size": 84010,
+    "license": "MIT License",
+    "version": "3.26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

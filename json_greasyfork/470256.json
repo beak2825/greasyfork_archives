@@ -1,0 +1,33 @@
+{
+  "id": 470256,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-06T02:41:20.000Z",
+  "code_updated_at": "2023-07-06T03:31:42.000Z",
+  "namespace": "🔥🔥自动静音播放并在播放完成后自动切换到下一个视频，直至刷完课程，减少繁琐的手动操作。",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1007737,
+      "name": "yifang qiu",
+      "created_at": "2023-01-06T04:21:01.000Z",
+      "url": "https://greasyfork.org/users/1007737-yifang-qiu"
+    }
+  ],
+  "name": "芳姐特供公需课",
+  "description": "全新的继续教育自动刷课时脚本",
+  "url": "https://greasyfork.org/scripts/470256-%E8%8A%B3%E5%A7%90%E7%89%B9%E4%BE%9B%E5%85%AC%E9%9C%80%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/470256/%E8%8A%B3%E5%A7%90%E7%89%B9%E4%BE%9B%E5%85%AC%E9%9C%80%E8%AF%BE.user.js",
+  "code_size": 3269,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

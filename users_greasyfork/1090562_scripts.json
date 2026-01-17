@@ -1,0 +1,68 @@
+[
+  {
+    "id": 476543,
+    "daily_installs": 0,
+    "total_installs": 70,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-10-02T06:36:38.000Z",
+    "code_updated_at": "2023-10-06T04:48:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1090562,
+        "name": "_ recrsive",
+        "created_at": "2023-06-04T07:42:13.000Z",
+        "url": "https://greasyfork.org/users/1090562-recrsive"
+      }
+    ],
+    "name": "ChatGPT Thread Deletion with Checkbox",
+    "description": "Adds checkboxes to chat threads in ChatGPT and provides functionality to delete selected threads.",
+    "url": "https://greasyfork.org/scripts/476543-chatgpt-thread-deletion-with-checkbox",
+    "code_url": "https://update.greasyfork.org/scripts/476543/ChatGPT%20Thread%20Deletion%20with%20Checkbox.user.js",
+    "code_size": 7932,
+    "license": "MIT License",
+    "version": "1.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 467862,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-04T08:19:48.000Z",
+    "code_updated_at": "2023-06-04T08:19:48.000Z",
+    "namespace": "https://greasyfork.org/users/1090562",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1090562,
+        "name": "_ recrsive",
+        "created_at": "2023-06-04T07:42:13.000Z",
+        "url": "https://greasyfork.org/users/1090562-recrsive"
+      }
+    ],
+    "name": "エンター2回でメッセージ送信",
+    "description": "エンター2回でメッセージを送信する",
+    "url": "https://greasyfork.org/scripts/467862-%E3%82%A8%E3%83%B3%E3%82%BF%E3%83%BC2%E5%9B%9E%E3%81%A7%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E9%80%81%E4%BF%A1",
+    "code_url": "https://update.greasyfork.org/scripts/467862/%E3%82%A8%E3%83%B3%E3%82%BF%E3%83%BC2%E5%9B%9E%E3%81%A7%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E9%80%81%E4%BF%A1.user.js",
+    "code_size": 1942,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

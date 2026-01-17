@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412349,
+    "daily_installs": 0,
+    "total_installs": 67,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-02T16:18:26.000Z",
+    "code_updated_at": "2020-10-02T16:23:21.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 691942,
+        "name": "Groove Addiction",
+        "created_at": "2020-10-02T15:58:33.000Z",
+        "url": "https://greasyfork.org/users/691942-groove-addiction"
+      }
+    ],
+    "name": "Откат \"мессенджера\" до сообщений в ВКонтакте",
+    "description": "Данный скрипт откатывает недавнее обновление \"мессенджера\" до сообщений в ВКонтакте путем заменой заголовка и текста в меню + бонусом заменяет \"сообщества\" на группы.",
+    "url": "https://greasyfork.org/scripts/412349-%D0%BE%D1%82%D0%BA%D0%B0%D1%82-%D0%BC%D0%B5%D1%81%D1%81%D0%B5%D0%BD%D0%B4%D0%B6%D0%B5%D1%80%D0%B0-%D0%B4%D0%BE-%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D0%B9-%D0%B2-%D0%B2%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D0%B5",
+    "code_url": "https://update.greasyfork.org/scripts/412349/%D0%9E%D1%82%D0%BA%D0%B0%D1%82%20%22%D0%BC%D0%B5%D1%81%D1%81%D0%B5%D0%BD%D0%B4%D0%B6%D0%B5%D1%80%D0%B0%22%20%D0%B4%D0%BE%20%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D0%B9%20%D0%B2%20%D0%92%D0%9A%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D0%B5.user.js",
+    "code_size": 977,
+    "license": null,
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

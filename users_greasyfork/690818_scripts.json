@@ -1,0 +1,68 @@
+[
+  {
+    "id": 412277,
+    "daily_installs": 0,
+    "total_installs": 252,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-09-30T21:59:40.000Z",
+    "code_updated_at": "2020-09-30T21:59:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 690818,
+        "name": "derac",
+        "created_at": "2020-09-27T14:44:27.000Z",
+        "url": "https://greasyfork.org/users/690818-derac"
+      }
+    ],
+    "name": "Better Bing Video Search",
+    "description": "Improve Bing video search.",
+    "url": "https://greasyfork.org/scripts/412277-better-bing-video-search",
+    "code_url": "https://update.greasyfork.org/scripts/412277/Better%20Bing%20Video%20Search.user.js",
+    "code_size": 759,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412102,
+    "daily_installs": 0,
+    "total_installs": 845,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-27T14:46:33.000Z",
+    "code_updated_at": "2020-09-27T14:46:33.000Z",
+    "namespace": "https://github.com/derac/Better-Yandex-Image-Search",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 690818,
+        "name": "derac",
+        "created_at": "2020-09-27T14:44:27.000Z",
+        "url": "https://greasyfork.org/users/690818-derac"
+      }
+    ],
+    "name": "Better Yandex Image Search",
+    "description": "Add fullscreen image scaling and hit down button to start quick slideshow.",
+    "url": "https://greasyfork.org/scripts/412102-better-yandex-image-search",
+    "code_url": "https://update.greasyfork.org/scripts/412102/Better%20Yandex%20Image%20Search.user.js",
+    "code_size": 1112,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

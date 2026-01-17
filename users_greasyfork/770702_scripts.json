@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 458985,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-28T03:07:40.000Z",
+    "code_updated_at": "2023-01-28T03:07:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770702,
+        "name": "cccaaannn",
+        "created_at": "2021-05-10T20:10:12.000Z",
+        "url": "https://greasyfork.org/users/770702-cccaaannn"
+      }
+    ],
+    "name": "Don't stop video on tab change",
+    "description": "Prevents sites like instagram from stopping videos on tab change.",
+    "url": "https://greasyfork.org/scripts/458985-don-t-stop-video-on-tab-change",
+    "code_url": "https://update.greasyfork.org/scripts/458985/Don%27t%20stop%20video%20on%20tab%20change.user.js",
+    "code_size": 592,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449690,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-08-17T04:56:18.000Z",
+    "code_updated_at": "2022-08-17T04:56:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770702,
+        "name": "cccaaannn",
+        "created_at": "2021-05-10T20:10:12.000Z",
+        "url": "https://greasyfork.org/users/770702-cccaaannn"
+      }
+    ],
+    "name": "Remove yandex mail ads",
+    "description": "Removes add from yandex mail",
+    "url": "https://greasyfork.org/scripts/449690-remove-yandex-mail-ads",
+    "code_url": "https://update.greasyfork.org/scripts/449690/Remove%20yandex%20mail%20ads.user.js",
+    "code_size": 1102,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 426283,
+    "daily_installs": 0,
+    "total_installs": 607,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-10T20:37:49.000Z",
+    "code_updated_at": "2025-01-10T02:16:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770702,
+        "name": "cccaaannn",
+        "created_at": "2021-05-10T20:10:12.000Z",
+        "url": "https://greasyfork.org/users/770702-cccaaannn"
+      }
+    ],
+    "name": "YouTube Permanent ProgressBar",
+    "description": "Keeps YouTube progress bar visible all the time.",
+    "url": "https://greasyfork.org/scripts/426283-youtube-permanent-progressbar",
+    "code_url": "https://update.greasyfork.org/scripts/426283/YouTube%20Permanent%20ProgressBar.user.js",
+    "code_size": 8283,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 464288,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-18T06:55:08.000Z",
+  "code_updated_at": "2023-04-19T02:23:50.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/464288-uibot-commander%E4%BF%AE%E6%94%B9css%E6%A0%B7%E5%BC%8F",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1062464,
+      "name": "andrezhu",
+      "created_at": "2023-04-18T06:47:18.000Z",
+      "url": "https://greasyfork.org/users/1062464-andrezhu",
+      "scripts": [
+        {
+          "id": 464288,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-18T06:55:08.000Z",
+          "code_updated_at": "2023-04-19T02:23:50.000Z",
+          "namespace": "https://greasyfork.org/en/scripts/464288-uibot-commander%E4%BF%AE%E6%94%B9css%E6%A0%B7%E5%BC%8F",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "UiBot Commander修改CSS样式",
+          "description": "修改UiBot Commander的样式，显示完整的流程名称",
+          "url": "https://greasyfork.org/scripts/464288-uibot-commander%E4%BF%AE%E6%94%B9css%E6%A0%B7%E5%BC%8F",
+          "code_url": "https://update.greasyfork.org/scripts/464288/UiBot%20Commander%E4%BF%AE%E6%94%B9CSS%E6%A0%B7%E5%BC%8F.user.js",
+          "code_size": 514,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "UiBot Commander修改CSS样式",
+  "description": "修改UiBot Commander的样式，显示完整的流程名称",
+  "url": "https://greasyfork.org/scripts/464288-uibot-commander%E4%BF%AE%E6%94%B9css%E6%A0%B7%E5%BC%8F",
+  "code_url": "https://update.greasyfork.org/scripts/464288/UiBot%20Commander%E4%BF%AE%E6%94%B9CSS%E6%A0%B7%E5%BC%8F.user.js",
+  "code_size": 514,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

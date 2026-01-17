@@ -1,0 +1,33 @@
+{
+  "id": 421029,
+  "daily_installs": 0,
+  "total_installs": 465,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-02T05:24:06.000Z",
+  "code_updated_at": "2021-02-02T06:01:10.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 690063,
+      "name": "beisimm",
+      "created_at": "2020-09-24T08:59:43.000Z",
+      "url": "https://greasyfork.org/users/690063-beisimm"
+    }
+  ],
+  "name": "bimi ,tvb云播,樱花广告清理",
+  "description": "2021/2/2 下午12:58:41",
+  "url": "https://greasyfork.org/scripts/421029-bimi-tvb%E4%BA%91%E6%92%AD-%E6%A8%B1%E8%8A%B1%E5%B9%BF%E5%91%8A%E6%B8%85%E7%90%86",
+  "code_url": "https://update.greasyfork.org/scripts/421029/bimi%20%2Ctvb%E4%BA%91%E6%92%AD%2C%E6%A8%B1%E8%8A%B1%E5%B9%BF%E5%91%8A%E6%B8%85%E7%90%86.user.js",
+  "code_size": 542,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

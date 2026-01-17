@@ -1,0 +1,68 @@
+[
+  {
+    "id": 479605,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-12T10:27:29.000Z",
+    "code_updated_at": "2023-11-12T10:27:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166111,
+        "name": "최재원",
+        "created_at": "2023-09-04T12:58:16.000Z",
+        "url": "https://greasyfork.org/users/1166111-%EC%B5%9C%EC%9E%AC%EC%9B%90"
+      }
+    ],
+    "name": "Voca Test Cheat Mode12",
+    "description": "어디서 내가 바꿔놓은 걸 롤백하려고 ㅋㅋ",
+    "url": "https://greasyfork.org/scripts/479605-voca-test-cheat-mode12",
+    "code_url": "https://update.greasyfork.org/scripts/479605/Voca%20Test%20Cheat%20Mode12.user.js",
+    "code_size": 2850,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 479378,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-09T14:16:59.000Z",
+    "code_updated_at": "2023-11-09T14:16:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166111,
+        "name": "최재원",
+        "created_at": "2023-09-04T12:58:16.000Z",
+        "url": "https://greasyfork.org/users/1166111-%EC%B5%9C%EC%9E%AC%EC%9B%90"
+      }
+    ],
+    "name": "Voca Test Cheat Mode7",
+    "description": "allzol",
+    "url": "https://greasyfork.org/scripts/479378-voca-test-cheat-mode7",
+    "code_url": "https://update.greasyfork.org/scripts/479378/Voca%20Test%20Cheat%20Mode7.user.js",
+    "code_size": 1274,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

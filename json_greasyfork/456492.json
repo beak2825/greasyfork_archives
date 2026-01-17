@@ -1,0 +1,59 @@
+{
+  "id": 456492,
+  "daily_installs": 0,
+  "total_installs": 669,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-12-12T13:37:54.000Z",
+  "code_updated_at": "2022-12-19T12:56:12.000Z",
+  "namespace": "https://stu.ityxb.com/writePaper/busywork/*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 996508,
+      "name": "HCG_Sky",
+      "created_at": "2022-12-12T13:18:27.000Z",
+      "url": "https://greasyfork.org/users/996508-hcg-sky",
+      "scripts": [
+        {
+          "id": 456492,
+          "daily_installs": 0,
+          "total_installs": 669,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2022-12-12T13:37:54.000Z",
+          "code_updated_at": "2022-12-19T12:56:12.000Z",
+          "namespace": "https://stu.ityxb.com/writePaper/busywork/*",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "传智网课答题(只支持大部分选择题)",
+          "description": "传智教育答题",
+          "url": "https://greasyfork.org/scripts/456492-%E4%BC%A0%E6%99%BA%E7%BD%91%E8%AF%BE%E7%AD%94%E9%A2%98-%E5%8F%AA%E6%94%AF%E6%8C%81%E5%A4%A7%E9%83%A8%E5%88%86%E9%80%89%E6%8B%A9%E9%A2%98",
+          "code_url": "https://update.greasyfork.org/scripts/456492/%E4%BC%A0%E6%99%BA%E7%BD%91%E8%AF%BE%E7%AD%94%E9%A2%98%28%E5%8F%AA%E6%94%AF%E6%8C%81%E5%A4%A7%E9%83%A8%E5%88%86%E9%80%89%E6%8B%A9%E9%A2%98%29.user.js",
+          "code_size": 4113,
+          "license": null,
+          "version": "2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "传智网课答题(只支持大部分选择题)",
+  "description": "传智教育答题",
+  "url": "https://greasyfork.org/scripts/456492-%E4%BC%A0%E6%99%BA%E7%BD%91%E8%AF%BE%E7%AD%94%E9%A2%98-%E5%8F%AA%E6%94%AF%E6%8C%81%E5%A4%A7%E9%83%A8%E5%88%86%E9%80%89%E6%8B%A9%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/456492/%E4%BC%A0%E6%99%BA%E7%BD%91%E8%AF%BE%E7%AD%94%E9%A2%98%28%E5%8F%AA%E6%94%AF%E6%8C%81%E5%A4%A7%E9%83%A8%E5%88%86%E9%80%89%E6%8B%A9%E9%A2%98%29.user.js",
+  "code_size": 4113,
+  "license": null,
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

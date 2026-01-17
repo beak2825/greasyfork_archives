@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436365,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-01T00:44:36.000Z",
+    "code_updated_at": "2021-12-01T01:02:23.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 798179,
+        "name": "gatesbin",
+        "created_at": "2021-07-29T02:33:54.000Z",
+        "url": "https://greasyfork.org/users/798179-gatesbin"
+      }
+    ],
+    "name": "Hy-直播间增强插件",
+    "description": "去掉那些让人讨厌的东西",
+    "url": "https://greasyfork.org/scripts/436365-hy-%E7%9B%B4%E6%92%AD%E9%97%B4%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/436365/Hy-%E7%9B%B4%E6%92%AD%E9%97%B4%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 325,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

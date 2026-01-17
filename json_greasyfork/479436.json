@@ -1,0 +1,59 @@
+{
+  "id": 479436,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-10T08:30:43.000Z",
+  "code_updated_at": "2023-11-10T08:30:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1214547,
+      "name": "Bacomino",
+      "created_at": "2023-11-10T08:24:44.000Z",
+      "url": "https://greasyfork.org/users/1214547-bacomino",
+      "scripts": [
+        {
+          "id": 479436,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-10T08:30:43.000Z",
+          "code_updated_at": "2023-11-10T08:30:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ajuster le panneau latéral Gmail",
+          "description": "Auto adjust Gmail left panel width. Activated by a double click on the left panel background.",
+          "url": "https://greasyfork.org/scripts/479436-ajuster-le-panneau-lat%C3%A9ral-gmail",
+          "code_url": "https://update.greasyfork.org/scripts/479436/Ajuster%20le%20panneau%20lat%C3%A9ral%20Gmail.user.js",
+          "code_size": 7877,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ajuster le panneau latéral Gmail",
+  "description": "Auto adjust Gmail left panel width. Activated by a double click on the left panel background.",
+  "url": "https://greasyfork.org/scripts/479436-ajuster-le-panneau-lat%C3%A9ral-gmail",
+  "code_url": "https://update.greasyfork.org/scripts/479436/Ajuster%20le%20panneau%20lat%C3%A9ral%20Gmail.user.js",
+  "code_size": 7877,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

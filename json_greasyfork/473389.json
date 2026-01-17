@@ -1,0 +1,34 @@
+{
+  "id": 473389,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-18T17:05:00.000Z",
+  "code_updated_at": "2023-08-18T17:05:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1154393,
+      "name": "Pavel Aliev",
+      "created_at": "2023-08-18T17:02:18.000Z",
+      "url": "https://greasyfork.org/users/1154393-pavel-aliev",
+      "scripts": []
+    }
+  ],
+  "name": "Modify IQ-WEB User-EDIT Select Height",
+  "description": "Set the height of the select box to 1000px",
+  "url": "https://greasyfork.org/scripts/473389-modify-iq-web-user-edit-select-height",
+  "code_url": "https://update.greasyfork.org/scripts/473389/Modify%20IQ-WEB%20User-EDIT%20Select%20Height.user.js",
+  "code_size": 578,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

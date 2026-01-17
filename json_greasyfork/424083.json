@@ -1,0 +1,33 @@
+{
+  "id": 424083,
+  "daily_installs": 0,
+  "total_installs": 342,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-28T07:26:07.000Z",
+  "code_updated_at": "2021-04-29T23:19:36.000Z",
+  "namespace": "Zero_G@4d7d460c-0424-11eb-adc1-0242ac120002",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 6263,
+      "name": "Zero_G",
+      "created_at": "2014-10-23T00:37:47.000Z",
+      "url": "https://greasyfork.org/users/6263-zero-g"
+    }
+  ],
+  "name": "Image onMouseHover arch.b4k",
+  "description": "Mouse over images to view full size",
+  "url": "https://greasyfork.org/scripts/424083-image-onmousehover-arch-b4k",
+  "code_url": "https://update.greasyfork.org/scripts/424083/Image%20onMouseHover%20archb4k.user.js",
+  "code_size": 7043,
+  "license": null,
+  "version": "1.4.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

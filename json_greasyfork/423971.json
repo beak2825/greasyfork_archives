@@ -1,0 +1,59 @@
+{
+  "id": 423971,
+  "daily_installs": 0,
+  "total_installs": 147,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-25T19:41:41.000Z",
+  "code_updated_at": "2021-03-25T19:41:41.000Z",
+  "namespace": "https://github.com/aflowofcode",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 751354,
+      "name": "afoc",
+      "created_at": "2021-03-25T19:35:02.000Z",
+      "url": "https://greasyfork.org/users/751354-afoc",
+      "scripts": [
+        {
+          "id": 423971,
+          "daily_installs": 0,
+          "total_installs": 147,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-25T19:41:41.000Z",
+          "code_updated_at": "2021-03-25T19:41:41.000Z",
+          "namespace": "https://github.com/aflowofcode",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Medium.com: Re-enable Text Selection",
+          "description": "Stop Medium from preventing text selection & clipboard copying",
+          "url": "https://greasyfork.org/scripts/423971-medium-com-re-enable-text-selection",
+          "code_url": "https://update.greasyfork.org/scripts/423971/Mediumcom%3A%20Re-enable%20Text%20Selection.user.js",
+          "code_size": 643,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Medium.com: Re-enable Text Selection",
+  "description": "Stop Medium from preventing text selection & clipboard copying",
+  "url": "https://greasyfork.org/scripts/423971-medium-com-re-enable-text-selection",
+  "code_url": "https://update.greasyfork.org/scripts/423971/Mediumcom%3A%20Re-enable%20Text%20Selection.user.js",
+  "code_size": 643,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

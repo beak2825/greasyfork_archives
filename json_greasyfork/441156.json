@@ -1,0 +1,33 @@
+{
+  "id": 441156,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-08T15:45:10.000Z",
+  "code_updated_at": "2022-03-08T15:52:54.000Z",
+  "namespace": "tampermonkey.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 884581,
+      "name": "LautronB",
+      "created_at": "2022-03-08T15:38:07.000Z",
+      "url": "https://greasyfork.org/users/884581-lautronb"
+    }
+  ],
+  "name": "Notificador de nuevas materias",
+  "description": "Chequear si nuevas materias estan disponibles en SIU Guarani",
+  "url": "https://greasyfork.org/scripts/441156-notificador-de-nuevas-materias",
+  "code_url": "https://update.greasyfork.org/scripts/441156/Notificador%20de%20nuevas%20materias.user.js",
+  "code_size": 2025,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

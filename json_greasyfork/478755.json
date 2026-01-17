@@ -1,0 +1,59 @@
+{
+  "id": 478755,
+  "daily_installs": 0,
+  "total_installs": 65,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-01T03:02:47.000Z",
+  "code_updated_at": "2023-11-01T03:06:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1208331,
+      "name": "asiyoua",
+      "created_at": "2023-11-01T01:19:54.000Z",
+      "url": "https://greasyfork.org/users/1208331-asiyoua",
+      "scripts": [
+        {
+          "id": 478755,
+          "daily_installs": 0,
+          "total_installs": 65,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-01T03:02:47.000Z",
+          "code_updated_at": "2023-11-01T03:06:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "豆瓣搜索Anna和Zlibrary",
+          "description": "在豆瓣读书页面添加搜索Anna和Zlibrary的按钮",
+          "url": "https://greasyfork.org/scripts/478755-%E8%B1%86%E7%93%A3%E6%90%9C%E7%B4%A2anna%E5%92%8Czlibrary",
+          "code_url": "https://update.greasyfork.org/scripts/478755/%E8%B1%86%E7%93%A3%E6%90%9C%E7%B4%A2Anna%E5%92%8CZlibrary.user.js",
+          "code_size": 2102,
+          "license": "GNU GPL",
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "豆瓣搜索Anna和Zlibrary",
+  "description": "在豆瓣读书页面添加搜索Anna和Zlibrary的按钮",
+  "url": "https://greasyfork.org/scripts/478755-%E8%B1%86%E7%93%A3%E6%90%9C%E7%B4%A2anna%E5%92%8Czlibrary",
+  "code_url": "https://update.greasyfork.org/scripts/478755/%E8%B1%86%E7%93%A3%E6%90%9C%E7%B4%A2Anna%E5%92%8CZlibrary.user.js",
+  "code_size": 2102,
+  "license": "GNU GPL",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

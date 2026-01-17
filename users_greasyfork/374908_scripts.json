@@ -30,6 +30,105 @@
     "version": "1.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 491705,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-05T11:23:06.000Z",
+    "code_updated_at": "2024-08-11T09:50:42.000Z",
+    "namespace": "https://github.com/symant233/tracker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374908,
+        "name": "symant",
+        "created_at": "2019-09-23T08:26:28.000Z",
+        "url": "https://greasyfork.org/users/374908-symant"
+      }
+    ],
+    "name": "general tracker",
+    "description": "General Tracker with WebSocket",
+    "url": "https://greasyfork.org/scripts/491705-general-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/491705/general%20tracker.user.js",
+    "code_size": 2896,
+    "license": "GPLv3",
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 430037,
+    "daily_installs": 0,
+    "total_installs": 137,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-29T04:23:31.000Z",
+    "code_updated_at": "2021-07-29T04:28:44.000Z",
+    "namespace": "https://github.com/symant233",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374908,
+        "name": "symant",
+        "created_at": "2019-09-23T08:26:28.000Z",
+        "url": "https://greasyfork.org/users/374908-symant"
+      }
+    ],
+    "name": "LeetCode 获取题解 Markdown, 自动启用运行结果差别.",
+    "description": "LeetCode 获取题解 Markdown 源码, 自动启用运行结果差别.",
+    "url": "https://greasyfork.org/scripts/430037-leetcode-%E8%8E%B7%E5%8F%96%E9%A2%98%E8%A7%A3-markdown-%E8%87%AA%E5%8A%A8%E5%90%AF%E7%94%A8%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C%E5%B7%AE%E5%88%AB",
+    "code_url": "https://update.greasyfork.org/scripts/430037/LeetCode%20%E8%8E%B7%E5%8F%96%E9%A2%98%E8%A7%A3%20Markdown%2C%20%E8%87%AA%E5%8A%A8%E5%90%AF%E7%94%A8%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C%E5%B7%AE%E5%88%AB.user.js",
+    "code_size": 1927,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429238,
+    "daily_installs": 0,
+    "total_installs": 204,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-12T03:38:46.000Z",
+    "code_updated_at": "2021-07-12T03:38:46.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/424086",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374908,
+        "name": "symant",
+        "created_at": "2019-09-23T08:26:28.000Z",
+        "url": "https://greasyfork.org/users/374908-symant"
+      }
+    ],
+    "name": "【全网视频VIP解析】改",
+    "description": "更改自脚本(ID:424086)v2.5,作者小艾特,遵循原作者GPL协议,仅用于学习.",
+    "url": "https://greasyfork.org/scripts/429238-%E5%85%A8%E7%BD%91%E8%A7%86%E9%A2%91vip%E8%A7%A3%E6%9E%90-%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/429238/%E3%80%90%E5%85%A8%E7%BD%91%E8%A7%86%E9%A2%91VIP%E8%A7%A3%E6%9E%90%E3%80%91%E6%94%B9.user.js",
+    "code_size": 12695,
+    "license": "GPL License",
+    "version": "1.0.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

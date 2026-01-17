@@ -1,0 +1,59 @@
+{
+  "id": 481587,
+  "daily_installs": 0,
+  "total_installs": 82,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-07T07:26:15.000Z",
+  "code_updated_at": "2023-12-08T12:14:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1229423,
+      "name": "S_slime",
+      "created_at": "2023-12-06T17:36:41.000Z",
+      "url": "https://greasyfork.org/users/1229423-s-slime",
+      "scripts": [
+        {
+          "id": 481587,
+          "daily_installs": 0,
+          "total_installs": 82,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-07T07:26:15.000Z",
+          "code_updated_at": "2023-12-08T12:14:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站视屏截图",
+          "description": "B站视屏截图，脚本运行后会添加一个蓝色的截屏按钮",
+          "url": "https://greasyfork.org/scripts/481587-b%E7%AB%99%E8%A7%86%E5%B1%8F%E6%88%AA%E5%9B%BE",
+          "code_url": "https://update.greasyfork.org/scripts/481587/B%E7%AB%99%E8%A7%86%E5%B1%8F%E6%88%AA%E5%9B%BE.user.js",
+          "code_size": 7674,
+          "license": "MIT License",
+          "version": "final2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站视屏截图",
+  "description": "B站视屏截图，脚本运行后会添加一个蓝色的截屏按钮",
+  "url": "https://greasyfork.org/scripts/481587-b%E7%AB%99%E8%A7%86%E5%B1%8F%E6%88%AA%E5%9B%BE",
+  "code_url": "https://update.greasyfork.org/scripts/481587/B%E7%AB%99%E8%A7%86%E5%B1%8F%E6%88%AA%E5%9B%BE.user.js",
+  "code_size": 7674,
+  "license": "MIT License",
+  "version": "final2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

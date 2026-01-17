@@ -1,0 +1,68 @@
+[
+  {
+    "id": 425798,
+    "daily_installs": 0,
+    "total_installs": 672,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-01T17:26:49.000Z",
+    "code_updated_at": "2021-05-01T17:26:49.000Z",
+    "namespace": "https://greasyfork.org/users/767360",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 767360,
+        "name": "redbrain",
+        "created_at": "2021-05-01T17:24:00.000Z",
+        "url": "https://greasyfork.org/users/767360-redbrain"
+      }
+    ],
+    "name": "DelugeRPG S-Battler",
+    "description": "Automatically uses the first poke and the first attack.",
+    "url": "https://greasyfork.org/scripts/425798-delugerpg-s-battler",
+    "code_url": "https://update.greasyfork.org/scripts/425798/DelugeRPG%20S-Battler.user.js",
+    "code_size": 472,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425796,
+    "daily_installs": 0,
+    "total_installs": 548,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-05-01T17:24:38.000Z",
+    "code_updated_at": "2021-05-01T17:24:37.000Z",
+    "namespace": "https://greasyfork.org/users/767360",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 767360,
+        "name": "redbrain",
+        "created_at": "2021-05-01T17:24:00.000Z",
+        "url": "https://greasyfork.org/users/767360-redbrain"
+      }
+    ],
+    "name": "DelugeRPG Auto-Mover",
+    "description": "to use: inspect element, open console, and type: findPoke(\"CaseSensitivePokeName\");",
+    "url": "https://greasyfork.org/scripts/425796-delugerpg-auto-mover",
+    "code_url": "https://update.greasyfork.org/scripts/425796/DelugeRPG%20Auto-Mover.user.js",
+    "code_size": 651,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

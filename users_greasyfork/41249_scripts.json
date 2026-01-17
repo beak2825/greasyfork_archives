@@ -1,0 +1,68 @@
+[
+  {
+    "id": 452008,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-25T14:18:05.000Z",
+    "code_updated_at": "2022-09-27T14:25:47.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/41249-tantiancai",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 41249,
+        "name": "tantiancai",
+        "created_at": "2016-05-01T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/41249-tantiancai"
+      }
+    ],
+    "name": "MuleSoft的Training课程外挂",
+    "description": "通过反复做题，获得正确答案。目前只对应了模拟考试部分，其他部分在陆续开发中。",
+    "url": "https://greasyfork.org/scripts/452008-mulesoft%E7%9A%84training%E8%AF%BE%E7%A8%8B%E5%A4%96%E6%8C%82",
+    "code_url": "https://update.greasyfork.org/scripts/452008/MuleSoft%E7%9A%84Training%E8%AF%BE%E7%A8%8B%E5%A4%96%E6%8C%82.user.js",
+    "code_size": 60205,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425088,
+    "daily_installs": 0,
+    "total_installs": 5285,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-15T13:52:15.000Z",
+    "code_updated_at": "2022-10-19T11:54:59.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/41249-tantiancai",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 41249,
+        "name": "tantiancai",
+        "created_at": "2016-05-01T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/41249-tantiancai"
+      }
+    ],
+    "name": "奥鹏教育视频刷课-静音-自动下一课",
+    "description": "奥鹏教育视频",
+    "url": "https://greasyfork.org/scripts/425088-%E5%A5%A5%E9%B9%8F%E6%95%99%E8%82%B2%E8%A7%86%E9%A2%91%E5%88%B7%E8%AF%BE-%E9%9D%99%E9%9F%B3-%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/425088/%E5%A5%A5%E9%B9%8F%E6%95%99%E8%82%B2%E8%A7%86%E9%A2%91%E5%88%B7%E8%AF%BE-%E9%9D%99%E9%9F%B3-%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%AF%BE.user.js",
+    "code_size": 2324,
+    "license": null,
+    "version": "0.9.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

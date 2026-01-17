@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443403,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-15T04:22:48.000Z",
+    "code_updated_at": "2025-03-14T21:07:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 329309,
+        "name": "Josh F (Josh1billion)",
+        "created_at": "2019-08-19T03:07:24.000Z",
+        "url": "https://greasyfork.org/users/329309-josh-f-josh1billion"
+      }
+    ],
+    "name": "La Crosse Tribune full article unblocker",
+    "description": "On the La Crosse Tribune website, displays full articles.",
+    "url": "https://greasyfork.org/scripts/443403-la-crosse-tribune-full-article-unblocker",
+    "code_url": "https://update.greasyfork.org/scripts/443403/La%20Crosse%20Tribune%20full%20article%20unblocker.user.js",
+    "code_size": 2655,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

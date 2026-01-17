@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451642,
+    "daily_installs": 0,
+    "total_installs": 195,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-19T15:18:31.000Z",
+    "code_updated_at": "2022-09-22T10:15:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 961227,
+        "name": "Joye-bot",
+        "created_at": "2022-09-19T14:29:30.000Z",
+        "url": "https://greasyfork.org/users/961227-joye-bot"
+      }
+    ],
+    "name": "Github Download",
+    "description": "高速下载gihthub",
+    "url": "https://greasyfork.org/scripts/451642-github-download",
+    "code_url": "https://update.greasyfork.org/scripts/451642/Github%20Download.user.js",
+    "code_size": 14451,
+    "license": "GPL-3.0 License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

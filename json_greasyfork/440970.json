@@ -1,0 +1,33 @@
+{
+  "id": 440970,
+  "daily_installs": 0,
+  "total_installs": 1630,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-05T08:30:02.000Z",
+  "code_updated_at": "2022-03-06T02:02:18.000Z",
+  "namespace": "http://lvshuncai.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 882262,
+      "name": "芷炫",
+      "created_at": "2022-03-02T16:49:35.000Z",
+      "url": "https://greasyfork.org/users/882262-%E8%8A%B7%E7%82%AB"
+    }
+  ],
+  "name": "QQ群相册批量下载",
+  "description": "自动点击QQ群相册的下载功能，实现所有的群相册的批量下载",
+  "url": "https://greasyfork.org/scripts/440970-qq%E7%BE%A4%E7%9B%B8%E5%86%8C%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/440970/QQ%E7%BE%A4%E7%9B%B8%E5%86%8C%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 10139,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

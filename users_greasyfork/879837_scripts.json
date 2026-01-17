@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440511,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-23T16:47:46.000Z",
+    "code_updated_at": "2022-02-23T16:47:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 879837,
+        "name": "OfirApps",
+        "created_at": "2022-02-23T16:42:31.000Z",
+        "url": "https://greasyfork.org/users/879837-ofirapps"
+      }
+    ],
+    "name": "Better replit editor",
+    "description": "Get the old and best replit editor!",
+    "url": "https://greasyfork.org/scripts/440511-better-replit-editor",
+    "code_url": "https://update.greasyfork.org/scripts/440511/Better%20replit%20editor.user.js",
+    "code_size": 1217,
+    "license": "Apache License 2.0",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

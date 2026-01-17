@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457806,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-07T15:11:47.000Z",
+    "code_updated_at": "2023-03-23T03:08:01.000Z",
+    "namespace": "https://github.com/NessajCN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1008551,
+        "name": "NessajCN",
+        "created_at": "2023-01-07T15:08:28.000Z",
+        "url": "https://greasyfork.org/users/1008551-nessajcn"
+      }
+    ],
+    "name": "rmUkraine",
+    "description": "Remove annoying Ukraine propaganda block.",
+    "url": "https://greasyfork.org/scripts/457806-rmukraine",
+    "code_url": "https://update.greasyfork.org/scripts/457806/rmUkraine.user.js",
+    "code_size": 574,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

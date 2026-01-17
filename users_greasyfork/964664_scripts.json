@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452261,
+    "daily_installs": 0,
+    "total_installs": 113,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-30T03:13:07.000Z",
+    "code_updated_at": "2022-12-07T10:35:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964664,
+        "name": "ZYKJShadow",
+        "created_at": "2022-09-29T08:19:17.000Z",
+        "url": "https://greasyfork.org/users/964664-zykjshadow"
+      }
+    ],
+    "name": "NFU选课",
+    "description": "数字校园抢课脚本",
+    "url": "https://greasyfork.org/scripts/452261-nfu%E9%80%89%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/452261/NFU%E9%80%89%E8%AF%BE.user.js",
+    "code_size": 1879,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

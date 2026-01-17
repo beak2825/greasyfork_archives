@@ -1,0 +1,68 @@
+[
+  {
+    "id": 425813,
+    "daily_installs": 0,
+    "total_installs": 1446,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-02T07:15:37.000Z",
+    "code_updated_at": "2021-05-02T07:21:57.000Z",
+    "namespace": "https://imciel.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 674175,
+        "name": "Ekko Guo",
+        "created_at": "2020-08-07T10:05:20.000Z",
+        "url": "https://greasyfork.org/users/674175-ekko-guo"
+      }
+    ],
+    "name": "Google Play APK downloader",
+    "description": "add APK download buttons to Google Play",
+    "url": "https://greasyfork.org/scripts/425813-google-play-apk-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/425813/Google%20Play%20APK%20downloader.user.js",
+    "code_size": 1148,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 424113,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-29T03:41:50.000Z",
+    "code_updated_at": "2021-03-29T13:47:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 674175,
+        "name": "Ekko Guo",
+        "created_at": "2020-08-07T10:05:20.000Z",
+        "url": "https://greasyfork.org/users/674175-ekko-guo"
+      }
+    ],
+    "name": "NoBaidu",
+    "description": "Jump to Google when visit Baidu.",
+    "url": "https://greasyfork.org/scripts/424113-nobaidu",
+    "code_url": "https://update.greasyfork.org/scripts/424113/NoBaidu.user.js",
+    "code_size": 447,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

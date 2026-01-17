@@ -1,0 +1,34 @@
+{
+  "id": 452315,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-01T04:49:39.000Z",
+  "code_updated_at": "2022-10-21T02:57:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 926057,
+      "name": "bna5 maps",
+      "created_at": "2022-06-16T04:47:07.000Z",
+      "url": "https://greasyfork.org/users/926057-bna5-maps",
+      "scripts": []
+    }
+  ],
+  "name": "Barcodes",
+  "description": "Generates barcodes on outboundssp instead of new tab",
+  "url": "https://greasyfork.org/scripts/452315-barcodes",
+  "code_url": "https://update.greasyfork.org/scripts/452315/Barcodes.user.js",
+  "code_size": 72814,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

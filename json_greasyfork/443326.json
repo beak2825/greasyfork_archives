@@ -1,0 +1,33 @@
+{
+  "id": 443326,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-13T14:37:39.000Z",
+  "code_updated_at": "2022-04-13T14:37:39.000Z",
+  "namespace": "无止境 - wuzhij.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 891035,
+      "name": "wuzhij",
+      "created_at": "2022-03-23T01:58:01.000Z",
+      "url": "https://greasyfork.org/users/891035-wuzhij"
+    }
+  ],
+  "name": "无止境VIP解析，x浏览器，苹果Alook浏览器通用型。",
+  "description": "安卓X浏览器直接安装使用。苹果Alook浏览器使用，播放集数不对可切换桌面后刷新，解析接口失效后请自行到其他脚本内提取替换更新。",
+  "url": "https://greasyfork.org/scripts/443326-%E6%97%A0%E6%AD%A2%E5%A2%83vip%E8%A7%A3%E6%9E%90-x%E6%B5%8F%E8%A7%88%E5%99%A8-%E8%8B%B9%E6%9E%9Calook%E6%B5%8F%E8%A7%88%E5%99%A8%E9%80%9A%E7%94%A8%E5%9E%8B",
+  "code_url": "https://update.greasyfork.org/scripts/443326/%E6%97%A0%E6%AD%A2%E5%A2%83VIP%E8%A7%A3%E6%9E%90%EF%BC%8Cx%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%8C%E8%8B%B9%E6%9E%9CAlook%E6%B5%8F%E8%A7%88%E5%99%A8%E9%80%9A%E7%94%A8%E5%9E%8B%E3%80%82.user.js",
+  "code_size": 5627,
+  "license": "wuzhij",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

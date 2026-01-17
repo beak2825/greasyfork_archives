@@ -1,0 +1,33 @@
+{
+  "id": 472568,
+  "daily_installs": 0,
+  "total_installs": 61,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-06T16:00:36.000Z",
+  "code_updated_at": "2023-08-06T16:35:25.000Z",
+  "namespace": "https://github.com/syhyz1990/darkmode",
+  "support_url": "https://github.com/syhyz1990/darkmode",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 939158,
+      "name": "krtttt",
+      "created_at": "2022-07-25T09:49:25.000Z",
+      "url": "https://greasyfork.org/users/939158-krtttt"
+    }
+  ],
+  "name": "阳光模式助手 (原夜间模式助手)",
+  "description": "实现特定网站的白天模式，支持手动设置网站",
+  "url": "https://greasyfork.org/scripts/472568-%E9%98%B3%E5%85%89%E6%A8%A1%E5%BC%8F%E5%8A%A9%E6%89%8B-%E5%8E%9F%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/472568/%E9%98%B3%E5%85%89%E6%A8%A1%E5%BC%8F%E5%8A%A9%E6%89%8B%20%28%E5%8E%9F%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E5%8A%A9%E6%89%8B%29.user.js",
+  "code_size": 24792,
+  "license": "MIT License",
+  "version": "2.2.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

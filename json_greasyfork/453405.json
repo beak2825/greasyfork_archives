@@ -1,0 +1,34 @@
+{
+  "id": 453405,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-20T06:37:41.000Z",
+  "code_updated_at": "2022-11-28T19:49:31.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/424132-auto-feed",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 971176,
+      "name": "lxzx21",
+      "created_at": "2022-10-15T13:56:07.000Z",
+      "url": "https://greasyfork.org/users/971176-lxzx21",
+      "scripts": []
+    }
+  ],
+  "name": "织梦转种脚本",
+  "description": "PT一键转种脚本",
+  "url": "https://greasyfork.org/scripts/453405-%E7%BB%87%E6%A2%A6%E8%BD%AC%E7%A7%8D%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/453405/%E7%BB%87%E6%A2%A6%E8%BD%AC%E7%A7%8D%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 1277613,
+  "license": "GPL-3.0 License",
+  "version": "2.0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

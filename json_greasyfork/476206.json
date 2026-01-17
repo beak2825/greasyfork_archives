@@ -1,0 +1,59 @@
+{
+  "id": 476206,
+  "daily_installs": 1,
+  "total_installs": 95,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-28T01:56:39.000Z",
+  "code_updated_at": "2023-11-01T07:17:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1182469,
+      "name": "FloralShat",
+      "created_at": "2023-09-28T01:44:53.000Z",
+      "url": "https://greasyfork.org/users/1182469-floralshat",
+      "scripts": [
+        {
+          "id": 476206,
+          "daily_installs": 1,
+          "total_installs": 95,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-28T01:56:39.000Z",
+          "code_updated_at": "2023-11-01T07:17:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页阅读优化",
+          "description": "对百度百科/CSDN/知乎/简书/360doc/思否/搜狐/网易/剑鱼标讯/企查查/ICONFINDER阅读体验进行优化",
+          "url": "https://greasyfork.org/scripts/476206-%E7%BD%91%E9%A1%B5%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/476206/%E7%BD%91%E9%A1%B5%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96.user.js",
+          "code_size": 20096,
+          "license": "MIT License",
+          "version": "0.2.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网页阅读优化",
+  "description": "对百度百科/CSDN/知乎/简书/360doc/思否/搜狐/网易/剑鱼标讯/企查查/ICONFINDER阅读体验进行优化",
+  "url": "https://greasyfork.org/scripts/476206-%E7%BD%91%E9%A1%B5%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/476206/%E7%BD%91%E9%A1%B5%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 20096,
+  "license": "MIT License",
+  "version": "0.2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

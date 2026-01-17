@@ -1,0 +1,33 @@
+{
+  "id": 491296,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-31T03:55:10.000Z",
+  "code_updated_at": "2024-04-05T16:11:58.000Z",
+  "namespace": "github.com/forceofcalm",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1281850,
+      "name": "forceofcalm",
+      "created_at": "2024-03-31T03:38:50.000Z",
+      "url": "https://greasyfork.org/users/1281850-forceofcalm"
+    }
+  ],
+  "name": "Akira/Ren Name Switcher for AO3 (site-wide; AKIRA KURUSU PREFERRED)",
+  "description": "Switches the name Ren Amamiya to Akira Kurusu on AO3 on works tagged as Persona 5.",
+  "url": "https://greasyfork.org/scripts/491296-akira-ren-name-switcher-for-ao3-site-wide-akira-kurusu-preferred",
+  "code_url": "https://update.greasyfork.org/scripts/491296/AkiraRen%20Name%20Switcher%20for%20AO3%20%28site-wide%3B%20AKIRA%20KURUSU%20PREFERRED%29.user.js",
+  "code_size": 3375,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

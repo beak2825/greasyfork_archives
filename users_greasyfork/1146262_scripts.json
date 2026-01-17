@@ -163,5 +163,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 472653,
+    "daily_installs": 1,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-07T14:23:58.000Z",
+    "code_updated_at": "2025-02-04T15:48:14.000Z",
+    "namespace": "https://jlcareglio.github.io/",
+    "support_url": "https://gist.github.com/JLCareglio/3d9c4694430b181d2de2780aa2479572/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1146262,
+        "name": "JLCareglio",
+        "created_at": "2023-08-07T14:20:26.000Z",
+        "url": "https://greasyfork.org/users/1146262-jlcareglio"
+      }
+    ],
+    "name": "Export SteamDB Search",
+    "description": "Adds a button to export current search in SteamDB as TSV",
+    "url": "https://greasyfork.org/scripts/472653-export-steamdb-search",
+    "code_url": "https://update.greasyfork.org/scripts/472653/Export%20SteamDB%20Search.user.js",
+    "code_size": 8536,
+    "license": "MIT License",
+    "version": "2.3.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472654,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-07T14:23:58.000Z",
+    "code_updated_at": "2025-02-04T15:48:22.000Z",
+    "namespace": "https://jlcareglio.github.io/",
+    "support_url": "https://gist.github.com/JLCareglio/8c47034f40e9febfd52476dd2f36e7bf/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1146262,
+        "name": "JLCareglio",
+        "created_at": "2023-08-07T14:20:26.000Z",
+        "url": "https://greasyfork.org/users/1146262-jlcareglio"
+      }
+    ],
+    "name": "Export SteamDB Sales",
+    "description": "Adds a button to export current sales in SteamDB as TSV",
+    "url": "https://greasyfork.org/scripts/472654-export-steamdb-sales",
+    "code_url": "https://update.greasyfork.org/scripts/472654/Export%20SteamDB%20Sales.user.js",
+    "code_size": 10007,
+    "license": "MIT License",
+    "version": "2.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

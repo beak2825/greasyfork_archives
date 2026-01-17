@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 483288,
+    "daily_installs": 0,
+    "total_installs": 2288,
+    "fan_score": "52.9",
+    "good_ratings": 7,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-12-28T05:54:01.000Z",
+    "code_updated_at": "2024-08-04T10:34:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 55411,
+        "name": "一身惆怅",
+        "created_at": "2016-07-18T03:38:00.000Z",
+        "url": "https://greasyfork.org/users/55411-%E4%B8%80%E8%BA%AB%E6%83%86%E6%80%85"
+      }
+    ],
+    "name": "Switch520下载优化",
+    "description": "Switch520点击下载按钮后，直接弹出下载地址，无需反复跳转、输入密码",
+    "url": "https://greasyfork.org/scripts/483288-switch520%E4%B8%8B%E8%BD%BD%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/483288/Switch520%E4%B8%8B%E8%BD%BD%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 11376,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

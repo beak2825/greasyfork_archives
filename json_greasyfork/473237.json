@@ -1,0 +1,34 @@
+{
+  "id": 473237,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-17T02:38:52.000Z",
+  "code_updated_at": "2023-08-17T02:38:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906534,
+      "name": "rusania",
+      "created_at": "2022-04-25T01:13:31.000Z",
+      "url": "https://greasyfork.org/users/906534-rusania",
+      "scripts": []
+    }
+  ],
+  "name": "cp_game_list",
+  "description": "chinaplay order list",
+  "url": "https://greasyfork.org/scripts/473237-cp-game-list",
+  "code_url": "https://update.greasyfork.org/scripts/473237/cp_game_list.user.js",
+  "code_size": 1512,
+  "license": "MIT License",
+  "version": "2023.08.17.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

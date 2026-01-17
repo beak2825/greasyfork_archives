@@ -1,0 +1,33 @@
+{
+  "id": 439272,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-28T10:19:21.000Z",
+  "code_updated_at": "2022-01-29T14:25:55.000Z",
+  "namespace": "https://twitter.com/petpetv",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841928,
+      "name": "petpetv",
+      "created_at": "2021-11-21T04:57:00.000Z",
+      "url": "https://greasyfork.org/users/841928-petpetv"
+    }
+  ],
+  "name": "UserLocal register assist",
+  "description": "YouTubeの立ってる枠をUserLocalに登録するのを助けるやーつ",
+  "url": "https://greasyfork.org/scripts/439272-userlocal-register-assist",
+  "code_url": "https://update.greasyfork.org/scripts/439272/UserLocal%20register%20assist.user.js",
+  "code_size": 5068,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.0.7",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

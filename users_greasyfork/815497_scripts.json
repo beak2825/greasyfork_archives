@@ -1,0 +1,233 @@
+[
+  {
+    "id": 435962,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-23T18:26:33.000Z",
+    "code_updated_at": "2021-11-23T18:29:55.000Z",
+    "namespace": "https://greasyfork.org/users/815497",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815497,
+        "name": "None Of Your Business (KingOfMemes)",
+        "created_at": "2021-09-14T23:34:45.000Z",
+        "url": "https://greasyfork.org/users/815497-none-of-your-business-kingofmemes"
+      }
+    ],
+    "name": "Newrow Anti Spy",
+    "description": "Prevent newrow from seeing if you are on a different screen.",
+    "url": "https://greasyfork.org/scripts/435962-newrow-anti-spy",
+    "code_url": "https://update.greasyfork.org/scripts/435962/Newrow%20Anti%20Spy.user.js",
+    "code_size": 1548,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434693,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-30T21:31:37.000Z",
+    "code_updated_at": "2021-10-30T21:31:36.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815497,
+        "name": "None Of Your Business (KingOfMemes)",
+        "created_at": "2021-09-14T23:34:45.000Z",
+        "url": "https://greasyfork.org/users/815497-none-of-your-business-kingofmemes"
+      }
+    ],
+    "name": "Modded moo mod to mod modded moomoo mod",
+    "description": "BuildCount, v8-FixBigPing, SaveChat, FastInsta, AutoCoordWalk, AFKMode, R-InstaKill, AutoHeal, AutoAntiBull, AntiInsta, FollowAnimals, AutoFarmResource, M-TripleWASDMills, UpArrow-Katana+Musket, H-Turret, N-Mill, V-spike, F-Trap, Z-TankGear, Shift-BiomeHats, Esc-BetterMenu, AutoAntiBull, MouseClicks, BetterHotBar, OneTickInsta. Please rate this script in the comments! I'm trying really hard! Give me your support!",
+    "url": "https://greasyfork.org/scripts/434693-modded-moo-mod-to-mod-modded-moomoo-mod",
+    "code_url": "https://update.greasyfork.org/scripts/434693/Modded%20moo%20mod%20to%20mod%20modded%20moomoo%20mod.user.js",
+    "code_size": 117569,
+    "license": null,
+    "version": "10.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434276,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-21T19:40:19.000Z",
+    "code_updated_at": "2021-10-21T19:40:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815497,
+        "name": "None Of Your Business (KingOfMemes)",
+        "created_at": "2021-09-14T23:34:45.000Z",
+        "url": "https://greasyfork.org/users/815497-none-of-your-business-kingofmemes"
+      }
+    ],
+    "name": "Newrow Multi-Task Script BETA",
+    "description": "Multitask your work by embedding your class connect in the lesson page!",
+    "url": "https://greasyfork.org/scripts/434276-newrow-multi-task-script-beta",
+    "code_url": "https://update.greasyfork.org/scripts/434276/Newrow%20Multi-Task%20Script%20BETA.user.js",
+    "code_size": 4483,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434275,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-21T19:37:15.000Z",
+    "code_updated_at": "2021-10-27T21:51:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815497,
+        "name": "None Of Your Business (KingOfMemes)",
+        "created_at": "2021-09-14T23:34:45.000Z",
+        "url": "https://greasyfork.org/users/815497-none-of-your-business-kingofmemes"
+      }
+    ],
+    "name": "IXL Time Farmer",
+    "description": "Farm time on IXL since it's utter bs. ;)",
+    "url": "https://greasyfork.org/scripts/434275-ixl-time-farmer",
+    "code_url": "https://update.greasyfork.org/scripts/434275/IXL%20Time%20Farmer.user.js",
+    "code_size": 1787,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434274,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-21T19:34:35.000Z",
+    "code_updated_at": "2021-10-21T19:34:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815497,
+        "name": "None Of Your Business (KingOfMemes)",
+        "created_at": "2021-09-14T23:34:45.000Z",
+        "url": "https://greasyfork.org/users/815497-none-of-your-business-kingofmemes"
+      }
+    ],
+    "name": "CodeHS Dark Mode",
+    "description": "Yet another dark mode script. Why don't they have it built in?",
+    "url": "https://greasyfork.org/scripts/434274-codehs-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/434274/CodeHS%20Dark%20Mode.user.js",
+    "code_size": 3174,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434236,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-21T04:03:28.000Z",
+    "code_updated_at": "2021-10-21T04:03:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815497,
+        "name": "None Of Your Business (KingOfMemes)",
+        "created_at": "2021-09-14T23:34:45.000Z",
+        "url": "https://greasyfork.org/users/815497-none-of-your-business-kingofmemes"
+      }
+    ],
+    "name": "Newrow Multi-Tasker",
+    "description": "Multitask your work by embedding your class connect in the lesson page!",
+    "url": "https://greasyfork.org/scripts/434236-newrow-multi-tasker",
+    "code_url": "https://update.greasyfork.org/scripts/434236/Newrow%20Multi-Tasker.user.js",
+    "code_size": 4029,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432427,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-14T23:36:59.000Z",
+    "code_updated_at": "2021-10-28T16:05:54.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/432427-k12-dark-mode",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815497,
+        "name": "None Of Your Business (KingOfMemes)",
+        "created_at": "2021-09-14T23:34:45.000Z",
+        "url": "https://greasyfork.org/users/815497-none-of-your-business-kingofmemes"
+      }
+    ],
+    "name": "K12 Dark Mode",
+    "description": "Makes the k12 pages a little easier on the eyes ;)",
+    "url": "https://greasyfork.org/scripts/432427-k12-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/432427/K12%20Dark%20Mode.user.js",
+    "code_size": 17655,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

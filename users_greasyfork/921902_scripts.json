@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445984,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-04T08:46:52.000Z",
+    "code_updated_at": "2023-05-15T08:05:43.000Z",
+    "namespace": "http://ventroar.xyz/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921902,
+        "name": "dsxksss",
+        "created_at": "2022-06-04T08:34:39.000Z",
+        "url": "https://greasyfork.org/users/921902-dsxksss"
+      }
+    ],
+    "name": "百度美化",
+    "description": "一个很简单的简约美化百度搜索页面的小脚本，因为是大一学生所以知识点不牢固，写这个脚本纯粹锻炼自己技术",
+    "url": "https://greasyfork.org/scripts/445984-%E7%99%BE%E5%BA%A6%E7%BE%8E%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/445984/%E7%99%BE%E5%BA%A6%E7%BE%8E%E5%8C%96.user.js",
+    "code_size": 1703,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 426499,
+  "daily_installs": 0,
+  "total_installs": 81,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-05-15T03:54:14.000Z",
+  "code_updated_at": "2021-12-15T02:37:25.000Z",
+  "namespace": "https://greasyfork.org/users/28185",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 28185,
+      "name": "_bit",
+      "created_at": "2016-01-23T20:24:23.000Z",
+      "url": "https://greasyfork.org/users/28185-bit"
+    }
+  ],
+  "name": "Lichess Full Coords",
+  "description": "Displays full coordinates on each square.",
+  "url": "https://greasyfork.org/scripts/426499-lichess-full-coords",
+  "code_url": "https://update.greasyfork.org/scripts/426499/Lichess%20Full%20Coords.user.js",
+  "code_size": 5433,
+  "license": "Apache License 2.0",
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

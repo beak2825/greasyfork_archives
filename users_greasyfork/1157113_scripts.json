@@ -1,0 +1,68 @@
+[
+  {
+    "id": 479346,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-09T03:49:37.000Z",
+    "code_updated_at": "2023-11-09T03:49:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1157113,
+        "name": "RyuKazeko",
+        "created_at": "2023-08-22T18:49:15.000Z",
+        "url": "https://greasyfork.org/users/1157113-ryukazeko"
+      }
+    ],
+    "name": "Fe",
+    "description": "Life is hard enough. Don't download tests for hours",
+    "url": "https://greasyfork.org/scripts/479346-fe",
+    "code_url": "https://update.greasyfork.org/scripts/479346/Fe.user.js",
+    "code_size": 8233,
+    "license": "GNU GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 475110,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-12T12:24:15.000Z",
+    "code_updated_at": "2023-09-12T21:32:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1157113,
+        "name": "RyuKazeko",
+        "created_at": "2023-08-22T18:49:15.000Z",
+        "url": "https://greasyfork.org/users/1157113-ryukazeko"
+      }
+    ],
+    "name": "FernusMonke",
+    "description": "İndirme botu.",
+    "url": "https://greasyfork.org/scripts/475110-fernusmonke",
+    "code_url": "https://update.greasyfork.org/scripts/475110/FernusMonke.user.js",
+    "code_size": 5318,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.4",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

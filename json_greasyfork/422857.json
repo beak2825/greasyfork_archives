@@ -1,0 +1,34 @@
+{
+  "id": 422857,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-08T08:41:41.000Z",
+  "code_updated_at": "2021-03-08T08:41:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 387573,
+      "name": "zhangxc427",
+      "created_at": "2019-10-16T08:26:54.000Z",
+      "url": "https://greasyfork.org/users/387573-zhangxc427",
+      "scripts": []
+    }
+  ],
+  "name": "某在线教育题库去除VIP限制，题库界面清洁下载",
+  "description": "某在线教育题库免费使用-题目转文件下载-去除购买题库的提示遮罩层",
+  "url": "https://greasyfork.org/scripts/422857-%E6%9F%90%E5%9C%A8%E7%BA%BF%E6%95%99%E8%82%B2%E9%A2%98%E5%BA%93%E5%8E%BB%E9%99%A4vip%E9%99%90%E5%88%B6-%E9%A2%98%E5%BA%93%E7%95%8C%E9%9D%A2%E6%B8%85%E6%B4%81%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/422857/%E6%9F%90%E5%9C%A8%E7%BA%BF%E6%95%99%E8%82%B2%E9%A2%98%E5%BA%93%E5%8E%BB%E9%99%A4VIP%E9%99%90%E5%88%B6%EF%BC%8C%E9%A2%98%E5%BA%93%E7%95%8C%E9%9D%A2%E6%B8%85%E6%B4%81%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 4142,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

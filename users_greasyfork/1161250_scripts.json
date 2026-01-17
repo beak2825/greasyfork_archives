@@ -64,5 +64,71 @@
     "locale": "da",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 491140,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-29T03:07:43.000Z",
+    "code_updated_at": "2025-03-11T12:33:26.000Z",
+    "namespace": "remio/script-pixiv",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1161250,
+        "name": "kasuie",
+        "created_at": "2023-08-28T05:52:23.000Z",
+        "url": "https://greasyfork.org/users/1161250-kasuie"
+      }
+    ],
+    "name": "Pixiv Mio Tools",
+    "description": "获取pixiv的排行数据，并新增到mio",
+    "url": "https://greasyfork.org/scripts/491140-pixiv-mio-tools",
+    "code_url": "https://update.greasyfork.org/scripts/491140/Pixiv%20Mio%20Tools.user.js",
+    "code_size": 155136,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474065,
+    "daily_installs": 0,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-28T05:57:24.000Z",
+    "code_updated_at": "2024-04-17T13:23:03.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/474065",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1161250,
+        "name": "kasuie",
+        "created_at": "2023-08-28T05:52:23.000Z",
+        "url": "https://greasyfork.org/users/1161250-kasuie"
+      }
+    ],
+    "name": "动漫花园魔改",
+    "description": "在不改变原来的功能的情况下，去除广告，实现暗色主题，都是一些主观上的美化，适用于动漫花园（dmhy）及相关镜像站，如果你也喜欢，欢迎使用~",
+    "url": "https://greasyfork.org/scripts/474065-%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E9%AD%94%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/474065/%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E9%AD%94%E6%94%B9.user.js",
+    "code_size": 1446,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

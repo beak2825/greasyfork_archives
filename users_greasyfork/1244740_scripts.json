@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484176,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-07T22:17:37.000Z",
+    "code_updated_at": "2024-01-07T22:21:10.000Z",
+    "namespace": "Youtube_Stream_Spamer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244740,
+        "name": "anon819251",
+        "created_at": "2024-01-07T22:11:09.000Z",
+        "url": "https://greasyfork.org/users/1244740-anon819251"
+      }
+    ],
+    "name": "Youtube Stream Spamer",
+    "description": "Youtube stream chat spam tool",
+    "url": "https://greasyfork.org/scripts/484176-youtube-stream-spamer",
+    "code_url": "https://update.greasyfork.org/scripts/484176/Youtube%20Stream%20Spamer.user.js",
+    "code_size": 4629,
+    "license": null,
+    "version": "2024-01-01",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

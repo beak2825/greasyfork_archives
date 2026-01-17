@@ -1,0 +1,34 @@
+{
+  "id": 471027,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-17T08:39:04.000Z",
+  "code_updated_at": "2023-07-17T08:42:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1128919,
+      "name": "Ilya Novojilov",
+      "created_at": "2023-07-17T08:36:29.000Z",
+      "url": "https://greasyfork.org/users/1128919-ilya-novojilov",
+      "scripts": []
+    }
+  ],
+  "name": "colorize the log output",
+  "description": "convert ESC formatting to HTML",
+  "url": "https://greasyfork.org/scripts/471027-colorize-the-log-output",
+  "code_url": "https://update.greasyfork.org/scripts/471027/colorize%20the%20log%20output.user.js",
+  "code_size": 55514,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

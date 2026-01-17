@@ -1,0 +1,68 @@
+[
+  {
+    "id": 469747,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-29T10:47:59.000Z",
+    "code_updated_at": "2023-06-30T01:25:58.000Z",
+    "namespace": "zxwNew",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937397,
+        "name": "Yoncms",
+        "created_at": "2022-07-20T02:07:19.000Z",
+        "url": "https://greasyfork.org/users/937397-yoncms"
+      }
+    ],
+    "name": "zhixuewangNew",
+    "description": "智学网评卷输入成绩自动提交!",
+    "url": "https://greasyfork.org/scripts/469747-zhixuewangnew",
+    "code_url": "https://update.greasyfork.org/scripts/469747/zhixuewangNew.user.js",
+    "code_size": 1768,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448292,
+    "daily_installs": 0,
+    "total_installs": 225,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-22T10:29:39.000Z",
+    "code_updated_at": "2022-07-22T10:36:38.000Z",
+    "namespace": "Yoncms/Hxpxw",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937397,
+        "name": "Yoncms",
+        "created_at": "2022-07-20T02:07:19.000Z",
+        "url": "https://greasyfork.org/users/937397-yoncms"
+      }
+    ],
+    "name": "Hasten_player",
+    "description": "突破视频观看速度以及进度条无法拖动的限制，极速完成观看任务！",
+    "url": "https://greasyfork.org/scripts/448292-hasten-player",
+    "code_url": "https://update.greasyfork.org/scripts/448292/Hasten_player.user.js",
+    "code_size": 966,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

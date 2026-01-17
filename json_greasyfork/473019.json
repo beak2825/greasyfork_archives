@@ -1,0 +1,34 @@
+{
+  "id": 473019,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-13T23:05:15.000Z",
+  "code_updated_at": "2023-08-14T10:03:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 855874,
+      "name": "Ramille Estarles",
+      "created_at": "2021-12-20T22:24:35.000Z",
+      "url": "https://greasyfork.org/users/855874-ramille-estarles",
+      "scripts": []
+    }
+  ],
+  "name": "Remove Ads Kissasian",
+  "description": "remove ads that open new window/tabs",
+  "url": "https://greasyfork.org/scripts/473019-remove-ads-kissasian",
+  "code_url": "https://update.greasyfork.org/scripts/473019/Remove%20Ads%20Kissasian.user.js",
+  "code_size": 1697,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

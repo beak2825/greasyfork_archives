@@ -1,0 +1,68 @@
+[
+  {
+    "id": 488080,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-23T08:24:42.000Z",
+    "code_updated_at": "2024-03-05T12:16:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 720211,
+        "name": "hyh6411",
+        "created_at": "2020-12-23T14:24:09.000Z",
+        "url": "https://greasyfork.org/users/720211-hyh6411"
+      }
+    ],
+    "name": "web_highlight",
+    "description": "选中高亮！",
+    "url": "https://greasyfork.org/scripts/488080-web-highlight",
+    "code_url": "https://update.greasyfork.org/scripts/488080/web_highlight.user.js",
+    "code_size": 10108,
+    "license": "MIT License",
+    "version": "0.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419067,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-23T14:38:02.000Z",
+    "code_updated_at": "2020-12-23T14:38:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 720211,
+        "name": "hyh6411",
+        "created_at": "2020-12-23T14:24:09.000Z",
+        "url": "https://greasyfork.org/users/720211-hyh6411"
+      }
+    ],
+    "name": "zhid_baidu",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/419067-zhid-baidu",
+    "code_url": "https://update.greasyfork.org/scripts/419067/zhid_baidu.user.js",
+    "code_size": 851,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

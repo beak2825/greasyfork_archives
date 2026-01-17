@@ -1,0 +1,34 @@
+{
+  "id": 487204,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-13T03:49:52.000Z",
+  "code_updated_at": "2024-02-16T00:38:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1245414,
+      "name": "Joshua Errington",
+      "created_at": "2024-01-09T06:31:17.000Z",
+      "url": "https://greasyfork.org/users/1245414-joshua-errington",
+      "scripts": []
+    }
+  ],
+  "name": "Poolside Label Printer",
+  "description": "Print labels from ticketing system to label printer",
+  "url": "https://greasyfork.org/scripts/487204-poolside-label-printer",
+  "code_url": "https://update.greasyfork.org/scripts/487204/Poolside%20Label%20Printer.user.js",
+  "code_size": 191129,
+  "license": "MIT License",
+  "version": "2024-02-16/2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

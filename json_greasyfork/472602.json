@@ -1,0 +1,59 @@
+{
+  "id": 472602,
+  "daily_installs": 0,
+  "total_installs": 264,
+  "fan_score": "36.5",
+  "good_ratings": 4,
+  "ok_ratings": 1,
+  "bad_ratings": 1,
+  "created_at": "2023-08-07T01:30:29.000Z",
+  "code_updated_at": "2023-09-12T11:26:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1145713,
+      "name": "eeezae",
+      "created_at": "2023-08-07T01:14:18.000Z",
+      "url": "https://greasyfork.org/users/1145713-eeezae",
+      "scripts": [
+        {
+          "id": 472602,
+          "daily_installs": 0,
+          "total_installs": 264,
+          "fan_score": "36.5",
+          "good_ratings": 4,
+          "ok_ratings": 1,
+          "bad_ratings": 1,
+          "created_at": "2023-08-07T01:30:29.000Z",
+          "code_updated_at": "2023-09-12T11:26:31.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "KomgaPatcher",
+          "description": "Komga comic server metadata patcher",
+          "url": "https://greasyfork.org/scripts/472602-komgapatcher",
+          "code_url": "https://update.greasyfork.org/scripts/472602/KomgaPatcher.user.js",
+          "code_size": 51449,
+          "license": "MIT License",
+          "version": "1.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "KomgaPatcher",
+  "description": "Komga comic server metadata patcher",
+  "url": "https://greasyfork.org/scripts/472602-komgapatcher",
+  "code_url": "https://update.greasyfork.org/scripts/472602/KomgaPatcher.user.js",
+  "code_size": 51449,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

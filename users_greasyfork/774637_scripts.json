@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426816,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-21T13:08:51.000Z",
+    "code_updated_at": "2021-05-21T13:08:51.000Z",
+    "namespace": "http://du9l.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774637,
+        "name": "dujiulun2006",
+        "created_at": "2021-05-21T13:06:35.000Z",
+        "url": "https://greasyfork.org/users/774637-dujiulun2006"
+      }
+    ],
+    "name": "picross",
+    "description": "picross solver",
+    "url": "https://greasyfork.org/scripts/426816-picross",
+    "code_url": "https://update.greasyfork.org/scripts/426816/picross.user.js",
+    "code_size": 10768,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

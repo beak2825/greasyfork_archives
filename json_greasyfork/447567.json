@@ -1,0 +1,33 @@
+{
+  "id": 447567,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-07T15:15:13.000Z",
+  "code_updated_at": "2022-07-07T15:15:13.000Z",
+  "namespace": "https://greasyfork.org/fr/users/8-decembre",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 8,
+      "name": "decembre",
+      "created_at": "2014-02-20T05:38:50.000Z",
+      "url": "https://greasyfork.org/users/8-decembre"
+    }
+  ],
+  "name": "Commune Paris - Liste des Frequences Radios - Choisir Tri par Frequences ou Noms",
+  "description": "Un click pour changer l'ordre de la Liste des Fréquences Radios...",
+  "url": "https://greasyfork.org/scripts/447567-commune-paris-liste-des-frequences-radios-choisir-tri-par-frequences-ou-noms",
+  "code_url": "https://update.greasyfork.org/scripts/447567/Commune%20Paris%20-%20Liste%20des%20Frequences%20Radios%20-%20Choisir%20Tri%20par%20Frequences%20ou%20Noms.user.js",
+  "code_size": 2788,
+  "license": "The Unlicense",
+  "version": "01.00",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

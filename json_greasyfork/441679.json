@@ -1,0 +1,59 @@
+{
+  "id": 441679,
+  "daily_installs": 0,
+  "total_installs": 172,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-18T05:49:23.000Z",
+  "code_updated_at": "2022-03-19T06:30:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 888609,
+      "name": "WaterAndFlower",
+      "created_at": "2022-03-17T12:13:04.000Z",
+      "url": "https://greasyfork.org/users/888609-waterandflower",
+      "scripts": [
+        {
+          "id": 441679,
+          "daily_installs": 0,
+          "total_installs": 172,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-18T05:49:23.000Z",
+          "code_updated_at": "2022-03-19T06:30:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "丹阳中北学院自动登录网络",
+          "description": "摆脱NNU-ZB时常健忘的毛病，帮助您自动设置账号密码运营商，自动登录网页，然后关闭网页",
+          "url": "https://greasyfork.org/scripts/441679-%E4%B8%B9%E9%98%B3%E4%B8%AD%E5%8C%97%E5%AD%A6%E9%99%A2%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E7%BD%91%E7%BB%9C",
+          "code_url": "https://update.greasyfork.org/scripts/441679/%E4%B8%B9%E9%98%B3%E4%B8%AD%E5%8C%97%E5%AD%A6%E9%99%A2%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E7%BD%91%E7%BB%9C.user.js",
+          "code_size": 21040,
+          "license": "MIT License",
+          "version": "0.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "丹阳中北学院自动登录网络",
+  "description": "摆脱NNU-ZB时常健忘的毛病，帮助您自动设置账号密码运营商，自动登录网页，然后关闭网页",
+  "url": "https://greasyfork.org/scripts/441679-%E4%B8%B9%E9%98%B3%E4%B8%AD%E5%8C%97%E5%AD%A6%E9%99%A2%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E7%BD%91%E7%BB%9C",
+  "code_url": "https://update.greasyfork.org/scripts/441679/%E4%B8%B9%E9%98%B3%E4%B8%AD%E5%8C%97%E5%AD%A6%E9%99%A2%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E7%BD%91%E7%BB%9C.user.js",
+  "code_size": 21040,
+  "license": "MIT License",
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

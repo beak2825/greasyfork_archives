@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 454558,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-10T05:07:44.000Z",
+    "code_updated_at": "2022-11-10T05:07:43.000Z",
+    "namespace": "https://greasyfork.org/users/981420",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 981420,
+        "name": "guyman624",
+        "created_at": "2022-11-10T05:04:26.000Z",
+        "url": "https://greasyfork.org/users/981420-guyman624"
+      }
+    ],
+    "name": "sneedex tooltips",
+    "description": "tooltips to tell you what the colors mean on sneedex.",
+    "url": "https://greasyfork.org/scripts/454558-sneedex-tooltips",
+    "code_url": "https://update.greasyfork.org/scripts/454558/sneedex%20tooltips.user.js",
+    "code_size": 1874,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

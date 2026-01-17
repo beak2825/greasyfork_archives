@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488473,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-27T19:36:59.000Z",
+    "code_updated_at": "2024-02-27T19:47:44.000Z",
+    "namespace": "http://yifangu.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 998777,
+        "name": "YGX",
+        "created_at": "2022-12-17T01:08:27.000Z",
+        "url": "https://greasyfork.org/users/998777-ygx"
+      }
+    ],
+    "name": "Darkify",
+    "description": "Selectively toggle dark mode for any website",
+    "url": "https://greasyfork.org/scripts/488473-darkify",
+    "code_url": "https://update.greasyfork.org/scripts/488473/Darkify.user.js",
+    "code_size": 4198,
+    "license": "MIT License",
+    "version": "2024-02-27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

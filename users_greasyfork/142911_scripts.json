@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412066,
+    "daily_installs": 0,
+    "total_installs": 132,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-27T10:16:36.000Z",
+    "code_updated_at": "2020-09-27T10:19:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 142911,
+        "name": "King D",
+        "created_at": "2017-07-22T22:30:20.000Z",
+        "url": "https://greasyfork.org/users/142911-king-d"
+      }
+    ],
+    "name": "LOL S10 二路流合成",
+    "description": "企鹅直播77777二路流",
+    "url": "https://greasyfork.org/scripts/412066-lol-s10-%E4%BA%8C%E8%B7%AF%E6%B5%81%E5%90%88%E6%88%90",
+    "code_url": "https://update.greasyfork.org/scripts/412066/LOL%20S10%20%E4%BA%8C%E8%B7%AF%E6%B5%81%E5%90%88%E6%88%90.user.js",
+    "code_size": 3187,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

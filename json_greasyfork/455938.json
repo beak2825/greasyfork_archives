@@ -1,0 +1,33 @@
+{
+  "id": 455938,
+  "daily_installs": 0,
+  "total_installs": 1006,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-03T15:03:28.000Z",
+  "code_updated_at": "2024-12-06T17:14:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 893587,
+      "name": "limbopro",
+      "created_at": "2022-03-26T18:49:45.000Z",
+      "url": "https://greasyfork.org/users/893587-limbopro"
+    }
+  ],
+  "name": "CSDN免登陆复制代码/Copy EveryThing you selected",
+  "description": "无需登陆，复制你选中的任何来自CSDN页面的字符串/文本/代码(请确保你在页面上能看到这些代码!)；Copy Everything from CSDN that you selected without login in.",
+  "url": "https://greasyfork.org/scripts/455938-csdn%E5%85%8D%E7%99%BB%E9%99%86%E5%A4%8D%E5%88%B6%E4%BB%A3%E7%A0%81-copy-everything-you-selected",
+  "code_url": "https://update.greasyfork.org/scripts/455938/CSDN%E5%85%8D%E7%99%BB%E9%99%86%E5%A4%8D%E5%88%B6%E4%BB%A3%E7%A0%81Copy%20EveryThing%20you%20selected.user.js",
+  "code_size": 3140,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

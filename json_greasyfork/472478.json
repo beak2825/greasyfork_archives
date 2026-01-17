@@ -1,0 +1,59 @@
+{
+  "id": 472478,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-05T09:03:19.000Z",
+  "code_updated_at": "2023-08-06T01:30:29.000Z",
+  "namespace": "https://github.com/AliubYiero/TamperMonkeyScripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1141976,
+      "name": "Yiero",
+      "created_at": "2023-08-02T10:43:15.000Z",
+      "url": "https://greasyfork.org/users/1141976-yiero",
+      "scripts": [
+        {
+          "id": 472556,
+          "daily_installs": 0,
+          "total_installs": 149,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-06T12:06:49.000Z",
+          "code_updated_at": "2023-08-06T12:06:49.000Z",
+          "namespace": "https://github.com/AliubYiero/TamperMonkeyScripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AutoScroll",
+          "description": "全平台自动滚动",
+          "url": "https://greasyfork.org/scripts/472556-autoscroll",
+          "code_url": "https://update.greasyfork.org/scripts/472556/AutoScroll.user.js",
+          "code_size": 8301,
+          "license": "GPL",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "kuaishouLiveAutoSendDanmuku",
+  "description": "快手直播自动发送内容",
+  "url": "https://greasyfork.org/scripts/472478-kuaishouliveautosenddanmuku",
+  "code_url": "https://update.greasyfork.org/scripts/472478/kuaishouLiveAutoSendDanmuku.user.js",
+  "code_size": 25764,
+  "license": "GPL",
+  "version": "1.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

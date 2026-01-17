@@ -1,0 +1,34 @@
+{
+  "id": 426796,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-21T06:31:28.000Z",
+  "code_updated_at": "2021-05-24T02:25:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 774477,
+      "name": "Ming987",
+      "created_at": "2021-05-21T05:52:49.000Z",
+      "url": "https://greasyfork.org/users/774477-ming987",
+      "scripts": []
+    }
+  ],
+  "name": "LIHKG",
+  "description": "En",
+  "url": "https://greasyfork.org/scripts/426796-lihkg",
+  "code_url": "https://update.greasyfork.org/scripts/426796/LIHKG.user.js",
+  "code_size": 464,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

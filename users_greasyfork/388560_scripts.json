@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427955,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-14T16:38:17.000Z",
+    "code_updated_at": "2021-06-14T16:55:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388560,
+        "name": "等那璀璨星辰",
+        "created_at": "2019-10-19T09:19:45.000Z",
+        "url": "https://greasyfork.org/users/388560-%E7%AD%89%E9%82%A3%E7%92%80%E7%92%A8%E6%98%9F%E8%BE%B0"
+      }
+    ],
+    "name": "斗鱼92000礼物红包助手🎁",
+    "description": "斗鱼抢全站红包，用于升账号等级，使用者需拥有呆妹儿小霸王(92000)15级粉丝牌，才可使用插件功能「http://dy92000.cn/」",
+    "url": "https://greasyfork.org/scripts/427955-%E6%96%97%E9%B1%BC92000%E7%A4%BC%E7%89%A9%E7%BA%A2%E5%8C%85%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/427955/%E6%96%97%E9%B1%BC92000%E7%A4%BC%E7%89%A9%E7%BA%A2%E5%8C%85%E5%8A%A9%E6%89%8B%F0%9F%8E%81.user.js",
+    "code_size": 43669,
+    "license": null,
+    "version": "2021.6.15.02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

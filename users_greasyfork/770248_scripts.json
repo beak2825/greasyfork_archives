@@ -1,0 +1,101 @@
+[
+  {
+    "id": 436092,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-26T04:57:40.000Z",
+    "code_updated_at": "2021-11-26T04:57:39.000Z",
+    "namespace": "https://greasyfork.org/users/770248",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770248,
+        "name": "Yun Yang",
+        "created_at": "2021-05-09T14:56:29.000Z",
+        "url": "https://greasyfork.org/users/770248-yun-yang"
+      }
+    ],
+    "name": "😼 自用 😼",
+    "description": "整 合",
+    "url": "https://greasyfork.org/scripts/436092-%E8%87%AA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/436092/%F0%9F%98%BC%20%E8%87%AA%E7%94%A8%20%F0%9F%98%BC.user.js",
+    "code_size": 598081,
+    "license": null,
+    "version": "2021.1126",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434964,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-04T01:02:37.000Z",
+    "code_updated_at": "2022-02-10T07:26:27.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770248,
+        "name": "Yun Yang",
+        "created_at": "2021-05-09T14:56:29.000Z",
+        "url": "https://greasyfork.org/users/770248-yun-yang"
+      }
+    ],
+    "name": "斗鱼 虎牙 免登陆看蓝光",
+    "description": "免登陆看蓝光 弹幕微调 屏蔽广告",
+    "url": "https://greasyfork.org/scripts/434964-%E6%96%97%E9%B1%BC-%E8%99%8E%E7%89%99-%E5%85%8D%E7%99%BB%E9%99%86%E7%9C%8B%E8%93%9D%E5%85%89",
+    "code_url": "https://update.greasyfork.org/scripts/434964/%E6%96%97%E9%B1%BC%20%E8%99%8E%E7%89%99%20%E5%85%8D%E7%99%BB%E9%99%86%E7%9C%8B%E8%93%9D%E5%85%89.user.js",
+    "code_size": 24631,
+    "license": null,
+    "version": "2022.2.10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434779,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-01T05:31:49.000Z",
+    "code_updated_at": "2022-02-10T07:46:03.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770248,
+        "name": "Yun Yang",
+        "created_at": "2021-05-09T14:56:29.000Z",
+        "url": "https://greasyfork.org/users/770248-yun-yang"
+      }
+    ],
+    "name": "新版 自动解析",
+    "description": "自 动 解 析",
+    "url": "https://greasyfork.org/scripts/434779-%E6%96%B0%E7%89%88-%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/434779/%E6%96%B0%E7%89%88%20%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 666585,
+    "license": null,
+    "version": "2022.2.10.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

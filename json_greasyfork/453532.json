@@ -1,0 +1,34 @@
+{
+  "id": 453532,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-22T09:12:26.000Z",
+  "code_updated_at": "2022-10-22T10:03:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 973821,
+      "name": "SPD SHAKE",
+      "created_at": "2022-10-22T09:09:24.000Z",
+      "url": "https://greasyfork.org/users/973821-spd-shake",
+      "scripts": []
+    }
+  ],
+  "name": "Auto clique topaz aptomingos",
+  "description": "Deuxsept",
+  "url": "https://greasyfork.org/scripts/453532-auto-clique-topaz-aptomingos",
+  "code_url": "https://update.greasyfork.org/scripts/453532/Auto%20clique%20topaz%20aptomingos.user.js",
+  "code_size": 4202,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

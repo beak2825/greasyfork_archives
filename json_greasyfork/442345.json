@@ -1,0 +1,59 @@
+{
+  "id": 442345,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-30T09:39:50.000Z",
+  "code_updated_at": "2022-06-27T03:43:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 894858,
+      "name": "zhengnan0627",
+      "created_at": "2022-03-29T06:02:02.000Z",
+      "url": "https://greasyfork.org/users/894858-zhengnan0627",
+      "scripts": [
+        {
+          "id": 442345,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-30T09:39:50.000Z",
+          "code_updated_at": "2022-06-27T03:43:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "aihui线上培训",
+          "description": "用于进行培训课程的播放及进度条控制",
+          "url": "https://greasyfork.org/scripts/442345-aihui%E7%BA%BF%E4%B8%8A%E5%9F%B9%E8%AE%AD",
+          "code_url": "https://update.greasyfork.org/scripts/442345/aihui%E7%BA%BF%E4%B8%8A%E5%9F%B9%E8%AE%AD.user.js",
+          "code_size": 9681,
+          "license": "MIT License",
+          "version": "1.13.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "aihui线上培训",
+  "description": "用于进行培训课程的播放及进度条控制",
+  "url": "https://greasyfork.org/scripts/442345-aihui%E7%BA%BF%E4%B8%8A%E5%9F%B9%E8%AE%AD",
+  "code_url": "https://update.greasyfork.org/scripts/442345/aihui%E7%BA%BF%E4%B8%8A%E5%9F%B9%E8%AE%AD.user.js",
+  "code_size": 9681,
+  "license": "MIT License",
+  "version": "1.13.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

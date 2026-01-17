@@ -1,0 +1,101 @@
+[
+  {
+    "id": 455092,
+    "daily_installs": 0,
+    "total_installs": 542,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-19T11:20:39.000Z",
+    "code_updated_at": "2022-11-30T23:25:03.000Z",
+    "namespace": "tea.pm",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156116,
+        "name": "cljnnn",
+        "created_at": "2017-10-16T00:10:38.000Z",
+        "url": "https://greasyfork.org/users/156116-cljnnn"
+      }
+    ],
+    "name": "steamAny",
+    "description": "steam anywhere",
+    "url": "https://greasyfork.org/scripts/455092-steamany",
+    "code_url": "https://update.greasyfork.org/scripts/455092/steamAny.user.js",
+    "code_size": 3558,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 451562,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-18T05:40:50.000Z",
+    "code_updated_at": "2022-09-18T05:40:50.000Z",
+    "namespace": "tea.pm",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156116,
+        "name": "cljnnn",
+        "created_at": "2017-10-16T00:10:38.000Z",
+        "url": "https://greasyfork.org/users/156116-cljnnn"
+      }
+    ],
+    "name": "CNMD B站短视频",
+    "description": "CNMD B站短视频。B站有太多几秒的短视频了，本脚本帮你与<1分钟的短视频说再见。任何不想被短视频分散精力的都需要这个。",
+    "url": "https://greasyfork.org/scripts/451562-cnmd-b%E7%AB%99%E7%9F%AD%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/451562/CNMD%20B%E7%AB%99%E7%9F%AD%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 1964,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416978,
+    "daily_installs": 0,
+    "total_installs": 328,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-29T01:26:55.000Z",
+    "code_updated_at": "2021-08-05T02:14:08.000Z",
+    "namespace": "tea.pm",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156116,
+        "name": "cljnnn",
+        "created_at": "2017-10-16T00:10:38.000Z",
+        "url": "https://greasyfork.org/users/156116-cljnnn"
+      }
+    ],
+    "name": "AutoLinker",
+    "description": "自动将页面所有文本转换为链接",
+    "url": "https://greasyfork.org/scripts/416978-autolinker",
+    "code_url": "https://update.greasyfork.org/scripts/416978/AutoLinker.user.js",
+    "code_size": 1989,
+    "license": null,
+    "version": "1.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427962,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-14T18:27:00.000Z",
+    "code_updated_at": "2021-06-14T20:41:09.000Z",
+    "namespace": "https://otx.alienvault.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 783441,
+        "name": "rustybrooks",
+        "created_at": "2021-06-14T18:24:52.000Z",
+        "url": "https://greasyfork.org/users/783441-rustybrooks"
+      }
+    ],
+    "name": "OTXP Link Generator",
+    "description": "Generate links to pivot to other OTX pages",
+    "url": "https://greasyfork.org/scripts/427962-otxp-link-generator",
+    "code_url": "https://update.greasyfork.org/scripts/427962/OTXP%20Link%20Generator.user.js",
+    "code_size": 4533,
+    "license": null,
+    "version": "0.22",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

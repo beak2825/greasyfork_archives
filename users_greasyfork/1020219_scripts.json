@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473530,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-20T22:30:44.000Z",
+    "code_updated_at": "2023-08-20T22:37:49.000Z",
+    "namespace": "magic",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1020219,
+        "name": "СЯΑFТЕЯВΟУ27",
+        "created_at": "2023-02-02T00:21:52.000Z",
+        "url": "https://greasyfork.org/users/1020219-%D1%81%D1%8F%CE%B1f%D1%82%D0%B5%D1%8F%D0%B2%CE%BF%D1%8327"
+      }
+    ],
+    "name": "Comment Section",
+    "description": "<h1>PenguinMod comment section</h1><p>Its in beta so expect bugs.</p><p>Also you kinda need a penguinmod/scratch account if you want people to know who you are when commenting</p>",
+    "url": "https://greasyfork.org/scripts/473530-comment-section",
+    "code_url": "https://update.greasyfork.org/scripts/473530/Comment%20Section.user.js",
+    "code_size": 2174,
+    "license": "MIT License",
+    "version": "beta0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 465367,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-02T11:31:32.000Z",
+    "code_updated_at": "2023-05-02T11:31:32.000Z",
+    "namespace": "https://reader.bookfusion.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937855,
+        "name": "jamescodesthings",
+        "created_at": "2022-07-21T09:32:15.000Z",
+        "url": "https://greasyfork.org/users/937855-jamescodesthings"
+      }
+    ],
+    "name": "BookFusion: Inherit Fonts",
+    "description": "Add a style that overrides font with \"inherit\" for certain books",
+    "url": "https://greasyfork.org/scripts/465367-bookfusion-inherit-fonts",
+    "code_url": "https://update.greasyfork.org/scripts/465367/BookFusion%3A%20Inherit%20Fonts.user.js",
+    "code_size": 1204,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448219,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-21T10:08:27.000Z",
+    "code_updated_at": "2022-07-21T10:15:05.000Z",
+    "namespace": "codesthings.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937855,
+        "name": "jamescodesthings",
+        "created_at": "2022-07-21T09:32:15.000Z",
+        "url": "https://greasyfork.org/users/937855-jamescodesthings"
+      }
+    ],
+    "name": "Lazyfoo Readable CSS",
+    "description": "Adds a readable CSS to Lazyfoo's tutorials.",
+    "url": "https://greasyfork.org/scripts/448219-lazyfoo-readable-css",
+    "code_url": "https://update.greasyfork.org/scripts/448219/Lazyfoo%20Readable%20CSS.user.js",
+    "code_size": 2629,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448215,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-21T09:39:35.000Z",
+    "code_updated_at": "2022-07-21T10:02:42.000Z",
+    "namespace": "codesthings.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937855,
+        "name": "jamescodesthings",
+        "created_at": "2022-07-21T09:32:15.000Z",
+        "url": "https://greasyfork.org/users/937855-jamescodesthings"
+      }
+    ],
+    "name": "Lazyfoo Highlight Code",
+    "description": "Add code highlight to LazyFoo's code snippets in the tutorials section, updated to HLJS 11.6, no jQuery, switchable theme.",
+    "url": "https://greasyfork.org/scripts/448215-lazyfoo-highlight-code",
+    "code_url": "https://update.greasyfork.org/scripts/448215/Lazyfoo%20Highlight%20Code.user.js",
+    "code_size": 1634,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

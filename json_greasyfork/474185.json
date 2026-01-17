@@ -1,0 +1,59 @@
+{
+  "id": 474185,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-30T05:17:17.000Z",
+  "code_updated_at": "2023-08-30T05:17:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 925684,
+      "name": "qufudj",
+      "created_at": "2022-06-15T02:08:37.000Z",
+      "url": "https://greasyfork.org/users/925684-qufudj",
+      "scripts": [
+        {
+          "id": 474492,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-04T06:18:33.000Z",
+          "code_updated_at": "2023-09-04T06:18:33.000Z",
+          "namespace": "https://www.taobao.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "改变淘宝搜索的的CSS",
+          "description": "现在的淘宝电脑端搜索的的界面不舒服，尤其是那个圆角，强制更改CSS!",
+          "url": "https://greasyfork.org/scripts/474492-%E6%94%B9%E5%8F%98%E6%B7%98%E5%AE%9D%E6%90%9C%E7%B4%A2%E7%9A%84%E7%9A%84css",
+          "code_url": "https://update.greasyfork.org/scripts/474492/%E6%94%B9%E5%8F%98%E6%B7%98%E5%AE%9D%E6%90%9C%E7%B4%A2%E7%9A%84%E7%9A%84CSS.user.js",
+          "code_size": 1685,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "wxno卫星在线去头部尾部",
+  "description": "头部尾部太烦人了，直接去掉。!",
+  "url": "https://greasyfork.org/scripts/474185-wxno%E5%8D%AB%E6%98%9F%E5%9C%A8%E7%BA%BF%E5%8E%BB%E5%A4%B4%E9%83%A8%E5%B0%BE%E9%83%A8",
+  "code_url": "https://update.greasyfork.org/scripts/474185/wxno%E5%8D%AB%E6%98%9F%E5%9C%A8%E7%BA%BF%E5%8E%BB%E5%A4%B4%E9%83%A8%E5%B0%BE%E9%83%A8.user.js",
+  "code_size": 433,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

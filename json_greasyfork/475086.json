@@ -1,0 +1,59 @@
+{
+  "id": 475086,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-12T05:21:23.000Z",
+  "code_updated_at": "2023-09-12T05:21:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1171331,
+      "name": "杨强（Quinto）",
+      "created_at": "2023-09-12T05:18:35.000Z",
+      "url": "https://greasyfork.org/users/1171331-%E6%9D%A8%E5%BC%BA-quinto",
+      "scripts": [
+        {
+          "id": 475086,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-12T05:21:23.000Z",
+          "code_updated_at": "2023-09-12T05:21:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "海外拼多多自动加入发货单",
+          "description": "用于海外版拼多多自动加入发货单",
+          "url": "https://greasyfork.org/scripts/475086-%E6%B5%B7%E5%A4%96%E6%8B%BC%E5%A4%9A%E5%A4%9A%E8%87%AA%E5%8A%A8%E5%8A%A0%E5%85%A5%E5%8F%91%E8%B4%A7%E5%8D%95",
+          "code_url": "https://update.greasyfork.org/scripts/475086/%E6%B5%B7%E5%A4%96%E6%8B%BC%E5%A4%9A%E5%A4%9A%E8%87%AA%E5%8A%A8%E5%8A%A0%E5%85%A5%E5%8F%91%E8%B4%A7%E5%8D%95.user.js",
+          "code_size": 6049,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "海外拼多多自动加入发货单",
+  "description": "用于海外版拼多多自动加入发货单",
+  "url": "https://greasyfork.org/scripts/475086-%E6%B5%B7%E5%A4%96%E6%8B%BC%E5%A4%9A%E5%A4%9A%E8%87%AA%E5%8A%A8%E5%8A%A0%E5%85%A5%E5%8F%91%E8%B4%A7%E5%8D%95",
+  "code_url": "https://update.greasyfork.org/scripts/475086/%E6%B5%B7%E5%A4%96%E6%8B%BC%E5%A4%9A%E5%A4%9A%E8%87%AA%E5%8A%A8%E5%8A%A0%E5%85%A5%E5%8F%91%E8%B4%A7%E5%8D%95.user.js",
+  "code_size": 6049,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 483918,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-05T02:28:00.000Z",
+  "code_updated_at": "2024-03-02T04:25:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1181635,
+      "name": "simsir-lin",
+      "created_at": "2023-09-27T00:58:30.000Z",
+      "url": "https://greasyfork.org/users/1181635-simsir-lin",
+      "scripts": []
+    }
+  ],
+  "name": "tampermonkey-xinbang",
+  "description": "暂无",
+  "url": "https://greasyfork.org/scripts/483918-tampermonkey-xinbang",
+  "code_url": "https://update.greasyfork.org/scripts/483918/tampermonkey-xinbang.user.js",
+  "code_size": 21893,
+  "license": "MIT License",
+  "version": "1.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

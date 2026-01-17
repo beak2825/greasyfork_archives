@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447486,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-06T08:00:38.000Z",
+    "code_updated_at": "2022-07-06T08:29:30.000Z",
+    "namespace": "https://greasyfork.org/en/users/932886-alexey-tokar",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 932886,
+        "name": "Alexey Tokar",
+        "created_at": "2022-07-06T07:58:24.000Z",
+        "url": "https://greasyfork.org/users/932886-alexey-tokar"
+      }
+    ],
+    "name": "OGame: Resources on Transit",
+    "description": "OGame: Displays resources on transit",
+    "url": "https://greasyfork.org/scripts/447486-ogame-resources-on-transit",
+    "code_url": "https://update.greasyfork.org/scripts/447486/OGame%3A%20Resources%20on%20Transit.user.js",
+    "code_size": 1525,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

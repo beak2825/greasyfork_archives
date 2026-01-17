@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445918,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-02T15:50:11.000Z",
+    "code_updated_at": "2022-06-02T15:50:11.000Z",
+    "namespace": "https://greasyfork.org/en/users/921347-fire-soul",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921347,
+        "name": "Fire soul",
+        "created_at": "2022-06-02T15:41:10.000Z",
+        "url": "https://greasyfork.org/users/921347-fire-soul"
+      }
+    ],
+    "name": "Firesoul19256",
+    "description": "ao3 extra kudos copy",
+    "url": "https://greasyfork.org/scripts/445918-firesoul19256",
+    "code_url": "https://update.greasyfork.org/scripts/445918/Firesoul19256.user.js",
+    "code_size": 2379,
+    "license": "MIT License",
+    "version": "0.0.1.20220602155011",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

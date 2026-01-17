@@ -1,0 +1,33 @@
+{
+  "id": 430373,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-05T06:50:50.000Z",
+  "code_updated_at": "2021-08-13T08:17:28.000Z",
+  "namespace": "coderWyh",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 797839,
+      "name": "CoderWyh",
+      "created_at": "2021-07-28T01:16:32.000Z",
+      "url": "https://greasyfork.org/users/797839-coderwyh"
+    }
+  ],
+  "name": "设置快捷键",
+  "description": "This script is only for Chinese mainland users. The script function is to help Beijing Construction Research Company set up excel forms with one click",
+  "url": "https://greasyfork.org/scripts/430373-%E8%AE%BE%E7%BD%AE%E5%BF%AB%E6%8D%B7%E9%94%AE",
+  "code_url": "https://update.greasyfork.org/scripts/430373/959854/%E8%AE%BE%E7%BD%AE%E5%BF%AB%E6%8D%B7%E9%94%AE.js",
+  "code_size": 6839,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

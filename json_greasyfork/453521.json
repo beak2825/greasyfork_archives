@@ -1,0 +1,34 @@
+{
+  "id": 453521,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-22T03:22:21.000Z",
+  "code_updated_at": "2022-10-25T07:07:38.000Z",
+  "namespace": "https://www.returnyoutubedislike.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 973705,
+      "name": "SchMOPS",
+      "created_at": "2022-10-22T03:18:49.000Z",
+      "url": "https://greasyfork.org/users/973705-schmops",
+      "scripts": []
+    }
+  ],
+  "name": "Return YouTube Dislike",
+  "description": "Return of the YouTube Dislike, Based off https://www.returnyoutubedislike.com/",
+  "url": "https://greasyfork.org/scripts/453521-return-youtube-dislike",
+  "code_url": "https://update.greasyfork.org/scripts/453521/Return%20YouTube%20Dislike.user.js",
+  "code_size": 19526,
+  "license": null,
+  "version": "3.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

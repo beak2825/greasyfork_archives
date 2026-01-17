@@ -1,0 +1,68 @@
+[
+  {
+    "id": 485939,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-29T05:00:54.000Z",
+    "code_updated_at": "2024-01-29T05:00:54.000Z",
+    "namespace": "get cookies",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1119042,
+        "name": "hao pu",
+        "created_at": "2023-07-04T19:46:02.000Z",
+        "url": "https://greasyfork.org/users/1119042-hao-pu"
+      }
+    ],
+    "name": "get_cookie",
+    "description": "cmos_cookie",
+    "url": "https://greasyfork.org/scripts/485939-get-cookie",
+    "code_url": "https://update.greasyfork.org/scripts/485939/get_cookie.user.js",
+    "code_size": 2578,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 471936,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-28T16:52:06.000Z",
+    "code_updated_at": "2024-03-03T05:42:11.000Z",
+    "namespace": "https://github.com/NiaoBlush/GoogleResultLanguageSwitcher",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1119042,
+        "name": "hao pu",
+        "created_at": "2023-07-04T19:46:02.000Z",
+        "url": "https://greasyfork.org/users/1119042-hao-pu"
+      }
+    ],
+    "name": "更改Google搜索结果中英文",
+    "description": "将google结果切换为中文结果, 不改变Google界面语言",
+    "url": "https://greasyfork.org/scripts/471936-%E6%9B%B4%E6%94%B9google%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E4%B8%AD%E8%8B%B1%E6%96%87",
+    "code_url": "https://update.greasyfork.org/scripts/471936/%E6%9B%B4%E6%94%B9Google%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E4%B8%AD%E8%8B%B1%E6%96%87.user.js",
+    "code_size": 1492,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 491154,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-29T07:40:39.000Z",
+    "code_updated_at": "2024-05-30T05:30:38.000Z",
+    "namespace": "https://github.com/techstay/myscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884237,
+        "name": "silins",
+        "created_at": "2022-03-08T01:53:58.000Z",
+        "url": "https://greasyfork.org/users/884237-silins"
+      }
+    ],
+    "name": "jd_zdget_skuids",
+    "description": "京东直播选品工具",
+    "url": "https://greasyfork.org/scripts/491154-jd-zdget-skuids",
+    "code_url": "https://update.greasyfork.org/scripts/491154/jd_zdget_skuids.user.js",
+    "code_size": 20912,
+    "license": "MIT License",
+    "version": "20240536",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489159,
+    "daily_installs": 0,
+    "total_installs": 155,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-06T12:47:21.000Z",
+    "code_updated_at": "2024-12-09T06:44:11.000Z",
+    "namespace": "https://github.com/techstay/myscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884237,
+        "name": "silins",
+        "created_at": "2022-03-08T01:53:58.000Z",
+        "url": "https://greasyfork.org/users/884237-silins"
+      }
+    ],
+    "name": "jd_get_skuids",
+    "description": "京东直播选品工具",
+    "url": "https://greasyfork.org/scripts/489159-jd-get-skuids",
+    "code_url": "https://update.greasyfork.org/scripts/489159/jd_get_skuids.user.js",
+    "code_size": 17062,
+    "license": "MIT License",
+    "version": "20241211",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

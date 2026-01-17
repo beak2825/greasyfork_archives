@@ -1,0 +1,68 @@
+[
+  {
+    "id": 460058,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-15T11:24:20.000Z",
+    "code_updated_at": "2023-02-15T11:49:44.000Z",
+    "namespace": "https://luckycat.ink/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1027165,
+        "name": "LuckyCatL",
+        "created_at": "2023-02-15T01:45:03.000Z",
+        "url": "https://greasyfork.org/users/1027165-luckycatl"
+      }
+    ],
+    "name": "百度去右侧广告",
+    "description": "baidu百度去右侧广告",
+    "url": "https://greasyfork.org/scripts/460058-%E7%99%BE%E5%BA%A6%E5%8E%BB%E5%8F%B3%E4%BE%A7%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/460058/%E7%99%BE%E5%BA%A6%E5%8E%BB%E5%8F%B3%E4%BE%A7%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 762,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460039,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-15T02:06:46.000Z",
+    "code_updated_at": "2023-02-15T11:25:30.000Z",
+    "namespace": "http://luckycat.ink/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1027165,
+        "name": "LuckyCatL",
+        "created_at": "2023-02-15T01:45:03.000Z",
+        "url": "https://greasyfork.org/users/1027165-luckycatl"
+      }
+    ],
+    "name": "bilibili专栏复制去除后缀",
+    "description": "bilibili专栏复制，去吃后缀作者链接信息",
+    "url": "https://greasyfork.org/scripts/460039-bilibili%E4%B8%93%E6%A0%8F%E5%A4%8D%E5%88%B6%E5%8E%BB%E9%99%A4%E5%90%8E%E7%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/460039/bilibili%E4%B8%93%E6%A0%8F%E5%A4%8D%E5%88%B6%E5%8E%BB%E9%99%A4%E5%90%8E%E7%BC%80.user.js",
+    "code_size": 578,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

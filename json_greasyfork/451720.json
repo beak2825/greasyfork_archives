@@ -1,0 +1,33 @@
+{
+  "id": 451720,
+  "daily_installs": 0,
+  "total_installs": 74,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-20T22:21:48.000Z",
+  "code_updated_at": "2024-04-16T16:23:03.000Z",
+  "namespace": "https://greasyfork.org/users/918578",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 918578,
+      "name": "squash",
+      "created_at": "2022-05-25T21:16:41.000Z",
+      "url": "https://greasyfork.org/users/918578-squash"
+    }
+  ],
+  "name": "MH - ToC Minimum Book",
+  "description": "Simple projection in tooltip for the minimum book length reachable with remaining hunts assuming 100% catch rate. Worst case attractions, best case catch rate.",
+  "url": "https://greasyfork.org/scripts/451720-mh-toc-minimum-book",
+  "code_url": "https://update.greasyfork.org/scripts/451720/MH%20-%20ToC%20Minimum%20Book.user.js",
+  "code_size": 3951,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

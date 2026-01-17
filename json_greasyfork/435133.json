@@ -1,0 +1,34 @@
+{
+  "id": 435133,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-07T07:42:40.000Z",
+  "code_updated_at": "2021-11-07T07:42:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 833119,
+      "name": "kokoronote",
+      "created_at": "2021-11-07T07:32:53.000Z",
+      "url": "https://greasyfork.org/users/833119-kokoronote",
+      "scripts": []
+    }
+  ],
+  "name": "防止B站直播在后台自动暂停",
+  "description": "防止Bilibili直播在后台自动暂停",
+  "url": "https://greasyfork.org/scripts/435133-%E9%98%B2%E6%AD%A2b%E7%AB%99%E7%9B%B4%E6%92%AD%E5%9C%A8%E5%90%8E%E5%8F%B0%E8%87%AA%E5%8A%A8%E6%9A%82%E5%81%9C",
+  "code_url": "https://update.greasyfork.org/scripts/435133/%E9%98%B2%E6%AD%A2B%E7%AB%99%E7%9B%B4%E6%92%AD%E5%9C%A8%E5%90%8E%E5%8F%B0%E8%87%AA%E5%8A%A8%E6%9A%82%E5%81%9C.user.js",
+  "code_size": 1190,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 460669,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-24T16:19:03.000Z",
+  "code_updated_at": "2023-02-24T16:19:03.000Z",
+  "namespace": "Wall Win Estimation",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1032445,
+      "name": "Apollyon",
+      "created_at": "2023-02-24T16:16:28.000Z",
+      "url": "https://greasyfork.org/users/1032445-apollyon",
+      "scripts": [
+        {
+          "id": 482214,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-14T16:12:13.000Z",
+          "code_updated_at": "2024-10-23T10:40:47.000Z",
+          "namespace": "Apo",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Company Loadouts",
+          "description": "Save, load, export, and import worker presets. Hide unnecessary info messages.",
+          "url": "https://greasyfork.org/scripts/482214-torn-company-loadouts",
+          "code_url": "https://update.greasyfork.org/scripts/482214/Torn%20Company%20Loadouts.user.js",
+          "code_size": 11604,
+          "license": "MIT License",
+          "version": "4.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wall Win Estimation",
+  "description": "Adds time to claim for territories, attack links in new tab, removes animation because it lags my chromebook",
+  "url": "https://greasyfork.org/scripts/460669-wall-win-estimation",
+  "code_url": "https://update.greasyfork.org/scripts/460669/Wall%20Win%20Estimation.user.js",
+  "code_size": 4440,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

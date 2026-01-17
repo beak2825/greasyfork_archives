@@ -1,0 +1,59 @@
+{
+  "id": 437497,
+  "daily_installs": 2,
+  "total_installs": 1766,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-12-23T15:07:51.000Z",
+  "code_updated_at": "2026-01-13T19:47:38.000Z",
+  "namespace": "https://greasyfork.org/users/856931",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 856931,
+      "name": "HaraldN",
+      "created_at": "2021-12-23T14:49:03.000Z",
+      "url": "https://greasyfork.org/users/856931-haraldn",
+      "scripts": [
+        {
+          "id": 437497,
+          "daily_installs": 2,
+          "total_installs": 1766,
+          "fan_score": "19.8",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2021-12-23T15:07:51.000Z",
+          "code_updated_at": "2026-01-13T19:47:38.000Z",
+          "namespace": "https://greasyfork.org/users/856931",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WaniKani Katakana For On'yomi",
+          "description": "A userscript for wanikani that transforms everything related to on'yomi into katakana.",
+          "url": "https://greasyfork.org/scripts/437497-wanikani-katakana-for-on-yomi",
+          "code_url": "https://update.greasyfork.org/scripts/437497/WaniKani%20Katakana%20For%20On%27yomi.user.js",
+          "code_size": 11218,
+          "license": "GPL v3.0",
+          "version": "2.5.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WaniKani Katakana For On'yomi",
+  "description": "A userscript for wanikani that transforms everything related to on'yomi into katakana.",
+  "url": "https://greasyfork.org/scripts/437497-wanikani-katakana-for-on-yomi",
+  "code_url": "https://update.greasyfork.org/scripts/437497/WaniKani%20Katakana%20For%20On%27yomi.user.js",
+  "code_size": 11218,
+  "license": "GPL v3.0",
+  "version": "2.5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 437887,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-01T07:18:06.000Z",
+  "code_updated_at": "2022-01-01T07:23:47.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/437887",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 859890,
+      "name": "bigbone",
+      "created_at": "2022-01-01T06:54:40.000Z",
+      "url": "https://greasyfork.org/users/859890-bigbone"
+    }
+  ],
+  "name": "蓝奏云盘增强",
+  "description": "蓝奏云盘个人中心隐藏充值遮罩",
+  "url": "https://greasyfork.org/scripts/437887-%E8%93%9D%E5%A5%8F%E4%BA%91%E7%9B%98%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/437887/%E8%93%9D%E5%A5%8F%E4%BA%91%E7%9B%98%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 695,
+  "license": "GNU GPLv3",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

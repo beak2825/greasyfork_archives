@@ -1,0 +1,134 @@
+[
+  {
+    "id": 436639,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-06T20:13:18.000Z",
+    "code_updated_at": "2021-12-06T20:13:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815143,
+        "name": "nategamer",
+        "created_at": "2021-09-13T21:43:18.000Z",
+        "url": "https://greasyfork.org/users/815143-nategamer"
+      }
+    ],
+    "name": "Finish AutoComplete",
+    "description": "fills out the finish task info",
+    "url": "https://greasyfork.org/scripts/436639-finish-autocomplete",
+    "code_url": "https://update.greasyfork.org/scripts/436639/Finish%20AutoComplete.user.js",
+    "code_size": 761,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434197,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-20T15:17:10.000Z",
+    "code_updated_at": "2021-10-20T15:20:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815143,
+        "name": "nategamer",
+        "created_at": "2021-09-13T21:43:18.000Z",
+        "url": "https://greasyfork.org/users/815143-nategamer"
+      }
+    ],
+    "name": "Special Claims - Outlook Buttons",
+    "description": "Copies the Receive Date, Email, and Name",
+    "url": "https://greasyfork.org/scripts/434197-special-claims-outlook-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/434197/Special%20Claims%20-%20Outlook%20Buttons.user.js",
+    "code_size": 3960,
+    "license": null,
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434188,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-20T13:26:07.000Z",
+    "code_updated_at": "2022-02-07T15:40:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815143,
+        "name": "nategamer",
+        "created_at": "2021-09-13T21:43:18.000Z",
+        "url": "https://greasyfork.org/users/815143-nategamer"
+      }
+    ],
+    "name": "Special Claims - Quick Tickets",
+    "description": "Provides a button to the QuickLink in the KBs",
+    "url": "https://greasyfork.org/scripts/434188-special-claims-quick-tickets",
+    "code_url": "https://update.greasyfork.org/scripts/434188/Special%20Claims%20-%20Quick%20Tickets.user.js",
+    "code_size": 9274,
+    "license": null,
+    "version": "2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432408,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-14T13:00:47.000Z",
+    "code_updated_at": "2021-10-20T15:12:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815143,
+        "name": "nategamer",
+        "created_at": "2021-09-13T21:43:18.000Z",
+        "url": "https://greasyfork.org/users/815143-nategamer"
+      }
+    ],
+    "name": "Special Claims - Outlook Buttons",
+    "description": "Copies the Receive Date, Email, and Name",
+    "url": "https://greasyfork.org/scripts/432408-special-claims-outlook-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/432408/Special%20Claims%20-%20Outlook%20Buttons.user.js",
+    "code_size": 3960,
+    "license": null,
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

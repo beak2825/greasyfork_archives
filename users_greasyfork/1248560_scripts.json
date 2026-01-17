@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484935,
+    "daily_installs": 0,
+    "total_installs": 661,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-15T17:23:38.000Z",
+    "code_updated_at": "2024-01-18T15:27:52.000Z",
+    "namespace": "https://github.com/zz0813/OneDrive-Direct-Download/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1248560,
+        "name": "zz0813",
+        "created_at": "2024-01-15T16:39:48.000Z",
+        "url": "https://greasyfork.org/users/1248560-zz0813"
+      }
+    ],
+    "name": "OneDrive不限速直接下載",
+    "description": "將共用連結轉換成直接下載連結並複製到剪貼簿",
+    "url": "https://greasyfork.org/scripts/484935-onedrive%E4%B8%8D%E9%99%90%E9%80%9F%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BC%89",
+    "code_url": "https://update.greasyfork.org/scripts/484935/OneDrive%E4%B8%8D%E9%99%90%E9%80%9F%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BC%89.user.js",
+    "code_size": 2290,
+    "license": "GPL-3.0 license",
+    "version": "v1.0.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

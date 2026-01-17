@@ -1,0 +1,35 @@
+[
+  {
+    "id": 470994,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-16T22:32:26.000Z",
+    "code_updated_at": "2023-07-16T22:32:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1026764,
+        "name": "狗",
+        "created_at": "2023-02-14T01:48:10.000Z",
+        "url": "https://greasyfork.org/users/1026764-%E7%8B%97"
+      }
+    ],
+    "name": "删除B站推荐的逆天玩意儿",
+    "description": "针对的就是“被这个反智视频笑死”这个逆天的鬼东西",
+    "url": "https://greasyfork.org/scripts/470994-%E5%88%A0%E9%99%A4b%E7%AB%99%E6%8E%A8%E8%8D%90%E7%9A%84%E9%80%86%E5%A4%A9%E7%8E%A9%E6%84%8F%E5%84%BF",
+    "code_url": "https://update.greasyfork.org/scripts/470994/%E5%88%A0%E9%99%A4B%E7%AB%99%E6%8E%A8%E8%8D%90%E7%9A%84%E9%80%86%E5%A4%A9%E7%8E%A9%E6%84%8F%E5%84%BF.user.js",
+    "code_size": 941,
+    "license": "狗",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

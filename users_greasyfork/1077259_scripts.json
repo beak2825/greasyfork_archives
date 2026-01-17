@@ -1,0 +1,68 @@
+[
+  {
+    "id": 467903,
+    "daily_installs": 0,
+    "total_installs": 150,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-04T16:10:31.000Z",
+    "code_updated_at": "2025-09-11T13:38:19.000Z",
+    "namespace": "https://greasyfork.org/en/users/1077259-synthetic",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1077259,
+        "name": "Synthetic",
+        "created_at": "2023-05-11T13:10:34.000Z",
+        "url": "https://greasyfork.org/users/1077259-synthetic"
+      }
+    ],
+    "name": "Twitch Stream Auto-Watch",
+    "description": "Auto-Watches a stream that is offline on page load, as soon as it goes online.",
+    "url": "https://greasyfork.org/scripts/467903-twitch-stream-auto-watch",
+    "code_url": "https://update.greasyfork.org/scripts/467903/Twitch%20Stream%20Auto-Watch.user.js",
+    "code_size": 1964,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467231,
+    "daily_installs": 0,
+    "total_installs": 316,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-05-27T14:44:56.000Z",
+    "code_updated_at": "2024-04-29T06:49:17.000Z",
+    "namespace": "https://greasyfork.org/en/users/1077259-synthetic",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1077259,
+        "name": "Synthetic",
+        "created_at": "2023-05-11T13:10:34.000Z",
+        "url": "https://greasyfork.org/users/1077259-synthetic"
+      }
+    ],
+    "name": "Twitch Drop Auto-Claim",
+    "description": "Auto-Claims drops, while attempting to evade bot detection and claim quickly.",
+    "url": "https://greasyfork.org/scripts/467231-twitch-drop-auto-claim",
+    "code_url": "https://update.greasyfork.org/scripts/467231/Twitch%20Drop%20Auto-Claim.user.js",
+    "code_size": 13456,
+    "license": "MIT License",
+    "version": "0.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

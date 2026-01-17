@@ -1,0 +1,34 @@
+{
+  "id": 450790,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-05T14:48:37.000Z",
+  "code_updated_at": "2022-10-22T16:58:38.000Z",
+  "namespace": "https://greasyfork.org/en/users/954625",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 954625,
+      "name": "D4eq6tB7HlmcTaY",
+      "created_at": "2022-09-04T18:21:58.000Z",
+      "url": "https://greasyfork.org/users/954625-d4eq6tb7hlmctay",
+      "scripts": []
+    }
+  ],
+  "name": "WebAssembly integrator",
+  "description": "THIS IS NOT A SCRIPT IF YOU USE IT IT WILL DO NOTHING!!!!!!!!!!!!!!!!",
+  "url": "https://greasyfork.org/scripts/450790-webassembly-integrator",
+  "code_url": "https://update.greasyfork.org/scripts/450790/1108171/WebAssembly%20integrator.js",
+  "code_size": 3852,
+  "license": null,
+  "version": "0.0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

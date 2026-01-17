@@ -96,6 +96,105 @@
     "version": "0.1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478314,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-26T11:02:49.000Z",
+    "code_updated_at": "2023-10-26T11:02:49.000Z",
+    "namespace": "https://torn.report/userscripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1151298,
+        "name": "Skeletron",
+        "created_at": "2023-08-14T11:02:47.000Z",
+        "url": "https://greasyfork.org/users/1151298-skeletron"
+      }
+    ],
+    "name": "Weapon & Armor UID Faction",
+    "description": "Displays weapon and armor UID on the Faction Armory page.",
+    "url": "https://greasyfork.org/scripts/478314-weapon-armor-uid-faction",
+    "code_url": "https://update.greasyfork.org/scripts/478314/Weapon%20%20Armor%20UID%20Faction.user.js",
+    "code_size": 1722,
+    "license": "GNU GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478313,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-26T10:54:02.000Z",
+    "code_updated_at": "2023-10-26T11:31:47.000Z",
+    "namespace": "https://torn.report/userscripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1151298,
+        "name": "Skeletron",
+        "created_at": "2023-08-14T11:02:47.000Z",
+        "url": "https://greasyfork.org/users/1151298-skeletron"
+      }
+    ],
+    "name": "Weapon & Armor UID",
+    "description": "Displays weapon and armor UID & adds details export button on the Items page.",
+    "url": "https://greasyfork.org/scripts/478313-weapon-armor-uid",
+    "code_url": "https://update.greasyfork.org/scripts/478313/Weapon%20%20Armor%20UID.user.js",
+    "code_size": 6141,
+    "license": "GNU GPLv3",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473059,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-14T12:15:08.000Z",
+    "code_updated_at": "2023-11-19T07:15:45.000Z",
+    "namespace": "ally.block",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1151298,
+        "name": "Skeletron",
+        "created_at": "2023-08-14T11:02:47.000Z",
+        "url": "https://greasyfork.org/users/1151298-skeletron"
+      }
+    ],
+    "name": "JFK Ally Block",
+    "description": "Adds a warning to the attack page of our allies (JFK Alliance Only).",
+    "url": "https://greasyfork.org/scripts/473059-jfk-ally-block",
+    "code_url": "https://update.greasyfork.org/scripts/473059/JFK%20Ally%20Block.user.js",
+    "code_size": 14279,
+    "license": "MIT License",
+    "version": "1.1.8",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

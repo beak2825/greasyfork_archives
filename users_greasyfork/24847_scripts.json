@@ -1,0 +1,134 @@
+[
+  {
+    "id": 440713,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-28T13:39:32.000Z",
+    "code_updated_at": "2024-02-17T15:43:53.000Z",
+    "namespace": "https://github.com/Mottie",
+    "support_url": "https://github.com/Mottie/GitHub-userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24847,
+        "name": "Mottie",
+        "created_at": "2015-12-25T22:44:29.000Z",
+        "url": "https://greasyfork.org/users/24847-mottie"
+      }
+    ],
+    "name": "GitHub Diff File Toggle",
+    "description": "A userscript that adds global diff file toggles",
+    "url": "https://greasyfork.org/scripts/440713-github-diff-file-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/440713/GitHub%20Diff%20File%20Toggle.user.js",
+    "code_size": 2678,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423726,
+    "daily_installs": 0,
+    "total_installs": 127,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-21T19:47:16.000Z",
+    "code_updated_at": "2021-03-21T20:08:04.000Z",
+    "namespace": "https://github.com/Mottie",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24847,
+        "name": "Mottie",
+        "created_at": "2015-12-25T22:44:29.000Z",
+        "url": "https://greasyfork.org/users/24847-mottie"
+      }
+    ],
+    "name": "GreasyFork Copy Code Snippet",
+    "description": "A userscript that adds a copy code button to the greasyfork code page",
+    "url": "https://greasyfork.org/scripts/423726-greasyfork-copy-code-snippet",
+    "code_url": "https://update.greasyfork.org/scripts/423726/GreasyFork%20Copy%20Code%20Snippet.user.js",
+    "code_size": 2298,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422445,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-28T21:49:53.000Z",
+    "code_updated_at": "2024-02-17T15:44:00.000Z",
+    "namespace": "https://github.com/Mottie",
+    "support_url": "https://github.com/Mottie/GitHub-userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24847,
+        "name": "Mottie",
+        "created_at": "2015-12-25T22:44:29.000Z",
+        "url": "https://greasyfork.org/users/24847-mottie"
+      }
+    ],
+    "name": "GitHub Watcher",
+    "description": "A userscript that can check a repo, folder, file or branch for updates",
+    "url": "https://greasyfork.org/scripts/422445-github-watcher",
+    "code_url": "https://update.greasyfork.org/scripts/422445/GitHub%20Watcher.user.js",
+    "code_size": 24678,
+    "license": "MIT License",
+    "version": "0.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421606,
+    "daily_installs": 0,
+    "total_installs": 144,
+    "fan_score": "30.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-02-12T02:32:43.000Z",
+    "code_updated_at": "2024-02-17T15:43:56.000Z",
+    "namespace": "https://github.com/Mottie",
+    "support_url": "https://github.com/Mottie/GitHub-userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24847,
+        "name": "Mottie",
+        "created_at": "2015-12-25T22:44:29.000Z",
+        "url": "https://greasyfork.org/users/24847-mottie"
+      }
+    ],
+    "name": "GitHub in VSCode",
+    "description": "A userscript that adds a button to open a repo in VSCode using github1s",
+    "url": "https://greasyfork.org/scripts/421606-github-in-vscode",
+    "code_url": "https://update.greasyfork.org/scripts/421606/GitHub%20in%20VSCode.user.js",
+    "code_size": 5721,
+    "license": "MIT License",
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

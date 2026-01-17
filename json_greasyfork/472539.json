@@ -1,0 +1,59 @@
+{
+  "id": 472539,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-06T07:29:15.000Z",
+  "code_updated_at": "2023-08-09T04:03:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1145187,
+      "name": "低山高梧桐",
+      "created_at": "2023-08-06T07:17:40.000Z",
+      "url": "https://greasyfork.org/users/1145187-%E4%BD%8E%E5%B1%B1%E9%AB%98%E6%A2%A7%E6%A1%90",
+      "scripts": [
+        {
+          "id": 472539,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-06T07:29:15.000Z",
+          "code_updated_at": "2023-08-09T04:03:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Typing Practice界面汉化",
+          "description": "汉化Typing Practice打字页面,网址https://www.keybr.com/",
+          "url": "https://greasyfork.org/scripts/472539-typing-practice%E7%95%8C%E9%9D%A2%E6%B1%89%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/472539/Typing%20Practice%E7%95%8C%E9%9D%A2%E6%B1%89%E5%8C%96.user.js",
+          "code_size": 21586,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Typing Practice界面汉化",
+  "description": "汉化Typing Practice打字页面,网址https://www.keybr.com/",
+  "url": "https://greasyfork.org/scripts/472539-typing-practice%E7%95%8C%E9%9D%A2%E6%B1%89%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/472539/Typing%20Practice%E7%95%8C%E9%9D%A2%E6%B1%89%E5%8C%96.user.js",
+  "code_size": 21586,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458498,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-18T20:32:20.000Z",
+    "code_updated_at": "2023-01-18T20:32:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1013989,
+        "name": "Daniel Talhaug",
+        "created_at": "2023-01-18T20:16:44.000Z",
+        "url": "https://greasyfork.org/users/1013989-daniel-talhaug"
+      }
+    ],
+    "name": "[Autemo] Fix for missing chat & profile",
+    "description": "A quick and hopefully temporary fix, hope Hui can get this fixed ASAP.",
+    "url": "https://greasyfork.org/scripts/458498-autemo-fix-for-missing-chat-profile",
+    "code_url": "https://update.greasyfork.org/scripts/458498/%5BAutemo%5D%20Fix%20for%20missing%20chat%20%20profile.user.js",
+    "code_size": 879,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 472443,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-04T20:06:50.000Z",
+  "code_updated_at": "2023-08-07T00:47:17.000Z",
+  "namespace": "https://www.margonem.pl/profile/view,9871878",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1141545,
+      "name": "itsRews",
+      "created_at": "2023-08-01T21:12:46.000Z",
+      "url": "https://greasyfork.org/users/1141545-itsrews",
+      "scripts": []
+    }
+  ],
+  "name": "[Rews] Klanowicze online",
+  "description": "Dodatek pokazujący klanowiczy którzy są online.",
+  "url": "https://greasyfork.org/scripts/472443-rews-klanowicze-online",
+  "code_url": "https://update.greasyfork.org/scripts/472443/%5BRews%5D%20Klanowicze%20online.user.js",
+  "code_size": 20404,
+  "license": null,
+  "version": "2.0.2",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

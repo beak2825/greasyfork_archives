@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457175,
+    "daily_installs": 0,
+    "total_installs": 716,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-26T18:40:08.000Z",
+    "code_updated_at": "2022-12-26T18:40:08.000Z",
+    "namespace": "https://greasyfork.org/users/1003240",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1003240,
+        "name": "ryxnnnn",
+        "created_at": "2022-12-26T18:37:54.000Z",
+        "url": "https://greasyfork.org/users/1003240-ryxnnnn"
+      }
+    ],
+    "name": "Roblox Bypass Date and Gender Verification",
+    "description": "This is a script that allows you to bypass birthday and gender popups on rovlox",
+    "url": "https://greasyfork.org/scripts/457175-roblox-bypass-date-and-gender-verification",
+    "code_url": "https://update.greasyfork.org/scripts/457175/Roblox%20Bypass%20Date%20and%20Gender%20Verification.user.js",
+    "code_size": 677,
+    "license": null,
+    "version": "69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

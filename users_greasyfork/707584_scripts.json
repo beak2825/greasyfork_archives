@@ -1,0 +1,68 @@
+[
+  {
+    "id": 421424,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-08T09:14:27.000Z",
+    "code_updated_at": "2021-07-01T14:17:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 707584,
+        "name": "nutVI",
+        "created_at": "2020-11-21T14:15:19.000Z",
+        "url": "https://greasyfork.org/users/707584-nutvi"
+      }
+    ],
+    "name": "SZU mailbox",
+    "description": "在深圳大学校务信箱中添加了评论和回复以及一些辅助的功能",
+    "url": "https://greasyfork.org/scripts/421424-szu-mailbox",
+    "code_url": "https://update.greasyfork.org/scripts/421424/SZU%20mailbox.user.js",
+    "code_size": 137071,
+    "license": null,
+    "version": "1.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416532,
+    "daily_installs": 0,
+    "total_installs": 873,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-21T14:29:45.000Z",
+    "code_updated_at": "2023-03-22T12:51:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 707584,
+        "name": "nutVI",
+        "created_at": "2020-11-21T14:15:19.000Z",
+        "url": "https://greasyfork.org/users/707584-nutvi"
+      }
+    ],
+    "name": "深圳大学大物预习题小助手",
+    "description": "自动提供参考答案",
+    "url": "https://greasyfork.org/scripts/416532-%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E5%A4%A7%E7%89%A9%E9%A2%84%E4%B9%A0%E9%A2%98%E5%B0%8F%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/416532/%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E5%A4%A7%E7%89%A9%E9%A2%84%E4%B9%A0%E9%A2%98%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 19223,
+    "license": null,
+    "version": "0.54",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

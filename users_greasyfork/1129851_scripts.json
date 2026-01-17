@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 475545,
+    "daily_installs": 3,
+    "total_installs": 1805,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-09-17T21:42:53.000Z",
+    "code_updated_at": "2024-07-19T21:02:30.000Z",
+    "namespace": "Magof - pixeldrain viewer & download - with bypass",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1129851,
+        "name": "magofera",
+        "created_at": "2023-07-18T11:06:52.000Z",
+        "url": "https://greasyfork.org/users/1129851-magofera"
+      }
+    ],
+    "name": "Pixeldrain Viewer & Download - With Bypass",
+    "description": "Enhances PixelDrain by handling file list clicks, displaying media content, and adding download bypass buttons for individual files and lists.",
+    "url": "https://greasyfork.org/scripts/475545-pixeldrain-viewer-download-with-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/475545/Pixeldrain%20Viewer%20%20Download%20-%20With%20Bypass.user.js",
+    "code_size": 6678,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

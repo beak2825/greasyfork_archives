@@ -1,0 +1,101 @@
+[
+  {
+    "id": 486741,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-06T06:51:24.000Z",
+    "code_updated_at": "2024-02-06T06:51:24.000Z",
+    "namespace": "https://github.com/AmeLooksSus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1069460,
+        "name": "AmeLooksSus",
+        "created_at": "2023-04-28T13:19:03.000Z",
+        "url": "https://greasyfork.org/users/1069460-amelookssus"
+      }
+    ],
+    "name": "The Pirate Bay Pop-ups Closer",
+    "description": "Close Pop-ups that tell you to turn on VPN in https://thepiratebay0.org even though you have vpn turned on.",
+    "url": "https://greasyfork.org/scripts/486741-the-pirate-bay-pop-ups-closer",
+    "code_url": "https://update.greasyfork.org/scripts/486741/The%20Pirate%20Bay%20Pop-ups%20Closer.user.js",
+    "code_size": 403,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484827,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-14T11:54:29.000Z",
+    "code_updated_at": "2024-01-14T11:54:29.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1069460,
+        "name": "AmeLooksSus",
+        "created_at": "2023-04-28T13:19:03.000Z",
+        "url": "https://greasyfork.org/users/1069460-amelookssus"
+      }
+    ],
+    "name": "Legacy to Latest Curseforge Redirect",
+    "description": "Replaces legacy CurseForge links with the current ones, excluding specified patterns",
+    "url": "https://greasyfork.org/scripts/484827-legacy-to-latest-curseforge-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/484827/Legacy%20to%20Latest%20Curseforge%20Redirect.user.js",
+    "code_size": 951,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 476892,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-07T15:15:31.000Z",
+    "code_updated_at": "2024-01-14T16:21:33.000Z",
+    "namespace": "https://github.com/AmeLooksSus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1069460,
+        "name": "AmeLooksSus",
+        "created_at": "2023-04-28T13:19:03.000Z",
+        "url": "https://greasyfork.org/users/1069460-amelookssus"
+      }
+    ],
+    "name": "Torn Chats Enhanced [Doesn't Work Anymore]",
+    "description": "Enjoy colorful user names for better chat readability.",
+    "url": "https://greasyfork.org/scripts/476892-torn-chats-enhanced-doesn-t-work-anymore",
+    "code_url": "https://update.greasyfork.org/scripts/476892/Torn%20Chats%20Enhanced%20%5BDoesn%27t%20Work%20Anymore%5D.user.js",
+    "code_size": 4107,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

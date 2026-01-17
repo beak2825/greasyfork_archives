@@ -1,0 +1,68 @@
+[
+  {
+    "id": 421251,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-05T15:11:36.000Z",
+    "code_updated_at": "2021-02-06T05:11:13.000Z",
+    "namespace": "https://victorwesterlund.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 733215,
+        "name": "vlw.se",
+        "created_at": "2021-01-31T18:32:24.000Z",
+        "url": "https://greasyfork.org/users/733215-vlw-se"
+      }
+    ],
+    "name": "Stadia Avatars",
+    "description": "victorWesterlund/stadia-avatar",
+    "url": "https://greasyfork.org/scripts/421251-stadia-avatars",
+    "code_url": "https://update.greasyfork.org/scripts/421251/Stadia%20Avatars.user.js",
+    "code_size": 4094,
+    "license": null,
+    "version": "1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421250,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-05T15:08:16.000Z",
+    "code_updated_at": "2021-02-05T15:08:15.000Z",
+    "namespace": "https://victorwesterlund.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 733215,
+        "name": "vlw.se",
+        "created_at": "2021-01-31T18:32:24.000Z",
+        "url": "https://greasyfork.org/users/733215-vlw-se"
+      }
+    ],
+    "name": "Stadia Avatars - Bot",
+    "description": "https://github.com/VictorWesterlund/stadia-avatar",
+    "url": "https://greasyfork.org/scripts/421250-stadia-avatars-bot",
+    "code_url": "https://update.greasyfork.org/scripts/421250/Stadia%20Avatars%20-%20Bot.user.js",
+    "code_size": 2515,
+    "license": null,
+    "version": "1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

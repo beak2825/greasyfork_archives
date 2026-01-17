@@ -1,0 +1,33 @@
+{
+  "id": 443271,
+  "daily_installs": 0,
+  "total_installs": 146,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-12T18:38:53.000Z",
+  "code_updated_at": "2022-04-12T18:51:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 901377,
+      "name": "Rexxt",
+      "created_at": "2022-04-12T18:30:51.000Z",
+      "url": "https://greasyfork.org/users/901377-rexxt"
+    }
+  ],
+  "name": "OWOP Maps",
+  "description": "Map system for OWOP, with included maps",
+  "url": "https://greasyfork.org/scripts/443271-owop-maps",
+  "code_url": "https://update.greasyfork.org/scripts/443271/OWOP%20Maps.user.js",
+  "code_size": 719,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

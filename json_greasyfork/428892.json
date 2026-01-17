@@ -1,0 +1,59 @@
+{
+  "id": 428892,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-04T12:00:03.000Z",
+  "code_updated_at": "2021-07-04T17:04:19.000Z",
+  "namespace": "https://greasyfork.org/users/790242",
+  "support_url": "https://board.playzo.de/index.php/User/965-Oguzhan-Ozen/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 790242,
+      "name": "Ahmet Ems.",
+      "created_at": "2021-07-04T11:56:12.000Z",
+      "url": "https://greasyfork.org/users/790242-ahmet-ems",
+      "scripts": [
+        {
+          "id": 428892,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-07-04T12:00:03.000Z",
+          "code_updated_at": "2021-07-04T17:04:19.000Z",
+          "namespace": "https://greasyfork.org/users/790242",
+          "support_url": "https://board.playzo.de/index.php/User/965-Oguzhan-Ozen/",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Futbolcup Duyuru",
+          "description": "Bu script, yöneticinin yapacağı duyuruları oyun içinde almanızı sağlayacak.",
+          "url": "https://greasyfork.org/scripts/428892-futbolcup-duyuru",
+          "code_url": "https://update.greasyfork.org/scripts/428892/Futbolcup%20Duyuru.user.js",
+          "code_size": 15315,
+          "license": "MIT License",
+          "version": "1.0.1.2",
+          "locale": "tr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Futbolcup Duyuru",
+  "description": "Bu script, yöneticinin yapacağı duyuruları oyun içinde almanızı sağlayacak.",
+  "url": "https://greasyfork.org/scripts/428892-futbolcup-duyuru",
+  "code_url": "https://update.greasyfork.org/scripts/428892/Futbolcup%20Duyuru.user.js",
+  "code_size": 15315,
+  "license": "MIT License",
+  "version": "1.0.1.2",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

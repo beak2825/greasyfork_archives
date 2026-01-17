@@ -1,0 +1,33 @@
+{
+  "id": 454041,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-31T16:20:30.000Z",
+  "code_updated_at": "2025-04-22T14:03:18.000Z",
+  "namespace": "https://greasyfork.org/users/237458",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 237458,
+      "name": "figuccio",
+      "created_at": "2019-01-05T11:50:44.000Z",
+      "url": "https://greasyfork.org/users/237458-figuccio"
+    }
+  ],
+  "name": "Clock figuccio 12-24",
+  "description": "clock ore ampm 24h al passaggio mouse",
+  "url": "https://greasyfork.org/scripts/454041-clock-figuccio-12-24",
+  "code_url": "https://update.greasyfork.org/scripts/454041/Clock%20figuccio%2012-24.user.js",
+  "code_size": 3801,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

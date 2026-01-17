@@ -1,0 +1,34 @@
+{
+  "id": 424855,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-11T12:57:10.000Z",
+  "code_updated_at": "2021-04-25T14:17:51.000Z",
+  "namespace": "iuya",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 756734,
+      "name": "iuyaa",
+      "created_at": "2021-04-09T12:15:25.000Z",
+      "url": "https://greasyfork.org/users/756734-iuyaa",
+      "scripts": []
+    }
+  ],
+  "name": "新客服系统_工作小结",
+  "description": "为新客服系统添加工作小结元素。",
+  "url": "https://greasyfork.org/scripts/424855-%E6%96%B0%E5%AE%A2%E6%9C%8D%E7%B3%BB%E7%BB%9F-%E5%B7%A5%E4%BD%9C%E5%B0%8F%E7%BB%93",
+  "code_url": "https://update.greasyfork.org/scripts/424855/%E6%96%B0%E5%AE%A2%E6%9C%8D%E7%B3%BB%E7%BB%9F_%E5%B7%A5%E4%BD%9C%E5%B0%8F%E7%BB%93.user.js",
+  "code_size": 1656,
+  "license": null,
+  "version": "1.6.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

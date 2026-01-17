@@ -1,0 +1,59 @@
+{
+  "id": 456427,
+  "daily_installs": 0,
+  "total_installs": 86,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-11T06:45:19.000Z",
+  "code_updated_at": "2022-12-11T06:48:28.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/995778",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 995778,
+      "name": "福利庄园",
+      "created_at": "2022-12-11T05:42:38.000Z",
+      "url": "https://greasyfork.org/users/995778-%E7%A6%8F%E5%88%A9%E5%BA%84%E5%9B%AD",
+      "scripts": [
+        {
+          "id": 456427,
+          "daily_installs": 0,
+          "total_installs": 86,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-11T06:45:19.000Z",
+          "code_updated_at": "2022-12-11T06:48:28.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/995778",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "西华大学|教学质量管理平台（麦可思）自动评价",
+          "description": "单选题选择最后一个选项“非常同意”“帮助非常大”，多选题选择除开“以上均没有”的前几项，对该课程或老师的建议默认输入“老师讲的课无可挑剔，我很满意”",
+          "url": "https://greasyfork.org/scripts/456427-%E8%A5%BF%E5%8D%8E%E5%A4%A7%E5%AD%A6-%E6%95%99%E5%AD%A6%E8%B4%A8%E9%87%8F%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0-%E9%BA%A6%E5%8F%AF%E6%80%9D-%E8%87%AA%E5%8A%A8%E8%AF%84%E4%BB%B7",
+          "code_url": "https://update.greasyfork.org/scripts/456427/%E8%A5%BF%E5%8D%8E%E5%A4%A7%E5%AD%A6%7C%E6%95%99%E5%AD%A6%E8%B4%A8%E9%87%8F%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%EF%BC%88%E9%BA%A6%E5%8F%AF%E6%80%9D%EF%BC%89%E8%87%AA%E5%8A%A8%E8%AF%84%E4%BB%B7.user.js",
+          "code_size": 3269,
+          "license": "MIT License",
+          "version": "6.6.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "西华大学|教学质量管理平台（麦可思）自动评价",
+  "description": "单选题选择最后一个选项“非常同意”“帮助非常大”，多选题选择除开“以上均没有”的前几项，对该课程或老师的建议默认输入“老师讲的课无可挑剔，我很满意”",
+  "url": "https://greasyfork.org/scripts/456427-%E8%A5%BF%E5%8D%8E%E5%A4%A7%E5%AD%A6-%E6%95%99%E5%AD%A6%E8%B4%A8%E9%87%8F%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0-%E9%BA%A6%E5%8F%AF%E6%80%9D-%E8%87%AA%E5%8A%A8%E8%AF%84%E4%BB%B7",
+  "code_url": "https://update.greasyfork.org/scripts/456427/%E8%A5%BF%E5%8D%8E%E5%A4%A7%E5%AD%A6%7C%E6%95%99%E5%AD%A6%E8%B4%A8%E9%87%8F%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%EF%BC%88%E9%BA%A6%E5%8F%AF%E6%80%9D%EF%BC%89%E8%87%AA%E5%8A%A8%E8%AF%84%E4%BB%B7.user.js",
+  "code_size": 3269,
+  "license": "MIT License",
+  "version": "6.6.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

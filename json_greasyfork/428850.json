@@ -1,0 +1,59 @@
+{
+  "id": 428850,
+  "daily_installs": 0,
+  "total_installs": 56,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-03T12:09:44.000Z",
+  "code_updated_at": "2021-07-03T12:09:44.000Z",
+  "namespace": "https://github.com/KoalaBoy",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 539941,
+      "name": "KoalaBoy",
+      "created_at": "2020-04-24T07:17:47.000Z",
+      "url": "https://greasyfork.org/users/539941-koalaboy",
+      "scripts": [
+        {
+          "id": 428850,
+          "daily_installs": 0,
+          "total_installs": 56,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-07-03T12:09:44.000Z",
+          "code_updated_at": "2021-07-03T12:09:44.000Z",
+          "namespace": "https://github.com/KoalaBoy",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NS Ads Remove",
+          "description": "ลบโฆษณา",
+          "url": "https://greasyfork.org/scripts/428850-ns-ads-remove",
+          "code_url": "https://update.greasyfork.org/scripts/428850/NS%20Ads%20Remove.user.js",
+          "code_size": 658,
+          "license": null,
+          "version": "0.1",
+          "locale": "th",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NS Ads Remove",
+  "description": "ลบโฆษณา",
+  "url": "https://greasyfork.org/scripts/428850-ns-ads-remove",
+  "code_url": "https://update.greasyfork.org/scripts/428850/NS%20Ads%20Remove.user.js",
+  "code_size": 658,
+  "license": null,
+  "version": "0.1",
+  "locale": "th",
+  "deleted": false,
+  "visibility": "public"
+}

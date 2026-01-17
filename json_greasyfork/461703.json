@@ -1,0 +1,34 @@
+{
+  "id": 461703,
+  "daily_installs": 0,
+  "total_installs": 551,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-12T14:03:32.000Z",
+  "code_updated_at": "2023-03-15T14:49:17.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/461703",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1040936,
+      "name": "wlhnet",
+      "created_at": "2023-03-12T10:27:21.000Z",
+      "url": "https://greasyfork.org/users/1040936-wlhnet",
+      "scripts": []
+    }
+  ],
+  "name": "叔叔不约-匿名聊天-自动点击匹配-只能在电脑上正常跑",
+  "description": "叔叔不约-匿名聊天，自动点击匹配，一直匹配到目标性别停止，解放双手（只能在电脑上正常跑）",
+  "url": "https://greasyfork.org/scripts/461703-%E5%8F%94%E5%8F%94%E4%B8%8D%E7%BA%A6-%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%8C%B9%E9%85%8D-%E5%8F%AA%E8%83%BD%E5%9C%A8%E7%94%B5%E8%84%91%E4%B8%8A%E6%AD%A3%E5%B8%B8%E8%B7%91",
+  "code_url": "https://update.greasyfork.org/scripts/461703/%E5%8F%94%E5%8F%94%E4%B8%8D%E7%BA%A6-%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%8C%B9%E9%85%8D-%E5%8F%AA%E8%83%BD%E5%9C%A8%E7%94%B5%E8%84%91%E4%B8%8A%E6%AD%A3%E5%B8%B8%E8%B7%91.user.js",
+  "code_size": 5002,
+  "license": "MIT License",
+  "version": "0.4.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

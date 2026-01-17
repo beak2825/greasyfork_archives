@@ -1,0 +1,33 @@
+{
+  "id": 479575,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-12T04:06:59.000Z",
+  "code_updated_at": "2023-11-12T04:06:59.000Z",
+  "namespace": "http://sample.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1215785,
+      "name": "jing_2hang1105",
+      "created_at": "2023-11-12T04:00:48.000Z",
+      "url": "https://greasyfork.org/users/1215785-jing-2hang1105"
+    }
+  ],
+  "name": "强行支持discourse",
+  "description": "强行覆盖discourse不支持限制，修改自英文搜索结果@Fuir",
+  "url": "https://greasyfork.org/scripts/479575-%E5%BC%BA%E8%A1%8C%E6%94%AF%E6%8C%81discourse",
+  "code_url": "https://update.greasyfork.org/scripts/479575/%E5%BC%BA%E8%A1%8C%E6%94%AF%E6%8C%81discourse.user.js",
+  "code_size": 786,
+  "license": "GNU GPLv3",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

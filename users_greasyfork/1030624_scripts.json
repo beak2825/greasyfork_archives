@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460438,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-21T08:17:27.000Z",
+    "code_updated_at": "2023-06-08T07:45:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1030624,
+        "name": "Ethan M",
+        "created_at": "2023-02-21T08:10:58.000Z",
+        "url": "https://greasyfork.org/users/1030624-ethan-m"
+      }
+    ],
+    "name": "Autofill Merge Request Form",
+    "description": "Fill merge request's title, description and merge options for F32S",
+    "url": "https://greasyfork.org/scripts/460438-autofill-merge-request-form",
+    "code_url": "https://update.greasyfork.org/scripts/460438/Autofill%20Merge%20Request%20Form.user.js",
+    "code_size": 1697,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

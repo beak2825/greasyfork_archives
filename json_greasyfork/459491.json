@@ -1,0 +1,33 @@
+{
+  "id": 459491,
+  "daily_installs": 0,
+  "total_installs": 50,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-05T20:19:52.000Z",
+  "code_updated_at": "2023-05-29T06:01:43.000Z",
+  "namespace": "Blocker",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670188,
+      "name": "hacker09",
+      "created_at": "2020-07-25T20:51:35.000Z",
+      "url": "https://greasyfork.org/users/670188-hacker09"
+    }
+  ],
+  "name": "User Blocker - MAL",
+  "description": "Block any user on any forum topic with a single click!",
+  "url": "https://greasyfork.org/scripts/459491-user-blocker-mal",
+  "code_url": "https://update.greasyfork.org/scripts/459491/User%20Blocker%20-%20MAL.user.js",
+  "code_size": 1727,
+  "license": null,
+  "version": "3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 424904,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-12T07:20:51.000Z",
+  "code_updated_at": "2021-04-12T08:42:13.000Z",
+  "namespace": "https://donderhiroba.jp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 757864,
+      "name": "lunyeung1000",
+      "created_at": "2021-04-12T07:06:26.000Z",
+      "url": "https://greasyfork.org/users/757864-lunyeung1000"
+    }
+  ],
+  "name": "Hiroba plugin",
+  "description": "他為ドンだーひろば增加新功能:在成績單上方增加王冠過濾按鈕 及 王冠資訊",
+  "url": "https://greasyfork.org/scripts/424904-hiroba-plugin",
+  "code_url": "https://update.greasyfork.org/scripts/424904/Hiroba%20plugin.user.js",
+  "code_size": 3679,
+  "license": null,
+  "version": "1.01",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

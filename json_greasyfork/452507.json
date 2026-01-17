@@ -1,0 +1,59 @@
+{
+  "id": 452507,
+  "daily_installs": 0,
+  "total_installs": 257,
+  "fan_score": "9.5",
+  "good_ratings": 0,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2022-10-05T08:08:56.000Z",
+  "code_updated_at": "2022-10-05T08:08:56.000Z",
+  "namespace": "ZBigFish",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 966742,
+      "name": "ZBigFish",
+      "created_at": "2022-10-05T08:01:34.000Z",
+      "url": "https://greasyfork.org/users/966742-zbigfish",
+      "scripts": [
+        {
+          "id": 452507,
+          "daily_installs": 0,
+          "total_installs": 257,
+          "fan_score": "9.5",
+          "good_ratings": 0,
+          "ok_ratings": 2,
+          "bad_ratings": 0,
+          "created_at": "2022-10-05T08:08:56.000Z",
+          "code_updated_at": "2022-10-05T08:08:56.000Z",
+          "namespace": "ZBigFish",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "arXiv论文下载自动重命名为论文名",
+          "description": "能够直接把下载的文件名默认修改为论文名，并且符合Windows文件命名规范。会在搜索页面以及单个论文界面产生一个下载论文的超链接，点击即可。",
+          "url": "https://greasyfork.org/scripts/452507-arxiv%E8%AE%BA%E6%96%87%E4%B8%8B%E8%BD%BD%E8%87%AA%E5%8A%A8%E9%87%8D%E5%91%BD%E5%90%8D%E4%B8%BA%E8%AE%BA%E6%96%87%E5%90%8D",
+          "code_url": "https://update.greasyfork.org/scripts/452507/arXiv%E8%AE%BA%E6%96%87%E4%B8%8B%E8%BD%BD%E8%87%AA%E5%8A%A8%E9%87%8D%E5%91%BD%E5%90%8D%E4%B8%BA%E8%AE%BA%E6%96%87%E5%90%8D.user.js",
+          "code_size": 2718,
+          "license": "AGPL License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "arXiv论文下载自动重命名为论文名",
+  "description": "能够直接把下载的文件名默认修改为论文名，并且符合Windows文件命名规范。会在搜索页面以及单个论文界面产生一个下载论文的超链接，点击即可。",
+  "url": "https://greasyfork.org/scripts/452507-arxiv%E8%AE%BA%E6%96%87%E4%B8%8B%E8%BD%BD%E8%87%AA%E5%8A%A8%E9%87%8D%E5%91%BD%E5%90%8D%E4%B8%BA%E8%AE%BA%E6%96%87%E5%90%8D",
+  "code_url": "https://update.greasyfork.org/scripts/452507/arXiv%E8%AE%BA%E6%96%87%E4%B8%8B%E8%BD%BD%E8%87%AA%E5%8A%A8%E9%87%8D%E5%91%BD%E5%90%8D%E4%B8%BA%E8%AE%BA%E6%96%87%E5%90%8D.user.js",
+  "code_size": 2718,
+  "license": "AGPL License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

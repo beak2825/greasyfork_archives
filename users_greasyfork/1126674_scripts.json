@@ -1,0 +1,35 @@
+[
+  {
+    "id": 470831,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-14T12:28:04.000Z",
+    "code_updated_at": "2025-03-30T16:18:16.000Z",
+    "namespace": "zschuessler",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1126674,
+        "name": "zachary schuessler",
+        "created_at": "2023-07-14T12:24:38.000Z",
+        "url": "https://greasyfork.org/users/1126674-zachary-schuessler"
+      }
+    ],
+    "name": "ChatGPT: Readability Styles for Engineers",
+    "description": "Makes long, complicated, software-related chats much more readable.",
+    "url": "https://greasyfork.org/scripts/470831-chatgpt-readability-styles-for-engineers",
+    "code_url": "https://update.greasyfork.org/scripts/470831/ChatGPT%3A%20Readability%20Styles%20for%20Engineers.user.js",
+    "code_size": 2876,
+    "license": "The Unlicense",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

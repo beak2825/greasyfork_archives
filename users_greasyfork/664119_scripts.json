@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462745,
+    "daily_installs": 0,
+    "total_installs": 185,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-28T02:33:41.000Z",
+    "code_updated_at": "2023-03-28T02:33:41.000Z",
+    "namespace": "lousando",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 664119,
+        "name": "lousando",
+        "created_at": "2020-07-07T00:59:54.000Z",
+        "url": "https://greasyfork.org/users/664119-lousando"
+      }
+    ],
+    "name": "SimsFinds Cleaner",
+    "description": "Makes SimsFinds a more pleasent visit",
+    "url": "https://greasyfork.org/scripts/462745-simsfinds-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/462745/SimsFinds%20Cleaner.user.js",
+    "code_size": 913,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

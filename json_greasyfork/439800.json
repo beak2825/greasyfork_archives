@@ -1,0 +1,33 @@
+{
+  "id": 439800,
+  "daily_installs": 0,
+  "total_installs": 155,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-02-10T02:18:02.000Z",
+  "code_updated_at": "2025-10-25T07:15:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 874762,
+      "name": "DialogueBot",
+      "created_at": "2022-02-10T02:08:37.000Z",
+      "url": "https://greasyfork.org/users/874762-dialoguebot"
+    }
+  ],
+  "name": "Github、Gitee仓库 图片文件显示工具",
+  "description": "Github、Gitee代码托管网址，仓库图片文件预览功能，点击小图可直接在新窗口查看并保存文件",
+  "url": "https://greasyfork.org/scripts/439800-github-gitee%E4%BB%93%E5%BA%93-%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/439800/Github%E3%80%81Gitee%E4%BB%93%E5%BA%93%20%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 7929,
+  "license": "HHB",
+  "version": "0.32",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

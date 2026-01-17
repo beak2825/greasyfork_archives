@@ -1,0 +1,33 @@
+{
+  "id": 463043,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-01T10:05:52.000Z",
+  "code_updated_at": "2025-12-23T19:06:31.000Z",
+  "namespace": "B1773rm4n",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1051362,
+      "name": "B1773rm4n",
+      "created_at": "2023-04-01T08:54:37.000Z",
+      "url": "https://greasyfork.org/users/1051362-b1773rm4n"
+    }
+  ],
+  "name": "Tweetdeck tweaks",
+  "description": "Customizes my own Tweetdeck experience. It's unlikely someone else will enjoy this.",
+  "url": "https://greasyfork.org/scripts/463043-tweetdeck-tweaks",
+  "code_url": "https://update.greasyfork.org/scripts/463043/Tweetdeck%20tweaks.user.js",
+  "code_size": 15473,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.9.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

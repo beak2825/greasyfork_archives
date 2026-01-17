@@ -1,0 +1,59 @@
+{
+  "id": 474588,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-05T08:59:38.000Z",
+  "code_updated_at": "2023-09-05T08:59:38.000Z",
+  "namespace": "http://twitter.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1166609,
+      "name": "Authority",
+      "created_at": "2023-09-05T08:57:19.000Z",
+      "url": "https://greasyfork.org/users/1166609-authority",
+      "scripts": [
+        {
+          "id": 474588,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-05T08:59:38.000Z",
+          "code_updated_at": "2023-09-05T08:59:38.000Z",
+          "namespace": "http://twitter.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "huangtui killer",
+          "description": "kill huangtui",
+          "url": "https://greasyfork.org/scripts/474588-huangtui-killer",
+          "code_url": "https://update.greasyfork.org/scripts/474588/huangtui%20killer.user.js",
+          "code_size": 990,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "huangtui killer",
+  "description": "kill huangtui",
+  "url": "https://greasyfork.org/scripts/474588-huangtui-killer",
+  "code_url": "https://update.greasyfork.org/scripts/474588/huangtui%20killer.user.js",
+  "code_size": 990,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

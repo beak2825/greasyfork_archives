@@ -1,0 +1,68 @@
+[
+  {
+    "id": 429300,
+    "daily_installs": 0,
+    "total_installs": 5586,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-13T11:26:32.000Z",
+    "code_updated_at": "2022-05-19T13:11:09.000Z",
+    "namespace": "小南88",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 792094,
+        "name": "小南88",
+        "created_at": "2021-07-10T06:03:40.000Z",
+        "url": "https://greasyfork.org/users/792094-%E5%B0%8F%E5%8D%9788"
+      }
+    ],
+    "name": "2022广东省公需课考核部分自动答题并提交",
+    "description": "《碳达峰、碳中和的实现路径与广东探索专题》和《数字化转型与产业创新发展专题》最后考核部分自动答题并提交",
+    "url": "https://greasyfork.org/scripts/429300-2022%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%85%AC%E9%9C%80%E8%AF%BE%E8%80%83%E6%A0%B8%E9%83%A8%E5%88%86%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E5%B9%B6%E6%8F%90%E4%BA%A4",
+    "code_url": "https://update.greasyfork.org/scripts/429300/2022%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%85%AC%E9%9C%80%E8%AF%BE%E8%80%83%E6%A0%B8%E9%83%A8%E5%88%86%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E5%B9%B6%E6%8F%90%E4%BA%A4.user.js",
+    "code_size": 1917,
+    "license": null,
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429163,
+    "daily_installs": 0,
+    "total_installs": 1046,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-10T11:04:11.000Z",
+    "code_updated_at": "2022-05-19T12:59:34.000Z",
+    "namespace": "小南88",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 792094,
+        "name": "小南88",
+        "created_at": "2021-07-10T06:03:40.000Z",
+        "url": "https://greasyfork.org/users/792094-%E5%B0%8F%E5%8D%9788"
+      }
+    ],
+    "name": "2022广东省公需课登录界面自动填入默认密码",
+    "description": "功能：1、自动填入默认密码：身份证末6位+'@Gd'；2、登录成功后，自动关闭弹出的修改密码对话框。",
+    "url": "https://greasyfork.org/scripts/429163-2022%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%85%AC%E9%9C%80%E8%AF%BE%E7%99%BB%E5%BD%95%E7%95%8C%E9%9D%A2%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5%E9%BB%98%E8%AE%A4%E5%AF%86%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/429163/2022%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%85%AC%E9%9C%80%E8%AF%BE%E7%99%BB%E5%BD%95%E7%95%8C%E9%9D%A2%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5%E9%BB%98%E8%AE%A4%E5%AF%86%E7%A0%81.user.js",
+    "code_size": 1116,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

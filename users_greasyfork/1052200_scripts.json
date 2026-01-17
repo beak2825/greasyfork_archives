@@ -64,5 +64,104 @@
     "locale": "es",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 476028,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-09-24T18:37:50.000Z",
+    "code_updated_at": "2024-08-22T04:41:58.000Z",
+    "namespace": "https://greasyfork.org/es/scripts/476028",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052200,
+        "name": "Shu2Ouma",
+        "created_at": "2023-04-03T03:42:12.000Z",
+        "url": "https://greasyfork.org/users/1052200-shu2ouma"
+      }
+    ],
+    "name": "Reddit B64 Decoder",
+    "description": "Decode Base64-encoded text in Reddit posts and convert URLs to clickable links.",
+    "url": "https://greasyfork.org/scripts/476028-reddit-b64-decoder",
+    "code_url": "https://update.greasyfork.org/scripts/476028/Reddit%20B64%20Decoder.user.js",
+    "code_size": 6191,
+    "license": "MIT License",
+    "version": "1.5.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466743,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-20T23:44:33.000Z",
+    "code_updated_at": "2025-08-27T04:19:03.000Z",
+    "namespace": "https://greasyfork.org/es/scripts/466743",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052200,
+        "name": "Shu2Ouma",
+        "created_at": "2023-04-03T03:42:12.000Z",
+        "url": "https://greasyfork.org/users/1052200-shu2ouma"
+      }
+    ],
+    "name": "Ps4Trainer JSON Downloader",
+    "description": "Descarga y gestiona archivos JSON desde ps4trainer.com con buscador, filtros, historial y carga optimizada.",
+    "url": "https://greasyfork.org/scripts/466743-ps4trainer-json-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/466743/Ps4Trainer%20JSON%20Downloader.user.js",
+    "code_size": 8839,
+    "license": null,
+    "version": "2.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463192,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-03T21:12:45.000Z",
+    "code_updated_at": "2025-06-30T01:47:38.000Z",
+    "namespace": "https://greasyfork.org/scripts/463192",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052200,
+        "name": "Shu2Ouma",
+        "created_at": "2023-04-03T03:42:12.000Z",
+        "url": "https://greasyfork.org/users/1052200-shu2ouma"
+      }
+    ],
+    "name": "MyAnimeList Synopsis Auto-Translator",
+    "description": "Traduce la descripción del anime y manga en MyAnimeList de manera automática.",
+    "url": "https://greasyfork.org/scripts/463192-myanimelist-synopsis-auto-translator",
+    "code_url": "https://update.greasyfork.org/scripts/463192/MyAnimeList%20Synopsis%20Auto-Translator.user.js",
+    "code_size": 16982,
+    "license": "MIT License",
+    "version": "2.9.2",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

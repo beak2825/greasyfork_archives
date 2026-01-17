@@ -1,0 +1,33 @@
+{
+  "id": 469114,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-21T02:59:15.000Z",
+  "code_updated_at": "2024-09-20T18:54:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1107486,
+      "name": "Pinball Destiny",
+      "created_at": "2023-06-20T18:25:36.000Z",
+      "url": "https://greasyfork.org/users/1107486-pinball-destiny"
+    }
+  ],
+  "name": "Copy Amboss Questions to ChatGPT for Step 1",
+  "description": "Add copy buttons to amboss.com to copy to ChatGPT",
+  "url": "https://greasyfork.org/scripts/469114-copy-amboss-questions-to-chatgpt-for-step-1",
+  "code_url": "https://update.greasyfork.org/scripts/469114/Copy%20Amboss%20Questions%20to%20ChatGPT%20for%20Step%201.user.js",
+  "code_size": 29683,
+  "license": null,
+  "version": "1.0.1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

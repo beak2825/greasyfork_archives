@@ -1,0 +1,59 @@
+{
+  "id": 459294,
+  "daily_installs": 0,
+  "total_installs": 141,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-02T06:22:51.000Z",
+  "code_updated_at": "2023-02-03T06:24:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1020354,
+      "name": "Moon Fire",
+      "created_at": "2023-02-02T06:16:09.000Z",
+      "url": "https://greasyfork.org/users/1020354-moon-fire",
+      "scripts": [
+        {
+          "id": 459294,
+          "daily_installs": 0,
+          "total_installs": 141,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-02T06:22:51.000Z",
+          "code_updated_at": "2023-02-03T06:24:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "超级简历页面简化",
+          "description": "给我与我憨憨女朋友一起使用，还有你们这些单身狗！超级简历页面简化，页面修改前：简历过多时，查看不方便，并且简历名称过长时，会不显示，不方便查找简历！",
+          "url": "https://greasyfork.org/scripts/459294-%E8%B6%85%E7%BA%A7%E7%AE%80%E5%8E%86%E9%A1%B5%E9%9D%A2%E7%AE%80%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/459294/%E8%B6%85%E7%BA%A7%E7%AE%80%E5%8E%86%E9%A1%B5%E9%9D%A2%E7%AE%80%E5%8C%96.user.js",
+          "code_size": 1926,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "超级简历页面简化",
+  "description": "给我与我憨憨女朋友一起使用，还有你们这些单身狗！超级简历页面简化，页面修改前：简历过多时，查看不方便，并且简历名称过长时，会不显示，不方便查找简历！",
+  "url": "https://greasyfork.org/scripts/459294-%E8%B6%85%E7%BA%A7%E7%AE%80%E5%8E%86%E9%A1%B5%E9%9D%A2%E7%AE%80%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/459294/%E8%B6%85%E7%BA%A7%E7%AE%80%E5%8E%86%E9%A1%B5%E9%9D%A2%E7%AE%80%E5%8C%96.user.js",
+  "code_size": 1926,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

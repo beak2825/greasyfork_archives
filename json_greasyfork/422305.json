@@ -1,0 +1,34 @@
+{
+  "id": 422305,
+  "daily_installs": 0,
+  "total_installs": 241,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-26T02:13:13.000Z",
+  "code_updated_at": "2021-02-26T02:17:37.000Z",
+  "namespace": "www.wlfcss.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 734286,
+      "name": "wlfcss",
+      "created_at": "2021-02-04T02:30:32.000Z",
+      "url": "https://greasyfork.org/users/734286-wlfcss",
+      "scripts": []
+    }
+  ],
+  "name": "云学堂考试答案查询脚本-CCAP",
+  "description": "本脚本请勿外传！",
+  "url": "https://greasyfork.org/scripts/422305-%E4%BA%91%E5%AD%A6%E5%A0%82%E8%80%83%E8%AF%95%E7%AD%94%E6%A1%88%E6%9F%A5%E8%AF%A2%E8%84%9A%E6%9C%AC-ccap",
+  "code_url": "https://update.greasyfork.org/scripts/422305/%E4%BA%91%E5%AD%A6%E5%A0%82%E8%80%83%E8%AF%95%E7%AD%94%E6%A1%88%E6%9F%A5%E8%AF%A2%E8%84%9A%E6%9C%AC-CCAP.user.js",
+  "code_size": 23677,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

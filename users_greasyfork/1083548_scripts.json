@@ -1,0 +1,68 @@
+[
+  {
+    "id": 467198,
+    "daily_installs": 0,
+    "total_installs": 132,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-27T04:26:55.000Z",
+    "code_updated_at": "2023-05-30T17:52:12.000Z",
+    "namespace": "https://greasyfork.org/users/5415",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1083548,
+        "name": "帝王哥",
+        "created_at": "2023-05-23T13:53:44.000Z",
+        "url": "https://greasyfork.org/users/1083548-%E5%B8%9D%E7%8E%8B%E5%93%A5"
+      }
+    ],
+    "name": "帝王哥论坛表情增强插件",
+    "description": "DZ论坛专用的回复表情, 插图扩展插件, 在发帖时快速输入自定义表情",
+    "url": "https://greasyfork.org/scripts/467198-%E5%B8%9D%E7%8E%8B%E5%93%A5%E8%AE%BA%E5%9D%9B%E8%A1%A8%E6%83%85%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/467198/%E5%B8%9D%E7%8E%8B%E5%93%A5%E8%AE%BA%E5%9D%9B%E8%A1%A8%E6%83%85%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 20779,
+    "license": "MIT License",
+    "version": "1.0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466922,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-23T15:01:37.000Z",
+    "code_updated_at": "2023-05-27T06:03:25.000Z",
+    "namespace": "diwangge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1083548,
+        "name": "帝王哥",
+        "created_at": "2023-05-23T13:53:44.000Z",
+        "url": "https://greasyfork.org/users/1083548-%E5%B8%9D%E7%8E%8B%E5%93%A5"
+      }
+    ],
+    "name": "富贵论坛快捷回复工具(帝王哥)",
+    "description": "帝王哥富贵论坛快捷回复工具暂时只支持富贵论坛使用",
+    "url": "https://greasyfork.org/scripts/466922-%E5%AF%8C%E8%B4%B5%E8%AE%BA%E5%9D%9B%E5%BF%AB%E6%8D%B7%E5%9B%9E%E5%A4%8D%E5%B7%A5%E5%85%B7-%E5%B8%9D%E7%8E%8B%E5%93%A5",
+    "code_url": "https://update.greasyfork.org/scripts/466922/%E5%AF%8C%E8%B4%B5%E8%AE%BA%E5%9D%9B%E5%BF%AB%E6%8D%B7%E5%9B%9E%E5%A4%8D%E5%B7%A5%E5%85%B7%28%E5%B8%9D%E7%8E%8B%E5%93%A5%29.user.js",
+    "code_size": 1329,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

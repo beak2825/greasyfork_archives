@@ -1,0 +1,134 @@
+[
+  {
+    "id": 490907,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-26T11:48:36.000Z",
+    "code_updated_at": "2024-03-27T21:44:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1278787,
+        "name": "Spike G",
+        "created_at": "2024-03-24T11:15:42.000Z",
+        "url": "https://greasyfork.org/users/1278787-spike-g"
+      }
+    ],
+    "name": "Attacks available",
+    "description": "Extract and display the value of 'x' from a dynamically generated element divided by 25",
+    "url": "https://greasyfork.org/scripts/490907-attacks-available",
+    "code_url": "https://update.greasyfork.org/scripts/490907/Attacks%20available.user.js",
+    "code_size": 2758,
+    "license": null,
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 490758,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-24T15:35:44.000Z",
+    "code_updated_at": "2024-03-24T15:35:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1278787,
+        "name": "Spike G",
+        "created_at": "2024-03-24T11:15:42.000Z",
+        "url": "https://greasyfork.org/users/1278787-spike-g"
+      }
+    ],
+    "name": "Torn Combat Content Remover",
+    "description": "Remove unwanted images and div elements in Torn combat page",
+    "url": "https://greasyfork.org/scripts/490758-torn-combat-content-remover",
+    "code_url": "https://update.greasyfork.org/scripts/490758/Torn%20Combat%20Content%20Remover.user.js",
+    "code_size": 996,
+    "license": "GPU GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 490744,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-24T12:54:23.000Z",
+    "code_updated_at": "2024-03-24T12:54:23.000Z",
+    "namespace": "finally.torn.FactionWallBattlestats",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1278787,
+        "name": "Spike G",
+        "created_at": "2024-03-24T11:15:42.000Z",
+        "url": "https://greasyfork.org/users/1278787-spike-g"
+      }
+    ],
+    "name": "Ranked War Spies and Hosp",
+    "description": "Hosp timers and spies on RW page! Shoutout cee tee ess and Zalp for hosp timer hint edit.",
+    "url": "https://greasyfork.org/scripts/490744-ranked-war-spies-and-hosp",
+    "code_url": "https://update.greasyfork.org/scripts/490744/Ranked%20War%20Spies%20and%20Hosp.user.js",
+    "code_size": 22936,
+    "license": null,
+    "version": "1.29",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 490738,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-24T11:26:36.000Z",
+    "code_updated_at": "2024-08-05T10:16:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1278787,
+        "name": "Spike G",
+        "created_at": "2024-03-24T11:15:42.000Z",
+        "url": "https://greasyfork.org/users/1278787-spike-g"
+      }
+    ],
+    "name": "S.H.I.T",
+    "description": "Shows faction members currently in the hospital with the remaining time",
+    "url": "https://greasyfork.org/scripts/490738-s-h-i-t",
+    "code_url": "https://update.greasyfork.org/scripts/490738/SHIT.user.js",
+    "code_size": 10848,
+    "license": null,
+    "version": "0.8.34.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

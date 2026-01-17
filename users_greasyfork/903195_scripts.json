@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443486,
+    "daily_installs": 0,
+    "total_installs": 1333,
+    "fan_score": "15.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 4,
+    "created_at": "2022-04-16T19:31:09.000Z",
+    "code_updated_at": "2022-07-28T12:33:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 903195,
+        "name": "xWass",
+        "created_at": "2022-04-16T19:28:12.000Z",
+        "url": "https://greasyfork.org/users/903195-xwass"
+      }
+    ],
+    "name": "Auto Clicker for More Ore",
+    "description": "Auto Clicker for More Ore, clicks weak spots, manual attacks on quest, and golden nuggets. Also updates automatically.",
+    "url": "https://greasyfork.org/scripts/443486-auto-clicker-for-more-ore",
+    "code_url": "https://update.greasyfork.org/scripts/443486/Auto%20Clicker%20for%20More%20Ore.user.js",
+    "code_size": 1115,
+    "license": "MIT License",
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

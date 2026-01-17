@@ -1,0 +1,33 @@
+{
+  "id": 443638,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-19T18:26:39.000Z",
+  "code_updated_at": "2022-04-19T18:26:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 236073,
+      "name": "MeGa Mosbah",
+      "created_at": "2018-12-30T04:44:33.000Z",
+      "url": "https://greasyfork.org/users/236073-mega-mosbah"
+    }
+  ],
+  "name": "ReaderImageOtp",
+  "description": "Read OTP image and transferd it to book-app",
+  "url": "https://greasyfork.org/scripts/443638-readerimageotp",
+  "code_url": "https://update.greasyfork.org/scripts/443638/ReaderImageOtp.user.js",
+  "code_size": 2750,
+  "license": null,
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

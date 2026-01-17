@@ -1,0 +1,34 @@
+{
+  "id": 484758,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-13T16:52:02.000Z",
+  "code_updated_at": "2024-01-13T16:52:02.000Z",
+  "namespace": "apv",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1247567,
+      "name": "Антон Карпов",
+      "created_at": "2024-01-13T16:50:56.000Z",
+      "url": "https://greasyfork.org/users/1247567-%D0%B0%D0%BD%D1%82%D0%BE%D0%BD-%D0%BA%D0%B0%D1%80%D0%BF%D0%BE%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "ApvGuessr",
+  "description": "apv",
+  "url": "https://greasyfork.org/scripts/484758-apvguessr",
+  "code_url": "https://update.greasyfork.org/scripts/484758/ApvGuessr.user.js",
+  "code_size": 2608,
+  "license": null,
+  "version": "0.1",
+  "locale": "nl",
+  "deleted": false,
+  "visibility": "public"
+}

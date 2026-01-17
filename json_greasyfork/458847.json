@@ -1,0 +1,34 @@
+{
+  "id": 458847,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-25T16:36:24.000Z",
+  "code_updated_at": "2023-01-28T13:30:50.000Z",
+  "namespace": "https://greasyfork.org/users/3920",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 3920,
+      "name": "mocho",
+      "created_at": "2014-07-26T14:36:13.000Z",
+      "url": "https://greasyfork.org/users/3920-mocho",
+      "scripts": []
+    }
+  ],
+  "name": "Extract FR",
+  "description": "Extract only FR in 5glab",
+  "url": "https://greasyfork.org/scripts/458847-extract-fr",
+  "code_url": "https://update.greasyfork.org/scripts/458847/Extract%20FR.user.js",
+  "code_size": 8261,
+  "license": null,
+  "version": "0.0.1.20230128133050",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

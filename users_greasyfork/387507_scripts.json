@@ -1,0 +1,101 @@
+[
+  {
+    "id": 448754,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-01T13:08:32.000Z",
+    "code_updated_at": "2022-08-01T13:08:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 387507,
+        "name": "zhangxc0427",
+        "created_at": "2019-10-16T04:30:38.000Z",
+        "url": "https://greasyfork.org/users/387507-zhangxc0427"
+      }
+    ],
+    "name": "基金从业再教育3.0",
+    "description": "真是个惊喜!",
+    "url": "https://greasyfork.org/scripts/448754-%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E5%86%8D%E6%95%99%E8%82%B23-0",
+    "code_url": "https://update.greasyfork.org/scripts/448754/%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E5%86%8D%E6%95%99%E8%82%B230.user.js",
+    "code_size": 7305,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 448731,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-01T02:04:31.000Z",
+    "code_updated_at": "2022-08-01T02:04:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 387507,
+        "name": "zhangxc0427",
+        "created_at": "2019-10-16T04:30:38.000Z",
+        "url": "https://greasyfork.org/users/387507-zhangxc0427"
+      }
+    ],
+    "name": "某在线教育题库免费使用-题目转文件下载-去除购买提示遮罩层",
+    "description": "某在线教育题库免费使用-题目转文件下载-去除购买题库的提示遮罩层",
+    "url": "https://greasyfork.org/scripts/448731-%E6%9F%90%E5%9C%A8%E7%BA%BF%E6%95%99%E8%82%B2%E9%A2%98%E5%BA%93%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8-%E9%A2%98%E7%9B%AE%E8%BD%AC%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD-%E5%8E%BB%E9%99%A4%E8%B4%AD%E4%B9%B0%E6%8F%90%E7%A4%BA%E9%81%AE%E7%BD%A9%E5%B1%82",
+    "code_url": "https://update.greasyfork.org/scripts/448731/%E6%9F%90%E5%9C%A8%E7%BA%BF%E6%95%99%E8%82%B2%E9%A2%98%E5%BA%93%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8-%E9%A2%98%E7%9B%AE%E8%BD%AC%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD-%E5%8E%BB%E9%99%A4%E8%B4%AD%E4%B9%B0%E6%8F%90%E7%A4%BA%E9%81%AE%E7%BD%A9%E5%B1%82.user.js",
+    "code_size": 3927,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434262,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-21T13:56:34.000Z",
+    "code_updated_at": "2021-10-22T02:26:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 387507,
+        "name": "zhangxc0427",
+        "created_at": "2019-10-16T04:30:38.000Z",
+        "url": "https://greasyfork.org/users/387507-zhangxc0427"
+      }
+    ],
+    "name": "基金从业再教育2.0",
+    "description": "真是个惊喜!",
+    "url": "https://greasyfork.org/scripts/434262-%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E5%86%8D%E6%95%99%E8%82%B22-0",
+    "code_url": "https://update.greasyfork.org/scripts/434262/%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E5%86%8D%E6%95%99%E8%82%B220.user.js",
+    "code_size": 5187,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

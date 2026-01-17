@@ -1,0 +1,33 @@
+{
+  "id": 447549,
+  "daily_installs": 0,
+  "total_installs": 216,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-07T07:43:21.000Z",
+  "code_updated_at": "2022-07-07T07:43:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 836906,
+      "name": "Crystala",
+      "created_at": "2021-11-10T21:56:24.000Z",
+      "url": "https://greasyfork.org/users/836906-crystala"
+    }
+  ],
+  "name": "NGA Missing Floor Detector",
+  "description": "自动检测NGA楼层缺失",
+  "url": "https://greasyfork.org/scripts/447549-nga-missing-floor-detector",
+  "code_url": "https://update.greasyfork.org/scripts/447549/NGA%20Missing%20Floor%20Detector.user.js",
+  "code_size": 1534,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

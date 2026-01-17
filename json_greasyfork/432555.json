@@ -1,0 +1,59 @@
+{
+  "id": 432555,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-17T12:39:28.000Z",
+  "code_updated_at": "2021-09-17T12:39:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816366,
+      "name": "fe-toplion",
+      "created_at": "2021-09-17T12:31:44.000Z",
+      "url": "https://greasyfork.org/users/816366-fe-toplion",
+      "scripts": [
+        {
+          "id": 432555,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-17T12:39:28.000Z",
+          "code_updated_at": "2021-09-17T12:39:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "cancelBtn",
+          "description": "取消离线包图片选中态!",
+          "url": "https://greasyfork.org/scripts/432555-cancelbtn",
+          "code_url": "https://update.greasyfork.org/scripts/432555/cancelBtn.user.js",
+          "code_size": 1748,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "cancelBtn",
+  "description": "取消离线包图片选中态!",
+  "url": "https://greasyfork.org/scripts/432555-cancelbtn",
+  "code_url": "https://update.greasyfork.org/scripts/432555/cancelBtn.user.js",
+  "code_size": 1748,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

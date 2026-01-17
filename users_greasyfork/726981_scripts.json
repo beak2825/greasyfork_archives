@@ -1,0 +1,134 @@
+[
+  {
+    "id": 491493,
+    "daily_installs": 0,
+    "total_installs": 916,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-02T15:21:59.000Z",
+    "code_updated_at": "2024-04-02T15:21:59.000Z",
+    "namespace": "http://QQ.COM",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 726981,
+        "name": "越前龙马",
+        "created_at": "2021-01-13T12:33:11.000Z",
+        "url": "https://greasyfork.org/users/726981-%E8%B6%8A%E5%89%8D%E9%BE%99%E9%A9%AC"
+      }
+    ],
+    "name": "万能全网一键VIP视频解析",
+    "description": "解析并自动跳转各大视频网站会员视频(傻瓜版)",
+    "url": "https://greasyfork.org/scripts/491493-%E4%B8%87%E8%83%BD%E5%85%A8%E7%BD%91%E4%B8%80%E9%94%AEvip%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/491493/%E4%B8%87%E8%83%BD%E5%85%A8%E7%BD%91%E4%B8%80%E9%94%AEVIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 1266,
+    "license": null,
+    "version": "2.232",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491019,
+    "daily_installs": 0,
+    "total_installs": 623,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-27T16:12:13.000Z",
+    "code_updated_at": "2024-03-27T16:12:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "http://tampermonkey.net/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 726981,
+        "name": "越前龙马",
+        "created_at": "2021-01-13T12:33:11.000Z",
+        "url": "https://greasyfork.org/users/726981-%E8%B6%8A%E5%89%8D%E9%BE%99%E9%A9%AC"
+      }
+    ],
+    "name": "VIP视频解析助手",
+    "description": "解析各大视频网站VIP视频，支持优酷，爱奇艺，乐视，腾讯视频，土豆，芒果TV，acfun，bilibili，PPTV，暴风，音悦台",
+    "url": "https://greasyfork.org/scripts/491019-vip%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/491019/VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 4237,
+    "license": "MIT License",
+    "version": "6.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422788,
+    "daily_installs": 0,
+    "total_installs": 246,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-06T17:48:08.000Z",
+    "code_updated_at": "2021-03-06T17:48:07.000Z",
+    "namespace": "police",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 726981,
+        "name": "越前龙马",
+        "created_at": "2021-01-13T12:33:11.000Z",
+        "url": "https://greasyfork.org/users/726981-%E8%B6%8A%E5%89%8D%E9%BE%99%E9%A9%AC"
+      }
+    ],
+    "name": "在线计算器",
+    "description": "统计计算：可计算一系列数据的和，平均值  科学计算：可进行函数、对数运算，以及阶乘、幂运算",
+    "url": "https://greasyfork.org/scripts/422788-%E5%9C%A8%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/422788/%E5%9C%A8%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%99%A8.user.js",
+    "code_size": 6401,
+    "license": null,
+    "version": "8.8.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421544,
+    "daily_installs": 0,
+    "total_installs": 909,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-10T19:37:39.000Z",
+    "code_updated_at": "2021-02-10T19:37:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 726981,
+        "name": "越前龙马",
+        "created_at": "2021-01-13T12:33:11.000Z",
+        "url": "https://greasyfork.org/users/726981-%E8%B6%8A%E5%89%8D%E9%BE%99%E9%A9%AC"
+      }
+    ],
+    "name": "在线视频字幕抓取",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/421544-%E5%9C%A8%E7%BA%BF%E8%A7%86%E9%A2%91%E5%AD%97%E5%B9%95%E6%8A%93%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/421544/%E5%9C%A8%E7%BA%BF%E8%A7%86%E9%A2%91%E5%AD%97%E5%B9%95%E6%8A%93%E5%8F%96.user.js",
+    "code_size": 12248,
+    "license": null,
+    "version": "4.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

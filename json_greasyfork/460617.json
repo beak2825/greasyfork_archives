@@ -1,0 +1,59 @@
+{
+  "id": 460617,
+  "daily_installs": 2,
+  "total_installs": 3927,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-23T19:31:31.000Z",
+  "code_updated_at": "2023-02-23T19:31:31.000Z",
+  "namespace": "https://greasyfork.org/users/1031972",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1031972,
+      "name": "jzhqvueehjulighiqw",
+      "created_at": "2023-02-23T18:48:26.000Z",
+      "url": "https://greasyfork.org/users/1031972-jzhqvueehjulighiqw",
+      "scripts": [
+        {
+          "id": 460617,
+          "daily_installs": 2,
+          "total_installs": 3927,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-23T19:31:31.000Z",
+          "code_updated_at": "2023-02-23T19:31:31.000Z",
+          "namespace": "https://greasyfork.org/users/1031972",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Instant CAI Messages",
+          "description": "Instant message chunks for CharacterAI",
+          "url": "https://greasyfork.org/scripts/460617-instant-cai-messages",
+          "code_url": "https://update.greasyfork.org/scripts/460617/Instant%20CAI%20Messages.user.js",
+          "code_size": 5985,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Instant CAI Messages",
+  "description": "Instant message chunks for CharacterAI",
+  "url": "https://greasyfork.org/scripts/460617-instant-cai-messages",
+  "code_url": "https://update.greasyfork.org/scripts/460617/Instant%20CAI%20Messages.user.js",
+  "code_size": 5985,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

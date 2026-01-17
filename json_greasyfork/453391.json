@@ -1,0 +1,59 @@
+{
+  "id": 453391,
+  "daily_installs": 0,
+  "total_installs": 240,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-19T23:33:10.000Z",
+  "code_updated_at": "2025-06-24T15:39:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972855,
+      "name": "PUndef",
+      "created_at": "2022-10-19T23:26:24.000Z",
+      "url": "https://greasyfork.org/users/972855-pundef",
+      "scripts": [
+        {
+          "id": 453391,
+          "daily_installs": 0,
+          "total_installs": 240,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-19T23:33:10.000Z",
+          "code_updated_at": "2025-06-24T15:39:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AnimeGo Prev Next player",
+          "description": "Prev, Next button for player on animego.org",
+          "url": "https://greasyfork.org/scripts/453391-animego-prev-next-player",
+          "code_url": "https://update.greasyfork.org/scripts/453391/AnimeGo%20Prev%20Next%20player.user.js",
+          "code_size": 11143,
+          "license": "MIT License",
+          "version": "0.5.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AnimeGo Prev Next player",
+  "description": "Prev, Next button for player on animego.org",
+  "url": "https://greasyfork.org/scripts/453391-animego-prev-next-player",
+  "code_url": "https://update.greasyfork.org/scripts/453391/AnimeGo%20Prev%20Next%20player.user.js",
+  "code_size": 11143,
+  "license": "MIT License",
+  "version": "0.5.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

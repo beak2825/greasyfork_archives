@@ -1,0 +1,33 @@
+{
+  "id": 466526,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-17T20:28:58.000Z",
+  "code_updated_at": "2023-05-17T20:28:58.000Z",
+  "namespace": "FZ was astonished",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 899154,
+      "name": "Max Sumerton",
+      "created_at": "2022-04-08T00:55:18.000Z",
+      "url": "https://greasyfork.org/users/899154-max-sumerton"
+    }
+  ],
+  "name": "Lost mod for moo moo io remake",
+  "description": "working Lost Mod",
+  "url": "https://greasyfork.org/scripts/466526-lost-mod-for-moo-moo-io-remake",
+  "code_url": "https://update.greasyfork.org/scripts/466526/1192001/Lost%20mod%20for%20moo%20moo%20io%20remake.js",
+  "code_size": 184266,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

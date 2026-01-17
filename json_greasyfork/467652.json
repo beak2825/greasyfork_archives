@@ -1,0 +1,59 @@
+{
+  "id": 467652,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-01T15:20:49.000Z",
+  "code_updated_at": "2023-06-01T18:02:21.000Z",
+  "namespace": "https://greasyfork.org/users/1088658",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1088658,
+      "name": "danieljaguiar",
+      "created_at": "2023-06-01T15:12:54.000Z",
+      "url": "https://greasyfork.org/users/1088658-danieljaguiar",
+      "scripts": [
+        {
+          "id": 467652,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-01T15:20:49.000Z",
+          "code_updated_at": "2023-06-01T18:02:21.000Z",
+          "namespace": "https://greasyfork.org/users/1088658",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WorkFlowy CTRL SHIFT ARROW fix on Chromebook",
+          "description": "In Workflowy, it will fix the CTRL + SHIFT + [Left Arrow | Right Arrow] behaviour on Chromebook, making it select the text and not ident the task.",
+          "url": "https://greasyfork.org/scripts/467652-workflowy-ctrl-shift-arrow-fix-on-chromebook",
+          "code_url": "https://update.greasyfork.org/scripts/467652/WorkFlowy%20CTRL%20SHIFT%20ARROW%20fix%20on%20Chromebook.user.js",
+          "code_size": 543,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WorkFlowy CTRL SHIFT ARROW fix on Chromebook",
+  "description": "In Workflowy, it will fix the CTRL + SHIFT + [Left Arrow | Right Arrow] behaviour on Chromebook, making it select the text and not ident the task.",
+  "url": "https://greasyfork.org/scripts/467652-workflowy-ctrl-shift-arrow-fix-on-chromebook",
+  "code_url": "https://update.greasyfork.org/scripts/467652/WorkFlowy%20CTRL%20SHIFT%20ARROW%20fix%20on%20Chromebook.user.js",
+  "code_size": 543,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

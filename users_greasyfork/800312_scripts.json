@@ -1,0 +1,35 @@
+[
+  {
+    "id": 430342,
+    "daily_installs": 0,
+    "total_installs": 232,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-04T11:52:23.000Z",
+    "code_updated_at": "2022-03-29T10:13:30.000Z",
+    "namespace": "http://huoyiming.cf:2005/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 800312,
+        "name": "Lucien2714",
+        "created_at": "2021-08-04T11:46:27.000Z",
+        "url": "https://greasyfork.org/users/800312-lucien2714"
+      }
+    ],
+    "name": "Fuck QQ\\知乎非官方网页提示、逼站的奇怪页面",
+    "description": "自动跳过QQ\\知乎链接提醒、逼站的奇怪页面",
+    "url": "https://greasyfork.org/scripts/430342-qq-%E7%9F%A5%E4%B9%8E%E9%9D%9E%E5%AE%98%E6%96%B9%E7%BD%91%E9%A1%B5%E6%8F%90%E7%A4%BA-%E9%80%BC%E7%AB%99%E7%9A%84%E5%A5%87%E6%80%AA%E9%A1%B5%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/430342/Fuck%20QQ%5C%E7%9F%A5%E4%B9%8E%E9%9D%9E%E5%AE%98%E6%96%B9%E7%BD%91%E9%A1%B5%E6%8F%90%E7%A4%BA%E3%80%81%E9%80%BC%E7%AB%99%E7%9A%84%E5%A5%87%E6%80%AA%E9%A1%B5%E9%9D%A2.user.js",
+    "code_size": 1483,
+    "license": "GNU General Public License v3.0 only",
+    "version": "6.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

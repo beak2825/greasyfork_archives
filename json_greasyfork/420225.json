@@ -1,0 +1,33 @@
+{
+  "id": 420225,
+  "daily_installs": 0,
+  "total_installs": 392,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-01-15T04:34:46.000Z",
+  "code_updated_at": "2021-01-15T04:34:45.000Z",
+  "namespace": "司冷 https://joakimstarr.gitee.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 288326,
+      "name": "JoakimStarr",
+      "created_at": "2019-04-02T17:34:53.000Z",
+      "url": "https://greasyfork.org/users/288326-joakimstarr"
+    }
+  ],
+  "name": "古诗词网屏蔽弹出二维码",
+  "description": "用来屏蔽古诗词网站弹出的烦人二维码",
+  "url": "https://greasyfork.org/scripts/420225-%E5%8F%A4%E8%AF%97%E8%AF%8D%E7%BD%91%E5%B1%8F%E8%94%BD%E5%BC%B9%E5%87%BA%E4%BA%8C%E7%BB%B4%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/420225/%E5%8F%A4%E8%AF%97%E8%AF%8D%E7%BD%91%E5%B1%8F%E8%94%BD%E5%BC%B9%E5%87%BA%E4%BA%8C%E7%BB%B4%E7%A0%81.user.js",
+  "code_size": 539,
+  "license": null,
+  "version": "1,0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

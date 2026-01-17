@@ -1,0 +1,59 @@
+{
+  "id": 462437,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-24T01:22:45.000Z",
+  "code_updated_at": "2023-03-24T01:22:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1041461,
+      "name": "flow2000",
+      "created_at": "2023-03-13T09:08:14.000Z",
+      "url": "https://greasyfork.org/users/1041461-flow2000",
+      "scripts": [
+        {
+          "id": 462437,
+          "daily_installs": 0,
+          "total_installs": 32,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-24T01:22:45.000Z",
+          "code_updated_at": "2023-03-24T01:22:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "QQ群群员数据导出",
+          "description": "导出QQ群群员名称，QQ号等相关数据",
+          "url": "https://greasyfork.org/scripts/462437-qq%E7%BE%A4%E7%BE%A4%E5%91%98%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA",
+          "code_url": "https://update.greasyfork.org/scripts/462437/QQ%E7%BE%A4%E7%BE%A4%E5%91%98%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA.user.js",
+          "code_size": 4470,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "QQ群群员数据导出",
+  "description": "导出QQ群群员名称，QQ号等相关数据",
+  "url": "https://greasyfork.org/scripts/462437-qq%E7%BE%A4%E7%BE%A4%E5%91%98%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA",
+  "code_url": "https://update.greasyfork.org/scripts/462437/QQ%E7%BE%A4%E7%BE%A4%E5%91%98%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA.user.js",
+  "code_size": 4470,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

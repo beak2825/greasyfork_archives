@@ -31,5 +31,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 472868,
+    "daily_installs": 0,
+    "total_installs": 200,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-08-10T23:29:54.000Z",
+    "code_updated_at": "2024-12-07T05:44:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242,
+        "name": "Bunnelby",
+        "created_at": "2014-05-16T04:23:08.000Z",
+        "url": "https://greasyfork.org/users/1242-bunnelby"
+      }
+    ],
+    "name": "Twitch, Auto reload when *k error",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/472868-twitch-auto-reload-when-k-error",
+    "code_url": "https://update.greasyfork.org/scripts/472868/Twitch%2C%20Auto%20reload%20when%20%2Ak%20error.user.js",
+    "code_size": 586,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457632,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-04T15:43:10.000Z",
+    "code_updated_at": "2024-07-15T17:29:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242,
+        "name": "Bunnelby",
+        "created_at": "2014-05-16T04:23:08.000Z",
+        "url": "https://greasyfork.org/users/1242-bunnelby"
+      }
+    ],
+    "name": "Twitch, Display sidebar on theater mode",
+    "description": "Display sidebar when mouseover player on theater mode",
+    "url": "https://greasyfork.org/scripts/457632-twitch-display-sidebar-on-theater-mode",
+    "code_url": "https://update.greasyfork.org/scripts/457632/Twitch%2C%20Display%20sidebar%20on%20theater%20mode.user.js",
+    "code_size": 3027,
+    "license": null,
+    "version": "0.1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444309,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-01T13:47:52.000Z",
+    "code_updated_at": "2022-05-01T13:47:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242,
+        "name": "Bunnelby",
+        "created_at": "2014-05-16T04:23:08.000Z",
+        "url": "https://greasyfork.org/users/1242-bunnelby"
+      }
+    ],
+    "name": "Steam, Booster Pack Price List",
+    "description": "Display price list",
+    "url": "https://greasyfork.org/scripts/444309-steam-booster-pack-price-list",
+    "code_url": "https://update.greasyfork.org/scripts/444309/Steam%2C%20Booster%20Pack%20Price%20List.user.js",
+    "code_size": 1827,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433189,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-30T02:18:41.000Z",
+    "code_updated_at": "2021-09-30T02:18:39.000Z",
+    "namespace": "org.userscript.bunnelby",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242,
+        "name": "Bunnelby",
+        "created_at": "2014-05-16T04:23:08.000Z",
+        "url": "https://greasyfork.org/users/1242-bunnelby"
+      }
+    ],
+    "name": "Steam, Legendary Market",
+    "description": "Steam Market",
+    "url": "https://greasyfork.org/scripts/433189-steam-legendary-market",
+    "code_url": "https://update.greasyfork.org/scripts/433189/Steam%2C%20Legendary%20Market.user.js",
+    "code_size": 111114,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 417564,
+    "daily_installs": 1,
+    "total_installs": 636,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-02T15:42:42.000Z",
+    "code_updated_at": "2025-05-08T07:59:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242,
+        "name": "Bunnelby",
+        "created_at": "2014-05-16T04:23:08.000Z",
+        "url": "https://greasyfork.org/users/1242-bunnelby"
+      }
+    ],
+    "name": "Youtube/Holodex, Hololive streaming schedule",
+    "description": "You can check schedule of recently hololive stream on youtube",
+    "url": "https://greasyfork.org/scripts/417564-youtube-holodex-hololive-streaming-schedule",
+    "code_url": "https://update.greasyfork.org/scripts/417564/YoutubeHolodex%2C%20Hololive%20streaming%20schedule.user.js",
+    "code_size": 73411,
+    "license": null,
+    "version": "1.0.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

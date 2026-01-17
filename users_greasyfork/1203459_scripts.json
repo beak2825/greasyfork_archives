@@ -229,5 +229,71 @@
     "locale": "de",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 484390,
+    "daily_installs": 1,
+    "total_installs": 418,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-09T19:27:23.000Z",
+    "code_updated_at": "2024-10-28T19:52:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203459,
+        "name": "ricardofauch",
+        "created_at": "2023-10-24T17:54:35.000Z",
+        "url": "https://greasyfork.org/users/1203459-ricardofauch"
+      }
+    ],
+    "name": "Tribal Wars Resource Buyer (Multi-language)",
+    "description": "Automate buying resources in Tribal Wars with premium points limit - works in all languages",
+    "url": "https://greasyfork.org/scripts/484390-tribal-wars-resource-buyer-multi-language",
+    "code_url": "https://update.greasyfork.org/scripts/484390/Tribal%20Wars%20Resource%20Buyer%20%28Multi-language%29.user.js",
+    "code_size": 14615,
+    "license": "MIT License",
+    "version": "1.4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 478176,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-24T17:58:09.000Z",
+    "code_updated_at": "2025-06-17T00:23:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203459,
+        "name": "ricardofauch",
+        "created_at": "2023-10-24T17:54:35.000Z",
+        "url": "https://greasyfork.org/users/1203459-ricardofauch"
+      }
+    ],
+    "name": "Hochschulsport Windhundskript",
+    "description": "AutoFill mit Benutzereingabe für das Anmeldeformular des Universitätssportprogramms",
+    "url": "https://greasyfork.org/scripts/478176-hochschulsport-windhundskript",
+    "code_url": "https://update.greasyfork.org/scripts/478176/Hochschulsport%20Windhundskript.user.js",
+    "code_size": 36006,
+    "license": null,
+    "version": "2.3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

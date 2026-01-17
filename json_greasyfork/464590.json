@@ -1,0 +1,34 @@
+{
+  "id": 464590,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-21T23:30:21.000Z",
+  "code_updated_at": "2023-04-21T23:34:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 986211,
+      "name": "Aporiz Sub",
+      "created_at": "2022-11-21T23:56:36.000Z",
+      "url": "https://greasyfork.org/users/986211-aporiz-sub",
+      "scripts": []
+    }
+  ],
+  "name": "twimaru font",
+  "description": "futaba sumaho to yomichan",
+  "url": "https://greasyfork.org/scripts/464590-twimaru-font",
+  "code_url": "https://update.greasyfork.org/scripts/464590/twimaru%20font.user.js",
+  "code_size": 545,
+  "license": "Mozilla Public License 2.0; http://www.mozilla.org/MPL/2.0/",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

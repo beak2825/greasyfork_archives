@@ -1,0 +1,68 @@
+[
+  {
+    "id": 434045,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-17T17:55:04.000Z",
+    "code_updated_at": "2021-10-17T17:55:04.000Z",
+    "namespace": "https://byxiaoxie.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 399721,
+        "name": "byxiaoxie",
+        "created_at": "2019-11-20T14:05:12.000Z",
+        "url": "https://greasyfork.org/users/399721-byxiaoxie"
+      }
+    ],
+    "name": "SWAN 剩余时间",
+    "description": "SWAN Time",
+    "url": "https://greasyfork.org/scripts/434045-swan-%E5%89%A9%E4%BD%99%E6%97%B6%E9%97%B4",
+    "code_url": "https://update.greasyfork.org/scripts/434045/SWAN%20%E5%89%A9%E4%BD%99%E6%97%B6%E9%97%B4.user.js",
+    "code_size": 4813,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419616,
+    "daily_installs": 0,
+    "total_installs": 121,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-04T08:31:12.000Z",
+    "code_updated_at": "2021-01-04T08:45:46.000Z",
+    "namespace": "http://byxiaoxie.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 399721,
+        "name": "byxiaoxie",
+        "created_at": "2019-11-20T14:05:12.000Z",
+        "url": "https://greasyfork.org/users/399721-byxiaoxie"
+      }
+    ],
+    "name": "SpeechLogger",
+    "description": "SpeechLogger - 破解限制",
+    "url": "https://greasyfork.org/scripts/419616-speechlogger",
+    "code_url": "https://update.greasyfork.org/scripts/419616/SpeechLogger.user.js",
+    "code_size": 625,
+    "license": null,
+    "version": "0.3",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

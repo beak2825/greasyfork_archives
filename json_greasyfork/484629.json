@@ -1,0 +1,34 @@
+{
+  "id": 484629,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-12T01:50:07.000Z",
+  "code_updated_at": "2024-01-12T01:50:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1023408,
+      "name": "likundeli10",
+      "created_at": "2023-02-08T03:13:10.000Z",
+      "url": "https://greasyfork.org/users/1023408-likundeli10",
+      "scripts": []
+    }
+  ],
+  "name": "客優雲自動更新安全庫存 on 採購建議",
+  "description": "客優雲自動更新安全庫存 on 採購建議 功能",
+  "url": "https://greasyfork.org/scripts/484629-%E5%AE%A2%E5%84%AA%E9%9B%B2%E8%87%AA%E5%8B%95%E6%9B%B4%E6%96%B0%E5%AE%89%E5%85%A8%E5%BA%AB%E5%AD%98-on-%E6%8E%A1%E8%B3%BC%E5%BB%BA%E8%AD%B0",
+  "code_url": "https://update.greasyfork.org/scripts/484629/%E5%AE%A2%E5%84%AA%E9%9B%B2%E8%87%AA%E5%8B%95%E6%9B%B4%E6%96%B0%E5%AE%89%E5%85%A8%E5%BA%AB%E5%AD%98%20on%20%E6%8E%A1%E8%B3%BC%E5%BB%BA%E8%AD%B0.user.js",
+  "code_size": 8241,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

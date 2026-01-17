@@ -1,0 +1,68 @@
+[
+  {
+    "id": 448808,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-02T14:43:39.000Z",
+    "code_updated_at": "2023-01-27T15:04:24.000Z",
+    "namespace": "https://greasyfork.org/users/858161",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858161,
+        "name": "JanTheMan",
+        "created_at": "2021-12-27T11:37:08.000Z",
+        "url": "https://greasyfork.org/users/858161-jantheman"
+      }
+    ],
+    "name": "League Of Legends - LeagueOfGraphs.com - Get information of best players",
+    "description": "When you check the best players for a specific champion and click on their name you will redirected to their profile. With this extension you jump to their champion builds, which is often the reason you clicked on the player in the first place.",
+    "url": "https://greasyfork.org/scripts/448808-league-of-legends-leagueofgraphs-com-get-information-of-best-players",
+    "code_url": "https://update.greasyfork.org/scripts/448808/League%20Of%20Legends%20-%20LeagueOfGraphscom%20-%20Get%20information%20of%20best%20players.user.js",
+    "code_size": 1350,
+    "license": "MIT License",
+    "version": "8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437646,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-27T11:44:21.000Z",
+    "code_updated_at": "2021-12-29T15:14:12.000Z",
+    "namespace": "https://greasyfork.org/users/858161",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858161,
+        "name": "JanTheMan",
+        "created_at": "2021-12-27T11:37:08.000Z",
+        "url": "https://greasyfork.org/users/858161-jantheman"
+      }
+    ],
+    "name": "Dont Starve Together - Fandom - Crock Pot - Just show your favorite recipes!",
+    "description": "This is a little extension for the game \"Don't Starve Together\". To be more specific: for the corresponding fandom.com-Page, for all ingame-recipes. This scripts filters the shown table of the page for the most important recipes. You are able to customize the shown values (little technical knowledge necessary). How to do that: 1) Open https://jsonkeeper.com/b/QVX0 2) Copy json 3) Create a new json on jsonkeeper.com 4) Copy link of your json into this script (first variable of script)",
+    "url": "https://greasyfork.org/scripts/437646-dont-starve-together-fandom-crock-pot-just-show-your-favorite-recipes",
+    "code_url": "https://update.greasyfork.org/scripts/437646/Dont%20Starve%20Together%20-%20Fandom%20-%20Crock%20Pot%20-%20Just%20show%20your%20favorite%20recipes%21.user.js",
+    "code_size": 6343,
+    "license": "MIT License",
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 469947,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-02T04:53:51.000Z",
+  "code_updated_at": "2023-07-06T06:42:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1116986,
+      "name": "mirrokurll",
+      "created_at": "2023-07-02T04:07:05.000Z",
+      "url": "https://greasyfork.org/users/1116986-mirrokurll"
+    }
+  ],
+  "name": "小说适配器",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/469947-%E5%B0%8F%E8%AF%B4%E9%80%82%E9%85%8D%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/469947/%E5%B0%8F%E8%AF%B4%E9%80%82%E9%85%8D%E5%99%A8.user.js",
+  "code_size": 1956,
+  "license": "MIT License",
+  "version": "0.13",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

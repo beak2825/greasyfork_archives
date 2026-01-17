@@ -1,0 +1,33 @@
+{
+  "id": 489429,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-09T20:11:27.000Z",
+  "code_updated_at": "2024-03-09T20:11:27.000Z",
+  "namespace": "https://github.com/sebudde/auto-next-player-for-autodarts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1268120,
+      "name": "_seb_",
+      "created_at": "2024-02-28T15:59:04.000Z",
+      "url": "https://greasyfork.org/users/1268120-seb"
+    }
+  ],
+  "name": "Auto next player for Autodarts",
+  "description": "Userscript for Autodarts to switch to next player after 3 darts",
+  "url": "https://greasyfork.org/scripts/489429-auto-next-player-for-autodarts",
+  "code_url": "https://update.greasyfork.org/scripts/489429/Auto%20next%20player%20for%20Autodarts.user.js",
+  "code_size": 5134,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

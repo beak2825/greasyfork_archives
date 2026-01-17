@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481090,
+    "daily_installs": 0,
+    "total_installs": 86,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-30T11:19:02.000Z",
+    "code_updated_at": "2025-07-27T07:36:41.000Z",
+    "namespace": "https://v.91km.cc/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1225583,
+        "name": "cococol",
+        "created_at": "2023-11-30T05:08:15.000Z",
+        "url": "https://greasyfork.org/users/1225583-cococol"
+      }
+    ],
+    "name": "从豆瓣电影跳转到91公里动画直接看",
+    "description": "91千米/公里动画是一个垃圾的动漫分类影视网站。安装此脚本后，豆瓣电影标题旁有显示'(→_→)观看' 字样，点击就可以去v.91km.cc搜索直接看了。",
+    "url": "https://greasyfork.org/scripts/481090-%E4%BB%8E%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1%E8%B7%B3%E8%BD%AC%E5%88%B091%E5%85%AC%E9%87%8C%E5%8A%A8%E7%94%BB%E7%9B%B4%E6%8E%A5%E7%9C%8B",
+    "code_url": "https://update.greasyfork.org/scripts/481090/%E4%BB%8E%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1%E8%B7%B3%E8%BD%AC%E5%88%B091%E5%85%AC%E9%87%8C%E5%8A%A8%E7%94%BB%E7%9B%B4%E6%8E%A5%E7%9C%8B.user.js",
+    "code_size": 2333,
+    "license": null,
+    "version": "1.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

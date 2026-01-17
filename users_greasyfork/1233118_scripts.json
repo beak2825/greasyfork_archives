@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482085,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-13T08:16:54.000Z",
+    "code_updated_at": "2023-12-13T08:16:54.000Z",
+    "namespace": "https://github.com/thinkall/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1233118,
+        "name": "thinkall",
+        "created_at": "2023-12-13T07:56:26.000Z",
+        "url": "https://greasyfork.org/users/1233118-thinkall"
+      }
+    ],
+    "name": "Hide \"GitHub Actions\" Notifications in PR Conversations",
+    "description": "Hide \"GitHub Actions\" div elements on GitHub pull request page so other comments will not be hidden.",
+    "url": "https://greasyfork.org/scripts/482085-hide-github-actions-notifications-in-pr-conversations",
+    "code_url": "https://update.greasyfork.org/scripts/482085/Hide%20%22GitHub%20Actions%22%20Notifications%20in%20PR%20Conversations.user.js",
+    "code_size": 2564,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

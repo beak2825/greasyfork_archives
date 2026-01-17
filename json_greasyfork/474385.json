@@ -1,0 +1,33 @@
+{
+  "id": 474385,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-02T01:33:55.000Z",
+  "code_updated_at": "2025-02-11T05:12:36.000Z",
+  "namespace": null,
+  "support_url": "https://bbs.tampermonkey.net.cn/thread-2726-1-1.html",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 529515,
+      "name": "kuruomi",
+      "created_at": "2020-04-21T02:32:12.000Z",
+      "url": "https://greasyfork.org/users/529515-kuruomi"
+    }
+  ],
+  "name": "GF_ElementGetter",
+  "description": "cxxjackie大佬的异步获取元素的脚本库,备份自用,使用方法见https://bbs.tampermonkey.net.cn/thread-2726-1-1.html",
+  "url": "https://greasyfork.org/scripts/474385-gf-elementgetter",
+  "code_url": "https://update.greasyfork.org/scripts/474385/1535220/GF_ElementGetter.js",
+  "code_size": 8670,
+  "license": null,
+  "version": "2.0.1",
+  "locale": "sv",
+  "deleted": false,
+  "visibility": "public"
+}

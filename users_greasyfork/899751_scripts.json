@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443042,
+    "daily_installs": 0,
+    "total_installs": 1744,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-04-09T07:56:35.000Z",
+    "code_updated_at": "2022-04-09T07:56:35.000Z",
+    "namespace": "https://blog.mcraft.cn/s/DongaoStudy.html",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 899751,
+        "name": "GJF",
+        "created_at": "2022-04-09T07:47:32.000Z",
+        "url": "https://greasyfork.org/users/899751-gjf"
+      }
+    ],
+    "name": "东奥会计人员在线继续教育刷课脚本",
+    "description": "东奥会计人员在线继续教育",
+    "url": "https://greasyfork.org/scripts/443042-%E4%B8%9C%E5%A5%A5%E4%BC%9A%E8%AE%A1%E4%BA%BA%E5%91%98%E5%9C%A8%E7%BA%BF%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/443042/%E4%B8%9C%E5%A5%A5%E4%BC%9A%E8%AE%A1%E4%BA%BA%E5%91%98%E5%9C%A8%E7%BA%BF%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 4804,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 427622,
+  "daily_installs": 0,
+  "total_installs": 92,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-07T11:53:04.000Z",
+  "code_updated_at": "2022-02-12T20:28:48.000Z",
+  "namespace": "https://greasyfork.org/users/780470",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 780470,
+      "name": "Tombaugh Regio",
+      "created_at": "2021-06-06T15:25:48.000Z",
+      "url": "https://greasyfork.org/users/780470-tombaugh-regio"
+    }
+  ],
+  "name": "Neopets: skip NF-only auctions",
+  "description": "Ignores Neofriend-only auctions by default",
+  "url": "https://greasyfork.org/scripts/427622-neopets-skip-nf-only-auctions",
+  "code_url": "https://update.greasyfork.org/scripts/427622/Neopets%3A%20skip%20NF-only%20auctions.user.js",
+  "code_size": 1365,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 471980,
+  "daily_installs": 0,
+  "total_installs": 2094,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-07-29T10:13:35.000Z",
+  "code_updated_at": "2023-07-29T10:13:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1138761,
+      "name": "limk-dev",
+      "created_at": "2023-07-29T10:06:28.000Z",
+      "url": "https://greasyfork.org/users/1138761-limk-dev",
+      "scripts": [
+        {
+          "id": 471980,
+          "daily_installs": 0,
+          "total_installs": 2094,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-07-29T10:13:35.000Z",
+          "code_updated_at": "2023-07-29T10:13:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "虎牙登录屏蔽器V1",
+          "description": "屏幕HUAYA的登录,让你安心,专注看片儿!!",
+          "url": "https://greasyfork.org/scripts/471980-%E8%99%8E%E7%89%99%E7%99%BB%E5%BD%95%E5%B1%8F%E8%94%BD%E5%99%A8v1",
+          "code_url": "https://update.greasyfork.org/scripts/471980/%E8%99%8E%E7%89%99%E7%99%BB%E5%BD%95%E5%B1%8F%E8%94%BD%E5%99%A8V1.user.js",
+          "code_size": 695,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "虎牙登录屏蔽器V1",
+  "description": "屏幕HUAYA的登录,让你安心,专注看片儿!!",
+  "url": "https://greasyfork.org/scripts/471980-%E8%99%8E%E7%89%99%E7%99%BB%E5%BD%95%E5%B1%8F%E8%94%BD%E5%99%A8v1",
+  "code_url": "https://update.greasyfork.org/scripts/471980/%E8%99%8E%E7%89%99%E7%99%BB%E5%BD%95%E5%B1%8F%E8%94%BD%E5%99%A8V1.user.js",
+  "code_size": 695,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

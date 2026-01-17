@@ -1,0 +1,35 @@
+[
+  {
+    "id": 446553,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-16T06:03:37.000Z",
+    "code_updated_at": "2022-06-16T08:38:57.000Z",
+    "namespace": "bakaft",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799825,
+        "name": "BakaFT",
+        "created_at": "2021-08-03T05:07:57.000Z",
+        "url": "https://greasyfork.org/users/799825-bakaft"
+      }
+    ],
+    "name": "长江大学教务处自动评教",
+    "description": "简简单单打个满分，进入评教页面后按F5刷新，让表格填充到整个页面的时候，你就可以在表格上方看到自动评教按钮了",
+    "url": "https://greasyfork.org/scripts/446553-%E9%95%BF%E6%B1%9F%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E5%A4%84%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+    "code_url": "https://update.greasyfork.org/scripts/446553/%E9%95%BF%E6%B1%9F%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E5%A4%84%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+    "code_size": 3691,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

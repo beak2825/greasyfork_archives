@@ -1,0 +1,34 @@
+{
+  "id": 472666,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-07T19:25:17.000Z",
+  "code_updated_at": "2023-08-07T19:25:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1146374,
+      "name": "Basilio",
+      "created_at": "2023-08-07T16:57:29.000Z",
+      "url": "https://greasyfork.org/users/1146374-basilio",
+      "scripts": []
+    }
+  ],
+  "name": "Banano Faucet and PTC",
+  "description": "Claim Faucet adn PTC",
+  "url": "https://greasyfork.org/scripts/472666-banano-faucet-and-ptc",
+  "code_url": "https://update.greasyfork.org/scripts/472666/Banano%20Faucet%20and%20PTC.user.js",
+  "code_size": 2974,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

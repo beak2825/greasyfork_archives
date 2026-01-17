@@ -1,0 +1,59 @@
+{
+  "id": 446805,
+  "daily_installs": 0,
+  "total_installs": 168,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-06-21T05:25:24.000Z",
+  "code_updated_at": "2022-06-21T05:25:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 927786,
+      "name": "PeterCardenas",
+      "created_at": "2022-06-21T05:06:16.000Z",
+      "url": "https://greasyfork.org/users/927786-petercardenas",
+      "scripts": [
+        {
+          "id": 446805,
+          "daily_installs": 0,
+          "total_installs": 168,
+          "fan_score": "19.8",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-06-21T05:25:24.000Z",
+          "code_updated_at": "2022-06-21T05:25:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitch Sidebar Hover",
+          "description": "Channel sidebar will expand when hovered over and collapsed when the mouse exits",
+          "url": "https://greasyfork.org/scripts/446805-twitch-sidebar-hover",
+          "code_url": "https://update.greasyfork.org/scripts/446805/Twitch%20Sidebar%20Hover.user.js",
+          "code_size": 913,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitch Sidebar Hover",
+  "description": "Channel sidebar will expand when hovered over and collapsed when the mouse exits",
+  "url": "https://greasyfork.org/scripts/446805-twitch-sidebar-hover",
+  "code_url": "https://update.greasyfork.org/scripts/446805/Twitch%20Sidebar%20Hover.user.js",
+  "code_size": 913,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 488629,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-29T17:23:19.000Z",
+  "code_updated_at": "2024-03-04T12:44:44.000Z",
+  "namespace": "http://userscripts.org/users/419370",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1268085,
+      "name": "Henrique Zeliotto",
+      "created_at": "2024-02-28T14:50:41.000Z",
+      "url": "https://greasyfork.org/users/1268085-henrique-zeliotto",
+      "scripts": [
+        {
+          "id": 488629,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-29T17:23:19.000Z",
+          "code_updated_at": "2024-03-04T12:44:44.000Z",
+          "namespace": "http://userscripts.org/users/419370",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WME Lupa Cromática pt-BR",
+          "description": "Adiciona cores a segmentos de vias conforme seus atributos",
+          "url": "https://greasyfork.org/scripts/488629-wme-lupa-crom%C3%A1tica-pt-br",
+          "code_url": "https://update.greasyfork.org/scripts/488629/WME%20Lupa%20Crom%C3%A1tica%20pt-BR.user.js",
+          "code_size": 62436,
+          "license": null,
+          "version": "1.02",
+          "locale": "pt-BR",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WME Lupa Cromática pt-BR",
+  "description": "Adiciona cores a segmentos de vias conforme seus atributos",
+  "url": "https://greasyfork.org/scripts/488629-wme-lupa-crom%C3%A1tica-pt-br",
+  "code_url": "https://update.greasyfork.org/scripts/488629/WME%20Lupa%20Crom%C3%A1tica%20pt-BR.user.js",
+  "code_size": 62436,
+  "license": null,
+  "version": "1.02",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

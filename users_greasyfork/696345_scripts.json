@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466799,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-21T21:44:44.000Z",
+    "code_updated_at": "2023-05-21T21:44:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 696345,
+        "name": "Marijn de Steur",
+        "created_at": "2020-10-19T07:30:51.000Z",
+        "url": "https://greasyfork.org/users/696345-marijn-de-steur"
+      }
+    ],
+    "name": "Auto reset / start player, when delayed/paused",
+    "description": "QOL cause twitch stupid",
+    "url": "https://greasyfork.org/scripts/466799-auto-reset-start-player-when-delayed-paused",
+    "code_url": "https://update.greasyfork.org/scripts/466799/Auto%20reset%20%20start%20player%2C%20when%20delayedpaused.user.js",
+    "code_size": 6135,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 467172,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-26T17:19:44.000Z",
+  "code_updated_at": "2023-05-26T17:19:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 293177,
+      "name": "pish",
+      "created_at": "2019-04-19T01:56:53.000Z",
+      "url": "https://greasyfork.org/users/293177-pish"
+    }
+  ],
+  "name": "LittleFox 打开台词",
+  "description": "LittleFox 打开所有台词",
+  "url": "https://greasyfork.org/scripts/467172-littlefox-%E6%89%93%E5%BC%80%E5%8F%B0%E8%AF%8D",
+  "code_url": "https://update.greasyfork.org/scripts/467172/LittleFox%20%E6%89%93%E5%BC%80%E5%8F%B0%E8%AF%8D.user.js",
+  "code_size": 1003,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

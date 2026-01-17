@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434552,
+    "daily_installs": 0,
+    "total_installs": 540,
+    "fan_score": "21.9",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2021-10-27T12:39:54.000Z",
+    "code_updated_at": "2022-04-15T21:56:32.000Z",
+    "namespace": "ur mom",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 829278,
+        "name": "DEDZET",
+        "created_at": "2021-10-27T12:28:51.000Z",
+        "url": "https://greasyfork.org/users/829278-dedzet"
+      }
+    ],
+    "name": "/r/forsen emotes for old reddit",
+    "description": "shows new subreddit emotes on the old reddit version of /r/forsen",
+    "url": "https://greasyfork.org/scripts/434552-r-forsen-emotes-for-old-reddit",
+    "code_url": "https://update.greasyfork.org/scripts/434552/rforsen%20emotes%20for%20old%20reddit.user.js",
+    "code_size": 7533,
+    "license": "MIT License",
+    "version": "0.32",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

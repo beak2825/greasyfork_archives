@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438001,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-03T16:21:00.000Z",
+    "code_updated_at": "2022-01-03T16:21:00.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860768,
+        "name": "DRSAgile",
+        "created_at": "2022-01-03T16:17:32.000Z",
+        "url": "https://greasyfork.org/users/860768-drsagile"
+      }
+    ],
+    "name": "Simple JSFiddle light theme",
+    "description": "1/3/2022, 6:18:06 PM: this script does not add anything in the UI so to turn it off you have to use *Monkey. Also it might disrupt when JSFiddle might change styling.",
+    "url": "https://greasyfork.org/scripts/438001-simple-jsfiddle-light-theme",
+    "code_url": "https://update.greasyfork.org/scripts/438001/Simple%20JSFiddle%20light%20theme.user.js",
+    "code_size": 1414,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

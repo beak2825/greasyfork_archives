@@ -1,0 +1,35 @@
+[
+  {
+    "id": 493814,
+    "daily_installs": 0,
+    "total_installs": 253,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-30T03:32:55.000Z",
+    "code_updated_at": "2024-04-30T03:33:47.000Z",
+    "namespace": "https://blazingbits.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1137415,
+        "name": "nerdflow",
+        "created_at": "2023-07-27T18:23:19.000Z",
+        "url": "https://greasyfork.org/users/1137415-nerdflow"
+      }
+    ],
+    "name": "Pular shortlinks Blazing Bits",
+    "description": "Acessa os links da página Blazing Bits automaticamente",
+    "url": "https://greasyfork.org/scripts/493814-pular-shortlinks-blazing-bits",
+    "code_url": "https://update.greasyfork.org/scripts/493814/Pular%20shortlinks%20Blazing%20Bits.user.js",
+    "code_size": 1753,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

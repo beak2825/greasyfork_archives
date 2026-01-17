@@ -1,0 +1,34 @@
+{
+  "id": 426968,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-24T12:02:02.000Z",
+  "code_updated_at": "2022-07-30T12:33:20.000Z",
+  "namespace": "https://forum.dentphoto.com/board/*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 722814,
+      "name": "도드마을가치투자",
+      "created_at": "2020-12-31T14:39:01.000Z",
+      "url": "https://greasyfork.org/users/722814-%EB%8F%84%EB%93%9C%EB%A7%88%EC%9D%84%EA%B0%80%EC%B9%98%ED%88%AC%EC%9E%90",
+      "scripts": []
+    }
+  ],
+  "name": "DNR",
+  "description": "replace nickname and name",
+  "url": "https://greasyfork.org/scripts/426968-dnr",
+  "code_url": "https://update.greasyfork.org/scripts/426968/DNR.user.js",
+  "code_size": 624,
+  "license": null,
+  "version": "20220730",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 433226,
+  "daily_installs": 0,
+  "total_installs": 816,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-30T17:46:06.000Z",
+  "code_updated_at": "2021-09-30T17:46:06.000Z",
+  "namespace": "https://greasyfork.org/users/211444",
+  "support_url": null,
+  "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=56E2JM7DNDHGQ&item_name=T4.4+script&currency_code=EUR",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 820637,
+      "name": "rollback",
+      "created_at": "2021-09-30T17:36:20.000Z",
+      "url": "https://greasyfork.org/users/820637-rollback",
+      "scripts": [
+        {
+          "id": 433226,
+          "daily_installs": 0,
+          "total_installs": 816,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-30T17:46:06.000Z",
+          "code_updated_at": "2021-09-30T17:46:06.000Z",
+          "namespace": "https://greasyfork.org/users/211444",
+          "support_url": null,
+          "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=56E2JM7DNDHGQ&item_name=T4.4+script&currency_code=EUR",
+          "contribution_amount": null,
+          "name": "Speedtra Resource bar plus",
+          "description": "Shows travian resources (for Travian Legends and Travian Path to Pandora)",
+          "url": "https://greasyfork.org/scripts/433226-speedtra-resource-bar-plus",
+          "code_url": "https://update.greasyfork.org/scripts/433226/Speedtra%20Resource%20bar%20plus.user.js",
+          "code_size": 387184,
+          "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+          "version": "2.12.38",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Speedtra Resource bar plus",
+  "description": "Shows travian resources (for Travian Legends and Travian Path to Pandora)",
+  "url": "https://greasyfork.org/scripts/433226-speedtra-resource-bar-plus",
+  "code_url": "https://update.greasyfork.org/scripts/433226/Speedtra%20Resource%20bar%20plus.user.js",
+  "code_size": 387184,
+  "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+  "version": "2.12.38",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

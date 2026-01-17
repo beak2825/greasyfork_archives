@@ -1,0 +1,34 @@
+{
+  "id": 462965,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-31T02:24:46.000Z",
+  "code_updated_at": "2023-03-31T02:24:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 898297,
+      "name": "jianpingyu",
+      "created_at": "2022-04-06T01:05:37.000Z",
+      "url": "https://greasyfork.org/users/898297-jianpingyu",
+      "scripts": []
+    }
+  ],
+  "name": "ipd_work_stats",
+  "description": "IPD工作量计算",
+  "url": "https://greasyfork.org/scripts/462965-ipd-work-stats",
+  "code_url": "https://update.greasyfork.org/scripts/462965/ipd_work_stats.user.js",
+  "code_size": 3625,
+  "license": "GPLv3",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

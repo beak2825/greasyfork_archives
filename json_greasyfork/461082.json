@@ -1,0 +1,33 @@
+{
+  "id": 461082,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-03T05:08:16.000Z",
+  "code_updated_at": "2023-03-03T07:04:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1035633,
+      "name": "irisWirisW",
+      "created_at": "2023-03-03T05:05:04.000Z",
+      "url": "https://greasyfork.org/users/1035633-iriswirisw"
+    }
+  ],
+  "name": "直播顺畅",
+  "description": "一个替换logo的脚本",
+  "url": "https://greasyfork.org/scripts/461082-%E7%9B%B4%E6%92%AD%E9%A1%BA%E7%95%85",
+  "code_url": "https://update.greasyfork.org/scripts/461082/%E7%9B%B4%E6%92%AD%E9%A1%BA%E7%95%85.user.js",
+  "code_size": 1535,
+  "license": "MIT License",
+  "version": "0.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

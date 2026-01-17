@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449506,
+    "daily_installs": 0,
+    "total_installs": 535,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-14T02:07:25.000Z",
+    "code_updated_at": "2022-08-19T10:41:04.000Z",
+    "namespace": "love_sagiri",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 946127,
+        "name": "六天°",
+        "created_at": "2022-08-14T02:05:42.000Z",
+        "url": "https://greasyfork.org/users/946127-%E5%85%AD%E5%A4%A9"
+      }
+    ],
+    "name": "移除网站内容复制小尾巴",
+    "description": "支持 CSDN/哔哩哔哩（bilibili、b站）/知乎",
+    "url": "https://greasyfork.org/scripts/449506-%E7%A7%BB%E9%99%A4%E7%BD%91%E7%AB%99%E5%86%85%E5%AE%B9%E5%A4%8D%E5%88%B6%E5%B0%8F%E5%B0%BE%E5%B7%B4",
+    "code_url": "https://update.greasyfork.org/scripts/449506/%E7%A7%BB%E9%99%A4%E7%BD%91%E7%AB%99%E5%86%85%E5%AE%B9%E5%A4%8D%E5%88%B6%E5%B0%8F%E5%B0%BE%E5%B7%B4.user.js",
+    "code_size": 3573,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

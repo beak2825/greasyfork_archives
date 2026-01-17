@@ -1,0 +1,34 @@
+{
+  "id": 461484,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-09T02:41:46.000Z",
+  "code_updated_at": "2023-07-04T08:55:00.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/205004-zy-g",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 205004,
+      "name": "zy G",
+      "created_at": "2018-08-15T04:11:40.000Z",
+      "url": "https://greasyfork.org/users/205004-zy-g",
+      "scripts": []
+    }
+  ],
+  "name": "百度谷歌跳转",
+  "description": "方便的在各个搜索引擎之间跳转",
+  "url": "https://greasyfork.org/scripts/461484-%E7%99%BE%E5%BA%A6%E8%B0%B7%E6%AD%8C%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/461484/%E7%99%BE%E5%BA%A6%E8%B0%B7%E6%AD%8C%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 182704,
+  "license": "everyone",
+  "version": "1.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420342,
+    "daily_installs": 0,
+    "total_installs": 3974,
+    "fan_score": "12.5",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2021-01-18T03:40:13.000Z",
+    "code_updated_at": "2021-01-18T03:40:12.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 679138,
+        "name": "Nathaniel_Scripts11",
+        "created_at": "2020-08-17T17:32:27.000Z",
+        "url": "https://greasyfork.org/users/679138-nathaniel-scripts11"
+      }
+    ],
+    "name": "Invisible Weapon (CrossBow) ZOMBS.IO!",
+    "description": "Press [-] for this invisible weapon! It is called crossbow and it is found in the game files",
+    "url": "https://greasyfork.org/scripts/420342-invisible-weapon-crossbow-zombs-io",
+    "code_url": "https://update.greasyfork.org/scripts/420342/Invisible%20Weapon%20%28CrossBow%29%20ZOMBSIO%21.user.js",
+    "code_size": 872,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

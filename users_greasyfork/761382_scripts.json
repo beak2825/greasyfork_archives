@@ -196,5 +196,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493563,
+    "daily_installs": 0,
+    "total_installs": 220,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-04-26T19:11:03.000Z",
+    "code_updated_at": "2024-04-26T19:11:03.000Z",
+    "namespace": "https://greasyfork.org/en/users/761382-joey-jts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 761382,
+        "name": "RetroMac11 (Joey JTS)",
+        "created_at": "2021-04-17T15:17:50.000Z",
+        "url": "https://greasyfork.org/users/761382-retromac11-joey-jts"
+      }
+    ],
+    "name": "Hide VP9 support from YouTube + Force 30 fps video",
+    "description": "This userscript hides VP9 support along with disabling 60 fps (forces 30 fps). Special thanks to Jefferson Scher and SteveJobzniak for this.",
+    "url": "https://greasyfork.org/scripts/493563-hide-vp9-support-from-youtube-force-30-fps-video",
+    "code_url": "https://update.greasyfork.org/scripts/493563/Hide%20VP9%20support%20from%20YouTube%20%2B%20Force%2030%20fps%20video.user.js",
+    "code_size": 24426,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442618,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-03T07:52:15.000Z",
+    "code_updated_at": "2022-04-03T08:07:31.000Z",
+    "namespace": "https://github.com/r-PlaceTux/Overlay",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 896949,
+        "name": "Mathiew May",
+        "created_at": "2022-04-03T07:41:36.000Z",
+        "url": "https://greasyfork.org/users/896949-mathiew-may"
+      }
+    ],
+    "name": "r/PlaceTux Android",
+    "description": "FLOSS forever!",
+    "url": "https://greasyfork.org/scripts/442618-r-placetux-android",
+    "code_url": "https://update.greasyfork.org/scripts/442618/rPlaceTux%20Android.user.js",
+    "code_size": 1518,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

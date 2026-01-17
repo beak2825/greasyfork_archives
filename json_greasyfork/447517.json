@@ -1,0 +1,34 @@
+{
+  "id": 447517,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-06T16:51:51.000Z",
+  "code_updated_at": "2023-05-24T09:17:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 882238,
+      "name": "Céline Egli",
+      "created_at": "2022-03-02T15:25:45.000Z",
+      "url": "https://greasyfork.org/users/882238-c%C3%A9line-egli",
+      "scripts": []
+    }
+  ],
+  "name": "Format email",
+  "description": "adds a button to format emails for trello card descriptions",
+  "url": "https://greasyfork.org/scripts/447517-format-email",
+  "code_url": "https://update.greasyfork.org/scripts/447517/Format%20email.user.js",
+  "code_size": 3795,
+  "license": "MIT License",
+  "version": "1.5.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

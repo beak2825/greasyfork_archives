@@ -64,5 +64,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493434,
+    "daily_installs": 0,
+    "total_installs": 88,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T06:34:22.000Z",
+    "code_updated_at": "2025-11-11T10:09:17.000Z",
+    "namespace": "https://github.com/pansong291/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 229596,
+        "name": "pansong291",
+        "created_at": "2018-12-01T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/229596-pansong291"
+      }
+    ],
+    "name": "google-translate",
+    "description": "add a Google Translate plug-in to the page",
+    "url": "https://greasyfork.org/scripts/493434-google-translate",
+    "code_url": "https://update.greasyfork.org/scripts/493434/google-translate.user.js",
+    "code_size": 5698,
+    "license": "Apache License 2.0",
+    "version": "0.3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485223,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-19T07:58:16.000Z",
+    "code_updated_at": "2024-05-11T09:20:20.000Z",
+    "namespace": "https://github.com/pansong291/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 229596,
+        "name": "pansong291",
+        "created_at": "2018-12-01T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/229596-pansong291"
+      }
+    ],
+    "name": "SVG Symbol Exhibitor",
+    "description": "Show all the SVG symbols on the page.",
+    "url": "https://greasyfork.org/scripts/485223-svg-symbol-exhibitor",
+    "code_url": "https://update.greasyfork.org/scripts/485223/SVG%20Symbol%20Exhibitor.user.js",
+    "code_size": 7434,
+    "license": "Apache License 2.0",
+    "version": "0.1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473443,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-19T12:28:12.000Z",
+    "code_updated_at": "2025-11-10T09:06:19.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 229596,
+        "name": "pansong291",
+        "created_at": "2018-12-01T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/229596-pansong291"
+      }
+    ],
+    "name": "popup-inject",
+    "description": "向网页中插入一个侧边按钮和一个弹窗",
+    "url": "https://greasyfork.org/scripts/473443-popup-inject",
+    "code_url": "https://update.greasyfork.org/scripts/473443/1692729/popup-inject.js",
+    "code_size": 11971,
+    "license": null,
+    "version": "0.0.1.20251110090619",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473442,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-19T12:20:03.000Z",
+    "code_updated_at": "2024-05-28T03:58:58.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 229596,
+        "name": "pansong291",
+        "created_at": "2018-12-01T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/229596-pansong291"
+      }
+    ],
+    "name": "cross-origin-storage",
+    "description": "跨域本地存储",
+    "url": "https://greasyfork.org/scripts/473442-cross-origin-storage",
+    "code_url": "https://update.greasyfork.org/scripts/473442/1384389/cross-origin-storage.js",
+    "code_size": 6907,
+    "license": null,
+    "version": "0.0.1.20240528035858",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 423987,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-26T03:13:07.000Z",
+    "code_updated_at": "2021-03-26T03:13:07.000Z",
+    "namespace": "https://pansong291.gitee.io/web/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 229596,
+        "name": "pansong291",
+        "created_at": "2018-12-01T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/229596-pansong291"
+      }
+    ],
+    "name": "去除CSDN系统通知小红点",
+    "description": "去除CSDN系统通知小红点并将通知标记为已读",
+    "url": "https://greasyfork.org/scripts/423987-%E5%8E%BB%E9%99%A4csdn%E7%B3%BB%E7%BB%9F%E9%80%9A%E7%9F%A5%E5%B0%8F%E7%BA%A2%E7%82%B9",
+    "code_url": "https://update.greasyfork.org/scripts/423987/%E5%8E%BB%E9%99%A4CSDN%E7%B3%BB%E7%BB%9F%E9%80%9A%E7%9F%A5%E5%B0%8F%E7%BA%A2%E7%82%B9.user.js",
+    "code_size": 3591,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

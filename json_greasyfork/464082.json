@@ -1,0 +1,59 @@
+{
+  "id": 464082,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-15T15:30:13.000Z",
+  "code_updated_at": "2023-04-15T15:30:12.000Z",
+  "namespace": "https://greasyfork.org/users/1060865",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1060865,
+      "name": "FenTheFox",
+      "created_at": "2023-04-15T15:26:09.000Z",
+      "url": "https://greasyfork.org/users/1060865-fenthefox",
+      "scripts": [
+        {
+          "id": 464082,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-15T15:30:13.000Z",
+          "code_updated_at": "2023-04-15T15:30:12.000Z",
+          "namespace": "https://greasyfork.org/users/1060865",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "hide review accuracy new",
+          "description": "hide the review accuracy in the top right during review sessions",
+          "url": "https://greasyfork.org/scripts/464082-hide-review-accuracy-new",
+          "code_url": "https://update.greasyfork.org/scripts/464082/hide%20review%20accuracy%20new.user.js",
+          "code_size": 477,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "hide review accuracy new",
+  "description": "hide the review accuracy in the top right during review sessions",
+  "url": "https://greasyfork.org/scripts/464082-hide-review-accuracy-new",
+  "code_url": "https://update.greasyfork.org/scripts/464082/hide%20review%20accuracy%20new.user.js",
+  "code_size": 477,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

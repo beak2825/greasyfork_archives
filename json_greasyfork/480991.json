@@ -1,0 +1,59 @@
+{
+  "id": 480991,
+  "daily_installs": 0,
+  "total_installs": 215,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-29T05:16:40.000Z",
+  "code_updated_at": "2023-11-29T07:06:27.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1225026-mr-yangyang",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1225026,
+      "name": "MR.YANGYANG",
+      "created_at": "2023-11-29T03:39:24.000Z",
+      "url": "https://greasyfork.org/users/1225026-mr-yangyang",
+      "scripts": [
+        {
+          "id": 480991,
+          "daily_installs": 0,
+          "total_installs": 215,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-29T05:16:40.000Z",
+          "code_updated_at": "2023-11-29T07:06:27.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/1225026-mr-yangyang",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微博视频下载助手(AI扬葱中院研究所)",
+          "description": "微博视频旁边自动会展示下载按钮，点击即可下载",
+          "url": "https://greasyfork.org/scripts/480991-%E5%BE%AE%E5%8D%9A%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-ai%E6%89%AC%E8%91%B1%E4%B8%AD%E9%99%A2%E7%A0%94%E7%A9%B6%E6%89%80",
+          "code_url": "https://update.greasyfork.org/scripts/480991/%E5%BE%AE%E5%8D%9A%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%28AI%E6%89%AC%E8%91%B1%E4%B8%AD%E9%99%A2%E7%A0%94%E7%A9%B6%E6%89%80%29.user.js",
+          "code_size": 3711,
+          "license": "MIT License",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微博视频下载助手(AI扬葱中院研究所)",
+  "description": "微博视频旁边自动会展示下载按钮，点击即可下载",
+  "url": "https://greasyfork.org/scripts/480991-%E5%BE%AE%E5%8D%9A%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-ai%E6%89%AC%E8%91%B1%E4%B8%AD%E9%99%A2%E7%A0%94%E7%A9%B6%E6%89%80",
+  "code_url": "https://update.greasyfork.org/scripts/480991/%E5%BE%AE%E5%8D%9A%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%28AI%E6%89%AC%E8%91%B1%E4%B8%AD%E9%99%A2%E7%A0%94%E7%A9%B6%E6%89%80%29.user.js",
+  "code_size": 3711,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

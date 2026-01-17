@@ -1,0 +1,68 @@
+[
+  {
+    "id": 462935,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-30T14:53:03.000Z",
+    "code_updated_at": "2025-09-17T06:18:44.000Z",
+    "namespace": "kukote",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2660,
+        "name": "mac9erd",
+        "created_at": "2014-06-09T07:09:46.000Z",
+        "url": "https://greasyfork.org/users/2660-mac9erd"
+      }
+    ],
+    "name": "Kukote",
+    "description": "Kukote is a simple plugin designed to enhance the functionality of UTAK. With Kukote installed, users of UTAK can enjoy a range of additional features that are not available with the basic version.",
+    "url": "https://greasyfork.org/scripts/462935-kukote",
+    "code_url": "https://update.greasyfork.org/scripts/462935/Kukote.user.js",
+    "code_size": 4552,
+    "license": "GPLv3",
+    "version": "0.2.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433250,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-01T08:34:15.000Z",
+    "code_updated_at": "2023-03-17T06:36:04.000Z",
+    "namespace": "drstyles",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2660,
+        "name": "mac9erd",
+        "created_at": "2014-06-09T07:09:46.000Z",
+        "url": "https://greasyfork.org/users/2660-mac9erd"
+      }
+    ],
+    "name": "DRStyles",
+    "description": "Additional features for DRS",
+    "url": "https://greasyfork.org/scripts/433250-drstyles",
+    "code_url": "https://update.greasyfork.org/scripts/433250/DRStyles.user.js",
+    "code_size": 4687,
+    "license": "GPLv3",
+    "version": "0.1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

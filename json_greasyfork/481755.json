@@ -1,0 +1,33 @@
+{
+  "id": 481755,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-09T08:19:53.000Z",
+  "code_updated_at": "2023-12-09T08:19:53.000Z",
+  "namespace": "http://your-namespace.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1141634,
+      "name": "蓝莓果酱",
+      "created_at": "2023-08-02T02:17:31.000Z",
+      "url": "https://greasyfork.org/users/1141634-%E8%93%9D%E8%8E%93%E6%9E%9C%E9%85%B1"
+    }
+  ],
+  "name": "视频审核工具",
+  "description": "自用AI审核脚本",
+  "url": "https://greasyfork.org/scripts/481755-%E8%A7%86%E9%A2%91%E5%AE%A1%E6%A0%B8%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/481755/%E8%A7%86%E9%A2%91%E5%AE%A1%E6%A0%B8%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 474666,
+  "license": "MIT License",
+  "version": "5.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

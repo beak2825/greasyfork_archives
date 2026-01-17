@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418991,
+    "daily_installs": 0,
+    "total_installs": 5802,
+    "fan_score": "52.9",
+    "good_ratings": 7,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-12-22T07:54:54.000Z",
+    "code_updated_at": "2020-12-22T07:54:54.000Z",
+    "namespace": "https://www.tuziang.com/combat/2390.html",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 719676,
+        "name": "tin3",
+        "created_at": "2020-12-22T07:38:10.000Z",
+        "url": "https://greasyfork.org/users/719676-tin3"
+      }
+    ],
+    "name": "干部网络学院刷课脚本",
+    "description": "一个用于广东干部网络学院刷课 的脚本。",
+    "url": "https://greasyfork.org/scripts/418991-%E5%B9%B2%E9%83%A8%E7%BD%91%E7%BB%9C%E5%AD%A6%E9%99%A2%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/418991/%E5%B9%B2%E9%83%A8%E7%BD%91%E7%BB%9C%E5%AD%A6%E9%99%A2%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 2122,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

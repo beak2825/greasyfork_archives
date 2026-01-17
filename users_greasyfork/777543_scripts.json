@@ -1,0 +1,68 @@
+[
+  {
+    "id": 450528,
+    "daily_installs": 0,
+    "total_installs": 86,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-31T09:38:31.000Z",
+    "code_updated_at": "2022-08-31T09:38:30.000Z",
+    "namespace": "gausszhou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 777543,
+        "name": "Gauss Zhou",
+        "created_at": "2021-05-29T15:00:39.000Z",
+        "url": "https://greasyfork.org/users/777543-gauss-zhou"
+      }
+    ],
+    "name": "Bilibili Greener",
+    "description": "感觉 B站 的广告也多起来了，而对于广告我一直是拒绝的",
+    "url": "https://greasyfork.org/scripts/450528-bilibili-greener",
+    "code_url": "https://update.greasyfork.org/scripts/450528/Bilibili%20Greener.user.js",
+    "code_size": 16503,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 436382,
+    "daily_installs": 0,
+    "total_installs": 1078,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-01T07:23:22.000Z",
+    "code_updated_at": "2024-03-31T08:43:58.000Z",
+    "namespace": "gausszhou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 777543,
+        "name": "Gauss Zhou",
+        "created_at": "2021-05-29T15:00:39.000Z",
+        "url": "https://greasyfork.org/users/777543-gauss-zhou"
+      }
+    ],
+    "name": "CSDN Greener",
+    "description": "CSDN 专杀，广告统统滚开，内容样式统一，我不要你觉得，我就要我觉得",
+    "url": "https://greasyfork.org/scripts/436382-csdn-greener",
+    "code_url": "https://update.greasyfork.org/scripts/436382/CSDN%20Greener.user.js",
+    "code_size": 34448,
+    "license": "MIT License",
+    "version": "0.0.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

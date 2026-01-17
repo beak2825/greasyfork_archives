@@ -1,0 +1,35 @@
+[
+  {
+    "id": 413733,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-18T12:28:55.000Z",
+    "code_updated_at": "2020-10-18T12:28:55.000Z",
+    "namespace": "https://github.com/billygachi/hospitalrecords-volume-slider",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 676497,
+        "name": "billy9999",
+        "created_at": "2020-08-15T14:36:44.000Z",
+        "url": "https://greasyfork.org/users/676497-billy9999"
+      }
+    ],
+    "name": "Hospitalrecords volume slider",
+    "description": "inserts volume slider for the webplayer",
+    "url": "https://greasyfork.org/scripts/413733-hospitalrecords-volume-slider",
+    "code_url": "https://update.greasyfork.org/scripts/413733/Hospitalrecords%20volume%20slider.user.js",
+    "code_size": 1475,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

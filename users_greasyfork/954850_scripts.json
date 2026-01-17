@@ -1,0 +1,35 @@
+[
+  {
+    "id": 450783,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-05T09:36:33.000Z",
+    "code_updated_at": "2022-09-07T03:09:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 954850,
+        "name": "wangcheng55555",
+        "created_at": "2022-09-05T09:22:52.000Z",
+        "url": "https://greasyfork.org/users/954850-wangcheng55555"
+      }
+    ],
+    "name": "StcAutoClick",
+    "description": "stc自动执行脚本",
+    "url": "https://greasyfork.org/scripts/450783-stcautoclick",
+    "code_url": "https://update.greasyfork.org/scripts/450783/StcAutoClick.user.js",
+    "code_size": 2638,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

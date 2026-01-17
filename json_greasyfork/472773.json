@@ -1,0 +1,59 @@
+{
+  "id": 472773,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-09T09:25:30.000Z",
+  "code_updated_at": "2023-08-09T09:25:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 881070,
+      "name": "2pa",
+      "created_at": "2022-02-27T08:33:09.000Z",
+      "url": "https://greasyfork.org/users/881070-2pa",
+      "scripts": [
+        {
+          "id": 472773,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-09T09:25:30.000Z",
+          "code_updated_at": "2023-08-09T09:25:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Restore elite 0 on viktorlab",
+          "description": "Prepend option to all select elements matching .dps__phase on viktorlab",
+          "url": "https://greasyfork.org/scripts/472773-restore-elite-0-on-viktorlab",
+          "code_url": "https://update.greasyfork.org/scripts/472773/Restore%20elite%200%20on%20viktorlab.user.js",
+          "code_size": 1678,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Restore elite 0 on viktorlab",
+  "description": "Prepend option to all select elements matching .dps__phase on viktorlab",
+  "url": "https://greasyfork.org/scripts/472773-restore-elite-0-on-viktorlab",
+  "code_url": "https://update.greasyfork.org/scripts/472773/Restore%20elite%200%20on%20viktorlab.user.js",
+  "code_size": 1678,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

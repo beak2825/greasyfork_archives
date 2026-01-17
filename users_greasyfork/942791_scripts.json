@@ -30,6 +30,72 @@
     "version": "2.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 480976,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-28T23:57:06.000Z",
+    "code_updated_at": "2023-11-28T23:57:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942791,
+        "name": "a Daydreamorama",
+        "created_at": "2022-08-03T23:30:19.000Z",
+        "url": "https://greasyfork.org/users/942791-a-daydreamorama"
+      }
+    ],
+    "name": "SplitScreenTranslateHalf",
+    "description": "Split the screen but only allow one iframe to be translated.",
+    "url": "https://greasyfork.org/scripts/480976-splitscreentranslatehalf",
+    "code_url": "https://update.greasyfork.org/scripts/480976/SplitScreenTranslateHalf.user.js",
+    "code_size": 1973,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 454495,
+    "daily_installs": 1,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-09T03:34:33.000Z",
+    "code_updated_at": "2022-11-09T03:34:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942791,
+        "name": "a Daydreamorama",
+        "created_at": "2022-08-03T23:30:19.000Z",
+        "url": "https://greasyfork.org/users/942791-a-daydreamorama"
+      }
+    ],
+    "name": "SplitScreen",
+    "description": "split the screen of the page",
+    "url": "https://greasyfork.org/scripts/454495-splitscreen",
+    "code_url": "https://update.greasyfork.org/scripts/454495/SplitScreen.user.js",
+    "code_size": 2006,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

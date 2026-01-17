@@ -1,0 +1,68 @@
+[
+  {
+    "id": 482488,
+    "daily_installs": 1,
+    "total_installs": 164,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-17T12:00:02.000Z",
+    "code_updated_at": "2023-12-17T13:31:07.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1232245,
+        "name": "Cary符号",
+        "created_at": "2023-12-11T13:36:28.000Z",
+        "url": "https://greasyfork.org/users/1232245-cary%E7%AC%A6%E5%8F%B7"
+      }
+    ],
+    "name": "立·即·下·载！",
+    "description": "下载地址获取成功后自动点击“立即下载”",
+    "url": "https://greasyfork.org/scripts/482488-%E7%AB%8B-%E5%8D%B3-%E4%B8%8B-%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/482488/%E7%AB%8B%C2%B7%E5%8D%B3%C2%B7%E4%B8%8B%C2%B7%E8%BD%BD%EF%BC%81.user.js",
+    "code_size": 1456,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482365,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-16T07:54:25.000Z",
+    "code_updated_at": "2023-12-17T06:37:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1232245,
+        "name": "Cary符号",
+        "created_at": "2023-12-11T13:36:28.000Z",
+        "url": "https://greasyfork.org/users/1232245-cary%E7%AC%A6%E5%8F%B7"
+      }
+    ],
+    "name": "70games自动评论",
+    "description": "自动评论以获取账号密码",
+    "url": "https://greasyfork.org/scripts/482365-70games%E8%87%AA%E5%8A%A8%E8%AF%84%E8%AE%BA",
+    "code_url": "https://update.greasyfork.org/scripts/482365/70games%E8%87%AA%E5%8A%A8%E8%AF%84%E8%AE%BA.user.js",
+    "code_size": 1951,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

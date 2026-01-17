@@ -1,0 +1,68 @@
+[
+  {
+    "id": 422839,
+    "daily_installs": 0,
+    "total_installs": 5274,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-03-08T03:18:24.000Z",
+    "code_updated_at": "2021-03-16T06:50:18.000Z",
+    "namespace": "http://stu.ityxb.com/writePaper/busywork/*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 473095,
+        "name": "GodKk",
+        "created_at": "2020-04-01T12:54:47.000Z",
+        "url": "https://greasyfork.org/users/473095-godkk"
+      }
+    ],
+    "name": "传智播客自动搜题",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/422839-%E4%BC%A0%E6%99%BA%E6%92%AD%E5%AE%A2%E8%87%AA%E5%8A%A8%E6%90%9C%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/422839/%E4%BC%A0%E6%99%BA%E6%92%AD%E5%AE%A2%E8%87%AA%E5%8A%A8%E6%90%9C%E9%A2%98.user.js",
+    "code_size": 1907,
+    "license": null,
+    "version": "3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 414938,
+    "daily_installs": 0,
+    "total_installs": 99,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-29T02:32:32.000Z",
+    "code_updated_at": "2020-10-29T02:32:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 473095,
+        "name": "GodKk",
+        "created_at": "2020-04-01T12:54:47.000Z",
+        "url": "https://greasyfork.org/users/473095-godkk"
+      }
+    ],
+    "name": "冷少编辑器",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/414938-%E5%86%B7%E5%B0%91%E7%BC%96%E8%BE%91%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/414938/%E5%86%B7%E5%B0%91%E7%BC%96%E8%BE%91%E5%99%A8.user.js",
+    "code_size": 2036,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

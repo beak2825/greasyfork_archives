@@ -1,0 +1,33 @@
+{
+  "id": 476124,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-26T20:12:21.000Z",
+  "code_updated_at": "2023-09-26T21:00:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 786529,
+      "name": "Yhria",
+      "created_at": "2021-06-23T11:59:10.000Z",
+      "url": "https://greasyfork.org/users/786529-yhria"
+    }
+  ],
+  "name": "Bring Twitter Icons Back",
+  "description": "Attempt at bringing back Twitter icons, removing Subscription buttons, removing blue checks",
+  "url": "https://greasyfork.org/scripts/476124-bring-twitter-icons-back",
+  "code_url": "https://update.greasyfork.org/scripts/476124/Bring%20Twitter%20Icons%20Back.user.js",
+  "code_size": 6746,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

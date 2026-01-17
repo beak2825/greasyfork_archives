@@ -1,0 +1,34 @@
+{
+  "id": 466244,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-14T06:27:50.000Z",
+  "code_updated_at": "2023-11-17T01:28:10.000Z",
+  "namespace": "https://ndaesik.tistory.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 925361,
+      "name": "Knk3em9JEJc9Ak",
+      "created_at": "2022-06-14T01:37:06.000Z",
+      "url": "https://greasyfork.org/users/925361-knk3em9jejc9ak",
+      "scripts": []
+    }
+  ],
+  "name": "Smart Dark Mode",
+  "description": "It is a smart dark theme that automatically switches to a dark screen when the background color of the homepage is bright. Provides a filter function that allows users to add or exclude URLs to apply directly.",
+  "url": "https://greasyfork.org/scripts/466244-smart-dark-mode",
+  "code_url": "https://update.greasyfork.org/scripts/466244/Smart%20Dark%20Mode.user.js",
+  "code_size": 29623,
+  "license": null,
+  "version": "2023.05.06.28.88",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

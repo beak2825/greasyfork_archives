@@ -1,0 +1,33 @@
+{
+  "id": 487110,
+  "daily_installs": 0,
+  "total_installs": 1894,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-02-11T18:00:50.000Z",
+  "code_updated_at": "2024-11-15T20:56:13.000Z",
+  "namespace": "http://live.bilibili.com/8719999",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1260088,
+      "name": "月仟龙琰",
+      "created_at": "2024-02-11T17:30:29.000Z",
+      "url": "https://greasyfork.org/users/1260088-%E6%9C%88%E4%BB%9F%E9%BE%99%E7%90%B0"
+    }
+  ],
+  "name": "B站直播遮罩去除",
+  "description": "哔哩哔哩去除直播网页上的遮罩",
+  "url": "https://greasyfork.org/scripts/487110-b%E7%AB%99%E7%9B%B4%E6%92%AD%E9%81%AE%E7%BD%A9%E5%8E%BB%E9%99%A4",
+  "code_url": "https://update.greasyfork.org/scripts/487110/B%E7%AB%99%E7%9B%B4%E6%92%AD%E9%81%AE%E7%BD%A9%E5%8E%BB%E9%99%A4.user.js",
+  "code_size": 563,
+  "license": "MIT License",
+  "version": "2025",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 476039,
+  "daily_installs": 0,
+  "total_installs": 339,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-25T04:37:03.000Z",
+  "code_updated_at": "2025-10-21T09:04:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1050144,
+      "name": "Pallab Das",
+      "created_at": "2023-03-29T21:51:03.000Z",
+      "url": "https://greasyfork.org/users/1050144-pallab-das"
+    }
+  ],
+  "name": "Humble Bundle",
+  "description": "reveal keys",
+  "url": "https://greasyfork.org/scripts/476039-humble-bundle",
+  "code_url": "https://update.greasyfork.org/scripts/476039/Humble%20Bundle.user.js",
+  "code_size": 3731,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

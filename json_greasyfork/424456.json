@@ -1,0 +1,59 @@
+{
+  "id": 424456,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-04T05:11:38.000Z",
+  "code_updated_at": "2021-04-04T05:38:28.000Z",
+  "namespace": "Silico",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 754696,
+      "name": "Silico",
+      "created_at": "2021-04-04T05:04:33.000Z",
+      "url": "https://greasyfork.org/users/754696-silico",
+      "scripts": [
+        {
+          "id": 424456,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-04T05:11:38.000Z",
+          "code_updated_at": "2021-04-04T05:38:28.000Z",
+          "namespace": "Silico",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Show whether Daily Mail articles without comments are moderated",
+          "description": "On Daily Mail articles that don't yet show any comments, there is no indication whether the article's comments are being pre-moderated. When they are, the Daily Mail discards most that are submitted, so this can save you wasting your time.",
+          "url": "https://greasyfork.org/scripts/424456-show-whether-daily-mail-articles-without-comments-are-moderated",
+          "code_url": "https://update.greasyfork.org/scripts/424456/Show%20whether%20Daily%20Mail%20articles%20without%20comments%20are%20moderated.user.js",
+          "code_size": 833,
+          "license": null,
+          "version": "2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Show whether Daily Mail articles without comments are moderated",
+  "description": "On Daily Mail articles that don't yet show any comments, there is no indication whether the article's comments are being pre-moderated. When they are, the Daily Mail discards most that are submitted, so this can save you wasting your time.",
+  "url": "https://greasyfork.org/scripts/424456-show-whether-daily-mail-articles-without-comments-are-moderated",
+  "code_url": "https://update.greasyfork.org/scripts/424456/Show%20whether%20Daily%20Mail%20articles%20without%20comments%20are%20moderated.user.js",
+  "code_size": 833,
+  "license": null,
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

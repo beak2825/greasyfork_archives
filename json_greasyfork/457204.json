@@ -1,0 +1,33 @@
+{
+  "id": 457204,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-27T10:50:46.000Z",
+  "code_updated_at": "2022-12-27T14:59:43.000Z",
+  "namespace": "Multi WEB PTC",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 875003,
+      "name": "Dodi Riyadi Saputra",
+      "created_at": "2022-02-10T12:50:09.000Z",
+      "url": "https://greasyfork.org/users/875003-dodi-riyadi-saputra"
+    }
+  ],
+  "name": "PTC 4 2023",
+  "description": "Multi WEB AutoRotasi",
+  "url": "https://greasyfork.org/scripts/457204-ptc-4-2023",
+  "code_url": "https://update.greasyfork.org/scripts/457204/1132344/PTC%204%202023.js",
+  "code_size": 17022,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

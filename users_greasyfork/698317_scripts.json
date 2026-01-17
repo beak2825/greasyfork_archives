@@ -1,0 +1,101 @@
+[
+  {
+    "id": 414767,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-27T18:30:11.000Z",
+    "code_updated_at": "2020-10-27T18:30:10.000Z",
+    "namespace": "https://greasyfork.org/users/698317",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698317,
+        "name": "Davi Cardoso",
+        "created_at": "2020-10-25T18:33:33.000Z",
+        "url": "https://greasyfork.org/users/698317-davi-cardoso"
+      }
+    ],
+    "name": "Swipe Right Android Lasso Bookmarklet",
+    "description": "Swipe Right on Android to Active Lasso Bookmarklet",
+    "url": "https://greasyfork.org/scripts/414767-swipe-right-android-lasso-bookmarklet",
+    "code_url": "https://update.greasyfork.org/scripts/414767/Swipe%20Right%20Android%20Lasso%20Bookmarklet.user.js",
+    "code_size": 10522,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 414644,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-25T20:02:27.000Z",
+    "code_updated_at": "2020-10-25T20:02:27.000Z",
+    "namespace": "https://greasyfork.org/users/698317",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698317,
+        "name": "Davi Cardoso",
+        "created_at": "2020-10-25T18:33:33.000Z",
+        "url": "https://greasyfork.org/users/698317-davi-cardoso"
+      }
+    ],
+    "name": "copy2clipboard",
+    "description": "a tampermonkey to copy code",
+    "url": "https://greasyfork.org/scripts/414644-copy2clipboard",
+    "code_url": "https://update.greasyfork.org/scripts/414644/copy2clipboard.user.js",
+    "code_size": 4370,
+    "license": "Apache License 2.0",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 414642,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-25T19:44:34.000Z",
+    "code_updated_at": "2021-01-11T20:21:00.000Z",
+    "namespace": "https://greasyfork.org/users/698317",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698317,
+        "name": "Davi Cardoso",
+        "created_at": "2020-10-25T18:33:33.000Z",
+        "url": "https://greasyfork.org/users/698317-davi-cardoso"
+      }
+    ],
+    "name": "Select Text Dictionaries",
+    "description": "copy text block oxford dictionary",
+    "url": "https://greasyfork.org/scripts/414642-select-text-dictionaries",
+    "code_url": "https://update.greasyfork.org/scripts/414642/Select%20Text%20Dictionaries.user.js",
+    "code_size": 2491,
+    "license": "Apache License 2.0",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

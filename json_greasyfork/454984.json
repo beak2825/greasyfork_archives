@@ -1,0 +1,59 @@
+{
+  "id": 454984,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-17T15:05:16.000Z",
+  "code_updated_at": "2022-11-17T19:52:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 984503,
+      "name": "6r7",
+      "created_at": "2022-11-17T14:49:51.000Z",
+      "url": "https://greasyfork.org/users/984503-6r7",
+      "scripts": [
+        {
+          "id": 454984,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-17T15:05:16.000Z",
+          "code_updated_at": "2022-11-17T19:52:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Clout.cx Username Effect",
+          "description": "[client-side]",
+          "url": "https://greasyfork.org/scripts/454984-clout-cx-username-effect",
+          "code_url": "https://update.greasyfork.org/scripts/454984/Cloutcx%20Username%20Effect.user.js",
+          "code_size": 2625,
+          "license": "GNU GPLv2",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Clout.cx Username Effect",
+  "description": "[client-side]",
+  "url": "https://greasyfork.org/scripts/454984-clout-cx-username-effect",
+  "code_url": "https://update.greasyfork.org/scripts/454984/Cloutcx%20Username%20Effect.user.js",
+  "code_size": 2625,
+  "license": "GNU GPLv2",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 455688,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-30T13:06:29.000Z",
+  "code_updated_at": "2022-11-30T13:19:31.000Z",
+  "namespace": "https://github.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 990203,
+      "name": "EndoUniPump",
+      "created_at": "2022-11-30T13:00:03.000Z",
+      "url": "https://greasyfork.org/users/990203-endounipump"
+    }
+  ],
+  "name": "EUP Clean Release Test Issue",
+  "description": "Cleans EndoUniPump Release Test Issue on GitHub of any redundant elements",
+  "url": "https://greasyfork.org/scripts/455688-eup-clean-release-test-issue",
+  "code_url": "https://update.greasyfork.org/scripts/455688/EUP%20Clean%20Release%20Test%20Issue.user.js",
+  "code_size": 1753,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

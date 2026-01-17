@@ -1,0 +1,59 @@
+{
+  "id": 424594,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-06T19:06:47.000Z",
+  "code_updated_at": "2021-04-06T20:25:36.000Z",
+  "namespace": "Zahonek",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 755673,
+      "name": "Mrkef von Záhonek",
+      "created_at": "2021-04-06T16:33:19.000Z",
+      "url": "https://greasyfork.org/users/755673-mrkef-von-z%C3%A1honek",
+      "scripts": [
+        {
+          "id": 428060,
+          "daily_installs": 0,
+          "total_installs": 33,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-16T20:36:27.000Z",
+          "code_updated_at": "2021-06-23T11:37:05.000Z",
+          "namespace": "Zahonek",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Combat 2.0",
+          "description": "Kickass combat 2.0 (may include slight rounding error)",
+          "url": "https://greasyfork.org/scripts/428060-combat-2-0",
+          "code_url": "https://update.greasyfork.org/scripts/428060/Combat%2020.user.js",
+          "code_size": 2016,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Offline time shortener",
+  "description": "Shorten that long offline time on chracter selection page.",
+  "url": "https://greasyfork.org/scripts/424594-offline-time-shortener",
+  "code_url": "https://update.greasyfork.org/scripts/424594/Offline%20time%20shortener.user.js",
+  "code_size": 969,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

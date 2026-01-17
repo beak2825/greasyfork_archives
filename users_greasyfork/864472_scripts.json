@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438483,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-13T15:49:10.000Z",
+    "code_updated_at": "2022-01-13T15:49:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864472,
+        "name": "codecaine",
+        "created_at": "2022-01-13T15:41:09.000Z",
+        "url": "https://greasyfork.org/users/864472-codecaine"
+      }
+    ],
+    "name": "Import Jquery",
+    "description": "Add jquery to websites for console debugging",
+    "url": "https://greasyfork.org/scripts/438483-import-jquery",
+    "code_url": "https://update.greasyfork.org/scripts/438483/Import%20Jquery.user.js",
+    "code_size": 465,
+    "license": "GNU GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

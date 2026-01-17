@@ -1,0 +1,134 @@
+[
+  {
+    "id": 487401,
+    "daily_installs": 0,
+    "total_installs": 102,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-15T16:53:14.000Z",
+    "code_updated_at": "2024-02-15T16:53:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 831014,
+        "name": "Zlajoyast",
+        "created_at": "2021-11-01T14:32:53.000Z",
+        "url": "https://greasyfork.org/users/831014-zlajoyast"
+      }
+    ],
+    "name": "Simple ChatGPT",
+    "description": "Press the shortcut \"Ctrl+Q\" to ask ChatGPT a question, and an alert box will return in your browser",
+    "url": "https://greasyfork.org/scripts/487401-simple-chatgpt",
+    "code_url": "https://update.greasyfork.org/scripts/487401/Simple%20ChatGPT.user.js",
+    "code_size": 3308,
+    "license": "MIT License",
+    "version": "2024-02-15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470146,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-04T15:07:00.000Z",
+    "code_updated_at": "2023-07-05T16:40:43.000Z",
+    "namespace": "steam-workshop-itens-file-size",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 831014,
+        "name": "Zlajoyast",
+        "created_at": "2021-11-01T14:32:53.000Z",
+        "url": "https://greasyfork.org/users/831014-zlajoyast"
+      }
+    ],
+    "name": "Steam Workshop Items File Size",
+    "description": "Adds file size to Steam Workshop items",
+    "url": "https://greasyfork.org/scripts/470146-steam-workshop-items-file-size",
+    "code_url": "https://update.greasyfork.org/scripts/470146/Steam%20Workshop%20Items%20File%20Size.user.js",
+    "code_size": 1894,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467339,
+    "daily_installs": 0,
+    "total_installs": 236,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-28T22:59:09.000Z",
+    "code_updated_at": "2025-01-09T21:20:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 831014,
+        "name": "Zlajoyast",
+        "created_at": "2021-11-01T14:32:53.000Z",
+        "url": "https://greasyfork.org/users/831014-zlajoyast"
+      }
+    ],
+    "name": "Rede Canais modo simplificado",
+    "description": "Simplifica a pagina Rede Canais removendo elementos de contato, comentarios e outros. Além de adicionar alguns botões para ajudar a encontrar mais filmes",
+    "url": "https://greasyfork.org/scripts/467339-rede-canais-modo-simplificado",
+    "code_url": "https://update.greasyfork.org/scripts/467339/Rede%20Canais%20modo%20simplificado.user.js",
+    "code_size": 36355,
+    "license": "MIT License",
+    "version": "1.2.2",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434821,
+    "daily_installs": 0,
+    "total_installs": 702,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-01T15:16:42.000Z",
+    "code_updated_at": "2024-01-29T20:43:21.000Z",
+    "namespace": "https://greasyfork.org/users/831014",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 831014,
+        "name": "Zlajoyast",
+        "created_at": "2021-11-01T14:32:53.000Z",
+        "url": "https://greasyfork.org/users/831014-zlajoyast"
+      }
+    ],
+    "name": "OWOP Image To Pixel",
+    "description": "Script that inserts the image for pixelart in OWOP",
+    "url": "https://greasyfork.org/scripts/434821-owop-image-to-pixel",
+    "code_url": "https://update.greasyfork.org/scripts/434821/OWOP%20Image%20To%20Pixel.user.js",
+    "code_size": 10362,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

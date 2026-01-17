@@ -1,0 +1,34 @@
+{
+  "id": 432746,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-21T09:31:15.000Z",
+  "code_updated_at": "2021-09-21T09:31:14.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/675587",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 675587,
+      "name": "你瞅啥",
+      "created_at": "2020-08-12T11:17:38.000Z",
+      "url": "https://greasyfork.org/users/675587-%E4%BD%A0%E7%9E%85%E5%95%A5",
+      "scripts": []
+    }
+  ],
+  "name": "dany",
+  "description": "Dany",
+  "url": "https://greasyfork.org/scripts/432746-dany",
+  "code_url": "https://update.greasyfork.org/scripts/432746/dany.user.js",
+  "code_size": 708640,
+  "license": null,
+  "version": "0.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

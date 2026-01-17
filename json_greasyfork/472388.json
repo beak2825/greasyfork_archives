@@ -1,0 +1,59 @@
+{
+  "id": 472388,
+  "daily_installs": 0,
+  "total_installs": 62,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-04T05:52:29.000Z",
+  "code_updated_at": "2024-04-24T22:17:40.000Z",
+  "namespace": "https://www.geoguessr.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1143461,
+      "name": "Wmtmky",
+      "created_at": "2023-08-04T05:21:53.000Z",
+      "url": "https://greasyfork.org/users/1143461-wmtmky",
+      "scripts": [
+        {
+          "id": 472388,
+          "daily_installs": 0,
+          "total_installs": 62,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-04T05:52:29.000Z",
+          "code_updated_at": "2024-04-24T22:17:40.000Z",
+          "namespace": "https://www.geoguessr.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Real Loc Count",
+          "description": "Gives the precise number of locations a GeoGuessr map has on its map page.",
+          "url": "https://greasyfork.org/scripts/472388-real-loc-count",
+          "code_url": "https://update.greasyfork.org/scripts/472388/Real%20Loc%20Count.user.js",
+          "code_size": 2944,
+          "license": null,
+          "version": "0.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Real Loc Count",
+  "description": "Gives the precise number of locations a GeoGuessr map has on its map page.",
+  "url": "https://greasyfork.org/scripts/472388-real-loc-count",
+  "code_url": "https://update.greasyfork.org/scripts/472388/Real%20Loc%20Count.user.js",
+  "code_size": 2944,
+  "license": null,
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

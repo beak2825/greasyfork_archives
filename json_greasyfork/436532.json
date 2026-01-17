@@ -1,0 +1,59 @@
+{
+  "id": 436532,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-04T06:29:47.000Z",
+  "code_updated_at": "2021-12-04T06:29:47.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 805131,
+      "name": "d3nial",
+      "created_at": "2021-08-16T07:08:56.000Z",
+      "url": "https://greasyfork.org/users/805131-d3nial",
+      "scripts": [
+        {
+          "id": 436532,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-04T06:29:47.000Z",
+          "code_updated_at": "2021-12-04T06:29:47.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CrazyHD Smart Search Enabler - chd4.com",
+          "description": "Enables CrazyHD smartsearch box for all ranks.",
+          "url": "https://greasyfork.org/scripts/436532-crazyhd-smart-search-enabler-chd4-com",
+          "code_url": "https://update.greasyfork.org/scripts/436532/CrazyHD%20Smart%20Search%20Enabler%20-%20chd4com.user.js",
+          "code_size": 452,
+          "license": null,
+          "version": "0.0.1.20211204062947",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CrazyHD Smart Search Enabler - chd4.com",
+  "description": "Enables CrazyHD smartsearch box for all ranks.",
+  "url": "https://greasyfork.org/scripts/436532-crazyhd-smart-search-enabler-chd4-com",
+  "code_url": "https://update.greasyfork.org/scripts/436532/CrazyHD%20Smart%20Search%20Enabler%20-%20chd4com.user.js",
+  "code_size": 452,
+  "license": null,
+  "version": "0.0.1.20211204062947",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

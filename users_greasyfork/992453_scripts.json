@@ -1,0 +1,35 @@
+[
+  {
+    "id": 493988,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-02T17:23:19.000Z",
+    "code_updated_at": "2025-03-02T18:39:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 992453,
+        "name": "Fillzest",
+        "created_at": "2022-12-04T16:15:18.000Z",
+        "url": "https://greasyfork.org/users/992453-fillzest"
+      }
+    ],
+    "name": "Steam Game Search & Gameplay videos RU",
+    "description": "Add search links for games on Steam pages and YouTube review",
+    "url": "https://greasyfork.org/scripts/493988-steam-game-search-gameplay-videos-ru",
+    "code_url": "https://update.greasyfork.org/scripts/493988/Steam%20Game%20Search%20%20Gameplay%20videos%20RU.user.js",
+    "code_size": 3358,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

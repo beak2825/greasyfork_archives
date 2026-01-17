@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451833,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-22T22:33:33.000Z",
+    "code_updated_at": "2022-09-22T22:38:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 962483,
+        "name": "Andrew Belter",
+        "created_at": "2022-09-22T22:29:32.000Z",
+        "url": "https://greasyfork.org/users/962483-andrew-belter"
+      }
+    ],
+    "name": "PreissCentral fixes",
+    "description": "Fix the ticket view, add send + resolve etc buttons",
+    "url": "https://greasyfork.org/scripts/451833-preisscentral-fixes",
+    "code_url": "https://update.greasyfork.org/scripts/451833/PreissCentral%20fixes.user.js",
+    "code_size": 3270,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

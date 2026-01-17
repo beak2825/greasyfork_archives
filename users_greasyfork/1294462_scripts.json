@@ -130,5 +130,38 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493699,
+    "daily_installs": 0,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-28T18:42:59.000Z",
+    "code_updated_at": "2025-11-16T22:30:44.000Z",
+    "namespace": "vksans",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1294462,
+        "name": "CATLYS",
+        "created_at": "2024-04-28T18:20:16.000Z",
+        "url": "https://greasyfork.org/users/1294462-catlys"
+      }
+    ],
+    "name": "VK Sans",
+    "description": "Скрипт для ВКонтакте, который устанавливает шрифт VK Sans. Станет более красиво. This script for VK.com installs the VK Sans font. It will become more beautiful.",
+    "url": "https://greasyfork.org/scripts/493699-vk-sans",
+    "code_url": "https://update.greasyfork.org/scripts/493699/VK%20Sans.user.js",
+    "code_size": 836,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

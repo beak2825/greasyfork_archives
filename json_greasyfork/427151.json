@@ -1,0 +1,34 @@
+{
+  "id": 427151,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-28T04:58:27.000Z",
+  "code_updated_at": "2021-05-28T04:58:26.000Z",
+  "namespace": "MrDgbot",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 777027,
+      "name": "洛谂",
+      "created_at": "2021-05-28T04:45:03.000Z",
+      "url": "https://greasyfork.org/users/777027-%E6%B4%9B%E8%B0%82",
+      "scripts": []
+    }
+  ],
+  "name": "U/答案/UTALK/网课显示/自动填入",
+  "description": "[√自动填入答案【可关闭】【默认延迟0.5秒】][√窗口显示答案][√作业与测试][√视听说单元测试][√UTALK]【禁止对源码进行修改，发布，禁止抄袭任意代码】（未适配的请联系，免费用户有5积分可以使用必修类，测试类内容需要在主页或脚本内的充值按钮获得积分方可使用）",
+  "url": "https://greasyfork.org/scripts/427151-u-%E7%AD%94%E6%A1%88-utalk-%E7%BD%91%E8%AF%BE%E6%98%BE%E7%A4%BA-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5",
+  "code_url": "https://update.greasyfork.org/scripts/427151/U%E7%AD%94%E6%A1%88UTALK%E7%BD%91%E8%AF%BE%E6%98%BE%E7%A4%BA%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5.user.js",
+  "code_size": 49601,
+  "license": null,
+  "version": "2.0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

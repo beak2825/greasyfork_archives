@@ -1,0 +1,233 @@
+[
+  {
+    "id": 491942,
+    "daily_installs": 1,
+    "total_installs": 2367,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-08T02:27:06.000Z",
+    "code_updated_at": "2024-04-12T01:32:54.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24050,
+        "name": "heckles",
+        "created_at": "2015-12-20T15:50:22.000Z",
+        "url": "https://greasyfork.org/users/24050-heckles"
+      }
+    ],
+    "name": "【Mod】Twitter Media Downloader",
+    "description": "Save Video/Photo by One-Click.",
+    "url": "https://greasyfork.org/scripts/491942-mod-twitter-media-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/491942/%E3%80%90Mod%E3%80%91Twitter%20Media%20Downloader.user.js",
+    "code_size": 42319,
+    "license": "MIT License",
+    "version": "1.27【Mod】20240412.0935",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434242,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-21T05:54:44.000Z",
+    "code_updated_at": "2021-10-21T06:00:25.000Z",
+    "namespace": "https://github.com/HayaoGai",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24050,
+        "name": "heckles",
+        "created_at": "2015-12-20T15:50:22.000Z",
+        "url": "https://greasyfork.org/users/24050-heckles"
+      }
+    ],
+    "name": "Twitter: Download Video【mod for kiwi】",
+    "description": "One button click to direct video download web page.",
+    "url": "https://greasyfork.org/scripts/434242-twitter-download-video-mod-for-kiwi",
+    "code_url": "https://update.greasyfork.org/scripts/434242/Twitter%3A%20Download%20Video%E3%80%90mod%20for%20kiwi%E3%80%91.user.js",
+    "code_size": 9027,
+    "license": null,
+    "version": "1.0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433987,
+    "daily_installs": 0,
+    "total_installs": 396,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-16T14:06:23.000Z",
+    "code_updated_at": "2022-01-13T14:17:39.000Z",
+    "namespace": "heckles",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24050,
+        "name": "heckles",
+        "created_at": "2015-12-20T15:50:22.000Z",
+        "url": "https://greasyfork.org/users/24050-heckles"
+      }
+    ],
+    "name": "【自用】Youtube自动英文字幕",
+    "description": "自动切换到英文字幕",
+    "url": "https://greasyfork.org/scripts/433987-%E8%87%AA%E7%94%A8-youtube%E8%87%AA%E5%8A%A8%E8%8B%B1%E6%96%87%E5%AD%97%E5%B9%95",
+    "code_url": "https://update.greasyfork.org/scripts/433987/%E3%80%90%E8%87%AA%E7%94%A8%E3%80%91Youtube%E8%87%AA%E5%8A%A8%E8%8B%B1%E6%96%87%E5%AD%97%E5%B9%95.user.js",
+    "code_size": 5744,
+    "license": null,
+    "version": "v2022.01.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431835,
+    "daily_installs": 0,
+    "total_installs": 128,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-03T03:11:49.000Z",
+    "code_updated_at": "2021-10-29T09:14:01.000Z",
+    "namespace": "https://greasyfork.org/users/24050",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24050,
+        "name": "heckles",
+        "created_at": "2015-12-20T15:50:22.000Z",
+        "url": "https://greasyfork.org/users/24050-heckles"
+      }
+    ],
+    "name": "【自用】雪球",
+    "description": "链接当前页面打开",
+    "url": "https://greasyfork.org/scripts/431835-%E8%87%AA%E7%94%A8-%E9%9B%AA%E7%90%83",
+    "code_url": "https://update.greasyfork.org/scripts/431835/%E3%80%90%E8%87%AA%E7%94%A8%E3%80%91%E9%9B%AA%E7%90%83.user.js",
+    "code_size": 18394,
+    "license": null,
+    "version": "2021.10.29",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431000,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-18T09:46:29.000Z",
+    "code_updated_at": "2021-08-18T09:54:05.000Z",
+    "namespace": "https://blog.maple3142.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24050,
+        "name": "heckles",
+        "created_at": "2015-12-20T15:50:22.000Z",
+        "url": "https://greasyfork.org/users/24050-heckles"
+      }
+    ],
+    "name": "【自用】-恢复youtube页面",
+    "description": "恢复youtube页面",
+    "url": "https://greasyfork.org/scripts/431000-%E8%87%AA%E7%94%A8-%E6%81%A2%E5%A4%8Dyoutube%E9%A1%B5%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/431000/%E3%80%90%E8%87%AA%E7%94%A8%E3%80%91-%E6%81%A2%E5%A4%8Dyoutube%E9%A1%B5%E9%9D%A2.user.js",
+    "code_size": 906,
+    "license": null,
+    "version": "2021.08.18",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 430980,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-18T00:01:52.000Z",
+    "code_updated_at": "2021-08-18T08:54:55.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24050,
+        "name": "heckles",
+        "created_at": "2015-12-20T15:50:22.000Z",
+        "url": "https://greasyfork.org/users/24050-heckles"
+      }
+    ],
+    "name": "【自用】 - 500px.com",
+    "description": "8/15/2021, 1:34:46 PM",
+    "url": "https://greasyfork.org/scripts/430980-%E8%87%AA%E7%94%A8-500px-com",
+    "code_url": "https://update.greasyfork.org/scripts/430980/%E3%80%90%E8%87%AA%E7%94%A8%E3%80%91%20-%20500pxcom.user.js",
+    "code_size": 896,
+    "license": null,
+    "version": "2021.08.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 429137,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-09T16:41:34.000Z",
+    "code_updated_at": "2021-08-11T13:24:03.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24050,
+        "name": "heckles",
+        "created_at": "2015-12-20T15:50:22.000Z",
+        "url": "https://greasyfork.org/users/24050-heckles"
+      }
+    ],
+    "name": "ImageReady【这是库，不要安装，不起作用】",
+    "description": "图片加载完之前获取大小",
+    "url": "https://greasyfork.org/scripts/429137-imageready-%E8%BF%99%E6%98%AF%E5%BA%93-%E4%B8%8D%E8%A6%81%E5%AE%89%E8%A3%85-%E4%B8%8D%E8%B5%B7%E4%BD%9C%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/429137/961631/ImageReady%E3%80%90%E8%BF%99%E6%98%AF%E5%BA%93%EF%BC%8C%E4%B8%8D%E8%A6%81%E5%AE%89%E8%A3%85%EF%BC%8C%E4%B8%8D%E8%B5%B7%E4%BD%9C%E7%94%A8%E3%80%91.js",
+    "code_size": 1937,
+    "license": null,
+    "version": "2021.07.09",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

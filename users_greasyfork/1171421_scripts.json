@@ -1,0 +1,35 @@
+[
+  {
+    "id": 475091,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-12T08:06:28.000Z",
+    "code_updated_at": "2023-09-12T08:06:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1171421,
+        "name": "zhouxinghua001",
+        "created_at": "2023-09-12T08:05:41.000Z",
+        "url": "https://greasyfork.org/users/1171421-zhouxinghua001"
+      }
+    ],
+    "name": "CCNU-xiaoya-DownLoader",
+    "description": "Add dowmload button to xiaoya",
+    "url": "https://greasyfork.org/scripts/475091-ccnu-xiaoya-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/475091/CCNU-xiaoya-DownLoader.user.js",
+    "code_size": 3789,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

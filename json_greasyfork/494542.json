@@ -1,0 +1,34 @@
+{
+  "id": 494542,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-10T02:06:51.000Z",
+  "code_updated_at": "2024-05-10T02:06:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1299171,
+      "name": "挟飞仙以遨游",
+      "created_at": "2024-05-10T01:38:38.000Z",
+      "url": "https://greasyfork.org/users/1299171-%E6%8C%9F%E9%A3%9E%E4%BB%99%E4%BB%A5%E9%81%A8%E6%B8%B8",
+      "scripts": []
+    }
+  ],
+  "name": "最新获取ss号",
+  "description": "获取SS号",
+  "url": "https://greasyfork.org/scripts/494542-%E6%9C%80%E6%96%B0%E8%8E%B7%E5%8F%96ss%E5%8F%B7",
+  "code_url": "https://update.greasyfork.org/scripts/494542/%E6%9C%80%E6%96%B0%E8%8E%B7%E5%8F%96ss%E5%8F%B7.user.js",
+  "code_size": 2304,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

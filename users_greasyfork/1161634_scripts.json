@@ -96,6 +96,39 @@
     "version": "0.2",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474093,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-28T15:59:56.000Z",
+    "code_updated_at": "2023-08-28T18:10:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1161634,
+        "name": "stigy",
+        "created_at": "2023-08-28T15:55:00.000Z",
+        "url": "https://greasyfork.org/users/1161634-stigy"
+      }
+    ],
+    "name": "POD - Decimal to American",
+    "description": "Finds and logs cellRows elements using MutationObserver (for converting odds).",
+    "url": "https://greasyfork.org/scripts/474093-pod-decimal-to-american",
+    "code_url": "https://update.greasyfork.org/scripts/474093/POD%20-%20Decimal%20to%20American.user.js",
+    "code_size": 3108,
+    "license": null,
+    "version": "0.14",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

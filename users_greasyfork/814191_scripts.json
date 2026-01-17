@@ -130,5 +130,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 464022,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T16:26:25.000Z",
+    "code_updated_at": "2025-05-30T01:36:57.000Z",
+    "namespace": "https://leaked.tools",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814191,
+        "name": "ctoSango",
+        "created_at": "2021-09-10T19:57:20.000Z",
+        "url": "https://greasyfork.org/users/814191-ctosango"
+      }
+    ],
+    "name": "Draft Tools",
+    "description": "Adds useful features to Cracked.sh's new-thread page.",
+    "url": "https://greasyfork.org/scripts/464022-draft-tools",
+    "code_url": "https://update.greasyfork.org/scripts/464022/1598239/Draft%20Tools.js",
+    "code_size": 8100,
+    "license": null,
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462864,
+    "daily_installs": 0,
+    "total_installs": 154,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-29T17:48:37.000Z",
+    "code_updated_at": "2024-11-26T02:55:41.000Z",
+    "namespace": "https://leaked.wiki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814191,
+        "name": "ctoSango",
+        "created_at": "2021-09-10T19:57:20.000Z",
+        "url": "https://greasyfork.org/users/814191-ctosango"
+      }
+    ],
+    "name": "Anonfiles, Upload.ee, MediaFire PDF Viewer",
+    "description": "Adds a button to view PDF and TXT files without needing to download them.",
+    "url": "https://greasyfork.org/scripts/462864-anonfiles-upload-ee-mediafire-pdf-viewer",
+    "code_url": "https://update.greasyfork.org/scripts/462864/Anonfiles%2C%20Uploadee%2C%20MediaFire%20PDF%20Viewer.user.js",
+    "code_size": 5285,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461668,
+    "daily_installs": 0,
+    "total_installs": 100,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-12T03:56:59.000Z",
+    "code_updated_at": "2023-03-12T03:56:59.000Z",
+    "namespace": "https://leaked.wiki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814191,
+        "name": "ctoSango",
+        "created_at": "2021-09-10T19:57:20.000Z",
+        "url": "https://greasyfork.org/users/814191-ctosango"
+      }
+    ],
+    "name": "Hotpot.ai Unlimiter",
+    "description": "Removes the local cooldowns for Hotpot.ai allowing you to generate multiple images at once!",
+    "url": "https://greasyfork.org/scripts/461668-hotpot-ai-unlimiter",
+    "code_url": "https://update.greasyfork.org/scripts/461668/Hotpotai%20Unlimiter.user.js",
+    "code_size": 923,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438443,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-13T00:56:50.000Z",
+    "code_updated_at": "2022-01-13T00:56:50.000Z",
+    "namespace": "https://leaked.wiki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814191,
+        "name": "ctoSango",
+        "created_at": "2021-09-10T19:57:20.000Z",
+        "url": "https://greasyfork.org/users/814191-ctosango"
+      }
+    ],
+    "name": "Delish.com Unblocker",
+    "description": "Removes the free recipe limit :)",
+    "url": "https://greasyfork.org/scripts/438443-delish-com-unblocker",
+    "code_url": "https://update.greasyfork.org/scripts/438443/Delishcom%20Unblocker.user.js",
+    "code_size": 501,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

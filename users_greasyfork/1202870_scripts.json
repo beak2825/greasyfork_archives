@@ -1,0 +1,35 @@
+[
+  {
+    "id": 478100,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-23T23:13:05.000Z",
+    "code_updated_at": "2024-01-29T09:06:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1202870,
+        "name": "antaww",
+        "created_at": "2023-10-23T23:11:37.000Z",
+        "url": "https://greasyfork.org/users/1202870-antaww"
+      }
+    ],
+    "name": "7speaking-v1-ayta",
+    "description": "7speaking 0 - 1 ayta",
+    "url": "https://greasyfork.org/scripts/478100-7speaking-v1-ayta",
+    "code_url": "https://update.greasyfork.org/scripts/478100/7speaking-v1-ayta.user.js",
+    "code_size": 5072,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

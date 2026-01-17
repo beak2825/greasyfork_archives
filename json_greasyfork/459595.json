@@ -1,0 +1,34 @@
+{
+  "id": 459595,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-07T13:35:21.000Z",
+  "code_updated_at": "2023-02-07T13:35:21.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 30791,
+      "name": "Jinfeng Li",
+      "created_at": "2016-02-18T05:30:52.000Z",
+      "url": "https://greasyfork.org/users/30791-jinfeng-li",
+      "scripts": []
+    }
+  ],
+  "name": "标点云后台title显示nav",
+  "description": "2022/6/16 上午9:47:38",
+  "url": "https://greasyfork.org/scripts/459595-%E6%A0%87%E7%82%B9%E4%BA%91%E5%90%8E%E5%8F%B0title%E6%98%BE%E7%A4%BAnav",
+  "code_url": "https://update.greasyfork.org/scripts/459595/%E6%A0%87%E7%82%B9%E4%BA%91%E5%90%8E%E5%8F%B0title%E6%98%BE%E7%A4%BAnav.user.js",
+  "code_size": 778,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

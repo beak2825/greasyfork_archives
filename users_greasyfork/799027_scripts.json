@@ -1,0 +1,68 @@
+[
+  {
+    "id": 462559,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-25T12:55:59.000Z",
+    "code_updated_at": "2023-03-25T12:55:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799027,
+        "name": "wlx0079",
+        "created_at": "2021-07-31T14:39:10.000Z",
+        "url": "https://greasyfork.org/users/799027-wlx0079"
+      }
+    ],
+    "name": "牛客反引流",
+    "description": "阐述ylg的梦",
+    "url": "https://greasyfork.org/scripts/462559-%E7%89%9B%E5%AE%A2%E5%8F%8D%E5%BC%95%E6%B5%81",
+    "code_url": "https://update.greasyfork.org/scripts/462559/%E7%89%9B%E5%AE%A2%E5%8F%8D%E5%BC%95%E6%B5%81.user.js",
+    "code_size": 2057,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 430170,
+    "daily_installs": 0,
+    "total_installs": 139,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-31T17:28:02.000Z",
+    "code_updated_at": "2021-08-06T11:12:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799027,
+        "name": "wlx0079",
+        "created_at": "2021-07-31T14:39:10.000Z",
+        "url": "https://greasyfork.org/users/799027-wlx0079"
+      }
+    ],
+    "name": "LinkCheatGuardian_BiliBili",
+    "description": "对b23.tv/xxxx这样的链接，直接获取到真实地址的标题，以免用户点进去自己不想看到的内容",
+    "url": "https://greasyfork.org/scripts/430170-linkcheatguardian-bilibili",
+    "code_url": "https://update.greasyfork.org/scripts/430170/LinkCheatGuardian_BiliBili.user.js",
+    "code_size": 3423,
+    "license": null,
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

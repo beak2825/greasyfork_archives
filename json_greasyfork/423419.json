@@ -1,0 +1,33 @@
+{
+  "id": 423419,
+  "daily_installs": 0,
+  "total_installs": 304,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-17T12:19:09.000Z",
+  "code_updated_at": "2023-04-01T08:11:13.000Z",
+  "namespace": "https://t.me/jsday",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 585298,
+      "name": "Jones Miller",
+      "created_at": "2020-06-12T04:53:21.000Z",
+      "url": "https://greasyfork.org/users/585298-jones-miller"
+    }
+  ],
+  "name": "安乐传",
+  "description": "一键到顶、到底； 电脑端、移动端通用。",
+  "url": "https://greasyfork.org/scripts/423419-%E5%AE%89%E4%B9%90%E4%BC%A0",
+  "code_url": "https://update.greasyfork.org/scripts/423419/%E5%AE%89%E4%B9%90%E4%BC%A0.user.js",
+  "code_size": 1561,
+  "license": null,
+  "version": "23.04.01",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

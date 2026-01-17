@@ -1,0 +1,59 @@
+{
+  "id": 466123,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-12T08:26:12.000Z",
+  "code_updated_at": "2024-10-17T08:35:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1053629,
+      "name": "George Geo",
+      "created_at": "2023-04-05T11:35:53.000Z",
+      "url": "https://greasyfork.org/users/1053629-george-geo",
+      "scripts": [
+        {
+          "id": 477522,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-16T10:50:22.000Z",
+          "code_updated_at": "2023-10-16T10:50:22.000Z",
+          "namespace": "https://greasyfork.org/users/1053629",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Noapte si zi",
+          "description": "Modificarea luminozitatii",
+          "url": "https://greasyfork.org/scripts/477522-noapte-si-zi",
+          "code_url": "https://update.greasyfork.org/scripts/477522/Noapte%20si%20zi.user.js",
+          "code_size": 679,
+          "license": "xD3MEnTu Ro1",
+          "version": "1.00",
+          "locale": "ro",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TW SCRIPT OLD Word v2",
+  "description": "TW SCRIPT OLD WORD",
+  "url": "https://greasyfork.org/scripts/466123-tw-script-old-word-v2",
+  "code_url": "https://update.greasyfork.org/scripts/466123/TW%20SCRIPT%20OLD%20Word%20v2.user.js",
+  "code_size": 75718,
+  "license": null,
+  "version": "1.50",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

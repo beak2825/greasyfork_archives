@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412386,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-03T13:35:14.000Z",
+    "code_updated_at": "2020-10-03T13:35:13.000Z",
+    "namespace": "AGNVADI FEEDING",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 283563,
+        "name": "VANDNA SINGH",
+        "created_at": "2019-03-19T14:39:30.000Z",
+        "url": "https://greasyfork.org/users/283563-vandna-singh"
+      }
+    ],
+    "name": "MPR",
+    "description": "butter RESULT",
+    "url": "https://greasyfork.org/scripts/412386-mpr",
+    "code_url": "https://update.greasyfork.org/scripts/412386/MPR.user.js",
+    "code_size": 13463,
+    "license": null,
+    "version": "4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

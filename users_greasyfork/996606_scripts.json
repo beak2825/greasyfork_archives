@@ -30,6 +30,105 @@
     "version": "1.0.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 475686,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-19T16:09:40.000Z",
+    "code_updated_at": "2023-10-07T19:13:36.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 996606,
+        "name": "loliprane",
+        "created_at": "2022-12-12T17:28:55.000Z",
+        "url": "https://greasyfork.org/users/996606-loliprane"
+      }
+    ],
+    "name": "Youtube pour mon frère",
+    "description": "19/09/2023 10:37:18",
+    "url": "https://greasyfork.org/scripts/475686-youtube-pour-mon-fr%C3%A8re",
+    "code_url": "https://update.greasyfork.org/scripts/475686/Youtube%20pour%20mon%20fr%C3%A8re.user.js",
+    "code_size": 3696,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458325,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-16T08:55:40.000Z",
+    "code_updated_at": "2023-01-17T09:58:06.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 996606,
+        "name": "loliprane",
+        "created_at": "2022-12-12T17:28:55.000Z",
+        "url": "https://greasyfork.org/users/996606-loliprane"
+      }
+    ],
+    "name": "SimpleMMO auto step",
+    "description": "15/01/2023 15:40:04",
+    "url": "https://greasyfork.org/scripts/458325-simplemmo-auto-step",
+    "code_url": "https://update.greasyfork.org/scripts/458325/SimpleMMO%20auto%20step.user.js",
+    "code_size": 6116,
+    "license": "MIT License",
+    "version": "1.9.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 456974,
+    "daily_installs": 0,
+    "total_installs": 2364,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-21T21:21:28.000Z",
+    "code_updated_at": "2022-12-21T21:21:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 996606,
+        "name": "loliprane",
+        "created_at": "2022-12-12T17:28:55.000Z",
+        "url": "https://greasyfork.org/users/996606-loliprane"
+      }
+    ],
+    "name": "Pokeclicker give every berry",
+    "description": "Give every berry to the player",
+    "url": "https://greasyfork.org/scripts/456974-pokeclicker-give-every-berry",
+    "code_url": "https://update.greasyfork.org/scripts/456974/Pokeclicker%20give%20every%20berry.user.js",
+    "code_size": 736,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

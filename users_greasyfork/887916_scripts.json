@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441570,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-15T22:19:18.000Z",
+    "code_updated_at": "2022-03-15T22:19:18.000Z",
+    "namespace": "https://greasyfork.org/users/13941",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 887916,
+        "name": "Anişor Neculai",
+        "created_at": "2022-03-15T22:18:04.000Z",
+        "url": "https://greasyfork.org/users/887916-ani%C5%9For-neculai"
+      }
+    ],
+    "name": "West Wiki Helper",
+    "description": "West Wiki Helper Updater",
+    "url": "https://greasyfork.org/scripts/441570-west-wiki-helper",
+    "code_url": "https://update.greasyfork.org/scripts/441570/West%20Wiki%20Helper.user.js",
+    "code_size": 2588,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

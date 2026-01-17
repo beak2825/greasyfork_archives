@@ -1,0 +1,34 @@
+{
+  "id": 446686,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-19T01:42:02.000Z",
+  "code_updated_at": "2022-06-19T01:42:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 923597,
+      "name": "1271930827",
+      "created_at": "2022-06-09T01:39:52.000Z",
+      "url": "https://greasyfork.org/users/923597-1271930827",
+      "scripts": []
+    }
+  ],
+  "name": "b站抢原石（开发版）",
+  "description": "自动抢原石",
+  "url": "https://greasyfork.org/scripts/446686-b%E7%AB%99%E6%8A%A2%E5%8E%9F%E7%9F%B3-%E5%BC%80%E5%8F%91%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/446686/b%E7%AB%99%E6%8A%A2%E5%8E%9F%E7%9F%B3%EF%BC%88%E5%BC%80%E5%8F%91%E7%89%88%EF%BC%89.user.js",
+  "code_size": 56115,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

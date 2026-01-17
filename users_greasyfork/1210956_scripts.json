@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479049,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-04T21:34:37.000Z",
+    "code_updated_at": "2023-11-07T16:04:26.000Z",
+    "namespace": "https://github.com/RequiemOfSpirit",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1210956,
+        "name": "RequiemOfSpirit",
+        "created_at": "2023-11-04T20:10:03.000Z",
+        "url": "https://greasyfork.org/users/1210956-requiemofspirit"
+      }
+    ],
+    "name": "Crunchyroll video overlay visibility toggle",
+    "description": "Adds an event listener on the Crunchyroll video player on the letter `h` to toggle video overlay visibility",
+    "url": "https://greasyfork.org/scripts/479049-crunchyroll-video-overlay-visibility-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/479049/Crunchyroll%20video%20overlay%20visibility%20toggle.user.js",
+    "code_size": 952,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

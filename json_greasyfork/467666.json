@@ -1,0 +1,33 @@
+{
+  "id": 467666,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-01T22:54:52.000Z",
+  "code_updated_at": "2023-06-02T01:23:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1088753,
+      "name": "cc-coding3",
+      "created_at": "2023-06-01T22:45:17.000Z",
+      "url": "https://greasyfork.org/users/1088753-cc-coding3"
+    }
+  ],
+  "name": "PTP - Stream Plex",
+  "description": "ptp stream plex description",
+  "url": "https://greasyfork.org/scripts/467666-ptp-stream-plex",
+  "code_url": "https://update.greasyfork.org/scripts/467666/PTP%20-%20Stream%20Plex.user.js",
+  "code_size": 419,
+  "license": null,
+  "version": "1.46",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

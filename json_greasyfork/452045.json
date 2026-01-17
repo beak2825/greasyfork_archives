@@ -1,0 +1,34 @@
+{
+  "id": 452045,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-26T10:54:39.000Z",
+  "code_updated_at": "2023-06-22T12:14:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 958255,
+      "name": "thekenanjunior",
+      "created_at": "2022-09-12T15:49:53.000Z",
+      "url": "https://greasyfork.org/users/958255-thekenanjunior",
+      "scripts": []
+    }
+  ],
+  "name": "u3a / u3b Eliminator",
+  "description": "This script eliminates unnecessary UTCs",
+  "url": "https://greasyfork.org/scripts/452045-u3a-u3b-eliminator",
+  "code_url": "https://update.greasyfork.org/scripts/452045/u3a%20%20u3b%20Eliminator.user.js",
+  "code_size": 1961,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

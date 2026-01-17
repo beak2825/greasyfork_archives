@@ -1,0 +1,68 @@
+[
+  {
+    "id": 470781,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-14T02:30:06.000Z",
+    "code_updated_at": "2023-08-14T06:56:54.000Z",
+    "namespace": "REG",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093954,
+        "name": "gochiAI",
+        "created_at": "2023-06-08T10:32:36.000Z",
+        "url": "https://greasyfork.org/users/1093954-gochiai"
+      }
+    ],
+    "name": "bookwalker spesial auto fetch",
+    "description": "bookwalker.jpの得点ページの改善",
+    "url": "https://greasyfork.org/scripts/470781-bookwalker-spesial-auto-fetch",
+    "code_url": "https://update.greasyfork.org/scripts/470781/bookwalker%20spesial%20auto%20fetch.user.js",
+    "code_size": 2352,
+    "license": null,
+    "version": "1.8",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470013,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-03T02:55:42.000Z",
+    "code_updated_at": "2023-07-03T02:55:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093954,
+        "name": "gochiAI",
+        "created_at": "2023-06-08T10:32:36.000Z",
+        "url": "https://greasyfork.org/users/1093954-gochiai"
+      }
+    ],
+    "name": "LINE theme downloader",
+    "description": "Download LINE themes using Tampermonkey",
+    "url": "https://greasyfork.org/scripts/470013-line-theme-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/470013/LINE%20theme%20downloader.user.js",
+    "code_size": 2123,
+    "license": null,
+    "version": "1.8",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

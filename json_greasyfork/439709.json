@@ -1,0 +1,34 @@
+{
+  "id": 439709,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-08T11:56:12.000Z",
+  "code_updated_at": "2022-02-08T11:56:12.000Z",
+  "namespace": "http://pp.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 221438,
+      "name": "CDF321",
+      "created_at": "2018-10-25T09:18:01.000Z",
+      "url": "https://greasyfork.org/users/221438-cdf321",
+      "scripts": []
+    }
+  ],
+  "name": "pf自动跳转",
+  "description": "world!",
+  "url": "https://greasyfork.org/scripts/439709-pf%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/439709/pf%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 2087,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 492118,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-10T02:36:53.000Z",
+  "code_updated_at": "2024-04-10T02:36:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286213,
+      "name": "Isaiah Fedur",
+      "created_at": "2024-04-10T02:26:59.000Z",
+      "url": "https://greasyfork.org/users/1286213-isaiah-fedur",
+      "scripts": [
+        {
+          "id": 492118,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-10T02:36:53.000Z",
+          "code_updated_at": "2024-04-10T02:36:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Krisp Message Deletion Helper Limited Runs",
+          "description": "Automate deletion of messages in Krisp with a limited number of attempts",
+          "url": "https://greasyfork.org/scripts/492118-krisp-message-deletion-helper-limited-runs",
+          "code_url": "https://update.greasyfork.org/scripts/492118/Krisp%20Message%20Deletion%20Helper%20Limited%20Runs.user.js",
+          "code_size": 3940,
+          "license": "MIT License",
+          "version": "5.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Krisp Message Deletion Helper Limited Runs",
+  "description": "Automate deletion of messages in Krisp with a limited number of attempts",
+  "url": "https://greasyfork.org/scripts/492118-krisp-message-deletion-helper-limited-runs",
+  "code_url": "https://update.greasyfork.org/scripts/492118/Krisp%20Message%20Deletion%20Helper%20Limited%20Runs.user.js",
+  "code_size": 3940,
+  "license": "MIT License",
+  "version": "5.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

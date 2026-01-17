@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474402,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-02T08:50:35.000Z",
+    "code_updated_at": "2023-09-02T08:50:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1164716,
+        "name": "DiceTwenty",
+        "created_at": "2023-09-02T08:43:16.000Z",
+        "url": "https://greasyfork.org/users/1164716-dicetwenty"
+      }
+    ],
+    "name": "ticket get",
+    "description": "获取 gtimg.com 验证码网站返回的 ticket",
+    "url": "https://greasyfork.org/scripts/474402-ticket-get",
+    "code_url": "https://update.greasyfork.org/scripts/474402/ticket%20get.user.js",
+    "code_size": 21622,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

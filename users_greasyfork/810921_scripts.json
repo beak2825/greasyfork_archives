@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 472768,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-09T08:33:51.000Z",
+    "code_updated_at": "2023-08-09T08:33:51.000Z",
+    "namespace": "https://greasyfork.org/en/users/810921-guywmustang",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810921,
+        "name": "guywmustang",
+        "created_at": "2021-09-01T03:18:35.000Z",
+        "url": "https://greasyfork.org/users/810921-guywmustang"
+      }
+    ],
+    "name": "Yahoo Mail Sidebar Shrinker",
+    "description": "Shrink the side bar in Yahoo Mail",
+    "url": "https://greasyfork.org/scripts/472768-yahoo-mail-sidebar-shrinker",
+    "code_url": "https://update.greasyfork.org/scripts/472768/Yahoo%20Mail%20Sidebar%20Shrinker.user.js",
+    "code_size": 4951,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431729,
+    "daily_installs": 0,
+    "total_installs": 100,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-01T03:20:40.000Z",
+    "code_updated_at": "2024-12-29T04:22:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810921,
+        "name": "guywmustang",
+        "created_at": "2021-09-01T03:18:35.000Z",
+        "url": "https://greasyfork.org/users/810921-guywmustang"
+      }
+    ],
+    "name": "Google Photos dark theme",
+    "description": "A darker look",
+    "url": "https://greasyfork.org/scripts/431729-google-photos-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/431729/Google%20Photos%20dark%20theme.user.js",
+    "code_size": 11620,
+    "license": "MIT License",
+    "version": "0.9.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 492800,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-18T00:49:52.000Z",
+  "code_updated_at": "2024-04-18T01:12:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1289635,
+      "name": "vtr88",
+      "created_at": "2024-04-18T00:40:52.000Z",
+      "url": "https://greasyfork.org/users/1289635-vtr88",
+      "scripts": [
+        {
+          "id": 492800,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-18T00:49:52.000Z",
+          "code_updated_at": "2024-04-18T01:12:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide Unreleased Albums with Auto Paging and Toggle",
+          "description": "Automatically load more albums until released ones are found, with a toggle to show/hide unreleased albums.",
+          "url": "https://greasyfork.org/scripts/492800-hide-unreleased-albums-with-auto-paging-and-toggle",
+          "code_url": "https://update.greasyfork.org/scripts/492800/Hide%20Unreleased%20Albums%20with%20Auto%20Paging%20and%20Toggle.user.js",
+          "code_size": 3695,
+          "license": "MIT License",
+          "version": "0.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide Unreleased Albums with Auto Paging and Toggle",
+  "description": "Automatically load more albums until released ones are found, with a toggle to show/hide unreleased albums.",
+  "url": "https://greasyfork.org/scripts/492800-hide-unreleased-albums-with-auto-paging-and-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/492800/Hide%20Unreleased%20Albums%20with%20Auto%20Paging%20and%20Toggle.user.js",
+  "code_size": 3695,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

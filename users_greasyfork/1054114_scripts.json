@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463377,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-06T03:08:02.000Z",
+    "code_updated_at": "2023-05-31T17:48:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1054114,
+        "name": "TombolaMan",
+        "created_at": "2023-04-06T03:03:45.000Z",
+        "url": "https://greasyfork.org/users/1054114-tombolaman"
+      }
+    ],
+    "name": "Grundo's Cafe - Go tombolWoke (or) Go tomBlroke",
+    "description": "Justice for the tombola man on grundos.cafe (GC)",
+    "url": "https://greasyfork.org/scripts/463377-grundo-s-cafe-go-tombolwoke-or-go-tomblroke",
+    "code_url": "https://update.greasyfork.org/scripts/463377/Grundo%27s%20Cafe%20-%20Go%20tombolWoke%20%28or%29%20Go%20tomBlroke.user.js",
+    "code_size": 1648,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

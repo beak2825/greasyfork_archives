@@ -1,0 +1,34 @@
+{
+  "id": 489745,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-13T20:19:37.000Z",
+  "code_updated_at": "2024-11-11T06:48:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1274161,
+      "name": "Jesse Weaver",
+      "created_at": "2024-03-13T20:17:41.000Z",
+      "url": "https://greasyfork.org/users/1274161-jesse-weaver",
+      "scripts": []
+    }
+  ],
+  "name": "AO3 Tweaks",
+  "description": "Add fonts and computed stats",
+  "url": "https://greasyfork.org/scripts/489745-ao3-tweaks",
+  "code_url": "https://update.greasyfork.org/scripts/489745/AO3%20Tweaks.user.js",
+  "code_size": 5339,
+  "license": "MPLv2",
+  "version": "2024.11.10.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

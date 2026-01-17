@@ -1,0 +1,35 @@
+[
+  {
+    "id": 471602,
+    "daily_installs": 0,
+    "total_installs": 188,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-24T13:26:51.000Z",
+    "code_updated_at": "2023-07-29T07:02:06.000Z",
+    "namespace": "https://greasyfork.org/scripts/471597-elon-musk",
+    "support_url": "https://github.com/so1ve/fuck-elonmusk",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1134762,
+        "name": "so1ve",
+        "created_at": "2023-07-24T12:14:38.000Z",
+        "url": "https://greasyfork.org/users/1134762-so1ve"
+      }
+    ],
+    "name": "Fuck Elon Musk",
+    "description": "Fuck Elon Musk! Let's bring Twitter back.",
+    "url": "https://greasyfork.org/scripts/471602-elon-musk",
+    "code_url": "https://update.greasyfork.org/scripts/471602/Fuck%20Elon%20Musk.user.js",
+    "code_size": 7830,
+    "license": "MIT License",
+    "version": "0.7.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

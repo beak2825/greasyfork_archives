@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 437597,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-26T07:04:44.000Z",
+    "code_updated_at": "2021-12-27T21:11:13.000Z",
+    "namespace": "https://github.com/bangumi/scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 857763,
+        "name": "J.K.",
+        "created_at": "2021-12-26T07:01:58.000Z",
+        "url": "https://greasyfork.org/users/857763-j-k"
+      }
+    ],
+    "name": "Bangumi.tv Topic Comments Reversal",
+    "description": "倒序显示讨论串",
+    "url": "https://greasyfork.org/scripts/437597-bangumi-tv-topic-comments-reversal",
+    "code_url": "https://update.greasyfork.org/scripts/437597/Bangumitv%20Topic%20Comments%20Reversal.user.js",
+    "code_size": 2173,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

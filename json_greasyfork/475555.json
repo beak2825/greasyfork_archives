@@ -1,0 +1,59 @@
+{
+  "id": 475555,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-18T01:23:18.000Z",
+  "code_updated_at": "2023-09-18T01:23:18.000Z",
+  "namespace": "http://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1142049,
+      "name": "John 1632",
+      "created_at": "2023-08-02T12:23:02.000Z",
+      "url": "https://greasyfork.org/users/1142049-john-1632",
+      "scripts": [
+        {
+          "id": 474404,
+          "daily_installs": 0,
+          "total_installs": 819,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-02T09:15:23.000Z",
+          "code_updated_at": "2023-09-02T10:05:32.000Z",
+          "namespace": "https://tampermonkey.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mathletics Answer Typing Script",
+          "description": "Mathletics Live Cheats that actually give points! Hold 'A' to generate points, Press 'A' to type in the answer, or if your answer is already typed press 'A' to submit",
+          "url": "https://greasyfork.org/scripts/474404-mathletics-answer-typing-script",
+          "code_url": "https://update.greasyfork.org/scripts/474404/Mathletics%20Answer%20Typing%20Script.user.js",
+          "code_size": 1890,
+          "license": "MIT License",
+          "version": "1.02",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto Correct Answers - Standard",
+  "description": "Automatically select correct answers on Blooket when the wrong answer is chosen, toggle GUI with 'Q' key. Premium package includes Chest ESP",
+  "url": "https://greasyfork.org/scripts/475555-auto-correct-answers-standard",
+  "code_url": "https://update.greasyfork.org/scripts/475555/Auto%20Correct%20Answers%20-%20Standard.user.js",
+  "code_size": 3412,
+  "license": "MIT License",
+  "version": "1.16",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

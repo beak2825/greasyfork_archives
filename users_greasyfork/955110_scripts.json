@@ -1,0 +1,35 @@
+[
+  {
+    "id": 450821,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-06T06:35:59.000Z",
+    "code_updated_at": "2022-09-06T07:01:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 955110,
+        "name": "bugmakerprime",
+        "created_at": "2022-09-06T03:48:16.000Z",
+        "url": "https://greasyfork.org/users/955110-bugmakerprime"
+      }
+    ],
+    "name": "百度搜索去除csdn",
+    "description": "百度搜索时利用搜索规则去除csdn",
+    "url": "https://greasyfork.org/scripts/450821-%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E5%8E%BB%E9%99%A4csdn",
+    "code_url": "https://update.greasyfork.org/scripts/450821/%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E5%8E%BB%E9%99%A4csdn.user.js",
+    "code_size": 2559,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

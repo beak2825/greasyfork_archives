@@ -1,0 +1,33 @@
+{
+  "id": 420262,
+  "daily_installs": 0,
+  "total_installs": 70,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-16T01:38:21.000Z",
+  "code_updated_at": "2021-01-16T01:38:21.000Z",
+  "namespace": "WazeDev",
+  "support_url": null,
+  "contribution_url": "https://github.com/WazeDev/Thank-The-Authors",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 166843,
+      "name": "WazeDev",
+      "created_at": "2018-01-15T19:52:14.000Z",
+      "url": "https://greasyfork.org/users/166843-wazedev"
+    }
+  ],
+  "name": "WME Reminders",
+  "description": "Create reminders in the Waze Map Editor.",
+  "url": "https://greasyfork.org/scripts/420262-wme-reminders",
+  "code_url": "https://update.greasyfork.org/scripts/420262/WME%20Reminders.user.js",
+  "code_size": 4530,
+  "license": "GNU GPLv3",
+  "version": "2021.01.15.001",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 425364,
+  "daily_installs": 0,
+  "total_installs": 186,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-22T00:19:22.000Z",
+  "code_updated_at": "2021-04-25T06:26:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 763172,
+      "name": "ShingZhanho",
+      "created_at": "2021-04-22T00:01:27.000Z",
+      "url": "https://greasyfork.org/users/763172-shingzhanho",
+      "scripts": [
+        {
+          "id": 425364,
+          "daily_installs": 0,
+          "total_installs": 186,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-22T00:19:22.000Z",
+          "code_updated_at": "2021-04-25T06:26:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Transparent Navigation Bar",
+          "description": "Transform supported site's navigation bar into an acrylic nav bar.",
+          "url": "https://greasyfork.org/scripts/425364-transparent-navigation-bar",
+          "code_url": "https://update.greasyfork.org/scripts/425364/Transparent%20Navigation%20Bar.user.js",
+          "code_size": 4194,
+          "license": null,
+          "version": "0.1.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Transparent Navigation Bar",
+  "description": "Transform supported site's navigation bar into an acrylic nav bar.",
+  "url": "https://greasyfork.org/scripts/425364-transparent-navigation-bar",
+  "code_url": "https://update.greasyfork.org/scripts/425364/Transparent%20Navigation%20Bar.user.js",
+  "code_size": 4194,
+  "license": null,
+  "version": "0.1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

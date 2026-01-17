@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476651,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-03T23:36:24.000Z",
+    "code_updated_at": "2023-10-03T23:36:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 880929,
+        "name": "cass_per",
+        "created_at": "2022-02-26T22:39:30.000Z",
+        "url": "https://greasyfork.org/users/880929-cass-per"
+      }
+    ],
+    "name": "Back To Top / Elevator Button -- Fandom Wiki",
+    "description": "Adds a Back To Top / Elevator button for those pesky long pages.",
+    "url": "https://greasyfork.org/scripts/476651-back-to-top-elevator-button-fandom-wiki",
+    "code_url": "https://update.greasyfork.org/scripts/476651/Back%20To%20Top%20%20Elevator%20Button%20--%20Fandom%20Wiki.user.js",
+    "code_size": 1327,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

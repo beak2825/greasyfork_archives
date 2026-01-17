@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420150,
+    "daily_installs": 0,
+    "total_installs": 428,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-13T20:13:36.000Z",
+    "code_updated_at": "2021-01-13T21:07:45.000Z",
+    "namespace": "https://github.com/gadgetsan",
+    "support_url": "https://github.com/gadgetsan",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 727136,
+        "name": "Stéphane Beaudet",
+        "created_at": "2021-01-13T20:04:53.000Z",
+        "url": "https://greasyfork.org/users/727136-st%C3%A9phane-beaudet"
+      }
+    ],
+    "name": "New Wallhaven Enhance",
+    "description": "Some Wallhaven Enhancements, based on Wallhaven Enhance",
+    "url": "https://greasyfork.org/scripts/420150-new-wallhaven-enhance",
+    "code_url": "https://update.greasyfork.org/scripts/420150/New%20Wallhaven%20Enhance.user.js",
+    "code_size": 8355,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

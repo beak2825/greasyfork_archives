@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415353,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-03T04:17:44.000Z",
+    "code_updated_at": "2020-11-03T04:17:44.000Z",
+    "namespace": "cn.edu.bit",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 700814,
+        "name": "xiaoye99",
+        "created_at": "2020-11-03T04:09:58.000Z",
+        "url": "https://greasyfork.org/users/700814-xiaoye99"
+      }
+    ],
+    "name": "北理乐学美化",
+    "description": "优化乐学的显示界面",
+    "url": "https://greasyfork.org/scripts/415353-%E5%8C%97%E7%90%86%E4%B9%90%E5%AD%A6%E7%BE%8E%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/415353/%E5%8C%97%E7%90%86%E4%B9%90%E5%AD%A6%E7%BE%8E%E5%8C%96.user.js",
+    "code_size": 1424,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

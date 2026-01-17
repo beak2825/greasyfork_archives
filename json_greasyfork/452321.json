@@ -1,0 +1,33 @@
+{
+  "id": 452321,
+  "daily_installs": 0,
+  "total_installs": 417,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-01T06:26:23.000Z",
+  "code_updated_at": "2022-10-01T06:32:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 965270,
+      "name": "CrazyGang97",
+      "created_at": "2022-10-01T06:20:28.000Z",
+      "url": "https://greasyfork.org/users/965270-crazygang97"
+    }
+  ],
+  "name": "Skip_zgzjzj",
+  "description": "用于对zgzjzj的确认跳过",
+  "url": "https://greasyfork.org/scripts/452321-skip-zgzjzj",
+  "code_url": "https://update.greasyfork.org/scripts/452321/Skip_zgzjzj.user.js",
+  "code_size": 899,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

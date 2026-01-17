@@ -1,0 +1,34 @@
+{
+  "id": 472530,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-06T04:13:08.000Z",
+  "code_updated_at": "2024-11-27T00:37:00.000Z",
+  "namespace": "http://hndx.fcsys.eu.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1145021,
+      "name": "dfc643",
+      "created_at": "2023-08-06T02:51:00.000Z",
+      "url": "https://greasyfork.org/users/1145021-dfc643",
+      "scripts": []
+    }
+  ],
+  "name": "【zPortal】固话选号补丁",
+  "description": "为 ZTE zPortal 修复部分浏览器在进行固话选号时，无法弹出选号列表",
+  "url": "https://greasyfork.org/scripts/472530-zportal-%E5%9B%BA%E8%AF%9D%E9%80%89%E5%8F%B7%E8%A1%A5%E4%B8%81",
+  "code_url": "https://update.greasyfork.org/scripts/472530/%E3%80%90zPortal%E3%80%91%E5%9B%BA%E8%AF%9D%E9%80%89%E5%8F%B7%E8%A1%A5%E4%B8%81.user.js",
+  "code_size": 856,
+  "license": "MIT License",
+  "version": "2024.1127",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

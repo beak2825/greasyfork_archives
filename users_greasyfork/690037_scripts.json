@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457447,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-01T08:21:52.000Z",
+    "code_updated_at": "2023-01-01T08:21:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 690037,
+        "name": "imhucy",
+        "created_at": "2020-09-24T06:54:11.000Z",
+        "url": "https://greasyfork.org/users/690037-imhucy"
+      }
+    ],
+    "name": "克拉TV(哈哩哈哩)_视频观看进度",
+    "description": "克拉TV_视频观看进度",
+    "url": "https://greasyfork.org/scripts/457447-%E5%85%8B%E6%8B%89tv-%E5%93%88%E5%93%A9%E5%93%88%E5%93%A9-%E8%A7%86%E9%A2%91%E8%A7%82%E7%9C%8B%E8%BF%9B%E5%BA%A6",
+    "code_url": "https://update.greasyfork.org/scripts/457447/%E5%85%8B%E6%8B%89TV%28%E5%93%88%E5%93%A9%E5%93%88%E5%93%A9%29_%E8%A7%86%E9%A2%91%E8%A7%82%E7%9C%8B%E8%BF%9B%E5%BA%A6.user.js",
+    "code_size": 10608,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

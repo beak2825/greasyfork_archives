@@ -1,0 +1,68 @@
+[
+  {
+    "id": 429447,
+    "daily_installs": 0,
+    "total_installs": 128,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-15T22:21:24.000Z",
+    "code_updated_at": "2021-07-19T22:40:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 521874,
+        "name": "momala454",
+        "created_at": "2020-04-18T22:06:26.000Z",
+        "url": "https://greasyfork.org/users/521874-momala454"
+      }
+    ],
+    "name": "9gag auto video control",
+    "description": "Automatically add video controls to videos on 9gag, without using timeout (which use a lot of ressource), but using MutationObserver instead (kind of an event when a video is added). The controls are added when you click on the video, to prevent problems with the function that put sound when you click. For videos without sound (\"gif\"), controls are shown directly",
+    "url": "https://greasyfork.org/scripts/429447-9gag-auto-video-control",
+    "code_url": "https://update.greasyfork.org/scripts/429447/9gag%20auto%20video%20control.user.js",
+    "code_size": 2583,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419496,
+    "daily_installs": 0,
+    "total_installs": 86,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-01T15:16:36.000Z",
+    "code_updated_at": "2022-01-26T10:02:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 521874,
+        "name": "momala454",
+        "created_at": "2020-04-18T22:06:26.000Z",
+        "url": "https://greasyfork.org/users/521874-momala454"
+      }
+    ],
+    "name": "jeuxvideo.com anti autoplay",
+    "description": "Supprime l'autoplay des vidéos sur jeuxvideo.com",
+    "url": "https://greasyfork.org/scripts/419496-jeuxvideo-com-anti-autoplay",
+    "code_url": "https://update.greasyfork.org/scripts/419496/jeuxvideocom%20anti%20autoplay.user.js",
+    "code_size": 797,
+    "license": null,
+    "version": "1.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

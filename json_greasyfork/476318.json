@@ -1,0 +1,34 @@
+{
+  "id": 476318,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-29T08:36:27.000Z",
+  "code_updated_at": "2023-10-11T21:41:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 912187,
+      "name": "ellum",
+      "created_at": "2022-05-09T09:13:19.000Z",
+      "url": "https://greasyfork.org/users/912187-ellum",
+      "scripts": []
+    }
+  ],
+  "name": "Minútové správy ako vertikálny sidebar",
+  "description": "Prerobenie sekcie s minútovými správami na vertikálny sidebar vpravo",
+  "url": "https://greasyfork.org/scripts/476318-min%C3%BAtov%C3%A9-spr%C3%A1vy-ako-vertik%C3%A1lny-sidebar",
+  "code_url": "https://update.greasyfork.org/scripts/476318/Min%C3%BAtov%C3%A9%20spr%C3%A1vy%20ako%20vertik%C3%A1lny%20sidebar.user.js",
+  "code_size": 1169,
+  "license": null,
+  "version": "1.1",
+  "locale": "sk",
+  "deleted": false,
+  "visibility": "public"
+}

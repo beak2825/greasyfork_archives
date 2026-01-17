@@ -1,0 +1,59 @@
+{
+  "id": 447925,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-15T19:05:46.000Z",
+  "code_updated_at": "2022-07-15T22:13:32.000Z",
+  "namespace": "https://cryptoweb3.tools/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 936092,
+      "name": "白丁0xlover",
+      "created_at": "2022-07-15T18:28:55.000Z",
+      "url": "https://greasyfork.org/users/936092-%E7%99%BD%E4%B8%810xlover",
+      "scripts": [
+        {
+          "id": 447925,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-15T19:05:46.000Z",
+          "code_updated_at": "2022-07-15T22:13:32.000Z",
+          "namespace": "https://cryptoweb3.tools/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NFT Rank Of CryptoWeb3.tools",
+          "description": "使CryptoWeb3更快的获取到NFT的Rank",
+          "url": "https://greasyfork.org/scripts/447925-nft-rank-of-cryptoweb3-tools",
+          "code_url": "https://update.greasyfork.org/scripts/447925/NFT%20Rank%20Of%20CryptoWeb3tools.user.js",
+          "code_size": 2116,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NFT Rank Of CryptoWeb3.tools",
+  "description": "使CryptoWeb3更快的获取到NFT的Rank",
+  "url": "https://greasyfork.org/scripts/447925-nft-rank-of-cryptoweb3-tools",
+  "code_url": "https://update.greasyfork.org/scripts/447925/NFT%20Rank%20Of%20CryptoWeb3tools.user.js",
+  "code_size": 2116,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

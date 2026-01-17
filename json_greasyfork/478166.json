@@ -1,0 +1,34 @@
+{
+  "id": 478166,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-24T13:06:46.000Z",
+  "code_updated_at": "2023-10-24T13:06:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1203270,
+      "name": "Michal Hornok",
+      "created_at": "2023-10-24T12:47:32.000Z",
+      "url": "https://greasyfork.org/users/1203270-michal-hornok",
+      "scripts": []
+    }
+  ],
+  "name": "Čína Basketbal - Přesměrování do live url",
+  "description": "Přesměrování do detailu",
+  "url": "https://greasyfork.org/scripts/478166-%C4%8D%C3%ADna-basketbal-p%C5%99esm%C4%9Brov%C3%A1n%C3%AD-do-live-url",
+  "code_url": "https://update.greasyfork.org/scripts/478166/%C4%8C%C3%ADna%20Basketbal%20-%20P%C5%99esm%C4%9Brov%C3%A1n%C3%AD%20do%20live%20url.user.js",
+  "code_size": 678,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

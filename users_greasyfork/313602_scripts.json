@@ -1,0 +1,68 @@
+[
+  {
+    "id": 476163,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-27T11:32:52.000Z",
+    "code_updated_at": "2023-11-14T07:50:19.000Z",
+    "namespace": "范文助手",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 313602,
+        "name": "dongchengtao",
+        "created_at": "2019-06-26T15:11:47.000Z",
+        "url": "https://greasyfork.org/users/313602-dongchengtao"
+      }
+    ],
+    "name": "范文助手",
+    "description": "绕过收费，支持网站：www.diyifanwen.com、www.77cn.com.cn、www.fanwenwang.com、www.cnfla.com、fanwen.chazidian.com、www.liuxue86.com、www.xuefen.com.cn",
+    "url": "https://greasyfork.org/scripts/476163-%E8%8C%83%E6%96%87%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/476163/%E8%8C%83%E6%96%87%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 4150,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "cy",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 428118,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-18T04:41:32.000Z",
+    "code_updated_at": "2021-06-18T04:41:32.000Z",
+    "namespace": "https://github.com/WindrunnerMax/TKScript",
+    "support_url": "https://github.com/WindrunnerMax/TKScript/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 313602,
+        "name": "dongchengtao",
+        "created_at": "2019-06-26T15:11:47.000Z",
+        "url": "https://greasyfork.org/users/313602-dongchengtao"
+      }
+    ],
+    "name": "🔥🔥🔥文本选中复制🔥🔥🔥",
+    "description": "解除网站不允许复制的限制，文本选中后点击复制按钮即可复制，主要用于 百度文库 道客巴巴 无忧考网 学习啦 蓬勃范文 思否社区 力扣 知乎 语雀 等",
+    "url": "https://greasyfork.org/scripts/428118-%E6%96%87%E6%9C%AC%E9%80%89%E4%B8%AD%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/428118/%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5%E6%96%87%E6%9C%AC%E9%80%89%E4%B8%AD%E5%A4%8D%E5%88%B6%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5.user.js",
+    "code_size": 11647,
+    "license": "GPL License",
+    "version": "2.2.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

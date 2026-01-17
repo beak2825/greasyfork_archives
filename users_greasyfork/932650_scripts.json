@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447459,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-05T13:33:06.000Z",
+    "code_updated_at": "2022-07-19T04:09:46.000Z",
+    "namespace": "https://blog.iotlearn.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 932650,
+        "name": "xsxz01",
+        "created_at": "2022-07-05T13:26:55.000Z",
+        "url": "https://greasyfork.org/users/932650-xsxz01"
+      }
+    ],
+    "name": "csdn自动评论插件",
+    "description": "打开csdn文章会自动进行评论，前提是你得登录",
+    "url": "https://greasyfork.org/scripts/447459-csdn%E8%87%AA%E5%8A%A8%E8%AF%84%E8%AE%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/447459/csdn%E8%87%AA%E5%8A%A8%E8%AF%84%E8%AE%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 4419,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

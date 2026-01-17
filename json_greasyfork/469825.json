@@ -1,0 +1,34 @@
+{
+  "id": 469825,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-30T06:44:23.000Z",
+  "code_updated_at": "2024-01-25T02:30:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1053903,
+      "name": "u1024i",
+      "created_at": "2023-04-05T16:35:34.000Z",
+      "url": "https://greasyfork.org/users/1053903-u1024i",
+      "scripts": []
+    }
+  ],
+  "name": "政务服务网优化",
+  "description": "政务服务网优化!",
+  "url": "https://greasyfork.org/scripts/469825-%E6%94%BF%E5%8A%A1%E6%9C%8D%E5%8A%A1%E7%BD%91%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/469825/%E6%94%BF%E5%8A%A1%E6%9C%8D%E5%8A%A1%E7%BD%91%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 32902,
+  "license": null,
+  "version": "0.42",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

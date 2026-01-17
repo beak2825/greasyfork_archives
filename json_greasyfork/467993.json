@@ -1,0 +1,59 @@
+{
+  "id": 467993,
+  "daily_installs": 0,
+  "total_installs": 108,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-05T16:58:05.000Z",
+  "code_updated_at": "2023-06-05T16:58:05.000Z",
+  "namespace": "https://greasyfork.org/users/1089374",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1089374,
+      "name": "LeWolfYT",
+      "created_at": "2023-06-03T00:18:43.000Z",
+      "url": "https://greasyfork.org/users/1089374-lewolfyt",
+      "scripts": [
+        {
+          "id": 467993,
+          "daily_installs": 0,
+          "total_installs": 108,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-05T16:58:05.000Z",
+          "code_updated_at": "2023-06-05T16:58:05.000Z",
+          "namespace": "https://greasyfork.org/users/1089374",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bonk-vtol-alternate",
+          "description": "A userscript to add VTOL back into bonk.io. Works with most extensions and userscripts (other than the VarTOL mod by Blu, which this script is based on)",
+          "url": "https://greasyfork.org/scripts/467993-bonk-vtol-alternate",
+          "code_url": "https://update.greasyfork.org/scripts/467993/bonk-vtol-alternate.user.js",
+          "code_size": 13182,
+          "license": null,
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bonk-vtol-alternate",
+  "description": "A userscript to add VTOL back into bonk.io. Works with most extensions and userscripts (other than the VarTOL mod by Blu, which this script is based on)",
+  "url": "https://greasyfork.org/scripts/467993-bonk-vtol-alternate",
+  "code_url": "https://update.greasyfork.org/scripts/467993/bonk-vtol-alternate.user.js",
+  "code_size": 13182,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

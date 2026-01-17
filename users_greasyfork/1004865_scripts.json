@@ -1,0 +1,68 @@
+[
+  {
+    "id": 470005,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-02T22:18:00.000Z",
+    "code_updated_at": "2023-08-05T21:41:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1004865,
+        "name": "KiraSmith-Dev",
+        "created_at": "2022-12-31T01:05:48.000Z",
+        "url": "https://greasyfork.org/users/1004865-kirasmith-dev"
+      }
+    ],
+    "name": "9anime Hide Title Spoilers",
+    "description": "Automatically hide titles for current & future episodes (shows past episode titles)",
+    "url": "https://greasyfork.org/scripts/470005-9anime-hide-title-spoilers",
+    "code_url": "https://update.greasyfork.org/scripts/470005/9anime%20Hide%20Title%20Spoilers.user.js",
+    "code_size": 4024,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457379,
+    "daily_installs": 0,
+    "total_installs": 510,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-12-31T01:12:13.000Z",
+    "code_updated_at": "2023-12-27T14:50:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1004865,
+        "name": "KiraSmith-Dev",
+        "created_at": "2022-12-31T01:05:48.000Z",
+        "url": "https://greasyfork.org/users/1004865-kirasmith-dev"
+      }
+    ],
+    "name": "9anime Auto Best Resolution",
+    "description": "Automatcially select the highest resolution on vidstream/mycloud streams",
+    "url": "https://greasyfork.org/scripts/457379-9anime-auto-best-resolution",
+    "code_url": "https://update.greasyfork.org/scripts/457379/9anime%20Auto%20Best%20Resolution.user.js",
+    "code_size": 1730,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

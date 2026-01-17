@@ -1,0 +1,33 @@
+{
+  "id": 472984,
+  "daily_installs": 0,
+  "total_installs": 151,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-13T13:13:47.000Z",
+  "code_updated_at": "2023-08-14T14:42:06.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1043719,
+      "name": "Surik Kostanyan",
+      "created_at": "2023-03-17T15:14:00.000Z",
+      "url": "https://greasyfork.org/users/1043719-surik-kostanyan"
+    }
+  ],
+  "name": "fire deleter,and 🐛 emoji adder",
+  "description": "13.08.2023, 17:12:06",
+  "url": "https://greasyfork.org/scripts/472984-fire-deleter-and-emoji-adder",
+  "code_url": "https://update.greasyfork.org/scripts/472984/fire%20deleter%2Cand%20%F0%9F%90%9B%20emoji%20adder.user.js",
+  "code_size": 1535,
+  "license": "MIT License",
+  "version": "alpha 0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

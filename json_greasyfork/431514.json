@@ -1,0 +1,59 @@
+{
+  "id": 431514,
+  "daily_installs": 0,
+  "total_installs": 149102,
+  "fan_score": "66.9",
+  "good_ratings": 48,
+  "ok_ratings": 16,
+  "bad_ratings": 8,
+  "created_at": "2021-08-28T06:31:57.000Z",
+  "code_updated_at": "2022-05-20T10:04:15.000Z",
+  "namespace": "lyj",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 809428,
+      "name": "z@2333.pub",
+      "created_at": "2021-08-28T06:28:16.000Z",
+      "url": "https://greasyfork.org/users/809428-z-2333-pub",
+      "scripts": [
+        {
+          "id": 431514,
+          "daily_installs": 0,
+          "total_installs": 149102,
+          "fan_score": "66.9",
+          "good_ratings": 48,
+          "ok_ratings": 16,
+          "bad_ratings": 8,
+          "created_at": "2021-08-28T06:31:57.000Z",
+          "code_updated_at": "2022-05-20T10:04:15.000Z",
+          "namespace": "lyj",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "超星网课助手/刷课/搜题（支持图片）/考试/all in one(fake题)",
+          "description": "考试版已经合并，自动答题，视频自动完成，章节测验自动答题提交，自动切换任务点等，开放自定义参数",
+          "url": "https://greasyfork.org/scripts/431514-%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B-%E5%88%B7%E8%AF%BE-%E6%90%9C%E9%A2%98-%E6%94%AF%E6%8C%81%E5%9B%BE%E7%89%87-%E8%80%83%E8%AF%95-all-in-one-fake%E9%A2%98",
+          "code_url": "https://update.greasyfork.org/scripts/431514/%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B%E5%88%B7%E8%AF%BE%E6%90%9C%E9%A2%98%EF%BC%88%E6%94%AF%E6%8C%81%E5%9B%BE%E7%89%87%EF%BC%89%E8%80%83%E8%AF%95all%20in%20one%28fake%E9%A2%98%29.user.js",
+          "code_size": 48081,
+          "license": "MIT License",
+          "version": "3.4.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "超星网课助手/刷课/搜题（支持图片）/考试/all in one(fake题)",
+  "description": "考试版已经合并，自动答题，视频自动完成，章节测验自动答题提交，自动切换任务点等，开放自定义参数",
+  "url": "https://greasyfork.org/scripts/431514-%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B-%E5%88%B7%E8%AF%BE-%E6%90%9C%E9%A2%98-%E6%94%AF%E6%8C%81%E5%9B%BE%E7%89%87-%E8%80%83%E8%AF%95-all-in-one-fake%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/431514/%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B%E5%88%B7%E8%AF%BE%E6%90%9C%E9%A2%98%EF%BC%88%E6%94%AF%E6%8C%81%E5%9B%BE%E7%89%87%EF%BC%89%E8%80%83%E8%AF%95all%20in%20one%28fake%E9%A2%98%29.user.js",
+  "code_size": 48081,
+  "license": "MIT License",
+  "version": "3.4.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

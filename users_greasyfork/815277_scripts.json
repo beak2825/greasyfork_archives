@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432393,
+    "daily_installs": 0,
+    "total_installs": 138,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-14T08:32:58.000Z",
+    "code_updated_at": "2021-09-14T08:32:58.000Z",
+    "namespace": "https://greasyfork.org/users/815277",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815277,
+        "name": "HanSuhhi",
+        "created_at": "2021-09-14T08:16:36.000Z",
+        "url": "https://greasyfork.org/users/815277-hansuhhi"
+      }
+    ],
+    "name": "csdn 代码块自由复制",
+    "description": "真受不了CSDN每一次都能推陈出新，用来恶心用户的新功能。",
+    "url": "https://greasyfork.org/scripts/432393-csdn-%E4%BB%A3%E7%A0%81%E5%9D%97%E8%87%AA%E7%94%B1%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/432393/csdn%20%E4%BB%A3%E7%A0%81%E5%9D%97%E8%87%AA%E7%94%B1%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 393,
+    "license": null,
+    "version": "0.0.1.20210914083258",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

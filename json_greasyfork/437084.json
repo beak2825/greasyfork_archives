@@ -1,0 +1,34 @@
+{
+  "id": 437084,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-15T10:27:16.000Z",
+  "code_updated_at": "2021-12-15T10:27:16.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 831932,
+      "name": "黑呦呦",
+      "created_at": "2021-11-04T04:51:34.000Z",
+      "url": "https://greasyfork.org/users/831932-%E9%BB%91%E5%91%A6%E5%91%A6",
+      "scripts": []
+    }
+  ],
+  "name": "成哥自用浏览器功能扩展",
+  "description": "视频全屏，手势快进",
+  "url": "https://greasyfork.org/scripts/437084-%E6%88%90%E5%93%A5%E8%87%AA%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E5%8A%9F%E8%83%BD%E6%89%A9%E5%B1%95",
+  "code_url": "https://update.greasyfork.org/scripts/437084/%E6%88%90%E5%93%A5%E8%87%AA%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E5%8A%9F%E8%83%BD%E6%89%A9%E5%B1%95.user.js",
+  "code_size": 11813,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

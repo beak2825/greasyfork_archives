@@ -1,0 +1,34 @@
+{
+  "id": 469277,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-23T07:19:46.000Z",
+  "code_updated_at": "2023-06-23T07:19:45.000Z",
+  "namespace": "https://www.ilzya.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1096635,
+      "name": "lee jack888",
+      "created_at": "2023-06-11T16:59:41.000Z",
+      "url": "https://greasyfork.org/users/1096635-lee-jack888",
+      "scripts": []
+    }
+  ],
+  "name": "空城里链接助手本地版",
+  "description": "免等待下载文件，超酷的哎~",
+  "url": "https://greasyfork.org/scripts/469277-%E7%A9%BA%E5%9F%8E%E9%87%8C%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B%E6%9C%AC%E5%9C%B0%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/469277/%E7%A9%BA%E5%9F%8E%E9%87%8C%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B%E6%9C%AC%E5%9C%B0%E7%89%88.user.js",
+  "code_size": 17990,
+  "license": "AGPL",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

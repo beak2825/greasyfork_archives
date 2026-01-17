@@ -1,0 +1,59 @@
+{
+  "id": 440890,
+  "daily_installs": 0,
+  "total_installs": 286,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-03-04T07:43:03.000Z",
+  "code_updated_at": "2022-03-06T10:00:02.000Z",
+  "namespace": "https://greasyfork.org/users/882700",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 882700,
+      "name": "FGFW",
+      "created_at": "2022-03-04T04:55:13.000Z",
+      "url": "https://greasyfork.org/users/882700-fgfw",
+      "scripts": [
+        {
+          "id": 440890,
+          "daily_installs": 0,
+          "total_installs": 286,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-03-04T07:43:03.000Z",
+          "code_updated_at": "2022-03-06T10:00:02.000Z",
+          "namespace": "https://greasyfork.org/users/882700",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CORS-via-GM",
+          "description": "CORS via Greasemonkey/Tampermonkey",
+          "url": "https://greasyfork.org/scripts/440890-cors-via-gm",
+          "code_url": "https://update.greasyfork.org/scripts/440890/CORS-via-GM.user.js",
+          "code_size": 1898,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "1.01",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CORS-via-GM",
+  "description": "CORS via Greasemonkey/Tampermonkey",
+  "url": "https://greasyfork.org/scripts/440890-cors-via-gm",
+  "code_url": "https://update.greasyfork.org/scripts/440890/CORS-via-GM.user.js",
+  "code_size": 1898,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

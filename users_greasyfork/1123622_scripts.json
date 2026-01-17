@@ -1,0 +1,35 @@
+[
+  {
+    "id": 470567,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-10T22:24:16.000Z",
+    "code_updated_at": "2023-07-10T22:24:16.000Z",
+    "namespace": "https://github.com/bababoyisntapopularname",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1123622,
+        "name": "jorgefreeman1.9.2.6.02.2.2@gmail.com",
+        "created_at": "2023-07-10T22:22:58.000Z",
+        "url": "https://greasyfork.org/users/1123622-jorgefreeman1-9-2-6-02-2-2-gmail-com"
+      }
+    ],
+    "name": "Bababot AntiDot Plugin",
+    "description": "Bababot",
+    "url": "https://greasyfork.org/scripts/470567-bababot-antidot-plugin",
+    "code_url": "https://update.greasyfork.org/scripts/470567/Bababot%20AntiDot%20Plugin.user.js",
+    "code_size": 1898,
+    "license": "GPLv3",
+    "version": "v1.0public",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473067,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-14T15:59:55.000Z",
+    "code_updated_at": "2023-08-14T16:04:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 474564,
+        "name": "yuze0804007",
+        "created_at": "2020-04-04T02:46:35.000Z",
+        "url": "https://greasyfork.org/users/474564-yuze0804007"
+      }
+    ],
+    "name": "ChatGPT+轻小说生肉TXT+分段上传+自动翻译",
+    "description": "GPT自动分段上传轻小说生肉TXT,然后翻译输出中文内容",
+    "url": "https://greasyfork.org/scripts/473067-chatgpt-%E8%BD%BB%E5%B0%8F%E8%AF%B4%E7%94%9F%E8%82%89txt-%E5%88%86%E6%AE%B5%E4%B8%8A%E4%BC%A0-%E8%87%AA%E5%8A%A8%E7%BF%BB%E8%AF%91",
+    "code_url": "https://update.greasyfork.org/scripts/473067/ChatGPT%2B%E8%BD%BB%E5%B0%8F%E8%AF%B4%E7%94%9F%E8%82%89TXT%2B%E5%88%86%E6%AE%B5%E4%B8%8A%E4%BC%A0%2B%E8%87%AA%E5%8A%A8%E7%BF%BB%E8%AF%91.user.js",
+    "code_size": 16619,
+    "license": "MIT License",
+    "version": "0.11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442859,
+    "daily_installs": 0,
+    "total_installs": 1351,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-06T11:01:37.000Z",
+    "code_updated_at": "2022-07-04T17:07:09.000Z",
+    "namespace": "https://github.com/shiba2046/greasemonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 841930,
+        "name": "Pengus F",
+        "created_at": "2021-11-21T05:03:00.000Z",
+        "url": "https://greasyfork.org/users/841930-pengus-f"
+      }
+    ],
+    "name": "基金从业人员远程培训工具",
+    "description": "Prevent the video stop when lost focus",
+    "url": "https://greasyfork.org/scripts/442859-%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E4%BA%BA%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/442859/%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E4%BA%BA%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 752,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

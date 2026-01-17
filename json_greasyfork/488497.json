@@ -1,0 +1,34 @@
+{
+  "id": 488497,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-28T03:47:53.000Z",
+  "code_updated_at": "2024-04-16T03:17:44.000Z",
+  "namespace": "https://www.1024net.tech/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 470915,
+      "name": "songkaik",
+      "created_at": "2020-03-29T02:23:52.000Z",
+      "url": "https://greasyfork.org/users/470915-songkaik",
+      "scripts": []
+    }
+  ],
+  "name": "通用获取模板",
+  "description": "I try to take over the world!",
+  "url": "https://greasyfork.org/scripts/488497-%E9%80%9A%E7%94%A8%E8%8E%B7%E5%8F%96%E6%A8%A1%E6%9D%BF",
+  "code_url": "https://update.greasyfork.org/scripts/488497/%E9%80%9A%E7%94%A8%E8%8E%B7%E5%8F%96%E6%A8%A1%E6%9D%BF.user.js",
+  "code_size": 2489,
+  "license": null,
+  "version": "2024.04.16.080000",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

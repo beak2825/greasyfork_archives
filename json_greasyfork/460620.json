@@ -1,0 +1,59 @@
+{
+  "id": 460620,
+  "daily_installs": 0,
+  "total_installs": 183,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-23T20:26:15.000Z",
+  "code_updated_at": "2024-10-14T18:10:05.000Z",
+  "namespace": "https://greasyfork.org/en/users/1031446-debsec",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1031446,
+      "name": "DebSec",
+      "created_at": "2023-02-22T19:35:24.000Z",
+      "url": "https://greasyfork.org/users/1031446-debsec",
+      "scripts": [
+        {
+          "id": 460620,
+          "daily_installs": 0,
+          "total_installs": 183,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-23T20:26:15.000Z",
+          "code_updated_at": "2024-10-14T18:10:05.000Z",
+          "namespace": "https://greasyfork.org/en/users/1031446-debsec",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "eBay Annoyances Remover",
+          "description": "Removes eBay Ads, Reviews, Recommendations & Other General Annoyances",
+          "url": "https://greasyfork.org/scripts/460620-ebay-annoyances-remover",
+          "code_url": "https://update.greasyfork.org/scripts/460620/eBay%20Annoyances%20Remover.user.js",
+          "code_size": 3121,
+          "license": "DWTFYWTPL",
+          "version": "2.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "eBay Annoyances Remover",
+  "description": "Removes eBay Ads, Reviews, Recommendations & Other General Annoyances",
+  "url": "https://greasyfork.org/scripts/460620-ebay-annoyances-remover",
+  "code_url": "https://update.greasyfork.org/scripts/460620/eBay%20Annoyances%20Remover.user.js",
+  "code_size": 3121,
+  "license": "DWTFYWTPL",
+  "version": "2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

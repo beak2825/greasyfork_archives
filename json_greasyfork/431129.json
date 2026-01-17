@@ -1,0 +1,33 @@
+{
+  "id": 431129,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-21T05:20:13.000Z",
+  "code_updated_at": "2025-10-24T14:19:18.000Z",
+  "namespace": "iilj",
+  "support_url": "https://github.com/iilj/comfortable-yukicoder/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 432475,
+      "name": "iilj",
+      "created_at": "2020-01-05T07:43:34.000Z",
+      "url": "https://greasyfork.org/users/432475-iilj"
+    }
+  ],
+  "name": "comfortable-yukicoder",
+  "description": "yukicoder にいくつかの機能を追加します．主に動線を増やします．",
+  "url": "https://greasyfork.org/scripts/431129-comfortable-yukicoder",
+  "code_url": "https://update.greasyfork.org/scripts/431129/comfortable-yukicoder.user.js",
+  "code_size": 36134,
+  "license": "MIT License",
+  "version": "1.2.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 434534,
+    "daily_installs": 0,
+    "total_installs": 400,
+    "fan_score": "30.1",
+    "good_ratings": 2,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2021-10-27T05:15:06.000Z",
+    "code_updated_at": "2025-09-16T23:33:11.000Z",
+    "namespace": "https://greasyfork.org/ru/users/302695",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 302695,
+        "name": "Pagan of Dark",
+        "created_at": "2019-05-17T15:55:39.000Z",
+        "url": "https://greasyfork.org/users/302695-pagan-of-dark"
+      }
+    ],
+    "name": "HWM GO Helper",
+    "description": "Помощник ГО (версия от 2025.09.17)",
+    "url": "https://greasyfork.org/scripts/434534-hwm-go-helper",
+    "code_url": "https://update.greasyfork.org/scripts/434534/HWM%20GO%20Helper.user.js",
+    "code_size": 74149,
+    "license": "MIT License",
+    "version": "6.361.1",
+    "locale": "bg",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

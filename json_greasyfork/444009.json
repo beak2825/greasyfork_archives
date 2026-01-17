@@ -1,0 +1,59 @@
+{
+  "id": 444009,
+  "daily_installs": 0,
+  "total_installs": 159,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-26T04:14:08.000Z",
+  "code_updated_at": "2022-04-26T07:35:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 907022,
+      "name": "resonates",
+      "created_at": "2022-04-26T04:05:51.000Z",
+      "url": "https://greasyfork.org/users/907022-resonates",
+      "scripts": [
+        {
+          "id": 444009,
+          "daily_installs": 0,
+          "total_installs": 159,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-26T04:14:08.000Z",
+          "code_updated_at": "2022-04-26T07:35:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微信读书自动阅读",
+          "description": "web微信读书自动阅读",
+          "url": "https://greasyfork.org/scripts/444009-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB",
+          "code_url": "https://update.greasyfork.org/scripts/444009/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB.user.js",
+          "code_size": 900,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微信读书自动阅读",
+  "description": "web微信读书自动阅读",
+  "url": "https://greasyfork.org/scripts/444009-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB",
+  "code_url": "https://update.greasyfork.org/scripts/444009/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB.user.js",
+  "code_size": 900,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

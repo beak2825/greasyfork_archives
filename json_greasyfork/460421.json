@@ -1,0 +1,34 @@
+{
+  "id": 460421,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-21T00:45:53.000Z",
+  "code_updated_at": "2024-02-19T00:54:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906534,
+      "name": "rusania",
+      "created_at": "2022-04-25T01:13:31.000Z",
+      "url": "https://greasyfork.org/users/906534-rusania",
+      "scripts": []
+    }
+  ],
+  "name": "steam_cart",
+  "description": "steam cart more info",
+  "url": "https://greasyfork.org/scripts/460421-steam-cart",
+  "code_url": "https://update.greasyfork.org/scripts/460421/steam_cart.user.js",
+  "code_size": 10019,
+  "license": "jacky",
+  "version": "2024.02.19.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

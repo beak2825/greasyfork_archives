@@ -1,0 +1,59 @@
+{
+  "id": 447237,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-29T16:55:49.000Z",
+  "code_updated_at": "2022-06-29T16:55:49.000Z",
+  "namespace": "http://userstyles.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 930466,
+      "name": "Bong Tun",
+      "created_at": "2022-06-29T16:54:09.000Z",
+      "url": "https://greasyfork.org/users/930466-bong-tun",
+      "scripts": [
+        {
+          "id": 447237,
+          "daily_installs": 0,
+          "total_installs": 39,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-29T16:55:49.000Z",
+          "code_updated_at": "2022-06-29T16:55:49.000Z",
+          "namespace": "http://userstyles.org",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "The Next VOZ - Classic",
+          "description": "Custom CSS By Ga9xVn - Make The Next VOZ Great Again",
+          "url": "https://greasyfork.org/scripts/447237-the-next-voz-classic",
+          "code_url": "https://update.greasyfork.org/scripts/447237/The%20Next%20VOZ%20-%20Classic.user.js",
+          "code_size": 23662,
+          "license": null,
+          "version": "0.20200519054757",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "The Next VOZ - Classic",
+  "description": "Custom CSS By Ga9xVn - Make The Next VOZ Great Again",
+  "url": "https://greasyfork.org/scripts/447237-the-next-voz-classic",
+  "code_url": "https://update.greasyfork.org/scripts/447237/The%20Next%20VOZ%20-%20Classic.user.js",
+  "code_size": 23662,
+  "license": null,
+  "version": "0.20200519054757",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 429781,
+  "daily_installs": 2,
+  "total_installs": 12125,
+  "fan_score": "51.0",
+  "good_ratings": 4,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-23T15:16:02.000Z",
+  "code_updated_at": "2025-12-22T08:54:07.000Z",
+  "namespace": "https://www.rainng.com/",
+  "support_url": "https://www.rainng.com/osu-download-booster",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 437820,
+      "name": "Azure99",
+      "created_at": "2020-01-23T13:51:47.000Z",
+      "url": "https://greasyfork.org/users/437820-azure99",
+      "scripts": [
+        {
+          "id": 429781,
+          "daily_installs": 2,
+          "total_installs": 12125,
+          "fan_score": "51.0",
+          "good_ratings": 4,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-07-23T15:16:02.000Z",
+          "code_updated_at": "2025-12-22T08:54:07.000Z",
+          "namespace": "https://www.rainng.com/",
+          "support_url": "https://www.rainng.com/osu-download-booster",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OSU Download Booster",
+          "description": "Osu谱面下载加速, 为中国玩家打造, 支持Rainng(Azure99维护)和Sayo(小夜维护)的镜像",
+          "url": "https://greasyfork.org/scripts/429781-osu-download-booster",
+          "code_url": "https://update.greasyfork.org/scripts/429781/OSU%20Download%20Booster.user.js",
+          "code_size": 5288,
+          "license": "MIT License",
+          "version": "2.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OSU Download Booster",
+  "description": "Osu谱面下载加速, 为中国玩家打造, 支持Rainng(Azure99维护)和Sayo(小夜维护)的镜像",
+  "url": "https://greasyfork.org/scripts/429781-osu-download-booster",
+  "code_url": "https://update.greasyfork.org/scripts/429781/OSU%20Download%20Booster.user.js",
+  "code_size": 5288,
+  "license": "MIT License",
+  "version": "2.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

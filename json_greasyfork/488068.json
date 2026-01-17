@@ -1,0 +1,34 @@
+{
+  "id": 488068,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-23T04:48:52.000Z",
+  "code_updated_at": "2024-02-23T11:25:08.000Z",
+  "namespace": "https://anthelion.me/torrents.php*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265674,
+      "name": "EnigmaticBacon",
+      "created_at": "2024-02-23T04:43:42.000Z",
+      "url": "https://greasyfork.org/users/1265674-enigmaticbacon",
+      "scripts": []
+    }
+  ],
+  "name": "Adoption Status Indicator",
+  "description": "Adds an \"Up for Adoption\" column with indicators to torrent listings.",
+  "url": "https://greasyfork.org/scripts/488068-adoption-status-indicator",
+  "code_url": "https://update.greasyfork.org/scripts/488068/Adoption%20Status%20Indicator.user.js",
+  "code_size": 2510,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

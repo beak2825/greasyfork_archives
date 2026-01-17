@@ -1,0 +1,35 @@
+[
+  {
+    "id": 413657,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-17T15:47:30.000Z",
+    "code_updated_at": "2020-10-17T17:50:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695949,
+        "name": "tkohout",
+        "created_at": "2020-10-17T15:45:24.000Z",
+        "url": "https://greasyfork.org/users/695949-tkohout"
+      }
+    ],
+    "name": "Facebook Fullscreen Photos",
+    "description": "Hide comments side bar when browsing photos on Facebook.",
+    "url": "https://greasyfork.org/scripts/413657-facebook-fullscreen-photos",
+    "code_url": "https://update.greasyfork.org/scripts/413657/Facebook%20Fullscreen%20Photos.user.js",
+    "code_size": 2765,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

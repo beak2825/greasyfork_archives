@@ -1,0 +1,34 @@
+{
+  "id": 419279,
+  "daily_installs": 0,
+  "total_installs": 2076,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-28T12:02:50.000Z",
+  "code_updated_at": "2021-04-07T09:26:44.000Z",
+  "namespace": "t",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 713993,
+      "name": "kckda",
+      "created_at": "2020-12-07T03:44:45.000Z",
+      "url": "https://greasyfork.org/users/713993-kckda",
+      "scripts": []
+    }
+  ],
+  "name": "welearn助手",
+  "description": "welearn",
+  "url": "https://greasyfork.org/scripts/419279-welearn%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/419279/welearn%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 2734,
+  "license": null,
+  "version": "1.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

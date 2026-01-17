@@ -1,0 +1,33 @@
+{
+  "id": 432541,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-17T07:46:04.000Z",
+  "code_updated_at": "2021-09-24T09:47:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 798613,
+      "name": "Mandi",
+      "created_at": "2021-07-30T09:32:39.000Z",
+      "url": "https://greasyfork.org/users/798613-mandi"
+    }
+  ],
+  "name": "NPC - Data Gatherer",
+  "description": "Gather item data from itemview page, and shop wiz results",
+  "url": "https://greasyfork.org/scripts/432541-npc-data-gatherer",
+  "code_url": "https://update.greasyfork.org/scripts/432541/NPC%20-%20Data%20Gatherer.user.js",
+  "code_size": 4081,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

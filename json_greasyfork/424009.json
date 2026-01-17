@@ -1,0 +1,33 @@
+{
+  "id": 424009,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-26T11:46:23.000Z",
+  "code_updated_at": "2021-03-26T12:44:15.000Z",
+  "namespace": "fotix",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 742844,
+      "name": "Fotix Chiang",
+      "created_at": "2021-03-02T13:34:54.000Z",
+      "url": "https://greasyfork.org/users/742844-fotix-chiang"
+    }
+  ],
+  "name": "JammerRemover",
+  "description": "remove the jammer on nas666",
+  "url": "https://greasyfork.org/scripts/424009-jammerremover",
+  "code_url": "https://update.greasyfork.org/scripts/424009/JammerRemover.user.js",
+  "code_size": 609,
+  "license": "MIT License",
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

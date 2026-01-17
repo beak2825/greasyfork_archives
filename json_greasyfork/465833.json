@@ -1,0 +1,33 @@
+{
+  "id": 465833,
+  "daily_installs": 0,
+  "total_installs": 274,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-09T03:25:20.000Z",
+  "code_updated_at": "2024-10-13T06:20:21.000Z",
+  "namespace": "npm/vite-plugin-monkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 172407,
+      "name": "Rxdey",
+      "created_at": "2018-02-26T08:25:44.000Z",
+      "url": "https://greasyfork.org/users/172407-rxdey"
+    }
+  ],
+  "name": "一乐编辑器命运卡高级编辑扩展",
+  "description": "命运卡/暗金高级编辑预览",
+  "url": "https://greasyfork.org/scripts/465833-%E4%B8%80%E4%B9%90%E7%BC%96%E8%BE%91%E5%99%A8%E5%91%BD%E8%BF%90%E5%8D%A1%E9%AB%98%E7%BA%A7%E7%BC%96%E8%BE%91%E6%89%A9%E5%B1%95",
+  "code_url": "https://update.greasyfork.org/scripts/465833/%E4%B8%80%E4%B9%90%E7%BC%96%E8%BE%91%E5%99%A8%E5%91%BD%E8%BF%90%E5%8D%A1%E9%AB%98%E7%BA%A7%E7%BC%96%E8%BE%91%E6%89%A9%E5%B1%95.user.js",
+  "code_size": 740,
+  "license": "MIT License",
+  "version": "2.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

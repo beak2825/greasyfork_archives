@@ -1,0 +1,34 @@
+{
+  "id": 428254,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-21T05:41:44.000Z",
+  "code_updated_at": "2021-06-21T05:57:09.000Z",
+  "namespace": "https://github.com/n0s2/zjoocScript",
+  "support_url": "https://github.com/n0s2/zjoocScript",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 785645,
+      "name": "n0s2",
+      "created_at": "2021-06-21T05:37:34.000Z",
+      "url": "https://greasyfork.org/users/785645-n0s2",
+      "scripts": []
+    }
+  ],
+  "name": "AzUjToOoPcL.AcYn",
+  "description": "ZJOOC自动播放下一课，详细使用需求见附加信息或readme.md",
+  "url": "https://greasyfork.org/scripts/428254-azujtooopcl-acyn",
+  "code_url": "https://update.greasyfork.org/scripts/428254/AzUjToOoPcLAcYn.user.js",
+  "code_size": 4261,
+  "license": null,
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 460184,
+  "daily_installs": 0,
+  "total_installs": 3902,
+  "fan_score": "70.1",
+  "good_ratings": 9,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-17T12:17:52.000Z",
+  "code_updated_at": "2023-10-22T06:17:05.000Z",
+  "namespace": "https://github.com/maimierjiafude/KK_OpenPanHelper",
+  "support_url": "https://github.com/maimierjiafude/KK_OpenPanHelper",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 996530,
+      "name": "maimierjiafude",
+      "created_at": "2022-12-12T14:09:02.000Z",
+      "url": "https://greasyfork.org/users/996530-maimierjiafude"
+    }
+  ],
+  "name": "网盘快开助手",
+  "description": "划一划，快速打开文本中的网盘链接，支持20+网盘，能自动提取提取码和解压密码。同时为了防止忘记链接相关信息，还会整合提取码和解压密码在链接里面，更有解压密码提示助手，在浏览器的历史记录里面打开，就会跳出提醒框，一键复制解压密码！！！。以及有分享的KK链接，要说的都在链接里面，插件全帮你搞定，直接网址打开无需多言（对方也要装网盘快开插件才行）。还有前后台打开模式，快开和弹窗模式，设置最适合自己的。沉浸式上网冲浪！（对于部分国内无法打开的网站，换源成我个人认为国内做的比较好的crx商店了，望周知）",
+  "url": "https://greasyfork.org/scripts/460184-%E7%BD%91%E7%9B%98%E5%BF%AB%E5%BC%80%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/460184/%E7%BD%91%E7%9B%98%E5%BF%AB%E5%BC%80%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 35956,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "2.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

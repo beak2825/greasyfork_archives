@@ -1,0 +1,59 @@
+{
+  "id": 475268,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-14T08:33:40.000Z",
+  "code_updated_at": "2023-09-14T08:58:44.000Z",
+  "namespace": "https://github.com/Faffcomo/TamperMonkey-TT-U-E",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1172760,
+      "name": "Faffcomo",
+      "created_at": "2023-09-14T08:27:46.000Z",
+      "url": "https://greasyfork.org/users/1172760-faffcomo",
+      "scripts": [
+        {
+          "id": 475268,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-14T08:33:40.000Z",
+          "code_updated_at": "2023-09-14T08:58:44.000Z",
+          "namespace": "https://github.com/Faffcomo/TamperMonkey-TT-U-E",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Расписание ПВГУС",
+          "description": "Изменяет дефолтное значение расписание ПВГУС-а на СППИ20",
+          "url": "https://greasyfork.org/scripts/475268-%D1%80%D0%B0%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BF%D0%B2%D0%B3%D1%83%D1%81",
+          "code_url": "https://update.greasyfork.org/scripts/475268/%D0%A0%D0%B0%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%9F%D0%92%D0%93%D0%A3%D0%A1.user.js",
+          "code_size": 763,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Расписание ПВГУС",
+  "description": "Изменяет дефолтное значение расписание ПВГУС-а на СППИ20",
+  "url": "https://greasyfork.org/scripts/475268-%D1%80%D0%B0%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BF%D0%B2%D0%B3%D1%83%D1%81",
+  "code_url": "https://update.greasyfork.org/scripts/475268/%D0%A0%D0%B0%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%9F%D0%92%D0%93%D0%A3%D0%A1.user.js",
+  "code_size": 763,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

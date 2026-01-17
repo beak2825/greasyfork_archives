@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424505,
+    "daily_installs": 0,
+    "total_installs": 165,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-05T02:49:19.000Z",
+    "code_updated_at": "2021-04-05T02:49:19.000Z",
+    "namespace": "https://pthome.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 754861,
+        "name": "Yunfly",
+        "created_at": "2021-04-04T15:09:40.000Z",
+        "url": "https://greasyfork.org/users/754861-yunfly"
+      }
+    ],
+    "name": "pt-adoption",
+    "description": "当前做种中增加认领",
+    "url": "https://greasyfork.org/scripts/424505-pt-adoption",
+    "code_url": "https://update.greasyfork.org/scripts/424505/pt-adoption.user.js",
+    "code_size": 3928,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

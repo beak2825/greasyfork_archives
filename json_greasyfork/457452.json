@@ -1,0 +1,33 @@
+{
+  "id": 457452,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-01T12:27:10.000Z",
+  "code_updated_at": "2023-01-01T22:12:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 956173,
+      "name": "Calonca",
+      "created_at": "2022-09-08T14:12:06.000Z",
+      "url": "https://greasyfork.org/users/956173-calonca"
+    }
+  ],
+  "name": "Jpdb stonks",
+  "description": "Add a reward system to jpdb that motivate you to study",
+  "url": "https://greasyfork.org/scripts/457452-jpdb-stonks",
+  "code_url": "https://update.greasyfork.org/scripts/457452/Jpdb%20stonks.user.js",
+  "code_size": 18781,
+  "license": "GPLv2",
+  "version": "0.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

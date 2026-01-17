@@ -1,0 +1,68 @@
+[
+  {
+    "id": 449654,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-16T11:26:56.000Z",
+    "code_updated_at": "2025-11-02T15:19:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 927942,
+        "name": "fivecc",
+        "created_at": "2022-06-21T14:26:27.000Z",
+        "url": "https://greasyfork.org/users/927942-fivecc"
+      }
+    ],
+    "name": "B 站大表情",
+    "description": "放大 B 站表情，并在光标指向表情时显示其名称",
+    "url": "https://greasyfork.org/scripts/449654-b-%E7%AB%99%E5%A4%A7%E8%A1%A8%E6%83%85",
+    "code_url": "https://update.greasyfork.org/scripts/449654/B%20%E7%AB%99%E5%A4%A7%E8%A1%A8%E6%83%85.user.js",
+    "code_size": 4820,
+    "license": "AGPL",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 446823,
+    "daily_installs": 0,
+    "total_installs": 162,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-21T14:35:18.000Z",
+    "code_updated_at": "2023-02-22T10:00:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 927942,
+        "name": "fivecc",
+        "created_at": "2022-06-21T14:26:27.000Z",
+        "url": "https://greasyfork.org/users/927942-fivecc"
+      }
+    ],
+    "name": "B站评论直达",
+    "description": "为 bilibili 上的评论生成支持 web 端和手机 app 直达的链接",
+    "url": "https://greasyfork.org/scripts/446823-b%E7%AB%99%E8%AF%84%E8%AE%BA%E7%9B%B4%E8%BE%BE",
+    "code_url": "https://update.greasyfork.org/scripts/446823/B%E7%AB%99%E8%AF%84%E8%AE%BA%E7%9B%B4%E8%BE%BE.user.js",
+    "code_size": 9025,
+    "license": "AGPL",
+    "version": "0.3.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

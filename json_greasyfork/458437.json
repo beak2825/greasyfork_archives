@@ -1,0 +1,33 @@
+{
+  "id": 458437,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-17T15:39:52.000Z",
+  "code_updated_at": "2023-01-17T17:57:22.000Z",
+  "namespace": "Vaebae@CK",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1013472,
+      "name": "Vaebae",
+      "created_at": "2023-01-17T15:35:49.000Z",
+      "url": "https://greasyfork.org/users/1013472-vaebae"
+    }
+  ],
+  "name": "Add Battledome to Dropdown",
+  "description": "Adds the Battledome to the menu dropdown",
+  "url": "https://greasyfork.org/scripts/458437-add-battledome-to-dropdown",
+  "code_url": "https://update.greasyfork.org/scripts/458437/Add%20Battledome%20to%20Dropdown.user.js",
+  "code_size": 516,
+  "license": null,
+  "version": "1.1b",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

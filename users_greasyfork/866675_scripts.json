@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438786,
+    "daily_installs": 0,
+    "total_installs": 60,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-19T08:09:37.000Z",
+    "code_updated_at": "2022-01-27T08:54:21.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 866675,
+        "name": "ARong Lin",
+        "created_at": "2022-01-19T08:00:14.000Z",
+        "url": "https://greasyfork.org/users/866675-arong-lin"
+      }
+    ],
+    "name": "anti-select-none - csdn.net",
+    "description": "解除 CSDN code block 的 select 鎖定",
+    "url": "https://greasyfork.org/scripts/438786-anti-select-none-csdn-net",
+    "code_url": "https://update.greasyfork.org/scripts/438786/anti-select-none%20-%20csdnnet.user.js",
+    "code_size": 1227,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

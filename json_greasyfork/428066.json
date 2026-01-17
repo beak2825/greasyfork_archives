@@ -1,0 +1,33 @@
+{
+  "id": 428066,
+  "daily_installs": 0,
+  "total_installs": 262,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-17T03:16:28.000Z",
+  "code_updated_at": "2021-06-17T03:16:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 784248,
+      "name": "Kieran Wilson",
+      "created_at": "2021-06-17T03:07:08.000Z",
+      "url": "https://greasyfork.org/users/784248-kieran-wilson"
+    }
+  ],
+  "name": "Melvor Mine Highest",
+  "description": "Automatically mine the highest available ore at all times",
+  "url": "https://greasyfork.org/scripts/428066-melvor-mine-highest",
+  "code_url": "https://update.greasyfork.org/scripts/428066/Melvor%20Mine%20Highest.user.js",
+  "code_size": 3108,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 425820,
+    "daily_installs": 0,
+    "total_installs": 163,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-02T11:13:54.000Z",
+    "code_updated_at": "2024-10-26T23:12:12.000Z",
+    "namespace": "https://greasyfork.org/users/767596",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 767596,
+        "name": "alo1719",
+        "created_at": "2021-05-02T10:49:31.000Z",
+        "url": "https://greasyfork.org/users/767596-alo1719"
+      }
+    ],
+    "name": "V2EX帖子盖楼显示Pro-同时兼容桌面和移动端",
+    "description": "V2EX帖子盖楼，高亮楼主回复，浏览帖子更直观！",
+    "url": "https://greasyfork.org/scripts/425820-v2ex%E5%B8%96%E5%AD%90%E7%9B%96%E6%A5%BC%E6%98%BE%E7%A4%BApro-%E5%90%8C%E6%97%B6%E5%85%BC%E5%AE%B9%E6%A1%8C%E9%9D%A2%E5%92%8C%E7%A7%BB%E5%8A%A8%E7%AB%AF",
+    "code_url": "https://update.greasyfork.org/scripts/425820/V2EX%E5%B8%96%E5%AD%90%E7%9B%96%E6%A5%BC%E6%98%BE%E7%A4%BAPro-%E5%90%8C%E6%97%B6%E5%85%BC%E5%AE%B9%E6%A1%8C%E9%9D%A2%E5%92%8C%E7%A7%BB%E5%8A%A8%E7%AB%AF.user.js",
+    "code_size": 2606,
+    "license": null,
+    "version": "0.3.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 438937,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-21T19:30:33.000Z",
+  "code_updated_at": "2022-01-21T19:48:26.000Z",
+  "namespace": "mediaworkskepletoltes2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 846358,
+      "name": "Mihály Nagy",
+      "created_at": "2021-11-29T21:22:48.000Z",
+      "url": "https://greasyfork.org/users/846358-mih%C3%A1ly-nagy",
+      "scripts": []
+    }
+  ],
+  "name": "Mediaworks - Origo, Life, SuliLife, ThatsLife, UniLife - kép letöltés a galériából",
+  "description": "Egyszerű képletöltés a Mediaworks címben felsorolt lapjainak galériájából.",
+  "url": "https://greasyfork.org/scripts/438937-mediaworks-origo-life-sulilife-thatslife-unilife-k%C3%A9p-let%C3%B6lt%C3%A9s-a-gal%C3%A9ri%C3%A1b%C3%B3l",
+  "code_url": "https://update.greasyfork.org/scripts/438937/Mediaworks%20-%20Origo%2C%20Life%2C%20SuliLife%2C%20ThatsLife%2C%20UniLife%20-%20k%C3%A9p%20let%C3%B6lt%C3%A9s%20a%20gal%C3%A9ri%C3%A1b%C3%B3l.user.js",
+  "code_size": 2004,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "hu",
+  "deleted": false,
+  "visibility": "public"
+}

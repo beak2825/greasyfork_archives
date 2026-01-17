@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422048,
+    "daily_installs": 1,
+    "total_installs": 1785,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-20T09:50:06.000Z",
+    "code_updated_at": "2021-02-24T12:16:45.000Z",
+    "namespace": "https://greasyfork.org/users/739207",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739207,
+        "name": "Haha Louis Omg YT",
+        "created_at": "2021-02-20T09:39:02.000Z",
+        "url": "https://greasyfork.org/users/739207-haha-louis-omg-yt"
+      }
+    ],
+    "name": "Hahalouisomg KRUNKER MOD CSS",
+    "description": "NEW CSS of KRUNKER.IO",
+    "url": "https://greasyfork.org/scripts/422048-hahalouisomg-krunker-mod-css",
+    "code_url": "https://update.greasyfork.org/scripts/422048/Hahalouisomg%20KRUNKER%20MOD%20CSS.user.js",
+    "code_size": 647,
+    "license": null,
+    "version": "3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

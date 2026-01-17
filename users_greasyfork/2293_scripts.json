@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418516,
+    "daily_installs": 0,
+    "total_installs": 160,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-11T19:10:13.000Z",
+    "code_updated_at": "2020-12-11T19:10:13.000Z",
+    "namespace": "s",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2293,
+        "name": "someone 2",
+        "created_at": "2014-05-28T21:30:24.000Z",
+        "url": "https://greasyfork.org/users/2293-someone-2"
+      }
+    ],
+    "name": "Youtube Embed NoCookie",
+    "description": "Change any embedded youtube videos with the no-cookie version",
+    "url": "https://greasyfork.org/scripts/418516-youtube-embed-nocookie",
+    "code_url": "https://update.greasyfork.org/scripts/418516/Youtube%20Embed%20NoCookie.user.js",
+    "code_size": 963,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

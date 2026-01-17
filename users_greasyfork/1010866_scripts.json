@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458079,
+    "daily_installs": 0,
+    "total_installs": 208,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-12T09:32:53.000Z",
+    "code_updated_at": "2024-12-15T12:06:17.000Z",
+    "namespace": "https://github.com/WLongSAMA/NoBaiduNews",
+    "support_url": "https://github.com/WLongSAMA/NoBaiduNews",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1010866,
+        "name": "a101084",
+        "created_at": "2023-01-12T09:02:54.000Z",
+        "url": "https://greasyfork.org/users/1010866-a101084"
+      }
+    ],
+    "name": "NoBaiduNews",
+    "description": "屏蔽百度页新闻推荐流，只保留网址导航功能。",
+    "url": "https://greasyfork.org/scripts/458079-nobaidunews",
+    "code_url": "https://update.greasyfork.org/scripts/458079/NoBaiduNews.user.js",
+    "code_size": 4934,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

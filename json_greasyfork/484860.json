@@ -1,0 +1,33 @@
+{
+  "id": 484860,
+  "daily_installs": 0,
+  "total_installs": 247,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-01-15T00:42:02.000Z",
+  "code_updated_at": "2024-01-15T00:42:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1248130,
+      "name": "Frankie Blagg",
+      "created_at": "2024-01-15T00:36:00.000Z",
+      "url": "https://greasyfork.org/users/1248130-frankie-blagg"
+    }
+  ],
+  "name": "IGG Games / bluemediafiles bypass",
+  "description": "Skip count down and redirect to actual download page.",
+  "url": "https://greasyfork.org/scripts/484860-igg-games-bluemediafiles-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/484860/IGG%20Games%20%20bluemediafiles%20bypass.user.js",
+  "code_size": 2992,
+  "license": "MIT License",
+  "version": "0.0.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

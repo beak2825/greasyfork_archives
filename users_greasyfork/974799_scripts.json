@@ -1,0 +1,68 @@
+[
+  {
+    "id": 455504,
+    "daily_installs": 2,
+    "total_installs": 692,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-27T17:29:53.000Z",
+    "code_updated_at": "2023-04-10T07:55:48.000Z",
+    "namespace": "https://github.com/eCxb3/cps",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 974799,
+        "name": "ezX",
+        "created_at": "2022-10-24T20:04:39.000Z",
+        "url": "https://greasyfork.org/users/974799-ezx"
+      }
+    ],
+    "name": "YouTube Premium Logo",
+    "description": "Changes the youtube logo to premium.",
+    "url": "https://greasyfork.org/scripts/455504-youtube-premium-logo",
+    "code_url": "https://update.greasyfork.org/scripts/455504/YouTube%20Premium%20Logo.user.js",
+    "code_size": 1781,
+    "license": null,
+    "version": "2077v.2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453833,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-27T10:54:01.000Z",
+    "code_updated_at": "2022-10-27T22:54:10.000Z",
+    "namespace": "https://bitbucket.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 974799,
+        "name": "ezX",
+        "created_at": "2022-10-24T20:04:39.000Z",
+        "url": "https://greasyfork.org/users/974799-ezx"
+      }
+    ],
+    "name": "SaizX theme — Lite blue",
+    "description": "This is a theme for agenda.sime.md with an anime background image and light blue colors.",
+    "url": "https://greasyfork.org/scripts/453833-saizx-theme-lite-blue",
+    "code_url": "https://update.greasyfork.org/scripts/453833/SaizX%20theme%20%E2%80%94%20Lite%20blue.user.js",
+    "code_size": 3557,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

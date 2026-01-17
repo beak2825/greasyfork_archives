@@ -1,0 +1,34 @@
+{
+  "id": 489732,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-13T16:24:59.000Z",
+  "code_updated_at": "2024-03-13T16:24:59.000Z",
+  "namespace": "http://paynjiduyr.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1274125,
+      "name": "suipianpian330",
+      "created_at": "2024-03-13T16:15:32.000Z",
+      "url": "https://greasyfork.org/users/1274125-suipianpian330",
+      "scripts": []
+    }
+  ],
+  "name": "Userscript Try",
+  "description": "try ou wodr!",
+  "url": "https://greasyfork.org/scripts/489732-userscript-try",
+  "code_url": "https://update.greasyfork.org/scripts/489732/Userscript%20Try.user.js",
+  "code_size": 540,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

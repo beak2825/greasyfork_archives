@@ -1,0 +1,34 @@
+{
+  "id": 449047,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-06T12:48:51.000Z",
+  "code_updated_at": "2022-08-06T13:12:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 943658,
+      "name": "viniary",
+      "created_at": "2022-08-06T12:43:39.000Z",
+      "url": "https://greasyfork.org/users/943658-viniary",
+      "scripts": []
+    }
+  ],
+  "name": "Herosi na Discordzie",
+  "description": "Quickly send discord messages for heroes and titans",
+  "url": "https://greasyfork.org/scripts/449047-herosi-na-discordzie",
+  "code_url": "https://update.greasyfork.org/scripts/449047/Herosi%20na%20Discordzie.user.js",
+  "code_size": 46203,
+  "license": "MIT License",
+  "version": "2.11.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

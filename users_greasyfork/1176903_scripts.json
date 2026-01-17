@@ -1,0 +1,68 @@
+[
+  {
+    "id": 482811,
+    "daily_installs": 0,
+    "total_installs": 1920,
+    "fan_score": "59.8",
+    "good_ratings": 7,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-12-21T10:01:00.000Z",
+    "code_updated_at": "2025-12-25T02:52:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1176903,
+        "name": "julymiaw",
+        "created_at": "2023-09-20T07:32:30.000Z",
+        "url": "https://greasyfork.org/users/1176903-julymiaw"
+      }
+    ],
+    "name": "东南大学抢课助手修改版",
+    "description": "听说你抢不到课",
+    "url": "https://greasyfork.org/scripts/482811-%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%8A%A2%E8%AF%BE%E5%8A%A9%E6%89%8B%E4%BF%AE%E6%94%B9%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/482811/%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%8A%A2%E8%AF%BE%E5%8A%A9%E6%89%8B%E4%BF%AE%E6%94%B9%E7%89%88.user.js",
+    "code_size": 66325,
+    "license": "MIT License",
+    "version": "3.4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 475816,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-21T13:26:25.000Z",
+    "code_updated_at": "2024-09-16T06:49:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1176903,
+        "name": "julymiaw",
+        "created_at": "2023-09-20T07:32:30.000Z",
+        "url": "https://greasyfork.org/users/1176903-julymiaw"
+      }
+    ],
+    "name": "东南大学课表样式调整",
+    "description": "修改了原东南大学办事大厅“我的课表”的一些愚蠢设计。注意，目前本脚本仅在tampermonkey上测试过，且仅针对本人课表做了优化，保证打印时不会超出页面。如果在您的浏览器中出现周课表横屏打印页面超出，请适当调整代码第383行function printTitle()内的margin-top属性（该属性控制标题离页面顶部的距离），或者，选择竖屏格式打印。如果你有更好的解决方法，欢迎联系我！（联系方式见文档底部）",
+    "url": "https://greasyfork.org/scripts/475816-%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E8%AF%BE%E8%A1%A8%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/475816/%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E8%AF%BE%E8%A1%A8%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 17630,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

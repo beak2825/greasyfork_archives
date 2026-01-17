@@ -1,0 +1,33 @@
+{
+  "id": 462293,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-22T01:59:02.000Z",
+  "code_updated_at": "2024-07-19T05:47:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 989457,
+      "name": "siji-Xian",
+      "created_at": "2022-11-29T03:34:28.000Z",
+      "url": "https://greasyfork.org/users/989457-siji-xian"
+    }
+  ],
+  "name": "投后结案-活动总览",
+  "description": "云图扩展工具",
+  "url": "https://greasyfork.org/scripts/462293-%E6%8A%95%E5%90%8E%E7%BB%93%E6%A1%88-%E6%B4%BB%E5%8A%A8%E6%80%BB%E8%A7%88",
+  "code_url": "https://update.greasyfork.org/scripts/462293/%E6%8A%95%E5%90%8E%E7%BB%93%E6%A1%88-%E6%B4%BB%E5%8A%A8%E6%80%BB%E8%A7%88.user.js",
+  "code_size": 7324,
+  "license": "MIT License",
+  "version": "2.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 440338,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-20T09:11:57.000Z",
+  "code_updated_at": "2022-02-20T09:11:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 878563,
+      "name": "黄羊",
+      "created_at": "2022-02-20T08:54:10.000Z",
+      "url": "https://greasyfork.org/users/878563-%E9%BB%84%E7%BE%8A",
+      "scripts": [
+        {
+          "id": 440338,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-20T09:11:57.000Z",
+          "code_updated_at": "2022-02-20T09:11:57.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "更改通行码为绿码",
+          "description": "更改校园通行码为绿码",
+          "url": "https://greasyfork.org/scripts/440338-%E6%9B%B4%E6%94%B9%E9%80%9A%E8%A1%8C%E7%A0%81%E4%B8%BA%E7%BB%BF%E7%A0%81",
+          "code_url": "https://update.greasyfork.org/scripts/440338/%E6%9B%B4%E6%94%B9%E9%80%9A%E8%A1%8C%E7%A0%81%E4%B8%BA%E7%BB%BF%E7%A0%81.user.js",
+          "code_size": 529,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "更改通行码为绿码",
+  "description": "更改校园通行码为绿码",
+  "url": "https://greasyfork.org/scripts/440338-%E6%9B%B4%E6%94%B9%E9%80%9A%E8%A1%8C%E7%A0%81%E4%B8%BA%E7%BB%BF%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/440338/%E6%9B%B4%E6%94%B9%E9%80%9A%E8%A1%8C%E7%A0%81%E4%B8%BA%E7%BB%BF%E7%A0%81.user.js",
+  "code_size": 529,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

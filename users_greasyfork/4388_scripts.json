@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420767,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-27T18:37:45.000Z",
+    "code_updated_at": "2022-09-13T09:25:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4388,
+        "name": "balint",
+        "created_at": "2014-08-11T09:56:54.000Z",
+        "url": "https://greasyfork.org/users/4388-balint"
+      }
+    ],
+    "name": "M4Sport",
+    "description": "remove advertising",
+    "url": "https://greasyfork.org/scripts/420767-m4sport",
+    "code_url": "https://update.greasyfork.org/scripts/420767/M4Sport.user.js",
+    "code_size": 466,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 446625,
+  "daily_installs": 0,
+  "total_installs": 302,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-17T12:36:45.000Z",
+  "code_updated_at": "2022-06-22T13:49:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 926516,
+      "name": "1Brenny1",
+      "created_at": "2022-06-17T12:32:21.000Z",
+      "url": "https://greasyfork.org/users/926516-1brenny1",
+      "scripts": [
+        {
+          "id": 446625,
+          "daily_installs": 0,
+          "total_installs": 302,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-17T12:36:45.000Z",
+          "code_updated_at": "2022-06-22T13:49:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Cookie Clicker Hack",
+          "description": "UNDETECTED | Get Tons Of Money In Cookie Clicker, Use Right Shift to open the menu. Now has WASD controls in the ascending menu. Top bar was removed.",
+          "url": "https://greasyfork.org/scripts/446625-cookie-clicker-hack",
+          "code_url": "https://update.greasyfork.org/scripts/446625/Cookie%20Clicker%20Hack.user.js",
+          "code_size": 4195,
+          "license": "GNU",
+          "version": "4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Cookie Clicker Hack",
+  "description": "UNDETECTED | Get Tons Of Money In Cookie Clicker, Use Right Shift to open the menu. Now has WASD controls in the ascending menu. Top bar was removed.",
+  "url": "https://greasyfork.org/scripts/446625-cookie-clicker-hack",
+  "code_url": "https://update.greasyfork.org/scripts/446625/Cookie%20Clicker%20Hack.user.js",
+  "code_size": 4195,
+  "license": "GNU",
+  "version": "4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

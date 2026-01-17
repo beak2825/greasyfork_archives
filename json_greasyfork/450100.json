@@ -1,0 +1,34 @@
+{
+  "id": 450100,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-24T14:52:30.000Z",
+  "code_updated_at": "2022-08-24T14:52:29.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 950215,
+      "name": "Pasha Morozov",
+      "created_at": "2022-08-24T09:35:07.000Z",
+      "url": "https://greasyfork.org/users/950215-pasha-morozov",
+      "scripts": []
+    }
+  ],
+  "name": "BLACK RUSSIA INDIGO  || Скрипт Кураторов форума by T.Vais.",
+  "description": "Специально для BlackRussia || INDIGO by T.Vais.",
+  "url": "https://greasyfork.org/scripts/450100-black-russia-indigo-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-t-vais",
+  "code_url": "https://update.greasyfork.org/scripts/450100/BLACK%20RUSSIA%20INDIGO%20%20%7C%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20TVais.user.js",
+  "code_size": 141506,
+  "license": "MIT License",
+  "version": "1.21",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

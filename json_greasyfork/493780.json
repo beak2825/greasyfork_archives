@@ -1,0 +1,33 @@
+{
+  "id": 493780,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-29T16:48:52.000Z",
+  "code_updated_at": "2024-07-22T06:24:04.000Z",
+  "namespace": "fireloong",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 768378,
+      "name": "itsky71",
+      "created_at": "2021-05-04T12:11:07.000Z",
+      "url": "https://greasyfork.org/users/768378-itsky71"
+    }
+  ],
+  "name": "Twig 翻译文档 api.html",
+  "description": "Twig 翻译文档",
+  "url": "https://greasyfork.org/scripts/493780-twig-%E7%BF%BB%E8%AF%91%E6%96%87%E6%A1%A3-api-html",
+  "code_url": "https://update.greasyfork.org/scripts/493780/Twig%20%E7%BF%BB%E8%AF%91%E6%96%87%E6%A1%A3%20apihtml.user.js",
+  "code_size": 5583,
+  "license": "MIT License",
+  "version": "0.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

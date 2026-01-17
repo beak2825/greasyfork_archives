@@ -1,0 +1,59 @@
+{
+  "id": 426336,
+  "daily_installs": 0,
+  "total_installs": 287,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-12T08:33:26.000Z",
+  "code_updated_at": "2024-03-01T23:49:43.000Z",
+  "namespace": "https://greasyfork.org/users/770660",
+  "support_url": "https://github.com/0xShutdown/Twitch-Auto-Claim-Bonus/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 770660,
+      "name": "SHUTDOWN",
+      "created_at": "2021-05-10T16:26:33.000Z",
+      "url": "https://greasyfork.org/users/770660-shutdown",
+      "scripts": [
+        {
+          "id": 426336,
+          "daily_installs": 0,
+          "total_installs": 287,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-05-12T08:33:26.000Z",
+          "code_updated_at": "2024-03-01T23:49:43.000Z",
+          "namespace": "https://greasyfork.org/users/770660",
+          "support_url": "https://github.com/0xShutdown/Twitch-Auto-Claim-Bonus/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitch Auto Claim Bonus",
+          "description": "Automatically claim Twitch channel points.",
+          "url": "https://greasyfork.org/scripts/426336-twitch-auto-claim-bonus",
+          "code_url": "https://update.greasyfork.org/scripts/426336/Twitch%20Auto%20Claim%20Bonus.user.js",
+          "code_size": 1606,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitch Auto Claim Bonus",
+  "description": "Automatically claim Twitch channel points.",
+  "url": "https://greasyfork.org/scripts/426336-twitch-auto-claim-bonus",
+  "code_url": "https://update.greasyfork.org/scripts/426336/Twitch%20Auto%20Claim%20Bonus.user.js",
+  "code_size": 1606,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

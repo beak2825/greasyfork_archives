@@ -1,0 +1,59 @@
+{
+  "id": 469658,
+  "daily_installs": 0,
+  "total_installs": 82,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-28T15:22:05.000Z",
+  "code_updated_at": "2024-05-15T13:25:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1109323,
+      "name": "罗智",
+      "created_at": "2023-06-23T01:52:03.000Z",
+      "url": "https://greasyfork.org/users/1109323-%E7%BD%97%E6%99%BA",
+      "scripts": [
+        {
+          "id": 469658,
+          "daily_installs": 0,
+          "total_installs": 82,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-28T15:22:05.000Z",
+          "code_updated_at": "2024-05-15T13:25:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "豆瓣条目跳转NeoDB条目",
+          "description": "try to take over the world!*",
+          "url": "https://greasyfork.org/scripts/469658-%E8%B1%86%E7%93%A3%E6%9D%A1%E7%9B%AE%E8%B7%B3%E8%BD%ACneodb%E6%9D%A1%E7%9B%AE",
+          "code_url": "https://update.greasyfork.org/scripts/469658/%E8%B1%86%E7%93%A3%E6%9D%A1%E7%9B%AE%E8%B7%B3%E8%BD%ACNeoDB%E6%9D%A1%E7%9B%AE.user.js",
+          "code_size": 5708,
+          "license": "MIT License",
+          "version": "0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "豆瓣条目跳转NeoDB条目",
+  "description": "try to take over the world!*",
+  "url": "https://greasyfork.org/scripts/469658-%E8%B1%86%E7%93%A3%E6%9D%A1%E7%9B%AE%E8%B7%B3%E8%BD%ACneodb%E6%9D%A1%E7%9B%AE",
+  "code_url": "https://update.greasyfork.org/scripts/469658/%E8%B1%86%E7%93%A3%E6%9D%A1%E7%9B%AE%E8%B7%B3%E8%BD%ACNeoDB%E6%9D%A1%E7%9B%AE.user.js",
+  "code_size": 5708,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 420364,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-18T16:27:49.000Z",
+  "code_updated_at": "2021-01-21T13:32:56.000Z",
+  "namespace": "showtime.keyboard",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 728793,
+      "name": "keyboard-shortcuts",
+      "created_at": "2021-01-18T16:03:21.000Z",
+      "url": "https://greasyfork.org/users/728793-keyboard-shortcuts"
+    }
+  ],
+  "name": "Showtime: enable YouTube-style keyboard controls",
+  "description": "Use similar controls as on YouTube when watching Showtime (`f` for full screen, `k` to play/pause, `c` for captions, `m` to mute/unmute, `p` to enable/disable PiP, `j`/`l` to go back/skip 10 seconds, left/right arrows for 5 seconds, `0`..`9` for 0% .. 90%)",
+  "url": "https://greasyfork.org/scripts/420364-showtime-enable-youtube-style-keyboard-controls",
+  "code_url": "https://update.greasyfork.org/scripts/420364/Showtime%3A%20enable%20YouTube-style%20keyboard%20controls.user.js",
+  "code_size": 3673,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

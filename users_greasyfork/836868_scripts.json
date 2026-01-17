@@ -31,5 +31,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 464807,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-25T08:22:47.000Z",
+    "code_updated_at": "2023-04-25T08:26:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 836868,
+        "name": "luckyluchang",
+        "created_at": "2021-11-10T19:14:24.000Z",
+        "url": "https://greasyfork.org/users/836868-luckyluchang"
+      }
+    ],
+    "name": "show the quantity of Quora answers",
+    "description": "Show the quantity of Quora answers.",
+    "url": "https://greasyfork.org/scripts/464807-show-the-quantity-of-quora-answers",
+    "code_url": "https://update.greasyfork.org/scripts/464807/show%20the%20quantity%20of%20Quora%20answers.user.js",
+    "code_size": 1214,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 463915,
+    "daily_installs": 0,
+    "total_installs": 113,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-04-13T13:58:32.000Z",
+    "code_updated_at": "2023-04-13T14:19:16.000Z",
+    "namespace": "https://greasyfork.org/users/836868",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 836868,
+        "name": "luckyluchang",
+        "created_at": "2021-11-10T19:14:24.000Z",
+        "url": "https://greasyfork.org/users/836868-luckyluchang"
+      }
+    ],
+    "name": "Auto adjust YouTube video to Theater mode",
+    "description": "Auto adjust YouTube video to Theater mode.",
+    "url": "https://greasyfork.org/scripts/463915-auto-adjust-youtube-video-to-theater-mode",
+    "code_url": "https://update.greasyfork.org/scripts/463915/Auto%20adjust%20YouTube%20video%20to%20Theater%20mode.user.js",
+    "code_size": 895,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461635,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-11T14:10:14.000Z",
+    "code_updated_at": "2023-03-11T14:44:36.000Z",
+    "namespace": "https://greasyfork.org/users/836868",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 836868,
+        "name": "luckyluchang",
+        "created_at": "2021-11-10T19:14:24.000Z",
+        "url": "https://greasyfork.org/users/836868-luckyluchang"
+      }
+    ],
+    "name": "search4Youtube",
+    "description": "Adds a button to search Reddit posts with Google",
+    "url": "https://greasyfork.org/scripts/461635-search4youtube",
+    "code_url": "https://update.greasyfork.org/scripts/461635/search4Youtube.user.js",
+    "code_size": 3664,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 441800,
+    "daily_installs": 0,
+    "total_installs": 178,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-20T06:37:00.000Z",
+    "code_updated_at": "2022-03-26T06:12:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 836868,
+        "name": "luckyluchang",
+        "created_at": "2021-11-10T19:14:24.000Z",
+        "url": "https://greasyfork.org/users/836868-luckyluchang"
+      }
+    ],
+    "name": "Hide Youtube player controls.",
+    "description": "Hide Youtube player controls. Press key 'h' to hide or show player contols.",
+    "url": "https://greasyfork.org/scripts/441800-hide-youtube-player-controls",
+    "code_url": "https://update.greasyfork.org/scripts/441800/Hide%20Youtube%20player%20controls.user.js",
+    "code_size": 2287,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440586,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-25T09:15:36.000Z",
+    "code_updated_at": "2023-01-19T06:26:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 836868,
+        "name": "luckyluchang",
+        "created_at": "2021-11-10T19:14:24.000Z",
+        "url": "https://greasyfork.org/users/836868-luckyluchang"
+      }
+    ],
+    "name": "NPR player controller",
+    "description": "'c': loading; 'z': rewind; 'x':fast forward.",
+    "url": "https://greasyfork.org/scripts/440586-npr-player-controller",
+    "code_url": "https://update.greasyfork.org/scripts/440586/NPR%20player%20controller.user.js",
+    "code_size": 980,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435329,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-10T19:19:14.000Z",
+    "code_updated_at": "2022-09-01T15:03:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 836868,
+        "name": "luckyluchang",
+        "created_at": "2021-11-10T19:14:24.000Z",
+        "url": "https://greasyfork.org/users/836868-luckyluchang"
+      }
+    ],
+    "name": "BiliBili 一键开关 弹幕 danmu",
+    "description": "默认通过快捷键“/” 键来显示或隐藏弹幕。也可通过更改代码中的”danmu“ 变量值来修改快捷键。 <br> 默认初始关闭弹幕，可通过更改”defaultClosing“变量为0，来默认初始开启弹幕.",
+    "url": "https://greasyfork.org/scripts/435329-bilibili-%E4%B8%80%E9%94%AE%E5%BC%80%E5%85%B3-%E5%BC%B9%E5%B9%95-danmu",
+    "code_url": "https://update.greasyfork.org/scripts/435329/BiliBili%20%E4%B8%80%E9%94%AE%E5%BC%80%E5%85%B3%20%E5%BC%B9%E5%B9%95%20danmu.user.js",
+    "code_size": 2460,
+    "license": "MIT License",
+    "version": "v1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

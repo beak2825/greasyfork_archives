@@ -1,0 +1,59 @@
+{
+  "id": 442746,
+  "daily_installs": 0,
+  "total_installs": 118,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-04T16:01:31.000Z",
+  "code_updated_at": "2022-04-04T16:01:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 897707,
+      "name": "Dưa Leo Sta",
+      "created_at": "2022-04-04T15:04:59.000Z",
+      "url": "https://greasyfork.org/users/897707-d%C6%B0a-leo-sta",
+      "scripts": [
+        {
+          "id": 442746,
+          "daily_installs": 0,
+          "total_installs": 118,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-04T16:01:31.000Z",
+          "code_updated_at": "2022-04-04T16:01:31.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "11h đêm tôi vẫn chưa được ngủ dume đám fb",
+          "description": "LoliUniveser muôn năm",
+          "url": "https://greasyfork.org/scripts/442746-11h-%C4%91%C3%AAm-t%C3%B4i-v%E1%BA%ABn-ch%C6%B0a-%C4%91%C6%B0%E1%BB%A3c-ng%E1%BB%A7-dume-%C4%91%C3%A1m-fb",
+          "code_url": "https://update.greasyfork.org/scripts/442746/11h%20%C4%91%C3%AAm%20t%C3%B4i%20v%E1%BA%ABn%20ch%C6%B0a%20%C4%91%C6%B0%E1%BB%A3c%20ng%E1%BB%A7%20dume%20%C4%91%C3%A1m%20fb.user.js",
+          "code_size": 1844,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "vi",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "11h đêm tôi vẫn chưa được ngủ dume đám fb",
+  "description": "LoliUniveser muôn năm",
+  "url": "https://greasyfork.org/scripts/442746-11h-%C4%91%C3%AAm-t%C3%B4i-v%E1%BA%ABn-ch%C6%B0a-%C4%91%C6%B0%E1%BB%A3c-ng%E1%BB%A7-dume-%C4%91%C3%A1m-fb",
+  "code_url": "https://update.greasyfork.org/scripts/442746/11h%20%C4%91%C3%AAm%20t%C3%B4i%20v%E1%BA%ABn%20ch%C6%B0a%20%C4%91%C6%B0%E1%BB%A3c%20ng%E1%BB%A7%20dume%20%C4%91%C3%A1m%20fb.user.js",
+  "code_size": 1844,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

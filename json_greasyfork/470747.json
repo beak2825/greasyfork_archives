@@ -1,0 +1,34 @@
+{
+  "id": 470747,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-13T12:18:40.000Z",
+  "code_updated_at": "2023-07-13T12:18:39.000Z",
+  "namespace": "https://wa.chatbotclubs.com/web/user",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1125629,
+      "name": "ch ri",
+      "created_at": "2023-07-13T12:08:59.000Z",
+      "url": "https://greasyfork.org/users/1125629-ch-ri",
+      "scripts": []
+    }
+  ],
+  "name": "unlock",
+  "description": "无敌",
+  "url": "https://greasyfork.org/scripts/470747-unlock",
+  "code_url": "https://update.greasyfork.org/scripts/470747/unlock.user.js",
+  "code_size": 4114,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

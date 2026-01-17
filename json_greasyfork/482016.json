@@ -1,0 +1,59 @@
+{
+  "id": 482016,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-12-12T10:26:48.000Z",
+  "code_updated_at": "2024-04-08T05:18:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1230040,
+      "name": "lockhea",
+      "created_at": "2023-12-07T18:09:41.000Z",
+      "url": "https://greasyfork.org/users/1230040-lockhea",
+      "scripts": [
+        {
+          "id": 482016,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2023-12-12T10:26:48.000Z",
+          "code_updated_at": "2024-04-08T05:18:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "浙江中医药大学学评教",
+          "description": "针对浙江中医药大学学教一体华的学评教的插件，可以省去重复的操作。本插件主要是简化评价操作，对于特殊的评价仍然需要手动评价，也不麻烦。",
+          "url": "https://greasyfork.org/scripts/482016-%E6%B5%99%E6%B1%9F%E4%B8%AD%E5%8C%BB%E8%8D%AF%E5%A4%A7%E5%AD%A6%E5%AD%A6%E8%AF%84%E6%95%99",
+          "code_url": "https://update.greasyfork.org/scripts/482016/%E6%B5%99%E6%B1%9F%E4%B8%AD%E5%8C%BB%E8%8D%AF%E5%A4%A7%E5%AD%A6%E5%AD%A6%E8%AF%84%E6%95%99.user.js",
+          "code_size": 12712,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "浙江中医药大学学评教",
+  "description": "针对浙江中医药大学学教一体华的学评教的插件，可以省去重复的操作。本插件主要是简化评价操作，对于特殊的评价仍然需要手动评价，也不麻烦。",
+  "url": "https://greasyfork.org/scripts/482016-%E6%B5%99%E6%B1%9F%E4%B8%AD%E5%8C%BB%E8%8D%AF%E5%A4%A7%E5%AD%A6%E5%AD%A6%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/482016/%E6%B5%99%E6%B1%9F%E4%B8%AD%E5%8C%BB%E8%8D%AF%E5%A4%A7%E5%AD%A6%E5%AD%A6%E8%AF%84%E6%95%99.user.js",
+  "code_size": 12712,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 464493,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-20T18:32:33.000Z",
+  "code_updated_at": "2023-04-20T18:32:32.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1008634,
+      "name": "delivs",
+      "created_at": "2023-01-07T18:10:05.000Z",
+      "url": "https://greasyfork.org/users/1008634-delivs",
+      "scripts": [
+        {
+          "id": 464493,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-20T18:32:33.000Z",
+          "code_updated_at": "2023-04-20T18:32:32.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "скрипт",
+          "description": "ммм героин",
+          "url": "https://greasyfork.org/scripts/464493-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82",
+          "code_url": "https://update.greasyfork.org/scripts/464493/%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82.user.js",
+          "code_size": 34100,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "скрипт",
+  "description": "ммм героин",
+  "url": "https://greasyfork.org/scripts/464493-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82",
+  "code_url": "https://update.greasyfork.org/scripts/464493/%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82.user.js",
+  "code_size": 34100,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 427491,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-04T02:42:27.000Z",
+  "code_updated_at": "2021-06-04T02:42:26.000Z",
+  "namespace": "白云味的棉花糖",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 675587,
+      "name": "你瞅啥",
+      "created_at": "2020-08-12T11:17:38.000Z",
+      "url": "https://greasyfork.org/users/675587-%E4%BD%A0%E7%9E%85%E5%95%A5",
+      "scripts": []
+    }
+  ],
+  "name": "吴丹",
+  "description": "支持移动端；加速跳广告；VIP 视频解析；支持自动解析；隐藏视频水印；快捷跳转搜索源；自定义解析和搜索源；豆瓣·选影视 净化",
+  "url": "https://greasyfork.org/scripts/427491-%E5%90%B4%E4%B8%B9",
+  "code_url": "https://update.greasyfork.org/scripts/427491/%E5%90%B4%E4%B8%B9.user.js",
+  "code_size": 113699,
+  "license": "GPL License",
+  "version": "初17.04.03识",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

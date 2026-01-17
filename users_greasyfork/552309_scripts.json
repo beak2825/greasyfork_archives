@@ -1,0 +1,68 @@
+[
+  {
+    "id": 475263,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-14T07:22:39.000Z",
+    "code_updated_at": "2023-09-14T07:22:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 552309,
+        "name": "Victrid",
+        "created_at": "2020-05-05T14:12:50.000Z",
+        "url": "https://greasyfork.org/users/552309-victrid"
+      }
+    ],
+    "name": "SJTU Grad student classtable to iCalendar",
+    "description": "Export the SJTU graduate school schedule to an iCalendar file. Initial support for iOS calendar locations is currently available.",
+    "url": "https://greasyfork.org/scripts/475263-sjtu-grad-student-classtable-to-icalendar",
+    "code_url": "https://update.greasyfork.org/scripts/475263/SJTU%20Grad%20student%20classtable%20to%20iCalendar.user.js",
+    "code_size": 26615,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 436985,
+    "daily_installs": 0,
+    "total_installs": 276,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-13T10:16:53.000Z",
+    "code_updated_at": "2022-05-16T08:15:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 552309,
+        "name": "Victrid",
+        "created_at": "2020-05-05T14:12:50.000Z",
+        "url": "https://greasyfork.org/users/552309-victrid"
+      }
+    ],
+    "name": "交大的课都是精品课，我除了感恩还能做什么呢",
+    "description": "赞美太阳",
+    "url": "https://greasyfork.org/scripts/436985-%E4%BA%A4%E5%A4%A7%E7%9A%84%E8%AF%BE%E9%83%BD%E6%98%AF%E7%B2%BE%E5%93%81%E8%AF%BE-%E6%88%91%E9%99%A4%E4%BA%86%E6%84%9F%E6%81%A9%E8%BF%98%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88%E5%91%A2",
+    "code_url": "https://update.greasyfork.org/scripts/436985/%E4%BA%A4%E5%A4%A7%E7%9A%84%E8%AF%BE%E9%83%BD%E6%98%AF%E7%B2%BE%E5%93%81%E8%AF%BE%EF%BC%8C%E6%88%91%E9%99%A4%E4%BA%86%E6%84%9F%E6%81%A9%E8%BF%98%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88%E5%91%A2.user.js",
+    "code_size": 7372,
+    "license": "GPLv3",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

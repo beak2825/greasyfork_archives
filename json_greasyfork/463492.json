@@ -1,0 +1,33 @@
+{
+  "id": 463492,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-07T18:28:46.000Z",
+  "code_updated_at": "2023-04-07T18:28:45.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1055540,
+      "name": "Charles13",
+      "created_at": "2023-04-07T18:21:39.000Z",
+      "url": "https://greasyfork.org/users/1055540-charles13"
+    }
+  ],
+  "name": "BLACK RUSSIA VOLGOGRAD",
+  "description": "Проверка отчетов для замов и лд.",
+  "url": "https://greasyfork.org/scripts/463492-black-russia-volgograd",
+  "code_url": "https://update.greasyfork.org/scripts/463492/BLACK%20RUSSIA%20VOLGOGRAD.user.js",
+  "code_size": 8604,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 441912,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-22T14:24:05.000Z",
+  "code_updated_at": "2022-03-22T14:24:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 822133,
+      "name": "CrazyOlolosh",
+      "created_at": "2021-10-05T11:59:07.000Z",
+      "url": "https://greasyfork.org/users/822133-crazyololosh"
+    }
+  ],
+  "name": "UseDesk Button",
+  "description": "Usedesk QoL improvments",
+  "url": "https://greasyfork.org/scripts/441912-usedesk-button",
+  "code_url": "https://update.greasyfork.org/scripts/441912/UseDesk%20Button.user.js",
+  "code_size": 6210,
+  "license": null,
+  "version": "1.3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

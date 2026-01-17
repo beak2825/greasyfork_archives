@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482398,
+    "daily_installs": 0,
+    "total_installs": 127,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-16T14:33:17.000Z",
+    "code_updated_at": "2023-12-18T14:46:08.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1083459,
+        "name": "LegaLeon",
+        "created_at": "2023-05-23T10:55:33.000Z",
+        "url": "https://greasyfork.org/users/1083459-legaleon"
+      }
+    ],
+    "name": "[ANAPA]Скрипт кураторам форума by L.Sweezy",
+    "description": "Скрипт для ответа на жалобы игроков | Black Russia Anapa",
+    "url": "https://greasyfork.org/scripts/482398-anapa-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%D0%BC-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-l-sweezy",
+    "code_url": "https://update.greasyfork.org/scripts/482398/%5BANAPA%5D%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%D0%BC%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20LSweezy.user.js",
+    "code_size": 177308,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

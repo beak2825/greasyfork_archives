@@ -1,0 +1,33 @@
+{
+  "id": 422508,
+  "daily_installs": 0,
+  "total_installs": 939,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-03-02T03:29:08.000Z",
+  "code_updated_at": "2021-03-03T03:51:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 742616,
+      "name": "renbeihong",
+      "created_at": "2021-03-02T02:06:12.000Z",
+      "url": "https://greasyfork.org/users/742616-renbeihong"
+    }
+  ],
+  "name": "nf招聘助手",
+  "description": "1.推荐牛人，批量打招呼;支持BOSS、智联、前程",
+  "url": "https://greasyfork.org/scripts/422508-nf%E6%8B%9B%E8%81%98%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/422508/nf%E6%8B%9B%E8%81%98%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 16895,
+  "license": null,
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

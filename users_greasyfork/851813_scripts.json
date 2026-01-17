@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456684,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-16T16:31:17.000Z",
+    "code_updated_at": "2022-12-16T16:31:17.000Z",
+    "namespace": "https://github.com/stuson/fifteensquared-spoiler",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 851813,
+        "name": "Sam Tuson (Staftastafegs)",
+        "created_at": "2021-12-11T13:05:20.000Z",
+        "url": "https://greasyfork.org/users/851813-sam-tuson-staftastafegs"
+      }
+    ],
+    "name": "Fifteensquared Spoiler",
+    "description": "Hides all answers and explanations for cryptic crosswords on Fifteensquared behind toggleable spoilers.",
+    "url": "https://greasyfork.org/scripts/456684-fifteensquared-spoiler",
+    "code_url": "https://update.greasyfork.org/scripts/456684/Fifteensquared%20Spoiler.user.js",
+    "code_size": 5913,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

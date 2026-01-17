@@ -1,0 +1,200 @@
+[
+  {
+    "id": 442844,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-06T05:25:54.000Z",
+    "code_updated_at": "2022-04-08T00:57:32.000Z",
+    "namespace": "super_video_helper_cat",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846464,
+        "name": "faikeung",
+        "created_at": "2021-11-30T03:49:44.000Z",
+        "url": "https://greasyfork.org/users/846464-faikeung"
+      }
+    ],
+    "name": "解锁B站大会员番剧、B站视频解析下载；全网VIP视频免费破解去广告；全网音乐直接下载；油管、Facebook等国外视频解析下载；网盘搜索引擎破解无限下载等（自用）",
+    "description": "【❤️ 视频自动解析，体会拥有VIP的感觉❤️，适配PC+移动 】功能有：1、解锁B站大会员番剧、B站视频解析下载；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费破解去广告(免跳出观影特方便)；3、网易云音乐、QQ音乐、酷狗、蜻蜓FM、荔枝FM、喜马拉雅等音乐和有声书音频免客户端下载；4、油管、Facebook等国外视频解析下载；5、网盘搜索引擎(来搜一下:laisoyixia.com, 小猪快盘:xiaozhukuaipan.com)破解无限下载；6、优惠券查询等；7、搜索引擎导航【脚本长期维护更新，完全免费，无广告】",
+    "url": "https://greasyfork.org/scripts/442844-%E8%A7%A3%E9%94%81b%E7%AB%99%E5%A4%A7%E4%BC%9A%E5%91%98%E7%95%AA%E5%89%A7-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A-%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD-%E6%B2%B9%E7%AE%A1-facebook%E7%AD%89%E5%9B%BD%E5%A4%96%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD-%E7%BD%91%E7%9B%98%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E7%A0%B4%E8%A7%A3%E6%97%A0%E9%99%90%E4%B8%8B%E8%BD%BD%E7%AD%89-%E8%87%AA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/442844/%E8%A7%A3%E9%94%81B%E7%AB%99%E5%A4%A7%E4%BC%9A%E5%91%98%E7%95%AA%E5%89%A7%E3%80%81B%E7%AB%99%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD%EF%BC%9B%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A%EF%BC%9B%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD%EF%BC%9B%E6%B2%B9%E7%AE%A1%E3%80%81Facebook%E7%AD%89%E5%9B%BD%E5%A4%96%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD%EF%BC%9B%E7%BD%91%E7%9B%98%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E7%A0%B4%E8%A7%A3%E6%97%A0%E9%99%90%E4%B8%8B%E8%BD%BD%E7%AD%89%EF%BC%88%E8%87%AA%E7%94%A8%EF%BC%89.user.js",
+    "code_size": 82865,
+    "license": "AGPL License",
+    "version": "3.5.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 440939,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-05T00:59:42.000Z",
+    "code_updated_at": "2022-03-05T01:42:30.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846464,
+        "name": "faikeung",
+        "created_at": "2021-11-30T03:49:44.000Z",
+        "url": "https://greasyfork.org/users/846464-faikeung"
+      }
+    ],
+    "name": "通用VIP视解析",
+    "description": "爱奇艺、腾讯视频、优酷、乐视、芒果TV、搜狐、1905、PPTV、B站。",
+    "url": "https://greasyfork.org/scripts/440939-%E9%80%9A%E7%94%A8vip%E8%A7%86%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/440939/%E9%80%9A%E7%94%A8VIP%E8%A7%86%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 9768,
+    "license": "MIT *",
+    "version": "1.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 440937,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-05T00:57:53.000Z",
+    "code_updated_at": "2022-03-05T00:57:53.000Z",
+    "namespace": "mx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846464,
+        "name": "faikeung",
+        "created_at": "2021-11-30T03:49:44.000Z",
+        "url": "https://greasyfork.org/users/846464-faikeung"
+      }
+    ],
+    "name": "觅影修改版",
+    "description": "自动加速跳过视频广告；原网页解析 VIP 视频；支持一键多线路自动解析；隐藏视频水印；快捷搜索跳转在线观看；豆瓣·选影视 净化；自定义解析；手机扫码看",
+    "url": "https://greasyfork.org/scripts/440937-%E8%A7%85%E5%BD%B1%E4%BF%AE%E6%94%B9%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/440937/%E8%A7%85%E5%BD%B1%E4%BF%AE%E6%94%B9%E7%89%88.user.js",
+    "code_size": 146482,
+    "license": "GPL License",
+    "version": "22.03.05",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 440935,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-05T00:43:15.000Z",
+    "code_updated_at": "2022-03-05T00:43:15.000Z",
+    "namespace": "(o˘◡˘o)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846464,
+        "name": "faikeung",
+        "created_at": "2021-11-30T03:49:44.000Z",
+        "url": "https://greasyfork.org/users/846464-faikeung"
+      }
+    ],
+    "name": "觅影",
+    "description": "支持移动端；加速跳广告；VIP 视频解析；支持自动解析；隐藏视频水印；快捷跳转搜索源；自定义解析和搜索源；豆瓣·选影视 净化",
+    "url": "https://greasyfork.org/scripts/440935-%E8%A7%85%E5%BD%B1",
+    "code_url": "https://update.greasyfork.org/scripts/440935/%E8%A7%85%E5%BD%B1.user.js",
+    "code_size": 114648,
+    "license": "GPL License",
+    "version": "20.20.final",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 436344,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-30T13:32:43.000Z",
+    "code_updated_at": "2021-12-01T04:52:38.000Z",
+    "namespace": "mx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846464,
+        "name": "faikeung",
+        "created_at": "2021-11-30T03:49:44.000Z",
+        "url": "https://greasyfork.org/users/846464-faikeung"
+      }
+    ],
+    "name": "MX觅影self",
+    "description": "自动加速跳过视频广告；原网页解析 VIP 视频；支持一键多线路自动解析；隐藏视频水印；快捷搜索跳转在线观看；豆瓣·选影视 净化；自定义解析；手机扫码看",
+    "url": "https://greasyfork.org/scripts/436344-mx%E8%A7%85%E5%BD%B1self",
+    "code_url": "https://update.greasyfork.org/scripts/436344/MX%E8%A7%85%E5%BD%B1self.user.js",
+    "code_size": 137628,
+    "license": "GPL License",
+    "version": "21.12.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 436305,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-30T04:01:19.000Z",
+    "code_updated_at": "2021-12-01T05:02:29.000Z",
+    "namespace": "mx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846464,
+        "name": "faikeung",
+        "created_at": "2021-11-30T03:49:44.000Z",
+        "url": "https://greasyfork.org/users/846464-faikeung"
+      }
+    ],
+    "name": "MX觅影",
+    "description": "自动加速跳过视频广告；原网页解析 VIP 视频；支持一键多线路自动解析；隐藏视频水印；快捷搜索跳转在线观看；豆瓣·选影视 净化；自定义解析；手机扫码看",
+    "url": "https://greasyfork.org/scripts/436305-mx%E8%A7%85%E5%BD%B1",
+    "code_url": "https://update.greasyfork.org/scripts/436305/MX%E8%A7%85%E5%BD%B1.user.js",
+    "code_size": 137393,
+    "license": "GPL License",
+    "version": "21.12.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

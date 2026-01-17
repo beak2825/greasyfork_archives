@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422992,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-10T09:04:20.000Z",
+    "code_updated_at": "2021-03-10T09:21:26.000Z",
+    "namespace": "jump_links",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 476682,
+        "name": "MouksJun",
+        "created_at": "2020-04-07T11:54:28.000Z",
+        "url": "https://greasyfork.org/users/476682-mouksjun"
+      }
+    ],
+    "name": "直接跳转外链",
+    "description": "跳过中转页 直接外部链接 支持 知乎 简书",
+    "url": "https://greasyfork.org/scripts/422992-%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC%E5%A4%96%E9%93%BE",
+    "code_url": "https://update.greasyfork.org/scripts/422992/%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC%E5%A4%96%E9%93%BE.user.js",
+    "code_size": 1629,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

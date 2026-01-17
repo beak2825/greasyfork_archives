@@ -1,0 +1,34 @@
+{
+  "id": 475462,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-16T23:21:21.000Z",
+  "code_updated_at": "2025-12-18T19:33:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 206502,
+      "name": "TomaszFromasz",
+      "created_at": "2018-08-21T06:06:43.000Z",
+      "url": "https://greasyfork.org/users/206502-tomaszfromasz",
+      "scripts": []
+    }
+  ],
+  "name": "Centrum Zarządzania Pracą (CZP)",
+  "description": "Tworzy centrum zarządzania pracą (taski / off-taski / rejty)",
+  "url": "https://greasyfork.org/scripts/475462-centrum-zarz%C4%85dzania-prac%C4%85-czp",
+  "code_url": "https://update.greasyfork.org/scripts/475462/Centrum%20Zarz%C4%85dzania%20Prac%C4%85%20%28CZP%29.user.js",
+  "code_size": 121036,
+  "license": null,
+  "version": "3.75",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

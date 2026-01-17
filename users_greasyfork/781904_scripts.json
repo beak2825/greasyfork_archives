@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487673,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-19T02:35:16.000Z",
+    "code_updated_at": "2025-07-03T10:21:16.000Z",
+    "namespace": "https://github.com/yoophoon",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 781904,
+        "name": "yoophoon",
+        "created_at": "2021-06-10T09:12:17.000Z",
+        "url": "https://greasyfork.org/users/781904-yoophoon"
+      }
+    ],
+    "name": "biquge365.net阅读背景调整",
+    "description": "改善笔趣阁的阅读体验",
+    "url": "https://greasyfork.org/scripts/487673-biquge365-net%E9%98%85%E8%AF%BB%E8%83%8C%E6%99%AF%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/487673/biquge365net%E9%98%85%E8%AF%BB%E8%83%8C%E6%99%AF%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 14335,
+    "license": "MIT License",
+    "version": "2024-02-25",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

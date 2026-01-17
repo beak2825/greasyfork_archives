@@ -1,0 +1,59 @@
+{
+  "id": 492194,
+  "daily_installs": 0,
+  "total_installs": 206,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-11T02:25:38.000Z",
+  "code_updated_at": "2024-04-11T02:25:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286645,
+      "name": "snow win",
+      "created_at": "2024-04-11T02:18:36.000Z",
+      "url": "https://greasyfork.org/users/1286645-snow-win",
+      "scripts": [
+        {
+          "id": 492194,
+          "daily_installs": 0,
+          "total_installs": 206,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-11T02:25:38.000Z",
+          "code_updated_at": "2024-04-11T02:25:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "imgur图片镜像换源",
+          "description": "imgur图片镜像换源,通过镜像服务器换源预览",
+          "url": "https://greasyfork.org/scripts/492194-imgur%E5%9B%BE%E7%89%87%E9%95%9C%E5%83%8F%E6%8D%A2%E6%BA%90",
+          "code_url": "https://update.greasyfork.org/scripts/492194/imgur%E5%9B%BE%E7%89%87%E9%95%9C%E5%83%8F%E6%8D%A2%E6%BA%90.user.js",
+          "code_size": 1455,
+          "license": "MIT License",
+          "version": "2024-03-05",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "imgur图片镜像换源",
+  "description": "imgur图片镜像换源,通过镜像服务器换源预览",
+  "url": "https://greasyfork.org/scripts/492194-imgur%E5%9B%BE%E7%89%87%E9%95%9C%E5%83%8F%E6%8D%A2%E6%BA%90",
+  "code_url": "https://update.greasyfork.org/scripts/492194/imgur%E5%9B%BE%E7%89%87%E9%95%9C%E5%83%8F%E6%8D%A2%E6%BA%90.user.js",
+  "code_size": 1455,
+  "license": "MIT License",
+  "version": "2024-03-05",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

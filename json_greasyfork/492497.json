@@ -1,0 +1,33 @@
+{
+  "id": 492497,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-14T11:11:19.000Z",
+  "code_updated_at": "2024-04-22T04:10:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1288199,
+      "name": "Sakura ushio",
+      "created_at": "2024-04-14T11:01:24.000Z",
+      "url": "https://greasyfork.org/users/1288199-sakura-ushio"
+    }
+  ],
+  "name": "哔哩哔哩漫画全屏沉浸",
+  "description": "删除漫画界面左右的悬浮图标，获得极致的全屏漫画体验",
+  "url": "https://greasyfork.org/scripts/492497-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%BC%AB%E7%94%BB%E5%85%A8%E5%B1%8F%E6%B2%89%E6%B5%B8",
+  "code_url": "https://update.greasyfork.org/scripts/492497/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%BC%AB%E7%94%BB%E5%85%A8%E5%B1%8F%E6%B2%89%E6%B5%B8.user.js",
+  "code_size": 1751,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

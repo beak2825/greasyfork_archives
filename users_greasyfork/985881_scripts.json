@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455292,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-23T12:08:02.000Z",
+    "code_updated_at": "2022-11-23T12:08:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 985881,
+        "name": "追梦枫竹",
+        "created_at": "2022-11-21T04:59:28.000Z",
+        "url": "https://greasyfork.org/users/985881-%E8%BF%BD%E6%A2%A6%E6%9E%AB%E7%AB%B9"
+      }
+    ],
+    "name": "华医网自动答题自改版",
+    "description": "华医网加速听课与自动答题，2022年4月结合新系统调整进行了功能升级完善修正。【功能】：1.多种倍速播放；2.随机延时拟人化；3.自动答题；4.屏蔽或者跳过课堂问题。",
+    "url": "https://greasyfork.org/scripts/455292-%E5%8D%8E%E5%8C%BB%E7%BD%91%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%87%AA%E6%94%B9%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/455292/%E5%8D%8E%E5%8C%BB%E7%BD%91%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%87%AA%E6%94%B9%E7%89%88.user.js",
+    "code_size": 20632,
+    "license": "AGPL License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

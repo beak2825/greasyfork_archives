@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476798,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-06T03:09:15.000Z",
+    "code_updated_at": "2023-10-06T03:09:15.000Z",
+    "namespace": "https://greasyfork.org/users/1189174",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1189174,
+        "name": "devang shah",
+        "created_at": "2023-10-06T03:05:16.000Z",
+        "url": "https://greasyfork.org/users/1189174-devang-shah"
+      }
+    ],
+    "name": "Force Select",
+    "description": "Stop sites from disabling selection of text",
+    "url": "https://greasyfork.org/scripts/476798-force-select",
+    "code_url": "https://update.greasyfork.org/scripts/476798/Force%20Select.user.js",
+    "code_size": 396,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

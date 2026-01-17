@@ -1,0 +1,33 @@
+{
+  "id": 437305,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-19T20:16:39.000Z",
+  "code_updated_at": "2021-12-19T20:48:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 854175,
+      "name": "YC白白",
+      "created_at": "2021-12-16T15:47:22.000Z",
+      "url": "https://greasyfork.org/users/854175-yc%E7%99%BD%E7%99%BD"
+    }
+  ],
+  "name": "91譜ios捷徑雙用v6.2",
+  "description": "實現移調、級數功能，兼容Safari手機版與網頁版",
+  "url": "https://greasyfork.org/scripts/437305-91%E8%AD%9Cios%E6%8D%B7%E5%BE%91%E9%9B%99%E7%94%A8v6-2",
+  "code_url": "https://update.greasyfork.org/scripts/437305/91%E8%AD%9Cios%E6%8D%B7%E5%BE%91%E9%9B%99%E7%94%A8v62.user.js",
+  "code_size": 22214,
+  "license": "AGPL",
+  "version": "6.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 479907,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-15T02:25:07.000Z",
+  "code_updated_at": "2023-11-15T02:28:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1204797,
+      "name": "billchenbest",
+      "created_at": "2023-10-27T03:04:16.000Z",
+      "url": "https://greasyfork.org/users/1204797-billchenbest",
+      "scripts": []
+    }
+  ],
+  "name": "Shopee轉盤",
+  "description": "自動執行分享操作並重新整理網頁",
+  "url": "https://greasyfork.org/scripts/479907-shopee%E8%BD%89%E7%9B%A4",
+  "code_url": "https://update.greasyfork.org/scripts/479907/Shopee%E8%BD%89%E7%9B%A4.user.js",
+  "code_size": 1560,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

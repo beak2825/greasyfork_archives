@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452140,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-28T03:52:28.000Z",
+    "code_updated_at": "2022-09-28T05:54:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964241,
+        "name": "郑剑霄",
+        "created_at": "2022-09-28T02:52:33.000Z",
+        "url": "https://greasyfork.org/users/964241-%E9%83%91%E5%89%91%E9%9C%84"
+      }
+    ],
+    "name": "拖动黏贴链接",
+    "description": "s图库拖动excel黏贴",
+    "url": "https://greasyfork.org/scripts/452140-%E6%8B%96%E5%8A%A8%E9%BB%8F%E8%B4%B4%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/452140/%E6%8B%96%E5%8A%A8%E9%BB%8F%E8%B4%B4%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 1866,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

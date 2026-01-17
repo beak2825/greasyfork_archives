@@ -1,0 +1,59 @@
+{
+  "id": 477400,
+  "daily_installs": 0,
+  "total_installs": 196,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-10-14T08:20:29.000Z",
+  "code_updated_at": "2023-10-19T06:56:53.000Z",
+  "namespace": "https://github.com/DaBluLite/DiscordColorways",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1195712,
+      "name": "DaBluLite",
+      "created_at": "2023-10-14T08:16:29.000Z",
+      "url": "https://greasyfork.org/users/1195712-dablulite",
+      "scripts": [
+        {
+          "id": 477400,
+          "daily_installs": 0,
+          "total_installs": 196,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-10-14T08:20:29.000Z",
+          "code_updated_at": "2023-10-19T06:56:53.000Z",
+          "namespace": "https://github.com/DaBluLite/DiscordColorways",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DiscordColorways",
+          "description": "The Definitive way of styling Discord and select themes",
+          "url": "https://greasyfork.org/scripts/477400-discordcolorways",
+          "code_url": "https://update.greasyfork.org/scripts/477400/DiscordColorways.user.js",
+          "code_size": 298371,
+          "license": "MIT License",
+          "version": "5.6.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DiscordColorways",
+  "description": "The Definitive way of styling Discord and select themes",
+  "url": "https://greasyfork.org/scripts/477400-discordcolorways",
+  "code_url": "https://update.greasyfork.org/scripts/477400/DiscordColorways.user.js",
+  "code_size": 298371,
+  "license": "MIT License",
+  "version": "5.6.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

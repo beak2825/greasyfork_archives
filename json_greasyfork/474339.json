@@ -1,0 +1,34 @@
+{
+  "id": 474339,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-01T09:37:48.000Z",
+  "code_updated_at": "2023-12-26T15:16:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1164023,
+      "name": "张三3090",
+      "created_at": "2023-09-01T09:13:23.000Z",
+      "url": "https://greasyfork.org/users/1164023-%E5%BC%A0%E4%B8%893090",
+      "scripts": []
+    }
+  ],
+  "name": "多传感融合项目",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/474339-%E5%A4%9A%E4%BC%A0%E6%84%9F%E8%9E%8D%E5%90%88%E9%A1%B9%E7%9B%AE",
+  "code_url": "https://update.greasyfork.org/scripts/474339/%E5%A4%9A%E4%BC%A0%E6%84%9F%E8%9E%8D%E5%90%88%E9%A1%B9%E7%9B%AE.user.js",
+  "code_size": 98298,
+  "license": null,
+  "version": "2023.12.26.1 Beta",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

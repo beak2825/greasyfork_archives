@@ -1,0 +1,33 @@
+{
+  "id": 487882,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-21T02:28:15.000Z",
+  "code_updated_at": "2024-02-25T01:14:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1264578,
+      "name": "TylerKimbell",
+      "created_at": "2024-02-21T02:09:58.000Z",
+      "url": "https://greasyfork.org/users/1264578-tylerkimbell"
+    }
+  ],
+  "name": "Real Time RPH Calculator",
+  "description": "Calculate your RPH in toolbelt on a day to day basis rather than month to month.",
+  "url": "https://greasyfork.org/scripts/487882-real-time-rph-calculator",
+  "code_url": "https://update.greasyfork.org/scripts/487882/Real%20Time%20RPH%20Calculator.user.js",
+  "code_size": 7461,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

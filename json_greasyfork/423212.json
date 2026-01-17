@@ -1,0 +1,59 @@
+{
+  "id": 423212,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-14T17:45:11.000Z",
+  "code_updated_at": "2021-03-14T17:45:11.000Z",
+  "namespace": "TD_analise_dos_precos",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 123852,
+      "name": "JohnDoe",
+      "created_at": "2017-05-13T19:24:37.000Z",
+      "url": "https://greasyfork.org/users/123852-johndoe",
+      "scripts": [
+        {
+          "id": 396890,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-25T15:06:51.000Z",
+          "code_updated_at": "2020-02-25T15:06:51.000Z",
+          "namespace": "RedditUsercript",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Reddit Flair Ban",
+          "description": "Remove topics by flair. Only works with Classic Reddit",
+          "url": "https://greasyfork.org/scripts/396890-reddit-flair-ban",
+          "code_url": "https://update.greasyfork.org/scripts/396890/Reddit%20Flair%20Ban.user.js",
+          "code_size": 21860,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TD: Análise dos preços do TD",
+  "description": "Análise dos sobre preços e taxas do Tesouro Direto!",
+  "url": "https://greasyfork.org/scripts/423212-td-an%C3%A1lise-dos-pre%C3%A7os-do-td",
+  "code_url": "https://update.greasyfork.org/scripts/423212/TD%3A%20An%C3%A1lise%20dos%20pre%C3%A7os%20do%20TD.user.js",
+  "code_size": 15084,
+  "license": null,
+  "version": "1",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

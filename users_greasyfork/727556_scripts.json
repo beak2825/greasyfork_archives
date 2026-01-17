@@ -1,0 +1,101 @@
+[
+  {
+    "id": 449515,
+    "daily_installs": 0,
+    "total_installs": 70,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-14T06:38:02.000Z",
+    "code_updated_at": "2022-09-08T07:13:07.000Z",
+    "namespace": "https://greasyfork.org/users/727556",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 727556,
+        "name": "b-en-nui",
+        "created_at": "2021-01-15T04:59:51.000Z",
+        "url": "https://greasyfork.org/users/727556-b-en-nui"
+      }
+    ],
+    "name": "Food Club Quick Bet Links",
+    "description": "Get rich",
+    "url": "https://greasyfork.org/scripts/449515-food-club-quick-bet-links",
+    "code_url": "https://update.greasyfork.org/scripts/449515/Food%20Club%20Quick%20Bet%20Links.user.js",
+    "code_size": 2889,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 448637,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-29T20:14:57.000Z",
+    "code_updated_at": "2022-07-29T20:14:57.000Z",
+    "namespace": "https://greasyfork.org/users/727556",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 727556,
+        "name": "b-en-nui",
+        "created_at": "2021-01-15T04:59:51.000Z",
+        "url": "https://greasyfork.org/users/727556-b-en-nui"
+      }
+    ],
+    "name": "GC Helper",
+    "description": "Adds helpful timers and links to the GC sidebar.",
+    "url": "https://greasyfork.org/scripts/448637-gc-helper",
+    "code_url": "https://update.greasyfork.org/scripts/448637/GC%20Helper.user.js",
+    "code_size": 12845,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 436521,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-04T01:43:09.000Z",
+    "code_updated_at": "2022-01-31T06:23:31.000Z",
+    "namespace": "https://greasyfork.org/users/727556",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 727556,
+        "name": "b-en-nui",
+        "created_at": "2021-01-15T04:59:51.000Z",
+        "url": "https://greasyfork.org/users/727556-b-en-nui"
+      }
+    ],
+    "name": "NPC RS Logger",
+    "description": "Log your restocks!",
+    "url": "https://greasyfork.org/scripts/436521-npc-rs-logger",
+    "code_url": "https://update.greasyfork.org/scripts/436521/NPC%20RS%20Logger.user.js",
+    "code_size": 1753,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

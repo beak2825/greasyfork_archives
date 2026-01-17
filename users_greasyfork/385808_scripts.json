@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433158,
+    "daily_installs": 0,
+    "total_installs": 369,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-29T11:53:16.000Z",
+    "code_updated_at": "2022-04-08T01:06:23.000Z",
+    "namespace": "https://github.com/yikuaibaiban/chinahrt",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385808,
+        "name": "panxiaolai",
+        "created_at": "2019-10-11T02:17:48.000Z",
+        "url": "https://greasyfork.org/users/385808-panxiaolai"
+      }
+    ],
+    "name": "潘晓来",
+    "description": "进入视频自动开始并静音。移除自动暂停",
+    "url": "https://greasyfork.org/scripts/433158-%E6%BD%98%E6%99%93%E6%9D%A5",
+    "code_url": "https://update.greasyfork.org/scripts/433158/%E6%BD%98%E6%99%93%E6%9D%A5.user.js",
+    "code_size": 599,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

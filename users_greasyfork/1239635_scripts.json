@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 483195,
+    "daily_installs": 2,
+    "total_installs": 1712,
+    "fan_score": "12.5",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2023-12-27T03:13:47.000Z",
+    "code_updated_at": "2024-01-16T01:54:08.000Z",
+    "namespace": "Lss",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1239635,
+        "name": "ssssyouxi",
+        "created_at": "2023-12-27T01:50:21.000Z",
+        "url": "https://greasyfork.org/users/1239635-ssssyouxi"
+      }
+    ],
+    "name": "B站成分查询·贴标签·三相之力·超多项指示器功能修复",
+    "description": "老脚本不能用了，做了一些修改，勉强能用。由于B站API限制，‘频繁刷新页面’或者‘评论区用户过多’可能会导致插件暂时失效，等待几分钟即可。有问题请留言，理性讨论。",
+    "url": "https://greasyfork.org/scripts/483195-b%E7%AB%99%E6%88%90%E5%88%86%E6%9F%A5%E8%AF%A2-%E8%B4%B4%E6%A0%87%E7%AD%BE-%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B-%E8%B6%85%E5%A4%9A%E9%A1%B9%E6%8C%87%E7%A4%BA%E5%99%A8%E5%8A%9F%E8%83%BD%E4%BF%AE%E5%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/483195/B%E7%AB%99%E6%88%90%E5%88%86%E6%9F%A5%E8%AF%A2%C2%B7%E8%B4%B4%E6%A0%87%E7%AD%BE%C2%B7%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B%C2%B7%E8%B6%85%E5%A4%9A%E9%A1%B9%E6%8C%87%E7%A4%BA%E5%99%A8%E5%8A%9F%E8%83%BD%E4%BF%AE%E5%A4%8D.user.js",
+    "code_size": 43074,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

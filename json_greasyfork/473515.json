@@ -1,0 +1,34 @@
+{
+  "id": 473515,
+  "daily_installs": 0,
+  "total_installs": 210,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-20T16:40:35.000Z",
+  "code_updated_at": "2025-02-14T11:01:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 993803,
+      "name": "Gentle Zhou",
+      "created_at": "2022-12-07T04:51:39.000Z",
+      "url": "https://greasyfork.org/users/993803-gentle-zhou",
+      "scripts": []
+    }
+  ],
+  "name": "TikTok播放量分析",
+  "description": "TikTok播放量滚动数据抓取",
+  "url": "https://greasyfork.org/scripts/473515-tiktok%E6%92%AD%E6%94%BE%E9%87%8F%E5%88%86%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/473515/TikTok%E6%92%AD%E6%94%BE%E9%87%8F%E5%88%86%E6%9E%90.user.js",
+  "code_size": 37876,
+  "license": "MIT License",
+  "version": "0.32",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

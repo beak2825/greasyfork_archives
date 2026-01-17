@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437674,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-28T03:46:58.000Z",
+    "code_updated_at": "2021-12-28T04:12:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 858346,
+        "name": "deadly",
+        "created_at": "2021-12-28T03:45:09.000Z",
+        "url": "https://greasyfork.org/users/858346-deadly"
+      }
+    ],
+    "name": "Typeracer Quick Leave/Start Race",
+    "description": "Allows you to quickly leave or start a race by pressing tab once",
+    "url": "https://greasyfork.org/scripts/437674-typeracer-quick-leave-start-race",
+    "code_url": "https://update.greasyfork.org/scripts/437674/Typeracer%20Quick%20LeaveStart%20Race.user.js",
+    "code_size": 827,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

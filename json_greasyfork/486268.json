@@ -1,0 +1,59 @@
+{
+  "id": 486268,
+  "daily_installs": 0,
+  "total_installs": 52,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-02T02:57:17.000Z",
+  "code_updated_at": "2024-02-02T03:02:52.000Z",
+  "namespace": "discuz",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 14656,
+      "name": "萌之神唑",
+      "created_at": "2015-08-27T05:39:41.000Z",
+      "url": "https://greasyfork.org/users/14656-%E8%90%8C%E4%B9%8B%E7%A5%9E%E5%94%91",
+      "scripts": [
+        {
+          "id": 486268,
+          "daily_installs": 0,
+          "total_installs": 52,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-02T02:57:17.000Z",
+          "code_updated_at": "2024-02-02T03:02:52.000Z",
+          "namespace": "discuz",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "屏蔽Chiphell特定用户主题、回帖、点评",
+          "description": "屏蔽Chiphell特定用户主题、回帖、点评。使用方式：在 “bls” 列表里加入想屏蔽的 ID, 用英文引号包围，英文逗号区隔。",
+          "url": "https://greasyfork.org/scripts/486268-%E5%B1%8F%E8%94%BDchiphell%E7%89%B9%E5%AE%9A%E7%94%A8%E6%88%B7%E4%B8%BB%E9%A2%98-%E5%9B%9E%E5%B8%96-%E7%82%B9%E8%AF%84",
+          "code_url": "https://update.greasyfork.org/scripts/486268/%E5%B1%8F%E8%94%BDChiphell%E7%89%B9%E5%AE%9A%E7%94%A8%E6%88%B7%E4%B8%BB%E9%A2%98%E3%80%81%E5%9B%9E%E5%B8%96%E3%80%81%E7%82%B9%E8%AF%84.user.js",
+          "code_size": 2527,
+          "license": null,
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "屏蔽Chiphell特定用户主题、回帖、点评",
+  "description": "屏蔽Chiphell特定用户主题、回帖、点评。使用方式：在 “bls” 列表里加入想屏蔽的 ID, 用英文引号包围，英文逗号区隔。",
+  "url": "https://greasyfork.org/scripts/486268-%E5%B1%8F%E8%94%BDchiphell%E7%89%B9%E5%AE%9A%E7%94%A8%E6%88%B7%E4%B8%BB%E9%A2%98-%E5%9B%9E%E5%B8%96-%E7%82%B9%E8%AF%84",
+  "code_url": "https://update.greasyfork.org/scripts/486268/%E5%B1%8F%E8%94%BDChiphell%E7%89%B9%E5%AE%9A%E7%94%A8%E6%88%B7%E4%B8%BB%E9%A2%98%E3%80%81%E5%9B%9E%E5%B8%96%E3%80%81%E7%82%B9%E8%AF%84.user.js",
+  "code_size": 2527,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

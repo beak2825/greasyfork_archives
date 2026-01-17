@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465366,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-02T11:28:28.000Z",
+    "code_updated_at": "2023-05-02T11:28:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1070842,
+        "name": "935567232",
+        "created_at": "2023-04-30T18:24:34.000Z",
+        "url": "https://greasyfork.org/users/1070842-935567232"
+      }
+    ],
+    "name": "一键购买csgo饰品",
+    "description": "实现skinport与waxpeer市场批量加入购物车",
+    "url": "https://greasyfork.org/scripts/465366-%E4%B8%80%E9%94%AE%E8%B4%AD%E4%B9%B0csgo%E9%A5%B0%E5%93%81",
+    "code_url": "https://update.greasyfork.org/scripts/465366/%E4%B8%80%E9%94%AE%E8%B4%AD%E4%B9%B0csgo%E9%A5%B0%E5%93%81.user.js",
+    "code_size": 5244,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

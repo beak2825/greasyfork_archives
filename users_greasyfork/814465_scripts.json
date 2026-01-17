@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432260,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-11T18:22:54.000Z",
+    "code_updated_at": "2021-09-11T18:24:26.000Z",
+    "namespace": "savit.statestimate",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814465,
+        "name": "Savit",
+        "created_at": "2021-09-11T18:21:24.000Z",
+        "url": "https://greasyfork.org/users/814465-savit"
+      }
+    ],
+    "name": "TORN: Stat Estimate + Elimination team",
+    "description": "Estimate the stats of a player based on their rank.",
+    "url": "https://greasyfork.org/scripts/432260-torn-stat-estimate-elimination-team",
+    "code_url": "https://update.greasyfork.org/scripts/432260/TORN%3A%20Stat%20Estimate%20%2B%20Elimination%20team.user.js",
+    "code_size": 24423,
+    "license": null,
+    "version": "2.7.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

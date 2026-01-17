@@ -1,0 +1,59 @@
+{
+  "id": 466473,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-17T02:18:11.000Z",
+  "code_updated_at": "2025-04-27T06:20:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 150320,
+      "name": "mint rain",
+      "created_at": "2017-08-25T00:44:22.000Z",
+      "url": "https://greasyfork.org/users/150320-mint-rain",
+      "scripts": [
+        {
+          "id": 466473,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-17T02:18:11.000Z",
+          "code_updated_at": "2025-04-27T06:20:49.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "V2ex辅助",
+          "description": "V2ex辅助，对文章用浏览器新标签页打开。",
+          "url": "https://greasyfork.org/scripts/466473-v2ex%E8%BE%85%E5%8A%A9",
+          "code_url": "https://update.greasyfork.org/scripts/466473/V2ex%E8%BE%85%E5%8A%A9.user.js",
+          "code_size": 859,
+          "license": "GNU General Public License v3.0 only",
+          "version": "0.2.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "V2ex辅助",
+  "description": "V2ex辅助，对文章用浏览器新标签页打开。",
+  "url": "https://greasyfork.org/scripts/466473-v2ex%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/466473/V2ex%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 859,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

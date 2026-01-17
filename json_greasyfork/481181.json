@@ -1,0 +1,59 @@
+{
+  "id": 481181,
+  "daily_installs": 0,
+  "total_installs": 140,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-01T17:28:44.000Z",
+  "code_updated_at": "2023-12-01T17:28:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1226395,
+      "name": "ISCcgadumer",
+      "created_at": "2023-12-01T17:22:30.000Z",
+      "url": "https://greasyfork.org/users/1226395-isccgadumer",
+      "scripts": [
+        {
+          "id": 481181,
+          "daily_installs": 0,
+          "total_installs": 140,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-01T17:28:44.000Z",
+          "code_updated_at": "2023-12-01T17:28:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube AdBlockerBlocker Blocker",
+          "description": "Replace YouTube Adblock warning with Youtube embeded Video",
+          "url": "https://greasyfork.org/scripts/481181-youtube-adblockerblocker-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/481181/YouTube%20AdBlockerBlocker%20Blocker.user.js",
+          "code_size": 3421,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube AdBlockerBlocker Blocker",
+  "description": "Replace YouTube Adblock warning with Youtube embeded Video",
+  "url": "https://greasyfork.org/scripts/481181-youtube-adblockerblocker-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/481181/YouTube%20AdBlockerBlocker%20Blocker.user.js",
+  "code_size": 3421,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 425678,
+  "daily_installs": 0,
+  "total_installs": 380,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-28T18:16:39.000Z",
+  "code_updated_at": "2021-05-24T15:58:26.000Z",
+  "namespace": "https://phatbl.at/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 766207,
+      "name": "phatblat",
+      "created_at": "2021-04-28T18:15:28.000Z",
+      "url": "https://greasyfork.org/users/766207-phatblat",
+      "scripts": [
+        {
+          "id": 425678,
+          "daily_installs": 0,
+          "total_installs": 380,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-28T18:16:39.000Z",
+          "code_updated_at": "2021-05-24T15:58:26.000Z",
+          "namespace": "https://phatbl.at/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Startpage.com - Hide Ads",
+          "description": "Hides the ads section of Startpage.com search results.",
+          "url": "https://greasyfork.org/scripts/425678-startpage-com-hide-ads",
+          "code_url": "https://update.greasyfork.org/scripts/425678/Startpagecom%20-%20Hide%20Ads.user.js",
+          "code_size": 1917,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Startpage.com - Hide Ads",
+  "description": "Hides the ads section of Startpage.com search results.",
+  "url": "https://greasyfork.org/scripts/425678-startpage-com-hide-ads",
+  "code_url": "https://update.greasyfork.org/scripts/425678/Startpagecom%20-%20Hide%20Ads.user.js",
+  "code_size": 1917,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

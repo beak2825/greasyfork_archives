@@ -1,0 +1,59 @@
+{
+  "id": 488214,
+  "daily_installs": 0,
+  "total_installs": 83,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-24T22:35:08.000Z",
+  "code_updated_at": "2025-07-02T07:49:39.000Z",
+  "namespace": "cyberdelia extract",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1266579,
+      "name": "Wilfred Helmig",
+      "created_at": "2024-02-24T22:29:25.000Z",
+      "url": "https://greasyfork.org/users/1266579-wilfred-helmig",
+      "scripts": [
+        {
+          "id": 488214,
+          "daily_installs": 0,
+          "total_installs": 83,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-24T22:35:08.000Z",
+          "code_updated_at": "2025-07-02T07:49:39.000Z",
+          "namespace": "cyberdelia extract",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Save/Print/PDF Civitai Articles (Modern Style)",
+          "description": "Save Civitai articles as HTML, Print, or proper PDF with clean formatting",
+          "url": "https://greasyfork.org/scripts/488214-save-print-pdf-civitai-articles-modern-style",
+          "code_url": "https://update.greasyfork.org/scripts/488214/SavePrintPDF%20Civitai%20Articles%20%28Modern%20Style%29.user.js",
+          "code_size": 7727,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Save/Print/PDF Civitai Articles (Modern Style)",
+  "description": "Save Civitai articles as HTML, Print, or proper PDF with clean formatting",
+  "url": "https://greasyfork.org/scripts/488214-save-print-pdf-civitai-articles-modern-style",
+  "code_url": "https://update.greasyfork.org/scripts/488214/SavePrintPDF%20Civitai%20Articles%20%28Modern%20Style%29.user.js",
+  "code_size": 7727,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

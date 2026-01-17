@@ -1,0 +1,35 @@
+[
+  {
+    "id": 438788,
+    "daily_installs": 0,
+    "total_installs": 990,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-19T08:26:46.000Z",
+    "code_updated_at": "2022-01-19T08:35:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 833329,
+        "name": "skittle-troller",
+        "created_at": "2021-11-07T19:32:41.000Z",
+        "url": "https://greasyfork.org/users/833329-skittle-troller"
+      }
+    ],
+    "name": "Base Saver - zombs.io",
+    "description": "just base saver",
+    "url": "https://greasyfork.org/scripts/438788-base-saver-zombs-io",
+    "code_url": "https://update.greasyfork.org/scripts/438788/Base%20Saver%20-%20zombsio.user.js",
+    "code_size": 17262,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

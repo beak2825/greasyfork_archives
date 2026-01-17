@@ -130,5 +130,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 491476,
+    "daily_installs": 0,
+    "total_installs": 67,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-02T09:21:27.000Z",
+    "code_updated_at": "2024-04-09T08:25:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043548,
+        "name": "fxalll",
+        "created_at": "2023-03-17T09:17:00.000Z",
+        "url": "https://greasyfork.org/users/1043548-fxalll"
+      }
+    ],
+    "name": "zqy爱学习",
+    "description": "私人刷视频脚本",
+    "url": "https://greasyfork.org/scripts/491476-zqy%E7%88%B1%E5%AD%A6%E4%B9%A0",
+    "code_url": "https://update.greasyfork.org/scripts/491476/zqy%E7%88%B1%E5%AD%A6%E4%B9%A0.user.js",
+    "code_size": 3988,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "2077-04-11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 471340,
+    "daily_installs": 0,
+    "total_installs": 88,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-21T08:58:19.000Z",
+    "code_updated_at": "2023-07-21T09:06:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043548,
+        "name": "fxalll",
+        "created_at": "2023-03-17T09:17:00.000Z",
+        "url": "https://greasyfork.org/users/1043548-fxalll"
+      }
+    ],
+    "name": "百度GPT优化体验·文言一心烦人弹窗优化",
+    "description": "推荐使用Edge浏览器拆分屏幕功能，文心一言在移动端模式下（拆分屏幕宽度调窄）可自动点击刷新弹窗并回到最新提问状态，无需繁琐点击。",
+    "url": "https://greasyfork.org/scripts/471340-%E7%99%BE%E5%BA%A6gpt%E4%BC%98%E5%8C%96%E4%BD%93%E9%AA%8C-%E6%96%87%E8%A8%80%E4%B8%80%E5%BF%83%E7%83%A6%E4%BA%BA%E5%BC%B9%E7%AA%97%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/471340/%E7%99%BE%E5%BA%A6GPT%E4%BC%98%E5%8C%96%E4%BD%93%E9%AA%8C%C2%B7%E6%96%87%E8%A8%80%E4%B8%80%E5%BF%83%E7%83%A6%E4%BA%BA%E5%BC%B9%E7%AA%97%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 6485,
+    "license": "GPL-3.0 License",
+    "version": "0.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462316,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-22T09:03:39.000Z",
+    "code_updated_at": "2023-03-22T09:04:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043548,
+        "name": "fxalll",
+        "created_at": "2023-03-17T09:17:00.000Z",
+        "url": "https://greasyfork.org/users/1043548-fxalll"
+      }
+    ],
+    "name": "MomoYu网站样式优化（增加摸鱼友好性）",
+    "description": "修改样式，个人偏好内容栏靠右，适合不适宜目光总是左撇到电脑最左边的打工人",
+    "url": "https://greasyfork.org/scripts/462316-momoyu%E7%BD%91%E7%AB%99%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96-%E5%A2%9E%E5%8A%A0%E6%91%B8%E9%B1%BC%E5%8F%8B%E5%A5%BD%E6%80%A7",
+    "code_url": "https://update.greasyfork.org/scripts/462316/MomoYu%E7%BD%91%E7%AB%99%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96%EF%BC%88%E5%A2%9E%E5%8A%A0%E6%91%B8%E9%B1%BC%E5%8F%8B%E5%A5%BD%E6%80%A7%EF%BC%89.user.js",
+    "code_size": 815,
+    "license": "GPL-3.0 License",
+    "version": "0.11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462016,
+    "daily_installs": 0,
+    "total_installs": 397,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-17T09:21:23.000Z",
+    "code_updated_at": "2023-03-17T09:42:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043548,
+        "name": "fxalll",
+        "created_at": "2023-03-17T09:17:00.000Z",
+        "url": "https://greasyfork.org/users/1043548-fxalll"
+      }
+    ],
+    "name": "优化免注册激活国内版ChatGPT使用体验",
+    "description": "国内ChatGPT（forchange）请稍后重试太烦了，写了一个的脚本自动点击，优化了性能",
+    "url": "https://greasyfork.org/scripts/462016-%E4%BC%98%E5%8C%96%E5%85%8D%E6%B3%A8%E5%86%8C%E6%BF%80%E6%B4%BB%E5%9B%BD%E5%86%85%E7%89%88chatgpt%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C",
+    "code_url": "https://update.greasyfork.org/scripts/462016/%E4%BC%98%E5%8C%96%E5%85%8D%E6%B3%A8%E5%86%8C%E6%BF%80%E6%B4%BB%E5%9B%BD%E5%86%85%E7%89%88ChatGPT%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C.user.js",
+    "code_size": 1756,
+    "license": "GPL-3.0 License",
+    "version": "0.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

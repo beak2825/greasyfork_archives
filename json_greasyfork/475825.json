@@ -1,0 +1,34 @@
+{
+  "id": 475825,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-21T14:28:23.000Z",
+  "code_updated_at": "2023-09-21T14:30:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 822781,
+      "name": "英语超好sss",
+      "created_at": "2021-10-07T14:08:42.000Z",
+      "url": "https://greasyfork.org/users/822781-%E8%8B%B1%E8%AF%AD%E8%B6%85%E5%A5%BDsss",
+      "scripts": []
+    }
+  ],
+  "name": "New Userscript",
+  "description": "try to take over the world!88",
+  "url": "https://greasyfork.org/scripts/475825-new-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/475825/New%20Userscript.user.js",
+  "code_size": 81901,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

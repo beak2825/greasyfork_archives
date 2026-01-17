@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490318,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-20T05:56:16.000Z",
+    "code_updated_at": "2024-03-20T07:53:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 241893,
+        "name": "BIUBIU UP",
+        "created_at": "2019-01-25T03:04:10.000Z",
+        "url": "https://greasyfork.org/users/241893-biubiu-up"
+      }
+    ],
+    "name": "掘金小册转markdown",
+    "description": "将掘金小册转存为markdown文件",
+    "url": "https://greasyfork.org/scripts/490318-%E6%8E%98%E9%87%91%E5%B0%8F%E5%86%8C%E8%BD%ACmarkdown",
+    "code_url": "https://update.greasyfork.org/scripts/490318/%E6%8E%98%E9%87%91%E5%B0%8F%E5%86%8C%E8%BD%ACmarkdown.user.js",
+    "code_size": 6179,
+    "license": "MIT License",
+    "version": "0.7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 463251,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-04T12:33:09.000Z",
+  "code_updated_at": "2023-04-04T12:33:09.000Z",
+  "namespace": "baiduSimplifyer",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1052974,
+      "name": "Acan Xie",
+      "created_at": "2023-04-04T12:17:39.000Z",
+      "url": "https://greasyfork.org/users/1052974-acan-xie"
+    }
+  ],
+  "name": "百度 界面精简",
+  "description": "进一步精简百度界面",
+  "url": "https://greasyfork.org/scripts/463251-%E7%99%BE%E5%BA%A6-%E7%95%8C%E9%9D%A2%E7%B2%BE%E7%AE%80",
+  "code_url": "https://update.greasyfork.org/scripts/463251/%E7%99%BE%E5%BA%A6%20%E7%95%8C%E9%9D%A2%E7%B2%BE%E7%AE%80.user.js",
+  "code_size": 1353,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

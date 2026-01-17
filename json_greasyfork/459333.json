@@ -1,0 +1,59 @@
+{
+  "id": 459333,
+  "daily_installs": 0,
+  "total_installs": 119,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-02T16:52:22.000Z",
+  "code_updated_at": "2023-02-02T17:50:50.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1020715,
+      "name": "TmanGamer",
+      "created_at": "2023-02-02T16:43:40.000Z",
+      "url": "https://greasyfork.org/users/1020715-tmangamer",
+      "scripts": [
+        {
+          "id": 459333,
+          "daily_installs": 0,
+          "total_installs": 119,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-02T16:52:22.000Z",
+          "code_updated_at": "2023-02-02T17:50:50.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Rich Discord, Make Discord Feature-Rich On Web!",
+          "description": "(\"Rich Discord\" 'Make DIscord Better on Web!' [soon to switch to this name])",
+          "url": "https://greasyfork.org/scripts/459333-rich-discord-make-discord-feature-rich-on-web",
+          "code_url": "https://update.greasyfork.org/scripts/459333/Rich%20Discord%2C%20Make%20Discord%20Feature-Rich%20On%20Web%21.user.js",
+          "code_size": 51679,
+          "license": "MIT License",
+          "version": "0.5b 001a",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Rich Discord, Make Discord Feature-Rich On Web!",
+  "description": "(\"Rich Discord\" 'Make DIscord Better on Web!' [soon to switch to this name])",
+  "url": "https://greasyfork.org/scripts/459333-rich-discord-make-discord-feature-rich-on-web",
+  "code_url": "https://update.greasyfork.org/scripts/459333/Rich%20Discord%2C%20Make%20Discord%20Feature-Rich%20On%20Web%21.user.js",
+  "code_size": 51679,
+  "license": "MIT License",
+  "version": "0.5b 001a",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

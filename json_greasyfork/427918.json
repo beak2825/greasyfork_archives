@@ -1,0 +1,59 @@
+{
+  "id": 427918,
+  "daily_installs": 1,
+  "total_installs": 1050,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-14T02:40:09.000Z",
+  "code_updated_at": "2021-06-14T02:40:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 719386,
+      "name": "Rick Sanchez",
+      "created_at": "2020-12-21T11:41:41.000Z",
+      "url": "https://greasyfork.org/users/719386-rick-sanchez",
+      "scripts": [
+        {
+          "id": 427918,
+          "daily_installs": 1,
+          "total_installs": 1050,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-14T02:40:09.000Z",
+          "code_updated_at": "2021-06-14T02:40:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Showdown Translation",
+          "description": "PSChina Server Translation剑盾DLC2汉化脚本",
+          "url": "https://greasyfork.org/scripts/427918-showdown-translation",
+          "code_url": "https://update.greasyfork.org/scripts/427918/Showdown%20Translation.user.js",
+          "code_size": 301396,
+          "license": null,
+          "version": "1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Showdown Translation",
+  "description": "PSChina Server Translation剑盾DLC2汉化脚本",
+  "url": "https://greasyfork.org/scripts/427918-showdown-translation",
+  "code_url": "https://update.greasyfork.org/scripts/427918/Showdown%20Translation.user.js",
+  "code_size": 301396,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

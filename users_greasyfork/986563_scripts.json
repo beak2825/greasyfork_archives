@@ -1,0 +1,101 @@
+[
+  {
+    "id": 487275,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-14T07:31:15.000Z",
+    "code_updated_at": "2024-02-14T07:31:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986563,
+        "name": "NullPointer",
+        "created_at": "2022-11-22T14:51:36.000Z",
+        "url": "https://greasyfork.org/users/986563-nullpointer"
+      }
+    ],
+    "name": "rod ASS",
+    "description": "try to take over the world! RODAS working time",
+    "url": "https://greasyfork.org/scripts/487275-rod-ass",
+    "code_url": "https://update.greasyfork.org/scripts/487275/rod%20ASS.user.js",
+    "code_size": 3764,
+    "license": "MIT License",
+    "version": "2024.02.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458879,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-26T07:24:11.000Z",
+    "code_updated_at": "2023-02-16T15:06:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986563,
+        "name": "NullPointer",
+        "created_at": "2022-11-22T14:51:36.000Z",
+        "url": "https://greasyfork.org/users/986563-nullpointer"
+      }
+    ],
+    "name": "vt portal",
+    "description": "working time for vt portal",
+    "url": "https://greasyfork.org/scripts/458879-vt-portal",
+    "code_url": "https://update.greasyfork.org/scripts/458879/vt%20portal.user.js",
+    "code_size": 2320,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 455682,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-30T11:50:59.000Z",
+    "code_updated_at": "2022-12-09T07:29:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986563,
+        "name": "NullPointer",
+        "created_at": "2022-11-22T14:51:36.000Z",
+        "url": "https://greasyfork.org/users/986563-nullpointer"
+      }
+    ],
+    "name": "pennergame bottle bot 2022",
+    "description": "bottle search menu",
+    "url": "https://greasyfork.org/scripts/455682-pennergame-bottle-bot-2022",
+    "code_url": "https://update.greasyfork.org/scripts/455682/pennergame%20bottle%20bot%202022.user.js",
+    "code_size": 11478,
+    "license": "MIT License",
+    "version": "11.2022.7",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

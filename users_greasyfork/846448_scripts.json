@@ -1,0 +1,68 @@
+[
+  {
+    "id": 437205,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-17T15:21:38.000Z",
+    "code_updated_at": "2021-12-17T15:21:37.000Z",
+    "namespace": "mouse_wheel_strengthening",
+    "support_url": "https://github.com/Subdue0/tampermonkey_scripts",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846448,
+        "name": "Subdue0",
+        "created_at": "2021-11-30T03:11:42.000Z",
+        "url": "https://greasyfork.org/users/846448-subdue0"
+      }
+    ],
+    "name": "鼠标滚轮增强",
+    "description": "滚动鼠标滚轮控制视频前进或者后退。",
+    "url": "https://greasyfork.org/scripts/437205-%E9%BC%A0%E6%A0%87%E6%BB%9A%E8%BD%AE%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/437205/%E9%BC%A0%E6%A0%87%E6%BB%9A%E8%BD%AE%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 13347,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 437204,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-17T15:20:42.000Z",
+    "code_updated_at": "2021-12-17T15:20:41.000Z",
+    "namespace": "vip_video_helper",
+    "support_url": "https://github.com/Subdue0/tampermonkey_scripts",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846448,
+        "name": "Subdue0",
+        "created_at": "2021-11-30T03:11:42.000Z",
+        "url": "https://greasyfork.org/users/846448-subdue0"
+      }
+    ],
+    "name": "VIP视频解析助手",
+    "description": "支持优酷、爱奇艺、乐视、腾讯视频、芒果TV、搜狐、土豆、A站、B站、PPTV、1905，适配桌面端和移动端。",
+    "url": "https://greasyfork.org/scripts/437204-vip%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/437204/VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 18514,
+    "license": "MIT License",
+    "version": "2.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

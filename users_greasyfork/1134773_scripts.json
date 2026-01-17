@@ -1,0 +1,35 @@
+[
+  {
+    "id": 471591,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-24T12:37:15.000Z",
+    "code_updated_at": "2024-02-11T19:20:40.000Z",
+    "namespace": "https://greasyfork.org/users/1134773",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1134773,
+        "name": "Seralfa",
+        "created_at": "2023-07-24T12:26:50.000Z",
+        "url": "https://greasyfork.org/users/1134773-seralfa"
+      }
+    ],
+    "name": "Chollometro - Bloqueo de tiendas",
+    "description": "Bloqueador de tiendas en chollometro.com",
+    "url": "https://greasyfork.org/scripts/471591-chollometro-bloqueo-de-tiendas",
+    "code_url": "https://update.greasyfork.org/scripts/471591/Chollometro%20-%20Bloqueo%20de%20tiendas.user.js",
+    "code_size": 2444,
+    "license": null,
+    "version": "1.02",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

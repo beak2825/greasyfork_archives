@@ -1,0 +1,200 @@
+[
+  {
+    "id": 489604,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-12T02:26:55.000Z",
+    "code_updated_at": "2024-03-12T02:26:55.000Z",
+    "namespace": "https://github.com/Official-Husko/violentmonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810889,
+        "name": "Official-Husko",
+        "created_at": "2021-09-01T00:06:18.000Z",
+        "url": "https://greasyfork.org/users/810889-official-husko"
+      }
+    ],
+    "name": "Remove Quote Marks",
+    "description": "This removes the quotation marks that tend to block text content.",
+    "url": "https://greasyfork.org/scripts/489604-remove-quote-marks",
+    "code_url": "https://update.greasyfork.org/scripts/489604/Remove%20Quote%20Marks.user.js",
+    "code_size": 875,
+    "license": "GNU GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484134,
+    "daily_installs": 0,
+    "total_installs": 736,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-07T12:53:14.000Z",
+    "code_updated_at": "2024-01-07T12:53:14.000Z",
+    "namespace": "https://github.com/Official-Husko/violentmonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810889,
+        "name": "Official-Husko",
+        "created_at": "2021-09-01T00:06:18.000Z",
+        "url": "https://greasyfork.org/users/810889-official-husko"
+      }
+    ],
+    "name": "Replace Service Links",
+    "description": "Replace the patreon links with kemono links for easy navigation. Strictly on Kemono.su",
+    "url": "https://greasyfork.org/scripts/484134-replace-service-links",
+    "code_url": "https://update.greasyfork.org/scripts/484134/Replace%20Service%20Links.user.js",
+    "code_size": 1817,
+    "license": "GNU GPLv3",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482293,
+    "daily_installs": 0,
+    "total_installs": 350,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-12-15T12:51:39.000Z",
+    "code_updated_at": "2024-03-12T04:25:35.000Z",
+    "namespace": "https://github.com/Official-Husko/violentmonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810889,
+        "name": "Official-Husko",
+        "created_at": "2021-09-01T00:06:18.000Z",
+        "url": "https://greasyfork.org/users/810889-official-husko"
+      }
+    ],
+    "name": "NexusMods Extended View",
+    "description": "This extends the content you can see by using more of the screen.",
+    "url": "https://greasyfork.org/scripts/482293-nexusmods-extended-view",
+    "code_url": "https://update.greasyfork.org/scripts/482293/NexusMods%20Extended%20View.user.js",
+    "code_size": 280234,
+    "license": "GNU GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482292,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-15T12:49:36.000Z",
+    "code_updated_at": "2023-12-16T00:50:15.000Z",
+    "namespace": "https://github.com/Official-Husko/violentmonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810889,
+        "name": "Official-Husko",
+        "created_at": "2021-09-01T00:06:18.000Z",
+        "url": "https://greasyfork.org/users/810889-official-husko"
+      }
+    ],
+    "name": "m0nkrus eye safer",
+    "description": "Safe your eyes from the war crime that the background is.",
+    "url": "https://greasyfork.org/scripts/482292-m0nkrus-eye-safer",
+    "code_url": "https://update.greasyfork.org/scripts/482292/m0nkrus%20eye%20safer.user.js",
+    "code_size": 96211,
+    "license": "GNU GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482285,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-15T11:57:49.000Z",
+    "code_updated_at": "2023-12-15T12:15:10.000Z",
+    "namespace": "https://github.com/Official-Husko/violentmonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810889,
+        "name": "Official-Husko",
+        "created_at": "2021-09-01T00:06:18.000Z",
+        "url": "https://greasyfork.org/users/810889-official-husko"
+      }
+    ],
+    "name": "F95 Always Halloween",
+    "description": "Do you like the Halloween theme? Now its back!",
+    "url": "https://greasyfork.org/scripts/482285-f95-always-halloween",
+    "code_url": "https://update.greasyfork.org/scripts/482285/F95%20Always%20Halloween.user.js",
+    "code_size": 97897,
+    "license": "GNU GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482283,
+    "daily_installs": 0,
+    "total_installs": 200,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-15T11:50:35.000Z",
+    "code_updated_at": "2023-12-23T14:59:22.000Z",
+    "namespace": "https://github.com/Official-Husko/violentmonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 810889,
+        "name": "Official-Husko",
+        "created_at": "2021-09-01T00:06:18.000Z",
+        "url": "https://greasyfork.org/users/810889-official-husko"
+      }
+    ],
+    "name": "F95 Zone extended view",
+    "description": "Never again have this empty space on the side of the page!",
+    "url": "https://greasyfork.org/scripts/482283-f95-zone-extended-view",
+    "code_url": "https://update.greasyfork.org/scripts/482283/F95%20Zone%20extended%20view.user.js",
+    "code_size": 258192,
+    "license": "GNU GPLv3",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

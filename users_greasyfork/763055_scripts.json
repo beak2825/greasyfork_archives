@@ -1,0 +1,68 @@
+[
+  {
+    "id": 433556,
+    "daily_installs": 0,
+    "total_installs": 143,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-07T13:28:34.000Z",
+    "code_updated_at": "2021-10-07T13:33:03.000Z",
+    "namespace": "https://eyesblog.gitee.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 763055,
+        "name": "YuJiZhao",
+        "created_at": "2021-04-21T14:00:42.000Z",
+        "url": "https://greasyfork.org/users/763055-yujizhao"
+      }
+    ],
+    "name": "bilibili弹幕列表实时滚动播放",
+    "description": "在B站看视频时弹幕一多就会遮住内容，可我又想看视频又想看弹幕，就写了这个脚本，安装后右侧的弹幕列表会随视频播放而滚动",
+    "url": "https://greasyfork.org/scripts/433556-bilibili%E5%BC%B9%E5%B9%95%E5%88%97%E8%A1%A8%E5%AE%9E%E6%97%B6%E6%BB%9A%E5%8A%A8%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/433556/bilibili%E5%BC%B9%E5%B9%95%E5%88%97%E8%A1%A8%E5%AE%9E%E6%97%B6%E6%BB%9A%E5%8A%A8%E6%92%AD%E6%94%BE.user.js",
+    "code_size": 9617,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425812,
+    "daily_installs": 0,
+    "total_installs": 1065,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-05-02T06:47:14.000Z",
+    "code_updated_at": "2021-12-08T08:45:38.000Z",
+    "namespace": "eyes",
+    "support_url": "https://eyesblog.gitee.io/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 763055,
+        "name": "YuJiZhao",
+        "created_at": "2021-04-21T14:00:42.000Z",
+        "url": "https://greasyfork.org/users/763055-yujizhao"
+      }
+    ],
+    "name": "页面自动滚动",
+    "description": "通过使用快捷键实现页面自动滚动",
+    "url": "https://greasyfork.org/scripts/425812-%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E6%BB%9A%E5%8A%A8",
+    "code_url": "https://update.greasyfork.org/scripts/425812/%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E6%BB%9A%E5%8A%A8.user.js",
+    "code_size": 3870,
+    "license": null,
+    "version": "1.6.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

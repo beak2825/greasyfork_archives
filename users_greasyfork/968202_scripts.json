@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452720,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-09T05:18:26.000Z",
+    "code_updated_at": "2022-10-09T05:54:51.000Z",
+    "namespace": "ray@rayps.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 968202,
+        "name": "RayPS",
+        "created_at": "2022-10-09T05:10:12.000Z",
+        "url": "https://greasyfork.org/users/968202-rayps"
+      }
+    ],
+    "name": "Bypass weixin110",
+    "description": "Bypass wechat url warning",
+    "url": "https://greasyfork.org/scripts/452720-bypass-weixin110",
+    "code_url": "https://update.greasyfork.org/scripts/452720/Bypass%20weixin110.user.js",
+    "code_size": 780,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

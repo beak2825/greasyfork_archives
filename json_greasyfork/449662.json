@@ -1,0 +1,33 @@
+{
+  "id": 449662,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-16T13:09:14.000Z",
+  "code_updated_at": "2022-09-14T11:58:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 945863,
+      "name": "Lu-YiFan",
+      "created_at": "2022-08-13T05:02:54.000Z",
+      "url": "https://greasyfork.org/users/945863-lu-yifan"
+    }
+  ],
+  "name": "陆怼怼要天天向上",
+  "description": "要好好学习！",
+  "url": "https://greasyfork.org/scripts/449662-%E9%99%86%E6%80%BC%E6%80%BC%E8%A6%81%E5%A4%A9%E5%A4%A9%E5%90%91%E4%B8%8A",
+  "code_url": "https://update.greasyfork.org/scripts/449662/%E9%99%86%E6%80%BC%E6%80%BC%E8%A6%81%E5%A4%A9%E5%A4%A9%E5%90%91%E4%B8%8A.user.js",
+  "code_size": 50619,
+  "license": null,
+  "version": "1.3.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

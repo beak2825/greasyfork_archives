@@ -1,0 +1,33 @@
+{
+  "id": 416461,
+  "daily_installs": 5,
+  "total_installs": 28088,
+  "fan_score": "38.9",
+  "good_ratings": 6,
+  "ok_ratings": 5,
+  "bad_ratings": 2,
+  "created_at": "2020-11-20T09:05:27.000Z",
+  "code_updated_at": "2020-12-01T10:35:42.000Z",
+  "namespace": "https://krunker.io/social.html?p=profile&q=MrLaugh",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 706017,
+      "name": "MrLaugh",
+      "created_at": "2020-11-17T10:49:03.000Z",
+      "url": "https://greasyfork.org/users/706017-mrlaugh"
+    }
+  ],
+  "name": "Krunker.io skin hack",
+  "description": "Krunker.io skin hack v3.3.2",
+  "url": "https://greasyfork.org/scripts/416461-krunker-io-skin-hack",
+  "code_url": "https://update.greasyfork.org/scripts/416461/Krunkerio%20skin%20hack.user.js",
+  "code_size": 2348,
+  "license": null,
+  "version": "v3.3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433739,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-11T18:09:53.000Z",
+    "code_updated_at": "2021-10-11T19:35:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 223166,
+        "name": "GlassAndroctonus",
+        "created_at": "2018-11-02T17:08:47.000Z",
+        "url": "https://greasyfork.org/users/223166-glassandroctonus"
+      }
+    ],
+    "name": "GITSTAT_ColorblindExtension",
+    "description": "This is an extension for the GitStat 2021/2022, because the results are marked with color, which is a problem for colorblind people.",
+    "url": "https://greasyfork.org/scripts/433739-gitstat-colorblindextension",
+    "code_url": "https://update.greasyfork.org/scripts/433739/GITSTAT_ColorblindExtension.user.js",
+    "code_size": 3999,
+    "license": null,
+    "version": "1.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

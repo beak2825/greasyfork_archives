@@ -1,0 +1,68 @@
+[
+  {
+    "id": 494273,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-07T01:46:13.000Z",
+    "code_updated_at": "2024-05-09T22:43:47.000Z",
+    "namespace": "http://github.com/p-toy-factory/always-kawaii-logo",
+    "support_url": "https://github.com/p-toy-factory/always-kawaii-logo/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173570,
+        "name": "PinkChampagne17",
+        "created_at": "2023-09-15T10:29:38.000Z",
+        "url": "https://greasyfork.org/users/1173570-pinkchampagne17"
+      }
+    ],
+    "name": "Always kawaii logo",
+    "description": "Make logo of the websites kawaii if available",
+    "url": "https://greasyfork.org/scripts/494273-always-kawaii-logo",
+    "code_url": "https://update.greasyfork.org/scripts/494273/Always%20kawaii%20logo.user.js",
+    "code_size": 3587,
+    "license": null,
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 475350,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-15T10:35:16.000Z",
+    "code_updated_at": "2023-09-15T10:35:16.000Z",
+    "namespace": "https://greasyfork.org/users/1173570",
+    "support_url": "https://github.com/p-toy-factory/ends-with-miao/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173570,
+        "name": "PinkChampagne17",
+        "created_at": "2023-09-15T10:29:38.000Z",
+        "url": "https://greasyfork.org/users/1173570-pinkchampagne17"
+      }
+    ],
+    "name": "以“喵”字作为句子结尾喵",
+    "description": "将网页中的每一个句子结尾都加上「喵」字作为结尾的篡改猴脚本喵。",
+    "url": "https://greasyfork.org/scripts/475350-%E4%BB%A5-%E5%96%B5-%E5%AD%97%E4%BD%9C%E4%B8%BA%E5%8F%A5%E5%AD%90%E7%BB%93%E5%B0%BE%E5%96%B5",
+    "code_url": "https://update.greasyfork.org/scripts/475350/%E4%BB%A5%E2%80%9C%E5%96%B5%E2%80%9D%E5%AD%97%E4%BD%9C%E4%B8%BA%E5%8F%A5%E5%AD%90%E7%BB%93%E5%B0%BE%E5%96%B5.user.js",
+    "code_size": 1525,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "0.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

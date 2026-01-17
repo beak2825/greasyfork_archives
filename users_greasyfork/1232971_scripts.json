@@ -1,0 +1,41 @@
+[
+  {
+    "id": 482067,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-13T02:42:13.000Z",
+    "code_updated_at": "2024-04-26T10:54:15.000Z",
+    "namespace": "BM Buyin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1232971,
+        "name": "liam Z",
+        "created_at": "2023-12-13T00:52:44.000Z",
+        "url": "https://greasyfork.org/users/1232971-liam-z"
+      },
+      {
+        "id": 1233685,
+        "name": "winne-xf",
+        "created_at": "2023-12-14T10:47:30.000Z",
+        "url": "https://greasyfork.org/users/1233685-winne-xf"
+      }
+    ],
+    "name": "Buyin Explain Product106",
+    "description": "自动循环讲解百应商品",
+    "url": "https://greasyfork.org/scripts/482067-buyin-explain-product106",
+    "code_url": "https://update.greasyfork.org/scripts/482067/Buyin%20Explain%20Product106.user.js",
+    "code_size": 7943,
+    "license": "ISC License",
+    "version": "1.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

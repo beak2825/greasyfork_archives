@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429421,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-15T09:08:57.000Z",
+    "code_updated_at": "2021-07-15T09:09:43.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/429421-ithomeurl-m-to-www",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394718,
+        "name": "ShuKim",
+        "created_at": "2019-11-04T08:07:52.000Z",
+        "url": "https://greasyfork.org/users/394718-shukim"
+      }
+    ],
+    "name": "ithomeurl m to www",
+    "description": "今日热榜it之家移动端页面跳转到桌面端",
+    "url": "https://greasyfork.org/scripts/429421-ithomeurl-m-to-www",
+    "code_url": "https://update.greasyfork.org/scripts/429421/ithomeurl%20m%20to%20www.user.js",
+    "code_size": 661,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

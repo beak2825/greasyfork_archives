@@ -1,0 +1,59 @@
+{
+  "id": 483962,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-05T13:08:31.000Z",
+  "code_updated_at": "2024-01-05T13:13:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1242878,
+      "name": "bibubibutt",
+      "created_at": "2024-01-03T18:05:55.000Z",
+      "url": "https://greasyfork.org/users/1242878-bibubibutt",
+      "scripts": [
+        {
+          "id": 483962,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-05T13:08:31.000Z",
+          "code_updated_at": "2024-01-05T13:13:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "sourse of watermark",
+          "description": "get off the  watermark",
+          "url": "https://greasyfork.org/scripts/483962-sourse-of-watermark",
+          "code_url": "https://update.greasyfork.org/scripts/483962/sourse%20of%20watermark.user.js",
+          "code_size": 660,
+          "license": "MIT License",
+          "version": "2024-1-6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "sourse of watermark",
+  "description": "get off the  watermark",
+  "url": "https://greasyfork.org/scripts/483962-sourse-of-watermark",
+  "code_url": "https://update.greasyfork.org/scripts/483962/sourse%20of%20watermark.user.js",
+  "code_size": 660,
+  "license": "MIT License",
+  "version": "2024-1-6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

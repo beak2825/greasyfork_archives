@@ -1,0 +1,34 @@
+{
+  "id": 481827,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-09T23:05:35.000Z",
+  "code_updated_at": "2025-04-18T09:30:11.000Z",
+  "namespace": "Dead Frontier - Shrike00",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 806742,
+      "name": "Shrike00",
+      "created_at": "2021-08-21T00:22:50.000Z",
+      "url": "https://greasyfork.org/users/806742-shrike00",
+      "scripts": []
+    }
+  ],
+  "name": "Dead Frontier - Scrapping",
+  "description": "Alternate scrapping method.",
+  "url": "https://greasyfork.org/scripts/481827-dead-frontier-scrapping",
+  "code_url": "https://update.greasyfork.org/scripts/481827/Dead%20Frontier%20-%20Scrapping.user.js",
+  "code_size": 46735,
+  "license": "MIT License",
+  "version": "0.0.19",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

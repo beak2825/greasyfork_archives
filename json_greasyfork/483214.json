@@ -1,0 +1,41 @@
+{
+  "id": 483214,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-27T09:23:30.000Z",
+  "code_updated_at": "2024-08-14T06:14:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 239510,
+      "name": "Zrincet",
+      "created_at": "2019-01-14T09:53:14.000Z",
+      "url": "https://greasyfork.org/users/239510-zrincet",
+      "scripts": []
+    },
+    {
+      "id": 1274757,
+      "name": "luke1879012",
+      "created_at": "2024-03-15T08:29:11.000Z",
+      "url": "https://greasyfork.org/users/1274757-luke1879012",
+      "scripts": []
+    }
+  ],
+  "name": "阿水AICookie管理",
+  "description": "适用于阿水AICookie管理。",
+  "url": "https://greasyfork.org/scripts/483214-%E9%98%BF%E6%B0%B4aicookie%E7%AE%A1%E7%90%86",
+  "code_url": "https://update.greasyfork.org/scripts/483214/%E9%98%BF%E6%B0%B4AICookie%E7%AE%A1%E7%90%86.user.js",
+  "code_size": 7335,
+  "license": "GNU GPLv3",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

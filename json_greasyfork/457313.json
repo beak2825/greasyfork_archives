@@ -1,0 +1,33 @@
+{
+  "id": 457313,
+  "daily_installs": 0,
+  "total_installs": 161,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-29T14:25:32.000Z",
+  "code_updated_at": "2023-07-30T18:50:26.000Z",
+  "namespace": "https://github.com/lcandy2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 541676,
+      "name": "Citron甜柠🍋",
+      "created_at": "2020-04-26T02:06:59.000Z",
+      "url": "https://greasyfork.org/users/541676-citron%E7%94%9C%E6%9F%A0"
+    }
+  ],
+  "name": "学习通考试移除背景水印",
+  "description": "通过删除水印元素的方式，移除学习通考试时个人信息（姓名、学号/工号）水印。请注意：本脚本仅供学习交流，严紧通过本脚本实行任何违反考试纪律的行为，脚本请于下载后的24小时内删除。",
+  "url": "https://greasyfork.org/scripts/457313-%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%80%83%E8%AF%95%E7%A7%BB%E9%99%A4%E8%83%8C%E6%99%AF%E6%B0%B4%E5%8D%B0",
+  "code_url": "https://update.greasyfork.org/scripts/457313/%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%80%83%E8%AF%95%E7%A7%BB%E9%99%A4%E8%83%8C%E6%99%AF%E6%B0%B4%E5%8D%B0.user.js",
+  "code_size": 1500,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

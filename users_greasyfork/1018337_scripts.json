@@ -1,0 +1,35 @@
+[
+  {
+    "id": 459059,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-29T09:29:44.000Z",
+    "code_updated_at": "2023-01-30T09:12:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018337,
+        "name": "tobias910903",
+        "created_at": "2023-01-29T09:01:50.000Z",
+        "url": "https://greasyfork.org/users/1018337-tobias910903"
+      }
+    ],
+    "name": "LHY测试插件",
+    "description": "一个描述",
+    "url": "https://greasyfork.org/scripts/459059-lhy%E6%B5%8B%E8%AF%95%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/459059/LHY%E6%B5%8B%E8%AF%95%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 30685,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

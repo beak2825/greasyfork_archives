@@ -1,0 +1,59 @@
+{
+  "id": 488760,
+  "daily_installs": 5,
+  "total_installs": 3308,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2024-03-02T04:10:59.000Z",
+  "code_updated_at": "2024-03-02T04:10:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1269115,
+      "name": "Lucas Gong",
+      "created_at": "2024-03-02T04:07:12.000Z",
+      "url": "https://greasyfork.org/users/1269115-lucas-gong",
+      "scripts": [
+        {
+          "id": 488760,
+          "daily_installs": 5,
+          "total_installs": 3308,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2024-03-02T04:10:59.000Z",
+          "code_updated_at": "2024-03-02T04:10:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Prodigy All Unlock Hack",
+          "description": "Unlocks everything in Prodigy in a more complex manner.",
+          "url": "https://greasyfork.org/scripts/488760-prodigy-all-unlock-hack",
+          "code_url": "https://update.greasyfork.org/scripts/488760/Prodigy%20All%20Unlock%20Hack.user.js",
+          "code_size": 1899,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Prodigy All Unlock Hack",
+  "description": "Unlocks everything in Prodigy in a more complex manner.",
+  "url": "https://greasyfork.org/scripts/488760-prodigy-all-unlock-hack",
+  "code_url": "https://update.greasyfork.org/scripts/488760/Prodigy%20All%20Unlock%20Hack.user.js",
+  "code_size": 1899,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

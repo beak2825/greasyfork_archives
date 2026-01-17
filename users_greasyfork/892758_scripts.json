@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492017,
+    "daily_installs": 1,
+    "total_installs": 933,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-08T21:22:00.000Z",
+    "code_updated_at": "2025-12-06T15:53:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892758,
+        "name": "kleptomaniac14",
+        "created_at": "2022-03-25T17:09:49.000Z",
+        "url": "https://greasyfork.org/users/892758-kleptomaniac14"
+      }
+    ],
+    "name": "DropGalaxy Auto Skip",
+    "description": "Auto skip ads and auto download on DropGalaxy",
+    "url": "https://greasyfork.org/scripts/492017-dropgalaxy-auto-skip",
+    "code_url": "https://update.greasyfork.org/scripts/492017/DropGalaxy%20Auto%20Skip.user.js",
+    "code_size": 37302,
+    "license": "GNU GPLv2",
+    "version": "1.7.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

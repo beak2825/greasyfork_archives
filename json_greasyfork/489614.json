@@ -1,0 +1,59 @@
+{
+  "id": 489614,
+  "daily_installs": 0,
+  "total_installs": 1771,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-12T05:56:19.000Z",
+  "code_updated_at": "2024-09-02T07:21:45.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/489614-1024%E5%B0%8F%E5%8A%A9%E6%89%8B",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 316458,
+      "name": "mingren",
+      "created_at": "2019-07-09T03:54:52.000Z",
+      "url": "https://greasyfork.org/users/316458-mingren",
+      "scripts": [
+        {
+          "id": 489614,
+          "daily_installs": 0,
+          "total_installs": 1771,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-12T05:56:19.000Z",
+          "code_updated_at": "2024-09-02T07:21:45.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/489614-1024%E5%B0%8F%E5%8A%A9%E6%89%8B",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "1024小助手",
+          "description": "草榴社区一键下载图片和视频、修复部分视频无法播放的问题、图片透明、图片隐藏、隐藏logo、点击图片全屏图片预览、高亮今天的帖子、返回顶部、去除图片点击限制、主题内小图模式和图片下载",
+          "url": "https://greasyfork.org/scripts/489614-1024%E5%B0%8F%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/489614/1024%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 16922,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "1024小助手",
+  "description": "草榴社区一键下载图片和视频、修复部分视频无法播放的问题、图片透明、图片隐藏、隐藏logo、点击图片全屏图片预览、高亮今天的帖子、返回顶部、去除图片点击限制、主题内小图模式和图片下载",
+  "url": "https://greasyfork.org/scripts/489614-1024%E5%B0%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/489614/1024%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 16922,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

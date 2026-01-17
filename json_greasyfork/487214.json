@@ -1,0 +1,33 @@
+{
+  "id": 487214,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-13T07:23:46.000Z",
+  "code_updated_at": "2025-12-09T06:14:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1260652,
+      "name": "Greended",
+      "created_at": "2024-02-13T07:07:31.000Z",
+      "url": "https://greasyfork.org/users/1260652-greended"
+    }
+  ],
+  "name": "[Steam friend activity] Hide all screenshots behind a black square",
+  "description": "Hides all screenshots from the steam friend activity and shows them back when you hover over them",
+  "url": "https://greasyfork.org/scripts/487214-steam-friend-activity-hide-all-screenshots-behind-a-black-square",
+  "code_url": "https://update.greasyfork.org/scripts/487214/%5BSteam%20friend%20activity%5D%20Hide%20all%20screenshots%20behind%20a%20black%20square.user.js",
+  "code_size": 1424,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 480613,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-23T14:20:21.000Z",
+  "code_updated_at": "2023-11-23T14:21:14.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1222359,
+      "name": "ganansuan647",
+      "created_at": "2023-11-23T14:17:00.000Z",
+      "url": "https://greasyfork.org/users/1222359-ganansuan647",
+      "scripts": [
+        {
+          "id": 480613,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-23T14:20:21.000Z",
+          "code_updated_at": "2023-11-23T14:21:14.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Computer “Vision” - webhek.com",
+          "description": "2023/11/23 22:04:34",
+          "url": "https://greasyfork.org/scripts/480613-computer-vision-webhek-com",
+          "code_url": "https://update.greasyfork.org/scripts/480613/Computer%20%E2%80%9CVision%E2%80%9D%20-%20webhekcom.user.js",
+          "code_size": 1783,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Computer “Vision” - webhek.com",
+  "description": "2023/11/23 22:04:34",
+  "url": "https://greasyfork.org/scripts/480613-computer-vision-webhek-com",
+  "code_url": "https://update.greasyfork.org/scripts/480613/Computer%20%E2%80%9CVision%E2%80%9D%20-%20webhekcom.user.js",
+  "code_size": 1783,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

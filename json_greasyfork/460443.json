@@ -1,0 +1,59 @@
+{
+  "id": 460443,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-21T09:56:14.000Z",
+  "code_updated_at": "2023-02-21T10:09:53.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 872594,
+      "name": "白月光ne",
+      "created_at": "2022-02-04T08:17:18.000Z",
+      "url": "https://greasyfork.org/users/872594-%E7%99%BD%E6%9C%88%E5%85%89ne",
+      "scripts": [
+        {
+          "id": 460443,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-02-21T09:56:14.000Z",
+          "code_updated_at": "2023-02-21T10:09:53.000Z",
+          "namespace": "https://greasyfork.org/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GOG Language BBCode quick copy",
+          "description": "Allows you to copy the gog languages in a BBCode fashion",
+          "url": "https://greasyfork.org/scripts/460443-gog-language-bbcode-quick-copy",
+          "code_url": "https://update.greasyfork.org/scripts/460443/GOG%20Language%20BBCode%20quick%20copy.user.js",
+          "code_size": 3200,
+          "license": "MIT License",
+          "version": "0.02",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GOG Language BBCode quick copy",
+  "description": "Allows you to copy the gog languages in a BBCode fashion",
+  "url": "https://greasyfork.org/scripts/460443-gog-language-bbcode-quick-copy",
+  "code_url": "https://update.greasyfork.org/scripts/460443/GOG%20Language%20BBCode%20quick%20copy.user.js",
+  "code_size": 3200,
+  "license": "MIT License",
+  "version": "0.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

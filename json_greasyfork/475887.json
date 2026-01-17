@@ -1,0 +1,59 @@
+{
+  "id": 475887,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-22T10:37:51.000Z",
+  "code_updated_at": "2023-09-22T10:37:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1132296,
+      "name": "choukin",
+      "created_at": "2023-07-21T11:07:28.000Z",
+      "url": "https://greasyfork.org/users/1132296-choukin",
+      "scripts": [
+        {
+          "id": 471548,
+          "daily_installs": 0,
+          "total_installs": 71,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-24T02:18:11.000Z",
+          "code_updated_at": "2023-10-09T10:34:19.000Z",
+          "namespace": "https://cloud.xuepeiyou.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WALL-E",
+          "description": "解放双手，审批人是本人时自动审批通过，脏活儿交给 WALL-E",
+          "url": "https://greasyfork.org/scripts/471548-wall-e",
+          "code_url": "https://update.greasyfork.org/scripts/471548/WALL-E.user.js",
+          "code_size": 26147,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Blob.js",
+  "description": "获取小红书个人信息页面数据点赞数据",
+  "url": "https://greasyfork.org/scripts/475887-blob-js",
+  "code_url": "https://update.greasyfork.org/scripts/475887/1254573/Blobjs.js",
+  "code_size": 7247,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

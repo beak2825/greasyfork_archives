@@ -1,0 +1,59 @@
+{
+  "id": 462587,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-26T02:22:57.000Z",
+  "code_updated_at": "2023-03-26T02:29:48.000Z",
+  "namespace": "https://Pudl.es/Contact",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1048169,
+      "name": "AzukiPuddles",
+      "created_at": "2023-03-26T02:17:31.000Z",
+      "url": "https://greasyfork.org/users/1048169-azukipuddles",
+      "scripts": [
+        {
+          "id": 462587,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-26T02:22:57.000Z",
+          "code_updated_at": "2023-03-26T02:29:48.000Z",
+          "namespace": "https://Pudl.es/Contact",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SL MP Skip Checkout Ads",
+          "description": "Automatically skips the ad page on checkout when you're only buying free stuff. Used to be tolerable before, but now they force you to scroll through 96 items, this is regardless of membership as well.",
+          "url": "https://greasyfork.org/scripts/462587-sl-mp-skip-checkout-ads",
+          "code_url": "https://update.greasyfork.org/scripts/462587/SL%20MP%20Skip%20Checkout%20Ads.user.js",
+          "code_size": 727,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SL MP Skip Checkout Ads",
+  "description": "Automatically skips the ad page on checkout when you're only buying free stuff. Used to be tolerable before, but now they force you to scroll through 96 items, this is regardless of membership as well.",
+  "url": "https://greasyfork.org/scripts/462587-sl-mp-skip-checkout-ads",
+  "code_url": "https://update.greasyfork.org/scripts/462587/SL%20MP%20Skip%20Checkout%20Ads.user.js",
+  "code_size": 727,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

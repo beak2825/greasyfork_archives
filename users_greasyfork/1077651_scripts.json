@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466585,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-18T15:46:49.000Z",
+    "code_updated_at": "2023-07-01T02:17:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1077651,
+        "name": "lazy-tomato",
+        "created_at": "2023-05-12T06:31:07.000Z",
+        "url": "https://greasyfork.org/users/1077651-lazy-tomato"
+      }
+    ],
+    "name": "免费访问知识星球",
+    "description": "免费访问知识星球2",
+    "url": "https://greasyfork.org/scripts/466585-%E5%85%8D%E8%B4%B9%E8%AE%BF%E9%97%AE%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83",
+    "code_url": "https://update.greasyfork.org/scripts/466585/%E5%85%8D%E8%B4%B9%E8%AE%BF%E9%97%AE%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83.user.js",
+    "code_size": 41682,
+    "license": null,
+    "version": "0.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

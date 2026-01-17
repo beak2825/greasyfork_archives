@@ -1,0 +1,33 @@
+{
+  "id": 451977,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-25T06:22:29.000Z",
+  "code_updated_at": "2022-09-25T06:23:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 661760,
+      "name": "aa731679676",
+      "created_at": "2020-06-30T11:31:39.000Z",
+      "url": "https://greasyfork.org/users/661760-aa731679676"
+    }
+  ],
+  "name": "CSDN_CODE_COPY",
+  "description": "CSDN code copy",
+  "url": "https://greasyfork.org/scripts/451977-csdn-code-copy",
+  "code_url": "https://update.greasyfork.org/scripts/451977/CSDN_CODE_COPY.user.js",
+  "code_size": 769,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441533,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-15T06:54:45.000Z",
+    "code_updated_at": "2022-03-18T05:38:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 887601,
+        "name": "mksz",
+        "created_at": "2022-03-15T06:30:19.000Z",
+        "url": "https://greasyfork.org/users/887601-mksz"
+      }
+    ],
+    "name": "Vote",
+    "description": "vote!",
+    "url": "https://greasyfork.org/scripts/441533-vote",
+    "code_url": "https://update.greasyfork.org/scripts/441533/Vote.user.js",
+    "code_size": 1276,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 424961,
+    "daily_installs": 0,
+    "total_installs": 378,
+    "fan_score": "29.9",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2021-04-13T10:26:48.000Z",
+    "code_updated_at": "2024-06-30T03:38:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 732771,
+        "name": "HuiAnxiaoxing",
+        "created_at": "2021-01-30T09:32:17.000Z",
+        "url": "https://greasyfork.org/users/732771-huianxiaoxing"
+      }
+    ],
+    "name": "弹幕词云",
+    "description": "bilibili弹幕词云、弹幕分析、弹幕列表",
+    "url": "https://greasyfork.org/scripts/424961-%E5%BC%B9%E5%B9%95%E8%AF%8D%E4%BA%91",
+    "code_url": "https://update.greasyfork.org/scripts/424961/%E5%BC%B9%E5%B9%95%E8%AF%8D%E4%BA%91.user.js",
+    "code_size": 90691,
+    "license": "MIT License",
+    "version": "2.6.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420915,
+    "daily_installs": 0,
+    "total_installs": 377,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-30T10:14:42.000Z",
+    "code_updated_at": "2021-02-04T10:10:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 732771,
+        "name": "HuiAnxiaoxing",
+        "created_at": "2021-01-30T09:32:17.000Z",
+        "url": "https://greasyfork.org/users/732771-huianxiaoxing"
+      }
+    ],
+    "name": "称赞你的主播/bilibili自动弹幕跟风/天选助手",
+    "description": "自动弹幕跟风/称赞你的主播/天选助手，称赞频率低一点，否则会被主播禁言的",
+    "url": "https://greasyfork.org/scripts/420915-%E7%A7%B0%E8%B5%9E%E4%BD%A0%E7%9A%84%E4%B8%BB%E6%92%AD-bilibili%E8%87%AA%E5%8A%A8%E5%BC%B9%E5%B9%95%E8%B7%9F%E9%A3%8E-%E5%A4%A9%E9%80%89%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/420915/%E7%A7%B0%E8%B5%9E%E4%BD%A0%E7%9A%84%E4%B8%BB%E6%92%ADbilibili%E8%87%AA%E5%8A%A8%E5%BC%B9%E5%B9%95%E8%B7%9F%E9%A3%8E%E5%A4%A9%E9%80%89%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 10685,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

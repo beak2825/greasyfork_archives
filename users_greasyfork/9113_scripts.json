@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481687,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-08T11:50:18.000Z",
+    "code_updated_at": "2024-01-09T11:55:45.000Z",
+    "namespace": "https://greasyfork.org/users/9113",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 9113,
+        "name": "Tomasz Błajek",
+        "created_at": "2015-02-13T19:19:27.000Z",
+        "url": "https://greasyfork.org/users/9113-tomasz-b%C5%82ajek"
+      }
+    ],
+    "name": "GoMagic course quizzes",
+    "description": "Utility for better access to course quizzes on gomagic.org",
+    "url": "https://greasyfork.org/scripts/481687-gomagic-course-quizzes",
+    "code_url": "https://update.greasyfork.org/scripts/481687/GoMagic%20course%20quizzes.user.js",
+    "code_size": 9601,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

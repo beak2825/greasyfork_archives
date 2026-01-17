@@ -1,0 +1,33 @@
+{
+  "id": 448028,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-17T22:44:39.000Z",
+  "code_updated_at": "2022-07-19T12:29:14.000Z",
+  "namespace": "https://greasyfork.org/users/670183-exnonull",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670183,
+      "name": "Exnonull",
+      "created_at": "2020-07-25T19:29:35.000Z",
+      "url": "https://greasyfork.org/users/670183-exnonull"
+    }
+  ],
+  "name": "RBDB",
+  "description": "RocketBall Decoder Buffer",
+  "url": "https://greasyfork.org/scripts/448028-rbdb",
+  "code_url": "https://update.greasyfork.org/scripts/448028/1071803/RBDB.js",
+  "code_size": 10886,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

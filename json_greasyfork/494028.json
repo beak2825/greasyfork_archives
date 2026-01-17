@@ -1,0 +1,34 @@
+{
+  "id": 494028,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-03T12:25:00.000Z",
+  "code_updated_at": "2024-07-25T15:35:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed OZ Commerz Oliver Steinmann",
+  "description": "Insert multiple transactions with specified details",
+  "url": "https://greasyfork.org/scripts/494028-ed-oz-commerz-oliver-steinmann",
+  "code_url": "https://update.greasyfork.org/scripts/494028/Ed%20OZ%20Commerz%20Oliver%20Steinmann.user.js",
+  "code_size": 64107,
+  "license": null,
+  "version": "0.14",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

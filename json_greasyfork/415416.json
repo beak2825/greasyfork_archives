@@ -1,0 +1,34 @@
+{
+  "id": 415416,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-03T15:43:31.000Z",
+  "code_updated_at": "2020-11-03T15:43:31.000Z",
+  "namespace": "https://greasyfork.org/en/users/466691-jadson-tavares",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 466691,
+      "name": "Jadson Tavares",
+      "created_at": "2020-03-21T20:14:14.000Z",
+      "url": "https://greasyfork.org/users/466691-jadson-tavares",
+      "scripts": []
+    }
+  ],
+  "name": "Freebitco.in Auto Bonus BTC (Pescador de Cripto)",
+  "description": "Script desenvolvido para ativar o bonus BTC automaticamente",
+  "url": "https://greasyfork.org/scripts/415416-freebitco-in-auto-bonus-btc-pescador-de-cripto",
+  "code_url": "https://update.greasyfork.org/scripts/415416/Freebitcoin%20Auto%20Bonus%20BTC%20%28Pescador%20de%20Cripto%29.user.js",
+  "code_size": 3162,
+  "license": null,
+  "version": "0.1",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

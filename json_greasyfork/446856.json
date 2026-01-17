@@ -1,0 +1,59 @@
+{
+  "id": 446856,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-22T09:03:54.000Z",
+  "code_updated_at": "2022-06-22T09:03:53.000Z",
+  "namespace": "dbbs",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 458341,
+      "name": "dedbbs1",
+      "created_at": "2020-03-13T04:07:06.000Z",
+      "url": "https://greasyfork.org/users/458341-dedbbs1",
+      "scripts": [
+        {
+          "id": 446856,
+          "daily_installs": 0,
+          "total_installs": 55,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-22T09:03:54.000Z",
+          "code_updated_at": "2022-06-22T09:03:53.000Z",
+          "namespace": "dbbs",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Noto Sans Replacer",
+          "description": "Replace all fonts with Noto Sans",
+          "url": "https://greasyfork.org/scripts/446856-noto-sans-replacer",
+          "code_url": "https://update.greasyfork.org/scripts/446856/Noto%20Sans%20Replacer.user.js",
+          "code_size": 149222,
+          "license": "GPLv2",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Noto Sans Replacer",
+  "description": "Replace all fonts with Noto Sans",
+  "url": "https://greasyfork.org/scripts/446856-noto-sans-replacer",
+  "code_url": "https://update.greasyfork.org/scripts/446856/Noto%20Sans%20Replacer.user.js",
+  "code_size": 149222,
+  "license": "GPLv2",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

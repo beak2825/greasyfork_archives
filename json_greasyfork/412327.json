@@ -1,0 +1,33 @@
+{
+  "id": 412327,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-02T08:25:25.000Z",
+  "code_updated_at": "2020-10-02T08:25:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 691811,
+      "name": "禾呈讠成",
+      "created_at": "2020-10-02T08:20:55.000Z",
+      "url": "https://greasyfork.org/users/691811-%E7%A6%BE%E5%91%88%E8%AE%A0%E6%88%90"
+    }
+  ],
+  "name": "隐藏dock栏",
+  "description": "隐藏你的dock栏",
+  "url": "https://greasyfork.org/scripts/412327-%E9%9A%90%E8%97%8Fdock%E6%A0%8F",
+  "code_url": "https://update.greasyfork.org/scripts/412327/%E9%9A%90%E8%97%8Fdock%E6%A0%8F.user.js",
+  "code_size": 336,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

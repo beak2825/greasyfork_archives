@@ -1,0 +1,101 @@
+[
+  {
+    "id": 485416,
+    "daily_installs": 0,
+    "total_installs": 2081,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-22T07:19:03.000Z",
+    "code_updated_at": "2024-01-22T07:19:03.000Z",
+    "namespace": "https://greasyfork.org/users/1245253",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245253,
+        "name": "Achlys09",
+        "created_at": "2024-01-08T21:17:17.000Z",
+        "url": "https://greasyfork.org/users/1245253-achlys09"
+      }
+    ],
+    "name": "Happymod",
+    "description": "none",
+    "url": "https://greasyfork.org/scripts/485416-happymod",
+    "code_url": "https://update.greasyfork.org/scripts/485416/Happymod.user.js",
+    "code_size": 773799,
+    "license": null,
+    "version": "Priavte for  now v4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485345,
+    "daily_installs": 0,
+    "total_installs": 730,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-01-21T02:02:00.000Z",
+    "code_updated_at": "2024-01-24T23:29:29.000Z",
+    "namespace": "https://greasyfork.org/users/1245253",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245253,
+        "name": "Achlys09",
+        "created_at": "2024-01-08T21:17:17.000Z",
+        "url": "https://greasyfork.org/users/1245253-achlys09"
+      }
+    ],
+    "name": "!!!! Project kindvers unpatched fps boost !!!!",
+    "description": "works best with stick hammer has autopush, auto trap, auto insta, autoheal, can get katana gun VISUALS not real (still deals 35 dmg but looks like katana)  to get this go with sword and DO NOT PICK KATANA or you will not be able to get gun, select the gun then you will get katana visuals :D thats all",
+    "url": "https://greasyfork.org/scripts/485345-project-kindvers-unpatched-fps-boost",
+    "code_url": "https://update.greasyfork.org/scripts/485345/%21%21%21%21%20Project%20kindvers%20unpatched%20fps%20boost%20%21%21%21%21.user.js",
+    "code_size": 602717,
+    "license": null,
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485204,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-19T05:12:41.000Z",
+    "code_updated_at": "2024-01-19T05:12:41.000Z",
+    "namespace": "https://greasyfork.org/users/1245253",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245253,
+        "name": "Achlys09",
+        "created_at": "2024-01-08T21:17:17.000Z",
+        "url": "https://greasyfork.org/users/1245253-achlys09"
+      }
+    ],
+    "name": "Good mod for wins",
+    "description": "HappyMod Users are Pro. HappyMod creators are super Pro.",
+    "url": "https://greasyfork.org/scripts/485204-good-mod-for-wins",
+    "code_url": "https://update.greasyfork.org/scripts/485204/Good%20mod%20for%20wins.user.js",
+    "code_size": 763235,
+    "license": null,
+    "version": "6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

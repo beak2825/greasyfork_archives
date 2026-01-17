@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490948,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-26T19:39:32.000Z",
+    "code_updated_at": "2024-03-26T19:39:30.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": "https://codeberg.org/Amm0ni4/bypass-all-shortlinks-debloated/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279822,
+        "name": "DaapHub",
+        "created_at": "2024-03-26T19:33:08.000Z",
+        "url": "https://greasyfork.org/users/1279822-daaphub"
+      }
+    ],
+    "name": "Universal Bypass Script",
+    "description": "Automatically bypass many link shorteners. Originally by BloggerPemula.",
+    "url": "https://greasyfork.org/scripts/490948-universal-bypass-script",
+    "code_url": "https://update.greasyfork.org/scripts/490948/Universal%20Bypass%20Script.user.js",
+    "code_size": 215159,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

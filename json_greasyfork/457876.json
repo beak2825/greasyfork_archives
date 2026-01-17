@@ -1,0 +1,33 @@
+{
+  "id": 457876,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-09T00:04:37.000Z",
+  "code_updated_at": "2023-01-09T00:04:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 309649,
+      "name": "Jakoers",
+      "created_at": "2019-06-14T07:07:26.000Z",
+      "url": "https://greasyfork.org/users/309649-jakoers"
+    }
+  ],
+  "name": "让知乎网页跟随系统主题",
+  "description": "读取系统主题并将知乎的主题设置为对应主题",
+  "url": "https://greasyfork.org/scripts/457876-%E8%AE%A9%E7%9F%A5%E4%B9%8E%E7%BD%91%E9%A1%B5%E8%B7%9F%E9%9A%8F%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/457876/%E8%AE%A9%E7%9F%A5%E4%B9%8E%E7%BD%91%E9%A1%B5%E8%B7%9F%E9%9A%8F%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%98.user.js",
+  "code_size": 926,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

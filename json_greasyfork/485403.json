@@ -1,0 +1,59 @@
+{
+  "id": 485403,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-22T01:34:32.000Z",
+  "code_updated_at": "2025-05-17T03:41:02.000Z",
+  "namespace": "wed0n.cuit.captcha",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 885440,
+      "name": "wed0n",
+      "created_at": "2022-03-10T13:26:53.000Z",
+      "url": "https://greasyfork.org/users/885440-wed0n",
+      "scripts": [
+        {
+          "id": 485403,
+          "daily_installs": 0,
+          "total_installs": 43,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-22T01:34:32.000Z",
+          "code_updated_at": "2025-05-17T03:41:02.000Z",
+          "namespace": "wed0n.cuit.captcha",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CUIT验证码自动填写",
+          "description": "驾校教务处登录自动填写验证码",
+          "url": "https://greasyfork.org/scripts/485403-cuit%E9%AA%8C%E8%AF%81%E7%A0%81%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99",
+          "code_url": "https://update.greasyfork.org/scripts/485403/CUIT%E9%AA%8C%E8%AF%81%E7%A0%81%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99.user.js",
+          "code_size": 589472,
+          "license": "MIT License",
+          "version": "0.2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CUIT验证码自动填写",
+  "description": "驾校教务处登录自动填写验证码",
+  "url": "https://greasyfork.org/scripts/485403-cuit%E9%AA%8C%E8%AF%81%E7%A0%81%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99",
+  "code_url": "https://update.greasyfork.org/scripts/485403/CUIT%E9%AA%8C%E8%AF%81%E7%A0%81%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99.user.js",
+  "code_size": 589472,
+  "license": "MIT License",
+  "version": "0.2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

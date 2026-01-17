@@ -1,0 +1,59 @@
+{
+  "id": 471870,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-27T23:38:35.000Z",
+  "code_updated_at": "2023-07-28T22:41:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1137465,
+      "name": "rowleto",
+      "created_at": "2023-07-27T23:12:27.000Z",
+      "url": "https://greasyfork.org/users/1137465-rowleto",
+      "scripts": [
+        {
+          "id": 471870,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-27T23:38:35.000Z",
+          "code_updated_at": "2023-07-28T22:41:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "x-away",
+          "description": "replace the X logo with the twitter logo",
+          "url": "https://greasyfork.org/scripts/471870-x-away",
+          "code_url": "https://update.greasyfork.org/scripts/471870/x-away.user.js",
+          "code_size": 2420,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "x-away",
+  "description": "replace the X logo with the twitter logo",
+  "url": "https://greasyfork.org/scripts/471870-x-away",
+  "code_url": "https://update.greasyfork.org/scripts/471870/x-away.user.js",
+  "code_size": 2420,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

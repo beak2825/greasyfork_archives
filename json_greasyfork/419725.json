@@ -1,0 +1,59 @@
+{
+  "id": 419725,
+  "daily_installs": 0,
+  "total_installs": 66,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-06T01:08:28.000Z",
+  "code_updated_at": "2022-02-24T02:54:03.000Z",
+  "namespace": "https://github.com/Absolucy",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 724336,
+      "name": "aspenluxxxy",
+      "created_at": "2021-01-06T00:13:33.000Z",
+      "url": "https://greasyfork.org/users/724336-aspenluxxxy",
+      "scripts": [
+        {
+          "id": 419725,
+          "daily_installs": 0,
+          "total_installs": 66,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-06T01:08:28.000Z",
+          "code_updated_at": "2022-02-24T02:54:03.000Z",
+          "namespace": "https://github.com/Absolucy",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GTFOTrending",
+          "description": "Nuke annoying trends, such as celebrity garbage and Dream stan dumbassery, from the Twitter trending sidebar.",
+          "url": "https://greasyfork.org/scripts/419725-gtfotrending",
+          "code_url": "https://update.greasyfork.org/scripts/419725/GTFOTrending.user.js",
+          "code_size": 1946,
+          "license": "BSD-3-Clause; https://github.com/Absolucy/userscripts/blob/dev/LICENSE.md",
+          "version": "1.1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GTFOTrending",
+  "description": "Nuke annoying trends, such as celebrity garbage and Dream stan dumbassery, from the Twitter trending sidebar.",
+  "url": "https://greasyfork.org/scripts/419725-gtfotrending",
+  "code_url": "https://update.greasyfork.org/scripts/419725/GTFOTrending.user.js",
+  "code_size": 1946,
+  "license": "BSD-3-Clause; https://github.com/Absolucy/userscripts/blob/dev/LICENSE.md",
+  "version": "1.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

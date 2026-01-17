@@ -1,0 +1,34 @@
+{
+  "id": 476485,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-01T08:31:32.000Z",
+  "code_updated_at": "2023-10-01T10:37:00.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1042409,
+      "name": "Petter Wahlman",
+      "created_at": "2023-03-15T07:37:37.000Z",
+      "url": "https://greasyfork.org/users/1042409-petter-wahlman",
+      "scripts": []
+    }
+  ],
+  "name": "[AdBlock] aftenposten",
+  "description": "11/23/2022, 10:36:30 PM",
+  "url": "https://greasyfork.org/scripts/476485-adblock-aftenposten",
+  "code_url": "https://update.greasyfork.org/scripts/476485/%5BAdBlock%5D%20aftenposten.user.js",
+  "code_size": 2088,
+  "license": "MIT License",
+  "version": "0.0.1.20231001103700",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 451737,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-21T03:23:27.000Z",
+  "code_updated_at": "2022-09-21T03:24:24.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 961803,
+      "name": "sun jaly",
+      "created_at": "2022-09-21T03:21:20.000Z",
+      "url": "https://greasyfork.org/users/961803-sun-jaly"
+    }
+  ],
+  "name": "批量取消关注 - douyin.com",
+  "description": "2022/9/21 10:48:08",
+  "url": "https://greasyfork.org/scripts/451737-%E6%89%B9%E9%87%8F%E5%8F%96%E6%B6%88%E5%85%B3%E6%B3%A8-douyin-com",
+  "code_url": "https://update.greasyfork.org/scripts/451737/%E6%89%B9%E9%87%8F%E5%8F%96%E6%B6%88%E5%85%B3%E6%B3%A8%20-%20douyincom.user.js",
+  "code_size": 2012,
+  "license": "Jone",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

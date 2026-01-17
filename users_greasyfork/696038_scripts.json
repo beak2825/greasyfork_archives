@@ -1,0 +1,134 @@
+[
+  {
+    "id": 472617,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-07T05:05:13.000Z",
+    "code_updated_at": "2025-07-17T03:26:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 696038,
+        "name": "Enjoy-li",
+        "created_at": "2020-10-18T04:01:42.000Z",
+        "url": "https://greasyfork.org/users/696038-enjoy-li"
+      }
+    ],
+    "name": "鼠标手势-【米】字",
+    "description": "1、通过按下鼠标右键拖动，分别实现的【↑ 上移一屏】、【↓ 下移一屏】、【↗ 移到底部】、【↘ 移到顶部】、【← 后退上页】、【→ 前进下页】、【↖ 关闭页面】、【↙ 刷新页面】当前标签页的八大功能；当然，支持长按超过1秒取消操作；",
+    "url": "https://greasyfork.org/scripts/472617-%E9%BC%A0%E6%A0%87%E6%89%8B%E5%8A%BF-%E7%B1%B3-%E5%AD%97",
+    "code_url": "https://update.greasyfork.org/scripts/472617/%E9%BC%A0%E6%A0%87%E6%89%8B%E5%8A%BF-%E3%80%90%E7%B1%B3%E3%80%91%E5%AD%97.user.js",
+    "code_size": 65912,
+    "license": "GPL License",
+    "version": "0.6.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470813,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-14T09:33:14.000Z",
+    "code_updated_at": "2025-07-18T02:50:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 696038,
+        "name": "Enjoy-li",
+        "created_at": "2020-10-18T04:01:42.000Z",
+        "url": "https://greasyfork.org/users/696038-enjoy-li"
+      }
+    ],
+    "name": "NpmjsUISetting",
+    "description": "npm_UI布局优化",
+    "url": "https://greasyfork.org/scripts/470813-npmjsuisetting",
+    "code_url": "https://update.greasyfork.org/scripts/470813/NpmjsUISetting.user.js",
+    "code_size": 54878,
+    "license": "GPL License",
+    "version": "0.1.8",
+    "locale": "sv",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470790,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-14T05:24:08.000Z",
+    "code_updated_at": "2025-07-17T05:52:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 696038,
+        "name": "Enjoy-li",
+        "created_at": "2020-10-18T04:01:42.000Z",
+        "url": "https://greasyfork.org/users/696038-enjoy-li"
+      }
+    ],
+    "name": "MostBeautifulFont-Hack",
+    "description": "最美字体-Hack：1、全网页 设置Hack字体，便于阅读英文网站和代码【容易混淆的字母和符号 aoO0Q CG iIlL|1 g9q {}[] ~-+<=】。【最后：1、localStorage中，支持关闭某一特定功能】",
+    "url": "https://greasyfork.org/scripts/470790-mostbeautifulfont-hack",
+    "code_url": "https://update.greasyfork.org/scripts/470790/MostBeautifulFont-Hack.user.js",
+    "code_size": 116693,
+    "license": "MIT License",
+    "version": "4.0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456560,
+    "daily_installs": 1,
+    "total_installs": 617,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-14T03:57:22.000Z",
+    "code_updated_at": "2025-07-17T05:49:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 696038,
+        "name": "Enjoy-li",
+        "created_at": "2020-10-18T04:01:42.000Z",
+        "url": "https://greasyfork.org/users/696038-enjoy-li"
+      }
+    ],
+    "name": "边读边看图",
+    "description": "功能一览：1、图文对照: 双击把图片固定在页面上，同时支持缩放、移动功能，便于图文对照阅读； 2、图片背景图: 使用浏览器查看在线图片或本地图片时，增加页面背景图，以便清晰显示当前图片轮廓 3、命名链接：打开链接方式，总是以命名的新窗口，跳转同一个链接页面，只激活,不刷新；4、快捷链接：点击链接文本时，跳转相应链接页面；5、鼠标选中文字后，(0.5秒内)立马松开左键，自动复制文字；反之，保持鼠标不移动超过 0.5秒后再松开，不会复制文字； 6、一键复制代码块：鼠标悬浮代码块后，点击显示的红色边框，复制到剪贴板 7、CSDN：仅在主动触发登录时，显示登录弹层 【最后：1、localStorage中，支持关闭某一特定功能】",
+    "url": "https://greasyfork.org/scripts/456560-%E8%BE%B9%E8%AF%BB%E8%BE%B9%E7%9C%8B%E5%9B%BE",
+    "code_url": "https://update.greasyfork.org/scripts/456560/%E8%BE%B9%E8%AF%BB%E8%BE%B9%E7%9C%8B%E5%9B%BE.user.js",
+    "code_size": 104546,
+    "license": "GPL License",
+    "version": "0.8.85",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

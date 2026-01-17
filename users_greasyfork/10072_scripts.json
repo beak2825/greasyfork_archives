@@ -1,0 +1,101 @@
+[
+  {
+    "id": 491768,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-06T04:34:11.000Z",
+    "code_updated_at": "2024-04-06T22:12:25.000Z",
+    "namespace": "http://thlayli.detrave.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10072,
+        "name": "Nathan Blume",
+        "created_at": "2015-03-30T13:25:08.000Z",
+        "url": "https://greasyfork.org/users/10072-nathan-blume"
+      }
+    ],
+    "name": "Last.fm Mini Artist Tags",
+    "description": "Adds miniature top tags to library artists pages",
+    "url": "https://greasyfork.org/scripts/491768-last-fm-mini-artist-tags",
+    "code_url": "https://update.greasyfork.org/scripts/491768/Lastfm%20Mini%20Artist%20Tags.user.js",
+    "code_size": 4501,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485285,
+    "daily_installs": 0,
+    "total_installs": 112,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-20T02:48:14.000Z",
+    "code_updated_at": "2025-04-03T00:46:00.000Z",
+    "namespace": "http://thlayli.detrave.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10072,
+        "name": "Nathan Blume",
+        "created_at": "2015-03-30T13:25:08.000Z",
+        "url": "https://greasyfork.org/users/10072-nathan-blume"
+      }
+    ],
+    "name": "Last.fm Original Tag Chart",
+    "description": "Restores the \"subway map\" chart on new Last.fm report pages",
+    "url": "https://greasyfork.org/scripts/485285-last-fm-original-tag-chart",
+    "code_url": "https://update.greasyfork.org/scripts/485285/Lastfm%20Original%20Tag%20Chart.user.js",
+    "code_size": 26669,
+    "license": "MIT License",
+    "version": "1.9.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456739,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-17T20:01:44.000Z",
+    "code_updated_at": "2023-10-27T22:21:03.000Z",
+    "namespace": "http://thlayli.detrave.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10072,
+        "name": "Nathan Blume",
+        "created_at": "2015-03-30T13:25:08.000Z",
+        "url": "https://greasyfork.org/users/10072-nathan-blume"
+      }
+    ],
+    "name": "Social Icons for Plex",
+    "description": "Display social media icons from Artist Biography web links",
+    "url": "https://greasyfork.org/scripts/456739-social-icons-for-plex",
+    "code_url": "https://update.greasyfork.org/scripts/456739/Social%20Icons%20for%20Plex.user.js",
+    "code_size": 10700,
+    "license": "MIT License",
+    "version": "0.7.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

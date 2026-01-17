@@ -1,0 +1,34 @@
+{
+  "id": 444030,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-26T11:27:24.000Z",
+  "code_updated_at": "2022-04-26T11:27:24.000Z",
+  "namespace": "PingJiaoPingXueHacker",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 907175,
+      "name": "TonyBao",
+      "created_at": "2022-04-26T11:25:20.000Z",
+      "url": "https://greasyfork.org/users/907175-tonybao",
+      "scripts": []
+    }
+  ],
+  "name": "评教评学Hacker",
+  "description": "自动单选是",
+  "url": "https://greasyfork.org/scripts/444030-%E8%AF%84%E6%95%99%E8%AF%84%E5%AD%A6hacker",
+  "code_url": "https://update.greasyfork.org/scripts/444030/%E8%AF%84%E6%95%99%E8%AF%84%E5%AD%A6Hacker.user.js",
+  "code_size": 1550,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,233 @@
+[
+  {
+    "id": 422536,
+    "daily_installs": 0,
+    "total_installs": 202,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-02T13:56:44.000Z",
+    "code_updated_at": "2021-03-02T13:56:44.000Z",
+    "namespace": "hardy.estate.mug",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435145,
+        "name": "Father-Torn",
+        "created_at": "2020-01-14T06:10:53.000Z",
+        "url": "https://greasyfork.org/users/435145-father-torn"
+      }
+    ],
+    "name": "Estate Agent Mug Helper",
+    "description": "Shows if it is profitable to mug someone with Estate Agency Listing",
+    "url": "https://greasyfork.org/scripts/422536-estate-agent-mug-helper",
+    "code_url": "https://update.greasyfork.org/scripts/422536/Estate%20Agent%20Mug%20Helper.user.js",
+    "code_size": 1966,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 422084,
+    "daily_installs": 0,
+    "total_installs": 131,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-02-21T05:39:10.000Z",
+    "code_updated_at": "2021-02-21T09:40:38.000Z",
+    "namespace": "hardy.company.stock",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435145,
+        "name": "Father-Torn",
+        "created_at": "2020-01-14T06:10:53.000Z",
+        "url": "https://greasyfork.org/users/435145-father-torn"
+      }
+    ],
+    "name": "Company Stock Order",
+    "description": "Auto-fills amount in Company Stock Boxes",
+    "url": "https://greasyfork.org/scripts/422084-company-stock-order",
+    "code_url": "https://update.greasyfork.org/scripts/422084/Company%20Stock%20Order.user.js",
+    "code_size": 2243,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419164,
+    "daily_installs": 0,
+    "total_installs": 274,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-26T02:47:59.000Z",
+    "code_updated_at": "2021-12-16T07:24:00.000Z",
+    "namespace": "hardy.russian.roulette",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435145,
+        "name": "Father-Torn",
+        "created_at": "2020-01-14T06:10:53.000Z",
+        "url": "https://greasyfork.org/users/435145-father-torn"
+      }
+    ],
+    "name": "Russian Roulette Timeout",
+    "description": "Shows a countdown of when a RR match would expire and makes names on Poker table clickable",
+    "url": "https://greasyfork.org/scripts/419164-russian-roulette-timeout",
+    "code_url": "https://update.greasyfork.org/scripts/419164/Russian%20Roulette%20Timeout.user.js",
+    "code_size": 4328,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 418456,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-10T15:41:32.000Z",
+    "code_updated_at": "2020-12-11T06:13:54.000Z",
+    "namespace": "hardy.homie.ns",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435145,
+        "name": "Father-Torn",
+        "created_at": "2020-01-14T06:10:53.000Z",
+        "url": "https://greasyfork.org/users/435145-father-torn"
+      }
+    ],
+    "name": "Homie (NS Version)",
+    "description": "Records Stocks Transactions",
+    "url": "https://greasyfork.org/scripts/418456-homie-ns-version",
+    "code_url": "https://update.greasyfork.org/scripts/418456/Homie%20%28NS%20Version%29.user.js",
+    "code_size": 23795,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 418455,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-10T15:38:11.000Z",
+    "code_updated_at": "2020-12-10T15:38:07.000Z",
+    "namespace": "hardy.homie",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435145,
+        "name": "Father-Torn",
+        "created_at": "2020-01-14T06:10:53.000Z",
+        "url": "https://greasyfork.org/users/435145-father-torn"
+      }
+    ],
+    "name": "Homie",
+    "description": "Stocks transactions tracker",
+    "url": "https://greasyfork.org/scripts/418455-homie",
+    "code_url": "https://update.greasyfork.org/scripts/418455/Homie.user.js",
+    "code_size": 22242,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 413647,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-17T12:32:48.000Z",
+    "code_updated_at": "2020-10-17T12:38:16.000Z",
+    "namespace": "hardy.attackoptionhider",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435145,
+        "name": "Father-Torn",
+        "created_at": "2020-01-14T06:10:53.000Z",
+        "url": "https://greasyfork.org/users/435145-father-torn"
+      }
+    ],
+    "name": "After Attack Option Hider",
+    "description": "Hides options as per requirement after winning an attack.",
+    "url": "https://greasyfork.org/scripts/413647-after-attack-option-hider",
+    "code_url": "https://update.greasyfork.org/scripts/413647/After%20Attack%20Option%20Hider.user.js",
+    "code_size": 4011,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 413609,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-17T08:56:59.000Z",
+    "code_updated_at": "2020-10-23T10:35:35.000Z",
+    "namespace": "hardy.auction.timer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435145,
+        "name": "Father-Torn",
+        "created_at": "2020-01-14T06:10:53.000Z",
+        "url": "https://greasyfork.org/users/435145-father-torn"
+      }
+    ],
+    "name": "Auction Countdown Timer for Mobile",
+    "description": "Display Countdown timer on Auction page for mobile.",
+    "url": "https://greasyfork.org/scripts/413609-auction-countdown-timer-for-mobile",
+    "code_url": "https://update.greasyfork.org/scripts/413609/Auction%20Countdown%20Timer%20for%20Mobile.user.js",
+    "code_size": 2515,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

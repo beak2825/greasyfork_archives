@@ -1,0 +1,34 @@
+{
+  "id": 428104,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-17T20:30:12.000Z",
+  "code_updated_at": "2021-06-17T20:43:52.000Z",
+  "namespace": "https://pescadordecripto.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 466691,
+      "name": "Jadson Tavares",
+      "created_at": "2020-03-21T20:14:14.000Z",
+      "url": "https://greasyfork.org/users/466691-jadson-tavares",
+      "scripts": []
+    }
+  ],
+  "name": "BSC-Staking.Finance (Pescador de Cripto)",
+  "description": "Auto Claim.",
+  "url": "https://greasyfork.org/scripts/428104-bsc-staking-finance-pescador-de-cripto",
+  "code_url": "https://update.greasyfork.org/scripts/428104/BSC-StakingFinance%20%28Pescador%20de%20Cripto%29.user.js",
+  "code_size": 1696,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 414223,
+    "daily_installs": 0,
+    "total_installs": 156,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-22T18:27:42.000Z",
+    "code_updated_at": "2020-10-23T00:12:03.000Z",
+    "namespace": "https://greasyfork.org/users/695969",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695969,
+        "name": "starrybouquet",
+        "created_at": "2020-10-17T18:17:08.000Z",
+        "url": "https://greasyfork.org/users/695969-starrybouquet"
+      }
+    ],
+    "name": "AO3: Add gifs to comments",
+    "description": "Add a gif to a comment on AO3",
+    "url": "https://greasyfork.org/scripts/414223-ao3-add-gifs-to-comments",
+    "code_url": "https://update.greasyfork.org/scripts/414223/AO3%3A%20Add%20gifs%20to%20comments.user.js",
+    "code_size": 2145,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

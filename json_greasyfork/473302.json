@@ -1,0 +1,34 @@
+{
+  "id": 473302,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-17T17:21:36.000Z",
+  "code_updated_at": "2023-08-17T17:21:35.000Z",
+  "namespace": "askAuto",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 853112,
+      "name": "草莓味麻婆豆腐",
+      "created_at": "2021-12-14T08:04:24.000Z",
+      "url": "https://greasyfork.org/users/853112-%E8%8D%89%E8%8E%93%E5%91%B3%E9%BA%BB%E5%A9%86%E8%B1%86%E8%85%90",
+      "scripts": []
+    }
+  ],
+  "name": "尔雅满分助手 支持gtpchart3.5答题和众多免费题库，自动静音播放，倍速需谨慎",
+  "description": "挂机解放时间，无需任何操作自动完成所有任务点。汇集全网免费、付费题库接口支持一键对接，答案更全更靠谱。",
+  "url": "https://greasyfork.org/scripts/473302-%E5%B0%94%E9%9B%85%E6%BB%A1%E5%88%86%E5%8A%A9%E6%89%8B-%E6%94%AF%E6%8C%81gtpchart3-5%E7%AD%94%E9%A2%98%E5%92%8C%E4%BC%97%E5%A4%9A%E5%85%8D%E8%B4%B9%E9%A2%98%E5%BA%93-%E8%87%AA%E5%8A%A8%E9%9D%99%E9%9F%B3%E6%92%AD%E6%94%BE-%E5%80%8D%E9%80%9F%E9%9C%80%E8%B0%A8%E6%85%8E",
+  "code_url": "https://update.greasyfork.org/scripts/473302/%E5%B0%94%E9%9B%85%E6%BB%A1%E5%88%86%E5%8A%A9%E6%89%8B%20%E6%94%AF%E6%8C%81gtpchart35%E7%AD%94%E9%A2%98%E5%92%8C%E4%BC%97%E5%A4%9A%E5%85%8D%E8%B4%B9%E9%A2%98%E5%BA%93%EF%BC%8C%E8%87%AA%E5%8A%A8%E9%9D%99%E9%9F%B3%E6%92%AD%E6%94%BE%EF%BC%8C%E5%80%8D%E9%80%9F%E9%9C%80%E8%B0%A8%E6%85%8E.user.js",
+  "code_size": 126565,
+  "license": null,
+  "version": "2.0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

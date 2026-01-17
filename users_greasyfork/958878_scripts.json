@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451421,
+    "daily_installs": 0,
+    "total_installs": 2339,
+    "fan_score": "55.2",
+    "good_ratings": 8,
+    "ok_ratings": 4,
+    "bad_ratings": 0,
+    "created_at": "2022-09-15T13:05:55.000Z",
+    "code_updated_at": "2023-03-11T15:21:27.000Z",
+    "namespace": "analyzer.bilibili",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 958878,
+        "name": "cx l",
+        "created_at": "2022-09-14T00:13:21.000Z",
+        "url": "https://greasyfork.org/users/958878-cx-l"
+      }
+    ],
+    "name": "Bilibili评论成分识别&屏蔽",
+    "description": "标注成分&自动屏蔽",
+    "url": "https://greasyfork.org/scripts/451421-bilibili%E8%AF%84%E8%AE%BA%E6%88%90%E5%88%86%E8%AF%86%E5%88%AB-%E5%B1%8F%E8%94%BD",
+    "code_url": "https://update.greasyfork.org/scripts/451421/Bilibili%E8%AF%84%E8%AE%BA%E6%88%90%E5%88%86%E8%AF%86%E5%88%AB%E5%B1%8F%E8%94%BD.user.js",
+    "code_size": 171238,
+    "license": "MIT License",
+    "version": "2.15",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

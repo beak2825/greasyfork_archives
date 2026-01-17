@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457610,
+    "daily_installs": 0,
+    "total_installs": 9200,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2023-01-04T08:02:08.000Z",
+    "code_updated_at": "2023-01-04T08:15:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1003383,
+        "name": "Yujia Pan",
+        "created_at": "2022-12-27T06:58:44.000Z",
+        "url": "https://greasyfork.org/users/1003383-yujia-pan"
+      }
+    ],
+    "name": "继续教育视频加速刷课挂课|公需课|专业课|各专业各省市继续教育|河南专技|智慧中小学教师研修|东奥会计|华医网|好医生",
+    "description": "任意浏览器视频倍速播放，按键调速|此脚本智能加速|如需代刷请联系V:xiaofeixia5G欢迎个人或代理前来咨询|",
+    "url": "https://greasyfork.org/scripts/457610-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%A7%86%E9%A2%91%E5%8A%A0%E9%80%9F%E5%88%B7%E8%AF%BE%E6%8C%82%E8%AF%BE-%E5%85%AC%E9%9C%80%E8%AF%BE-%E4%B8%93%E4%B8%9A%E8%AF%BE-%E5%90%84%E4%B8%93%E4%B8%9A%E5%90%84%E7%9C%81%E5%B8%82%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E6%B2%B3%E5%8D%97%E4%B8%93%E6%8A%80-%E6%99%BA%E6%85%A7%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E4%B8%9C%E5%A5%A5%E4%BC%9A%E8%AE%A1-%E5%8D%8E%E5%8C%BB%E7%BD%91-%E5%A5%BD%E5%8C%BB%E7%94%9F",
+    "code_url": "https://update.greasyfork.org/scripts/457610/%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%A7%86%E9%A2%91%E5%8A%A0%E9%80%9F%E5%88%B7%E8%AF%BE%E6%8C%82%E8%AF%BE%7C%E5%85%AC%E9%9C%80%E8%AF%BE%7C%E4%B8%93%E4%B8%9A%E8%AF%BE%7C%E5%90%84%E4%B8%93%E4%B8%9A%E5%90%84%E7%9C%81%E5%B8%82%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%7C%E6%B2%B3%E5%8D%97%E4%B8%93%E6%8A%80%7C%E6%99%BA%E6%85%A7%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%7C%E4%B8%9C%E5%A5%A5%E4%BC%9A%E8%AE%A1%7C%E5%8D%8E%E5%8C%BB%E7%BD%91%7C%E5%A5%BD%E5%8C%BB%E7%94%9F.user.js",
+    "code_size": 12354,
+    "license": "MIT License",
+    "version": "1.0.26",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

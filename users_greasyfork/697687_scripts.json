@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487308,
+    "daily_installs": 1,
+    "total_installs": 352,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-02-14T17:24:17.000Z",
+    "code_updated_at": "2024-02-14T17:24:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 697687,
+        "name": "zhengqingqian",
+        "created_at": "2020-10-23T13:48:59.000Z",
+        "url": "https://greasyfork.org/users/697687-zhengqingqian"
+      }
+    ],
+    "name": "腾讯文档助手（批量导出）",
+    "description": "批量导出",
+    "url": "https://greasyfork.org/scripts/487308-%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E5%8A%A9%E6%89%8B-%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA",
+    "code_url": "https://update.greasyfork.org/scripts/487308/%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E5%8A%A9%E6%89%8B%EF%BC%88%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%EF%BC%89.user.js",
+    "code_size": 15816,
+    "license": "MIT License",
+    "version": "2024-02-11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

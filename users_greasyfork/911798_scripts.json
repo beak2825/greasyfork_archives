@@ -1,0 +1,68 @@
+[
+  {
+    "id": 446169,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-08T04:11:55.000Z",
+    "code_updated_at": "2025-07-15T01:09:55.000Z",
+    "namespace": "for秀米",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 911798,
+        "name": "暴走的肥猫",
+        "created_at": "2022-05-08T09:16:13.000Z",
+        "url": "https://greasyfork.org/users/911798-%E6%9A%B4%E8%B5%B0%E7%9A%84%E8%82%A5%E7%8C%AB"
+      }
+    ],
+    "name": "秀米layout",
+    "description": "xiumi layout",
+    "url": "https://greasyfork.org/scripts/446169-%E7%A7%80%E7%B1%B3layout",
+    "code_url": "https://update.greasyfork.org/scripts/446169/%E7%A7%80%E7%B1%B3layout.user.js",
+    "code_size": 65051,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 445813,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-31T14:04:09.000Z",
+    "code_updated_at": "2022-06-10T12:08:31.000Z",
+    "namespace": "https://greasyfork.org/users/911798",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 911798,
+        "name": "暴走的肥猫",
+        "created_at": "2022-05-08T09:16:13.000Z",
+        "url": "https://greasyfork.org/users/911798-%E6%9A%B4%E8%B5%B0%E7%9A%84%E8%82%A5%E7%8C%AB"
+      }
+    ],
+    "name": "[fatcat] VIP视频破解去广告",
+    "description": "主流视频平台VIP，Safari使用userscripts进行安装即可，适配iPad、iPhone。更换解析点方便，不定期更新解析点",
+    "url": "https://greasyfork.org/scripts/445813-fatcat-vip%E8%A7%86%E9%A2%91%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/445813/%5Bfatcat%5D%20VIP%E8%A7%86%E9%A2%91%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 15952,
+    "license": null,
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

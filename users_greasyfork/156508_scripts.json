@@ -1,0 +1,167 @@
+[
+  {
+    "id": 439655,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-07T01:10:33.000Z",
+    "code_updated_at": "2022-02-23T13:43:31.000Z",
+    "namespace": "https://greasyfork.org/pt-BR/scripts/439451-pegaxy-rent-bot-3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156508,
+        "name": "LuqDragon",
+        "created_at": "2017-10-19T23:54:41.000Z",
+        "url": "https://greasyfork.org/users/156508-luqdragon"
+      }
+    ],
+    "name": "Pegaxy Rent Bot 3",
+    "description": "Bot para tentar alugar cavalos",
+    "url": "https://greasyfork.org/scripts/439655-pegaxy-rent-bot-3",
+    "code_url": "https://update.greasyfork.org/scripts/439655/Pegaxy%20Rent%20Bot%203.user.js",
+    "code_size": 2419,
+    "license": "MIT License",
+    "version": "0.42",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 439473,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-01T23:59:24.000Z",
+    "code_updated_at": "2022-02-01T23:59:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156508,
+        "name": "LuqDragon",
+        "created_at": "2017-10-19T23:54:41.000Z",
+        "url": "https://greasyfork.org/users/156508-luqdragon"
+      }
+    ],
+    "name": "Rent Bot 2",
+    "description": "teste do teste",
+    "url": "https://greasyfork.org/scripts/439473-rent-bot-2",
+    "code_url": "https://update.greasyfork.org/scripts/439473/Rent%20Bot%202.user.js",
+    "code_size": 1088,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 439388,
+    "daily_installs": 0,
+    "total_installs": 12508,
+    "fan_score": "15.0",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2022-01-30T20:54:54.000Z",
+    "code_updated_at": "2022-01-30T20:54:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156508,
+        "name": "LuqDragon",
+        "created_at": "2017-10-19T23:54:41.000Z",
+        "url": "https://greasyfork.org/users/156508-luqdragon"
+      }
+    ],
+    "name": "Auto Click Captcha",
+    "description": "Auto clicks the recaptcha checkbox",
+    "url": "https://greasyfork.org/scripts/439388-auto-click-captcha",
+    "code_url": "https://update.greasyfork.org/scripts/439388/Auto%20Click%20Captcha.user.js",
+    "code_size": 2406,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431220,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-08-23T06:16:04.000Z",
+    "code_updated_at": "2021-08-23T09:49:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156508,
+        "name": "LuqDragon",
+        "created_at": "2017-10-19T23:54:41.000Z",
+        "url": "https://greasyfork.org/users/156508-luqdragon"
+      }
+    ],
+    "name": "PVU Water and Crow Highlighter",
+    "description": "Highlight water less than 100 and crows in plants",
+    "url": "https://greasyfork.org/scripts/431220-pvu-water-and-crow-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/431220/PVU%20Water%20and%20Crow%20Highlighter.user.js",
+    "code_size": 1277,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425690,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-29T03:22:36.000Z",
+    "code_updated_at": "2021-04-30T06:47:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156508,
+        "name": "LuqDragon",
+        "created_at": "2017-10-19T23:54:41.000Z",
+        "url": "https://greasyfork.org/users/156508-luqdragon"
+      }
+    ],
+    "name": "Auto Reward",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/425690-auto-reward",
+    "code_url": "https://update.greasyfork.org/scripts/425690/Auto%20Reward.user.js",
+    "code_size": 1639,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

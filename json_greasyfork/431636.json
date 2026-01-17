@@ -1,0 +1,33 @@
+{
+  "id": 431636,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-30T11:04:57.000Z",
+  "code_updated_at": "2021-08-30T11:14:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 810305,
+      "name": "KristijanRoss",
+      "created_at": "2021-08-30T10:59:40.000Z",
+      "url": "https://greasyfork.org/users/810305-kristijanross"
+    }
+  ],
+  "name": "HBOGO but smooth",
+  "description": "Fixes HBO lag on old PC-s by disabling styles while video is playing.",
+  "url": "https://greasyfork.org/scripts/431636-hbogo-but-smooth",
+  "code_url": "https://update.greasyfork.org/scripts/431636/HBOGO%20but%20smooth.user.js",
+  "code_size": 1223,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

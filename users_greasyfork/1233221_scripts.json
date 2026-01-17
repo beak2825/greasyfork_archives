@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482105,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-13T11:37:35.000Z",
+    "code_updated_at": "2024-05-22T03:44:04.000Z",
+    "namespace": "https://greasyfork.org/cybermage",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1233221,
+        "name": "Cybermage",
+        "created_at": "2023-12-13T11:20:06.000Z",
+        "url": "https://greasyfork.org/users/1233221-cybermage"
+      }
+    ],
+    "name": "逻辑透镜",
+    "description": "从品葱文章生成提示词以检查逻辑谬误。",
+    "url": "https://greasyfork.org/scripts/482105-%E9%80%BB%E8%BE%91%E9%80%8F%E9%95%9C",
+    "code_url": "https://update.greasyfork.org/scripts/482105/%E9%80%BB%E8%BE%91%E9%80%8F%E9%95%9C.user.js",
+    "code_size": 10503,
+    "license": "MIT License",
+    "version": "0.6.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

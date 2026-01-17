@@ -1,0 +1,33 @@
+{
+  "id": 454973,
+  "daily_installs": 0,
+  "total_installs": 592,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-17T11:11:35.000Z",
+  "code_updated_at": "2024-04-02T14:02:38.000Z",
+  "namespace": "https://github.com/AnotiaWang",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 984422,
+      "name": "AnotiaWang",
+      "created_at": "2022-11-17T11:02:49.000Z",
+      "url": "https://greasyfork.org/users/984422-anotiawang"
+    }
+  ],
+  "name": "深圳大学大物实验预习题小助手增强版 (modified by WYK)",
+  "description": "自动提供参考答案",
+  "url": "https://greasyfork.org/scripts/454973-%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E5%A4%A7%E7%89%A9%E5%AE%9E%E9%AA%8C%E9%A2%84%E4%B9%A0%E9%A2%98%E5%B0%8F%E5%8A%A9%E6%89%8B%E5%A2%9E%E5%BC%BA%E7%89%88-modified-by-wyk",
+  "code_url": "https://update.greasyfork.org/scripts/454973/%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E5%A4%A7%E7%89%A9%E5%AE%9E%E9%AA%8C%E9%A2%84%E4%B9%A0%E9%A2%98%E5%B0%8F%E5%8A%A9%E6%89%8B%E5%A2%9E%E5%BC%BA%E7%89%88%20%28modified%20by%20WYK%29.user.js",
+  "code_size": 21910,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "0.56",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484280,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-08T21:20:49.000Z",
+    "code_updated_at": "2024-01-08T21:20:49.000Z",
+    "namespace": "meme",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245254,
+        "name": "Qinghui Gao",
+        "created_at": "2024-01-08T21:18:08.000Z",
+        "url": "https://greasyfork.org/users/1245254-qinghui-gao"
+      }
+    ],
+    "name": "SSBY",
+    "description": "SSBY, to match someone and say hello",
+    "url": "https://greasyfork.org/scripts/484280-ssby",
+    "code_url": "https://update.greasyfork.org/scripts/484280/SSBY.user.js",
+    "code_size": 4156,
+    "license": "MIT License",
+    "version": "0.41",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

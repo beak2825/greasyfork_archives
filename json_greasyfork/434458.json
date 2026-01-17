@@ -1,0 +1,59 @@
+{
+  "id": 434458,
+  "daily_installs": 1,
+  "total_installs": 1730,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-10-25T11:50:51.000Z",
+  "code_updated_at": "2021-12-04T13:29:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 827369,
+      "name": "Eugene Moner",
+      "created_at": "2021-10-21T11:00:08.000Z",
+      "url": "https://greasyfork.org/users/827369-eugene-moner",
+      "scripts": [
+        {
+          "id": 434458,
+          "daily_installs": 1,
+          "total_installs": 1730,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2021-10-25T11:50:51.000Z",
+          "code_updated_at": "2021-12-04T13:29:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Freebitco.in Low balance and roll speed MULTIPLY BTC Script 2021",
+          "description": "To support please register on my free bitco.in reffer https://freebitco.in/?r=10276558",
+          "url": "https://greasyfork.org/scripts/434458-freebitco-in-low-balance-and-roll-speed-multiply-btc-script-2021",
+          "code_url": "https://update.greasyfork.org/scripts/434458/Freebitcoin%20Low%20balance%20and%20roll%20speed%20MULTIPLY%20BTC%20Script%202021.user.js",
+          "code_size": 3606,
+          "license": null,
+          "version": "2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Freebitco.in Low balance and roll speed MULTIPLY BTC Script 2021",
+  "description": "To support please register on my free bitco.in reffer https://freebitco.in/?r=10276558",
+  "url": "https://greasyfork.org/scripts/434458-freebitco-in-low-balance-and-roll-speed-multiply-btc-script-2021",
+  "code_url": "https://update.greasyfork.org/scripts/434458/Freebitcoin%20Low%20balance%20and%20roll%20speed%20MULTIPLY%20BTC%20Script%202021.user.js",
+  "code_size": 3606,
+  "license": null,
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

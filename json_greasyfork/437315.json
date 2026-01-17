@@ -1,0 +1,59 @@
+{
+  "id": 437315,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-20T02:51:10.000Z",
+  "code_updated_at": "2022-11-17T06:09:42.000Z",
+  "namespace": "leedaisen",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 855492,
+      "name": "Daisen Lee (小生)",
+      "created_at": "2021-12-20T02:48:21.000Z",
+      "url": "https://greasyfork.org/users/855492-daisen-lee-%E5%B0%8F%E7%94%9F",
+      "scripts": [
+        {
+          "id": 437315,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-20T02:51:10.000Z",
+          "code_updated_at": "2022-11-17T06:09:42.000Z",
+          "namespace": "leedaisen",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "去除恶心的代码里的字体样式",
+          "description": "2022/11/17 上午10:15:52",
+          "url": "https://greasyfork.org/scripts/437315-%E5%8E%BB%E9%99%A4%E6%81%B6%E5%BF%83%E7%9A%84%E4%BB%A3%E7%A0%81%E9%87%8C%E7%9A%84%E5%AD%97%E4%BD%93%E6%A0%B7%E5%BC%8F",
+          "code_url": "https://update.greasyfork.org/scripts/437315/%E5%8E%BB%E9%99%A4%E6%81%B6%E5%BF%83%E7%9A%84%E4%BB%A3%E7%A0%81%E9%87%8C%E7%9A%84%E5%AD%97%E4%BD%93%E6%A0%B7%E5%BC%8F.user.js",
+          "code_size": 821,
+          "license": null,
+          "version": "1.2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "去除恶心的代码里的字体样式",
+  "description": "2022/11/17 上午10:15:52",
+  "url": "https://greasyfork.org/scripts/437315-%E5%8E%BB%E9%99%A4%E6%81%B6%E5%BF%83%E7%9A%84%E4%BB%A3%E7%A0%81%E9%87%8C%E7%9A%84%E5%AD%97%E4%BD%93%E6%A0%B7%E5%BC%8F",
+  "code_url": "https://update.greasyfork.org/scripts/437315/%E5%8E%BB%E9%99%A4%E6%81%B6%E5%BF%83%E7%9A%84%E4%BB%A3%E7%A0%81%E9%87%8C%E7%9A%84%E5%AD%97%E4%BD%93%E6%A0%B7%E5%BC%8F.user.js",
+  "code_size": 821,
+  "license": null,
+  "version": "1.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

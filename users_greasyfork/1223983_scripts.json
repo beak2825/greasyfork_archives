@@ -1,0 +1,101 @@
+[
+  {
+    "id": 482209,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-14T14:55:49.000Z",
+    "code_updated_at": "2024-03-06T14:33:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1223983,
+        "name": "fzahner",
+        "created_at": "2023-11-26T19:54:55.000Z",
+        "url": "https://greasyfork.org/users/1223983-fzahner"
+      }
+    ],
+    "name": "Moodle remove forceautodownload",
+    "description": "Opens file instead of downloading it in moodle.",
+    "url": "https://greasyfork.org/scripts/482209-moodle-remove-forceautodownload",
+    "code_url": "https://update.greasyfork.org/scripts/482209/Moodle%20remove%20forceautodownload.user.js",
+    "code_size": 1260,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482206,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-14T14:45:42.000Z",
+    "code_updated_at": "2023-12-14T14:53:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1223983,
+        "name": "fzahner",
+        "created_at": "2023-11-26T19:54:55.000Z",
+        "url": "https://greasyfork.org/users/1223983-fzahner"
+      }
+    ],
+    "name": "Better Studyflix",
+    "description": "Clicks away login window and stops autoplay.",
+    "url": "https://greasyfork.org/scripts/482206-better-studyflix",
+    "code_url": "https://update.greasyfork.org/scripts/482206/Better%20Studyflix.user.js",
+    "code_size": 975,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 480847,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-26T19:56:03.000Z",
+    "code_updated_at": "2023-12-18T07:31:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1223983,
+        "name": "fzahner",
+        "created_at": "2023-11-26T19:54:55.000Z",
+        "url": "https://greasyfork.org/users/1223983-fzahner"
+      }
+    ],
+    "name": "Canoe Logo Replace",
+    "description": "Replaces Canoe Logos and Menu Items with Apliqo ones for Tool Demo",
+    "url": "https://greasyfork.org/scripts/480847-canoe-logo-replace",
+    "code_url": "https://update.greasyfork.org/scripts/480847/Canoe%20Logo%20Replace.user.js",
+    "code_size": 2835,
+    "license": "MIT License",
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 483759,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-03T09:33:45.000Z",
+  "code_updated_at": "2024-01-03T09:41:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1241829,
+      "name": "lemuresss",
+      "created_at": "2024-01-01T08:55:53.000Z",
+      "url": "https://greasyfork.org/users/1241829-lemuresss"
+    }
+  ],
+  "name": "Tuxun Fun button transparent Changer",
+  "description": "Apply a blur effect to the background of specific elements on Tuxun Fun and make all card-top-right elements' background transparent",
+  "url": "https://greasyfork.org/scripts/483759-tuxun-fun-button-transparent-changer",
+  "code_url": "https://update.greasyfork.org/scripts/483759/Tuxun%20Fun%20button%20transparent%20Changer.user.js",
+  "code_size": 1825,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

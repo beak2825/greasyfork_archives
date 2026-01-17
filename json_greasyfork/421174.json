@@ -1,0 +1,59 @@
+{
+  "id": 421174,
+  "daily_installs": 0,
+  "total_installs": 597,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-04T03:29:49.000Z",
+  "code_updated_at": "2021-02-04T05:44:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 734280,
+      "name": "baofeidyz",
+      "created_at": "2021-02-04T02:15:17.000Z",
+      "url": "https://greasyfork.org/users/734280-baofeidyz",
+      "scripts": [
+        {
+          "id": 421174,
+          "daily_installs": 0,
+          "total_installs": 597,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-04T03:29:49.000Z",
+          "code_updated_at": "2021-02-04T05:44:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Watch TV With You",
+          "description": "用于同步H5 video标签的暂停、播放、拖拽进度条的事件，可以让多人同步进度条，一直看视频，脚本目前测试了腾讯视频、哔哩哔哩、YouTube三个平台，理论上其他平台也支持，可自行修改脚本中的@match标签。后台基于websocket协议提供服务，后台源码地址：https://github.com/baofeidyz/wtwu。作者不提供后台服务。",
+          "url": "https://greasyfork.org/scripts/421174-watch-tv-with-you",
+          "code_url": "https://update.greasyfork.org/scripts/421174/Watch%20TV%20With%20You.user.js",
+          "code_size": 3632,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Watch TV With You",
+  "description": "用于同步H5 video标签的暂停、播放、拖拽进度条的事件，可以让多人同步进度条，一直看视频，脚本目前测试了腾讯视频、哔哩哔哩、YouTube三个平台，理论上其他平台也支持，可自行修改脚本中的@match标签。后台基于websocket协议提供服务，后台源码地址：https://github.com/baofeidyz/wtwu。作者不提供后台服务。",
+  "url": "https://greasyfork.org/scripts/421174-watch-tv-with-you",
+  "code_url": "https://update.greasyfork.org/scripts/421174/Watch%20TV%20With%20You.user.js",
+  "code_size": 3632,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

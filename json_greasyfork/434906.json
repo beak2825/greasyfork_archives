@@ -1,0 +1,34 @@
+{
+  "id": 434906,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-03T04:13:34.000Z",
+  "code_updated_at": "2021-11-03T18:18:59.000Z",
+  "namespace": "Lost",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 831534,
+      "name": "Tyler Arens",
+      "created_at": "2021-11-03T04:08:03.000Z",
+      "url": "https://greasyfork.org/users/831534-tyler-arens",
+      "scripts": []
+    }
+  ],
+  "name": "D2JSP D2R Softcore ISO Refresher",
+  "description": "Reloads D2JSP D2R Softcore ISO every 10 seconds",
+  "url": "https://greasyfork.org/scripts/434906-d2jsp-d2r-softcore-iso-refresher",
+  "code_url": "https://update.greasyfork.org/scripts/434906/D2JSP%20D2R%20Softcore%20ISO%20Refresher.user.js",
+  "code_size": 2239,
+  "license": null,
+  "version": "2.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

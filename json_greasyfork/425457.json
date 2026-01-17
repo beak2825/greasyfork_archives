@@ -1,0 +1,33 @@
+{
+  "id": 425457,
+  "daily_installs": 0,
+  "total_installs": 502,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-23T18:30:24.000Z",
+  "code_updated_at": "2021-11-11T03:29:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 754006,
+      "name": "antoine-carpentier",
+      "created_at": "2021-04-02T05:21:02.000Z",
+      "url": "https://greasyfork.org/users/754006-antoine-carpentier"
+    }
+  ],
+  "name": "Melvor DungeonTimer",
+  "description": "Displays different statistics relating to dungeon completion (Completion count since the script has been installed,previous time, best time, average time)",
+  "url": "https://greasyfork.org/scripts/425457-melvor-dungeontimer",
+  "code_url": "https://update.greasyfork.org/scripts/425457/Melvor%20DungeonTimer.user.js",
+  "code_size": 32205,
+  "license": null,
+  "version": "1.0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

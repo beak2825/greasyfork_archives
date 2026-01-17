@@ -64,5 +64,104 @@
     "locale": "es",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 490482,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-21T17:19:50.000Z",
+    "code_updated_at": "2024-03-21T17:19:49.000Z",
+    "namespace": "Ajustar ataque",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1270250,
+        "name": "greposcript",
+        "created_at": "2024-03-04T15:21:18.000Z",
+        "url": "https://greasyfork.org/users/1270250-greposcript"
+      }
+    ],
+    "name": "Ajustar ataque",
+    "description": "Versión alternativa de ajustar ataques",
+    "url": "https://greasyfork.org/scripts/490482-ajustar-ataque",
+    "code_url": "https://update.greasyfork.org/scripts/490482/Ajustar%20ataque.user.js",
+    "code_size": 25147,
+    "license": null,
+    "version": "0.2.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488987,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-04T15:27:02.000Z",
+    "code_updated_at": "2024-03-04T15:27:02.000Z",
+    "namespace": "https://greasyfork.org/users/1270250",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1270250,
+        "name": "greposcript",
+        "created_at": "2024-03-04T15:21:18.000Z",
+        "url": "https://greasyfork.org/users/1270250-greposcript"
+      }
+    ],
+    "name": "Ajustar Ataque con Heroe - MODIFICADO.",
+    "description": "Ajustar Ataque con Heroe - MODIFICADO..",
+    "url": "https://greasyfork.org/scripts/488987-ajustar-ataque-con-heroe-modificado",
+    "code_url": "https://update.greasyfork.org/scripts/488987/Ajustar%20Ataque%20con%20Heroe%20-%20MODIFICADO.user.js",
+    "code_size": 19674,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 488986,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-04T15:26:11.000Z",
+    "code_updated_at": "2024-03-04T15:26:11.000Z",
+    "namespace": "https://greasyfork.org/users/1270250",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1270250,
+        "name": "greposcript",
+        "created_at": "2024-03-04T15:21:18.000Z",
+        "url": "https://greasyfork.org/users/1270250-greposcript"
+      }
+    ],
+    "name": "Ajustar Ataque con Heroe - MODIFICADO",
+    "description": "Ajustar Ataque con Heroe - MODIFICADO.",
+    "url": "https://greasyfork.org/scripts/488986-ajustar-ataque-con-heroe-modificado",
+    "code_url": "https://update.greasyfork.org/scripts/488986/Ajustar%20Ataque%20con%20Heroe%20-%20MODIFICADO.user.js",
+    "code_size": 24679,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
   }
 ]

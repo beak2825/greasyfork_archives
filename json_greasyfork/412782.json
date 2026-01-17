@@ -1,0 +1,59 @@
+{
+  "id": 412782,
+  "daily_installs": 0,
+  "total_installs": 2064,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-10T05:58:02.000Z",
+  "code_updated_at": "2021-09-17T10:40:23.000Z",
+  "namespace": "ZhihuVideoFucker",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 693787,
+      "name": "nu11ptr",
+      "created_at": "2020-10-10T04:58:53.000Z",
+      "url": "https://greasyfork.org/users/693787-nu11ptr",
+      "scripts": [
+        {
+          "id": 412782,
+          "daily_installs": 0,
+          "total_installs": 2064,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-10T05:58:02.000Z",
+          "code_updated_at": "2021-09-17T10:40:23.000Z",
+          "namespace": "ZhihuVideoFucker",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "知乎去视频",
+          "description": "去掉知乎的营销视频",
+          "url": "https://greasyfork.org/scripts/412782-%E7%9F%A5%E4%B9%8E%E5%8E%BB%E8%A7%86%E9%A2%91",
+          "code_url": "https://update.greasyfork.org/scripts/412782/%E7%9F%A5%E4%B9%8E%E5%8E%BB%E8%A7%86%E9%A2%91.user.js",
+          "code_size": 631,
+          "license": null,
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "知乎去视频",
+  "description": "去掉知乎的营销视频",
+  "url": "https://greasyfork.org/scripts/412782-%E7%9F%A5%E4%B9%8E%E5%8E%BB%E8%A7%86%E9%A2%91",
+  "code_url": "https://update.greasyfork.org/scripts/412782/%E7%9F%A5%E4%B9%8E%E5%8E%BB%E8%A7%86%E9%A2%91.user.js",
+  "code_size": 631,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418691,
+    "daily_installs": 0,
+    "total_installs": 851,
+    "fan_score": "64.6",
+    "good_ratings": 7,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-16T06:54:39.000Z",
+    "code_updated_at": "2021-03-17T00:41:40.000Z",
+    "namespace": "https://greasyfork.org/en/users/716928-grepreia",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 717318,
+        "name": "grepreic",
+        "created_at": "2020-12-16T06:50:18.000Z",
+        "url": "https://greasyfork.org/users/717318-grepreic"
+      }
+    ],
+    "name": "nonstop：去除手动跳转",
+    "description": "Nonstop是用于无感跳转到知乎，微博，简书，QQ 邮箱等无法直接跳转的外链，免去手动跳转的烦恼。",
+    "url": "https://greasyfork.org/scripts/418691-nonstop-%E5%8E%BB%E9%99%A4%E6%89%8B%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/418691/nonstop%EF%BC%9A%E5%8E%BB%E9%99%A4%E6%89%8B%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 2250,
+    "license": null,
+    "version": "0.1.41",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463586,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-09T07:10:04.000Z",
+    "code_updated_at": "2023-04-09T07:10:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1056664,
+        "name": "Simon Zöllner",
+        "created_at": "2023-04-09T07:07:47.000Z",
+        "url": "https://greasyfork.org/users/1056664-simon-z%C3%B6llner"
+      }
+    ],
+    "name": "VisBOS - Checkbox für Lieferscheine automatisch aktivieren",
+    "description": "Checkbox für Lieferscheine automatisch aktivieren",
+    "url": "https://greasyfork.org/scripts/463586-visbos-checkbox-f%C3%BCr-lieferscheine-automatisch-aktivieren",
+    "code_url": "https://update.greasyfork.org/scripts/463586/VisBOS%20-%20Checkbox%20f%C3%BCr%20Lieferscheine%20automatisch%20aktivieren.user.js",
+    "code_size": 585,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

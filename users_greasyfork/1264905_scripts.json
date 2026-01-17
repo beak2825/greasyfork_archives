@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487940,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-21T13:38:25.000Z",
+    "code_updated_at": "2024-02-21T13:38:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264905,
+        "name": "ghameus Enrique",
+        "created_at": "2024-02-21T13:35:23.000Z",
+        "url": "https://greasyfork.org/users/1264905-ghameus-enrique"
+      }
+    ],
+    "name": "在网页上记笔记",
+    "description": "浅浅记一下笔记。",
+    "url": "https://greasyfork.org/scripts/487940-%E5%9C%A8%E7%BD%91%E9%A1%B5%E4%B8%8A%E8%AE%B0%E7%AC%94%E8%AE%B0",
+    "code_url": "https://update.greasyfork.org/scripts/487940/%E5%9C%A8%E7%BD%91%E9%A1%B5%E4%B8%8A%E8%AE%B0%E7%AC%94%E8%AE%B0.user.js",
+    "code_size": 4398,
+    "license": "MIT License",
+    "version": "2024-02-16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

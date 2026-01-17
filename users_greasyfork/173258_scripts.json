@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461094,
+    "daily_installs": 0,
+    "total_installs": 330,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-03T09:08:27.000Z",
+    "code_updated_at": "2023-03-03T09:23:42.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 173258,
+        "name": "酷羊CoolSheep",
+        "created_at": "2018-03-04T02:55:08.000Z",
+        "url": "https://greasyfork.org/users/173258-%E9%85%B7%E7%BE%8Acoolsheep"
+      }
+    ],
+    "name": "百度NTR - By ChatGPT",
+    "description": "将百度首页的 Logo、icon 和 tab 标题都更换为 Google 搜索引擎的 Logo、icon 和相应文字，并将搜索结果页重定向为 Google 搜索结果页，同时修改搜索行为为Google的结果页",
+    "url": "https://greasyfork.org/scripts/461094-%E7%99%BE%E5%BA%A6ntr-by-chatgpt",
+    "code_url": "https://update.greasyfork.org/scripts/461094/%E7%99%BE%E5%BA%A6NTR%20-%20By%20ChatGPT.user.js",
+    "code_size": 3048,
+    "license": "license type",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

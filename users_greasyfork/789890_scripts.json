@@ -1,0 +1,35 @@
+[
+  {
+    "id": 430513,
+    "daily_installs": 0,
+    "total_installs": 2319,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-08T17:20:23.000Z",
+    "code_updated_at": "2021-08-08T17:20:22.000Z",
+    "namespace": "None.",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 789890,
+        "name": "Kweibjdsngrb",
+        "created_at": "2021-07-03T09:18:32.000Z",
+        "url": "https://greasyfork.org/users/789890-kweibjdsngrb"
+      }
+    ],
+    "name": "Moomoo.io ItzF1ker1 editon",
+    "description": "I'm trying to make dis. xd",
+    "url": "https://greasyfork.org/scripts/430513-moomoo-io-itzf1ker1-editon",
+    "code_url": "https://update.greasyfork.org/scripts/430513/Moomooio%20ItzF1ker1%20editon.user.js",
+    "code_size": 8290,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

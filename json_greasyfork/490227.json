@@ -1,0 +1,59 @@
+{
+  "id": 490227,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-19T01:39:28.000Z",
+  "code_updated_at": "2024-03-19T12:22:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1276354,
+      "name": "Wawiwu",
+      "created_at": "2024-03-19T01:33:55.000Z",
+      "url": "https://greasyfork.org/users/1276354-wawiwu",
+      "scripts": [
+        {
+          "id": 490227,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-19T01:39:28.000Z",
+          "code_updated_at": "2024-03-19T12:22:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tiket.com War Ticket",
+          "description": "Untuk War Ticket!",
+          "url": "https://greasyfork.org/scripts/490227-tiket-com-war-ticket",
+          "code_url": "https://update.greasyfork.org/scripts/490227/Tiketcom%20War%20Ticket.user.js",
+          "code_size": 3696,
+          "license": "MIT License",
+          "version": "0.1.61",
+          "locale": "id",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Tiket.com War Ticket",
+  "description": "Untuk War Ticket!",
+  "url": "https://greasyfork.org/scripts/490227-tiket-com-war-ticket",
+  "code_url": "https://update.greasyfork.org/scripts/490227/Tiketcom%20War%20Ticket.user.js",
+  "code_size": 3696,
+  "license": "MIT License",
+  "version": "0.1.61",
+  "locale": "id",
+  "deleted": false,
+  "visibility": "public"
+}

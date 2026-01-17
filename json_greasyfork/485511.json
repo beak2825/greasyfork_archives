@@ -1,0 +1,59 @@
+{
+  "id": 485511,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-23T16:40:51.000Z",
+  "code_updated_at": "2024-01-23T16:40:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1252263,
+      "name": "Bigmarmote",
+      "created_at": "2024-01-23T16:37:02.000Z",
+      "url": "https://greasyfork.org/users/1252263-bigmarmote",
+      "scripts": [
+        {
+          "id": 485511,
+          "daily_installs": 0,
+          "total_installs": 22,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-23T16:40:51.000Z",
+          "code_updated_at": "2024-01-23T16:40:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Delete youtube short category",
+          "description": "Retirer la catégorie youtube short désagréable",
+          "url": "https://greasyfork.org/scripts/485511-delete-youtube-short-category",
+          "code_url": "https://update.greasyfork.org/scripts/485511/Delete%20youtube%20short%20category.user.js",
+          "code_size": 623,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Delete youtube short category",
+  "description": "Retirer la catégorie youtube short désagréable",
+  "url": "https://greasyfork.org/scripts/485511-delete-youtube-short-category",
+  "code_url": "https://update.greasyfork.org/scripts/485511/Delete%20youtube%20short%20category.user.js",
+  "code_size": 623,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

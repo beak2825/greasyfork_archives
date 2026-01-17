@@ -1,0 +1,59 @@
+{
+  "id": 452974,
+  "daily_installs": 0,
+  "total_installs": 54,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-13T08:43:24.000Z",
+  "code_updated_at": "2022-10-14T04:06:26.000Z",
+  "namespace": "https://github.com/BloodKirin/baidu-image-search-show-image-dimensions-userscript",
+  "support_url": "https://github.com/BloodKirin/baidu-image-search-show-image-dimensions-userscript/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 970094,
+      "name": "BloodKirin",
+      "created_at": "2022-10-13T08:42:02.000Z",
+      "url": "https://greasyfork.org/users/970094-bloodkirin",
+      "scripts": [
+        {
+          "id": 452974,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-13T08:43:24.000Z",
+          "code_updated_at": "2022-10-14T04:06:26.000Z",
+          "namespace": "https://github.com/BloodKirin/baidu-image-search-show-image-dimensions-userscript",
+          "support_url": "https://github.com/BloodKirin/baidu-image-search-show-image-dimensions-userscript/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "百度图片搜索 - 显示图片尺寸",
+          "description": "显示百度图片搜索缩略图的图片尺寸 (例如: \"1920 × 1080\").",
+          "url": "https://greasyfork.org/scripts/452974-%E7%99%BE%E5%BA%A6%E5%9B%BE%E7%89%87%E6%90%9C%E7%B4%A2-%E6%98%BE%E7%A4%BA%E5%9B%BE%E7%89%87%E5%B0%BA%E5%AF%B8",
+          "code_url": "https://update.greasyfork.org/scripts/452974/%E7%99%BE%E5%BA%A6%E5%9B%BE%E7%89%87%E6%90%9C%E7%B4%A2%20-%20%E6%98%BE%E7%A4%BA%E5%9B%BE%E7%89%87%E5%B0%BA%E5%AF%B8.user.js",
+          "code_size": 3287,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "百度图片搜索 - 显示图片尺寸",
+  "description": "显示百度图片搜索缩略图的图片尺寸 (例如: \"1920 × 1080\").",
+  "url": "https://greasyfork.org/scripts/452974-%E7%99%BE%E5%BA%A6%E5%9B%BE%E7%89%87%E6%90%9C%E7%B4%A2-%E6%98%BE%E7%A4%BA%E5%9B%BE%E7%89%87%E5%B0%BA%E5%AF%B8",
+  "code_url": "https://update.greasyfork.org/scripts/452974/%E7%99%BE%E5%BA%A6%E5%9B%BE%E7%89%87%E6%90%9C%E7%B4%A2%20-%20%E6%98%BE%E7%A4%BA%E5%9B%BE%E7%89%87%E5%B0%BA%E5%AF%B8.user.js",
+  "code_size": 3287,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

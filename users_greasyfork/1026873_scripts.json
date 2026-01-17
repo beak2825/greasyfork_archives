@@ -1,0 +1,68 @@
+[
+  {
+    "id": 460339,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-20T01:45:34.000Z",
+    "code_updated_at": "2023-02-22T01:22:29.000Z",
+    "namespace": "代刷课程",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1026873,
+        "name": "MKJZY",
+        "created_at": "2023-02-14T07:09:12.000Z",
+        "url": "https://greasyfork.org/users/1026873-mkjzy"
+      }
+    ],
+    "name": "大连会计继续教育 0.6 Beta",
+    "description": "加微信发测试视频",
+    "url": "https://greasyfork.org/scripts/460339-%E5%A4%A7%E8%BF%9E%E4%BC%9A%E8%AE%A1%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-0-6-beta",
+    "code_url": "https://update.greasyfork.org/scripts/460339/%E5%A4%A7%E8%BF%9E%E4%BC%9A%E8%AE%A1%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%2006%20Beta.user.js",
+    "code_size": 2444,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460338,
+    "daily_installs": 0,
+    "total_installs": 1001,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-20T01:44:31.000Z",
+    "code_updated_at": "2023-11-03T01:49:19.000Z",
+    "namespace": "代刷课程",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1026873,
+        "name": "MKJZY",
+        "created_at": "2023-02-14T07:09:12.000Z",
+        "url": "https://greasyfork.org/users/1026873-mkjzy"
+      }
+    ],
+    "name": "辽宁省干部在线学习网-专业技术专区专用",
+    "description": "专业技术只能自然时长挂课时，其他专区均可刷课时",
+    "url": "https://greasyfork.org/scripts/460338-%E8%BE%BD%E5%AE%81%E7%9C%81%E5%B9%B2%E9%83%A8%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0%E7%BD%91-%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%B8%93%E5%8C%BA%E4%B8%93%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/460338/%E8%BE%BD%E5%AE%81%E7%9C%81%E5%B9%B2%E9%83%A8%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0%E7%BD%91-%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%B8%93%E5%8C%BA%E4%B8%93%E7%94%A8.user.js",
+    "code_size": 2637,
+    "license": null,
+    "version": "1.06",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

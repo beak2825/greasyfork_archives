@@ -1,0 +1,59 @@
+{
+  "id": 490163,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-18T07:09:58.000Z",
+  "code_updated_at": "2025-04-17T02:24:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 105809,
+      "name": "heisroja@gmail.com",
+      "created_at": "2017-02-26T11:22:51.000Z",
+      "url": "https://greasyfork.org/users/105809-heisroja-gmail-com",
+      "scripts": [
+        {
+          "id": 490163,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-18T07:09:58.000Z",
+          "code_updated_at": "2025-04-17T02:24:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ES自定义解析",
+          "description": "使用自定义的结构解析ES查询结果 使查询结果易于解读",
+          "url": "https://greasyfork.org/scripts/490163-es%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A7%A3%E6%9E%90",
+          "code_url": "https://update.greasyfork.org/scripts/490163/ES%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A7%A3%E6%9E%90.user.js",
+          "code_size": 13649,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "20250417001",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ES自定义解析",
+  "description": "使用自定义的结构解析ES查询结果 使查询结果易于解读",
+  "url": "https://greasyfork.org/scripts/490163-es%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/490163/ES%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 13649,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "20250417001",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

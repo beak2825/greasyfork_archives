@@ -1,0 +1,33 @@
+{
+  "id": 456276,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-08T14:45:07.000Z",
+  "code_updated_at": "2022-12-28T22:48:00.000Z",
+  "namespace": "userscript1",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 709060,
+      "name": "userscript1",
+      "created_at": "2020-11-26T00:25:05.000Z",
+      "url": "https://greasyfork.org/users/709060-userscript1"
+    }
+  ],
+  "name": "BC: Title Case tracks",
+  "description": "change ALL CAPS TRACKS to Title Case",
+  "url": "https://greasyfork.org/scripts/456276-bc-title-case-tracks",
+  "code_url": "https://update.greasyfork.org/scripts/456276/BC%3A%20Title%20Case%20tracks.user.js",
+  "code_size": 569,
+  "license": "GPLv3",
+  "version": "0.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491216,
+    "daily_installs": 0,
+    "total_installs": 100,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-30T02:10:36.000Z",
+    "code_updated_at": "2024-03-30T02:26:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1281385,
+        "name": "Henrique Snowing",
+        "created_at": "2024-03-30T02:07:31.000Z",
+        "url": "https://greasyfork.org/users/1281385-henrique-snowing"
+      }
+    ],
+    "name": "Animeszone ANTI-AD-DIV",
+    "description": "Tira a div que aparece quando vc usa adblock",
+    "url": "https://greasyfork.org/scripts/491216-animeszone-anti-ad-div",
+    "code_url": "https://update.greasyfork.org/scripts/491216/Animeszone%20ANTI-AD-DIV.user.js",
+    "code_size": 709,
+    "license": null,
+    "version": "24.69.1v",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

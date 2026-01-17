@@ -1,0 +1,35 @@
+[
+  {
+    "id": 425346,
+    "daily_installs": 0,
+    "total_installs": 102,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-21T16:25:01.000Z",
+    "code_updated_at": "2021-11-20T14:39:54.000Z",
+    "namespace": "https://pixiv.me/ashgale",
+    "support_url": "https://github.com/GaleOfAshes/pixiv-bettertagger/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 763110,
+        "name": "GaleOfAshes",
+        "created_at": "2021-04-21T16:22:59.000Z",
+        "url": "https://greasyfork.org/users/763110-galeofashes"
+      }
+    ],
+    "name": "Pixiv BetterTagger",
+    "description": "Use the search API to allow english tags to be used",
+    "url": "https://greasyfork.org/scripts/425346-pixiv-bettertagger",
+    "code_url": "https://update.greasyfork.org/scripts/425346/Pixiv%20BetterTagger.user.js",
+    "code_size": 3422,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

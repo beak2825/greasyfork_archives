@@ -1,0 +1,34 @@
+{
+  "id": 494290,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-07T07:48:28.000Z",
+  "code_updated_at": "2025-03-07T13:47:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "ATP ITP JSON",
+  "description": "Skript zobrazující statistiky z ITP API nebo Hawkeye API s automatickou aktualizací",
+  "url": "https://greasyfork.org/scripts/494290-atp-itp-json",
+  "code_url": "https://update.greasyfork.org/scripts/494290/ATP%20ITP%20JSON.user.js",
+  "code_size": 53568,
+  "license": "none",
+  "version": "3.9",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

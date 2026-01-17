@@ -361,5 +361,203 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 494012,
+    "daily_installs": 0,
+    "total_installs": 349,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-03T06:09:15.000Z",
+    "code_updated_at": "2024-05-03T08:49:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097076,
+        "name": "nihaoshijie999",
+        "created_at": "2023-06-12T10:20:31.000Z",
+        "url": "https://greasyfork.org/users/1097076-nihaoshijie999"
+      }
+    ],
+    "name": "知乎评论展开",
+    "description": "滚动到底部若干次，然后模拟点击展开所有评论，供singlefile保存用",
+    "url": "https://greasyfork.org/scripts/494012-%E7%9F%A5%E4%B9%8E%E8%AF%84%E8%AE%BA%E5%B1%95%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/494012/%E7%9F%A5%E4%B9%8E%E8%AF%84%E8%AE%BA%E5%B1%95%E5%BC%80.user.js",
+    "code_size": 1394,
+    "license": "GPL-3.0 License",
+    "version": "2024-05-032",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491785,
+    "daily_installs": 1,
+    "total_installs": 140,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-06T09:48:13.000Z",
+    "code_updated_at": "2024-04-06T09:55:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097076,
+        "name": "nihaoshijie999",
+        "created_at": "2023-06-12T10:20:31.000Z",
+        "url": "https://greasyfork.org/users/1097076-nihaoshijie999"
+      }
+    ],
+    "name": "保存fetch和xhr",
+    "description": "自动保存/备份 fetch/xhr/ajax请求响应的脚本，导出为json文件，可以用于多种用途，比如说自动保存浏览过的b站视频评论、收藏夹、知乎回答、知乎评论、知乎收藏、小红书评论、百度网盘文件列表等等。初始目的为弥补https://archive.org/无法保存动态加载的网页的问题。而且f12 network export har无法仅保存某些请求，且步骤比较繁琐，无法自动。",
+    "url": "https://greasyfork.org/scripts/491785-%E4%BF%9D%E5%AD%98fetch%E5%92%8Cxhr",
+    "code_url": "https://update.greasyfork.org/scripts/491785/%E4%BF%9D%E5%AD%98fetch%E5%92%8Cxhr.user.js",
+    "code_size": 4898,
+    "license": "LGPLv3",
+    "version": "2024-04-08",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 489474,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-10T12:28:26.000Z",
+    "code_updated_at": "2024-03-10T12:32:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097076,
+        "name": "nihaoshijie999",
+        "created_at": "2023-06-12T10:20:31.000Z",
+        "url": "https://greasyfork.org/users/1097076-nihaoshijie999"
+      }
+    ],
+    "name": "StackOverflow code标签替换",
+    "description": "替换<code>为<strong>，使chrome的翻译拆分效果更好。否则code会截断一整个句子的翻译。",
+    "url": "https://greasyfork.org/scripts/489474-stackoverflow-code%E6%A0%87%E7%AD%BE%E6%9B%BF%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/489474/StackOverflow%20code%E6%A0%87%E7%AD%BE%E6%9B%BF%E6%8D%A2.user.js",
+    "code_size": 2375,
+    "license": "LGPLv3",
+    "version": "2024-03-101",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 487456,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-16T13:23:12.000Z",
+    "code_updated_at": "2024-03-14T06:52:42.000Z",
+    "namespace": "https://greasyfork.org/users/1097076",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097076,
+        "name": "nihaoshijie999",
+        "created_at": "2023-06-12T10:20:31.000Z",
+        "url": "https://greasyfork.org/users/1097076-nihaoshijie999"
+      }
+    ],
+    "name": "博客园编辑页面添加目录跳转",
+    "description": "博客园编辑页面左上角添加指向所有h1标题的跳转链接目录，以免文章太长滚动麻烦",
+    "url": "https://greasyfork.org/scripts/487456-%E5%8D%9A%E5%AE%A2%E5%9B%AD%E7%BC%96%E8%BE%91%E9%A1%B5%E9%9D%A2%E6%B7%BB%E5%8A%A0%E7%9B%AE%E5%BD%95%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/487456/%E5%8D%9A%E5%AE%A2%E5%9B%AD%E7%BC%96%E8%BE%91%E9%A1%B5%E9%9D%A2%E6%B7%BB%E5%8A%A0%E7%9B%AE%E5%BD%95%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 1991,
+    "license": "LGPLv3",
+    "version": "2024-03-14",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 471767,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-26T14:26:59.000Z",
+    "code_updated_at": "2023-07-27T12:54:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097076,
+        "name": "nihaoshijie999",
+        "created_at": "2023-06-12T10:20:31.000Z",
+        "url": "https://greasyfork.org/users/1097076-nihaoshijie999"
+      }
+    ],
+    "name": "查找简体字中的繁体字（或繁体字中的简体字）",
+    "description": "查找简体字中的繁体字（或繁体字中的简体字），我找了很久，都是繁体简体之间的转换，却没有一个是“查找”，没法找到哪个字是繁体，所以依托https://s2t.buyaocha.com/这个网站写了个小脚本",
+    "url": "https://greasyfork.org/scripts/471767-%E6%9F%A5%E6%89%BE%E7%AE%80%E4%BD%93%E5%AD%97%E4%B8%AD%E7%9A%84%E7%B9%81%E4%BD%93%E5%AD%97-%E6%88%96%E7%B9%81%E4%BD%93%E5%AD%97%E4%B8%AD%E7%9A%84%E7%AE%80%E4%BD%93%E5%AD%97",
+    "code_url": "https://update.greasyfork.org/scripts/471767/%E6%9F%A5%E6%89%BE%E7%AE%80%E4%BD%93%E5%AD%97%E4%B8%AD%E7%9A%84%E7%B9%81%E4%BD%93%E5%AD%97%EF%BC%88%E6%88%96%E7%B9%81%E4%BD%93%E5%AD%97%E4%B8%AD%E7%9A%84%E7%AE%80%E4%BD%93%E5%AD%97%EF%BC%89.user.js",
+    "code_size": 1247,
+    "license": "GPL-3.0 License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 468500,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-12T10:33:52.000Z",
+    "code_updated_at": "2024-05-13T04:18:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097076,
+        "name": "nihaoshijie999",
+        "created_at": "2023-06-12T10:20:31.000Z",
+        "url": "https://greasyfork.org/users/1097076-nihaoshijie999"
+      }
+    ],
+    "name": "删除标点",
+    "description": "截天神器删除标点+繁体字转简体字",
+    "url": "https://greasyfork.org/scripts/468500-%E5%88%A0%E9%99%A4%E6%A0%87%E7%82%B9",
+    "code_url": "https://update.greasyfork.org/scripts/468500/%E5%88%A0%E9%99%A4%E6%A0%87%E7%82%B9.user.js",
+    "code_size": 1852,
+    "license": "GPL-3.0 License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

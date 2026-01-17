@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448803,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-02T13:19:08.000Z",
+    "code_updated_at": "2022-08-02T15:24:34.000Z",
+    "namespace": "leawind",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942393,
+        "name": "LEAWIND",
+        "created_at": "2022-08-02T13:05:16.000Z",
+        "url": "https://greasyfork.org/users/942393-leawind"
+      }
+    ],
+    "name": "BingSearchHelper",
+    "description": "Automatically add options when searching by bing",
+    "url": "https://greasyfork.org/scripts/448803-bingsearchhelper",
+    "code_url": "https://update.greasyfork.org/scripts/448803/BingSearchHelper.user.js",
+    "code_size": 9365,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 488890,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-03T14:01:57.000Z",
+    "code_updated_at": "2024-03-04T11:06:03.000Z",
+    "namespace": "http://blog.3gxk.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 145831,
+        "name": "Curtion",
+        "created_at": "2017-08-02T07:05:04.000Z",
+        "url": "https://greasyfork.org/users/145831-curtion"
+      }
+    ],
+    "name": "隐藏B站AI总结浮窗",
+    "description": "在B站上，鼠标放在视频上时会显示一个AI总结浮窗，但是它会遮挡一些东西，该插件可隐藏该浮窗",
+    "url": "https://greasyfork.org/scripts/488890-%E9%9A%90%E8%97%8Fb%E7%AB%99ai%E6%80%BB%E7%BB%93%E6%B5%AE%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/488890/%E9%9A%90%E8%97%8FB%E7%AB%99AI%E6%80%BB%E7%BB%93%E6%B5%AE%E7%AA%97.user.js",
+    "code_size": 587,
+    "license": "MIT License",
+    "version": "2024-03-04",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

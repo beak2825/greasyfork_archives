@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462026,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-17T13:12:06.000Z",
+    "code_updated_at": "2023-03-17T13:56:40.000Z",
+    "namespace": "https://greasyfork.org/en/users/971770",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 971770,
+        "name": "Joan Doan",
+        "created_at": "2022-10-17T03:07:05.000Z",
+        "url": "https://greasyfork.org/users/971770-joan-doan"
+      }
+    ],
+    "name": "ChatGPT Const to Var switch for Javascript snippets",
+    "description": "ChatGPT always makes const variables in JavaScript snippets, and sometimes refuses to change it. This script solves the problem.",
+    "url": "https://greasyfork.org/scripts/462026-chatgpt-const-to-var-switch-for-javascript-snippets",
+    "code_url": "https://update.greasyfork.org/scripts/462026/ChatGPT%20Const%20to%20Var%20switch%20for%20Javascript%20snippets.user.js",
+    "code_size": 4488,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 481497,
+  "daily_installs": 0,
+  "total_installs": 202,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-06T04:58:04.000Z",
+  "code_updated_at": "2024-11-04T12:40:43.000Z",
+  "namespace": "自动看PPT，1模式版本，全新版本，新的检测机制，操作逻辑！",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1210658,
+      "name": "zuoteamleader",
+      "created_at": "2023-11-04T12:18:57.000Z",
+      "url": "https://greasyfork.org/users/1210658-zuoteamleader"
+    }
+  ],
+  "name": "雨课堂-自动看PPT-Pro",
+  "description": "支持【雨课堂】自动看PPT，1模式版本，全新版本，新的检测机制，操作逻辑！“祝福”偷代码不声明作者的**！！！",
+  "url": "https://greasyfork.org/scripts/481497-%E9%9B%A8%E8%AF%BE%E5%A0%82-%E8%87%AA%E5%8A%A8%E7%9C%8Bppt-pro",
+  "code_url": "https://update.greasyfork.org/scripts/481497/%E9%9B%A8%E8%AF%BE%E5%A0%82-%E8%87%AA%E5%8A%A8%E7%9C%8BPPT-Pro.user.js",
+  "code_size": 8743,
+  "license": "CC BY-NC-SA 4.0",
+  "version": "8.8.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

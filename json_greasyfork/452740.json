@@ -1,0 +1,33 @@
+{
+  "id": 452740,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-09T13:08:26.000Z",
+  "code_updated_at": "2022-10-09T13:08:26.000Z",
+  "namespace": "AntiPushByKKosty4kaGGGQfds5HDI65GIYQEG",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 968383,
+      "name": "KKosty4ka",
+      "created_at": "2022-10-09T13:04:47.000Z",
+      "url": "https://greasyfork.org/users/968383-kkosty4ka"
+    }
+  ],
+  "name": "Anti-Push",
+  "description": "push notifications should be removed from existance",
+  "url": "https://greasyfork.org/scripts/452740-anti-push",
+  "code_url": "https://update.greasyfork.org/scripts/452740/Anti-Push.user.js",
+  "code_size": 501,
+  "license": "GNU GPLv3",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

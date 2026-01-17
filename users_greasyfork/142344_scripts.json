@@ -97,5 +97,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 479066,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-05T06:24:44.000Z",
+    "code_updated_at": "2025-05-23T01:26:07.000Z",
+    "namespace": "https://greasyfork.org/zh-TW/users/142344-jasn-hr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 142344,
+        "name": "Jasn Hr",
+        "created_at": "2017-07-20T15:31:05.000Z",
+        "url": "https://greasyfork.org/users/142344-jasn-hr"
+      }
+    ],
+    "name": "巴哈姆特動畫瘋[Shift]+[→]跳過1m30s",
+    "description": "巴哈姆特動畫瘋按下快捷鍵[Shift]+[→]跳過1分30秒",
+    "url": "https://greasyfork.org/scripts/479066-%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E5%8B%95%E7%95%AB%E7%98%8B-shift-%E8%B7%B3%E9%81%8E1m30s",
+    "code_url": "https://update.greasyfork.org/scripts/479066/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E5%8B%95%E7%95%AB%E7%98%8B%5BShift%5D%2B%5B%E2%86%92%5D%E8%B7%B3%E9%81%8E1m30s.user.js",
+    "code_size": 4398,
+    "license": "GPL3",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 447375,
+    "daily_installs": 0,
+    "total_installs": 68,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-03T06:36:19.000Z",
+    "code_updated_at": "2023-10-31T13:06:11.000Z",
+    "namespace": "https://greasyfork.org/zh-TW/users/142344-jasn-hr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 142344,
+        "name": "Jasn Hr",
+        "created_at": "2017-07-20T15:31:05.000Z",
+        "url": "https://greasyfork.org/users/142344-jasn-hr"
+      }
+    ],
+    "name": "Discord Auto remove mention when reply",
+    "description": "Discord Auto remove mention when reply.",
+    "url": "https://greasyfork.org/scripts/447375-discord-auto-remove-mention-when-reply",
+    "code_url": "https://update.greasyfork.org/scripts/447375/Discord%20Auto%20remove%20mention%20when%20reply.user.js",
+    "code_size": 6996,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438067,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-05T03:23:55.000Z",
+    "code_updated_at": "2025-05-23T01:26:05.000Z",
+    "namespace": "https://greasyfork.org/zh-TW/users/142344-jasn-hr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 142344,
+        "name": "Jasn Hr",
+        "created_at": "2017-07-20T15:31:05.000Z",
+        "url": "https://greasyfork.org/users/142344-jasn-hr"
+      }
+    ],
+    "name": "SCP Artwork Hub Move Mouse To Show Image",
+    "description": "SCP Artwork Hub Move Mouse To Show Image.",
+    "url": "https://greasyfork.org/scripts/438067-scp-artwork-hub-move-mouse-to-show-image",
+    "code_url": "https://update.greasyfork.org/scripts/438067/SCP%20Artwork%20Hub%20Move%20Mouse%20To%20Show%20Image.user.js",
+    "code_size": 5216,
+    "license": "GPL3",
+    "version": "1.3.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438065,
+    "daily_installs": 0,
+    "total_installs": 134,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-05T03:09:22.000Z",
+    "code_updated_at": "2025-05-23T01:26:06.000Z",
+    "namespace": "https://greasyfork.org/zh-TW/users/142344-jasn-hr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 142344,
+        "name": "Jasn Hr",
+        "created_at": "2017-07-20T15:31:05.000Z",
+        "url": "https://greasyfork.org/users/142344-jasn-hr"
+      }
+    ],
+    "name": "Stackoverflow Add Button For Copy to clipboard",
+    "description": "Stackoverflow add button for copy to clipboard.",
+    "url": "https://greasyfork.org/scripts/438065-stackoverflow-add-button-for-copy-to-clipboard",
+    "code_url": "https://update.greasyfork.org/scripts/438065/Stackoverflow%20Add%20Button%20For%20Copy%20to%20clipboard.user.js",
+    "code_size": 3053,
+    "license": "GPL3",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

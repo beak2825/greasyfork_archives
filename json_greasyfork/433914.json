@@ -1,0 +1,33 @@
+{
+  "id": 433914,
+  "daily_installs": 0,
+  "total_installs": 99,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-15T07:39:48.000Z",
+  "code_updated_at": "2022-09-14T16:45:57.000Z",
+  "namespace": "https://greasyfork.org/users/679182",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 679182,
+      "name": "hjk789",
+      "created_at": "2020-08-18T01:35:52.000Z",
+      "url": "https://greasyfork.org/users/679182-hjk789"
+    }
+  ],
+  "name": "YouTube Similar Comments Hider",
+  "description": "Ensure originality in YouTube's comment section by hiding all sorts of repeated comments, copy-paste comments, repeated quotes from the video and saturated memes.",
+  "url": "https://greasyfork.org/scripts/433914-youtube-similar-comments-hider",
+  "code_url": "https://update.greasyfork.org/scripts/433914/YouTube%20Similar%20Comments%20Hider.user.js",
+  "code_size": 21832,
+  "license": "https://github.com/hjk789/Userscripts/tree/master/YouTube-Similar-Comments-Hider#license",
+  "version": "1.7.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

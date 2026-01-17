@@ -1,0 +1,59 @@
+{
+  "id": 446105,
+  "daily_installs": 0,
+  "total_installs": 310,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-06-06T18:53:29.000Z",
+  "code_updated_at": "2022-06-06T18:53:28.000Z",
+  "namespace": "https://greasyfork.org/users/670183",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 916994,
+      "name": "Urjavascriptwriter",
+      "created_at": "2022-05-21T18:57:51.000Z",
+      "url": "https://greasyfork.org/users/916994-urjavascriptwriter",
+      "scripts": [
+        {
+          "id": 446105,
+          "daily_installs": 0,
+          "total_installs": 310,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2022-06-06T18:53:29.000Z",
+          "code_updated_at": "2022-06-06T18:53:28.000Z",
+          "namespace": "https://greasyfork.org/users/670183",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PP-Client",
+          "description": "Pixel Place Client",
+          "url": "https://greasyfork.org/scripts/446105-pp-client",
+          "code_url": "https://update.greasyfork.org/scripts/446105/PP-Client.user.js",
+          "code_size": 10044,
+          "license": "MIT License",
+          "version": "1.6.2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PP-Client",
+  "description": "Pixel Place Client",
+  "url": "https://greasyfork.org/scripts/446105-pp-client",
+  "code_url": "https://update.greasyfork.org/scripts/446105/PP-Client.user.js",
+  "code_size": 10044,
+  "license": "MIT License",
+  "version": "1.6.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

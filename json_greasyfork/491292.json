@@ -1,0 +1,59 @@
+{
+  "id": 491292,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-31T02:34:07.000Z",
+  "code_updated_at": "2024-04-03T11:08:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1281824,
+      "name": "Hector Luces",
+      "created_at": "2024-03-31T02:31:21.000Z",
+      "url": "https://greasyfork.org/users/1281824-hector-luces",
+      "scripts": [
+        {
+          "id": 491292,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-31T02:34:07.000Z",
+          "code_updated_at": "2024-04-03T11:08:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NAVAUTO",
+          "description": "Navega aleatoriamente por la web",
+          "url": "https://greasyfork.org/scripts/491292-navauto",
+          "code_url": "https://update.greasyfork.org/scripts/491292/NAVAUTO.user.js",
+          "code_size": 4380,
+          "license": "MIT License",
+          "version": "1.8",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NAVAUTO",
+  "description": "Navega aleatoriamente por la web",
+  "url": "https://greasyfork.org/scripts/491292-navauto",
+  "code_url": "https://update.greasyfork.org/scripts/491292/NAVAUTO.user.js",
+  "code_size": 4380,
+  "license": "MIT License",
+  "version": "1.8",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

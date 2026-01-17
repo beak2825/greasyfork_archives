@@ -1,0 +1,33 @@
+{
+  "id": 457491,
+  "daily_installs": 0,
+  "total_installs": 3197,
+  "fan_score": "7.3",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 3,
+  "created_at": "2023-01-02T10:24:29.000Z",
+  "code_updated_at": "2023-01-02T10:24:29.000Z",
+  "namespace": "-",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1005759,
+      "name": "鄭豪睿",
+      "created_at": "2023-01-02T10:15:50.000Z",
+      "url": "https://greasyfork.org/users/1005759-%E9%84%AD%E8%B1%AA%E7%9D%BF"
+    }
+  ],
+  "name": "4 bots damian",
+  "description": "For more info about 4x multibox go my channel https://youtube.com/CyRuler",
+  "url": "https://greasyfork.org/scripts/457491-4-bots-damian",
+  "code_url": "https://update.greasyfork.org/scripts/457491/4%20bots%20damian.user.js",
+  "code_size": 40194,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

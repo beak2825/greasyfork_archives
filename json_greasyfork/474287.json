@@ -1,0 +1,33 @@
+{
+  "id": 474287,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-31T11:43:39.000Z",
+  "code_updated_at": "2024-04-11T05:45:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1023408,
+      "name": "likundeli10",
+      "created_at": "2023-02-08T03:13:10.000Z",
+      "url": "https://greasyfork.org/users/1023408-likundeli10"
+    }
+  ],
+  "name": "Lavida 尋找留言 給購物金",
+  "description": "Lavida 尋找留言 給購物金 功能",
+  "url": "https://greasyfork.org/scripts/474287-lavida-%E5%B0%8B%E6%89%BE%E7%95%99%E8%A8%80-%E7%B5%A6%E8%B3%BC%E7%89%A9%E9%87%91",
+  "code_url": "https://update.greasyfork.org/scripts/474287/Lavida%20%E5%B0%8B%E6%89%BE%E7%95%99%E8%A8%80%20%E7%B5%A6%E8%B3%BC%E7%89%A9%E9%87%91.user.js",
+  "code_size": 9988,
+  "license": "MIT License",
+  "version": "2024.04.11.01",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

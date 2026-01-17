@@ -1,0 +1,59 @@
+{
+  "id": 423607,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-19T22:24:33.000Z",
+  "code_updated_at": "2021-03-19T22:24:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 749306,
+      "name": "Nyreb",
+      "created_at": "2021-03-19T22:21:12.000Z",
+      "url": "https://greasyfork.org/users/749306-nyreb",
+      "scripts": [
+        {
+          "id": 423607,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-19T22:24:33.000Z",
+          "code_updated_at": "2021-03-19T22:24:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Filtering Petio",
+          "description": "Filter out available/requested items",
+          "url": "https://greasyfork.org/scripts/423607-filtering-petio",
+          "code_url": "https://update.greasyfork.org/scripts/423607/Filtering%20Petio.user.js",
+          "code_size": 821,
+          "license": null,
+          "version": "0.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Filtering Petio",
+  "description": "Filter out available/requested items",
+  "url": "https://greasyfork.org/scripts/423607-filtering-petio",
+  "code_url": "https://update.greasyfork.org/scripts/423607/Filtering%20Petio.user.js",
+  "code_size": 821,
+  "license": null,
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

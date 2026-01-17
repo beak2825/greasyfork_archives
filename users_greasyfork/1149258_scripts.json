@@ -1,0 +1,35 @@
+[
+  {
+    "id": 472913,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-11T16:17:35.000Z",
+    "code_updated_at": "2023-08-11T16:17:35.000Z",
+    "namespace": "https://greasyfork.org/users/1149258",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1149258,
+        "name": "amogusamogusx",
+        "created_at": "2023-08-11T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1149258-amogusamogusx"
+      }
+    ],
+    "name": "Bypass premium on wprost.pl",
+    "description": "wprost.pl premium bypasser. The script uses very simple bypass, as shown below. No idea why does it work, but it works. I just found a very long if() instrucion in the site's source code and checked when it returns true. Script needs around 10-15 seconds to extend article with premium content, should run automatically.",
+    "url": "https://greasyfork.org/scripts/472913-bypass-premium-on-wprost-pl",
+    "code_url": "https://update.greasyfork.org/scripts/472913/Bypass%20premium%20on%20wprostpl.user.js",
+    "code_size": 585,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

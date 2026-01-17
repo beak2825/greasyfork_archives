@@ -1,0 +1,34 @@
+{
+  "id": 455759,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-01T06:41:38.000Z",
+  "code_updated_at": "2022-12-01T06:41:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 917475,
+      "name": "wed543",
+      "created_at": "2022-05-23T03:24:13.000Z",
+      "url": "https://greasyfork.org/users/917475-wed543",
+      "scripts": []
+    }
+  ],
+  "name": "家庭教育",
+  "description": "Autoplay",
+  "url": "https://greasyfork.org/scripts/455759-%E5%AE%B6%E5%BA%AD%E6%95%99%E8%82%B2",
+  "code_url": "https://update.greasyfork.org/scripts/455759/%E5%AE%B6%E5%BA%AD%E6%95%99%E8%82%B2.user.js",
+  "code_size": 785,
+  "license": null,
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

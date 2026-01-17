@@ -1,0 +1,134 @@
+[
+  {
+    "id": 432357,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-13T16:33:04.000Z",
+    "code_updated_at": "2021-09-13T18:57:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 320458,
+        "name": "meppydc",
+        "created_at": "2019-07-25T16:37:29.000Z",
+        "url": "https://greasyfork.org/users/320458-meppydc"
+      }
+    ],
+    "name": "Ultra PPB Script",
+    "description": "Shows ultra ppb and sorta accurate projected score, modified from Oki's cheese pace script",
+    "url": "https://greasyfork.org/scripts/432357-ultra-ppb-script",
+    "code_url": "https://update.greasyfork.org/scripts/432357/Ultra%20PPB%20Script.user.js",
+    "code_size": 2646,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432356,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-13T16:31:26.000Z",
+    "code_updated_at": "2021-09-13T16:31:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 320458,
+        "name": "meppydc",
+        "created_at": "2019-07-25T16:37:29.000Z",
+        "url": "https://greasyfork.org/users/320458-meppydc"
+      }
+    ],
+    "name": "Cheese Pace Script",
+    "description": "Predicts cheese time/block count",
+    "url": "https://greasyfork.org/scripts/432356-cheese-pace-script",
+    "code_url": "https://update.greasyfork.org/scripts/432356/Cheese%20Pace%20Script.user.js",
+    "code_size": 2930,
+    "license": null,
+    "version": "0.22",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427874,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-13T04:53:08.000Z",
+    "code_updated_at": "2021-08-28T16:37:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 320458,
+        "name": "meppydc",
+        "created_at": "2019-07-25T16:37:29.000Z",
+        "url": "https://greasyfork.org/users/320458-meppydc"
+      }
+    ],
+    "name": "Automatic Replay Code",
+    "description": "shows replay code on reset in practice mode",
+    "url": "https://greasyfork.org/scripts/427874-automatic-replay-code",
+    "code_url": "https://update.greasyfork.org/scripts/427874/Automatic%20Replay%20Code.user.js",
+    "code_size": 3932,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423379,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-17T04:34:24.000Z",
+    "code_updated_at": "2021-03-17T04:34:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 320458,
+        "name": "meppydc",
+        "created_at": "2019-07-25T16:37:29.000Z",
+        "url": "https://greasyfork.org/users/320458-meppydc"
+      }
+    ],
+    "name": "witch background",
+    "description": "meppy's jstris background script",
+    "url": "https://greasyfork.org/scripts/423379-witch-background",
+    "code_url": "https://update.greasyfork.org/scripts/423379/witch%20background.user.js",
+    "code_size": 1032,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

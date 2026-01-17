@@ -1,0 +1,33 @@
+{
+  "id": 468628,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-14T06:38:17.000Z",
+  "code_updated_at": "2023-06-14T06:38:17.000Z",
+  "namespace": "https://greasyfork.org/users/1096044",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1096044,
+      "name": "Sora-Ayano",
+      "created_at": "2023-06-11T03:56:38.000Z",
+      "url": "https://greasyfork.org/users/1096044-sora-ayano"
+    }
+  ],
+  "name": "22/7表情包",
+  "description": "在B站中增加22/7表情包 Forked from https://github.com/AS042971/bilibili-bobo",
+  "url": "https://greasyfork.org/scripts/468628-22-7%E8%A1%A8%E6%83%85%E5%8C%85",
+  "code_url": "https://update.greasyfork.org/scripts/468628/227%E8%A1%A8%E6%83%85%E5%8C%85.user.js",
+  "code_size": 20833,
+  "license": "BSD-3",
+  "version": "0.0.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

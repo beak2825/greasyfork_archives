@@ -1,0 +1,59 @@
+{
+  "id": 443843,
+  "daily_installs": 0,
+  "total_installs": 616,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-22T22:32:00.000Z",
+  "code_updated_at": "2022-04-23T08:29:25.000Z",
+  "namespace": "audite.dev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 905725,
+      "name": "Audite",
+      "created_at": "2022-04-22T22:23:25.000Z",
+      "url": "https://greasyfork.org/users/905725-audite",
+      "scripts": [
+        {
+          "id": 443843,
+          "daily_installs": 0,
+          "total_installs": 616,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-22T22:32:00.000Z",
+          "code_updated_at": "2022-04-23T08:29:25.000Z",
+          "namespace": "audite.dev",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Soap2Day Autoplay Toggleble",
+          "description": "Autoplay soap2play shows and movies when the page loads with toggleble button bellow the player. Written in Tampermonkey.",
+          "url": "https://greasyfork.org/scripts/443843-soap2day-autoplay-toggleble",
+          "code_url": "https://update.greasyfork.org/scripts/443843/Soap2Day%20Autoplay%20Toggleble.user.js",
+          "code_size": 3365,
+          "license": "BY-NC-CD",
+          "version": "1.1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Soap2Day Autoplay Toggleble",
+  "description": "Autoplay soap2play shows and movies when the page loads with toggleble button bellow the player. Written in Tampermonkey.",
+  "url": "https://greasyfork.org/scripts/443843-soap2day-autoplay-toggleble",
+  "code_url": "https://update.greasyfork.org/scripts/443843/Soap2Day%20Autoplay%20Toggleble.user.js",
+  "code_size": 3365,
+  "license": "BY-NC-CD",
+  "version": "1.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

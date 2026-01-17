@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412013,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-26T14:37:00.000Z",
+    "code_updated_at": "2020-09-26T14:53:04.000Z",
+    "namespace": "https://wr786.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 688975,
+        "name": "wr786",
+        "created_at": "2020-09-19T14:01:39.000Z",
+        "url": "https://greasyfork.org/users/688975-wr786"
+      }
+    ],
+    "name": "Botzone_LevelUpper",
+    "description": "Botzone挂机升级小工具",
+    "url": "https://greasyfork.org/scripts/412013-botzone-levelupper",
+    "code_url": "https://update.greasyfork.org/scripts/412013/Botzone_LevelUpper.user.js",
+    "code_size": 1615,
+    "license": null,
+    "version": "0.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 459814,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-11T02:31:46.000Z",
+    "code_updated_at": "2023-02-11T02:35:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 325278,
+        "name": "csczq123456",
+        "created_at": "2019-08-11T14:05:09.000Z",
+        "url": "https://greasyfork.org/users/325278-csczq123456"
+      }
+    ],
+    "name": "豆瓣资源外站下载器（移动端）",
+    "description": "用于移动端豆瓣页面的资源外站下载器",
+    "url": "https://greasyfork.org/scripts/459814-%E8%B1%86%E7%93%A3%E8%B5%84%E6%BA%90%E5%A4%96%E7%AB%99%E4%B8%8B%E8%BD%BD%E5%99%A8-%E7%A7%BB%E5%8A%A8%E7%AB%AF",
+    "code_url": "https://update.greasyfork.org/scripts/459814/%E8%B1%86%E7%93%A3%E8%B5%84%E6%BA%90%E5%A4%96%E7%AB%99%E4%B8%8B%E8%BD%BD%E5%99%A8%EF%BC%88%E7%A7%BB%E5%8A%A8%E7%AB%AF%EF%BC%89.user.js",
+    "code_size": 1942,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 428961,
+  "daily_installs": 0,
+  "total_installs": 5819,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-06T08:29:37.000Z",
+  "code_updated_at": "2021-07-06T08:29:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 790876,
+      "name": "jliuchen",
+      "created_at": "2021-07-06T08:17:23.000Z",
+      "url": "https://greasyfork.org/users/790876-jliuchen",
+      "scripts": [
+        {
+          "id": 428961,
+          "daily_installs": 0,
+          "total_installs": 5819,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-07-06T08:29:37.000Z",
+          "code_updated_at": "2021-07-06T08:29:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "青书学堂课程作业答题快捷搜索辅助",
+          "description": "青书学堂课程作业快捷答题网络搜索辅助 | 作者 @lidppp 的青书学堂懒人考试脚本(无法搜索有图片的题目)优化版本",
+          "url": "https://greasyfork.org/scripts/428961-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E8%AF%BE%E7%A8%8B%E4%BD%9C%E4%B8%9A%E7%AD%94%E9%A2%98%E5%BF%AB%E6%8D%B7%E6%90%9C%E7%B4%A2%E8%BE%85%E5%8A%A9",
+          "code_url": "https://update.greasyfork.org/scripts/428961/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E8%AF%BE%E7%A8%8B%E4%BD%9C%E4%B8%9A%E7%AD%94%E9%A2%98%E5%BF%AB%E6%8D%B7%E6%90%9C%E7%B4%A2%E8%BE%85%E5%8A%A9.user.js",
+          "code_size": 5140,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "青书学堂课程作业答题快捷搜索辅助",
+  "description": "青书学堂课程作业快捷答题网络搜索辅助 | 作者 @lidppp 的青书学堂懒人考试脚本(无法搜索有图片的题目)优化版本",
+  "url": "https://greasyfork.org/scripts/428961-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E8%AF%BE%E7%A8%8B%E4%BD%9C%E4%B8%9A%E7%AD%94%E9%A2%98%E5%BF%AB%E6%8D%B7%E6%90%9C%E7%B4%A2%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/428961/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E8%AF%BE%E7%A8%8B%E4%BD%9C%E4%B8%9A%E7%AD%94%E9%A2%98%E5%BF%AB%E6%8D%B7%E6%90%9C%E7%B4%A2%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 5140,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

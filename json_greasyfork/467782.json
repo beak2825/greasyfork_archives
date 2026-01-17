@@ -1,0 +1,33 @@
+{
+  "id": 467782,
+  "daily_installs": 0,
+  "total_installs": 156,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-03T08:20:11.000Z",
+  "code_updated_at": "2025-04-19T15:30:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1089700,
+      "name": "Ye lan",
+      "created_at": "2023-06-03T08:13:05.000Z",
+      "url": "https://greasyfork.org/users/1089700-ye-lan"
+    }
+  ],
+  "name": "屏蔽大会员彩色弹幕(2025.4.19亲测可用)",
+  "description": "装上就会自动屏蔽B站新出的大会员彩色渐变弹幕了",
+  "url": "https://greasyfork.org/scripts/467782-%E5%B1%8F%E8%94%BD%E5%A4%A7%E4%BC%9A%E5%91%98%E5%BD%A9%E8%89%B2%E5%BC%B9%E5%B9%95-2025-4-19%E4%BA%B2%E6%B5%8B%E5%8F%AF%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/467782/%E5%B1%8F%E8%94%BD%E5%A4%A7%E4%BC%9A%E5%91%98%E5%BD%A9%E8%89%B2%E5%BC%B9%E5%B9%95%282025419%E4%BA%B2%E6%B5%8B%E5%8F%AF%E7%94%A8%29.user.js",
+  "code_size": 887,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

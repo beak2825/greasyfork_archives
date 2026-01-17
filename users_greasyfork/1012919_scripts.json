@@ -63,6 +63,204 @@
     "version": "0.1.1",
     "locale": "et",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478608,
+    "daily_installs": 1,
+    "total_installs": 1267,
+    "fan_score": "37.6",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-10-30T08:40:28.000Z",
+    "code_updated_at": "2024-03-22T09:11:54.000Z",
+    "namespace": "http://howardzhangdqs.eu.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1012919,
+        "name": "Howardzhangdqs",
+        "created_at": "2023-01-16T12:35:50.000Z",
+        "url": "https://greasyfork.org/users/1012919-howardzhangdqs"
+      }
+    ],
+    "name": "知乎下载器",
+    "description": "一键复制知乎文章/回答为Markdown，下载文章/回答为zip（包含素材图片与文章/回答信息），备份你珍贵的回答与文章。",
+    "url": "https://greasyfork.org/scripts/478608-%E7%9F%A5%E4%B9%8E%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/478608/%E7%9F%A5%E4%B9%8E%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 113332,
+    "license": "MIT License",
+    "version": "0.3.26-4e0824",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 476324,
+    "daily_installs": 0,
+    "total_installs": 401,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-29T10:40:09.000Z",
+    "code_updated_at": "2024-06-08T13:12:24.000Z",
+    "namespace": "http://howardzhangdqs.eu.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1012919,
+        "name": "Howardzhangdqs",
+        "created_at": "2023-01-16T12:35:50.000Z",
+        "url": "https://greasyfork.org/users/1012919-howardzhangdqs"
+      }
+    ],
+    "name": "Web选择",
+    "description": "由于Web选择太好用，微软就把他砍掉了。本脚本实现了Web选择的部分功能。按下Alt+S即可选择文本。",
+    "url": "https://greasyfork.org/scripts/476324-web%E9%80%89%E6%8B%A9",
+    "code_url": "https://update.greasyfork.org/scripts/476324/Web%E9%80%89%E6%8B%A9.user.js",
+    "code_size": 22418,
+    "license": "MIT License",
+    "version": "0.2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 468400,
+    "daily_installs": 0,
+    "total_installs": 1577,
+    "fan_score": "51.7",
+    "good_ratings": 5,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-06-11T01:21:04.000Z",
+    "code_updated_at": "2023-10-01T23:27:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1012919,
+        "name": "Howardzhangdqs",
+        "created_at": "2023-01-16T12:35:50.000Z",
+        "url": "https://greasyfork.org/users/1012919-howardzhangdqs"
+      }
+    ],
+    "name": "虫虫钢琴免VIP扒谱",
+    "description": "免VIP扒谱+去除部分烦人广告",
+    "url": "https://greasyfork.org/scripts/468400-%E8%99%AB%E8%99%AB%E9%92%A2%E7%90%B4%E5%85%8Dvip%E6%89%92%E8%B0%B1",
+    "code_url": "https://update.greasyfork.org/scripts/468400/%E8%99%AB%E8%99%AB%E9%92%A2%E7%90%B4%E5%85%8DVIP%E6%89%92%E8%B0%B1.user.js",
+    "code_size": 4517,
+    "license": "GPLv3",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 468211,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-08T14:01:36.000Z",
+    "code_updated_at": "2023-06-09T12:36:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1012919,
+        "name": "Howardzhangdqs",
+        "created_at": "2023-01-16T12:35:50.000Z",
+        "url": "https://greasyfork.org/users/1012919-howardzhangdqs"
+      }
+    ],
+    "name": "指鼠为鸭",
+    "description": "这个世界上不再有鼠鼠，全是鸭鸭！",
+    "url": "https://greasyfork.org/scripts/468211-%E6%8C%87%E9%BC%A0%E4%B8%BA%E9%B8%AD",
+    "code_url": "https://update.greasyfork.org/scripts/468211/%E6%8C%87%E9%BC%A0%E4%B8%BA%E9%B8%AD.user.js",
+    "code_size": 3443,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 459571,
+    "daily_installs": 0,
+    "total_installs": 212,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-07T06:41:35.000Z",
+    "code_updated_at": "2023-06-19T03:12:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1012919,
+        "name": "Howardzhangdqs",
+        "created_at": "2023-01-16T12:35:50.000Z",
+        "url": "https://greasyfork.org/users/1012919-howardzhangdqs"
+      }
+    ],
+    "name": "百度搜索增强 弹窗显示其他搜索引擎、ChatGPT、BingChat结果",
+    "description": "本插件会将百度热搜的内容替换为一个弹窗，其中显示其他搜索引擎或网站的搜索内容。支持ChatGPT、Bing Chat免费代理。自定义方便。",
+    "url": "https://greasyfork.org/scripts/459571-%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA-%E5%BC%B9%E7%AA%97%E6%98%BE%E7%A4%BA%E5%85%B6%E4%BB%96%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E-chatgpt-bingchat%E7%BB%93%E6%9E%9C",
+    "code_url": "https://update.greasyfork.org/scripts/459571/%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA%20%E5%BC%B9%E7%AA%97%E6%98%BE%E7%A4%BA%E5%85%B6%E4%BB%96%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E3%80%81ChatGPT%E3%80%81BingChat%E7%BB%93%E6%9E%9C.user.js",
+    "code_size": 6365,
+    "license": "GPLv3",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458374,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-16T22:44:46.000Z",
+    "code_updated_at": "2023-02-07T05:46:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1012919,
+        "name": "Howardzhangdqs",
+        "created_at": "2023-01-16T12:35:50.000Z",
+        "url": "https://greasyfork.org/users/1012919-howardzhangdqs"
+      }
+    ],
+    "name": "移除百度翻译烦人广告",
+    "description": "A tampermonkey script for Baidu Fanyi for better using experience",
+    "url": "https://greasyfork.org/scripts/458374-%E7%A7%BB%E9%99%A4%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91%E7%83%A6%E4%BA%BA%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/458374/%E7%A7%BB%E9%99%A4%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91%E7%83%A6%E4%BA%BA%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 4273,
+    "license": "Good Luck With That Public License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

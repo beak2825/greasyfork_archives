@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473964,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-26T19:26:36.000Z",
+    "code_updated_at": "2023-08-26T20:18:34.000Z",
+    "namespace": "regis@animebytes.tv",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1158462,
+        "name": "MrRegis",
+        "created_at": "2023-08-24T15:31:35.000Z",
+        "url": "https://greasyfork.org/users/1158462-mrregis"
+      }
+    ],
+    "name": "AB - Screenshot Scroller",
+    "description": "Adds scrolling buttons and keyboard controls when opening screenshots on torrent pages",
+    "url": "https://greasyfork.org/scripts/473964-ab-screenshot-scroller",
+    "code_url": "https://update.greasyfork.org/scripts/473964/AB%20-%20Screenshot%20Scroller.user.js",
+    "code_size": 4567,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

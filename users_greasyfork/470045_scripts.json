@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416011,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-12T18:41:24.000Z",
+    "code_updated_at": "2020-11-12T18:41:24.000Z",
+    "namespace": "https://greasyfork.org/users/470045",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470045,
+        "name": "Minecrazy",
+        "created_at": "2020-03-27T12:26:32.000Z",
+        "url": "https://greasyfork.org/users/470045-minecrazy"
+      }
+    ],
+    "name": "BV->av",
+    "description": "对“萌萌哒丶九灬书”和“神代绮凛”的转av脚本进行了简单粗暴的合并,以解决前者不显示时间t和后者换p时不转换的问题",
+    "url": "https://greasyfork.org/scripts/416011-bv-av",
+    "code_url": "https://update.greasyfork.org/scripts/416011/BV-%3Eav.user.js",
+    "code_size": 1010,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

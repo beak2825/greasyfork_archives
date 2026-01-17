@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435049,
+    "daily_installs": 0,
+    "total_installs": 138,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-05T19:42:55.000Z",
+    "code_updated_at": "2021-11-05T19:42:55.000Z",
+    "namespace": "https://windrises.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 170140,
+        "name": "windrises",
+        "created_at": "2018-02-10T04:39:21.000Z",
+        "url": "https://greasyfork.org/users/170140-windrises"
+      }
+    ],
+    "name": "Bilibili直播弹幕屏蔽",
+    "description": "屏蔽底端弹幕等",
+    "url": "https://greasyfork.org/scripts/435049-bilibili%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E5%B1%8F%E8%94%BD",
+    "code_url": "https://update.greasyfork.org/scripts/435049/Bilibili%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E5%B1%8F%E8%94%BD.user.js",
+    "code_size": 1499,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 434637,
+    "daily_installs": 0,
+    "total_installs": 149,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-29T14:20:18.000Z",
+    "code_updated_at": "2022-07-30T01:30:47.000Z",
+    "namespace": "https://github.com/aoi-umi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 829949,
+        "name": "aoi-umi",
+        "created_at": "2021-10-29T13:04:13.000Z",
+        "url": "https://greasyfork.org/users/829949-aoi-umi"
+      }
+    ],
+    "name": "Acfun Extension",
+    "description": "acfun插件",
+    "url": "https://greasyfork.org/scripts/434637-acfun-extension",
+    "code_url": "https://update.greasyfork.org/scripts/434637/Acfun%20Extension.user.js",
+    "code_size": 22490,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

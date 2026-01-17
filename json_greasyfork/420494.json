@@ -1,0 +1,59 @@
+{
+  "id": 420494,
+  "daily_installs": 0,
+  "total_installs": 56,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-21T12:09:59.000Z",
+  "code_updated_at": "2021-09-14T14:58:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 729760,
+      "name": "bananashot",
+      "created_at": "2021-01-21T12:06:03.000Z",
+      "url": "https://greasyfork.org/users/729760-bananashot",
+      "scripts": [
+        {
+          "id": 420494,
+          "daily_installs": 0,
+          "total_installs": 56,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-21T12:09:59.000Z",
+          "code_updated_at": "2021-09-14T14:58:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "torlook speedster",
+          "description": "removes 10 seconds counter",
+          "url": "https://greasyfork.org/scripts/420494-torlook-speedster",
+          "code_url": "https://update.greasyfork.org/scripts/420494/torlook%20speedster.user.js",
+          "code_size": 1441,
+          "license": null,
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "torlook speedster",
+  "description": "removes 10 seconds counter",
+  "url": "https://greasyfork.org/scripts/420494-torlook-speedster",
+  "code_url": "https://update.greasyfork.org/scripts/420494/torlook%20speedster.user.js",
+  "code_size": 1441,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 423582,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-19T15:15:11.000Z",
+  "code_updated_at": "2021-03-19T15:35:08.000Z",
+  "namespace": "com.tornstuff.ocpayday",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 749230,
+      "name": "MightyGoober",
+      "created_at": "2021-03-19T15:10:47.000Z",
+      "url": "https://greasyfork.org/users/749230-mightygoober",
+      "scripts": []
+    }
+  ],
+  "name": "TORN: Any OC Payday",
+  "description": "Easily do a payday after completing an oc.",
+  "url": "https://greasyfork.org/scripts/423582-torn-any-oc-payday",
+  "code_url": "https://update.greasyfork.org/scripts/423582/TORN%3A%20Any%20OC%20Payday.user.js",
+  "code_size": 2812,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

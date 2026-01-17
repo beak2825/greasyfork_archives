@@ -1,0 +1,33 @@
+{
+  "id": 440163,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-17T02:27:38.000Z",
+  "code_updated_at": "2022-07-27T10:59:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 743411,
+      "name": "dongliangzxc",
+      "created_at": "2021-03-04T03:32:56.000Z",
+      "url": "https://greasyfork.org/users/743411-dongliangzxc"
+    }
+  ],
+  "name": "宝宝装计算器",
+  "description": "baobaozhuang计算器",
+  "url": "https://greasyfork.org/scripts/440163-%E5%AE%9D%E5%AE%9D%E8%A3%85%E8%AE%A1%E7%AE%97%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/440163/%E5%AE%9D%E5%AE%9D%E8%A3%85%E8%AE%A1%E7%AE%97%E5%99%A8.user.js",
+  "code_size": 14282,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

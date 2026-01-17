@@ -1,0 +1,33 @@
+{
+  "id": 452195,
+  "daily_installs": 0,
+  "total_installs": 768,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-28T21:42:10.000Z",
+  "code_updated_at": "2023-02-27T14:37:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 964527,
+      "name": "Michel Cousin",
+      "created_at": "2022-09-28T21:40:28.000Z",
+      "url": "https://greasyfork.org/users/964527-michel-cousin"
+    }
+  ],
+  "name": "Disneyland Paris Waiting List Position",
+  "description": "Shows your position on DLP waiting lists. Only tested with reservations of 1 annual pass.",
+  "url": "https://greasyfork.org/scripts/452195-disneyland-paris-waiting-list-position",
+  "code_url": "https://update.greasyfork.org/scripts/452195/Disneyland%20Paris%20Waiting%20List%20Position.user.js",
+  "code_size": 4485,
+  "license": "MIT License",
+  "version": "0.13",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

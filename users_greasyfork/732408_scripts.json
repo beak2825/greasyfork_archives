@@ -63,6 +63,105 @@
     "version": "0.0.1.20250515070644",
     "locale": "pt",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 450119,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-25T02:44:23.000Z",
+    "code_updated_at": "2022-08-25T04:51:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 732408,
+        "name": "张冰",
+        "created_at": "2021-01-29T05:45:40.000Z",
+        "url": "https://greasyfork.org/users/732408-%E5%BC%A0%E5%86%B0"
+      }
+    ],
+    "name": "新闻网图片透明度0.1",
+    "description": "baidu,qq,sohu,zhihu,douban网站图片默认透明度0.1，方便摸鱼",
+    "url": "https://greasyfork.org/scripts/450119-%E6%96%B0%E9%97%BB%E7%BD%91%E5%9B%BE%E7%89%87%E9%80%8F%E6%98%8E%E5%BA%A60-1",
+    "code_url": "https://update.greasyfork.org/scripts/450119/%E6%96%B0%E9%97%BB%E7%BD%91%E5%9B%BE%E7%89%87%E9%80%8F%E6%98%8E%E5%BA%A601.user.js",
+    "code_size": 2329,
+    "license": "MIT License",
+    "version": "0.11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420992,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-01T11:06:48.000Z",
+    "code_updated_at": "2021-02-01T11:08:14.000Z",
+    "namespace": "https://github.com/PRC-Cc/Tampermonkey.git",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 732408,
+        "name": "张冰",
+        "created_at": "2021-01-29T05:45:40.000Z",
+        "url": "https://greasyfork.org/users/732408-%E5%BC%A0%E5%86%B0"
+      }
+    ],
+    "name": "Tapd 详情复制 ：id+title (转载修改)",
+    "description": "Story 详情页面标题后添加复制按钮，用于复制精简srotyId",
+    "url": "https://greasyfork.org/scripts/420992-tapd-%E8%AF%A6%E6%83%85%E5%A4%8D%E5%88%B6-id-title-%E8%BD%AC%E8%BD%BD%E4%BF%AE%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/420992/Tapd%20%E8%AF%A6%E6%83%85%E5%A4%8D%E5%88%B6%20%EF%BC%9Aid%2Btitle%20%28%E8%BD%AC%E8%BD%BD%E4%BF%AE%E6%94%B9%29.user.js",
+    "code_size": 2641,
+    "license": null,
+    "version": "0.21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 420858,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-29T05:51:25.000Z",
+    "code_updated_at": "2021-02-01T02:10:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 732408,
+        "name": "张冰",
+        "created_at": "2021-01-29T05:45:40.000Z",
+        "url": "https://greasyfork.org/users/732408-%E5%BC%A0%E5%86%B0"
+      }
+    ],
+    "name": "bd-file 详情页下载链接提前&默认展示所有链接",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/420858-bd-file-%E8%AF%A6%E6%83%85%E9%A1%B5%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E6%8F%90%E5%89%8D-%E9%BB%98%E8%AE%A4%E5%B1%95%E7%A4%BA%E6%89%80%E6%9C%89%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/420858/bd-file%20%E8%AF%A6%E6%83%85%E9%A1%B5%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E6%8F%90%E5%89%8D%E9%BB%98%E8%AE%A4%E5%B1%95%E7%A4%BA%E6%89%80%E6%9C%89%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 689,
+    "license": null,
+    "version": "0.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

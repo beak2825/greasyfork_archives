@@ -30,6 +30,105 @@
     "version": "0.0.1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 472567,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-06T15:34:43.000Z",
+    "code_updated_at": "2023-10-14T07:38:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 804474,
+        "name": "折纸",
+        "created_at": "2021-08-14T06:21:35.000Z",
+        "url": "https://greasyfork.org/users/804474-%E6%8A%98%E7%BA%B8"
+      }
+    ],
+    "name": "Github Repo Hider",
+    "description": "Hide some sensitive repos from github home page if others(especially your CTO or boss) accidentally visit github.com on your computer.",
+    "url": "https://greasyfork.org/scripts/472567-github-repo-hider",
+    "code_url": "https://update.greasyfork.org/scripts/472567/Github%20Repo%20Hider.user.js",
+    "code_size": 1164,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 465516,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-04T16:21:02.000Z",
+    "code_updated_at": "2023-05-06T03:00:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 804474,
+        "name": "折纸",
+        "created_at": "2021-08-14T06:21:35.000Z",
+        "url": "https://greasyfork.org/users/804474-%E6%8A%98%E7%BA%B8"
+      }
+    ],
+    "name": "GameBanana Mod Has Downloaded Marker",
+    "description": "Mark out GameBanana downloaded mods",
+    "url": "https://greasyfork.org/scripts/465516-gamebanana-mod-has-downloaded-marker",
+    "code_url": "https://update.greasyfork.org/scripts/465516/GameBanana%20Mod%20Has%20Downloaded%20Marker.user.js",
+    "code_size": 3296,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 434192,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-20T14:21:59.000Z",
+    "code_updated_at": "2021-10-21T14:29:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 804474,
+        "name": "折纸",
+        "created_at": "2021-08-14T06:21:35.000Z",
+        "url": "https://greasyfork.org/users/804474-%E6%8A%98%E7%BA%B8"
+      }
+    ],
+    "name": "Chao Xing Fucker",
+    "description": "fuck Chao Xing",
+    "url": "https://greasyfork.org/scripts/434192-chao-xing",
+    "code_url": "https://update.greasyfork.org/scripts/434192/Chao%20Xing%20Fucker.user.js",
+    "code_size": 3854,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

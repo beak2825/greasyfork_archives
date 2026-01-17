@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458782,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-24T14:10:13.000Z",
+    "code_updated_at": "2023-01-24T14:10:13.000Z",
+    "namespace": "https://forum.liverussia.online/index.php",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016101,
+        "name": "Marin Len",
+        "created_at": "2023-01-24T14:06:59.000Z",
+        "url": "https://greasyfork.org/users/1016101-marin-len"
+      }
+    ],
+    "name": "LIVE RUSSIA | Script for forum by M.Morrison",
+    "description": "Always remember who you are!",
+    "url": "https://greasyfork.org/scripts/458782-live-russia-script-for-forum-by-m-morrison",
+    "code_url": "https://update.greasyfork.org/scripts/458782/LIVE%20RUSSIA%20%7C%20Script%20for%20forum%20by%20MMorrison.user.js",
+    "code_size": 78323,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

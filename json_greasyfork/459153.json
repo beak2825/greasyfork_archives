@@ -1,0 +1,33 @@
+{
+  "id": 459153,
+  "daily_installs": 0,
+  "total_installs": 65,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-01-30T20:00:11.000Z",
+  "code_updated_at": "2023-01-30T20:07:19.000Z",
+  "namespace": "http://sr.ht/~weebney",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 904434,
+      "name": "weebney",
+      "created_at": "2022-04-19T16:29:58.000Z",
+      "url": "https://greasyfork.org/users/904434-weebney"
+    }
+  ],
+  "name": "Force Wikipedia Old (Vector) Skin",
+  "description": "Returns Wikipedia's \"Vector\" skin. Doesn't break history or URLs, works faster!",
+  "url": "https://greasyfork.org/scripts/459153-force-wikipedia-old-vector-skin",
+  "code_url": "https://update.greasyfork.org/scripts/459153/Force%20Wikipedia%20Old%20%28Vector%29%20Skin.user.js",
+  "code_size": 1012,
+  "license": "BSD 2-Clause \"Simplified\" License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

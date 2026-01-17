@@ -1,0 +1,33 @@
+{
+  "id": 458610,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-21T02:55:49.000Z",
+  "code_updated_at": "2023-02-15T15:04:24.000Z",
+  "namespace": "http://shequ.3vcn.work/",
+  "support_url": "http://shequ.3vcn.work/",
+  "contribution_url": "http://shequ.3vcn.work/a/jiexi",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1013889,
+      "name": "StarV",
+      "created_at": "2023-01-18T14:42:14.000Z",
+      "url": "https://greasyfork.org/users/1013889-starv"
+    }
+  ],
+  "name": "VIP视频解析播放（弹幕追剧）",
+  "description": "支持爱奇艺、优酷、腾讯视频、芒果TV等全网VIP视频解析播放。后续将陆续开放适配更多功能。【更新日志】 版本号V1.3 适配VIP影视解析简洁版(version1.9)，点击菜单-影视解析可直接跳转简洁版页面并自动解析。",
+  "url": "https://greasyfork.org/scripts/458610-vip%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E6%92%AD%E6%94%BE-%E5%BC%B9%E5%B9%95%E8%BF%BD%E5%89%A7",
+  "code_url": "https://update.greasyfork.org/scripts/458610/VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E6%92%AD%E6%94%BE%EF%BC%88%E5%BC%B9%E5%B9%95%E8%BF%BD%E5%89%A7%EF%BC%89.user.js",
+  "code_size": 70366,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

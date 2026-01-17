@@ -1,0 +1,68 @@
+[
+  {
+    "id": 477340,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-13T08:27:31.000Z",
+    "code_updated_at": "2023-10-13T08:27:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 733714,
+        "name": "钱勇俊",
+        "created_at": "2021-02-02T09:59:44.000Z",
+        "url": "https://greasyfork.org/users/733714-%E9%92%B1%E5%8B%87%E4%BF%8A"
+      }
+    ],
+    "name": "bizMonitorDataSync",
+    "description": "拉取业务监控数据同步飞书",
+    "url": "https://greasyfork.org/scripts/477340-bizmonitordatasync",
+    "code_url": "https://update.greasyfork.org/scripts/477340/bizMonitorDataSync.user.js",
+    "code_size": 9879,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 467450,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-30T02:09:22.000Z",
+    "code_updated_at": "2023-05-30T02:09:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 733714,
+        "name": "钱勇俊",
+        "created_at": "2021-02-02T09:59:44.000Z",
+        "url": "https://greasyfork.org/users/733714-%E9%92%B1%E5%8B%87%E4%BF%8A"
+      }
+    ],
+    "name": "releaseFetch",
+    "description": "拉取ops信息更新紧急发布清单",
+    "url": "https://greasyfork.org/scripts/467450-releasefetch",
+    "code_url": "https://update.greasyfork.org/scripts/467450/releaseFetch.user.js",
+    "code_size": 4688,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

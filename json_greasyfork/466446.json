@@ -1,0 +1,59 @@
+{
+  "id": 466446,
+  "daily_installs": 1,
+  "total_installs": 5612,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-16T16:50:02.000Z",
+  "code_updated_at": "2023-05-17T06:54:53.000Z",
+  "namespace": "https://www.flvcd.com/index.htm",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1059605,
+      "name": "猫不理",
+      "created_at": "2023-04-13T15:49:02.000Z",
+      "url": "https://greasyfork.org/users/1059605-%E7%8C%AB%E4%B8%8D%E7%90%86",
+      "scripts": [
+        {
+          "id": 466446,
+          "daily_installs": 1,
+          "total_installs": 5612,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-16T16:50:02.000Z",
+          "code_updated_at": "2023-05-17T06:54:53.000Z",
+          "namespace": "https://www.flvcd.com/index.htm",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "硕鼠一键视频解析",
+          "description": "调用硕鼠网站解析网页中的视频，支持解析国内各类主流视频网站、综合网站、教育网站、MV音频网站、网络电视台、游戏网站、体育网站以及部分国外视频网站的视频，支持网站列表截至2023.05.14",
+          "url": "https://greasyfork.org/scripts/466446-%E7%A1%95%E9%BC%A0%E4%B8%80%E9%94%AE%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90",
+          "code_url": "https://update.greasyfork.org/scripts/466446/%E7%A1%95%E9%BC%A0%E4%B8%80%E9%94%AE%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js",
+          "code_size": 11149,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "硕鼠一键视频解析",
+  "description": "调用硕鼠网站解析网页中的视频，支持解析国内各类主流视频网站、综合网站、教育网站、MV音频网站、网络电视台、游戏网站、体育网站以及部分国外视频网站的视频，支持网站列表截至2023.05.14",
+  "url": "https://greasyfork.org/scripts/466446-%E7%A1%95%E9%BC%A0%E4%B8%80%E9%94%AE%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/466446/%E7%A1%95%E9%BC%A0%E4%B8%80%E9%94%AE%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 11149,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

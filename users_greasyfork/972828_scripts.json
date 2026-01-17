@@ -1,0 +1,233 @@
+[
+  {
+    "id": 475431,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-16T15:03:23.000Z",
+    "code_updated_at": "2023-09-16T15:03:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972828,
+        "name": "Perlito",
+        "created_at": "2022-10-19T19:23:37.000Z",
+        "url": "https://greasyfork.org/users/972828-perlito"
+      }
+    ],
+    "name": "Test",
+    "description": "elo",
+    "url": "https://greasyfork.org/scripts/475431-test",
+    "code_url": "https://update.greasyfork.org/scripts/475431/Test.user.js",
+    "code_size": 280429,
+    "license": null,
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 460260,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-18T20:38:04.000Z",
+    "code_updated_at": "2023-02-18T20:38:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972828,
+        "name": "Perlito",
+        "created_at": "2022-10-19T19:23:37.000Z",
+        "url": "https://greasyfork.org/users/972828-perlito"
+      }
+    ],
+    "name": "atakowane mordy",
+    "description": "atakowani gracze",
+    "url": "https://greasyfork.org/scripts/460260-atakowane-mordy",
+    "code_url": "https://update.greasyfork.org/scripts/460260/atakowane%20mordy.user.js",
+    "code_size": 956,
+    "license": null,
+    "version": "0.1",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453881,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-28T08:55:52.000Z",
+    "code_updated_at": "2022-10-30T18:10:52.000Z",
+    "namespace": "Hehe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972828,
+        "name": "Perlito",
+        "created_at": "2022-10-19T19:23:37.000Z",
+        "url": "https://greasyfork.org/users/972828-perlito"
+      }
+    ],
+    "name": "Auto Zbierak Single",
+    "description": "Auto zbierak afk",
+    "url": "https://greasyfork.org/scripts/453881-auto-zbierak-single",
+    "code_url": "https://update.greasyfork.org/scripts/453881/Auto%20Zbierak%20Single.user.js",
+    "code_size": 7119,
+    "license": null,
+    "version": "1.1337",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453473,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-21T09:28:40.000Z",
+    "code_updated_at": "2022-10-21T09:28:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972828,
+        "name": "Perlito",
+        "created_at": "2022-10-19T19:23:37.000Z",
+        "url": "https://greasyfork.org/users/972828-perlito"
+      }
+    ],
+    "name": "Podgląd zbieraka",
+    "description": "Czek mi",
+    "url": "https://greasyfork.org/scripts/453473-podgl%C4%85d-zbieraka",
+    "code_url": "https://update.greasyfork.org/scripts/453473/Podgl%C4%85d%20zbieraka.user.js",
+    "code_size": 953,
+    "license": null,
+    "version": "0.1",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453389,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-19T22:04:49.000Z",
+    "code_updated_at": "2022-10-21T09:29:24.000Z",
+    "namespace": "https://greasyfork.org/users/151096",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972828,
+        "name": "Perlito",
+        "created_at": "2022-10-19T19:23:37.000Z",
+        "url": "https://greasyfork.org/users/972828-perlito"
+      }
+    ],
+    "name": "Farmbot",
+    "description": "Farms automatically with loot assistant",
+    "url": "https://greasyfork.org/scripts/453389-farmbot",
+    "code_url": "https://update.greasyfork.org/scripts/453389/Farmbot.user.js",
+    "code_size": 34029,
+    "license": null,
+    "version": "3.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453387,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-19T22:01:16.000Z",
+    "code_updated_at": "2022-10-21T09:30:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972828,
+        "name": "Perlito",
+        "created_at": "2022-10-19T19:23:37.000Z",
+        "url": "https://greasyfork.org/users/972828-perlito"
+      }
+    ],
+    "name": "Rozpiska dynamiczna",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/453387-rozpiska-dynamiczna",
+    "code_url": "https://update.greasyfork.org/scripts/453387/Rozpiska%20dynamiczna.user.js",
+    "code_size": 1018,
+    "license": null,
+    "version": "0.2",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453378,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-19T19:35:54.000Z",
+    "code_updated_at": "2022-10-21T09:33:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972828,
+        "name": "Perlito",
+        "created_at": "2022-10-19T19:23:37.000Z",
+        "url": "https://greasyfork.org/users/972828-perlito"
+      }
+    ],
+    "name": "Wysylanie surek",
+    "description": "Dej byczkowi na monety",
+    "url": "https://greasyfork.org/scripts/453378-wysylanie-surek",
+    "code_url": "https://update.greasyfork.org/scripts/453378/Wysylanie%20surek.user.js",
+    "code_size": 965,
+    "license": null,
+    "version": "0.2",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 471730,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-26T00:42:38.000Z",
+  "code_updated_at": "2023-07-26T00:43:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1135849,
+      "name": "Eli T. Drumm",
+      "created_at": "2023-07-26T00:39:01.000Z",
+      "url": "https://greasyfork.org/users/1135849-eli-t-drumm"
+    }
+  ],
+  "name": "Upgrade \"𝕏\" logo to Wayland",
+  "description": "to get ahead of the inevitable migration, this replaces the 𝕏 logo with the Wayland logo",
+  "url": "https://greasyfork.org/scripts/471730-upgrade-%F0%9D%95%8F-logo-to-wayland",
+  "code_url": "https://update.greasyfork.org/scripts/471730/Upgrade%20%22%F0%9D%95%8F%22%20logo%20to%20Wayland.user.js",
+  "code_size": 2304,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 472147,
+  "daily_installs": 0,
+  "total_installs": 166,
+  "fan_score": "12.5",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 1,
+  "created_at": "2023-08-01T02:00:55.000Z",
+  "code_updated_at": "2023-08-01T02:00:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1140792,
+      "name": "DudeUnoob",
+      "created_at": "2023-08-01T01:58:55.000Z",
+      "url": "https://greasyfork.org/users/1140792-dudeunoob",
+      "scripts": [
+        {
+          "id": 472147,
+          "daily_installs": 0,
+          "total_installs": 166,
+          "fan_score": "12.5",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 1,
+          "created_at": "2023-08-01T02:00:55.000Z",
+          "code_updated_at": "2023-08-01T02:00:55.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Aceable Autoanswer and video player script",
+          "description": "an autoanswer script for questions, pages, going next",
+          "url": "https://greasyfork.org/scripts/472147-aceable-autoanswer-and-video-player-script",
+          "code_url": "https://update.greasyfork.org/scripts/472147/Aceable%20Autoanswer%20and%20video%20player%20script.user.js",
+          "code_size": 1450,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Aceable Autoanswer and video player script",
+  "description": "an autoanswer script for questions, pages, going next",
+  "url": "https://greasyfork.org/scripts/472147-aceable-autoanswer-and-video-player-script",
+  "code_url": "https://update.greasyfork.org/scripts/472147/Aceable%20Autoanswer%20and%20video%20player%20script.user.js",
+  "code_size": 1450,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

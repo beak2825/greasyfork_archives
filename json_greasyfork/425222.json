@@ -1,0 +1,33 @@
+{
+  "id": 425222,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-19T00:20:40.000Z",
+  "code_updated_at": "2021-04-19T00:22:05.000Z",
+  "namespace": "https://greasyfork.org/users/137",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 137,
+      "name": "100の人 (エスパー・イーシア)",
+      "created_at": "2014-04-05T03:27:26.000Z",
+      "url": "https://greasyfork.org/users/137-100%E3%81%AE%E4%BA%BA-%E3%82%A8%E3%82%B9%E3%83%91%E3%83%BC-%E3%82%A4%E3%83%BC%E3%82%B7%E3%82%A2"
+    }
+  ],
+  "name": "pixiv iOSの履歴を同期",
+  "description": "【userChromeES】pixivプレミアム (有料会員) の閲覧履歴機能を利用し、iOSのpixivの履歴をFirefoxアカウントと同期します。",
+  "url": "https://greasyfork.org/scripts/425222-pixiv-ios%E3%81%AE%E5%B1%A5%E6%AD%B4%E3%82%92%E5%90%8C%E6%9C%9F",
+  "code_url": "https://update.greasyfork.org/scripts/425222/pixiv%20iOS%E3%81%AE%E5%B1%A5%E6%AD%B4%E3%82%92%E5%90%8C%E6%9C%9F.user.js",
+  "code_size": 6000,
+  "license": "Mozilla Public License 2.0",
+  "version": "1.0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

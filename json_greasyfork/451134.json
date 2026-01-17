@@ -1,0 +1,59 @@
+{
+  "id": 451134,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-11T08:43:23.000Z",
+  "code_updated_at": "2022-09-11T08:43:23.000Z",
+  "namespace": "QQ：51839879",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 957344,
+      "name": "wangjunhai@live.cn",
+      "created_at": "2022-09-11T08:25:59.000Z",
+      "url": "https://greasyfork.org/users/957344-wangjunhai-live-cn",
+      "scripts": [
+        {
+          "id": 451134,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-11T08:43:23.000Z",
+          "code_updated_at": "2022-09-11T08:43:23.000Z",
+          "namespace": "QQ：51839879",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "河北医科大学电脑一键登录校园网",
+          "description": "一键登录校园网",
+          "url": "https://greasyfork.org/scripts/451134-%E6%B2%B3%E5%8C%97%E5%8C%BB%E7%A7%91%E5%A4%A7%E5%AD%A6%E7%94%B5%E8%84%91%E4%B8%80%E9%94%AE%E7%99%BB%E5%BD%95%E6%A0%A1%E5%9B%AD%E7%BD%91",
+          "code_url": "https://update.greasyfork.org/scripts/451134/%E6%B2%B3%E5%8C%97%E5%8C%BB%E7%A7%91%E5%A4%A7%E5%AD%A6%E7%94%B5%E8%84%91%E4%B8%80%E9%94%AE%E7%99%BB%E5%BD%95%E6%A0%A1%E5%9B%AD%E7%BD%91.user.js",
+          "code_size": 647,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "河北医科大学电脑一键登录校园网",
+  "description": "一键登录校园网",
+  "url": "https://greasyfork.org/scripts/451134-%E6%B2%B3%E5%8C%97%E5%8C%BB%E7%A7%91%E5%A4%A7%E5%AD%A6%E7%94%B5%E8%84%91%E4%B8%80%E9%94%AE%E7%99%BB%E5%BD%95%E6%A0%A1%E5%9B%AD%E7%BD%91",
+  "code_url": "https://update.greasyfork.org/scripts/451134/%E6%B2%B3%E5%8C%97%E5%8C%BB%E7%A7%91%E5%A4%A7%E5%AD%A6%E7%94%B5%E8%84%91%E4%B8%80%E9%94%AE%E7%99%BB%E5%BD%95%E6%A0%A1%E5%9B%AD%E7%BD%91.user.js",
+  "code_size": 647,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

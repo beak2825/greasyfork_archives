@@ -1,0 +1,190 @@
+[
+  {
+    "id": 456378,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-10T08:51:56.000Z",
+    "code_updated_at": "2022-12-10T08:51:56.000Z",
+    "namespace": "https://pterclub.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 284654,
+        "name": "ylxb2016",
+        "created_at": "2019-03-21T01:47:13.000Z",
+        "url": "https://greasyfork.org/users/284654-ylxb2016"
+      }
+    ],
+    "name": "pter helper keyboard shortcuts",
+    "description": "猫站审核键盘快捷方式",
+    "url": "https://greasyfork.org/scripts/456378-pter-helper-keyboard-shortcuts",
+    "code_url": "https://update.greasyfork.org/scripts/456378/pter%20helper%20keyboard%20shortcuts.user.js",
+    "code_size": 6805,
+    "license": null,
+    "version": "0.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 445226,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-19T10:06:51.000Z",
+    "code_updated_at": "2023-12-30T07:41:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 284654,
+        "name": "ylxb2016",
+        "created_at": "2019-03-21T01:47:13.000Z",
+        "url": "https://greasyfork.org/users/284654-ylxb2016"
+      },
+      {
+        "id": 818462,
+        "name": "ccf-2012",
+        "created_at": "2021-09-24T03:31:32.000Z",
+        "url": "https://greasyfork.org/users/818462-ccf-2012"
+      }
+    ],
+    "name": "管理批量发邀请/魔力",
+    "description": "pter 管理批量发邀请/魔力",
+    "url": "https://greasyfork.org/scripts/445226-%E7%AE%A1%E7%90%86%E6%89%B9%E9%87%8F%E5%8F%91%E9%82%80%E8%AF%B7-%E9%AD%94%E5%8A%9B",
+    "code_url": "https://update.greasyfork.org/scripts/445226/%E7%AE%A1%E7%90%86%E6%89%B9%E9%87%8F%E5%8F%91%E9%82%80%E8%AF%B7%E9%AD%94%E5%8A%9B.user.js",
+    "code_size": 11960,
+    "license": null,
+    "version": "1.4.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 445225,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-19T10:02:02.000Z",
+    "code_updated_at": "2022-08-03T17:14:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 284654,
+        "name": "ylxb2016",
+        "created_at": "2019-03-21T01:47:13.000Z",
+        "url": "https://greasyfork.org/users/284654-ylxb2016"
+      },
+      {
+        "id": 818462,
+        "name": "ccf-2012",
+        "created_at": "2021-09-24T03:31:32.000Z",
+        "url": "https://greasyfork.org/users/818462-ccf-2012"
+      }
+    ],
+    "name": "批量发猫粮",
+    "description": "pter 批量发邀请",
+    "url": "https://greasyfork.org/scripts/445225-%E6%89%B9%E9%87%8F%E5%8F%91%E7%8C%AB%E7%B2%AE",
+    "code_url": "https://update.greasyfork.org/scripts/445225/%E6%89%B9%E9%87%8F%E5%8F%91%E7%8C%AB%E7%B2%AE.user.js",
+    "code_size": 8431,
+    "license": null,
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 435321,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-10T14:51:02.000Z",
+    "code_updated_at": "2024-07-17T11:26:48.000Z",
+    "namespace": "https://greasyfork.org/users/812132",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 812132,
+        "name": "xgmloo",
+        "created_at": "2021-09-04T11:01:02.000Z",
+        "url": "https://greasyfork.org/users/812132-xgmloo",
+        "scripts": [
+          {
+            "id": 444193,
+            "daily_installs": 0,
+            "total_installs": 15,
+            "fan_score": "5.0",
+            "good_ratings": 0,
+            "ok_ratings": 0,
+            "bad_ratings": 0,
+            "created_at": "2022-04-29T12:29:46.000Z",
+            "code_updated_at": "2022-04-29T12:30:37.000Z",
+            "namespace": "https://greasyfork.org/users/812132",
+            "support_url": null,
+            "contribution_url": null,
+            "contribution_amount": null,
+            "name": "DBLP显示页数",
+            "description": "如题。",
+            "url": "https://greasyfork.org/scripts/444193-dblp%E6%98%BE%E7%A4%BA%E9%A1%B5%E6%95%B0",
+            "code_url": "https://update.greasyfork.org/scripts/444193/DBLP%E6%98%BE%E7%A4%BA%E9%A1%B5%E6%95%B0.user.js",
+            "code_size": 860,
+            "license": "GPL-3.0 License",
+            "version": "1.0",
+            "locale": "zh-CN",
+            "deleted": false
+          }
+        ]
+      },
+      {
+        "id": 284654,
+        "name": "ylxb2016",
+        "created_at": "2019-03-21T01:47:13.000Z",
+        "url": "https://greasyfork.org/users/284654-ylxb2016"
+      },
+      {
+        "id": 818462,
+        "name": "ccf-2012",
+        "created_at": "2021-09-24T03:31:32.000Z",
+        "url": "https://greasyfork.org/users/818462-ccf-2012"
+      },
+      {
+        "id": 989066,
+        "name": "rottenapple11",
+        "created_at": "2022-11-28T07:36:25.000Z",
+        "url": "https://greasyfork.org/users/989066-rottenapple11"
+      }
+    ],
+    "name": "PTer Letter Helper",
+    "description": "如题.",
+    "url": "https://greasyfork.org/scripts/435321-pter-letter-helper",
+    "code_url": "https://update.greasyfork.org/scripts/435321/PTer%20Letter%20Helper.user.js",
+    "code_size": 21112,
+    "license": "MIT License",
+    "version": "2.3.16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

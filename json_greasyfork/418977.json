@@ -1,0 +1,59 @@
+{
+  "id": 418977,
+  "daily_installs": 0,
+  "total_installs": 89,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-22T02:25:46.000Z",
+  "code_updated_at": "2021-01-27T06:37:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 98885,
+      "name": "丁二",
+      "created_at": "2017-01-31T09:24:20.000Z",
+      "url": "https://greasyfork.org/users/98885-%E4%B8%81%E4%BA%8C",
+      "scripts": [
+        {
+          "id": 418977,
+          "daily_installs": 0,
+          "total_installs": 89,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-12-22T02:25:46.000Z",
+          "code_updated_at": "2021-01-27T06:37:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "调试时阻止页面跳转",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/418977-%E8%B0%83%E8%AF%95%E6%97%B6%E9%98%BB%E6%AD%A2%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC",
+          "code_url": "https://update.greasyfork.org/scripts/418977/%E8%B0%83%E8%AF%95%E6%97%B6%E9%98%BB%E6%AD%A2%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC.user.js",
+          "code_size": 475,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "调试时阻止页面跳转",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/418977-%E8%B0%83%E8%AF%95%E6%97%B6%E9%98%BB%E6%AD%A2%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/418977/%E8%B0%83%E8%AF%95%E6%97%B6%E9%98%BB%E6%AD%A2%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 475,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

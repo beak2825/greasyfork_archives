@@ -1,0 +1,34 @@
+{
+  "id": 492647,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-16T08:38:30.000Z",
+  "code_updated_at": "2024-04-17T07:21:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1288923,
+      "name": "archsrc",
+      "created_at": "2024-04-16T08:11:59.000Z",
+      "url": "https://greasyfork.org/users/1288923-archsrc",
+      "scripts": []
+    }
+  ],
+  "name": "允许番茄小说正文文本选择",
+  "description": "解除番茄小说正文禁止文本选择的限制",
+  "url": "https://greasyfork.org/scripts/492647-%E5%85%81%E8%AE%B8%E7%95%AA%E8%8C%84%E5%B0%8F%E8%AF%B4%E6%AD%A3%E6%96%87%E6%96%87%E6%9C%AC%E9%80%89%E6%8B%A9",
+  "code_url": "https://update.greasyfork.org/scripts/492647/%E5%85%81%E8%AE%B8%E7%95%AA%E8%8C%84%E5%B0%8F%E8%AF%B4%E6%AD%A3%E6%96%87%E6%96%87%E6%9C%AC%E9%80%89%E6%8B%A9.user.js",
+  "code_size": 770,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

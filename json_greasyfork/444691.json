@@ -1,0 +1,33 @@
+{
+  "id": 444691,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-08T16:15:09.000Z",
+  "code_updated_at": "2022-05-08T17:59:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 777928,
+      "name": "MrKleiner",
+      "created_at": "2021-05-30T15:19:55.000Z",
+      "url": "https://greasyfork.org/users/777928-mrkleiner"
+    }
+  ],
+  "name": "Evernote, more like, Everubbish",
+  "description": "Webdesigners can go fuck themselves with their retarded design standards",
+  "url": "https://greasyfork.org/scripts/444691-evernote-more-like-everubbish",
+  "code_url": "https://update.greasyfork.org/scripts/444691/Evernote%2C%20more%20like%2C%20Everubbish.user.js",
+  "code_size": 4066,
+  "license": "MIT License",
+  "version": "0.31",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

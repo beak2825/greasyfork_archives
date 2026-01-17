@@ -31,5 +31,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 462794,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-28T17:04:57.000Z",
+    "code_updated_at": "2023-03-28T17:04:57.000Z",
+    "namespace": "Zhangsq37",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905449,
+        "name": "Zhangsq37_",
+        "created_at": "2022-04-22T07:09:58.000Z",
+        "url": "https://greasyfork.org/users/905449-zhangsq37"
+      }
+    ],
+    "name": "网页挡板",
+    "description": "通过【Alt+单击】在网页唤出一个（多个）自由移动和调整大小的挡板，遮住不想露出的内容，或是直播中挡住游戏广告/黄色广告",
+    "url": "https://greasyfork.org/scripts/462794-%E7%BD%91%E9%A1%B5%E6%8C%A1%E6%9D%BF",
+    "code_url": "https://update.greasyfork.org/scripts/462794/%E7%BD%91%E9%A1%B5%E6%8C%A1%E6%9D%BF.user.js",
+    "code_size": 16086,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460503,
+    "daily_installs": 1,
+    "total_installs": 1067,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-22T12:43:31.000Z",
+    "code_updated_at": "2024-01-07T11:39:40.000Z",
+    "namespace": "https://gitee.com/zhangsongqiang/userscript/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905449,
+        "name": "Zhangsq37_",
+        "created_at": "2022-04-22T07:09:58.000Z",
+        "url": "https://greasyfork.org/users/905449-zhangsq37"
+      }
+    ],
+    "name": "B站直播SC悬浮窗",
+    "description": "将B站直播的SC部分展开显示到一个悬浮窗",
+    "url": "https://greasyfork.org/scripts/460503-b%E7%AB%99%E7%9B%B4%E6%92%ADsc%E6%82%AC%E6%B5%AE%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/460503/B%E7%AB%99%E7%9B%B4%E6%92%ADSC%E6%82%AC%E6%B5%AE%E7%AA%97.user.js",
+    "code_size": 26541,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 443799,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-22T09:15:11.000Z",
+    "code_updated_at": "2022-04-22T12:11:23.000Z",
+    "namespace": "https://gitee.com/zhangsongqiang/userscript/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905449,
+        "name": "Zhangsq37_",
+        "created_at": "2022-04-22T07:09:58.000Z",
+        "url": "https://greasyfork.org/users/905449-zhangsq37"
+      }
+    ],
+    "name": "自由设计",
+    "description": "自由设计网页",
+    "url": "https://greasyfork.org/scripts/443799-%E8%87%AA%E7%94%B1%E8%AE%BE%E8%AE%A1",
+    "code_url": "https://update.greasyfork.org/scripts/443799/%E8%87%AA%E7%94%B1%E8%AE%BE%E8%AE%A1.user.js",
+    "code_size": 6437,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

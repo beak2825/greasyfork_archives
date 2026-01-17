@@ -1,0 +1,33 @@
+{
+  "id": 448170,
+  "daily_installs": 0,
+  "total_installs": 218,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-20T08:02:04.000Z",
+  "code_updated_at": "2022-08-14T03:09:51.000Z",
+  "namespace": "ads-remove",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 937499,
+      "name": "beeant0512",
+      "created_at": "2022-07-20T07:53:54.000Z",
+      "url": "https://greasyfork.org/users/937499-beeant0512"
+    }
+  ],
+  "name": "小广告移除",
+  "description": "移除网站里面的小广告",
+  "url": "https://greasyfork.org/scripts/448170-%E5%B0%8F%E5%B9%BF%E5%91%8A%E7%A7%BB%E9%99%A4",
+  "code_url": "https://update.greasyfork.org/scripts/448170/%E5%B0%8F%E5%B9%BF%E5%91%8A%E7%A7%BB%E9%99%A4.user.js",
+  "code_size": 1468,
+  "license": "MIT License",
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

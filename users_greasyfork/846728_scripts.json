@@ -1,0 +1,134 @@
+[
+  {
+    "id": 483007,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-24T13:42:04.000Z",
+    "code_updated_at": "2025-03-01T09:27:11.000Z",
+    "namespace": "小集专用",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846728,
+        "name": "@lyd@",
+        "created_at": "2021-11-30T12:31:15.000Z",
+        "url": "https://greasyfork.org/users/846728-lyd"
+      }
+    ],
+    "name": "Download PDF & Redirector Login",
+    "description": "在文章页面上添加下载 PDF 按钮和 Redirector 登录按钮",
+    "url": "https://greasyfork.org/scripts/483007-download-pdf-redirector-login",
+    "code_url": "https://update.greasyfork.org/scripts/483007/Download%20PDF%20%20Redirector%20Login.user.js",
+    "code_size": 33081,
+    "license": "MIT License",
+    "version": "2.6.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478773,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-01T07:57:01.000Z",
+    "code_updated_at": "2024-08-20T02:09:01.000Z",
+    "namespace": "brown",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846728,
+        "name": "@lyd@",
+        "created_at": "2021-11-30T12:31:15.000Z",
+        "url": "https://greasyfork.org/users/846728-lyd"
+      }
+    ],
+    "name": "Download PDF & Redirector Login",
+    "description": "瑞克布朗文献下载专用(浙大版)",
+    "url": "https://greasyfork.org/scripts/478773-download-pdf-redirector-login",
+    "code_url": "https://update.greasyfork.org/scripts/478773/Download%20PDF%20%20Redirector%20Login.user.js",
+    "code_size": 76327,
+    "license": "MIT License",
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 470012,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-03T02:13:31.000Z",
+    "code_updated_at": "2023-10-09T05:36:16.000Z",
+    "namespace": "Domain Redirector",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846728,
+        "name": "@lyd@",
+        "created_at": "2021-11-30T12:31:15.000Z",
+        "url": "https://greasyfork.org/users/846728-lyd"
+      }
+    ],
+    "name": "Domain Redirector",
+    "description": "Redirects specific domains to new domain",
+    "url": "https://greasyfork.org/scripts/470012-domain-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/470012/Domain%20Redirector.user.js",
+    "code_size": 3724,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 466307,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-15T00:13:52.000Z",
+    "code_updated_at": "2023-07-09T10:14:08.000Z",
+    "namespace": "Redirector login",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 846728,
+        "name": "@lyd@",
+        "created_at": "2021-11-30T12:31:15.000Z",
+        "url": "https://greasyfork.org/users/846728-lyd"
+      }
+    ],
+    "name": "Redirector login",
+    "description": "在文章页面上添加下载 PDF 按钮",
+    "url": "https://greasyfork.org/scripts/466307-redirector-login",
+    "code_url": "https://update.greasyfork.org/scripts/466307/Redirector%20login.user.js",
+    "code_size": 10804,
+    "license": "MIT License",
+    "version": "1.03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

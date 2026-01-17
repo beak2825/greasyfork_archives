@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463606,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-09T14:16:44.000Z",
+    "code_updated_at": "2024-01-26T20:28:37.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1028159,
+        "name": "Lemonte",
+        "created_at": "2023-02-16T11:31:42.000Z",
+        "url": "https://greasyfork.org/users/1028159-lemonte"
+      }
+    ],
+    "name": "кураторы форумa общий скрипт black russia",
+    "description": "author Lemonte",
+    "url": "https://greasyfork.org/scripts/463606-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BCa-%D0%BE%D0%B1%D1%89%D0%B8%D0%B9-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-black-russia",
+    "code_url": "https://update.greasyfork.org/scripts/463606/%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BCa%20%D0%BE%D0%B1%D1%89%D0%B8%D0%B9%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20black%20russia.user.js",
+    "code_size": 6822,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

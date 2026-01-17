@@ -1,0 +1,59 @@
+{
+  "id": 421576,
+  "daily_installs": 1,
+  "total_installs": 2087,
+  "fan_score": "61.0",
+  "good_ratings": 6,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-11T11:19:29.000Z",
+  "code_updated_at": "2024-02-20T13:56:36.000Z",
+  "namespace": "hi",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 736576,
+      "name": "Butterlvr6",
+      "created_at": "2021-02-11T11:00:20.000Z",
+      "url": "https://greasyfork.org/users/736576-butterlvr6",
+      "scripts": [
+        {
+          "id": 421576,
+          "daily_installs": 1,
+          "total_installs": 2087,
+          "fan_score": "61.0",
+          "good_ratings": 6,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-11T11:19:29.000Z",
+          "code_updated_at": "2024-02-20T13:56:36.000Z",
+          "namespace": "hi",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Free multicrypto Auto Faucet. FREE CRYPTO EVERY HOUR!!!!",
+          "description": "Auto Faucet Script. Get free STEAM TETHER USD coin BINANCE coin NEO DASH BITCOIN NEM CARDANO ETHEREUM LITECOIN RIPPLE TRON CHAINLINK DOGE coin EVERY HOUR!!!!!",
+          "url": "https://greasyfork.org/scripts/421576-free-multicrypto-auto-faucet-free-crypto-every-hour",
+          "code_url": "https://update.greasyfork.org/scripts/421576/Free%20multicrypto%20Auto%20Faucet%20FREE%20CRYPTO%20EVERY%20HOUR%21%21%21%21.user.js",
+          "code_size": 1856,
+          "license": null,
+          "version": "4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Free multicrypto Auto Faucet. FREE CRYPTO EVERY HOUR!!!!",
+  "description": "Auto Faucet Script. Get free STEAM TETHER USD coin BINANCE coin NEO DASH BITCOIN NEM CARDANO ETHEREUM LITECOIN RIPPLE TRON CHAINLINK DOGE coin EVERY HOUR!!!!!",
+  "url": "https://greasyfork.org/scripts/421576-free-multicrypto-auto-faucet-free-crypto-every-hour",
+  "code_url": "https://update.greasyfork.org/scripts/421576/Free%20multicrypto%20Auto%20Faucet%20FREE%20CRYPTO%20EVERY%20HOUR%21%21%21%21.user.js",
+  "code_size": 1856,
+  "license": null,
+  "version": "4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

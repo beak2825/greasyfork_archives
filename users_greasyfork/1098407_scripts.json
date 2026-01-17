@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 468632,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-14T07:27:12.000Z",
+    "code_updated_at": "2025-03-19T11:01:29.000Z",
+    "namespace": "https://github.com/Tosox/ZEIT-Akademie-Quiz-Solver",
+    "support_url": "https://github.com/Tosox/ZEIT-Akademie-Quiz-Solver/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1098407,
+        "name": "Tosox",
+        "created_at": "2023-06-14T07:20:33.000Z",
+        "url": "https://greasyfork.org/users/1098407-tosox"
+      }
+    ],
+    "name": "ZEIT Akademie Quiz Solver",
+    "description": "Shows the solutions to the current quiz questions",
+    "url": "https://greasyfork.org/scripts/468632-zeit-akademie-quiz-solver",
+    "code_url": "https://update.greasyfork.org/scripts/468632/ZEIT%20Akademie%20Quiz%20Solver.user.js",
+    "code_size": 2893,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

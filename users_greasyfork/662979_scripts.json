@@ -1,0 +1,101 @@
+[
+  {
+    "id": 445281,
+    "daily_installs": 0,
+    "total_installs": 842,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-20T07:40:03.000Z",
+    "code_updated_at": "2022-05-20T07:40:03.000Z",
+    "namespace": "https://greasyfork.org/users/662979",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662979,
+        "name": "harry-sunhao",
+        "created_at": "2020-07-03T15:32:40.000Z",
+        "url": "https://greasyfork.org/users/662979-harry-sunhao"
+      }
+    ],
+    "name": "防豆瓣跳转首页",
+    "description": "解决pc网页版豆瓣很多帖子点开直接跳转网站首页",
+    "url": "https://greasyfork.org/scripts/445281-%E9%98%B2%E8%B1%86%E7%93%A3%E8%B7%B3%E8%BD%AC%E9%A6%96%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/445281/%E9%98%B2%E8%B1%86%E7%93%A3%E8%B7%B3%E8%BD%AC%E9%A6%96%E9%A1%B5.user.js",
+    "code_size": 1433,
+    "license": "GPL-3.0 License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445020,
+    "daily_installs": 0,
+    "total_installs": 121,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-15T17:00:10.000Z",
+    "code_updated_at": "2022-05-25T00:51:56.000Z",
+    "namespace": "https://greasyfork.org/users/662979",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662979,
+        "name": "harry-sunhao",
+        "created_at": "2020-07-03T15:32:40.000Z",
+        "url": "https://greasyfork.org/users/662979-harry-sunhao"
+      }
+    ],
+    "name": "JD去广告商品",
+    "description": "去除京东广告商品，广告横幅，推荐位",
+    "url": "https://greasyfork.org/scripts/445020-jd%E5%8E%BB%E5%B9%BF%E5%91%8A%E5%95%86%E5%93%81",
+    "code_url": "https://update.greasyfork.org/scripts/445020/JD%E5%8E%BB%E5%B9%BF%E5%91%8A%E5%95%86%E5%93%81.user.js",
+    "code_size": 2807,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427369,
+    "daily_installs": 0,
+    "total_installs": 117,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-01T18:12:32.000Z",
+    "code_updated_at": "2022-08-19T03:19:33.000Z",
+    "namespace": "https://greasyfork.org/users/662979",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662979,
+        "name": "harry-sunhao",
+        "created_at": "2020-07-03T15:32:40.000Z",
+        "url": "https://greasyfork.org/users/662979-harry-sunhao"
+      }
+    ],
+    "name": "Speed up for Youtube",
+    "description": "Press right key to speed up, NoStop",
+    "url": "https://greasyfork.org/scripts/427369-speed-up-for-youtube",
+    "code_url": "https://update.greasyfork.org/scripts/427369/Speed%20up%20for%20Youtube.user.js",
+    "code_size": 3034,
+    "license": "MIT License",
+    "version": "1.05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

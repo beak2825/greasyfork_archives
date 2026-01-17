@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479980,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-11-15T16:47:39.000Z",
+    "code_updated_at": "2024-09-04T15:37:49.000Z",
+    "namespace": "http://ganky",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905461,
+        "name": "Ganky Mark",
+        "created_at": "2022-04-22T07:47:53.000Z",
+        "url": "https://greasyfork.org/users/905461-ganky-mark"
+      }
+    ],
+    "name": "Colamanga我的收藏更新日期排序",
+    "description": "Colamanga我的收藏，列表按照最新更新日期排序（2024-09-04更新自动加载多页收藏并排序）",
+    "url": "https://greasyfork.org/scripts/479980-colamanga%E6%88%91%E7%9A%84%E6%94%B6%E8%97%8F%E6%9B%B4%E6%96%B0%E6%97%A5%E6%9C%9F%E6%8E%92%E5%BA%8F",
+    "code_url": "https://update.greasyfork.org/scripts/479980/Colamanga%E6%88%91%E7%9A%84%E6%94%B6%E8%97%8F%E6%9B%B4%E6%96%B0%E6%97%A5%E6%9C%9F%E6%8E%92%E5%BA%8F.user.js",
+    "code_size": 2450,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

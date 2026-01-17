@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492126,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-10T04:26:28.000Z",
+    "code_updated_at": "2024-04-10T04:26:28.000Z",
+    "namespace": "ErisGreyrat",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286255,
+        "name": "sci",
+        "created_at": "2024-04-10T04:20:46.000Z",
+        "url": "https://greasyfork.org/users/1286255-sci"
+      }
+    ],
+    "name": "随机密码生成器",
+    "description": "点击页面左下角按钮输入位数生成随机密码到剪贴板",
+    "url": "https://greasyfork.org/scripts/492126-%E9%9A%8F%E6%9C%BA%E5%AF%86%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/492126/%E9%9A%8F%E6%9C%BA%E5%AF%86%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8.user.js",
+    "code_size": 3719,
+    "license": "MIT License",
+    "version": "2024-04-10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

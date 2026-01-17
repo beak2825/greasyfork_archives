@@ -1,0 +1,59 @@
+{
+  "id": 440979,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-05T13:30:44.000Z",
+  "code_updated_at": "2022-03-05T13:30:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 743849,
+      "name": "java-xiaoyi",
+      "created_at": "2021-03-05T09:16:16.000Z",
+      "url": "https://greasyfork.org/users/743849-java-xiaoyi",
+      "scripts": [
+        {
+          "id": 448128,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-19T14:42:39.000Z",
+          "code_updated_at": "2022-07-19T14:42:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "江湖再见",
+          "description": "练手",
+          "url": "https://greasyfork.org/scripts/448128-%E6%B1%9F%E6%B9%96%E5%86%8D%E8%A7%81",
+          "code_url": "https://update.greasyfork.org/scripts/448128/%E6%B1%9F%E6%B9%96%E5%86%8D%E8%A7%81.user.js",
+          "code_size": 891,
+          "license": "MIT License",
+          "version": "3.5.49",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "战斗吧歌姬！【内群】",
+  "description": "Bilibili直播间，小心心、天选时刻、实物抽奖、活动抽奖、动态抽奖",
+  "url": "https://greasyfork.org/scripts/440979-%E6%88%98%E6%96%97%E5%90%A7%E6%AD%8C%E5%A7%AC-%E5%86%85%E7%BE%A4",
+  "code_url": "https://update.greasyfork.org/scripts/440979/%E6%88%98%E6%96%97%E5%90%A7%E6%AD%8C%E5%A7%AC%EF%BC%81%E3%80%90%E5%86%85%E7%BE%A4%E3%80%91.user.js",
+  "code_size": 770678,
+  "license": "MIT License",
+  "version": "8.2.17",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

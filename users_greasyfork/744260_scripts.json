@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422774,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-06T12:26:25.000Z",
+    "code_updated_at": "2021-03-06T12:26:24.000Z",
+    "namespace": "tomv.io.dagaanbieding-net-belgium-deals-only",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 744260,
+        "name": "Tom Vervoort",
+        "created_at": "2021-03-06T12:03:08.000Z",
+        "url": "https://greasyfork.org/users/744260-tom-vervoort"
+      }
+    ],
+    "name": "Show only belgium deals",
+    "description": "show only belgium deals on dagaanbieding.net",
+    "url": "https://greasyfork.org/scripts/422774-show-only-belgium-deals",
+    "code_url": "https://update.greasyfork.org/scripts/422774/Show%20only%20belgium%20deals.user.js",
+    "code_size": 643,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

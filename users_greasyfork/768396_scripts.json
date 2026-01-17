@@ -1,0 +1,35 @@
+[
+  {
+    "id": 425929,
+    "daily_installs": 0,
+    "total_installs": 971,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-04T13:07:28.000Z",
+    "code_updated_at": "2021-09-05T16:02:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 768396,
+        "name": "PeterLiu",
+        "created_at": "2021-05-04T13:01:19.000Z",
+        "url": "https://greasyfork.org/users/768396-peterliu"
+      }
+    ],
+    "name": "economist unlimited",
+    "description": "economist unlimited reading",
+    "url": "https://greasyfork.org/scripts/425929-economist-unlimited",
+    "code_url": "https://update.greasyfork.org/scripts/425929/economist%20unlimited.user.js",
+    "code_size": 1309,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

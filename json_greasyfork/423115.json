@@ -1,0 +1,33 @@
+{
+  "id": 423115,
+  "daily_installs": 0,
+  "total_installs": 362,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-12T09:04:58.000Z",
+  "code_updated_at": "2021-03-12T09:04:57.000Z",
+  "namespace": "http://tampermonkey.net/csdn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 746364,
+      "name": "decode",
+      "created_at": "2021-03-12T08:48:22.000Z",
+      "url": "https://greasyfork.org/users/746364-decode"
+    }
+  ],
+  "name": "csdn看评论免登录+去广告",
+  "description": "去掉右侧、评论区上侧广告，支持免登陆查看评论、显示全文",
+  "url": "https://greasyfork.org/scripts/423115-csdn%E7%9C%8B%E8%AF%84%E8%AE%BA%E5%85%8D%E7%99%BB%E5%BD%95-%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/423115/csdn%E7%9C%8B%E8%AF%84%E8%AE%BA%E5%85%8D%E7%99%BB%E5%BD%95%2B%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 1578,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

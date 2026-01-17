@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424926,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-04-12T15:46:27.000Z",
+    "code_updated_at": "2021-04-12T15:46:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 758123,
+        "name": "barthofu",
+        "created_at": "2021-04-12T15:35:49.000Z",
+        "url": "https://greasyfork.org/users/758123-barthofu"
+      }
+    ],
+    "name": "Github IDE Preview",
+    "description": "Open a github repo in an online code editor (similar to VSCode)!",
+    "url": "https://greasyfork.org/scripts/424926-github-ide-preview",
+    "code_url": "https://update.greasyfork.org/scripts/424926/Github%20IDE%20Preview.user.js",
+    "code_size": 1238,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

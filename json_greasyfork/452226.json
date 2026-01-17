@@ -1,0 +1,59 @@
+{
+  "id": 452226,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-29T12:51:28.000Z",
+  "code_updated_at": "2022-09-29T12:51:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 964737,
+      "name": "dhalsim",
+      "created_at": "2022-09-29T12:47:43.000Z",
+      "url": "https://greasyfork.org/users/964737-dhalsim",
+      "scripts": [
+        {
+          "id": 452226,
+          "daily_installs": 0,
+          "total_installs": 46,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-29T12:51:28.000Z",
+          "code_updated_at": "2022-09-29T12:51:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Disable accidental youtube video seek for arrow up and down keys",
+          "description": "After changing the position of the video by clicking the progress bar, up and down arrow keys will seek the video instead of changing the volume. this script fixes this by refocusing to the video element",
+          "url": "https://greasyfork.org/scripts/452226-disable-accidental-youtube-video-seek-for-arrow-up-and-down-keys",
+          "code_url": "https://update.greasyfork.org/scripts/452226/Disable%20accidental%20youtube%20video%20seek%20for%20arrow%20up%20and%20down%20keys.user.js",
+          "code_size": 1043,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Disable accidental youtube video seek for arrow up and down keys",
+  "description": "After changing the position of the video by clicking the progress bar, up and down arrow keys will seek the video instead of changing the volume. this script fixes this by refocusing to the video element",
+  "url": "https://greasyfork.org/scripts/452226-disable-accidental-youtube-video-seek-for-arrow-up-and-down-keys",
+  "code_url": "https://update.greasyfork.org/scripts/452226/Disable%20accidental%20youtube%20video%20seek%20for%20arrow%20up%20and%20down%20keys.user.js",
+  "code_size": 1043,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

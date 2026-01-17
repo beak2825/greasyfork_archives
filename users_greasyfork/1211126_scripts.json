@@ -97,5 +97,38 @@
     "locale": "cy",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 480740,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-25T09:36:31.000Z",
+    "code_updated_at": "2023-11-25T09:36:31.000Z",
+    "namespace": "https://github.com/XiaoLinXiaoZhu/HUST-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1211126,
+        "name": "XiaoLinXiaoZhu",
+        "created_at": "2023-11-05T04:21:40.000Z",
+        "url": "https://greasyfork.org/users/1211126-xiaolinxiaozhu"
+      }
+    ],
+    "name": "HUST华中科技大学军理线上作业自动填充助手",
+    "description": "HUST military science online homework autofill assistant",
+    "url": "https://greasyfork.org/scripts/480740-hust%E5%8D%8E%E4%B8%AD%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E5%86%9B%E7%90%86%E7%BA%BF%E4%B8%8A%E4%BD%9C%E4%B8%9A%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/480740/HUST%E5%8D%8E%E4%B8%AD%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E5%86%9B%E7%90%86%E7%BA%BF%E4%B8%8A%E4%BD%9C%E4%B8%9A%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 6600,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

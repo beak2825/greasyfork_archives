@@ -1,0 +1,59 @@
+{
+  "id": 441703,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-18T16:25:24.000Z",
+  "code_updated_at": "2022-03-18T16:25:24.000Z",
+  "namespace": "https://twitter.com/atarime_cafe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 889152,
+      "name": "あたりめコーヒー",
+      "created_at": "2022-03-18T16:06:22.000Z",
+      "url": "https://greasyfork.org/users/889152-%E3%81%82%E3%81%9F%E3%82%8A%E3%82%81%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC",
+      "scripts": [
+        {
+          "id": 441703,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-18T16:25:24.000Z",
+          "code_updated_at": "2022-03-18T16:25:24.000Z",
+          "namespace": "https://twitter.com/atarime_cafe",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MoneyForward Saving Rate",
+          "description": "MoneyForwardに貯蓄率を表示します。",
+          "url": "https://greasyfork.org/scripts/441703-moneyforward-saving-rate",
+          "code_url": "https://update.greasyfork.org/scripts/441703/MoneyForward%20Saving%20Rate.user.js",
+          "code_size": 1583,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MoneyForward Saving Rate",
+  "description": "MoneyForwardに貯蓄率を表示します。",
+  "url": "https://greasyfork.org/scripts/441703-moneyforward-saving-rate",
+  "code_url": "https://update.greasyfork.org/scripts/441703/MoneyForward%20Saving%20Rate.user.js",
+  "code_size": 1583,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

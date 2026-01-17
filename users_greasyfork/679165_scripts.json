@@ -1,0 +1,101 @@
+[
+  {
+    "id": 441164,
+    "daily_installs": 0,
+    "total_installs": 358,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-08T17:36:59.000Z",
+    "code_updated_at": "2022-08-19T00:49:06.000Z",
+    "namespace": "https://lawrenzo.com/p/remove-reddit-sidebar",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 679165,
+        "name": "Lawrence Sim",
+        "created_at": "2020-08-17T22:36:25.000Z",
+        "url": "https://greasyfork.org/users/679165-lawrence-sim"
+      }
+    ],
+    "name": "Remove Reddit Sidebar and Trending",
+    "description": "Removes the sidebar and trending bar on the front page of Reddit.",
+    "url": "https://greasyfork.org/scripts/441164-remove-reddit-sidebar-and-trending",
+    "code_url": "https://update.greasyfork.org/scripts/441164/Remove%20Reddit%20Sidebar%20and%20Trending.user.js",
+    "code_size": 1698,
+    "license": "WTFPL (http://www.wtfpl.net)",
+    "version": "0.2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439072,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-24T18:21:27.000Z",
+    "code_updated_at": "2022-01-24T18:21:27.000Z",
+    "namespace": "Adblock Blocker Blocker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 679165,
+        "name": "Lawrence Sim",
+        "created_at": "2020-08-17T22:36:25.000Z",
+        "url": "https://greasyfork.org/users/679165-lawrence-sim"
+      }
+    ],
+    "name": "Adblock Blocker Blocker",
+    "description": "Bypass adblock-detectors. Pretty heavy-handed so will need updating frequently.",
+    "url": "https://greasyfork.org/scripts/439072-adblock-blocker-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/439072/Adblock%20Blocker%20Blocker.user.js",
+    "code_size": 4904,
+    "license": null,
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 439071,
+    "daily_installs": 0,
+    "total_installs": 186,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-24T18:19:37.000Z",
+    "code_updated_at": "2022-08-19T14:53:11.000Z",
+    "namespace": "https://lawrenzo.com/p/reddit-chemo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 679165,
+        "name": "Lawrence Sim",
+        "created_at": "2020-08-17T22:36:25.000Z",
+        "url": "https://greasyfork.org/users/679165-lawrence-sim"
+      }
+    ],
+    "name": "Reddit Chemo",
+    "description": "Filter, block, and remove unwanted subreddit posts of your choosing and remove ads on the Reddit feed.",
+    "url": "https://greasyfork.org/scripts/439071-reddit-chemo",
+    "code_url": "https://update.greasyfork.org/scripts/439071/Reddit%20Chemo.user.js",
+    "code_size": 27855,
+    "license": "WTFPL (http://www.wtfpl.net)",
+    "version": "2.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

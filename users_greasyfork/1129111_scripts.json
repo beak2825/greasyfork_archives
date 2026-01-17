@@ -1,0 +1,200 @@
+[
+  {
+    "id": 480743,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-25T10:20:01.000Z",
+    "code_updated_at": "2024-12-19T02:05:58.000Z",
+    "namespace": "TVer自動再生",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1129111,
+        "name": "hamachi",
+        "created_at": "2023-07-17T12:44:59.000Z",
+        "url": "https://greasyfork.org/users/1129111-hamachi"
+      }
+    ],
+    "name": "TVer自動再生",
+    "description": "Tver自動再生",
+    "url": "https://greasyfork.org/scripts/480743-tver%E8%87%AA%E5%8B%95%E5%86%8D%E7%94%9F",
+    "code_url": "https://update.greasyfork.org/scripts/480743/TVer%E8%87%AA%E5%8B%95%E5%86%8D%E7%94%9F.user.js",
+    "code_size": 1052,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 479604,
+    "daily_installs": 0,
+    "total_installs": 111,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-12T10:19:50.000Z",
+    "code_updated_at": "2024-12-19T02:08:16.000Z",
+    "namespace": "TVer click play",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1129111,
+        "name": "hamachi",
+        "created_at": "2023-07-17T12:44:59.000Z",
+        "url": "https://greasyfork.org/users/1129111-hamachi"
+      }
+    ],
+    "name": "TVer click play",
+    "description": "Tverの再生画面クリックで、再生開始・停止を行えるようにします",
+    "url": "https://greasyfork.org/scripts/479604-tver-click-play",
+    "code_url": "https://update.greasyfork.org/scripts/479604/TVer%20click%20play.user.js",
+    "code_size": 1778,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473928,
+    "daily_installs": 0,
+    "total_installs": 1133,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-26T08:29:52.000Z",
+    "code_updated_at": "2024-10-26T15:22:53.000Z",
+    "namespace": "https://github.com/chimaha/Pixiv-Infinite-Scroll",
+    "support_url": "https://github.com/hamachi25/Pixiv-Infinite-Scroll/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1129111,
+        "name": "hamachi",
+        "created_at": "2023-07-17T12:44:59.000Z",
+        "url": "https://greasyfork.org/users/1129111-hamachi"
+      }
+    ],
+    "name": "Pixiv Infinite Scroll",
+    "description": "Add infinite scroll feature to Pixiv.",
+    "url": "https://greasyfork.org/scripts/473928-pixiv-infinite-scroll",
+    "code_url": "https://update.greasyfork.org/scripts/473928/Pixiv%20Infinite%20Scroll.user.js",
+    "code_size": 84962,
+    "license": "MIT License",
+    "version": "1.6.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 471981,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-29T11:36:53.000Z",
+    "code_updated_at": "2024-02-09T21:31:11.000Z",
+    "namespace": "https://github.com/chimaha/dAnimeSmoothPlayer",
+    "support_url": "https://github.com/chimaha/dAnimeSmoothPlayer/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1129111,
+        "name": "hamachi",
+        "created_at": "2023-07-17T12:44:59.000Z",
+        "url": "https://greasyfork.org/users/1129111-hamachi"
+      }
+    ],
+    "name": "dアニメストア スムーズプレイヤー",
+    "description": "dアニメストアのFirefox限定フリーズバグを擬似的に回避します",
+    "url": "https://greasyfork.org/scripts/471981-d%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%B9%E3%83%88%E3%82%A2-%E3%82%B9%E3%83%A0%E3%83%BC%E3%82%BA%E3%83%97%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC",
+    "code_url": "https://update.greasyfork.org/scripts/471981/d%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%B9%E3%83%88%E3%82%A2%20%E3%82%B9%E3%83%A0%E3%83%BC%E3%82%BA%E3%83%97%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC.user.js",
+    "code_size": 2402,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 471401,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-21T20:20:07.000Z",
+    "code_updated_at": "2023-08-12T23:19:58.000Z",
+    "namespace": "https://github.com/chimaha/dAnimeScroll",
+    "support_url": "https://github.com/chimaha/dAnimeScroll/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1129111,
+        "name": "hamachi",
+        "created_at": "2023-07-17T12:44:59.000Z",
+        "url": "https://greasyfork.org/users/1129111-hamachi"
+      }
+    ],
+    "name": "dアニメストアで横スクロール",
+    "description": "dアニメストアの横スクロールを、Firefoxで使用できるようにします",
+    "url": "https://greasyfork.org/scripts/471401-d%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%B9%E3%83%88%E3%82%A2%E3%81%A7%E6%A8%AA%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB",
+    "code_url": "https://update.greasyfork.org/scripts/471401/d%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%B9%E3%83%88%E3%82%A2%E3%81%A7%E6%A8%AA%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB.user.js",
+    "code_size": 1683,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 471042,
+    "daily_installs": 0,
+    "total_installs": 67,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-17T13:46:53.000Z",
+    "code_updated_at": "2024-09-04T01:53:06.000Z",
+    "namespace": "https://github.com/chimaha/dAnimePlus",
+    "support_url": "https://github.com/chimaha/dAnimePlus/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1129111,
+        "name": "hamachi",
+        "created_at": "2023-07-17T12:44:59.000Z",
+        "url": "https://greasyfork.org/users/1129111-hamachi"
+      }
+    ],
+    "name": "dアニメストアPlus",
+    "description": "dアニメストアに様々な機能を追加します",
+    "url": "https://greasyfork.org/scripts/471042-d%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%B9%E3%83%88%E3%82%A2plus",
+    "code_url": "https://update.greasyfork.org/scripts/471042/d%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%B9%E3%83%88%E3%82%A2Plus.user.js",
+    "code_size": 21390,
+    "license": "MIT License",
+    "version": "1.9.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

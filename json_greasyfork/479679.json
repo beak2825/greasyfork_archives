@@ -1,0 +1,59 @@
+{
+  "id": 479679,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-13T02:16:46.000Z",
+  "code_updated_at": "2023-11-13T02:16:46.000Z",
+  "namespace": "GamesGxDownloader",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1216429,
+      "name": "coddy0717",
+      "created_at": "2023-11-13T02:11:32.000Z",
+      "url": "https://greasyfork.org/users/1216429-coddy0717",
+      "scripts": [
+        {
+          "id": 479679,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-13T02:16:46.000Z",
+          "code_updated_at": "2023-11-13T02:16:46.000Z",
+          "namespace": "GamesGxDownloader",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GamesGX Downloader",
+          "description": "Skip shortener to gamesgx.net",
+          "url": "https://greasyfork.org/scripts/479679-gamesgx-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/479679/GamesGX%20Downloader.user.js",
+          "code_size": 1413,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GamesGX Downloader",
+  "description": "Skip shortener to gamesgx.net",
+  "url": "https://greasyfork.org/scripts/479679-gamesgx-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/479679/GamesGX%20Downloader.user.js",
+  "code_size": 1413,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

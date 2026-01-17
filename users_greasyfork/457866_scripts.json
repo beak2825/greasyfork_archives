@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424910,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-12T08:46:38.000Z",
+    "code_updated_at": "2021-04-20T09:21:44.000Z",
+    "namespace": "https://littleboyharry.me",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 457866,
+        "name": "LittleboyHarry",
+        "created_at": "2020-03-12T06:38:26.000Z",
+        "url": "https://greasyfork.org/users/457866-littleboyharry"
+      }
+    ],
+    "name": "Read Golang Doc Better",
+    "description": "go to read with better override style!",
+    "url": "https://greasyfork.org/scripts/424910-read-golang-doc-better",
+    "code_url": "https://update.greasyfork.org/scripts/424910/Read%20Golang%20Doc%20Better.user.js",
+    "code_size": 662,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

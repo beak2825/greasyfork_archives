@@ -1,0 +1,33 @@
+{
+  "id": 461345,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-07T03:19:08.000Z",
+  "code_updated_at": "2023-03-07T03:20:30.000Z",
+  "namespace": "https://greasyfork.org/es/users/1037829-thisguy0048",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1037829,
+      "name": "thisguy0048",
+      "created_at": "2023-03-07T03:12:31.000Z",
+      "url": "https://greasyfork.org/users/1037829-thisguy0048"
+    }
+  ],
+  "name": "Steam Trading Links",
+  "description": "Adds extra links to Steam to make trading easier.",
+  "url": "https://greasyfork.org/scripts/461345-steam-trading-links",
+  "code_url": "https://update.greasyfork.org/scripts/461345/Steam%20Trading%20Links.user.js",
+  "code_size": 5266,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

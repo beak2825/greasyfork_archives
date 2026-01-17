@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437238,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-18T12:38:56.000Z",
+    "code_updated_at": "2021-12-18T12:44:57.000Z",
+    "namespace": "https://reddit.com/u/daviderosi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 854913,
+        "name": "Francesco Rosi",
+        "created_at": "2021-12-18T12:33:56.000Z",
+        "url": "https://greasyfork.org/users/854913-francesco-rosi"
+      }
+    ],
+    "name": "Cheat for checkboxolympics.com",
+    "description": "A cheat for checkboxolympics.com that lets you get a time of around under 0.010 on all game modes.",
+    "url": "https://greasyfork.org/scripts/437238-cheat-for-checkboxolympics-com",
+    "code_url": "https://update.greasyfork.org/scripts/437238/Cheat%20for%20checkboxolympicscom.user.js",
+    "code_size": 716,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

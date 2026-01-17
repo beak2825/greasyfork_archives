@@ -1,0 +1,59 @@
+{
+  "id": 437675,
+  "daily_installs": 0,
+  "total_installs": 251,
+  "fan_score": "30.1",
+  "good_ratings": 2,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2021-12-28T04:35:39.000Z",
+  "code_updated_at": "2021-12-28T04:36:29.000Z",
+  "namespace": "deep.institute",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 857634,
+      "name": "dev.qm7or",
+      "created_at": "2021-12-25T20:28:29.000Z",
+      "url": "https://greasyfork.org/users/857634-dev-qm7or",
+      "scripts": [
+        {
+          "id": 437675,
+          "daily_installs": 0,
+          "total_installs": 251,
+          "fan_score": "30.1",
+          "good_ratings": 2,
+          "ok_ratings": 2,
+          "bad_ratings": 0,
+          "created_at": "2021-12-28T04:35:39.000Z",
+          "code_updated_at": "2021-12-28T04:36:29.000Z",
+          "namespace": "deep.institute",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Choose the best resolution on rumble.com",
+          "description": "Alwasy choose the best resolution on rumble.com",
+          "url": "https://greasyfork.org/scripts/437675-choose-the-best-resolution-on-rumble-com",
+          "code_url": "https://update.greasyfork.org/scripts/437675/Choose%20the%20best%20resolution%20on%20rumblecom.user.js",
+          "code_size": 780,
+          "license": "MIT License",
+          "version": "Fixed",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Choose the best resolution on rumble.com",
+  "description": "Alwasy choose the best resolution on rumble.com",
+  "url": "https://greasyfork.org/scripts/437675-choose-the-best-resolution-on-rumble-com",
+  "code_url": "https://update.greasyfork.org/scripts/437675/Choose%20the%20best%20resolution%20on%20rumblecom.user.js",
+  "code_size": 780,
+  "license": "MIT License",
+  "version": "Fixed",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

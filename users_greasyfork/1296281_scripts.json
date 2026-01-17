@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494010,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-03T05:54:07.000Z",
+    "code_updated_at": "2025-04-20T14:49:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1296281,
+        "name": "ShineByPupil",
+        "created_at": "2024-05-03T05:08:06.000Z",
+        "url": "https://greasyfork.org/users/1296281-shinebypupil"
+      }
+    ],
+    "name": "本地表格数据筛选",
+    "description": "获取<table>标签的表格元素，根据表头形成筛选列表，本地对数据进行筛选",
+    "url": "https://greasyfork.org/scripts/494010-%E6%9C%AC%E5%9C%B0%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E7%AD%9B%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/494010/%E6%9C%AC%E5%9C%B0%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E7%AD%9B%E9%80%89.user.js",
+    "code_size": 32018,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

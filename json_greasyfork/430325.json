@@ -1,0 +1,34 @@
+{
+  "id": 430325,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-04T07:29:08.000Z",
+  "code_updated_at": "2021-08-04T09:05:40.000Z",
+  "namespace": "Script Runner Pro",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 775697,
+      "name": "channox32",
+      "created_at": "2021-05-24T12:44:29.000Z",
+      "url": "https://greasyfork.org/users/775697-channox32",
+      "scripts": []
+    }
+  ],
+  "name": "PvU Auto Water and Scare Crow",
+  "description": "Plant vs Undead (PVU) is a multiplayer tower defense game, where your plants are also your real asset. The goal is to combine the phenomenal Plants vs Zombies with new blockchain technology – NFTs.",
+  "url": "https://greasyfork.org/scripts/430325-pvu-auto-water-and-scare-crow",
+  "code_url": "https://update.greasyfork.org/scripts/430325/PvU%20Auto%20Water%20and%20Scare%20Crow.user.js",
+  "code_size": 46465,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

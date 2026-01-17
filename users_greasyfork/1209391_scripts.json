@@ -1,0 +1,101 @@
+[
+  {
+    "id": 478902,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-02T22:47:44.000Z",
+    "code_updated_at": "2023-11-03T10:55:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209391,
+        "name": "jaylann",
+        "created_at": "2023-11-02T15:36:33.000Z",
+        "url": "https://greasyfork.org/users/1209391-jaylann"
+      }
+    ],
+    "name": "TUM Logo Replacer",
+    "description": "Replace the word 'tum' with the TUM Logo",
+    "url": "https://greasyfork.org/scripts/478902-tum-logo-replacer",
+    "code_url": "https://update.greasyfork.org/scripts/478902/TUM%20Logo%20Replacer.user.js",
+    "code_size": 1654,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478901,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-02T22:42:55.000Z",
+    "code_updated_at": "2023-11-02T22:58:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209391,
+        "name": "jaylann",
+        "created_at": "2023-11-02T15:36:33.000Z",
+        "url": "https://greasyfork.org/users/1209391-jaylann"
+      }
+    ],
+    "name": "Excellence Reminder",
+    "description": "Reminds you of TUMs excellence in random intervals",
+    "url": "https://greasyfork.org/scripts/478901-excellence-reminder",
+    "code_url": "https://update.greasyfork.org/scripts/478901/Excellence%20Reminder.user.js",
+    "code_size": 5215,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478876,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-02T15:48:09.000Z",
+    "code_updated_at": "2023-11-02T22:57:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209391,
+        "name": "jaylann",
+        "created_at": "2023-11-02T15:36:33.000Z",
+        "url": "https://greasyfork.org/users/1209391-jaylann"
+      }
+    ],
+    "name": "Attention Span Extender",
+    "description": "Uses sophisticated psychological techniques to keep your attention on TUM pages",
+    "url": "https://greasyfork.org/scripts/478876-attention-span-extender",
+    "code_url": "https://update.greasyfork.org/scripts/478876/Attention%20Span%20Extender.user.js",
+    "code_size": 2185,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

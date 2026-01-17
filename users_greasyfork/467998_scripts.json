@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481001,
+    "daily_installs": 0,
+    "total_installs": 1020,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-29T07:39:09.000Z",
+    "code_updated_at": "2023-12-18T06:08:54.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 467998,
+        "name": "York Wang",
+        "created_at": "2020-03-24T03:26:58.000Z",
+        "url": "https://greasyfork.org/users/467998-york-wang"
+      }
+    ],
+    "name": "Fuck Yudao",
+    "description": "屏蔽芋道官方文档登录校验",
+    "url": "https://greasyfork.org/scripts/481001-yudao",
+    "code_url": "https://update.greasyfork.org/scripts/481001/Fuck%20Yudao.user.js",
+    "code_size": 1934,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

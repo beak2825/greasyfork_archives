@@ -1,0 +1,33 @@
+{
+  "id": 478577,
+  "daily_installs": 0,
+  "total_installs": 11581,
+  "fan_score": "64.6",
+  "good_ratings": 7,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-30T03:28:36.000Z",
+  "code_updated_at": "2023-10-30T06:55:10.000Z",
+  "namespace": "http://ibaiyu.top/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1199960,
+      "name": "南风依旧",
+      "created_at": "2023-10-20T02:19:42.000Z",
+      "url": "https://greasyfork.org/users/1199960-%E5%8D%97%E9%A3%8E%E4%BE%9D%E6%97%A7"
+    }
+  ],
+  "name": "国开自动刷课（不答题考试）",
+  "description": "国开（国家开放大学）自动刷课（不答题考试） 支持自动访问线上链接、查看资料附件、观看视频、自动查看页面。",
+  "url": "https://greasyfork.org/scripts/478577-%E5%9B%BD%E5%BC%80%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE-%E4%B8%8D%E7%AD%94%E9%A2%98%E8%80%83%E8%AF%95",
+  "code_url": "https://update.greasyfork.org/scripts/478577/%E5%9B%BD%E5%BC%80%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%EF%BC%88%E4%B8%8D%E7%AD%94%E9%A2%98%E8%80%83%E8%AF%95%EF%BC%89.user.js",
+  "code_size": 18224,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

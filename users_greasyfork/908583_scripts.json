@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444206,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-29T15:57:26.000Z",
+    "code_updated_at": "2022-05-07T11:10:31.000Z",
+    "namespace": "https://greasyfork.org/ko/users/908583",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 908583,
+        "name": "dsfa adfsfd",
+        "created_at": "2022-04-29T15:48:46.000Z",
+        "url": "https://greasyfork.org/users/908583-dsfa-adfsfd"
+      }
+    ],
+    "name": "novelpia shortcut tool",
+    "description": "편하게 써용, 왼쪽 화살표 이전화, 오른쪽 화살표 다음화, right ctrl 패널 열기, 엔터 추천, 쉬프트 댓글창 +++이거 쓰면 페이지 방식 못 씀 스크롤 쓰세요",
+    "url": "https://greasyfork.org/scripts/444206-novelpia-shortcut-tool",
+    "code_url": "https://update.greasyfork.org/scripts/444206/novelpia%20shortcut%20tool.user.js",
+    "code_size": 1483,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

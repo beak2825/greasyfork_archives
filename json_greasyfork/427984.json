@@ -1,0 +1,59 @@
+{
+  "id": 427984,
+  "daily_installs": 0,
+  "total_installs": 165,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-15T07:57:15.000Z",
+  "code_updated_at": "2021-06-15T07:59:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 783610,
+      "name": "逆宮風鈴",
+      "created_at": "2021-06-15T07:43:17.000Z",
+      "url": "https://greasyfork.org/users/783610-%E9%80%86%E5%AE%AE%E9%A2%A8%E9%88%B4",
+      "scripts": [
+        {
+          "id": 427984,
+          "daily_installs": 0,
+          "total_installs": 165,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-15T07:57:15.000Z",
+          "code_updated_at": "2021-06-15T07:59:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "輕小說文庫 簡單介面設定 /轻小说文库 简单介面设定",
+          "description": "此外掛用於修改背景顏色、內容背景顏色、文字設定、標題文字設定。移除廣告、設定區。放大書目欄、下一頁超連結字體",
+          "url": "https://greasyfork.org/scripts/427984-%E8%BC%95%E5%B0%8F%E8%AA%AA%E6%96%87%E5%BA%AB-%E7%B0%A1%E5%96%AE%E4%BB%8B%E9%9D%A2%E8%A8%AD%E5%AE%9A-%E8%BD%BB%E5%B0%8F%E8%AF%B4%E6%96%87%E5%BA%93-%E7%AE%80%E5%8D%95%E4%BB%8B%E9%9D%A2%E8%AE%BE%E5%AE%9A",
+          "code_url": "https://update.greasyfork.org/scripts/427984/%E8%BC%95%E5%B0%8F%E8%AA%AA%E6%96%87%E5%BA%AB%20%E7%B0%A1%E5%96%AE%E4%BB%8B%E9%9D%A2%E8%A8%AD%E5%AE%9A%20%E8%BD%BB%E5%B0%8F%E8%AF%B4%E6%96%87%E5%BA%93%20%E7%AE%80%E5%8D%95%E4%BB%8B%E9%9D%A2%E8%AE%BE%E5%AE%9A.user.js",
+          "code_size": 2033,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "輕小說文庫 簡單介面設定 /轻小说文库 简单介面设定",
+  "description": "此外掛用於修改背景顏色、內容背景顏色、文字設定、標題文字設定。移除廣告、設定區。放大書目欄、下一頁超連結字體",
+  "url": "https://greasyfork.org/scripts/427984-%E8%BC%95%E5%B0%8F%E8%AA%AA%E6%96%87%E5%BA%AB-%E7%B0%A1%E5%96%AE%E4%BB%8B%E9%9D%A2%E8%A8%AD%E5%AE%9A-%E8%BD%BB%E5%B0%8F%E8%AF%B4%E6%96%87%E5%BA%93-%E7%AE%80%E5%8D%95%E4%BB%8B%E9%9D%A2%E8%AE%BE%E5%AE%9A",
+  "code_url": "https://update.greasyfork.org/scripts/427984/%E8%BC%95%E5%B0%8F%E8%AA%AA%E6%96%87%E5%BA%AB%20%E7%B0%A1%E5%96%AE%E4%BB%8B%E9%9D%A2%E8%A8%AD%E5%AE%9A%20%E8%BD%BB%E5%B0%8F%E8%AF%B4%E6%96%87%E5%BA%93%20%E7%AE%80%E5%8D%95%E4%BB%8B%E9%9D%A2%E8%AE%BE%E5%AE%9A.user.js",
+  "code_size": 2033,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

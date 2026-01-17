@@ -1,0 +1,33 @@
+{
+  "id": 416043,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-13T14:44:55.000Z",
+  "code_updated_at": "2020-11-13T14:50:59.000Z",
+  "namespace": "koohiireview",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 704719,
+      "name": "lde",
+      "created_at": "2020-11-13T14:27:16.000Z",
+      "url": "https://greasyfork.org/users/704719-lde"
+    }
+  ],
+  "name": "Kanji Koohii Stroke Order - Review section",
+  "description": "Adds Kanji Stroke Order to the Review section",
+  "url": "https://greasyfork.org/scripts/416043-kanji-koohii-stroke-order-review-section",
+  "code_url": "https://update.greasyfork.org/scripts/416043/Kanji%20Koohii%20Stroke%20Order%20-%20Review%20section.user.js",
+  "code_size": 1084,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

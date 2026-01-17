@@ -1,0 +1,68 @@
+[
+  {
+    "id": 435478,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-14T03:55:09.000Z",
+    "code_updated_at": "2021-11-14T03:55:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 173391,
+        "name": "cuteribs",
+        "created_at": "2018-03-05T03:05:47.000Z",
+        "url": "https://greasyfork.org/users/173391-cuteribs"
+      }
+    ],
+    "name": "排骨翻译捷径",
+    "description": "选择文本 右键翻译, 目前支持 google, bing",
+    "url": "https://greasyfork.org/scripts/435478-%E6%8E%92%E9%AA%A8%E7%BF%BB%E8%AF%91%E6%8D%B7%E5%BE%84",
+    "code_url": "https://update.greasyfork.org/scripts/435478/%E6%8E%92%E9%AA%A8%E7%BF%BB%E8%AF%91%E6%8D%B7%E5%BE%84.user.js",
+    "code_size": 1288,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434086,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-18T14:46:43.000Z",
+    "code_updated_at": "2021-10-23T18:40:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 173391,
+        "name": "cuteribs",
+        "created_at": "2018-03-05T03:05:47.000Z",
+        "url": "https://greasyfork.org/users/173391-cuteribs"
+      }
+    ],
+    "name": "绿联云 NAS 助手",
+    "description": "直接通过浏览器使用绿联云功能, 免装绿联云客户端",
+    "url": "https://greasyfork.org/scripts/434086-%E7%BB%BF%E8%81%94%E4%BA%91-nas-%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/434086/%E7%BB%BF%E8%81%94%E4%BA%91%20NAS%20%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 4658,
+    "license": null,
+    "version": "0.21",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

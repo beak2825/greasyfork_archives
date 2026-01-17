@@ -1,0 +1,34 @@
+{
+  "id": 457783,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-07T05:42:43.000Z",
+  "code_updated_at": "2023-01-07T05:48:16.000Z",
+  "namespace": "https://mp.weixin.qq.com/s/DtcPGtbc34bORAsrsf0OvA",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1001673,
+      "name": "guojizhansky",
+      "created_at": "2022-12-23T07:57:49.000Z",
+      "url": "https://greasyfork.org/users/1001673-guojizhansky",
+      "scripts": []
+    }
+  ],
+  "name": "Alibaba国际站询盘订单榜单90天内产品询盘订单数查询--By 微信公众号搜索国际站运营Sky",
+  "description": "用来查询国际站订单询盘榜单90天内产品询盘订单数",
+  "url": "https://greasyfork.org/scripts/457783-alibaba%E5%9B%BD%E9%99%85%E7%AB%99%E8%AF%A2%E7%9B%98%E8%AE%A2%E5%8D%95%E6%A6%9C%E5%8D%9590%E5%A4%A9%E5%86%85%E4%BA%A7%E5%93%81%E8%AF%A2%E7%9B%98%E8%AE%A2%E5%8D%95%E6%95%B0%E6%9F%A5%E8%AF%A2-by-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E6%90%9C%E7%B4%A2%E5%9B%BD%E9%99%85%E7%AB%99%E8%BF%90%E8%90%A5sky",
+  "code_url": "https://update.greasyfork.org/scripts/457783/Alibaba%E5%9B%BD%E9%99%85%E7%AB%99%E8%AF%A2%E7%9B%98%E8%AE%A2%E5%8D%95%E6%A6%9C%E5%8D%9590%E5%A4%A9%E5%86%85%E4%BA%A7%E5%93%81%E8%AF%A2%E7%9B%98%E8%AE%A2%E5%8D%95%E6%95%B0%E6%9F%A5%E8%AF%A2--By%20%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E6%90%9C%E7%B4%A2%E5%9B%BD%E9%99%85%E7%AB%99%E8%BF%90%E8%90%A5Sky.user.js",
+  "code_size": 2174,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

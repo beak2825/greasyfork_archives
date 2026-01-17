@@ -1,0 +1,35 @@
+[
+  {
+    "id": 446633,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-17T21:11:36.000Z",
+    "code_updated_at": "2022-06-19T11:53:36.000Z",
+    "namespace": "http://www.dounban.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 926681,
+        "name": "greasygrease",
+        "created_at": "2022-06-17T21:07:20.000Z",
+        "url": "https://greasyfork.org/users/926681-greasygrease"
+      }
+    ],
+    "name": "境外势力操纵豆瓣",
+    "description": "境外手机号用户不实名验证也能大放厥词",
+    "url": "https://greasyfork.org/scripts/446633-%E5%A2%83%E5%A4%96%E5%8A%BF%E5%8A%9B%E6%93%8D%E7%BA%B5%E8%B1%86%E7%93%A3",
+    "code_url": "https://update.greasyfork.org/scripts/446633/%E5%A2%83%E5%A4%96%E5%8A%BF%E5%8A%9B%E6%93%8D%E7%BA%B5%E8%B1%86%E7%93%A3.user.js",
+    "code_size": 599,
+    "license": "GNU GPLv3",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

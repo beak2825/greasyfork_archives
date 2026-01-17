@@ -1,0 +1,59 @@
+{
+  "id": 491787,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-06T09:56:56.000Z",
+  "code_updated_at": "2024-04-06T09:56:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1284617,
+      "name": "lw zhang",
+      "created_at": "2024-04-06T09:52:58.000Z",
+      "url": "https://greasyfork.org/users/1284617-lw-zhang",
+      "scripts": [
+        {
+          "id": 491788,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-06T09:59:13.000Z",
+          "code_updated_at": "2024-04-06T09:59:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "直播间链接销量初始化",
+          "description": "直播间链接销量初始化脚本",
+          "url": "https://greasyfork.org/scripts/491788-%E7%9B%B4%E6%92%AD%E9%97%B4%E9%93%BE%E6%8E%A5%E9%94%80%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/491788/%E7%9B%B4%E6%92%AD%E9%97%B4%E9%93%BE%E6%8E%A5%E9%94%80%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96.user.js",
+          "code_size": 3232,
+          "license": "zhanglw",
+          "version": "2024-04-06",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "直播间链接每日销量",
+  "description": "直播间链接每日销量脚本",
+  "url": "https://greasyfork.org/scripts/491787-%E7%9B%B4%E6%92%AD%E9%97%B4%E9%93%BE%E6%8E%A5%E6%AF%8F%E6%97%A5%E9%94%80%E9%87%8F",
+  "code_url": "https://update.greasyfork.org/scripts/491787/%E7%9B%B4%E6%92%AD%E9%97%B4%E9%93%BE%E6%8E%A5%E6%AF%8F%E6%97%A5%E9%94%80%E9%87%8F.user.js",
+  "code_size": 3082,
+  "license": "zhanglw",
+  "version": "2024-04-06",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

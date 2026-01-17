@@ -1,0 +1,33 @@
+{
+  "id": 446081,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-06T08:59:51.000Z",
+  "code_updated_at": "2022-06-06T08:59:50.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 922660,
+      "name": "Morteza Hashemi",
+      "created_at": "2022-06-06T08:55:57.000Z",
+      "url": "https://greasyfork.org/users/922660-morteza-hashemi"
+    }
+  ],
+  "name": "clickprofit",
+  "description": "https://www.youtube.com/channel/UCm2XoBbuIVSgMagy3Q01tSw",
+  "url": "https://greasyfork.org/scripts/446081-clickprofit",
+  "code_url": "https://update.greasyfork.org/scripts/446081/clickprofit.user.js",
+  "code_size": 863,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "sv",
+  "deleted": false,
+  "visibility": "public"
+}

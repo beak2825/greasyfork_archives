@@ -1,0 +1,33 @@
+{
+  "id": 441684,
+  "daily_installs": 0,
+  "total_installs": 54,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-18T07:31:14.000Z",
+  "code_updated_at": "2022-04-07T05:22:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 798614,
+      "name": "zhigang1992",
+      "created_at": "2021-07-30T09:33:59.000Z",
+      "url": "https://greasyfork.org/users/798614-zhigang1992"
+    }
+  ],
+  "name": "文本标注辅助",
+  "description": "文本标注辅助, 同时标注/删除",
+  "url": "https://greasyfork.org/scripts/441684-%E6%96%87%E6%9C%AC%E6%A0%87%E6%B3%A8%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/441684/%E6%96%87%E6%9C%AC%E6%A0%87%E6%B3%A8%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 3352,
+  "license": "MIT License",
+  "version": "0.0.10",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

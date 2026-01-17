@@ -1,0 +1,68 @@
+[
+  {
+    "id": 487163,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-12T11:43:47.000Z",
+    "code_updated_at": "2024-02-12T11:43:47.000Z",
+    "namespace": "zhaoxiaqian",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239203,
+        "name": "zhaoxiaqian",
+        "created_at": "2019-01-13T04:40:51.000Z",
+        "url": "https://greasyfork.org/users/239203-zhaoxiaqian"
+      }
+    ],
+    "name": "叔叔不约自动聊天",
+    "description": "叔叔不约只配女 并自动问好",
+    "url": "https://greasyfork.org/scripts/487163-%E5%8F%94%E5%8F%94%E4%B8%8D%E7%BA%A6%E8%87%AA%E5%8A%A8%E8%81%8A%E5%A4%A9",
+    "code_url": "https://update.greasyfork.org/scripts/487163/%E5%8F%94%E5%8F%94%E4%B8%8D%E7%BA%A6%E8%87%AA%E5%8A%A8%E8%81%8A%E5%A4%A9.user.js",
+    "code_size": 2910,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473535,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-21T01:35:38.000Z",
+    "code_updated_at": "2023-08-21T01:35:38.000Z",
+    "namespace": "灌云-赵小倩",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239203,
+        "name": "zhaoxiaqian",
+        "created_at": "2019-01-13T04:40:51.000Z",
+        "url": "https://greasyfork.org/users/239203-zhaoxiaqian"
+      }
+    ],
+    "name": "自用-陌路人发消息",
+    "description": "陌路人自动发消息",
+    "url": "https://greasyfork.org/scripts/473535-%E8%87%AA%E7%94%A8-%E9%99%8C%E8%B7%AF%E4%BA%BA%E5%8F%91%E6%B6%88%E6%81%AF",
+    "code_url": "https://update.greasyfork.org/scripts/473535/%E8%87%AA%E7%94%A8-%E9%99%8C%E8%B7%AF%E4%BA%BA%E5%8F%91%E6%B6%88%E6%81%AF.user.js",
+    "code_size": 1727,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

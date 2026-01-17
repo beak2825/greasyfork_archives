@@ -1,0 +1,59 @@
+{
+  "id": 422946,
+  "daily_installs": 1,
+  "total_installs": 924,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-09T12:55:46.000Z",
+  "code_updated_at": "2021-03-25T14:52:05.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 745258,
+      "name": "k9120303",
+      "created_at": "2021-03-09T12:22:27.000Z",
+      "url": "https://greasyfork.org/users/745258-k9120303",
+      "scripts": [
+        {
+          "id": 422946,
+          "daily_installs": 1,
+          "total_installs": 924,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-09T12:55:46.000Z",
+          "code_updated_at": "2021-03-25T14:52:05.000Z",
+          "namespace": "none",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Instagram mobile on Desktop Fix",
+          "description": "Change the User Agent on Instagram to use mobile version on Desktop",
+          "url": "https://greasyfork.org/scripts/422946-instagram-mobile-on-desktop-fix",
+          "code_url": "https://update.greasyfork.org/scripts/422946/Instagram%20mobile%20on%20Desktop%20Fix.user.js",
+          "code_size": 943,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Instagram mobile on Desktop Fix",
+  "description": "Change the User Agent on Instagram to use mobile version on Desktop",
+  "url": "https://greasyfork.org/scripts/422946-instagram-mobile-on-desktop-fix",
+  "code_url": "https://update.greasyfork.org/scripts/422946/Instagram%20mobile%20on%20Desktop%20Fix.user.js",
+  "code_size": 943,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

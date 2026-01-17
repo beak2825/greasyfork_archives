@@ -1,0 +1,34 @@
+{
+  "id": 432659,
+  "daily_installs": 0,
+  "total_installs": 98,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-19T14:17:18.000Z",
+  "code_updated_at": "2024-01-23T12:53:00.000Z",
+  "namespace": "Lennydada",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 558478,
+      "name": "lennydada",
+      "created_at": "2020-05-10T15:08:06.000Z",
+      "url": "https://greasyfork.org/users/558478-lennydada",
+      "scripts": []
+    }
+  ],
+  "name": "m3u8_Lenny",
+  "description": "m3u8",
+  "url": "https://greasyfork.org/scripts/432659-m3u8-lenny",
+  "code_url": "https://update.greasyfork.org/scripts/432659/m3u8_Lenny.user.js",
+  "code_size": 20413,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

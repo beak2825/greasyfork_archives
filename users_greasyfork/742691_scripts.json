@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422513,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-02T06:42:29.000Z",
+    "code_updated_at": "2021-07-05T06:23:11.000Z",
+    "namespace": "https://www.hicaliber.com.au",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 742691,
+        "name": "hicaliber-nikita-alekseev",
+        "created_at": "2021-03-02T06:34:58.000Z",
+        "url": "https://greasyfork.org/users/742691-hicaliber-nikita-alekseev"
+      }
+    ],
+    "name": "AUTO Show Assignee field in JIRA Create Linked Issue",
+    "description": "Show Assignee field in the JIRA modal window of Create Linked Issue",
+    "url": "https://greasyfork.org/scripts/422513-auto-show-assignee-field-in-jira-create-linked-issue",
+    "code_url": "https://update.greasyfork.org/scripts/422513/AUTO%20Show%20Assignee%20field%20in%20JIRA%20Create%20Linked%20Issue.user.js",
+    "code_size": 2978,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487380,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-15T13:28:14.000Z",
+    "code_updated_at": "2024-02-15T13:28:13.000Z",
+    "namespace": "https://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1261566,
+        "name": "大雷轰顶",
+        "created_at": "2024-02-15T13:25:05.000Z",
+        "url": "https://greasyfork.org/users/1261566-%E5%A4%A7%E9%9B%B7%E8%BD%B0%E9%A1%B6"
+      }
+    ],
+    "name": "网赚盘下载助手",
+    "description": "支持快速下载网赚盘",
+    "url": "https://greasyfork.org/scripts/487380-%E7%BD%91%E8%B5%9A%E7%9B%98%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/487380/%E7%BD%91%E8%B5%9A%E7%9B%98%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 42560,
+    "license": null,
+    "version": "1.74",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

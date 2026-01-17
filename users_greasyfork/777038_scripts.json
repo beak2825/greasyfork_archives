@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427153,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-28T05:56:27.000Z",
+    "code_updated_at": "2021-05-28T05:56:27.000Z",
+    "namespace": "https://greasyfork.org/ru/users/777038-magic3000",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 777038,
+        "name": "Magic3000",
+        "created_at": "2021-05-28T05:54:28.000Z",
+        "url": "https://greasyfork.org/users/777038-magic3000"
+      }
+    ],
+    "name": "Music tab to MORGENSHTERN rename",
+    "description": "Changes name of \"Music\" section to MORGENSHTERN",
+    "url": "https://greasyfork.org/scripts/427153-music-tab-to-morgenshtern-rename",
+    "code_url": "https://update.greasyfork.org/scripts/427153/Music%20tab%20to%20MORGENSHTERN%20rename.user.js",
+    "code_size": 1389,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

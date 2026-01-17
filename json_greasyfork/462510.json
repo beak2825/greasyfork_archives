@@ -1,0 +1,33 @@
+{
+  "id": 462510,
+  "daily_installs": 0,
+  "total_installs": 255,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-03-24T23:51:17.000Z",
+  "code_updated_at": "2024-03-21T12:30:13.000Z",
+  "namespace": "https://greasyfork.org/users/980489",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 980489,
+      "name": "Rust1667",
+      "created_at": "2022-11-07T21:45:09.000Z",
+      "url": "https://greasyfork.org/users/980489-rust1667"
+    }
+  ],
+  "name": "spanish torrent sites short-link bypasser",
+  "description": "Bypass some shorteners for spanish torrent sites like elitetorrent.com zonatorrent.in tomadivx.net estrenosdtl.re infomaniakos.net subtorrents.eu divxatope.net divxtotal.mov",
+  "url": "https://greasyfork.org/scripts/462510-spanish-torrent-sites-short-link-bypasser",
+  "code_url": "https://update.greasyfork.org/scripts/462510/spanish%20torrent%20sites%20short-link%20bypasser.user.js",
+  "code_size": 1807,
+  "license": null,
+  "version": "1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

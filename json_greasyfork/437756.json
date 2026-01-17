@@ -1,0 +1,59 @@
+{
+  "id": 437756,
+  "daily_installs": 0,
+  "total_installs": 139,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-29T13:25:28.000Z",
+  "code_updated_at": "2022-07-20T03:46:28.000Z",
+  "namespace": "https://txq.life",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 858977,
+      "name": "tanxinqi1996",
+      "created_at": "2021-12-29T13:16:18.000Z",
+      "url": "https://greasyfork.org/users/858977-tanxinqi1996",
+      "scripts": [
+        {
+          "id": 437756,
+          "daily_installs": 0,
+          "total_installs": 139,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-29T13:25:28.000Z",
+          "code_updated_at": "2022-07-20T03:46:28.000Z",
+          "namespace": "https://txq.life",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "攀升学堂助手",
+          "description": "钉钉授课学堂助手",
+          "url": "https://greasyfork.org/scripts/437756-%E6%94%80%E5%8D%87%E5%AD%A6%E5%A0%82%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/437756/%E6%94%80%E5%8D%87%E5%AD%A6%E5%A0%82%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 5954,
+          "license": "MIT License",
+          "version": "2022.07.20.1200",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "攀升学堂助手",
+  "description": "钉钉授课学堂助手",
+  "url": "https://greasyfork.org/scripts/437756-%E6%94%80%E5%8D%87%E5%AD%A6%E5%A0%82%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/437756/%E6%94%80%E5%8D%87%E5%AD%A6%E5%A0%82%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 5954,
+  "license": "MIT License",
+  "version": "2022.07.20.1200",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

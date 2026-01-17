@@ -1,0 +1,167 @@
+[
+  {
+    "id": 430012,
+    "daily_installs": 0,
+    "total_installs": 332,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-28T18:55:05.000Z",
+    "code_updated_at": "2021-08-12T00:55:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 460308,
+        "name": "Mekhi Maragh",
+        "created_at": "2020-03-16T17:27:41.000Z",
+        "url": "https://greasyfork.org/users/460308-mekhi-maragh"
+      }
+    ],
+    "name": "New Userscript",
+    "description": "try to take over the world",
+    "url": "https://greasyfork.org/scripts/430012-new-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/430012/New%20Userscript.user.js",
+    "code_size": 634,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425427,
+    "daily_installs": 0,
+    "total_installs": 171,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-23T02:57:29.000Z",
+    "code_updated_at": "2021-04-23T02:58:22.000Z",
+    "namespace": "aaa",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 460308,
+        "name": "Mekhi Maragh",
+        "created_at": "2020-03-16T17:27:41.000Z",
+        "url": "https://greasyfork.org/users/460308-mekhi-maragh"
+      }
+    ],
+    "name": "Twin Bullet Stack by Mekhi Maragh",
+    "description": "Makes a wall of bullets with Twin tank!",
+    "url": "https://greasyfork.org/scripts/425427-twin-bullet-stack-by-mekhi-maragh",
+    "code_url": "https://update.greasyfork.org/scripts/425427/Twin%20Bullet%20Stack%20by%20Mekhi%20Maragh.user.js",
+    "code_size": 9440,
+    "license": null,
+    "version": "69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 424410,
+    "daily_installs": 0,
+    "total_installs": 126,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-03T00:32:57.000Z",
+    "code_updated_at": "2021-04-03T00:32:56.000Z",
+    "namespace": "aaa",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 460308,
+        "name": "Mekhi Maragh",
+        "created_at": "2020-03-16T17:27:41.000Z",
+        "url": "https://greasyfork.org/users/460308-mekhi-maragh"
+      }
+    ],
+    "name": "Overlord Drone Spread Script Made By Mekhi Maragh",
+    "description": "Makes orginal fighter script a little more powerful using the side barrels instead of the back ones",
+    "url": "https://greasyfork.org/scripts/424410-overlord-drone-spread-script-made-by-mekhi-maragh",
+    "code_url": "https://update.greasyfork.org/scripts/424410/Overlord%20Drone%20Spread%20Script%20Made%20By%20Mekhi%20Maragh.user.js",
+    "code_size": 9509,
+    "license": null,
+    "version": "9000",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 424407,
+    "daily_installs": 0,
+    "total_installs": 163,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-04-03T00:03:50.000Z",
+    "code_updated_at": "2021-04-03T00:03:49.000Z",
+    "namespace": "aaa",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 460308,
+        "name": "Mekhi Maragh",
+        "created_at": "2020-03-16T17:27:41.000Z",
+        "url": "https://greasyfork.org/users/460308-mekhi-maragh"
+      }
+    ],
+    "name": "Fighter Script Made By Mekhi Maragh (added Otco Stack)",
+    "description": "Makes orginal fighter script a little more powerful using the side barrels instead of the back ones",
+    "url": "https://greasyfork.org/scripts/424407-fighter-script-made-by-mekhi-maragh-added-otco-stack",
+    "code_url": "https://update.greasyfork.org/scripts/424407/Fighter%20Script%20Made%20By%20Mekhi%20Maragh%20%28added%20Otco%20Stack%29.user.js",
+    "code_size": 9675,
+    "license": null,
+    "version": "69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 424289,
+    "daily_installs": 0,
+    "total_installs": 90,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-31T22:35:45.000Z",
+    "code_updated_at": "2021-03-31T22:35:44.000Z",
+    "namespace": "aaa",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 460308,
+        "name": "Mekhi Maragh",
+        "created_at": "2020-03-16T17:27:41.000Z",
+        "url": "https://greasyfork.org/users/460308-mekhi-maragh"
+      }
+    ],
+    "name": "Fighter Script Made By Mekhi Maragh",
+    "description": "Makes orginal fighter script a little more powerful using the side barrels instead of the back ones",
+    "url": "https://greasyfork.org/scripts/424289-fighter-script-made-by-mekhi-maragh",
+    "code_url": "https://update.greasyfork.org/scripts/424289/Fighter%20Script%20Made%20By%20Mekhi%20Maragh.user.js",
+    "code_size": 9545,
+    "license": null,
+    "version": "69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

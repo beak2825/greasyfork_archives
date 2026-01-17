@@ -1,0 +1,59 @@
+{
+  "id": 489723,
+  "daily_installs": 0,
+  "total_installs": 54,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-13T12:07:39.000Z",
+  "code_updated_at": "2024-03-13T12:07:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1273864,
+      "name": "runkuny",
+      "created_at": "2024-03-13T06:14:44.000Z",
+      "url": "https://greasyfork.org/users/1273864-runkuny",
+      "scripts": [
+        {
+          "id": 489723,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-13T12:07:39.000Z",
+          "code_updated_at": "2024-03-13T12:07:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "聚融E课程自动播放，不带答题功能，version1.0",
+          "description": "这是聚融E课程自动播放，不带答题功能，version1.0",
+          "url": "https://greasyfork.org/scripts/489723-%E8%81%9A%E8%9E%8De%E8%AF%BE%E7%A8%8B%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E4%B8%8D%E5%B8%A6%E7%AD%94%E9%A2%98%E5%8A%9F%E8%83%BD-version1-0",
+          "code_url": "https://update.greasyfork.org/scripts/489723/%E8%81%9A%E8%9E%8DE%E8%AF%BE%E7%A8%8B%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%EF%BC%8C%E4%B8%8D%E5%B8%A6%E7%AD%94%E9%A2%98%E5%8A%9F%E8%83%BD%EF%BC%8Cversion10.user.js",
+          "code_size": 2172,
+          "license": "MIT License",
+          "version": "2024-03-13",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "聚融E课程自动播放，不带答题功能，version1.0",
+  "description": "这是聚融E课程自动播放，不带答题功能，version1.0",
+  "url": "https://greasyfork.org/scripts/489723-%E8%81%9A%E8%9E%8De%E8%AF%BE%E7%A8%8B%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E4%B8%8D%E5%B8%A6%E7%AD%94%E9%A2%98%E5%8A%9F%E8%83%BD-version1-0",
+  "code_url": "https://update.greasyfork.org/scripts/489723/%E8%81%9A%E8%9E%8DE%E8%AF%BE%E7%A8%8B%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%EF%BC%8C%E4%B8%8D%E5%B8%A6%E7%AD%94%E9%A2%98%E5%8A%9F%E8%83%BD%EF%BC%8Cversion10.user.js",
+  "code_size": 2172,
+  "license": "MIT License",
+  "version": "2024-03-13",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

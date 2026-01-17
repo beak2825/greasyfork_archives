@@ -1,0 +1,68 @@
+[
+  {
+    "id": 489915,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-15T20:54:54.000Z",
+    "code_updated_at": "2024-03-15T20:54:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1274986,
+        "name": "iwanttobelive",
+        "created_at": "2024-03-15T20:04:34.000Z",
+        "url": "https://greasyfork.org/users/1274986-iwanttobelive"
+      }
+    ],
+    "name": "Megamarket Calculate Review Bonuses",
+    "description": "Calculate the total bonus amount for reviews on the megamarket.ru page",
+    "url": "https://greasyfork.org/scripts/489915-megamarket-calculate-review-bonuses",
+    "code_url": "https://update.greasyfork.org/scripts/489915/Megamarket%20Calculate%20Review%20Bonuses.user.js",
+    "code_size": 3753,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 489914,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-15T20:08:06.000Z",
+    "code_updated_at": "2024-03-15T20:10:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1274986,
+        "name": "iwanttobelive",
+        "created_at": "2024-03-15T20:04:34.000Z",
+        "url": "https://greasyfork.org/users/1274986-iwanttobelive"
+      }
+    ],
+    "name": "Megamarket Calculate Bonus Total and Update Balance",
+    "description": "Calculate total sum of bonus amounts and update balance on button click",
+    "url": "https://greasyfork.org/scripts/489914-megamarket-calculate-bonus-total-and-update-balance",
+    "code_url": "https://update.greasyfork.org/scripts/489914/Megamarket%20Calculate%20Bonus%20Total%20and%20Update%20Balance.user.js",
+    "code_size": 4885,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

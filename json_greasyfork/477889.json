@@ -1,0 +1,34 @@
+{
+  "id": 477889,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-20T19:12:14.000Z",
+  "code_updated_at": "2025-05-01T18:52:46.000Z",
+  "namespace": "https://gitlab.com/NvlblNm/wayfarer/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 912932,
+      "name": "SA1FUL23",
+      "created_at": "2022-05-11T05:21:52.000Z",
+      "url": "https://greasyfork.org/users/912932-sa1ful23",
+      "scripts": []
+    }
+  ],
+  "name": "IITC plugin: Wayfarer Planner",
+  "description": "Place markers on the map for your candidates in Wayfarer.",
+  "url": "https://greasyfork.org/scripts/477889-iitc-plugin-wayfarer-planner",
+  "code_url": "https://update.greasyfork.org/scripts/477889/IITC%20plugin%3A%20Wayfarer%20Planner.user.js",
+  "code_size": 56726,
+  "license": null,
+  "version": "1.184",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

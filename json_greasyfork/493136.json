@@ -1,0 +1,33 @@
+{
+  "id": 493136,
+  "daily_installs": 0,
+  "total_installs": 130,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-22T03:06:13.000Z",
+  "code_updated_at": "2024-04-28T00:41:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1291534,
+      "name": "mgtx",
+      "created_at": "2024-04-22T02:55:26.000Z",
+      "url": "https://greasyfork.org/users/1291534-mgtx"
+    }
+  ],
+  "name": "【掘金】自动签到&自动抽奖",
+  "description": "基于iframe实现,不用担心接口被禁。",
+  "url": "https://greasyfork.org/scripts/493136-%E6%8E%98%E9%87%91-%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0-%E8%87%AA%E5%8A%A8%E6%8A%BD%E5%A5%96",
+  "code_url": "https://update.greasyfork.org/scripts/493136/%E3%80%90%E6%8E%98%E9%87%91%E3%80%91%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0%E8%87%AA%E5%8A%A8%E6%8A%BD%E5%A5%96.user.js",
+  "code_size": 7204,
+  "license": "MIT License",
+  "version": "2.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

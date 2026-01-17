@@ -1,0 +1,33 @@
+{
+  "id": 490803,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-25T03:45:52.000Z",
+  "code_updated_at": "2024-03-25T03:58:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1279060,
+      "name": "LiseQQ",
+      "created_at": "2024-03-25T03:32:44.000Z",
+      "url": "https://greasyfork.org/users/1279060-liseqq"
+    }
+  ],
+  "name": "Otomoto Wykrywanie Samochodów z USA",
+  "description": "Wyszukuje słowa kluczowe (\"Stany Zjednoczone\" i \"USA\") i wyświetla alert w momencie znalezienia co najmniej jednego z nich",
+  "url": "https://greasyfork.org/scripts/490803-otomoto-wykrywanie-samochod%C3%B3w-z-usa",
+  "code_url": "https://update.greasyfork.org/scripts/490803/Otomoto%20Wykrywanie%20Samochod%C3%B3w%20z%20USA.user.js",
+  "code_size": 1130,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

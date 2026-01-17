@@ -1,0 +1,34 @@
+{
+  "id": 472273,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-02T16:45:11.000Z",
+  "code_updated_at": "2023-08-02T16:45:11.000Z",
+  "namespace": "https://greasyfork.org/en/users/1056265-sashayesin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 963751,
+      "name": "soporte movistar",
+      "created_at": "2022-09-26T14:23:40.000Z",
+      "url": "https://greasyfork.org/users/963751-soporte-movistar",
+      "scripts": []
+    }
+  ],
+  "name": "modo oscuro",
+  "description": "Dark theme for Drawaria.",
+  "url": "https://greasyfork.org/scripts/472273-modo-oscuro",
+  "code_url": "https://update.greasyfork.org/scripts/472273/modo%20oscuro.user.js",
+  "code_size": 100712,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

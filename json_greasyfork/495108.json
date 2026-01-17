@@ -1,0 +1,33 @@
+{
+  "id": 495108,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-16T03:16:27.000Z",
+  "code_updated_at": "2025-10-26T04:33:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1302296,
+      "name": "侯钰熙",
+      "created_at": "2024-05-16T03:07:37.000Z",
+      "url": "https://greasyfork.org/users/1302296-%E4%BE%AF%E9%92%B0%E7%86%99"
+    }
+  ],
+  "name": "奇安学堂-屏蔽切屏检测",
+  "description": "屏蔽奇安信内网平台奇安学堂的切屏检测功能",
+  "url": "https://greasyfork.org/scripts/495108-%E5%A5%87%E5%AE%89%E5%AD%A6%E5%A0%82-%E5%B1%8F%E8%94%BD%E5%88%87%E5%B1%8F%E6%A3%80%E6%B5%8B",
+  "code_url": "https://update.greasyfork.org/scripts/495108/%E5%A5%87%E5%AE%89%E5%AD%A6%E5%A0%82-%E5%B1%8F%E8%94%BD%E5%88%87%E5%B1%8F%E6%A3%80%E6%B5%8B.user.js",
+  "code_size": 15911,
+  "license": "MIT License",
+  "version": "1.4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

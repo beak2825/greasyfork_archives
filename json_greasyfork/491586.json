@@ -1,0 +1,59 @@
+{
+  "id": 491586,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-03T19:10:44.000Z",
+  "code_updated_at": "2024-04-05T01:27:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1283518,
+      "name": "7KMANN",
+      "created_at": "2024-04-03T19:08:25.000Z",
+      "url": "https://greasyfork.org/users/1283518-7kmann",
+      "scripts": [
+        {
+          "id": 496909,
+          "daily_installs": 0,
+          "total_installs": 69,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-03T01:57:13.000Z",
+          "code_updated_at": "2025-01-23T02:47:49.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "All vids playlist",
+          "description": "Create \"Play all\" videos playlist, accessible from channel page",
+          "url": "https://greasyfork.org/scripts/496909-all-vids-playlist",
+          "code_url": "https://update.greasyfork.org/scripts/496909/All%20vids%20playlist.user.js",
+          "code_size": 8666,
+          "license": "MIT License",
+          "version": "1.0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "S0urceProgram",
+  "description": "change et agrandis le background, on aime pas les francais",
+  "url": "https://greasyfork.org/scripts/491586-s0urceprogram",
+  "code_url": "https://update.greasyfork.org/scripts/491586/S0urceProgram.user.js",
+  "code_size": 12655,
+  "license": null,
+  "version": "1.4.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

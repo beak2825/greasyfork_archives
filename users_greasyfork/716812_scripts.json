@@ -1,0 +1,101 @@
+[
+  {
+    "id": 481584,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-07T06:48:29.000Z",
+    "code_updated_at": "2023-12-07T07:04:04.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 716812,
+        "name": "YBENS",
+        "created_at": "2020-12-15T02:30:16.000Z",
+        "url": "https://greasyfork.org/users/716812-ybens"
+      }
+    ],
+    "name": "JoySpace Search Focus",
+    "description": "Set focus on search box on JoySpace homepage",
+    "url": "https://greasyfork.org/scripts/481584-joyspace-search-focus",
+    "code_url": "https://update.greasyfork.org/scripts/481584/JoySpace%20Search%20Focus.user.js",
+    "code_size": 899,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 420378,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-19T02:58:09.000Z",
+    "code_updated_at": "2021-01-19T02:58:09.000Z",
+    "namespace": "http://tangmocd.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 716812,
+        "name": "YBENS",
+        "created_at": "2020-12-15T02:30:16.000Z",
+        "url": "https://greasyfork.org/users/716812-ybens"
+      }
+    ],
+    "name": "leetcode user case",
+    "description": "create user case unit test in leetcode.com",
+    "url": "https://greasyfork.org/scripts/420378-leetcode-user-case",
+    "code_url": "https://update.greasyfork.org/scripts/420378/leetcode%20user%20case.user.js",
+    "code_size": 5426,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418643,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-15T02:46:11.000Z",
+    "code_updated_at": "2020-12-15T02:46:11.000Z",
+    "namespace": "http://tangmocd.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 716812,
+        "name": "YBENS",
+        "created_at": "2020-12-15T02:30:16.000Z",
+        "url": "https://greasyfork.org/users/716812-ybens"
+      }
+    ],
+    "name": "leetcode user case",
+    "description": "create user case unit test in leetcode.com",
+    "url": "https://greasyfork.org/scripts/418643-leetcode-user-case",
+    "code_url": "https://update.greasyfork.org/scripts/418643/leetcode%20user%20case.user.js",
+    "code_size": 4716,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441172,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-08T19:25:40.000Z",
+    "code_updated_at": "2022-03-08T19:25:40.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884630,
+        "name": "Jim Monaco",
+        "created_at": "2022-03-08T19:12:58.000Z",
+        "url": "https://greasyfork.org/users/884630-jim-monaco"
+      }
+    ],
+    "name": "_Echo360 ID Revealer",
+    "description": "Adds user IDs to the echo360 Users admin page. Prints section IDs to the console on the Courses page.",
+    "url": "https://greasyfork.org/scripts/441172-echo360-id-revealer",
+    "code_url": "https://update.greasyfork.org/scripts/441172/_Echo360%20ID%20Revealer.user.js",
+    "code_size": 1857,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

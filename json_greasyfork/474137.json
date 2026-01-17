@@ -1,0 +1,34 @@
+{
+  "id": 474137,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-29T09:46:53.000Z",
+  "code_updated_at": "2023-08-29T09:46:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 755806,
+      "name": "ErickCharles",
+      "created_at": "2021-04-07T05:07:34.000Z",
+      "url": "https://greasyfork.org/users/755806-erickcharles",
+      "scripts": []
+    }
+  ],
+  "name": "转化为拼音",
+  "description": "t获取拼音",
+  "url": "https://greasyfork.org/scripts/474137-%E8%BD%AC%E5%8C%96%E4%B8%BA%E6%8B%BC%E9%9F%B3",
+  "code_url": "https://update.greasyfork.org/scripts/474137/1242561/%E8%BD%AC%E5%8C%96%E4%B8%BA%E6%8B%BC%E9%9F%B3.js",
+  "code_size": 53996,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

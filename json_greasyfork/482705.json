@@ -1,0 +1,33 @@
+{
+  "id": 482705,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-19T23:25:52.000Z",
+  "code_updated_at": "2023-12-19T23:25:52.000Z",
+  "namespace": "Visua",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 252149,
+      "name": "Visua",
+      "created_at": "2019-03-03T14:37:25.000Z",
+      "url": "https://greasyfork.org/users/252149-visua"
+    }
+  ],
+  "name": "Fishtank Camera Buttons",
+  "description": "Show buttons for every camera in the sidebar",
+  "url": "https://greasyfork.org/scripts/482705-fishtank-camera-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/482705/Fishtank%20Camera%20Buttons.user.js",
+  "code_size": 2442,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

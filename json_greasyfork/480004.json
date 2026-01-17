@@ -1,0 +1,33 @@
+{
+  "id": 480004,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-16T01:05:04.000Z",
+  "code_updated_at": "2023-11-16T01:05:04.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1216458,
+      "name": "skysigh",
+      "created_at": "2023-11-13T03:16:50.000Z",
+      "url": "https://greasyfork.org/users/1216458-skysigh"
+    }
+  ],
+  "name": "天翼云考试 测试(简)",
+  "description": "2023/9/13 20:20:01",
+  "url": "https://greasyfork.org/scripts/480004-%E5%A4%A9%E7%BF%BC%E4%BA%91%E8%80%83%E8%AF%95-%E6%B5%8B%E8%AF%95-%E7%AE%80",
+  "code_url": "https://update.greasyfork.org/scripts/480004/%E5%A4%A9%E7%BF%BC%E4%BA%91%E8%80%83%E8%AF%95%20%E6%B5%8B%E8%AF%95%28%E7%AE%80%29.user.js",
+  "code_size": 2454,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

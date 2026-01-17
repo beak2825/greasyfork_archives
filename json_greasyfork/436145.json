@@ -1,0 +1,59 @@
+{
+  "id": 436145,
+  "daily_installs": 0,
+  "total_installs": 9764,
+  "fan_score": "39.6",
+  "good_ratings": 3,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-11-27T06:06:28.000Z",
+  "code_updated_at": "2023-12-23T06:49:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 845006,
+      "name": "jlllp",
+      "created_at": "2021-11-27T05:49:33.000Z",
+      "url": "https://greasyfork.org/users/845006-jlllp",
+      "scripts": [
+        {
+          "id": 436145,
+          "daily_installs": 0,
+          "total_installs": 9764,
+          "fan_score": "39.6",
+          "good_ratings": 3,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2021-11-27T06:06:28.000Z",
+          "code_updated_at": "2023-12-23T06:49:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "继续教育刷网课",
+          "description": "网课视频自动播放下一集 有问题可以通过邮箱cheat_lipeng@foxmail.com反馈问题",
+          "url": "https://greasyfork.org/scripts/436145-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%88%B7%E7%BD%91%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/436145/%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%88%B7%E7%BD%91%E8%AF%BE.user.js",
+          "code_size": 27555,
+          "license": "MIT License",
+          "version": "1.0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "继续教育刷网课",
+  "description": "网课视频自动播放下一集 有问题可以通过邮箱cheat_lipeng@foxmail.com反馈问题",
+  "url": "https://greasyfork.org/scripts/436145-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%88%B7%E7%BD%91%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/436145/%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%88%B7%E7%BD%91%E8%AF%BE.user.js",
+  "code_size": 27555,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

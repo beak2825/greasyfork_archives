@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486864,
+    "daily_installs": 1,
+    "total_installs": 105,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-07T21:53:48.000Z",
+    "code_updated_at": "2024-02-07T22:12:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1126003,
+        "name": "OndryGames12",
+        "created_at": "2023-07-13T20:52:59.000Z",
+        "url": "https://greasyfork.org/users/1126003-ondrygames12"
+      }
+    ],
+    "name": "NoShorts – YT",
+    "description": "Removes those annoying shorts from your search/homepage",
+    "url": "https://greasyfork.org/scripts/486864-noshorts-yt",
+    "code_url": "https://update.greasyfork.org/scripts/486864/NoShorts%20%E2%80%93%20YT.user.js",
+    "code_size": 1467,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

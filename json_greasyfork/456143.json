@@ -1,0 +1,34 @@
+{
+  "id": 456143,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-06T20:17:58.000Z",
+  "code_updated_at": "2022-12-06T20:17:56.000Z",
+  "namespace": "https://greasyfork.org/users/219866",
+  "support_url": null,
+  "contribution_url": "https://afdian.net/@cyberubbish",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 668903,
+      "name": "hio",
+      "created_at": "2020-07-21T09:55:50.000Z",
+      "url": "https://greasyfork.org/users/668903-hio",
+      "scripts": []
+    }
+  ],
+  "name": "喜马拉雅专辑下载器",
+  "description": "可能是你见过最丝滑的喜马拉雅下载器啦！登录后支持VIP音频下载，支持专辑批量下载，支持修改音质，链接导出、调用aria2等功能，直接下载M4A，MP3文件。",
+  "url": "https://greasyfork.org/scripts/456143-%E5%96%9C%E9%A9%AC%E6%8B%89%E9%9B%85%E4%B8%93%E8%BE%91%E4%B8%8B%E8%BD%BD%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/456143/%E5%96%9C%E9%A9%AC%E6%8B%89%E9%9B%85%E4%B8%93%E8%BE%91%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+  "code_size": 22309,
+  "license": "MIT License",
+  "version": "1.2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

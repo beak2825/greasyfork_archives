@@ -1,0 +1,34 @@
+{
+  "id": 475391,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-16T01:18:38.000Z",
+  "code_updated_at": "2024-01-22T19:29:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1160264,
+      "name": "Luis AguilarZevallos",
+      "created_at": "2023-08-27T00:48:35.000Z",
+      "url": "https://greasyfork.org/users/1160264-luis-aguilarzevallos",
+      "scripts": []
+    }
+  ],
+  "name": "freedash",
+  "description": "Freedash auto roll",
+  "url": "https://greasyfork.org/scripts/475391-freedash",
+  "code_url": "https://update.greasyfork.org/scripts/475391/freedash.user.js",
+  "code_size": 12493,
+  "license": "MIT License",
+  "version": "1.11.11",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

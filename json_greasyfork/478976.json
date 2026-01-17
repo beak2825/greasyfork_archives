@@ -1,0 +1,59 @@
+{
+  "id": 478976,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-04T02:15:22.000Z",
+  "code_updated_at": "2023-11-04T04:42:03.000Z",
+  "namespace": "https://greasyfork.org/users/933976",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 933976,
+      "name": "Bobby Corwen",
+      "created_at": "2022-07-09T09:36:51.000Z",
+      "url": "https://greasyfork.org/users/933976-bobby-corwen",
+      "scripts": [
+        {
+          "id": 500372,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-12T01:26:26.000Z",
+          "code_updated_at": "2024-07-12T01:31:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Rapidgator link checker",
+          "description": "jlibrary link checker",
+          "url": "https://greasyfork.org/scripts/500372-rapidgator-link-checker",
+          "code_url": "https://update.greasyfork.org/scripts/500372/Rapidgator%20link%20checker.user.js",
+          "code_size": 4776,
+          "license": null,
+          "version": "2024-07-12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Scanlover: set notifications data length to max",
+  "description": "Set notifications limit to max",
+  "url": "https://greasyfork.org/scripts/478976-scanlover-set-notifications-data-length-to-max",
+  "code_url": "https://update.greasyfork.org/scripts/478976/Scanlover%3A%20set%20notifications%20data%20length%20to%20max.user.js",
+  "code_size": 671,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

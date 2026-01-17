@@ -1,0 +1,33 @@
+{
+  "id": 460920,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-28T13:34:36.000Z",
+  "code_updated_at": "2023-02-28T13:34:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 809943,
+      "name": "1564269628",
+      "created_at": "2021-08-29T13:27:40.000Z",
+      "url": "https://greasyfork.org/users/809943-1564269628"
+    }
+  ],
+  "name": "Haust-Wlan",
+  "description": "Haust-Wlan-Auto",
+  "url": "https://greasyfork.org/scripts/460920-haust-wlan",
+  "code_url": "https://update.greasyfork.org/scripts/460920/Haust-Wlan.user.js",
+  "code_size": 729,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

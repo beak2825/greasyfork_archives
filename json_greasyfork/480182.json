@@ -1,0 +1,34 @@
+{
+  "id": 480182,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-18T11:14:42.000Z",
+  "code_updated_at": "2023-11-18T16:15:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1214983,
+      "name": "User475186",
+      "created_at": "2023-11-10T19:32:29.000Z",
+      "url": "https://greasyfork.org/users/1214983-user475186",
+      "scripts": []
+    }
+  ],
+  "name": "ALE+",
+  "description": "Improves level editor",
+  "url": "https://greasyfork.org/scripts/480182-ale",
+  "code_url": "https://update.greasyfork.org/scripts/480182/ALE%2B.user.js",
+  "code_size": 19451,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

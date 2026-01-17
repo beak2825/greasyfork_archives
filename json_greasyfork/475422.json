@@ -1,0 +1,59 @@
+{
+  "id": 475422,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-16T11:20:21.000Z",
+  "code_updated_at": "2023-09-16T11:22:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1151677,
+      "name": "svvbssdvb",
+      "created_at": "2023-08-15T02:47:24.000Z",
+      "url": "https://greasyfork.org/users/1151677-svvbssdvb",
+      "scripts": [
+        {
+          "id": 475865,
+          "daily_installs": 0,
+          "total_installs": 366,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-22T06:09:58.000Z",
+          "code_updated_at": "2023-09-22T06:09:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "柠檬文才视频学习脚本，可以自动学习，自动连播，自选倍速（但是高倍数不稳定）",
+          "description": "支持【柠檬文才】",
+          "url": "https://greasyfork.org/scripts/475865-%E6%9F%A0%E6%AA%AC%E6%96%87%E6%89%8D%E8%A7%86%E9%A2%91%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC-%E5%8F%AF%E4%BB%A5%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD-%E8%87%AA%E9%80%89%E5%80%8D%E9%80%9F-%E4%BD%86%E6%98%AF%E9%AB%98%E5%80%8D%E6%95%B0%E4%B8%8D%E7%A8%B3%E5%AE%9A",
+          "code_url": "https://update.greasyfork.org/scripts/475865/%E6%9F%A0%E6%AA%AC%E6%96%87%E6%89%8D%E8%A7%86%E9%A2%91%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC%EF%BC%8C%E5%8F%AF%E4%BB%A5%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%EF%BC%8C%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD%EF%BC%8C%E8%87%AA%E9%80%89%E5%80%8D%E9%80%9F%EF%BC%88%E4%BD%86%E6%98%AF%E9%AB%98%E5%80%8D%E6%95%B0%E4%B8%8D%E7%A8%B3%E5%AE%9A%EF%BC%89.user.js",
+          "code_size": 24912,
+          "license": "MIT License",
+          "version": "5.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "四平农村成人高等专科学校只有倍速版",
+  "description": "支持",
+  "url": "https://greasyfork.org/scripts/475422-%E5%9B%9B%E5%B9%B3%E5%86%9C%E6%9D%91%E6%88%90%E4%BA%BA%E9%AB%98%E7%AD%89%E4%B8%93%E7%A7%91%E5%AD%A6%E6%A0%A1%E5%8F%AA%E6%9C%89%E5%80%8D%E9%80%9F%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/475422/%E5%9B%9B%E5%B9%B3%E5%86%9C%E6%9D%91%E6%88%90%E4%BA%BA%E9%AB%98%E7%AD%89%E4%B8%93%E7%A7%91%E5%AD%A6%E6%A0%A1%E5%8F%AA%E6%9C%89%E5%80%8D%E9%80%9F%E7%89%88.user.js",
+  "code_size": 228971,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

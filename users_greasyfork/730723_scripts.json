@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439073,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-24T20:24:27.000Z",
+    "code_updated_at": "2022-01-24T20:26:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 730723,
+        "name": "Chigusa0w0",
+        "created_at": "2021-01-24T07:20:57.000Z",
+        "url": "https://greasyfork.org/users/730723-chigusa0w0"
+      }
+    ],
+    "name": "NGA 超天酱表情包",
+    "description": "将超天酱表情添加至NGA网页端",
+    "url": "https://greasyfork.org/scripts/439073-nga-%E8%B6%85%E5%A4%A9%E9%85%B1%E8%A1%A8%E6%83%85%E5%8C%85",
+    "code_url": "https://update.greasyfork.org/scripts/439073/NGA%20%E8%B6%85%E5%A4%A9%E9%85%B1%E8%A1%A8%E6%83%85%E5%8C%85.user.js",
+    "code_size": 3431,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

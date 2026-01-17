@@ -1,0 +1,101 @@
+[
+  {
+    "id": 473861,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-25T09:45:44.000Z",
+    "code_updated_at": "2023-08-25T09:45:44.000Z",
+    "namespace": "http://gstsgy.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1123109,
+        "name": "古古月",
+        "created_at": "2023-07-10T06:18:19.000Z",
+        "url": "https://greasyfork.org/users/1123109-%E5%8F%A4%E5%8F%A4%E6%9C%88"
+      }
+    ],
+    "name": "万能去广告",
+    "description": "万能去广告：可去除大部分网页广告，经典w3c。网站添加请联系微信gstsgy",
+    "url": "https://greasyfork.org/scripts/473861-%E4%B8%87%E8%83%BD%E5%8E%BB%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/473861/%E4%B8%87%E8%83%BD%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 2476,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470647,
+    "daily_installs": 0,
+    "total_installs": 283,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-12T08:13:47.000Z",
+    "code_updated_at": "2023-07-13T05:11:43.000Z",
+    "namespace": "gstsgy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1123109,
+        "name": "古古月",
+        "created_at": "2023-07-10T06:18:19.000Z",
+        "url": "https://greasyfork.org/users/1123109-%E5%8F%A4%E5%8F%A4%E6%9C%88"
+      }
+    ],
+    "name": "百度搜索去广告",
+    "description": "百度搜索去广告,优化百度搜索,简单粗暴",
+    "url": "https://greasyfork.org/scripts/470647-%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E5%8E%BB%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/470647/%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 1507,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470518,
+    "daily_installs": 3,
+    "total_installs": 1239,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-07-10T06:21:31.000Z",
+    "code_updated_at": "2023-08-10T07:00:14.000Z",
+    "namespace": "gstsgy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1123109,
+        "name": "古古月",
+        "created_at": "2023-07-10T06:18:19.000Z",
+        "url": "https://greasyfork.org/users/1123109-%E5%8F%A4%E5%8F%A4%E6%9C%88"
+      }
+    ],
+    "name": "bing搜索去广告",
+    "description": "bing搜索去广告,优化bing搜索",
+    "url": "https://greasyfork.org/scripts/470518-bing%E6%90%9C%E7%B4%A2%E5%8E%BB%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/470518/bing%E6%90%9C%E7%B4%A2%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 814,
+    "license": "MIT License",
+    "version": "0.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

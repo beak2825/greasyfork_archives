@@ -36,6 +36,105 @@
     "version": "4.2.5",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 430318,
+    "daily_installs": 0,
+    "total_installs": 1420,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-04T04:19:27.000Z",
+    "code_updated_at": "2021-08-04T04:19:26.000Z",
+    "namespace": "https://github.com/adlered",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 93520,
+        "name": "adlered_",
+        "created_at": "2017-01-09T15:11:49.000Z",
+        "url": "https://greasyfork.org/users/93520-adlered"
+      }
+    ],
+    "name": "《论如何在知乎上优雅的摸鱼》",
+    "description": "隐藏知乎的状态栏，清除主页广告，优化排版，假装成GitHub的标题和图标，区分问题/视频/专栏等等。好（享）好（受）工（摸）作（鱼）哦（吧）。",
+    "url": "https://greasyfork.org/scripts/430318-%E8%AE%BA%E5%A6%82%E4%BD%95%E5%9C%A8%E7%9F%A5%E4%B9%8E%E4%B8%8A%E4%BC%98%E9%9B%85%E7%9A%84%E6%91%B8%E9%B1%BC",
+    "code_url": "https://update.greasyfork.org/scripts/430318/%E3%80%8A%E8%AE%BA%E5%A6%82%E4%BD%95%E5%9C%A8%E7%9F%A5%E4%B9%8E%E4%B8%8A%E4%BC%98%E9%9B%85%E7%9A%84%E6%91%B8%E9%B1%BC%E3%80%8B.user.js",
+    "code_size": 8952,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429640,
+    "daily_installs": 0,
+    "total_installs": 816,
+    "fan_score": "21.9",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2021-07-20T05:50:43.000Z",
+    "code_updated_at": "2021-07-20T10:03:26.000Z",
+    "namespace": "https://github.com/adlered",
+    "support_url": null,
+    "contribution_url": "https://doc.stackoverflow.wiki/web/#/21?page_id=138",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 93520,
+        "name": "adlered_",
+        "created_at": "2017-01-09T15:11:49.000Z",
+        "url": "https://greasyfork.org/users/93520-adlered"
+      }
+    ],
+    "name": "🔥持续更新🔥 简书 jianshu.com 广告完全过滤、人性化脚本优化：Greener系列的新产品，有口皆碑超好用。",
+    "description": "⚡️拥有数项独家功能的最强简书脚本，不服比一比⚡️|🕶继CSDNGreener的又一力作，一样的实用美观|🖥主页滑动自动加载，无需手动点击|",
+    "url": "https://greasyfork.org/scripts/429640-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0-%E7%AE%80%E4%B9%A6-jianshu-com-%E5%B9%BF%E5%91%8A%E5%AE%8C%E5%85%A8%E8%BF%87%E6%BB%A4-%E4%BA%BA%E6%80%A7%E5%8C%96%E8%84%9A%E6%9C%AC%E4%BC%98%E5%8C%96-greener%E7%B3%BB%E5%88%97%E7%9A%84%E6%96%B0%E4%BA%A7%E5%93%81-%E6%9C%89%E5%8F%A3%E7%9A%86%E7%A2%91%E8%B6%85%E5%A5%BD%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/429640/%F0%9F%94%A5%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%F0%9F%94%A5%20%E7%AE%80%E4%B9%A6%20jianshucom%20%E5%B9%BF%E5%91%8A%E5%AE%8C%E5%85%A8%E8%BF%87%E6%BB%A4%E3%80%81%E4%BA%BA%E6%80%A7%E5%8C%96%E8%84%9A%E6%9C%AC%E4%BC%98%E5%8C%96%EF%BC%9AGreener%E7%B3%BB%E5%88%97%E7%9A%84%E6%96%B0%E4%BA%A7%E5%93%81%EF%BC%8C%E6%9C%89%E5%8F%A3%E7%9A%86%E7%A2%91%E8%B6%85%E5%A5%BD%E7%94%A8%E3%80%82.user.js",
+    "code_size": 9750,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 429111,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-09T06:21:46.000Z",
+    "code_updated_at": "2021-07-09T06:21:45.000Z",
+    "namespace": "https://greasyfork.org/users/93520",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 93520,
+        "name": "adlered_",
+        "created_at": "2017-01-09T15:11:49.000Z",
+        "url": "https://greasyfork.org/users/93520-adlered"
+      }
+    ],
+    "name": "PY脚本",
+    "description": "1+X平台",
+    "url": "https://greasyfork.org/scripts/429111-py%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/429111/PY%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 3385,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

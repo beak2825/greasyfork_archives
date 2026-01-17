@@ -1,0 +1,200 @@
+[
+  {
+    "id": 473709,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-23T02:28:07.000Z",
+    "code_updated_at": "2023-08-23T02:28:07.000Z",
+    "namespace": "https://github.com/KumaTea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 169784,
+        "name": "Kuma Tea",
+        "created_at": "2018-02-07T07:26:04.000Z",
+        "url": "https://greasyfork.org/users/169784-kuma-tea"
+      }
+    ],
+    "name": "B站BV号添加超链接",
+    "description": "替换文本形式的B站BV号为超链接",
+    "url": "https://greasyfork.org/scripts/473709-b%E7%AB%99bv%E5%8F%B7%E6%B7%BB%E5%8A%A0%E8%B6%85%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/473709/B%E7%AB%99BV%E5%8F%B7%E6%B7%BB%E5%8A%A0%E8%B6%85%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 1257,
+    "license": "GPLv3",
+    "version": "0.1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 473511,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-20T14:53:36.000Z",
+    "code_updated_at": "2023-08-20T14:53:35.000Z",
+    "namespace": "https://github.com/KumaTea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 169784,
+        "name": "Kuma Tea",
+        "created_at": "2018-02-07T07:26:04.000Z",
+        "url": "https://greasyfork.org/users/169784-kuma-tea"
+      }
+    ],
+    "name": "去除邪恶数字",
+    "description": "去除邪恶数字，防止口算出错",
+    "url": "https://greasyfork.org/scripts/473511-%E5%8E%BB%E9%99%A4%E9%82%AA%E6%81%B6%E6%95%B0%E5%AD%97",
+    "code_url": "https://update.greasyfork.org/scripts/473511/%E5%8E%BB%E9%99%A4%E9%82%AA%E6%81%B6%E6%95%B0%E5%AD%97.user.js",
+    "code_size": 1948,
+    "license": "GPLv3",
+    "version": "0.1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 455930,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-03T12:21:21.000Z",
+    "code_updated_at": "2022-12-03T12:30:29.000Z",
+    "namespace": "https://github.com/KumaTea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 169784,
+        "name": "Kuma Tea",
+        "created_at": "2018-02-07T07:26:04.000Z",
+        "url": "https://greasyfork.org/users/169784-kuma-tea"
+      }
+    ],
+    "name": "Discord 全屏一起看",
+    "description": "使 Discord 一起看 Youtube 时占满全屏",
+    "url": "https://greasyfork.org/scripts/455930-discord-%E5%85%A8%E5%B1%8F%E4%B8%80%E8%B5%B7%E7%9C%8B",
+    "code_url": "https://update.greasyfork.org/scripts/455930/Discord%20%E5%85%A8%E5%B1%8F%E4%B8%80%E8%B5%B7%E7%9C%8B.user.js",
+    "code_size": 1595,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437298,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-19T18:45:05.000Z",
+    "code_updated_at": "2022-10-02T16:56:14.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 169784,
+        "name": "Kuma Tea",
+        "created_at": "2018-02-07T07:26:04.000Z",
+        "url": "https://greasyfork.org/users/169784-kuma-tea"
+      }
+    ],
+    "name": "tesseract-fast.min.js",
+    "description": "https://gitee.com/kumatea/tesseract-dist/raw/master/2.1.5/tesseract-fast.min.js",
+    "url": "https://greasyfork.org/scripts/437298-tesseract-fast-min-js",
+    "code_url": "https://update.greasyfork.org/scripts/437298/1100275/tesseract-fastminjs.js",
+    "code_size": 110437,
+    "license": null,
+    "version": "0.0.1.20221002165614",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 419757,
+    "daily_installs": 0,
+    "total_installs": 487,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-06T12:05:18.000Z",
+    "code_updated_at": "2022-12-03T13:45:21.000Z",
+    "namespace": "https://github.com/KumaTea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 169784,
+        "name": "Kuma Tea",
+        "created_at": "2018-02-07T07:26:04.000Z",
+        "url": "https://greasyfork.org/users/169784-kuma-tea"
+      }
+    ],
+    "name": "中大自动验证码认证",
+    "description": "中山大学身份验证系统自动识别验证码登录",
+    "url": "https://greasyfork.org/scripts/419757-%E4%B8%AD%E5%A4%A7%E8%87%AA%E5%8A%A8%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AE%A4%E8%AF%81",
+    "code_url": "https://update.greasyfork.org/scripts/419757/%E4%B8%AD%E5%A4%A7%E8%87%AA%E5%8A%A8%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AE%A4%E8%AF%81.user.js",
+    "code_size": 5914,
+    "license": "GPLv3",
+    "version": "1.2.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417056,
+    "daily_installs": 0,
+    "total_installs": 789,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-29T16:52:13.000Z",
+    "code_updated_at": "2021-06-26T18:03:02.000Z",
+    "namespace": "https://github.com/KumaTea",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 169784,
+        "name": "Kuma Tea",
+        "created_at": "2018-02-07T07:26:04.000Z",
+        "url": "https://greasyfork.org/users/169784-kuma-tea"
+      }
+    ],
+    "name": "中大自动评教",
+    "description": "中山大学教务系统学生自动评教脚本",
+    "url": "https://greasyfork.org/scripts/417056-%E4%B8%AD%E5%A4%A7%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+    "code_url": "https://update.greasyfork.org/scripts/417056/%E4%B8%AD%E5%A4%A7%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+    "code_size": 4540,
+    "license": "MIT License",
+    "version": "0.2.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

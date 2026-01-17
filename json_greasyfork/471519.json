@@ -1,0 +1,59 @@
+{
+  "id": 471519,
+  "daily_installs": 0,
+  "total_installs": 134,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-23T14:31:33.000Z",
+  "code_updated_at": "2023-07-24T06:46:18.000Z",
+  "namespace": "alplune-auto-wifi",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1134120,
+      "name": "Mingaaaaaaa",
+      "created_at": "2023-07-23T14:23:04.000Z",
+      "url": "https://greasyfork.org/users/1134120-mingaaaaaaa",
+      "scripts": [
+        {
+          "id": 471519,
+          "daily_installs": 0,
+          "total_installs": 134,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-23T14:31:33.000Z",
+          "code_updated_at": "2023-07-24T06:46:18.000Z",
+          "namespace": "alplune-auto-wifi",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "南邮校园网自动登录",
+          "description": "南京邮电大学校园网自动登录脚本",
+          "url": "https://greasyfork.org/scripts/471519-%E5%8D%97%E9%82%AE%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+          "code_url": "https://update.greasyfork.org/scripts/471519/%E5%8D%97%E9%82%AE%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+          "code_size": 1650,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "南邮校园网自动登录",
+  "description": "南京邮电大学校园网自动登录脚本",
+  "url": "https://greasyfork.org/scripts/471519-%E5%8D%97%E9%82%AE%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/471519/%E5%8D%97%E9%82%AE%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 1650,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

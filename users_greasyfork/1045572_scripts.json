@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462290,
+    "daily_installs": 0,
+    "total_installs": 60,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-22T01:29:33.000Z",
+    "code_updated_at": "2023-03-22T01:29:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1045572,
+        "name": "Toby_cc",
+        "created_at": "2023-03-21T08:55:19.000Z",
+        "url": "https://greasyfork.org/users/1045572-toby-cc"
+      }
+    ],
+    "name": "鼠标点击-心型图标",
+    "description": "鼠标点击会出现随机颜色的 ❤ 效果",
+    "url": "https://greasyfork.org/scripts/462290-%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB-%E5%BF%83%E5%9E%8B%E5%9B%BE%E6%A0%87",
+    "code_url": "https://update.greasyfork.org/scripts/462290/%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB-%E5%BF%83%E5%9E%8B%E5%9B%BE%E6%A0%87.user.js",
+    "code_size": 2381,
+    "license": "GPL License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

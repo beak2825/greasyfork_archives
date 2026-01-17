@@ -1,0 +1,59 @@
+{
+  "id": 447406,
+  "daily_installs": 0,
+  "total_installs": 3410,
+  "fan_score": "30.1",
+  "good_ratings": 2,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2022-07-04T03:02:22.000Z",
+  "code_updated_at": "2022-11-25T01:56:17.000Z",
+  "namespace": "http://web.chinahrt.com and so on",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 931850,
+      "name": "jeavenchu",
+      "created_at": "2022-07-04T02:46:32.000Z",
+      "url": "https://greasyfork.org/users/931850-jeavenchu",
+      "scripts": [
+        {
+          "id": 447406,
+          "daily_installs": 0,
+          "total_installs": 3410,
+          "fan_score": "30.1",
+          "good_ratings": 2,
+          "ok_ratings": 2,
+          "bad_ratings": 0,
+          "created_at": "2022-07-04T03:02:22.000Z",
+          "code_updated_at": "2022-11-25T01:56:17.000Z",
+          "namespace": "http://web.chinahrt.com and so on",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "专业技术人员继续教育网站不停止插件",
+          "description": "不停止插件(不保证所有网址，请自行尝试)",
+          "url": "https://greasyfork.org/scripts/447406-%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E7%BD%91%E7%AB%99%E4%B8%8D%E5%81%9C%E6%AD%A2%E6%8F%92%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/447406/%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E7%BD%91%E7%AB%99%E4%B8%8D%E5%81%9C%E6%AD%A2%E6%8F%92%E4%BB%B6.user.js",
+          "code_size": 607,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "专业技术人员继续教育网站不停止插件",
+  "description": "不停止插件(不保证所有网址，请自行尝试)",
+  "url": "https://greasyfork.org/scripts/447406-%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E7%BD%91%E7%AB%99%E4%B8%8D%E5%81%9C%E6%AD%A2%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/447406/%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E7%BD%91%E7%AB%99%E4%B8%8D%E5%81%9C%E6%AD%A2%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 607,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

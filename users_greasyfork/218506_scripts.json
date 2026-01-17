@@ -1,0 +1,35 @@
+[
+  {
+    "id": 432786,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-22T07:09:53.000Z",
+    "code_updated_at": "2021-09-23T01:44:03.000Z",
+    "namespace": "http://github.com/binjoo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 218506,
+        "name": "binjoo",
+        "created_at": "2018-10-10T08:57:10.000Z",
+        "url": "https://greasyfork.org/users/218506-binjoo"
+      }
+    ],
+    "name": "自动下一节课程",
+    "description": "自动下一节课程，刷视频用",
+    "url": "https://greasyfork.org/scripts/432786-%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%8A%82%E8%AF%BE%E7%A8%8B",
+    "code_url": "https://update.greasyfork.org/scripts/432786/%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%8A%82%E8%AF%BE%E7%A8%8B.user.js",
+    "code_size": 803,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

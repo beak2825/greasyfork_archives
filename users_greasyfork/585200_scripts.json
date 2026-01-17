@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431272,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-24T02:35:19.000Z",
+    "code_updated_at": "2021-08-24T02:35:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 585200,
+        "name": "黄俊人",
+        "created_at": "2020-06-12T01:37:19.000Z",
+        "url": "https://greasyfork.org/users/585200-%E9%BB%84%E4%BF%8A%E4%BA%BA"
+      }
+    ],
+    "name": "不学习何以强国 - 自用",
+    "description": "读文章,看视频，做习题。",
+    "url": "https://greasyfork.org/scripts/431272-%E4%B8%8D%E5%AD%A6%E4%B9%A0%E4%BD%95%E4%BB%A5%E5%BC%BA%E5%9B%BD-%E8%87%AA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/431272/%E4%B8%8D%E5%AD%A6%E4%B9%A0%E4%BD%95%E4%BB%A5%E5%BC%BA%E5%9B%BD%20-%20%E8%87%AA%E7%94%A8.user.js",
+    "code_size": 43045,
+    "license": null,
+    "version": "999",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

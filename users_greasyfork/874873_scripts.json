@@ -1,0 +1,68 @@
+[
+  {
+    "id": 459639,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-08T07:15:58.000Z",
+    "code_updated_at": "2023-02-08T07:15:58.000Z",
+    "namespace": "NitasToolBox_plugin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 874873,
+        "name": "Nita121388",
+        "created_at": "2022-02-10T07:04:54.000Z",
+        "url": "https://greasyfork.org/users/874873-nita121388"
+      }
+    ],
+    "name": "NitasToolBox2",
+    "description": "NitaToolBox浏览器插件",
+    "url": "https://greasyfork.org/scripts/459639-nitastoolbox2",
+    "code_url": "https://update.greasyfork.org/scripts/459639/NitasToolBox2.user.js",
+    "code_size": 607,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439809,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-10T09:32:40.000Z",
+    "code_updated_at": "2022-12-23T06:02:06.000Z",
+    "namespace": "NitasToolBox_plugin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 874873,
+        "name": "Nita121388",
+        "created_at": "2022-02-10T07:04:54.000Z",
+        "url": "https://greasyfork.org/users/874873-nita121388"
+      }
+    ],
+    "name": "NitasToolBox",
+    "description": "NitaToolBox浏览器插件",
+    "url": "https://greasyfork.org/scripts/439809-nitastoolbox",
+    "code_url": "https://update.greasyfork.org/scripts/439809/NitasToolBox.user.js",
+    "code_size": 2661,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

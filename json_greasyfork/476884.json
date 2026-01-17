@@ -1,0 +1,33 @@
+{
+  "id": 476884,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-07T13:59:05.000Z",
+  "code_updated_at": "2023-10-07T14:00:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 933727,
+      "name": "lusteven901228",
+      "created_at": "2022-07-08T14:28:52.000Z",
+      "url": "https://greasyfork.org/users/933727-lusteven901228"
+    }
+  ],
+  "name": "Redcap每週問卷自動填寫",
+  "description": "按F2後，全部填「滿意」+下一頁",
+  "url": "https://greasyfork.org/scripts/476884-redcap%E6%AF%8F%E9%80%B1%E5%95%8F%E5%8D%B7%E8%87%AA%E5%8B%95%E5%A1%AB%E5%AF%AB",
+  "code_url": "https://update.greasyfork.org/scripts/476884/Redcap%E6%AF%8F%E9%80%B1%E5%95%8F%E5%8D%B7%E8%87%AA%E5%8B%95%E5%A1%AB%E5%AF%AB.user.js",
+  "code_size": 992,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

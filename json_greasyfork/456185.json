@@ -1,0 +1,59 @@
+{
+  "id": 456185,
+  "daily_installs": 0,
+  "total_installs": 81,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-07T14:37:54.000Z",
+  "code_updated_at": "2022-12-07T14:37:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 994082,
+      "name": "littleboy_",
+      "created_at": "2022-12-07T14:20:25.000Z",
+      "url": "https://greasyfork.org/users/994082-littleboy",
+      "scripts": [
+        {
+          "id": 456185,
+          "daily_installs": 0,
+          "total_installs": 81,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-07T14:37:54.000Z",
+          "code_updated_at": "2022-12-07T14:37:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "家庭教育培训自动下一节课",
+          "description": "家庭教育培训自动下一节课，自动切换下一节课，不做题，配合倍速播放",
+          "url": "https://greasyfork.org/scripts/456185-%E5%AE%B6%E5%BA%AD%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%8A%82%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/456185/%E5%AE%B6%E5%BA%AD%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%8A%82%E8%AF%BE.user.js",
+          "code_size": 1721,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "家庭教育培训自动下一节课",
+  "description": "家庭教育培训自动下一节课，自动切换下一节课，不做题，配合倍速播放",
+  "url": "https://greasyfork.org/scripts/456185-%E5%AE%B6%E5%BA%AD%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%8A%82%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/456185/%E5%AE%B6%E5%BA%AD%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%8A%82%E8%AF%BE.user.js",
+  "code_size": 1721,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

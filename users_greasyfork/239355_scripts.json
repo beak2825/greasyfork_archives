@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449139,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-07T19:18:59.000Z",
+    "code_updated_at": "2022-08-07T21:21:48.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239355,
+        "name": "Wolfy_0615",
+        "created_at": "2019-01-13T20:26:00.000Z",
+        "url": "https://greasyfork.org/users/239355-wolfy-0615"
+      }
+    ],
+    "name": "MPP - AdvancedChatLogger",
+    "description": "8/6/2022, 1:13:53 AM",
+    "url": "https://greasyfork.org/scripts/449139-mpp-advancedchatlogger",
+    "code_url": "https://update.greasyfork.org/scripts/449139/MPP%20-%20AdvancedChatLogger.user.js",
+    "code_size": 4289,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485844,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-27T22:44:22.000Z",
+    "code_updated_at": "2024-01-27T23:43:32.000Z",
+    "namespace": "https://github.com/Cansiny0320/bilibili-block-plus",
+    "support_url": "https://github.com/Cansiny0320/bilibili-block-plus/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 941834,
+        "name": "Cansiny0320",
+        "created_at": "2022-07-31T19:19:52.000Z",
+        "url": "https://greasyfork.org/users/941834-cansiny0320"
+      }
+    ],
+    "name": "b 站黑名单加强",
+    "description": "可屏蔽指定用户作品、评论等",
+    "url": "https://greasyfork.org/scripts/485844-b-%E7%AB%99%E9%BB%91%E5%90%8D%E5%8D%95%E5%8A%A0%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/485844/b%20%E7%AB%99%E9%BB%91%E5%90%8D%E5%8D%95%E5%8A%A0%E5%BC%BA.user.js",
+    "code_size": 1138477,
+    "license": "MIT License",
+    "version": "0.3.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415419,
+    "daily_installs": 0,
+    "total_installs": 327,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-03T16:14:06.000Z",
+    "code_updated_at": "2025-04-27T03:43:31.000Z",
+    "namespace": "https://github.com/VincentPvoid",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 701067,
+        "name": "VincentPvoid",
+        "created_at": "2020-11-03T15:56:14.000Z",
+        "url": "https://greasyfork.org/users/701067-vincentpvoid"
+      }
+    ],
+    "name": "AO3屏蔽某作者文章和某用户评论",
+    "description": "一个简单的屏蔽特定AO3作者和特定用户评论的脚本",
+    "url": "https://greasyfork.org/scripts/415419-ao3%E5%B1%8F%E8%94%BD%E6%9F%90%E4%BD%9C%E8%80%85%E6%96%87%E7%AB%A0%E5%92%8C%E6%9F%90%E7%94%A8%E6%88%B7%E8%AF%84%E8%AE%BA",
+    "code_url": "https://update.greasyfork.org/scripts/415419/AO3%E5%B1%8F%E8%94%BD%E6%9F%90%E4%BD%9C%E8%80%85%E6%96%87%E7%AB%A0%E5%92%8C%E6%9F%90%E7%94%A8%E6%88%B7%E8%AF%84%E8%AE%BA.user.js",
+    "code_size": 39560,
+    "license": null,
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

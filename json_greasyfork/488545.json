@@ -1,0 +1,34 @@
+{
+  "id": 488545,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-28T14:27:46.000Z",
+  "code_updated_at": "2024-02-28T14:27:46.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 822781,
+      "name": "英语超好sss",
+      "created_at": "2021-10-07T14:08:42.000Z",
+      "url": "https://greasyfork.org/users/822781-%E8%8B%B1%E8%AF%AD%E8%B6%85%E5%A5%BDsss",
+      "scripts": []
+    }
+  ],
+  "name": "22222",
+  "description": "333333",
+  "url": "https://greasyfork.org/scripts/488545-22222",
+  "code_url": "https://update.greasyfork.org/scripts/488545/1335029/22222.js",
+  "code_size": 68269,
+  "license": null,
+  "version": "0.0.1.20240228142746",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

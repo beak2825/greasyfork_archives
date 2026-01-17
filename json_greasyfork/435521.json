@@ -1,0 +1,59 @@
+{
+  "id": 435521,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-15T02:20:59.000Z",
+  "code_updated_at": "2021-11-15T02:20:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 838716,
+      "name": "aeddj",
+      "created_at": "2021-11-15T02:05:20.000Z",
+      "url": "https://greasyfork.org/users/838716-aeddj",
+      "scripts": [
+        {
+          "id": 438876,
+          "daily_installs": 0,
+          "total_installs": 175,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-20T15:09:05.000Z",
+          "code_updated_at": "2022-01-20T15:09:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "斗鱼弹幕抽奖自动发送（自用）",
+          "description": "斗鱼弹幕抽奖自动发送",
+          "url": "https://greasyfork.org/scripts/438876-%E6%96%97%E9%B1%BC%E5%BC%B9%E5%B9%95%E6%8A%BD%E5%A5%96%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81-%E8%87%AA%E7%94%A8",
+          "code_url": "https://update.greasyfork.org/scripts/438876/%E6%96%97%E9%B1%BC%E5%BC%B9%E5%B9%95%E6%8A%BD%E5%A5%96%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81%EF%BC%88%E8%87%AA%E7%94%A8%EF%BC%89.user.js",
+          "code_size": 2073,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CSDN去广告",
+  "description": "清除csdn广告",
+  "url": "https://greasyfork.org/scripts/435521-csdn%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/435521/CSDN%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 662,
+  "license": "LGPL",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

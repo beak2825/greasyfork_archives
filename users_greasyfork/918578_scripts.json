@@ -1,0 +1,167 @@
+[
+  {
+    "id": 453188,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-16T20:00:02.000Z",
+    "code_updated_at": "2022-10-16T20:00:02.000Z",
+    "namespace": "https://greasyfork.org/users/918578",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918578,
+        "name": "squash",
+        "created_at": "2022-05-25T21:16:41.000Z",
+        "url": "https://greasyfork.org/users/918578-squash"
+      }
+    ],
+    "name": "MH - Guesstimate Halloween Drops",
+    "description": "Guesstimation in tooltips for potential drops per current quantity of cheese in Gloomy Greenwood. Does not currently account for Incense!",
+    "url": "https://greasyfork.org/scripts/453188-mh-guesstimate-halloween-drops",
+    "code_url": "https://update.greasyfork.org/scripts/453188/MH%20-%20Guesstimate%20Halloween%20Drops.user.js",
+    "code_size": 4435,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 451716,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-20T18:49:36.000Z",
+    "code_updated_at": "2022-09-24T23:56:52.000Z",
+    "namespace": "https://greasyfork.org/users/918578",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918578,
+        "name": "squash",
+        "created_at": "2022-05-25T21:16:41.000Z",
+        "url": "https://greasyfork.org/users/918578-squash"
+      }
+    ],
+    "name": "MH - Journal Screenshot Button",
+    "description": "Adds a button to the top of journal to generate and save a screenshot of the last N journal entries, optionally excluding non-hunts",
+    "url": "https://greasyfork.org/scripts/451716-mh-journal-screenshot-button",
+    "code_url": "https://update.greasyfork.org/scripts/451716/MH%20-%20Journal%20Screenshot%20Button.user.js",
+    "code_size": 8235,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449330,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-10T22:13:38.000Z",
+    "code_updated_at": "2022-09-04T01:56:43.000Z",
+    "namespace": "https://greasyfork.org/users/918578",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918578,
+        "name": "squash",
+        "created_at": "2022-05-25T21:16:41.000Z",
+        "url": "https://greasyfork.org/users/918578-squash"
+      }
+    ],
+    "name": "Mousehunt - Dark UI Theme - Full",
+    "description": "Experimental! Customizable recolor for most of the UI. Default palette is a dark mode. Intended for use with Stylus extension.",
+    "url": "https://greasyfork.org/scripts/449330-mousehunt-dark-ui-theme-full",
+    "code_url": "https://update.greasyfork.org/scripts/449330/Mousehunt%20-%20Dark%20UI%20Theme%20-%20Full.user.css",
+    "code_size": 43079,
+    "license": null,
+    "version": "0.8.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 445602,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-26T20:08:03.000Z",
+    "code_updated_at": "2022-05-26T20:08:03.000Z",
+    "namespace": "https://greasyfork.org/users/918578",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918578,
+        "name": "squash",
+        "created_at": "2022-05-25T21:16:41.000Z",
+        "url": "https://greasyfork.org/users/918578-squash"
+      }
+    ],
+    "name": "MH - Enable tooltips for item favorites",
+    "description": "Enables item description tooltips on hover for favorited items in the trap selector",
+    "url": "https://greasyfork.org/scripts/445602-mh-enable-tooltips-for-item-favorites",
+    "code_url": "https://update.greasyfork.org/scripts/445602/MH%20-%20Enable%20tooltips%20for%20item%20favorites.user.js",
+    "code_size": 2128,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445553,
+    "daily_installs": 0,
+    "total_installs": 119,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-25T21:48:13.000Z",
+    "code_updated_at": "2023-01-06T14:41:23.000Z",
+    "namespace": "https://greasyfork.org/users/918578",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918578,
+        "name": "squash",
+        "created_at": "2022-05-25T21:16:41.000Z",
+        "url": "https://greasyfork.org/users/918578-squash"
+      }
+    ],
+    "name": "MH - Censor Journal Names",
+    "description": "Adds toggle button at top of journal to blur out names of friends/mapmates in *most* journal entries. For privacy-conscious screenshots!",
+    "url": "https://greasyfork.org/scripts/445553-mh-censor-journal-names",
+    "code_url": "https://update.greasyfork.org/scripts/445553/MH%20-%20Censor%20Journal%20Names.user.js",
+    "code_size": 5433,
+    "license": null,
+    "version": "0.7.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

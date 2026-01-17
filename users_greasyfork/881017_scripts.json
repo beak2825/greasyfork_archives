@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440659,
+    "daily_installs": 0,
+    "total_installs": 509,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-02-27T06:07:53.000Z",
+    "code_updated_at": "2022-06-05T08:45:41.000Z",
+    "namespace": "https://github.com/soraliu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 881017,
+        "name": "Sora Liu",
+        "created_at": "2022-02-27T05:57:26.000Z",
+        "url": "https://greasyfork.org/users/881017-sora-liu"
+      }
+    ],
+    "name": "Notion Sticky TOC (2022 Available)",
+    "description": "Set Notion TOC Sticky.",
+    "url": "https://greasyfork.org/scripts/440659-notion-sticky-toc-2022-available",
+    "code_url": "https://update.greasyfork.org/scripts/440659/Notion%20Sticky%20TOC%20%282022%20Available%29.user.js",
+    "code_size": 3257,
+    "license": "MIT License",
+    "version": "0.6.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

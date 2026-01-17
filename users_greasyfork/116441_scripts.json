@@ -1,0 +1,200 @@
+[
+  {
+    "id": 465240,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-01T05:27:00.000Z",
+    "code_updated_at": "2023-05-05T02:44:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 116441,
+        "name": "Bboy Tech",
+        "created_at": "2017-04-11T22:46:28.000Z",
+        "url": "https://greasyfork.org/users/116441-bboy-tech"
+      }
+    ],
+    "name": "rumble",
+    "description": "rumble install",
+    "url": "https://greasyfork.org/scripts/465240-rumble",
+    "code_url": "https://update.greasyfork.org/scripts/465240/rumble.user.js",
+    "code_size": 1240,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433317,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-02T15:32:49.000Z",
+    "code_updated_at": "2021-10-02T15:32:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 116441,
+        "name": "Bboy Tech",
+        "created_at": "2017-04-11T22:46:28.000Z",
+        "url": "https://greasyfork.org/users/116441-bboy-tech"
+      }
+    ],
+    "name": "playnano watch and learn pro",
+    "description": "rewards",
+    "url": "https://greasyfork.org/scripts/433317-playnano-watch-and-learn-pro",
+    "code_url": "https://update.greasyfork.org/scripts/433317/playnano%20watch%20and%20learn%20pro.user.js",
+    "code_size": 4116,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432629,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-19T02:31:46.000Z",
+    "code_updated_at": "2021-09-24T04:01:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 116441,
+        "name": "Bboy Tech",
+        "created_at": "2017-04-11T22:46:28.000Z",
+        "url": "https://greasyfork.org/users/116441-bboy-tech"
+      }
+    ],
+    "name": "ridethepinee",
+    "description": "make money online",
+    "url": "https://greasyfork.org/scripts/432629-ridethepinee",
+    "code_url": "https://update.greasyfork.org/scripts/432629/ridethepinee.user.js",
+    "code_size": 3352,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432175,
+    "daily_installs": 0,
+    "total_installs": 258,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-10T03:42:49.000Z",
+    "code_updated_at": "2021-10-02T03:09:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 116441,
+        "name": "Bboy Tech",
+        "created_at": "2017-04-11T22:46:28.000Z",
+        "url": "https://greasyfork.org/users/116441-bboy-tech"
+      }
+    ],
+    "name": "playnano watch and learn",
+    "description": "rewards",
+    "url": "https://greasyfork.org/scripts/432175-playnano-watch-and-learn",
+    "code_url": "https://update.greasyfork.org/scripts/432175/playnano%20watch%20and%20learn.user.js",
+    "code_size": 3868,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 431595,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-29T19:17:51.000Z",
+    "code_updated_at": "2021-08-29T19:17:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 116441,
+        "name": "Bboy Tech",
+        "created_at": "2017-04-11T22:46:28.000Z",
+        "url": "https://greasyfork.org/users/116441-bboy-tech"
+      }
+    ],
+    "name": "bucksify faucet",
+    "description": "Make money",
+    "url": "https://greasyfork.org/scripts/431595-bucksify-faucet",
+    "code_url": "https://update.greasyfork.org/scripts/431595/bucksify%20faucet.user.js",
+    "code_size": 1066,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 425498,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-24T23:28:02.000Z",
+    "code_updated_at": "2021-04-25T00:32:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 116441,
+        "name": "Bboy Tech",
+        "created_at": "2017-04-11T22:46:28.000Z",
+        "url": "https://greasyfork.org/users/116441-bboy-tech"
+      }
+    ],
+    "name": "bestbuy add to cart",
+    "description": "buying bot",
+    "url": "https://greasyfork.org/scripts/425498-bestbuy-add-to-cart",
+    "code_url": "https://update.greasyfork.org/scripts/425498/bestbuy%20add%20to%20cart.user.js",
+    "code_size": 973,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

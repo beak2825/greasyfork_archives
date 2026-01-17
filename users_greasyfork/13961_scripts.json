@@ -1,0 +1,134 @@
+[
+  {
+    "id": 464612,
+    "daily_installs": 0,
+    "total_installs": 76,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-22T11:49:35.000Z",
+    "code_updated_at": "2023-04-22T11:49:35.000Z",
+    "namespace": "https://greasyfork.org/users/13961",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 13961,
+        "name": "kongfu",
+        "created_at": "2015-08-04T03:17:07.000Z",
+        "url": "https://greasyfork.org/users/13961-kongfu"
+      }
+    ],
+    "name": "自动适配手机浏览器宽度",
+    "description": "Automatically resizes the page to fit the browser window",
+    "url": "https://greasyfork.org/scripts/464612-%E8%87%AA%E5%8A%A8%E9%80%82%E9%85%8D%E6%89%8B%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%BD%E5%BA%A6",
+    "code_url": "https://update.greasyfork.org/scripts/464612/%E8%87%AA%E5%8A%A8%E9%80%82%E9%85%8D%E6%89%8B%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%BD%E5%BA%A6.user.js",
+    "code_size": 440,
+    "license": null,
+    "version": "1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462980,
+    "daily_installs": 0,
+    "total_installs": 232,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-31T09:23:21.000Z",
+    "code_updated_at": "2023-03-31T09:23:21.000Z",
+    "namespace": "https://greasyfork.org/users/13961",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 13961,
+        "name": "kongfu",
+        "created_at": "2015-08-04T03:17:07.000Z",
+        "url": "https://greasyfork.org/users/13961-kongfu"
+      }
+    ],
+    "name": "自适应宽度脚本2",
+    "description": "自动将页面宽度调整为适合屏幕大小的宽度",
+    "url": "https://greasyfork.org/scripts/462980-%E8%87%AA%E9%80%82%E5%BA%94%E5%AE%BD%E5%BA%A6%E8%84%9A%E6%9C%AC2",
+    "code_url": "https://update.greasyfork.org/scripts/462980/%E8%87%AA%E9%80%82%E5%BA%94%E5%AE%BD%E5%BA%A6%E8%84%9A%E6%9C%AC2.user.js",
+    "code_size": 2227,
+    "license": null,
+    "version": "2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460829,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-27T03:24:22.000Z",
+    "code_updated_at": "2023-02-27T03:24:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 13961,
+        "name": "kongfu",
+        "created_at": "2015-08-04T03:17:07.000Z",
+        "url": "https://greasyfork.org/users/13961-kongfu"
+      }
+    ],
+    "name": "屏蔽360doc干扰元素",
+    "description": "去掉360doc购买弹窗",
+    "url": "https://greasyfork.org/scripts/460829-%E5%B1%8F%E8%94%BD360doc%E5%B9%B2%E6%89%B0%E5%85%83%E7%B4%A0",
+    "code_url": "https://update.greasyfork.org/scripts/460829/%E5%B1%8F%E8%94%BD360doc%E5%B9%B2%E6%89%B0%E5%85%83%E7%B4%A0.user.js",
+    "code_size": 485,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456381,
+    "daily_installs": 0,
+    "total_installs": 134,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-10T10:40:37.000Z",
+    "code_updated_at": "2022-12-10T10:40:36.000Z",
+    "namespace": "http://tampermonkey.dianzishu.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 13961,
+        "name": "kongfu",
+        "created_at": "2015-08-04T03:17:07.000Z",
+        "url": "https://greasyfork.org/users/13961-kongfu"
+      }
+    ],
+    "name": "自动调整网页宽度",
+    "description": "自动根据浏览器宽度调整网页文字，相当于文字重排。",
+    "url": "https://greasyfork.org/scripts/456381-%E8%87%AA%E5%8A%A8%E8%B0%83%E6%95%B4%E7%BD%91%E9%A1%B5%E5%AE%BD%E5%BA%A6",
+    "code_url": "https://update.greasyfork.org/scripts/456381/%E8%87%AA%E5%8A%A8%E8%B0%83%E6%95%B4%E7%BD%91%E9%A1%B5%E5%AE%BD%E5%BA%A6.user.js",
+    "code_size": 1007,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

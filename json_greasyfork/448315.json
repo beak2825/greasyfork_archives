@@ -1,0 +1,34 @@
+{
+  "id": 448315,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-22T19:50:46.000Z",
+  "code_updated_at": "2022-07-23T06:24:17.000Z",
+  "namespace": "https://greasyfork.org/users/938392",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 938392,
+      "name": "Matthieu Lefèvre",
+      "created_at": "2022-07-22T19:47:18.000Z",
+      "url": "https://greasyfork.org/users/938392-matthieu-lef%C3%A8vre",
+      "scripts": []
+    }
+  ],
+  "name": "Auto Guess",
+  "description": "script perso",
+  "url": "https://greasyfork.org/scripts/448315-auto-guess",
+  "code_url": "https://update.greasyfork.org/scripts/448315/Auto%20Guess.user.js",
+  "code_size": 4073,
+  "license": null,
+  "version": "0.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

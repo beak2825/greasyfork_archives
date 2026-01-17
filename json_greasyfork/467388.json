@@ -1,0 +1,59 @@
+{
+  "id": 467388,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-29T09:55:47.000Z",
+  "code_updated_at": "2023-05-31T03:06:40.000Z",
+  "namespace": "http://www.akuvox.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 874327,
+      "name": "455361051",
+      "created_at": "2022-02-09T01:47:15.000Z",
+      "url": "https://greasyfork.org/users/874327-455361051",
+      "scripts": [
+        {
+          "id": 472872,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-11T02:19:55.000Z",
+          "code_updated_at": "2023-08-11T02:39:54.000Z",
+          "namespace": "http://www.akuvox.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Akuvox ChanDao-Project Bink-Test",
+          "description": "内部使用，外部无效，方便快捷创建项目",
+          "url": "https://greasyfork.org/scripts/472872-akuvox-chandao-project-bink-test",
+          "code_url": "https://update.greasyfork.org/scripts/472872/Akuvox%20ChanDao-Project%20Bink-Test.user.js",
+          "code_size": 8125,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ConfluenceAutoFillLabels",
+  "description": "auto list all labels",
+  "url": "https://greasyfork.org/scripts/467388-confluenceautofilllabels",
+  "code_url": "https://update.greasyfork.org/scripts/467388/ConfluenceAutoFillLabels.user.js",
+  "code_size": 6534,
+  "license": "11",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

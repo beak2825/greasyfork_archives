@@ -1,0 +1,34 @@
+{
+  "id": 448754,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-01T13:08:32.000Z",
+  "code_updated_at": "2022-08-01T13:08:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 387507,
+      "name": "zhangxc0427",
+      "created_at": "2019-10-16T04:30:38.000Z",
+      "url": "https://greasyfork.org/users/387507-zhangxc0427",
+      "scripts": []
+    }
+  ],
+  "name": "基金从业再教育3.0",
+  "description": "真是个惊喜!",
+  "url": "https://greasyfork.org/scripts/448754-%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E5%86%8D%E6%95%99%E8%82%B23-0",
+  "code_url": "https://update.greasyfork.org/scripts/448754/%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E5%86%8D%E6%95%99%E8%82%B230.user.js",
+  "code_size": 7305,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

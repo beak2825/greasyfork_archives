@@ -1,0 +1,59 @@
+{
+  "id": 419917,
+  "daily_installs": 0,
+  "total_installs": 357,
+  "fan_score": "6.1",
+  "good_ratings": 0,
+  "ok_ratings": 2,
+  "bad_ratings": 1,
+  "created_at": "2021-01-09T03:34:48.000Z",
+  "code_updated_at": "2021-01-09T03:34:47.000Z",
+  "namespace": "https://greasyfork.org/users/725305",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 725305,
+      "name": "Hephaistoz",
+      "created_at": "2021-01-09T03:26:08.000Z",
+      "url": "https://greasyfork.org/users/725305-hephaistoz",
+      "scripts": [
+        {
+          "id": 419917,
+          "daily_installs": 0,
+          "total_installs": 357,
+          "fan_score": "6.1",
+          "good_ratings": 0,
+          "ok_ratings": 2,
+          "bad_ratings": 1,
+          "created_at": "2021-01-09T03:34:48.000Z",
+          "code_updated_at": "2021-01-09T03:34:47.000Z",
+          "namespace": "https://greasyfork.org/users/725305",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Turn Off Youtube Annotations",
+          "description": "Script to deactivate annotations toggle from youtube video settings",
+          "url": "https://greasyfork.org/scripts/419917-turn-off-youtube-annotations",
+          "code_url": "https://update.greasyfork.org/scripts/419917/Turn%20Off%20Youtube%20Annotations.user.js",
+          "code_size": 1524,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Turn Off Youtube Annotations",
+  "description": "Script to deactivate annotations toggle from youtube video settings",
+  "url": "https://greasyfork.org/scripts/419917-turn-off-youtube-annotations",
+  "code_url": "https://update.greasyfork.org/scripts/419917/Turn%20Off%20Youtube%20Annotations.user.js",
+  "code_size": 1524,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

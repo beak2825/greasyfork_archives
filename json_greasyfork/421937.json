@@ -1,0 +1,59 @@
+{
+  "id": 421937,
+  "daily_installs": 0,
+  "total_installs": 6269,
+  "fan_score": "80.8",
+  "good_ratings": 20,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-02-18T11:35:54.000Z",
+  "code_updated_at": "2021-10-12T14:05:10.000Z",
+  "namespace": "https://github.com/Iuleoo/GitHub_loc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 738565,
+      "name": "Iuleoo",
+      "created_at": "2021-02-18T11:16:22.000Z",
+      "url": "https://greasyfork.org/users/738565-iuleoo",
+      "scripts": [
+        {
+          "id": 421937,
+          "daily_installs": 0,
+          "total_installs": 6269,
+          "fan_score": "80.8",
+          "good_ratings": 20,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2021-02-18T11:35:54.000Z",
+          "code_updated_at": "2021-10-12T14:05:10.000Z",
+          "namespace": "https://github.com/Iuleoo/GitHub_loc",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GitHub local",
+          "description": "Translate GitHub.com",
+          "url": "https://greasyfork.org/scripts/421937-github-local",
+          "code_url": "https://update.greasyfork.org/scripts/421937/GitHub%20local.user.js",
+          "code_size": 5067,
+          "license": null,
+          "version": "2.1.0",
+          "locale": "da",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GitHub local",
+  "description": "Translate GitHub.com",
+  "url": "https://greasyfork.org/scripts/421937-github-local",
+  "code_url": "https://update.greasyfork.org/scripts/421937/GitHub%20local.user.js",
+  "code_size": 5067,
+  "license": null,
+  "version": "2.1.0",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

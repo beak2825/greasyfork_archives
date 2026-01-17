@@ -1,0 +1,68 @@
+[
+  {
+    "id": 467651,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-01T15:05:25.000Z",
+    "code_updated_at": "2023-06-02T22:13:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1088431,
+        "name": "crizzo",
+        "created_at": "2023-06-01T09:24:15.000Z",
+        "url": "https://greasyfork.org/users/1088431-crizzo"
+      }
+    ],
+    "name": "grunkomatic",
+    "description": "Hide posts below a threshold number of likes",
+    "url": "https://greasyfork.org/scripts/467651-grunkomatic",
+    "code_url": "https://update.greasyfork.org/scripts/467651/grunkomatic.user.js",
+    "code_size": 5295,
+    "license": "MIT License",
+    "version": "0.25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 467636,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-01T09:39:23.000Z",
+    "code_updated_at": "2023-06-01T15:04:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1088431,
+        "name": "crizzo",
+        "created_at": "2023-06-01T09:24:15.000Z",
+        "url": "https://greasyfork.org/users/1088431-crizzo"
+      }
+    ],
+    "name": "DEV grunkomatic",
+    "description": "Hide posts below a threshold number of likes",
+    "url": "https://greasyfork.org/scripts/467636-dev-grunkomatic",
+    "code_url": "https://update.greasyfork.org/scripts/467636/DEV%20grunkomatic.user.js",
+    "code_size": 3953,
+    "license": "MIT License",
+    "version": "0.23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

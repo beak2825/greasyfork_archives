@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456833,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-19T18:57:50.000Z",
+    "code_updated_at": "2022-12-19T18:57:50.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 250667,
+        "name": "dddddd",
+        "created_at": "2019-02-28T11:39:40.000Z",
+        "url": "https://greasyfork.org/users/250667-dddddd"
+      }
+    ],
+    "name": "语雀标签（状态）小工具 - yuque.com",
+    "description": "2022/12/19 03:46:53",
+    "url": "https://greasyfork.org/scripts/456833-%E8%AF%AD%E9%9B%80%E6%A0%87%E7%AD%BE-%E7%8A%B6%E6%80%81-%E5%B0%8F%E5%B7%A5%E5%85%B7-yuque-com",
+    "code_url": "https://update.greasyfork.org/scripts/456833/%E8%AF%AD%E9%9B%80%E6%A0%87%E7%AD%BE%EF%BC%88%E7%8A%B6%E6%80%81%EF%BC%89%E5%B0%8F%E5%B7%A5%E5%85%B7%20-%20yuquecom.user.js",
+    "code_size": 8620,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

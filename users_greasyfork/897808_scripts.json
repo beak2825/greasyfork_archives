@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442763,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-04T20:02:17.000Z",
+    "code_updated_at": "2022-04-04T20:25:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 897808,
+        "name": "TAspert",
+        "created_at": "2022-04-04T20:00:10.000Z",
+        "url": "https://greasyfork.org/users/897808-taspert"
+      }
+    ],
+    "name": "Reddit Place - VLC barre des taches",
+    "description": "Dessinons le logo de VLC (logiciel Français) dans la barre des taches !",
+    "url": "https://greasyfork.org/scripts/442763-reddit-place-vlc-barre-des-taches",
+    "code_url": "https://update.greasyfork.org/scripts/442763/Reddit%20Place%20-%20VLC%20barre%20des%20taches.user.js",
+    "code_size": 1405,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

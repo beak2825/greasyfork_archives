@@ -1,0 +1,33 @@
+{
+  "id": 412310,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-02T04:36:20.000Z",
+  "code_updated_at": "2020-10-02T04:36:20.000Z",
+  "namespace": "https://x181.cn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 691763,
+      "name": "zhanhongtao",
+      "created_at": "2020-10-02T04:28:26.000Z",
+      "url": "https://greasyfork.org/users/691763-zhanhongtao"
+    }
+  ],
+  "name": "auto-run-script-for-every-task",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/412310-auto-run-script-for-every-task",
+  "code_url": "https://update.greasyfork.org/scripts/412310/auto-run-script-for-every-task.user.js",
+  "code_size": 7101,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

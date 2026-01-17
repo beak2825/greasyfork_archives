@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477690,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-18T13:49:54.000Z",
+    "code_updated_at": "2024-05-24T15:36:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1198918,
+        "name": "Edward_Davidson",
+        "created_at": "2023-10-18T13:36:06.000Z",
+        "url": "https://greasyfork.org/users/1198918-edward-davidson"
+      }
+    ],
+    "name": "Кураторы адм/ЗГА/ГА | KALININGRAD",
+    "description": "Предложения по улучшению писать в ВК - https://vk.com/id637370917",
+    "url": "https://greasyfork.org/scripts/477690-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D0%B0%D0%B4%D0%BC-%D0%B7%D0%B3%D0%B0-%D0%B3%D0%B0-kaliningrad",
+    "code_url": "https://update.greasyfork.org/scripts/477690/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D0%B0%D0%B4%D0%BC%D0%97%D0%93%D0%90%D0%93%D0%90%20%7C%20KALININGRAD.user.js",
+    "code_size": 46314,
+    "license": "MIT License",
+    "version": "1.10.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

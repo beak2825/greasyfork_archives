@@ -1,0 +1,59 @@
+{
+  "id": 464156,
+  "daily_installs": 1,
+  "total_installs": 445,
+  "fan_score": "20.8",
+  "good_ratings": 1,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2023-04-16T13:39:19.000Z",
+  "code_updated_at": "2024-04-22T11:20:41.000Z",
+  "namespace": "Ziran",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 827478,
+      "name": "zran-va11",
+      "created_at": "2021-10-21T18:24:17.000Z",
+      "url": "https://greasyfork.org/users/827478-zran-va11",
+      "scripts": [
+        {
+          "id": 464156,
+          "daily_installs": 1,
+          "total_installs": 445,
+          "fan_score": "20.8",
+          "good_ratings": 1,
+          "ok_ratings": 2,
+          "bad_ratings": 0,
+          "created_at": "2023-04-16T13:39:19.000Z",
+          "code_updated_at": "2024-04-22T11:20:41.000Z",
+          "namespace": "Ziran",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Another cmoa.jp Downloader",
+          "description": "用于网站cmoa.jp的下载。在顶部菜单选项右侧点击download按钮开始下载。按钮没有显示的话尝试重新打开菜单栏。图片每50页分为一部分进行压缩下载，压缩需要40-60秒，请不要关闭或刷新页面。",
+          "url": "https://greasyfork.org/scripts/464156-another-cmoa-jp-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/464156/Another%20cmoajp%20Downloader.user.js",
+          "code_size": 9355,
+          "license": "MIT License",
+          "version": "2.3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Another cmoa.jp Downloader",
+  "description": "用于网站cmoa.jp的下载。在顶部菜单选项右侧点击download按钮开始下载。按钮没有显示的话尝试重新打开菜单栏。图片每50页分为一部分进行压缩下载，压缩需要40-60秒，请不要关闭或刷新页面。",
+  "url": "https://greasyfork.org/scripts/464156-another-cmoa-jp-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/464156/Another%20cmoajp%20Downloader.user.js",
+  "code_size": 9355,
+  "license": "MIT License",
+  "version": "2.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

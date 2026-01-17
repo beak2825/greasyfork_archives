@@ -1,0 +1,33 @@
+{
+  "id": 441617,
+  "daily_installs": 0,
+  "total_installs": 204,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-16T20:17:56.000Z",
+  "code_updated_at": "2022-03-16T20:17:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 888310,
+      "name": "ZEFISH",
+      "created_at": "2022-03-16T20:14:41.000Z",
+      "url": "https://greasyfork.org/users/888310-zefish"
+    }
+  ],
+  "name": "GTA GUESSER CH33T",
+  "description": "Cheat for gta geusser",
+  "url": "https://greasyfork.org/scripts/441617-gta-guesser-ch33t",
+  "code_url": "https://update.greasyfork.org/scripts/441617/GTA%20GUESSER%20CH33T.user.js",
+  "code_size": 4396,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

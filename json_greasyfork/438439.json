@@ -1,0 +1,34 @@
+{
+  "id": 438439,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-13T00:20:50.000Z",
+  "code_updated_at": "2022-01-19T01:36:43.000Z",
+  "namespace": "https://greasyfork.org/users/859074",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 859074,
+      "name": "Johnathon Aurand",
+      "created_at": "2021-12-29T18:52:00.000Z",
+      "url": "https://greasyfork.org/users/859074-johnathon-aurand",
+      "scripts": []
+    }
+  ],
+  "name": "Horwasp corrections Beta",
+  "description": "Fixes Horwasp predictions in planet view",
+  "url": "https://greasyfork.org/scripts/438439-horwasp-corrections-beta",
+  "code_url": "https://update.greasyfork.org/scripts/438439/Horwasp%20corrections%20Beta.user.js",
+  "code_size": 128481,
+  "license": null,
+  "version": "3.05",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

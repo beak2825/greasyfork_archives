@@ -1,0 +1,59 @@
+{
+  "id": 444994,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-15T07:15:19.000Z",
+  "code_updated_at": "2022-05-15T07:15:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 837777,
+      "name": "xiaowei1234",
+      "created_at": "2021-11-12T13:34:33.000Z",
+      "url": "https://greasyfork.org/users/837777-xiaowei1234",
+      "scripts": [
+        {
+          "id": 435393,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-12T13:50:21.000Z",
+          "code_updated_at": "2021-11-16T05:45:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Automatic retroactive",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/435393-automatic-retroactive",
+          "code_url": "https://update.greasyfork.org/scripts/435393/Automatic%20retroactive.user.js",
+          "code_size": 2337,
+          "license": null,
+          "version": "2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动补签",
+  "description": "发生的方式",
+  "url": "https://greasyfork.org/scripts/444994-%E8%87%AA%E5%8A%A8%E8%A1%A5%E7%AD%BE",
+  "code_url": "https://update.greasyfork.org/scripts/444994/%E8%87%AA%E5%8A%A8%E8%A1%A5%E7%AD%BE.user.js",
+  "code_size": 3635,
+  "license": null,
+  "version": "2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

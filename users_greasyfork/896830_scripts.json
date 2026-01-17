@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442605,
+    "daily_installs": 0,
+    "total_installs": 1176,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-03T02:40:29.000Z",
+    "code_updated_at": "2022-04-03T12:04:00.000Z",
+    "namespace": "https://github.com/hellodk34/refresh-baidu-baike",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 896830,
+        "name": "hellodk",
+        "created_at": "2022-04-03T01:42:01.000Z",
+        "url": "https://greasyfork.org/users/896830-hellodk"
+      }
+    ],
+    "name": "还我干净清爽百度百科！",
+    "description": "去除百度百科、百度经验页面上的声明、秒懂百科、TA说等与条目介绍相关性不强的sb信息",
+    "url": "https://greasyfork.org/scripts/442605-%E8%BF%98%E6%88%91%E5%B9%B2%E5%87%80%E6%B8%85%E7%88%BD%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91",
+    "code_url": "https://update.greasyfork.org/scripts/442605/%E8%BF%98%E6%88%91%E5%B9%B2%E5%87%80%E6%B8%85%E7%88%BD%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91%EF%BC%81.user.js",
+    "code_size": 2078,
+    "license": "GNU General Public License v3.0",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

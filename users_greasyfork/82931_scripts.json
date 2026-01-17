@@ -295,5 +295,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 440655,
+    "daily_installs": 0,
+    "total_installs": 718,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-27T00:57:39.000Z",
+    "code_updated_at": "2025-07-29T22:56:42.000Z",
+    "namespace": "https://spin.rip/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 82931,
+        "name": "Spinfal",
+        "created_at": "2016-11-26T03:27:41.000Z",
+        "url": "https://greasyfork.org/users/82931-spinfal"
+      }
+    ],
+    "name": "Roblox Friend Remover",
+    "description": "Remove all of your friends on Roblox",
+    "url": "https://greasyfork.org/scripts/440655-roblox-friend-remover",
+    "code_url": "https://update.greasyfork.org/scripts/440655/Roblox%20Friend%20Remover.user.js",
+    "code_size": 3171,
+    "license": "AGPL-3.0 License",
+    "version": "3000",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423795,
+    "daily_installs": 0,
+    "total_installs": 356,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-22T19:57:06.000Z",
+    "code_updated_at": "2021-03-30T00:01:42.000Z",
+    "namespace": "https://waa.ai/spinpy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 82931,
+        "name": "Spinfal",
+        "created_at": "2016-11-26T03:27:41.000Z",
+        "url": "https://greasyfork.org/users/82931-spinfal"
+      }
+    ],
+    "name": "Auto Cookie Clicker",
+    "description": "Automate Cookie Clicker and have it do the work for you!",
+    "url": "https://greasyfork.org/scripts/423795-auto-cookie-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/423795/Auto%20Cookie%20Clicker.user.js",
+    "code_size": 3115,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422851,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-08T06:34:38.000Z",
+    "code_updated_at": "2021-04-09T04:52:16.000Z",
+    "namespace": "https://waa.ai/spinpy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 82931,
+        "name": "Spinfal",
+        "created_at": "2016-11-26T03:27:41.000Z",
+        "url": "https://greasyfork.org/users/82931-spinfal"
+      }
+    ],
+    "name": "Chihuahuaspin Cheat",
+    "description": "Allows you to change the amount of spins in chihuahuaspin.com",
+    "url": "https://greasyfork.org/scripts/422851-chihuahuaspin-cheat",
+    "code_url": "https://update.greasyfork.org/scripts/422851/Chihuahuaspin%20Cheat.user.js",
+    "code_size": 1264,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419827,
+    "daily_installs": 0,
+    "total_installs": 303,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-07T18:55:37.000Z",
+    "code_updated_at": "2025-02-14T21:24:02.000Z",
+    "namespace": "https://spin.rip",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 82931,
+        "name": "Spinfal",
+        "created_at": "2016-11-26T03:27:41.000Z",
+        "url": "https://greasyfork.org/users/82931-spinfal"
+      }
+    ],
+    "name": "MathPapa No-Pro Calculator",
+    "description": "Allows you to use MathPapa's calculator and show the steps for work without needing to buy the Pro version",
+    "url": "https://greasyfork.org/scripts/419827-mathpapa-no-pro-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/419827/MathPapa%20No-Pro%20Calculator.user.js",
+    "code_size": 1901,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

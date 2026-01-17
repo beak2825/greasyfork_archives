@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451605,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-18T22:15:29.000Z",
+    "code_updated_at": "2022-09-18T22:15:28.000Z",
+    "namespace": "https://github.com/jrib/userscripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 960530,
+        "name": "jrib",
+        "created_at": "2022-09-17T21:06:01.000Z",
+        "url": "https://greasyfork.org/users/960530-jrib"
+      }
+    ],
+    "name": "Clip all coupons at wegmans.com",
+    "description": "9/12/2022, 6:07:45 PM",
+    "url": "https://greasyfork.org/scripts/451605-clip-all-coupons-at-wegmans-com",
+    "code_url": "https://update.greasyfork.org/scripts/451605/Clip%20all%20coupons%20at%20wegmanscom.user.js",
+    "code_size": 4456,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

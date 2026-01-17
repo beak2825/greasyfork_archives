@@ -1,0 +1,34 @@
+{
+  "id": 491923,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-07T20:23:36.000Z",
+  "code_updated_at": "2024-04-07T21:00:52.000Z",
+  "namespace": "http://tw-db.info",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1156278,
+      "name": "Cthaeh",
+      "created_at": "2023-08-21T13:57:21.000Z",
+      "url": "https://greasyfork.org/users/1156278-cthaeh",
+      "scripts": []
+    }
+  ],
+  "name": "The West - tw-db.info Cloth Calc [eng]",
+  "description": "The West Script: Cloth Calculation for game version 1.34 or higher",
+  "url": "https://greasyfork.org/scripts/491923-the-west-tw-db-info-cloth-calc-eng",
+  "code_url": "https://update.greasyfork.org/scripts/491923/The%20West%20-%20tw-dbinfo%20Cloth%20Calc%20%5Beng%5D.user.js",
+  "code_size": 647053,
+  "license": null,
+  "version": "0.49.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

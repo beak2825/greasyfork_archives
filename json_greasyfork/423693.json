@@ -1,0 +1,33 @@
+{
+  "id": 423693,
+  "daily_installs": 0,
+  "total_installs": 177,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-21T06:03:53.000Z",
+  "code_updated_at": "2021-04-14T14:11:16.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 749747,
+      "name": "VroomVroom",
+      "created_at": "2021-03-21T05:55:53.000Z",
+      "url": "https://greasyfork.org/users/749747-vroomvroom"
+    }
+  ],
+  "name": "Torn: Spy Save",
+  "description": "Saves your spies by sending them to TornStats",
+  "url": "https://greasyfork.org/scripts/423693-torn-spy-save",
+  "code_url": "https://update.greasyfork.org/scripts/423693/Torn%3A%20Spy%20Save.user.js",
+  "code_size": 4642,
+  "license": null,
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

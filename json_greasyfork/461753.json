@@ -1,0 +1,34 @@
+{
+  "id": 461753,
+  "daily_installs": 0,
+  "total_installs": 114,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-13T12:22:28.000Z",
+  "code_updated_at": "2023-07-18T19:42:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1041522,
+      "name": "Anna Kalimbetova",
+      "created_at": "2023-03-13T11:28:34.000Z",
+      "url": "https://greasyfork.org/users/1041522-anna-kalimbetova",
+      "scripts": []
+    }
+  ],
+  "name": "Кураторы форума /КФ/ YELLOW",
+  "description": "По вопросам в ВК - https://vk.com/id636046107",
+  "url": "https://greasyfork.org/scripts/461753-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D0%BA%D1%84-yellow",
+  "code_url": "https://update.greasyfork.org/scripts/461753/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%D0%9A%D0%A4%20YELLOW.user.js",
+  "code_size": 131442,
+  "license": "MIT License",
+  "version": "0.30",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

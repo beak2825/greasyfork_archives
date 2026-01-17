@@ -1,0 +1,68 @@
+[
+  {
+    "id": 457868,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-08T20:00:35.000Z",
+    "code_updated_at": "2023-01-10T09:21:28.000Z",
+    "namespace": "autofill",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1008677,
+        "name": "kyougenn",
+        "created_at": "2023-01-07T23:44:45.000Z",
+        "url": "https://greasyfork.org/users/1008677-kyougenn"
+      }
+    ],
+    "name": "GGn Autofill from torrent",
+    "description": "Attempt to read the .torrent file and fill in the artist and album",
+    "url": "https://greasyfork.org/scripts/457868-ggn-autofill-from-torrent",
+    "code_url": "https://update.greasyfork.org/scripts/457868/GGn%20Autofill%20from%20torrent.user.js",
+    "code_size": 8063,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 457854,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-08T13:05:23.000Z",
+    "code_updated_at": "2023-01-10T09:15:57.000Z",
+    "namespace": "yadg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1008677,
+        "name": "kyougenn",
+        "created_at": "2023-01-07T23:44:45.000Z",
+        "url": "https://greasyfork.org/users/1008677-kyougenn"
+      }
+    ],
+    "name": "GGn YADG",
+    "description": "This script provides integration with online description generator YADG (http://yadg.cc) - Credit to Slack06 and SavageCore",
+    "url": "https://greasyfork.org/scripts/457854-ggn-yadg",
+    "code_url": "https://update.greasyfork.org/scripts/457854/GGn%20YADG.user.js",
+    "code_size": 86586,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

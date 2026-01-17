@@ -1,0 +1,34 @@
+{
+  "id": 432091,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-08T06:43:01.000Z",
+  "code_updated_at": "2021-09-14T08:12:25.000Z",
+  "namespace": "Script Runner Pro",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 813296,
+      "name": "Vincent Dingding",
+      "created_at": "2021-09-08T06:41:10.000Z",
+      "url": "https://greasyfork.org/users/813296-vincent-dingding",
+      "scripts": []
+    }
+  ],
+  "name": "Bugaw Crow v3.0",
+  "description": "PVU tool",
+  "url": "https://greasyfork.org/scripts/432091-bugaw-crow-v3-0",
+  "code_url": "https://update.greasyfork.org/scripts/432091/Bugaw%20Crow%20v30.user.js",
+  "code_size": 3417,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 426979,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-24T20:25:26.000Z",
+    "code_updated_at": "2021-05-24T21:15:58.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774325,
+        "name": "0xAhmet",
+        "created_at": "2021-05-20T17:44:31.000Z",
+        "url": "https://greasyfork.org/users/774325-0xahmet"
+      }
+    ],
+    "name": "OfferID Finder + Auto Refresh",
+    "description": "İzinsiz Dağıtmayın Tşkler",
+    "url": "https://greasyfork.org/scripts/426979-offerid-finder-auto-refresh",
+    "code_url": "https://update.greasyfork.org/scripts/426979/OfferID%20Finder%20%2B%20Auto%20Refresh.user.js",
+    "code_size": 3834,
+    "license": null,
+    "version": "0.000003_alpha_rc_new_final_new_2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 426772,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-20T17:46:19.000Z",
+    "code_updated_at": "2021-05-21T18:25:01.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774325,
+        "name": "0xAhmet",
+        "created_at": "2021-05-20T17:44:31.000Z",
+        "url": "https://greasyfork.org/users/774325-0xahmet"
+      }
+    ],
+    "name": "Semi Auto Buy",
+    "description": "5/20/2021, 1:05:34 PM",
+    "url": "https://greasyfork.org/scripts/426772-semi-auto-buy",
+    "code_url": "https://update.greasyfork.org/scripts/426772/Semi%20Auto%20Buy.user.js",
+    "code_size": 2271,
+    "license": null,
+    "version": "0.0001_beta",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

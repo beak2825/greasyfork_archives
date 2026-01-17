@@ -1,0 +1,34 @@
+{
+  "id": 475487,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-17T04:36:43.000Z",
+  "code_updated_at": "2023-09-17T04:36:43.000Z",
+  "namespace": "tampermonkey.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1174802,
+      "name": "Bear Beckendorf",
+      "created_at": "2023-09-17T04:21:37.000Z",
+      "url": "https://greasyfork.org/users/1174802-bear-beckendorf",
+      "scripts": []
+    }
+  ],
+  "name": "Make Opponent's Cards Visible",
+  "description": "Make opponent's cards visible in the card game",
+  "url": "https://greasyfork.org/scripts/475487-make-opponent-s-cards-visible",
+  "code_url": "https://update.greasyfork.org/scripts/475487/Make%20Opponent%27s%20Cards%20Visible.user.js",
+  "code_size": 1431,
+  "license": null,
+  "version": "2.0",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

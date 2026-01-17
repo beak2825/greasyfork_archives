@@ -1,0 +1,33 @@
+{
+  "id": 465954,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-05-10T18:22:28.000Z",
+  "code_updated_at": "2023-05-10T18:51:03.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076801,
+      "name": "Captivate9575",
+      "created_at": "2023-05-10T18:18:26.000Z",
+      "url": "https://greasyfork.org/users/1076801-captivate9575"
+    }
+  ],
+  "name": "Remove \"People Also Search For\" Box",
+  "description": "Removes the annoying \"People also search for\" box that pops up in Google Search and causes layout shift after a navigation.",
+  "url": "https://greasyfork.org/scripts/465954-remove-people-also-search-for-box",
+  "code_url": "https://update.greasyfork.org/scripts/465954/Remove%20%22People%20Also%20Search%20For%22%20Box.user.js",
+  "code_size": 878,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

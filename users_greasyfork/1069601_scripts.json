@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465079,
+    "daily_installs": 0,
+    "total_installs": 84,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-28T16:59:50.000Z",
+    "code_updated_at": "2023-04-28T16:59:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1069601,
+        "name": "喜雨xxin",
+        "created_at": "2023-04-28T16:41:21.000Z",
+        "url": "https://greasyfork.org/users/1069601-%E5%96%9C%E9%9B%A8xxin"
+      }
+    ],
+    "name": "ComfyUI 字符替代汉化",
+    "description": "COMFYUI 不完全汉化",
+    "url": "https://greasyfork.org/scripts/465079-comfyui-%E5%AD%97%E7%AC%A6%E6%9B%BF%E4%BB%A3%E6%B1%89%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/465079/ComfyUI%20%E5%AD%97%E7%AC%A6%E6%9B%BF%E4%BB%A3%E6%B1%89%E5%8C%96.user.js",
+    "code_size": 7328,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

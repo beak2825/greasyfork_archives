@@ -1,0 +1,59 @@
+{
+  "id": 465558,
+  "daily_installs": 0,
+  "total_installs": 2793,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-05T04:42:37.000Z",
+  "code_updated_at": "2023-05-05T04:42:37.000Z",
+  "namespace": "https://mooc.zzf4.top/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1073354,
+      "name": "ZZF4",
+      "created_at": "2023-05-05T04:40:44.000Z",
+      "url": "https://greasyfork.org/users/1073354-zzf4",
+      "scripts": [
+        {
+          "id": 465558,
+          "daily_installs": 0,
+          "total_installs": 2793,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-05T04:42:37.000Z",
+          "code_updated_at": "2023-05-05T04:42:37.000Z",
+          "namespace": "https://mooc.zzf4.top/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "moocHelper 智慧职教助手，新版智慧职教新版职教云",
+          "description": "新版智慧职教、职教云课件视频自动完成，可选择倍速,全部功能请前往mooc.zzf4.top体验",
+          "url": "https://greasyfork.org/scripts/465558-moochelper-%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E5%8A%A9%E6%89%8B-%E6%96%B0%E7%89%88%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E6%96%B0%E7%89%88%E8%81%8C%E6%95%99%E4%BA%91",
+          "code_url": "https://update.greasyfork.org/scripts/465558/moocHelper%20%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E5%8A%A9%E6%89%8B%EF%BC%8C%E6%96%B0%E7%89%88%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E6%96%B0%E7%89%88%E8%81%8C%E6%95%99%E4%BA%91.user.js",
+          "code_size": 1685,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "moocHelper 智慧职教助手，新版智慧职教新版职教云",
+  "description": "新版智慧职教、职教云课件视频自动完成，可选择倍速,全部功能请前往mooc.zzf4.top体验",
+  "url": "https://greasyfork.org/scripts/465558-moochelper-%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E5%8A%A9%E6%89%8B-%E6%96%B0%E7%89%88%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E6%96%B0%E7%89%88%E8%81%8C%E6%95%99%E4%BA%91",
+  "code_url": "https://update.greasyfork.org/scripts/465558/moocHelper%20%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E5%8A%A9%E6%89%8B%EF%BC%8C%E6%96%B0%E7%89%88%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E6%96%B0%E7%89%88%E8%81%8C%E6%95%99%E4%BA%91.user.js",
+  "code_size": 1685,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

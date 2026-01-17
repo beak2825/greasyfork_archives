@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433518,
+    "daily_installs": 4,
+    "total_installs": 5121,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-06T18:27:19.000Z",
+    "code_updated_at": "2021-10-06T18:27:18.000Z",
+    "namespace": "Free and Real agario bots updated",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811591,
+        "name": "crakle cheats",
+        "created_at": "2021-09-02T22:28:48.000Z",
+        "url": "https://greasyfork.org/users/811591-crakle-cheats"
+      }
+    ],
+    "name": "Free Agar.io Bots (Vanilla Version) updated",
+    "description": "Free and Real open source agario bots (tags: ogario, legend mod, vanilla, free bots, unlimited, hacks, infinity, agar.io, cheat, miniclip, agar)",
+    "url": "https://greasyfork.org/scripts/433518-free-agar-io-bots-vanilla-version-updated",
+    "code_url": "https://update.greasyfork.org/scripts/433518/Free%20Agario%20Bots%20%28Vanilla%20Version%29%20updated.user.js",
+    "code_size": 26281,
+    "license": null,
+    "version": "2.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

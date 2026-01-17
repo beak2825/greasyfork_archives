@@ -1,0 +1,68 @@
+[
+  {
+    "id": 443478,
+    "daily_installs": 0,
+    "total_installs": 477,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-16T14:13:48.000Z",
+    "code_updated_at": "2022-04-16T19:44:05.000Z",
+    "namespace": "http://userstyles.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 833002,
+        "name": "Sniper Typist",
+        "created_at": "2021-11-06T22:35:20.000Z",
+        "url": "https://greasyfork.org/users/833002-sniper-typist"
+      }
+    ],
+    "name": "Nitro Type Glitched Window Style!",
+    "description": "It looks like you are on window. But way cooler!!!",
+    "url": "https://greasyfork.org/scripts/443478-nitro-type-glitched-window-style",
+    "code_url": "https://update.greasyfork.org/scripts/443478/Nitro%20Type%20Glitched%20Window%20Style%21.user.js",
+    "code_size": 4054,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435505,
+    "daily_installs": 0,
+    "total_installs": 327,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-11-14T16:50:42.000Z",
+    "code_updated_at": "2022-01-23T23:47:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 833002,
+        "name": "Sniper Typist",
+        "created_at": "2021-11-06T22:35:20.000Z",
+        "url": "https://greasyfork.org/users/833002-sniper-typist"
+      }
+    ],
+    "name": "Nitro Type Fortune Teller",
+    "description": "Tell you fortune every time you enter Nitro Type",
+    "url": "https://greasyfork.org/scripts/435505-nitro-type-fortune-teller",
+    "code_url": "https://update.greasyfork.org/scripts/435505/Nitro%20Type%20Fortune%20Teller.user.js",
+    "code_size": 4940,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

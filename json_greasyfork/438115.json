@@ -1,0 +1,59 @@
+{
+  "id": 438115,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-06T07:17:43.000Z",
+  "code_updated_at": "2022-02-09T20:10:36.000Z",
+  "namespace": "https://greasyfork.org/en/users/861623-hannah-gbs",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 861623,
+      "name": "Hannah Ryan",
+      "created_at": "2022-01-06T07:14:52.000Z",
+      "url": "https://greasyfork.org/users/861623-hannah-ryan",
+      "scripts": [
+        {
+          "id": 438115,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-06T07:17:43.000Z",
+          "code_updated_at": "2022-02-09T20:10:36.000Z",
+          "namespace": "https://greasyfork.org/en/users/861623-hannah-gbs",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide TTROY on ABB",
+          "description": "Hide Specific User",
+          "url": "https://greasyfork.org/scripts/438115-hide-ttroy-on-abb",
+          "code_url": "https://update.greasyfork.org/scripts/438115/Hide%20TTROY%20on%20ABB.user.js",
+          "code_size": 654,
+          "license": null,
+          "version": "1.11",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide TTROY on ABB",
+  "description": "Hide Specific User",
+  "url": "https://greasyfork.org/scripts/438115-hide-ttroy-on-abb",
+  "code_url": "https://update.greasyfork.org/scripts/438115/Hide%20TTROY%20on%20ABB.user.js",
+  "code_size": 654,
+  "license": null,
+  "version": "1.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

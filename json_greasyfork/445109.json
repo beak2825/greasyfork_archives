@@ -1,0 +1,34 @@
+{
+  "id": 445109,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-17T09:15:21.000Z",
+  "code_updated_at": "2022-05-17T09:15:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 43669,
+      "name": "fz 3",
+      "created_at": "2016-05-14T11:28:51.000Z",
+      "url": "https://greasyfork.org/users/43669-fz-3",
+      "scripts": []
+    }
+  ],
+  "name": "monitor OKX merchant status",
+  "description": "monitor OKX merchant status for trade purpose.",
+  "url": "https://greasyfork.org/scripts/445109-monitor-okx-merchant-status",
+  "code_url": "https://update.greasyfork.org/scripts/445109/monitor%20OKX%20merchant%20status.user.js",
+  "code_size": 3156,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

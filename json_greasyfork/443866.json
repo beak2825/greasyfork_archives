@@ -1,0 +1,59 @@
+{
+  "id": 443866,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-23T09:55:50.000Z",
+  "code_updated_at": "2022-04-23T10:02:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 865562,
+      "name": "hzxsxds01",
+      "created_at": "2022-01-16T11:50:31.000Z",
+      "url": "https://greasyfork.org/users/865562-hzxsxds01",
+      "scripts": [
+        {
+          "id": 452462,
+          "daily_installs": 0,
+          "total_installs": 124,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-04T07:57:47.000Z",
+          "code_updated_at": "2022-10-04T07:57:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "C证续证-学习辅助",
+          "description": "C证续证视频部分学习辅助，全自动学习。",
+          "url": "https://greasyfork.org/scripts/452462-c%E8%AF%81%E7%BB%AD%E8%AF%81-%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9",
+          "code_url": "https://update.greasyfork.org/scripts/452462/C%E8%AF%81%E7%BB%AD%E8%AF%81-%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9.user.js",
+          "code_size": 2836,
+          "license": "No license",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CSDN 文章阅读清洁",
+  "description": "CSDN文章阅读页清洁工具，去除左右两边的各类垃圾以及文章下面的评论等内容。",
+  "url": "https://greasyfork.org/scripts/443866-csdn-%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E6%B8%85%E6%B4%81",
+  "code_url": "https://update.greasyfork.org/scripts/443866/CSDN%20%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E6%B8%85%E6%B4%81.user.js",
+  "code_size": 1774,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 469688,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-29T03:09:39.000Z",
+  "code_updated_at": "2023-06-29T03:09:39.000Z",
+  "namespace": "https://greasyfork.org/users/292729",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 292729,
+      "name": "epicmines33",
+      "created_at": "2019-04-17T06:33:27.000Z",
+      "url": "https://greasyfork.org/users/292729-epicmines33",
+      "scripts": [
+        {
+          "id": 469688,
+          "daily_installs": 0,
+          "total_installs": 34,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-29T03:09:39.000Z",
+          "code_updated_at": "2023-06-29T03:09:39.000Z",
+          "namespace": "https://greasyfork.org/users/292729",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "anti kahoot notifications",
+          "description": "removes kahoot notifications (hide annoying player limit)",
+          "url": "https://greasyfork.org/scripts/469688-anti-kahoot-notifications",
+          "code_url": "https://update.greasyfork.org/scripts/469688/anti%20kahoot%20notifications.user.js",
+          "code_size": 536,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "anti kahoot notifications",
+  "description": "removes kahoot notifications (hide annoying player limit)",
+  "url": "https://greasyfork.org/scripts/469688-anti-kahoot-notifications",
+  "code_url": "https://update.greasyfork.org/scripts/469688/anti%20kahoot%20notifications.user.js",
+  "code_size": 536,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

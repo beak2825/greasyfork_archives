@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465566,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-05T06:44:11.000Z",
+    "code_updated_at": "2024-03-16T06:53:06.000Z",
+    "namespace": "https://greasyfork.org/users/1073399",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1073399,
+        "name": "ZzzzzzzSkyward",
+        "created_at": "2023-05-05T06:32:21.000Z",
+        "url": "https://greasyfork.org/users/1073399-zzzzzzzskyward"
+      }
+    ],
+    "name": "饥荒联机版皮肤翻译dst-skin-trans",
+    "description": "对点数商店和steam市场进行汉化",
+    "url": "https://greasyfork.org/scripts/465566-%E9%A5%A5%E8%8D%92%E8%81%94%E6%9C%BA%E7%89%88%E7%9A%AE%E8%82%A4%E7%BF%BB%E8%AF%91dst-skin-trans",
+    "code_url": "https://update.greasyfork.org/scripts/465566/%E9%A5%A5%E8%8D%92%E8%81%94%E6%9C%BA%E7%89%88%E7%9A%AE%E8%82%A4%E7%BF%BB%E8%AF%91dst-skin-trans.user.js",
+    "code_size": 170129,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

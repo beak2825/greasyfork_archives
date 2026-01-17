@@ -1,0 +1,68 @@
+[
+  {
+    "id": 431516,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-28T06:47:33.000Z",
+    "code_updated_at": "2021-08-28T06:47:32.000Z",
+    "namespace": "https://cosmos547.moe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 61553,
+        "name": "Wenhan Zhu",
+        "created_at": "2016-08-21T17:39:53.000Z",
+        "url": "https://greasyfork.org/users/61553-wenhan-zhu"
+      }
+    ],
+    "name": "IEEE UWaterloo redirect",
+    "description": "Add a button to open the page via UWaterloo proxy link",
+    "url": "https://greasyfork.org/scripts/431516-ieee-uwaterloo-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/431516/IEEE%20UWaterloo%20redirect.user.js",
+    "code_size": 1010,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 428692,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-30T04:42:54.000Z",
+    "code_updated_at": "2021-06-30T04:42:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 61553,
+        "name": "Wenhan Zhu",
+        "created_at": "2016-08-21T17:39:53.000Z",
+        "url": "https://greasyfork.org/users/61553-wenhan-zhu"
+      }
+    ],
+    "name": "M-team replace old links",
+    "description": "Automatically replaces the outdated domain in links",
+    "url": "https://greasyfork.org/scripts/428692-m-team-replace-old-links",
+    "code_url": "https://update.greasyfork.org/scripts/428692/M-team%20replace%20old%20links.user.js",
+    "code_size": 1161,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

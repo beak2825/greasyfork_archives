@@ -1,0 +1,33 @@
+{
+  "id": 457898,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-09T07:07:20.000Z",
+  "code_updated_at": "2023-01-09T07:07:19.000Z",
+  "namespace": "dex.gos",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 45944,
+      "name": "Dex",
+      "created_at": "2016-05-28T04:13:46.000Z",
+      "url": "https://greasyfork.org/users/45944-dex"
+    }
+  ],
+  "name": "Gates of Survival - Handout Clearer",
+  "description": "This script will add a button to the Kingdom experience handout page. When pressed, the script will zero out every experience field on the screen.",
+  "url": "https://greasyfork.org/scripts/457898-gates-of-survival-handout-clearer",
+  "code_url": "https://update.greasyfork.org/scripts/457898/Gates%20of%20Survival%20-%20Handout%20Clearer.user.js",
+  "code_size": 2426,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

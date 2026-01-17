@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483847,
+    "daily_installs": 3,
+    "total_installs": 7465,
+    "fan_score": "75.4",
+    "good_ratings": 17,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2024-01-04T11:08:54.000Z",
+    "code_updated_at": "2025-12-16T05:31:39.000Z",
+    "namespace": "xhs_downloader",
+    "support_url": "https://github.com/JoeanAmier/XHS-Downloader/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1168259,
+        "name": "鹿鸣6",
+        "created_at": "2023-09-07T15:47:59.000Z",
+        "url": "https://greasyfork.org/users/1168259-%E9%B9%BF%E9%B8%A36"
+      }
+    ],
+    "name": "XHS-Downloader",
+    "description": "提取小红书作品/用户链接，下载小红书无水印图文/视频作品文件",
+    "url": "https://greasyfork.org/scripts/483847-xhs-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/483847/XHS-Downloader.user.js",
+    "code_size": 91543,
+    "license": "GNU General Public License v3.0",
+    "version": "2.2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

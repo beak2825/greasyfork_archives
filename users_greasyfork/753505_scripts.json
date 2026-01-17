@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424276,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-31T18:09:35.000Z",
+    "code_updated_at": "2021-03-31T18:09:34.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 753505,
+        "name": "ManAhter",
+        "created_at": "2021-03-31T18:05:51.000Z",
+        "url": "https://greasyfork.org/users/753505-manahter"
+      }
+    ],
+    "name": "Kariyer.net üye girişi ekranı kaldır",
+    "description": "31.03.2021 20:48:26",
+    "url": "https://greasyfork.org/scripts/424276-kariyer-net-%C3%BCye-giri%C5%9Fi-ekran%C4%B1-kald%C4%B1r",
+    "code_url": "https://update.greasyfork.org/scripts/424276/Kariyernet%20%C3%BCye%20giri%C5%9Fi%20ekran%C4%B1%20kald%C4%B1r.user.js",
+    "code_size": 429,
+    "license": null,
+    "version": "1.0",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 428784,
+  "daily_installs": 0,
+  "total_installs": 138,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-02T03:39:29.000Z",
+  "code_updated_at": "2021-08-13T10:05:43.000Z",
+  "namespace": "ustb_vpn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 547158,
+      "name": "hunshcn",
+      "created_at": "2020-04-30T10:38:13.000Z",
+      "url": "https://greasyfork.org/users/547158-hunshcn"
+    }
+  ],
+  "name": "USTB everywhere",
+  "description": "访问你所想",
+  "url": "https://greasyfork.org/scripts/428784-ustb-everywhere",
+  "code_url": "https://update.greasyfork.org/scripts/428784/USTB%20everywhere.user.js",
+  "code_size": 1512,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

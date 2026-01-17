@@ -31,5 +31,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 491487,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-02T13:30:39.000Z",
+    "code_updated_at": "2024-04-02T13:30:39.000Z",
+    "namespace": "https://www.luogu.com.cn/user/542457",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1234567,
+        "name": "cff_0102",
+        "created_at": "2023-12-16T03:58:21.000Z",
+        "url": "https://greasyfork.org/users/1234567-cff-0102"
+      }
+    ],
+    "name": "定时发布云剪贴板",
+    "description": "字面意思，在一天的固定时间内发布洛谷云剪贴板，前提是你得在浏览器中挂着一个洛谷云剪贴板的网页。",
+    "url": "https://greasyfork.org/scripts/491487-%E5%AE%9A%E6%97%B6%E5%8F%91%E5%B8%83%E4%BA%91%E5%89%AA%E8%B4%B4%E6%9D%BF",
+    "code_url": "https://update.greasyfork.org/scripts/491487/%E5%AE%9A%E6%97%B6%E5%8F%91%E5%B8%83%E4%BA%91%E5%89%AA%E8%B4%B4%E6%9D%BF.user.js",
+    "code_size": 2212,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474901,
+    "daily_installs": 0,
+    "total_installs": 673,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-09T13:52:53.000Z",
+    "code_updated_at": "2025-01-22T10:32:25.000Z",
+    "namespace": "https://www.luogu.com.cn/user/542457",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1234567,
+        "name": "cff_0102",
+        "created_at": "2023-12-16T03:58:21.000Z",
+        "url": "https://greasyfork.org/users/1234567-cff-0102"
+      }
+    ],
+    "name": "洛谷讨论区显示时间改成具体时间",
+    "description": "将原本的“……前”改为具体的时间",
+    "url": "https://greasyfork.org/scripts/474901-%E6%B4%9B%E8%B0%B7%E8%AE%A8%E8%AE%BA%E5%8C%BA%E6%98%BE%E7%A4%BA%E6%97%B6%E9%97%B4%E6%94%B9%E6%88%90%E5%85%B7%E4%BD%93%E6%97%B6%E9%97%B4",
+    "code_url": "https://update.greasyfork.org/scripts/474901/%E6%B4%9B%E8%B0%B7%E8%AE%A8%E8%AE%BA%E5%8C%BA%E6%98%BE%E7%A4%BA%E6%97%B6%E9%97%B4%E6%94%B9%E6%88%90%E5%85%B7%E4%BD%93%E6%97%B6%E9%97%B4.user.js",
+    "code_size": 9639,
+    "license": "MIT License",
+    "version": "2.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474873,
+    "daily_installs": 0,
+    "total_installs": 591,
+    "fan_score": "39.6",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-09-09T05:14:27.000Z",
+    "code_updated_at": "2025-01-22T06:38:02.000Z",
+    "namespace": "https://www.luogu.com.cn/user/542457",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1234567,
+        "name": "cff_0102",
+        "created_at": "2023-12-16T03:58:21.000Z",
+        "url": "https://greasyfork.org/users/1234567-cff-0102"
+      }
+    ],
+    "name": "3327-luogu | 洛谷颜色自定义",
+    "description": "可以根据个人喜好，自定义洛谷各个地方的颜色。",
+    "url": "https://greasyfork.org/scripts/474873-3327-luogu-%E6%B4%9B%E8%B0%B7%E9%A2%9C%E8%89%B2%E8%87%AA%E5%AE%9A%E4%B9%89",
+    "code_url": "https://update.greasyfork.org/scripts/474873/3327-luogu%20%7C%20%E6%B4%9B%E8%B0%B7%E9%A2%9C%E8%89%B2%E8%87%AA%E5%AE%9A%E4%B9%89.user.js",
+    "code_size": 101188,
+    "license": "MIT License",
+    "version": "4.1.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469332,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-24T03:51:41.000Z",
+    "code_updated_at": "2023-09-23T06:00:31.000Z",
+    "namespace": "https://www.luogu.com.cn/user/542457",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1234567,
+        "name": "cff_0102",
+        "created_at": "2023-12-16T03:58:21.000Z",
+        "url": "https://greasyfork.org/users/1234567-cff-0102"
+      }
+    ],
+    "name": "3327",
+    "description": "cff 用的洛谷美化插件",
+    "url": "https://greasyfork.org/scripts/469332-3327",
+    "code_url": "https://update.greasyfork.org/scripts/469332/3327.user.js",
+    "code_size": 56822,
+    "license": "MIT License",
+    "version": "1.1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

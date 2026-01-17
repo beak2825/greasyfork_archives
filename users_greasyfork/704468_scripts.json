@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416196,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-16T10:01:37.000Z",
+    "code_updated_at": "2020-11-16T10:01:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 704468,
+        "name": "ye sa",
+        "created_at": "2020-11-12T14:31:18.000Z",
+        "url": "https://greasyfork.org/users/704468-ye-sa"
+      }
+    ],
+    "name": "PTT 隱藏廢文腳本",
+    "description": "隱藏含有特定關鍵字文章",
+    "url": "https://greasyfork.org/scripts/416196-ptt-%E9%9A%B1%E8%97%8F%E5%BB%A2%E6%96%87%E8%85%B3%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/416196/PTT%20%E9%9A%B1%E8%97%8F%E5%BB%A2%E6%96%87%E8%85%B3%E6%9C%AC.user.js",
+    "code_size": 3016,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

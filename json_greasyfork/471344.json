@@ -1,0 +1,33 @@
+{
+  "id": 471344,
+  "daily_installs": 0,
+  "total_installs": 59,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-21T09:14:12.000Z",
+  "code_updated_at": "2023-07-21T09:14:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1112371,
+      "name": "wyj1991",
+      "created_at": "2023-06-26T06:40:10.000Z",
+      "url": "https://greasyfork.org/users/1112371-wyj1991"
+    }
+  ],
+  "name": "新思考网刷网课（hnpx.cersp.com）",
+  "description": "1.进入登录页面，输入账号、密码登录；    2.登录成功后不要做任何操作，自动刷网课；    3.自动找到该页未刷完所有网课观看。",
+  "url": "https://greasyfork.org/scripts/471344-%E6%96%B0%E6%80%9D%E8%80%83%E7%BD%91%E5%88%B7%E7%BD%91%E8%AF%BE-hnpx-cersp-com",
+  "code_url": "https://update.greasyfork.org/scripts/471344/%E6%96%B0%E6%80%9D%E8%80%83%E7%BD%91%E5%88%B7%E7%BD%91%E8%AF%BE%EF%BC%88hnpxcerspcom%EF%BC%89.user.js",
+  "code_size": 3335,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

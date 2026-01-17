@@ -1,0 +1,34 @@
+{
+  "id": 445718,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-29T16:25:54.000Z",
+  "code_updated_at": "2022-05-29T16:25:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 919932,
+      "name": "ニャハハR",
+      "created_at": "2022-05-29T16:18:34.000Z",
+      "url": "https://greasyfork.org/users/919932-%E3%83%8B%E3%83%A3%E3%83%8F%E3%83%8Fr",
+      "scripts": []
+    }
+  ],
+  "name": "radiofavo",
+  "description": "Mail yourself",
+  "url": "https://greasyfork.org/scripts/445718-radiofavo",
+  "code_url": "https://update.greasyfork.org/scripts/445718/radiofavo.user.js",
+  "code_size": 1005,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

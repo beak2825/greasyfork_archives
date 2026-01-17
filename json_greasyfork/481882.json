@@ -1,0 +1,59 @@
+{
+  "id": 481882,
+  "daily_installs": 1,
+  "total_installs": 150,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-10T15:47:59.000Z",
+  "code_updated_at": "2023-12-10T15:47:59.000Z",
+  "namespace": "dagidin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1231765,
+      "name": "Fatma Durak",
+      "created_at": "2023-12-10T15:47:13.000Z",
+      "url": "https://greasyfork.org/users/1231765-fatma-durak",
+      "scripts": [
+        {
+          "id": 481882,
+          "daily_installs": 1,
+          "total_installs": 150,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-10T15:47:59.000Z",
+          "code_updated_at": "2023-12-10T15:47:59.000Z",
+          "namespace": "dagidin",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FileDM Bypass",
+          "description": "Bypass annoying FileDM download managers!",
+          "url": "https://greasyfork.org/scripts/481882-filedm-bypass",
+          "code_url": "https://update.greasyfork.org/scripts/481882/FileDM%20Bypass.user.js",
+          "code_size": 1394,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FileDM Bypass",
+  "description": "Bypass annoying FileDM download managers!",
+  "url": "https://greasyfork.org/scripts/481882-filedm-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/481882/FileDM%20Bypass.user.js",
+  "code_size": 1394,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

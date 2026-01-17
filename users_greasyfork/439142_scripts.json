@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441610,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-16T18:40:58.000Z",
+    "code_updated_at": "2022-03-16T18:42:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 439142,
+        "name": "Yoda Serv",
+        "created_at": "2020-01-29T00:39:35.000Z",
+        "url": "https://greasyfork.org/users/439142-yoda-serv"
+      }
+    ],
+    "name": "Clube do Dual Search 2.0 (Advanced View)",
+    "description": "Search Clube do Dual from IMDB page (Advanced View)",
+    "url": "https://greasyfork.org/scripts/441610-clube-do-dual-search-2-0-advanced-view",
+    "code_url": "https://update.greasyfork.org/scripts/441610/Clube%20do%20Dual%20Search%2020%20%28Advanced%20View%29.user.js",
+    "code_size": 1118,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

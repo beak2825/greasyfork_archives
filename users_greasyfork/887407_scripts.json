@@ -1,0 +1,68 @@
+[
+  {
+    "id": 451597,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-18T17:54:21.000Z",
+    "code_updated_at": "2022-09-18T17:55:36.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/451597-hn-for-vampires",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 887407,
+        "name": "libele",
+        "created_at": "2022-03-14T16:05:35.000Z",
+        "url": "https://greasyfork.org/users/887407-libele"
+      }
+    ],
+    "name": "HN for vampires",
+    "description": "feeling bloodthirsty?",
+    "url": "https://greasyfork.org/scripts/451597-hn-for-vampires",
+    "code_url": "https://update.greasyfork.org/scripts/451597/HN%20for%20vampires.user.js",
+    "code_size": 617,
+    "license": "The Unlicense",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 441566,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-15T20:59:25.000Z",
+    "code_updated_at": "2022-09-18T18:19:26.000Z",
+    "namespace": "https://news.ycombinator.com/item?id=30668137",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 887407,
+        "name": "libele",
+        "created_at": "2022-03-14T16:05:35.000Z",
+        "url": "https://greasyfork.org/users/887407-libele"
+      }
+    ],
+    "name": "HN Avatars in 396 bytes",
+    "description": "Annotated avatars on all HN comments.",
+    "url": "https://greasyfork.org/scripts/441566-hn-avatars-in-396-bytes",
+    "code_url": "https://update.greasyfork.org/scripts/441566/HN%20Avatars%20in%20396%20bytes.user.js",
+    "code_size": 1171,
+    "license": null,
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

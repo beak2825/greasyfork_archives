@@ -1,0 +1,35 @@
+[
+  {
+    "id": 475778,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-21T01:30:08.000Z",
+    "code_updated_at": "2023-09-21T01:30:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862007,
+        "name": "gqcdm",
+        "created_at": "2022-01-07T07:08:28.000Z",
+        "url": "https://greasyfork.org/users/862007-gqcdm"
+      }
+    ],
+    "name": "新华智慧校园一键批改作业",
+    "description": "添加一键帮学生提交作业和一键批改作业",
+    "url": "https://greasyfork.org/scripts/475778-%E6%96%B0%E5%8D%8E%E6%99%BA%E6%85%A7%E6%A0%A1%E5%9B%AD%E4%B8%80%E9%94%AE%E6%89%B9%E6%94%B9%E4%BD%9C%E4%B8%9A",
+    "code_url": "https://update.greasyfork.org/scripts/475778/%E6%96%B0%E5%8D%8E%E6%99%BA%E6%85%A7%E6%A0%A1%E5%9B%AD%E4%B8%80%E9%94%AE%E6%89%B9%E6%94%B9%E4%BD%9C%E4%B8%9A.user.js",
+    "code_size": 7600,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

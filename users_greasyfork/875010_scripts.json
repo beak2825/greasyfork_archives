@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439899,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-12T09:00:02.000Z",
+    "code_updated_at": "2022-02-12T09:00:01.000Z",
+    "namespace": "[https://sc.scm121.com/]",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 875010,
+        "name": "linzhongqi",
+        "created_at": "2022-02-10T13:02:09.000Z",
+        "url": "https://greasyfork.org/users/875010-linzhongqi"
+      }
+    ],
+    "name": "聚水潭-ajax版本",
+    "description": "聚水潭-ajax版本-批量解密订单，保存到本地",
+    "url": "https://greasyfork.org/scripts/439899-%E8%81%9A%E6%B0%B4%E6%BD%AD-ajax%E7%89%88%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/439899/%E8%81%9A%E6%B0%B4%E6%BD%AD-ajax%E7%89%88%E6%9C%AC.user.js",
+    "code_size": 28866,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

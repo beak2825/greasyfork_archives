@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424045,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-27T03:31:38.000Z",
+    "code_updated_at": "2021-03-27T03:31:38.000Z",
+    "namespace": "http://notebk.spaces.live.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2580,
+        "name": "FateRover",
+        "created_at": "2014-06-07T12:17:30.000Z",
+        "url": "https://greasyfork.org/users/2580-faterover"
+      }
+    ],
+    "name": "CleanHide & Enable RightClick-Copy",
+    "description": "CleanHide.Hotkey:CRTL+Q. Created By Inorth. blueicejin@163.com.http://notebk.spaces.live.com/",
+    "url": "https://greasyfork.org/scripts/424045-cleanhide-enable-rightclick-copy",
+    "code_url": "https://update.greasyfork.org/scripts/424045/CleanHide%20%20Enable%20RightClick-Copy.user.js",
+    "code_size": 6651,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

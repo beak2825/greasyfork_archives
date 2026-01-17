@@ -1,0 +1,34 @@
+{
+  "id": 436142,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-27T03:33:25.000Z",
+  "code_updated_at": "2021-11-27T03:33:25.000Z",
+  "namespace": "yum",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 5869,
+      "name": "迈克斯",
+      "created_at": "2014-10-06T23:33:28.000Z",
+      "url": "https://greasyfork.org/users/5869-%E8%BF%88%E5%85%8B%E6%96%AF",
+      "scripts": []
+    }
+  ],
+  "name": "ban Youtube Autoplay",
+  "description": "ban Youtube video autoplaying",
+  "url": "https://greasyfork.org/scripts/436142-ban-youtube-autoplay",
+  "code_url": "https://update.greasyfork.org/scripts/436142/ban%20Youtube%20Autoplay.user.js",
+  "code_size": 1004,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

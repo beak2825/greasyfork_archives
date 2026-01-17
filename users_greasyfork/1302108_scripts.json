@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495120,
+    "daily_installs": 0,
+    "total_installs": 342,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-16T05:56:19.000Z",
+    "code_updated_at": "2024-05-16T06:23:45.000Z",
+    "namespace": "https://github.com/DrNaki",
+    "support_url": "https://github.com/DrNaki/AutoDownloadChatGPTVoice/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1302108,
+        "name": "DrNaki",
+        "created_at": "2024-05-15T15:08:21.000Z",
+        "url": "https://greasyfork.org/users/1302108-drnaki"
+      }
+    ],
+    "name": "Auto Download ChatGPT's voice",
+    "description": "TTS (Text-to-Speech) via ChatGPT. Automatically downloads the audio file when ChatGPT's read aloud button is clicked. 通过ChatGPT实现文本转语音(当播放chatgpt的朗读时，自动将声音文件下载下来)",
+    "url": "https://greasyfork.org/scripts/495120-auto-download-chatgpt-s-voice",
+    "code_url": "https://update.greasyfork.org/scripts/495120/Auto%20Download%20ChatGPT%27s%20voice.user.js",
+    "code_size": 3199,
+    "license": "MIT License",
+    "version": "1.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

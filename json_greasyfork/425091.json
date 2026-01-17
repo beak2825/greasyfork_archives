@@ -1,0 +1,33 @@
+{
+  "id": 425091,
+  "daily_installs": 0,
+  "total_installs": 140,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-04-15T14:28:45.000Z",
+  "code_updated_at": "2025-10-25T09:11:36.000Z",
+  "namespace": "http://ursus.id.lv",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 759681,
+      "name": "UrSuS",
+      "created_at": "2021-04-15T14:26:11.000Z",
+      "url": "https://greasyfork.org/users/759681-ursus"
+    }
+  ],
+  "name": "Strava Global Heatmap TMS server link generator for JOSM",
+  "description": "Generates Strava Global Heatmap TMS server link for OpenStreetMap JOSM editor",
+  "url": "https://greasyfork.org/scripts/425091-strava-global-heatmap-tms-server-link-generator-for-josm",
+  "code_url": "https://update.greasyfork.org/scripts/425091/Strava%20Global%20Heatmap%20TMS%20server%20link%20generator%20for%20JOSM.user.js",
+  "code_size": 3820,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

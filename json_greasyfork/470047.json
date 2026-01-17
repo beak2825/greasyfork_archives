@@ -1,0 +1,34 @@
+{
+  "id": 470047,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-03T13:11:34.000Z",
+  "code_updated_at": "2023-07-13T02:51:37.000Z",
+  "namespace": "https://greasyfork.org/users/1084278",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1084278,
+      "name": "KeXing Guo",
+      "created_at": "2023-05-25T03:52:01.000Z",
+      "url": "https://greasyfork.org/users/1084278-kexing-guo",
+      "scripts": []
+    }
+  ],
+  "name": "河洛农场 自动种植 VIP版",
+  "description": "自动种植农场 VIP版",
+  "url": "https://greasyfork.org/scripts/470047-%E6%B2%B3%E6%B4%9B%E5%86%9C%E5%9C%BA-%E8%87%AA%E5%8A%A8%E7%A7%8D%E6%A4%8D-vip%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/470047/%E6%B2%B3%E6%B4%9B%E5%86%9C%E5%9C%BA%20%E8%87%AA%E5%8A%A8%E7%A7%8D%E6%A4%8D%20VIP%E7%89%88.user.js",
+  "code_size": 12296,
+  "license": "GPL-3.0 License",
+  "version": "0.0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

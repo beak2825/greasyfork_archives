@@ -1,0 +1,59 @@
+{
+  "id": 415543,
+  "daily_installs": 0,
+  "total_installs": 122,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-05T12:25:17.000Z",
+  "code_updated_at": "2024-11-13T12:29:04.000Z",
+  "namespace": "MZ",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 435516,
+      "name": "MizugaMezA",
+      "created_at": "2020-01-15T12:19:57.000Z",
+      "url": "https://greasyfork.org/users/435516-mizugameza",
+      "scripts": [
+        {
+          "id": 415543,
+          "daily_installs": 0,
+          "total_installs": 122,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-05T12:25:17.000Z",
+          "code_updated_at": "2024-11-13T12:29:04.000Z",
+          "namespace": "MZ",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "To Top",
+          "description": "Web to Top & Bottom",
+          "url": "https://greasyfork.org/scripts/415543-to-top",
+          "code_url": "https://update.greasyfork.org/scripts/415543/To%20Top.user.js",
+          "code_size": 2413,
+          "license": null,
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "To Top",
+  "description": "Web to Top & Bottom",
+  "url": "https://greasyfork.org/scripts/415543-to-top",
+  "code_url": "https://update.greasyfork.org/scripts/415543/To%20Top.user.js",
+  "code_size": 2413,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

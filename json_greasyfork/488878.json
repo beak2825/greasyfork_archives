@@ -1,0 +1,59 @@
+{
+  "id": 488878,
+  "daily_installs": 0,
+  "total_installs": 446,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-03-03T12:16:09.000Z",
+  "code_updated_at": "2024-03-03T12:16:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1269754,
+      "name": "Memi",
+      "created_at": "2024-03-03T12:13:36.000Z",
+      "url": "https://greasyfork.org/users/1269754-memi",
+      "scripts": [
+        {
+          "id": 488878,
+          "daily_installs": 0,
+          "total_installs": 446,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-03-03T12:16:09.000Z",
+          "code_updated_at": "2024-03-03T12:16:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Youtube Downloader",
+          "description": "Download MP4, MP3 HIGH QUALITY without external services and more.",
+          "url": "https://greasyfork.org/scripts/488878-youtube-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/488878/Youtube%20Downloader.user.js",
+          "code_size": 1792,
+          "license": null,
+          "version": "2.1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Youtube Downloader",
+  "description": "Download MP4, MP3 HIGH QUALITY without external services and more.",
+  "url": "https://greasyfork.org/scripts/488878-youtube-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/488878/Youtube%20Downloader.user.js",
+  "code_size": 1792,
+  "license": null,
+  "version": "2.1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

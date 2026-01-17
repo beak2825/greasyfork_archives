@@ -1,0 +1,33 @@
+{
+  "id": 421622,
+  "daily_installs": 1,
+  "total_installs": 4217,
+  "fan_score": "74.1",
+  "good_ratings": 11,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-12T11:00:05.000Z",
+  "code_updated_at": "2025-04-24T14:49:26.000Z",
+  "namespace": "Teng",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 726536,
+      "name": "samisold",
+      "created_at": "2021-01-12T10:42:30.000Z",
+      "url": "https://greasyfork.org/users/726536-samisold"
+    }
+  ],
+  "name": "TENG 购物党比价脚本【官方纯净版】",
+  "description": "仅在html标签中插入购物党官方js脚本，不含其他个人广告",
+  "url": "https://greasyfork.org/scripts/421622-teng-%E8%B4%AD%E7%89%A9%E5%85%9A%E6%AF%94%E4%BB%B7%E8%84%9A%E6%9C%AC-%E5%AE%98%E6%96%B9%E7%BA%AF%E5%87%80%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/421622/TENG%20%E8%B4%AD%E7%89%A9%E5%85%9A%E6%AF%94%E4%BB%B7%E8%84%9A%E6%9C%AC%E3%80%90%E5%AE%98%E6%96%B9%E7%BA%AF%E5%87%80%E7%89%88%E3%80%91.user.js",
+  "code_size": 49456,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.24",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468590,
+    "daily_installs": 0,
+    "total_installs": 236,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-13T16:15:16.000Z",
+    "code_updated_at": "2023-06-14T03:05:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1098013,
+        "name": "王琛_XenKo",
+        "created_at": "2023-06-13T15:41:52.000Z",
+        "url": "https://greasyfork.org/users/1098013-%E7%8E%8B%E7%90%9B-xenko"
+      }
+    ],
+    "name": "网站自动刷新，可刷学习通学习次数",
+    "description": "网站自动刷新，此脚本可用于学习通刷课程的学习次数 可自行更改需要应用的网址",
+    "url": "https://greasyfork.org/scripts/468590-%E7%BD%91%E7%AB%99%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0-%E5%8F%AF%E5%88%B7%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%AD%A6%E4%B9%A0%E6%AC%A1%E6%95%B0",
+    "code_url": "https://update.greasyfork.org/scripts/468590/%E7%BD%91%E7%AB%99%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%EF%BC%8C%E5%8F%AF%E5%88%B7%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%AD%A6%E4%B9%A0%E6%AC%A1%E6%95%B0.user.js",
+    "code_size": 1587,
+    "license": null,
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

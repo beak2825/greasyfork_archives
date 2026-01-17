@@ -1,0 +1,33 @@
+{
+  "id": 462413,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-23T15:17:30.000Z",
+  "code_updated_at": "2023-03-23T15:17:29.000Z",
+  "namespace": "https://www.pai.ci",
+  "support_url": "https://www.pai.ci",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1046816,
+      "name": "Ernesto Mazon Valadez",
+      "created_at": "2023-03-23T15:16:03.000Z",
+      "url": "https://greasyfork.org/users/1046816-ernesto-mazon-valadez"
+    }
+  ],
+  "name": "ã€æ´¾æ´¾åŠ©æ‰‹ã€‘ç™¾åº¦ç½‘ç›˜å·¥å…·ç®±ç›´é“¾è§£æž â€”â€”æŒç»­æ›´æ–°",
+  "description": "ã€2022/02/07ç¨³å®šå¥”æ”¾é€Ÿåº¦æ‹‰æ»¡ã€‘ç®€å•æ— é™åˆ¶çš„ç™¾åº¦ç½‘ç›˜è§£æžè„šæœ¬ï¼Œæ— è§†é»‘å·ï¼Œå…SVIPï¼Œå…æµè§ˆå™¨æ‰©å±•ï¼Œæ”¯æŒIDMã€NDMã€Ariaã€Motrixç­‰å¤šç§å·¥å…·ä¸‹è½½ã€‚å¿«æ¥ä½“éªŒå§ï¼ï¼ï¼ðŸ‘ðŸ‘ðŸ‘",
+  "url": "https://greasyfork.org/scripts/462413-%C3%A3-%C3%A6-%C3%A6-%C3%A5%C5%A1-%C3%A6-%C3%A3-%C3%A7-%C3%A5%C2%BA-%C3%A7-%C3%A7-%C3%A5-%C3%A5-%C3%A7-%C3%A7-%C3%A9-%C3%A8-%C3%A6%C5%BE-%C3%A2-%C3%A2-%C3%A6%C5%93-%C3%A7-%C3%A6-%C3%A6",
+  "code_url": "https://update.greasyfork.org/scripts/462413/%C3%A3%E2%82%AC%C2%90%C3%A6%C2%B4%C2%BE%C3%A6%C2%B4%C2%BE%C3%A5%C5%A0%C2%A9%C3%A6%E2%80%B0%E2%80%B9%C3%A3%E2%82%AC%E2%80%98%C3%A7%E2%84%A2%C2%BE%C3%A5%C2%BA%C2%A6%C3%A7%C2%BD%E2%80%98%C3%A7%E2%80%BA%CB%9C%C3%A5%C2%B7%C2%A5%C3%A5%E2%80%A6%C2%B7%C3%A7%C2%AE%C2%B1%C3%A7%E2%80%BA%C2%B4%C3%A9%E2%80%9C%C2%BE%C3%A8%C2%A7%C2%A3%C3%A6%C5%BE%C2%90%20%C3%A2%E2%82%AC%E2%80%9D%C3%A2%E2%82%AC%E2%80%9D%C3%A6%C5%92%C2%81%C3%A7%C2%BB%C2%AD%C3%A6%E2%80%BA%C2%B4%C3%A6%E2%80%93%C2%B0.user.js",
+  "code_size": 241290,
+  "license": "MIT License",
+  "version": "1.2.0",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 472537,
+  "daily_installs": 0,
+  "total_installs": 299,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-06T07:23:29.000Z",
+  "code_updated_at": "2025-07-27T04:39:57.000Z",
+  "namespace": "Dead Frontier - Shrike00",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 806742,
+      "name": "Shrike00",
+      "created_at": "2021-08-21T00:22:50.000Z",
+      "url": "https://greasyfork.org/users/806742-shrike00",
+      "scripts": []
+    }
+  ],
+  "name": "Dead Frontier - Discarding",
+  "description": "Alternate discarding method.",
+  "url": "https://greasyfork.org/scripts/472537-dead-frontier-discarding",
+  "code_url": "https://update.greasyfork.org/scripts/472537/Dead%20Frontier%20-%20Discarding.user.js",
+  "code_size": 30521,
+  "license": "MIT License",
+  "version": "0.0.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

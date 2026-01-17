@@ -1,0 +1,134 @@
+[
+  {
+    "id": 438832,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-19T21:13:06.000Z",
+    "code_updated_at": "2022-01-19T21:13:06.000Z",
+    "namespace": "https://github.com/lopezloo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 866606,
+        "name": "lopez",
+        "created_at": "2022-01-19T04:04:28.000Z",
+        "url": "https://greasyfork.org/users/866606-lopez"
+      }
+    ],
+    "name": "Steam inventory keyboard steering",
+    "description": "Adds possibility to navigate Steam inventory using keyboard.",
+    "url": "https://greasyfork.org/scripts/438832-steam-inventory-keyboard-steering",
+    "code_url": "https://update.greasyfork.org/scripts/438832/Steam%20inventory%20keyboard%20steering.user.js",
+    "code_size": 873,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438770,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-19T04:21:55.000Z",
+    "code_updated_at": "2022-01-19T04:21:55.000Z",
+    "namespace": "https://github.com/lopezloo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 866606,
+        "name": "lopez",
+        "created_at": "2022-01-19T04:04:28.000Z",
+        "url": "https://greasyfork.org/users/866606-lopez"
+      }
+    ],
+    "name": "Wykop - podświetl wpisy użytkownika na mikroblogu",
+    "description": "Podświetla powyższe wpisy użytkownika po najechaniu na jego nick we wpisie na wykopowym mikroblogu.",
+    "url": "https://greasyfork.org/scripts/438770-wykop-pod%C5%9Bwietl-wpisy-u%C5%BCytkownika-na-mikroblogu",
+    "code_url": "https://update.greasyfork.org/scripts/438770/Wykop%20-%20pod%C5%9Bwietl%20wpisy%20u%C5%BCytkownika%20na%20mikroblogu.user.js",
+    "code_size": 1581,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438768,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-19T04:17:32.000Z",
+    "code_updated_at": "2022-01-19T04:17:32.000Z",
+    "namespace": "https://github.com/lopezloo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 866606,
+        "name": "lopez",
+        "created_at": "2022-01-19T04:04:28.000Z",
+        "url": "https://greasyfork.org/users/866606-lopez"
+      }
+    ],
+    "name": "Wykop - pokaż odpowiedzi wyłącznie autora wpisu",
+    "description": "Dodaje przycisk \"pokaż tylko komentarze autora\" we wpisach na mikroblogu",
+    "url": "https://greasyfork.org/scripts/438768-wykop-poka%C5%BC-odpowiedzi-wy%C5%82%C4%85cznie-autora-wpisu",
+    "code_url": "https://update.greasyfork.org/scripts/438768/Wykop%20-%20poka%C5%BC%20odpowiedzi%20wy%C5%82%C4%85cznie%20autora%20wpisu.user.js",
+    "code_size": 1398,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438767,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-19T04:14:19.000Z",
+    "code_updated_at": "2022-01-19T04:14:18.000Z",
+    "namespace": "https://github.com/lopezloo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 866606,
+        "name": "lopez",
+        "created_at": "2022-01-19T04:04:28.000Z",
+        "url": "https://greasyfork.org/users/866606-lopez"
+      }
+    ],
+    "name": "Wykop.pl - automatyczne czytanie wszystkich powiadomień",
+    "description": "Dodaje przycisk \"odczytaj wszystkie powiadomienia\" na wykop.pl/powiadomienia",
+    "url": "https://greasyfork.org/scripts/438767-wykop-pl-automatyczne-czytanie-wszystkich-powiadomie%C5%84",
+    "code_url": "https://update.greasyfork.org/scripts/438767/Wykoppl%20-%20automatyczne%20czytanie%20wszystkich%20powiadomie%C5%84.user.js",
+    "code_size": 1007,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

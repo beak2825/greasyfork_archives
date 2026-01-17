@@ -1,0 +1,59 @@
+{
+  "id": 457918,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-01-09T14:00:23.000Z",
+  "code_updated_at": "2023-01-09T14:05:08.000Z",
+  "namespace": "https://greasyfork.org/users/1008796",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1008796,
+      "name": "山有木兮之",
+      "created_at": "2023-01-08T06:50:57.000Z",
+      "url": "https://greasyfork.org/users/1008796-%E5%B1%B1%E6%9C%89%E6%9C%A8%E5%85%AE%E4%B9%8B",
+      "scripts": [
+        {
+          "id": 457918,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2023-01-09T14:00:23.000Z",
+          "code_updated_at": "2023-01-09T14:05:08.000Z",
+          "namespace": "https://greasyfork.org/users/1008796",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili播放界面卡片ui",
+          "description": "初学css，简单修改了一些样式，主要是修改为卡片式UI",
+          "url": "https://greasyfork.org/scripts/457918-bilibili%E6%92%AD%E6%94%BE%E7%95%8C%E9%9D%A2%E5%8D%A1%E7%89%87ui",
+          "code_url": "https://update.greasyfork.org/scripts/457918/bilibili%E6%92%AD%E6%94%BE%E7%95%8C%E9%9D%A2%E5%8D%A1%E7%89%87ui.user.css",
+          "code_size": 4438,
+          "license": null,
+          "version": "0.0.1.20230109140508",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili播放界面卡片ui",
+  "description": "初学css，简单修改了一些样式，主要是修改为卡片式UI",
+  "url": "https://greasyfork.org/scripts/457918-bilibili%E6%92%AD%E6%94%BE%E7%95%8C%E9%9D%A2%E5%8D%A1%E7%89%87ui",
+  "code_url": "https://update.greasyfork.org/scripts/457918/bilibili%E6%92%AD%E6%94%BE%E7%95%8C%E9%9D%A2%E5%8D%A1%E7%89%87ui.user.css",
+  "code_size": 4438,
+  "license": null,
+  "version": "0.0.1.20230109140508",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

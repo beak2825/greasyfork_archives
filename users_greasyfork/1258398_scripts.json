@@ -1,0 +1,67 @@
+[
+  {
+    "id": 486829,
+    "daily_installs": 0,
+    "total_installs": 433,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-07T10:09:29.000Z",
+    "code_updated_at": "2024-07-30T10:12:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 729959,
+        "name": "ExplorerOFE",
+        "created_at": "2021-01-22T04:21:08.000Z",
+        "url": "https://greasyfork.org/users/729959-explorerofe",
+        "scripts": [
+          {
+            "id": 486829,
+            "daily_installs": 0,
+            "total_installs": 433,
+            "fan_score": "5.0",
+            "good_ratings": 0,
+            "ok_ratings": 0,
+            "bad_ratings": 0,
+            "created_at": "2024-02-07T10:09:29.000Z",
+            "code_updated_at": "2024-07-30T10:12:48.000Z",
+            "namespace": "http://tampermonkey.net/",
+            "support_url": null,
+            "contribution_url": null,
+            "contribution_amount": null,
+            "name": "移除B站直播间的模糊/马赛克(V0.2)",
+            "description": "个别分区的直播间有模糊，其实现在前端，修改即可，代码极简",
+            "url": "https://greasyfork.org/scripts/486829-%E7%A7%BB%E9%99%A4b%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E6%A8%A1%E7%B3%8A-%E9%A9%AC%E8%B5%9B%E5%85%8B-v0-2",
+            "code_url": "https://update.greasyfork.org/scripts/486829/%E7%A7%BB%E9%99%A4B%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E6%A8%A1%E7%B3%8A%E9%A9%AC%E8%B5%9B%E5%85%8B%28V02%29.user.js",
+            "code_size": 415,
+            "license": null,
+            "version": "0.2",
+            "locale": "zh-CN",
+            "deleted": false
+          }
+        ]
+      },
+      {
+        "id": 1258398,
+        "name": "half-drop",
+        "created_at": "2024-02-06T23:05:24.000Z",
+        "url": "https://greasyfork.org/users/1258398-half-drop"
+      }
+    ],
+    "name": "移除B站直播间的模糊/马赛克(V0.2)",
+    "description": "个别分区的直播间有模糊，其实现在前端，修改即可，代码极简",
+    "url": "https://greasyfork.org/scripts/486829-%E7%A7%BB%E9%99%A4b%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E6%A8%A1%E7%B3%8A-%E9%A9%AC%E8%B5%9B%E5%85%8B-v0-2",
+    "code_url": "https://update.greasyfork.org/scripts/486829/%E7%A7%BB%E9%99%A4B%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E6%A8%A1%E7%B3%8A%E9%A9%AC%E8%B5%9B%E5%85%8B%28V02%29.user.js",
+    "code_size": 415,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

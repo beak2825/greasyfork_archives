@@ -1,0 +1,34 @@
+{
+  "id": 436775,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-09T03:25:16.000Z",
+  "code_updated_at": "2021-12-09T03:25:16.000Z",
+  "namespace": "https://greasyfork.org/users/694396",
+  "support_url": null,
+  "contribution_url": "https://gitee.com/q2257227289/00/raw/master/963540817-1.png",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 848067,
+      "name": "tiger540",
+      "created_at": "2021-12-03T12:10:34.000Z",
+      "url": "https://greasyfork.org/users/848067-tiger540",
+      "scripts": []
+    }
+  ],
+  "name": "【电脑 && 手机 全网唯一全自动脚本】VIP会员视频自动解析",
+  "description": "脚本功能目前有：1--（B站请自己使用“脚本搜索”）（请自行安装 “辅助脚本” 自己自定义接口使用）（视频解析失败的话请自己 （电脑：左上角按钮 && 手机：右下角按钮） 切换接口，不用乱反馈，手机 哔哩哔哩 视频解析的话，需要切换电脑UA）A站、B站、优酷、土豆、腾讯、芒果、爱奇艺、搜狐、西瓜、乐视、PPTV、1905...等各大视频网站 （普通视频--自动跳过视频广告 && 自动暂停视频，会员视频--自动会员解析,解放双手），2--A站,B站,优酷,腾讯,爱奇艺,芒果TV,PPTV,搜狐,乐视视频关闭弹幕，3--豆瓣资源 可以搜索观看视频，4--支持 网易云音乐、QQ音乐、酷狗、酷我、虾米、咪咕、5SING、喜马拉雅、懒人听书、全民K歌、一听音乐、九酷音乐网、echo回声、四季电台、快手视频、抖音视频、好看视频...等（非付费 和 非会员）音乐 和 MV 嗅探下载（先播放，然后再点击网页右上角--猫咪按钮）。（请不要相信“解析”出现的一切任何形式的广告，江小白无聊作品，单纯写好玩的）",
+  "url": "https://greasyfork.org/scripts/436775-%E7%94%B5%E8%84%91-%E6%89%8B%E6%9C%BA-%E5%85%A8%E7%BD%91%E5%94%AF%E4%B8%80%E5%85%A8%E8%87%AA%E5%8A%A8%E8%84%9A%E6%9C%AC-vip%E4%BC%9A%E5%91%98%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/436775/%E3%80%90%E7%94%B5%E8%84%91%20%20%E6%89%8B%E6%9C%BA%20%E5%85%A8%E7%BD%91%E5%94%AF%E4%B8%80%E5%85%A8%E8%87%AA%E5%8A%A8%E8%84%9A%E6%9C%AC%E3%80%91VIP%E4%BC%9A%E5%91%98%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 677461,
+  "license": null,
+  "version": "963540817.902",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

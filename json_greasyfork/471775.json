@@ -1,0 +1,33 @@
+{
+  "id": 471775,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-26T16:18:23.000Z",
+  "code_updated_at": "2023-07-31T14:39:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber"
+    }
+  ],
+  "name": "Vertragssignature Kristof Regert",
+  "description": "Anforderung an GwG - digitale Signatur",
+  "url": "https://greasyfork.org/scripts/471775-vertragssignature-kristof-regert",
+  "code_url": "https://update.greasyfork.org/scripts/471775/Vertragssignature%20Kristof%20Regert.user.js",
+  "code_size": 12426,
+  "license": null,
+  "version": "3.4",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

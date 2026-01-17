@@ -1,0 +1,33 @@
+{
+  "id": 487743,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-19T17:03:45.000Z",
+  "code_updated_at": "2024-02-19T17:07:45.000Z",
+  "namespace": "https://github.com/Joshua-Baca",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1263830,
+      "name": "Joshua-Baca",
+      "created_at": "2024-02-19T16:45:28.000Z",
+      "url": "https://greasyfork.org/users/1263830-joshua-baca"
+    }
+  ],
+  "name": "Panopto Caption Downloader",
+  "description": "Download Panopto video captions easily.",
+  "url": "https://greasyfork.org/scripts/487743-panopto-caption-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/487743/Panopto%20Caption%20Downloader.user.js",
+  "code_size": 8885,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

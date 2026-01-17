@@ -1,0 +1,34 @@
+{
+  "id": 443278,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-12T23:00:47.000Z",
+  "code_updated_at": "2022-04-12T23:00:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 901397,
+      "name": "Marcelo Pereira Teixeira da Silva",
+      "created_at": "2022-04-12T22:39:32.000Z",
+      "url": "https://greasyfork.org/users/901397-marcelo-pereira-teixeira-da-silva",
+      "scripts": []
+    }
+  ],
+  "name": "PJO - Get Anki Sentences Script",
+  "description": "Script simples para fazer o download de um arquivo CSV na plataforma do Programa Japonês Online que conterá sentenças para importação no programa Anki.",
+  "url": "https://greasyfork.org/scripts/443278-pjo-get-anki-sentences-script",
+  "code_url": "https://update.greasyfork.org/scripts/443278/PJO%20-%20Get%20Anki%20Sentences%20Script.user.js",
+  "code_size": 6356,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

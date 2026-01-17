@@ -63,6 +63,171 @@
     "version": "0.0.5_2025-05-15",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473325,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-17T21:42:28.000Z",
+    "code_updated_at": "2025-05-15T14:07:24.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/473325-1_decrypt-day",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906522,
+        "name": "sports_wook",
+        "created_at": "2022-04-25T00:32:15.000Z",
+        "url": "https://greasyfork.org/users/906522-sports-wook"
+      }
+    ],
+    "name": "1_decrypt.day",
+    "description": "block ads",
+    "url": "https://greasyfork.org/scripts/473325-1-decrypt-day",
+    "code_url": "https://update.greasyfork.org/scripts/473325/1_decryptday.user.js",
+    "code_size": 886,
+    "license": null,
+    "version": "2025.05.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463357,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-05T17:39:23.000Z",
+    "code_updated_at": "2025-05-15T14:07:16.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/463357-1_duckduckgo-mobile",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906522,
+        "name": "sports_wook",
+        "created_at": "2022-04-25T00:32:15.000Z",
+        "url": "https://greasyfork.org/users/906522-sports-wook"
+      }
+    ],
+    "name": "1_DuckDuckGo-mobile",
+    "description": "Custom dark mode & optimized layout",
+    "url": "https://greasyfork.org/scripts/463357-1-duckduckgo-mobile",
+    "code_url": "https://update.greasyfork.org/scripts/463357/1_DuckDuckGo-mobile.user.js",
+    "code_size": 4691,
+    "license": null,
+    "version": "2025.05.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463355,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-05T17:36:07.000Z",
+    "code_updated_at": "2026-01-08T16:13:49.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/463355-1_yahoo-fantasy-dark-night",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906522,
+        "name": "sports_wook",
+        "created_at": "2022-04-25T00:32:15.000Z",
+        "url": "https://greasyfork.org/users/906522-sports-wook"
+      }
+    ],
+    "name": "1_Yahoo-Fantasy-Dark-Night",
+    "description": "dark mode & hide ads",
+    "url": "https://greasyfork.org/scripts/463355-1-yahoo-fantasy-dark-night",
+    "code_url": "https://update.greasyfork.org/scripts/463355/1_Yahoo-Fantasy-Dark-Night.user.js",
+    "code_size": 51191,
+    "license": null,
+    "version": "2026.01.08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 463354,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-05T17:34:18.000Z",
+    "code_updated_at": "2025-05-15T14:05:52.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/463354-1_the-bump",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906522,
+        "name": "sports_wook",
+        "created_at": "2022-04-25T00:32:15.000Z",
+        "url": "https://greasyfork.org/users/906522-sports-wook"
+      }
+    ],
+    "name": "1_The-Bump",
+    "description": "fix layout on mobile & block ads",
+    "url": "https://greasyfork.org/scripts/463354-1-the-bump",
+    "code_url": "https://update.greasyfork.org/scripts/463354/1_The-Bump.user.js",
+    "code_size": 1703,
+    "license": null,
+    "version": "2025.05.15",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
+  },
+  {
+    "id": 463350,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-05T17:12:54.000Z",
+    "code_updated_at": "2025-09-04T15:37:49.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/463350-1_tiderinsider-mobile",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906522,
+        "name": "sports_wook",
+        "created_at": "2022-04-25T00:32:15.000Z",
+        "url": "https://greasyfork.org/users/906522-sports-wook"
+      }
+    ],
+    "name": "1_TiderInsider-mobile",
+    "description": "Better fit on mobile devices",
+    "url": "https://greasyfork.org/scripts/463350-1-tiderinsider-mobile",
+    "code_url": "https://update.greasyfork.org/scripts/463350/1_TiderInsider-mobile.user.js",
+    "code_size": 6294,
+    "license": null,
+    "version": "2025.09.04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
   }
 ]

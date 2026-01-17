@@ -1,0 +1,33 @@
+{
+  "id": 461295,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-06T10:03:05.000Z",
+  "code_updated_at": "2023-03-06T10:03:04.000Z",
+  "namespace": "https://greasyfork.org/users/24330",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 24330,
+      "name": "wyl219",
+      "created_at": "2015-12-22T05:19:49.000Z",
+      "url": "https://greasyfork.org/users/24330-wyl219"
+    }
+  ],
+  "name": "审图平台辅助",
+  "description": "[河南省勘察设计设计质量监管平台](http://hnkcsjzl.hnjs.henan.gov.cn/)辅助工具.",
+  "url": "https://greasyfork.org/scripts/461295-%E5%AE%A1%E5%9B%BE%E5%B9%B3%E5%8F%B0%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/461295/%E5%AE%A1%E5%9B%BE%E5%B9%B3%E5%8F%B0%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 18034,
+  "license": "MIT License",
+  "version": "0.0.1.20230306100304",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

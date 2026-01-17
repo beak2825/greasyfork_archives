@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 475682,
+    "daily_installs": 2,
+    "total_installs": 1255,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-19T14:12:29.000Z",
+    "code_updated_at": "2025-05-21T16:16:26.000Z",
+    "namespace": "https://github.com/Sv443/BetterYTM",
+    "support_url": "https://github.com/Sv443/BetterYTM/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 184165,
+        "name": "Sv443",
+        "created_at": "2018-05-05T22:06:26.000Z",
+        "url": "https://greasyfork.org/users/184165-sv443"
+      }
+    ],
+    "name": "BetterYTM",
+    "description": "Lots of configurable layout and user experience improvements for YouTube Music™ and YouTube™",
+    "url": "https://greasyfork.org/scripts/475682-betterytm",
+    "code_url": "https://update.greasyfork.org/scripts/475682/BetterYTM.user.js",
+    "code_size": 452786,
+    "license": "GNU Affero General Public License v3.0 only",
+    "version": "3.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 472956,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-12T20:46:39.000Z",
+    "code_updated_at": "2025-11-15T20:40:55.000Z",
+    "namespace": "https://github.com/Sv443-Network/UserUtils",
+    "support_url": "https://github.com/Sv443-Network/UserUtils/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 184165,
+        "name": "Sv443",
+        "created_at": "2018-05-05T22:06:26.000Z",
+        "url": "https://greasyfork.org/users/184165-sv443"
+      }
+    ],
+    "name": "UserUtils",
+    "description": "General purpose DOM/GreaseMonkey library: register listeners for when CSS selectors exist, intercept events, create persistent & synchronous data stores, modify the DOM more easily and much more",
+    "url": "https://greasyfork.org/scripts/472956-userutils",
+    "code_url": "https://update.greasyfork.org/scripts/472956/1696164/UserUtils.js",
+    "code_size": 85364,
+    "license": "MIT License",
+    "version": "9.4.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 450213,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-26T08:58:16.000Z",
+    "code_updated_at": "2023-11-18T01:11:19.000Z",
+    "namespace": "https://github.com/Sv443/larger-twitch-squad-player",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 184165,
+        "name": "Sv443",
+        "created_at": "2018-05-05T22:06:26.000Z",
+        "url": "https://greasyfork.org/users/184165-sv443"
+      }
+    ],
+    "name": "Larger Twitch squad player",
+    "description": "Removes the title bar in Twitch squad streams to increase the player size",
+    "url": "https://greasyfork.org/scripts/450213-larger-twitch-squad-player",
+    "code_url": "https://update.greasyfork.org/scripts/450213/Larger%20Twitch%20squad%20player.user.js",
+    "code_size": 1047,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

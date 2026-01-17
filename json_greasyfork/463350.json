@@ -1,0 +1,34 @@
+{
+  "id": 463350,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-05T17:12:54.000Z",
+  "code_updated_at": "2025-09-04T15:37:49.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/463350-1_tiderinsider-mobile",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906522,
+      "name": "sports_wook",
+      "created_at": "2022-04-25T00:32:15.000Z",
+      "url": "https://greasyfork.org/users/906522-sports-wook",
+      "scripts": []
+    }
+  ],
+  "name": "1_TiderInsider-mobile",
+  "description": "Better fit on mobile devices",
+  "url": "https://greasyfork.org/scripts/463350-1-tiderinsider-mobile",
+  "code_url": "https://update.greasyfork.org/scripts/463350/1_TiderInsider-mobile.user.js",
+  "code_size": 6294,
+  "license": null,
+  "version": "2025.09.04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

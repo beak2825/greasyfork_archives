@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488293,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-26T02:11:39.000Z",
+    "code_updated_at": "2024-02-28T01:54:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1267011,
+        "name": "cn-kali-team",
+        "created_at": "2024-02-26T02:00:47.000Z",
+        "url": "https://greasyfork.org/users/1267011-cn-kali-team"
+      }
+    ],
+    "name": "Mark CVE",
+    "description": "Mark the current page CVE",
+    "url": "https://greasyfork.org/scripts/488293-mark-cve",
+    "code_url": "https://update.greasyfork.org/scripts/488293/Mark%20CVE.user.js",
+    "code_size": 3596,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

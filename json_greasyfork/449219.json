@@ -1,0 +1,59 @@
+{
+  "id": 449219,
+  "daily_installs": 0,
+  "total_installs": 885,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-09T12:20:20.000Z",
+  "code_updated_at": "2022-08-09T14:23:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 944706,
+      "name": "shw_js",
+      "created_at": "2022-08-09T12:17:45.000Z",
+      "url": "https://greasyfork.org/users/944706-shw-js",
+      "scripts": [
+        {
+          "id": 449219,
+          "daily_installs": 0,
+          "total_installs": 885,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-09T12:20:20.000Z",
+          "code_updated_at": "2022-08-09T14:23:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SHW YGN GARTIC.IO SCRIPT 2022 EDITION",
+          "description": "SHW YGN GARTIC.IO SCRIPT 2022 EDITION -1.2",
+          "url": "https://greasyfork.org/scripts/449219-shw-ygn-gartic-io-script-2022-edition",
+          "code_url": "https://update.greasyfork.org/scripts/449219/SHW%20YGN%20GARTICIO%20SCRIPT%202022%20EDITION.user.js",
+          "code_size": 3992,
+          "license": null,
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SHW YGN GARTIC.IO SCRIPT 2022 EDITION",
+  "description": "SHW YGN GARTIC.IO SCRIPT 2022 EDITION -1.2",
+  "url": "https://greasyfork.org/scripts/449219-shw-ygn-gartic-io-script-2022-edition",
+  "code_url": "https://update.greasyfork.org/scripts/449219/SHW%20YGN%20GARTICIO%20SCRIPT%202022%20EDITION.user.js",
+  "code_size": 3992,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

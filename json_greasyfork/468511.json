@@ -1,0 +1,59 @@
+{
+  "id": 468511,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-12T14:49:06.000Z",
+  "code_updated_at": "2023-06-12T14:55:25.000Z",
+  "namespace": "WhyEssEff",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1097245,
+      "name": "WhyEssEff",
+      "created_at": "2023-06-12T14:41:44.000Z",
+      "url": "https://greasyfork.org/users/1097245-whyesseff",
+      "scripts": [
+        {
+          "id": 468511,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-12T14:49:06.000Z",
+          "code_updated_at": "2023-06-12T14:55:25.000Z",
+          "namespace": "WhyEssEff",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AO3: Display Tag ID – Fixed",
+          "description": "a quick and dirty script to display a canonical tag's tag id in its /works page – written by adustyspectacle (to 1.3), updated by WhyEssEff",
+          "url": "https://greasyfork.org/scripts/468511-ao3-display-tag-id-fixed",
+          "code_url": "https://update.greasyfork.org/scripts/468511/AO3%3A%20Display%20Tag%20ID%20%E2%80%93%20Fixed.user.js",
+          "code_size": 1994,
+          "license": null,
+          "version": "1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AO3: Display Tag ID – Fixed",
+  "description": "a quick and dirty script to display a canonical tag's tag id in its /works page – written by adustyspectacle (to 1.3), updated by WhyEssEff",
+  "url": "https://greasyfork.org/scripts/468511-ao3-display-tag-id-fixed",
+  "code_url": "https://update.greasyfork.org/scripts/468511/AO3%3A%20Display%20Tag%20ID%20%E2%80%93%20Fixed.user.js",
+  "code_size": 1994,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

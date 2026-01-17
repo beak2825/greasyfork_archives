@@ -1,0 +1,34 @@
+{
+  "id": 423040,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-11T05:06:14.000Z",
+  "code_updated_at": "2021-09-07T10:18:47.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/423040",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 745879,
+      "name": "MiniMaX4233",
+      "created_at": "2021-03-11T05:02:41.000Z",
+      "url": "https://greasyfork.org/users/745879-minimax4233",
+      "scripts": []
+    }
+  ],
+  "name": "Recharge Any Amount of China Telecom(Macau) Prepaid Card",
+  "description": "為中國電信預付卡充值任意金額，僅用於測試和學習研究，禁止用於商業用途，不能保證其合法性，準確性，完整性和有效性，請根據情況自行判斷。",
+  "url": "https://greasyfork.org/scripts/423040-recharge-any-amount-of-china-telecom-macau-prepaid-card",
+  "code_url": "https://update.greasyfork.org/scripts/423040/Recharge%20Any%20Amount%20of%20China%20Telecom%28Macau%29%20Prepaid%20Card.user.js",
+  "code_size": 2247,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

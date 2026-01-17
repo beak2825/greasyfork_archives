@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412186,
+    "daily_installs": 1,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-28T22:56:47.000Z",
+    "code_updated_at": "2020-09-28T22:56:47.000Z",
+    "namespace": "http://blockunsafe.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 687286,
+        "name": "gonetoorion",
+        "created_at": "2020-09-14T01:38:38.000Z",
+        "url": "https://greasyfork.org/users/687286-gonetoorion"
+      }
+    ],
+    "name": "blockunsafe",
+    "description": "Block unsafe(uncomfortable) content on web pages by keywords",
+    "url": "https://greasyfork.org/scripts/412186-blockunsafe",
+    "code_url": "https://update.greasyfork.org/scripts/412186/blockunsafe.user.js",
+    "code_size": 16701,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

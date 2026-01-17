@@ -30,6 +30,138 @@
     "version": "0.3",
     "locale": "fr",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 486325,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-02T17:48:10.000Z",
+    "code_updated_at": "2024-02-02T19:23:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964527,
+        "name": "Michel Cousin",
+        "created_at": "2022-09-28T21:40:28.000Z",
+        "url": "https://greasyfork.org/users/964527-michel-cousin"
+      }
+    ],
+    "name": "ticketdlp-fannou",
+    "description": "dlp",
+    "url": "https://greasyfork.org/scripts/486325-ticketdlp-fannou",
+    "code_url": "https://update.greasyfork.org/scripts/486325/ticketdlp-fannou.user.js",
+    "code_size": 15540,
+    "license": "MIT License",
+    "version": "2024-02-03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459478,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-05T15:02:55.000Z",
+    "code_updated_at": "2023-02-05T15:17:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964527,
+        "name": "Michel Cousin",
+        "created_at": "2022-09-28T21:40:28.000Z",
+        "url": "https://greasyfork.org/users/964527-michel-cousin"
+      }
+    ],
+    "name": "Same Day Reservation - Pass Annuel",
+    "description": "On DLP Annual Pass website you can't make reservations for the same day. Now you can.",
+    "url": "https://greasyfork.org/scripts/459478-same-day-reservation-pass-annuel",
+    "code_url": "https://update.greasyfork.org/scripts/459478/Same%20Day%20Reservation%20-%20Pass%20Annuel.user.js",
+    "code_size": 1422,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459198,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-31T14:19:50.000Z",
+    "code_updated_at": "2023-01-31T14:19:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964527,
+        "name": "Michel Cousin",
+        "created_at": "2022-09-28T21:40:28.000Z",
+        "url": "https://greasyfork.org/users/964527-michel-cousin"
+      }
+    ],
+    "name": "Disneyland Paris Waiting List Position BETA",
+    "description": "Shows your position on DLP waiting lists. Only tested with reservations of 1 annual pass.",
+    "url": "https://greasyfork.org/scripts/459198-disneyland-paris-waiting-list-position-beta",
+    "code_url": "https://update.greasyfork.org/scripts/459198/Disneyland%20Paris%20Waiting%20List%20Position%20BETA.user.js",
+    "code_size": 4177,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 453561,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-22T20:51:58.000Z",
+    "code_updated_at": "2025-09-08T12:55:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 964527,
+        "name": "Michel Cousin",
+        "created_at": "2022-09-28T21:40:28.000Z",
+        "url": "https://greasyfork.org/users/964527-michel-cousin"
+      }
+    ],
+    "name": "Photo(By)Pass",
+    "description": "Download Disneyland Paris Photopass picture without overlay or watermark and full original resolution from camera. (Only tested with attraction pictures)",
+    "url": "https://greasyfork.org/scripts/453561-photo-by-pass",
+    "code_url": "https://update.greasyfork.org/scripts/453561/Photo%28By%29Pass.user.js",
+    "code_size": 3156,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

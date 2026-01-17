@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423587,
+    "daily_installs": 0,
+    "total_installs": 8490,
+    "fan_score": "78.1",
+    "good_ratings": 17,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-03-19T15:43:24.000Z",
+    "code_updated_at": "2021-03-21T03:08:06.000Z",
+    "namespace": "ilovexuexi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 749234,
+        "name": "樂高",
+        "created_at": "2021-03-19T15:18:46.000Z",
+        "url": "https://greasyfork.org/users/749234-%E6%A8%82%E9%AB%98"
+      }
+    ],
+    "name": "找学习资料大师[电子书搜索神器]支持豆瓣/鸠摩搜书",
+    "description": "帮你找到你想要的学习资料，搜索到绝大部分的电子书，支持豆瓣电脑端/手机端，支持鸠摩搜书扩展搜索结果",
+    "url": "https://greasyfork.org/scripts/423587-%E6%89%BE%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99%E5%A4%A7%E5%B8%88-%E7%94%B5%E5%AD%90%E4%B9%A6%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8-%E6%94%AF%E6%8C%81%E8%B1%86%E7%93%A3-%E9%B8%A0%E6%91%A9%E6%90%9C%E4%B9%A6",
+    "code_url": "https://update.greasyfork.org/scripts/423587/%E6%89%BE%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99%E5%A4%A7%E5%B8%88%5B%E7%94%B5%E5%AD%90%E4%B9%A6%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8%5D%E6%94%AF%E6%8C%81%E8%B1%86%E7%93%A3%E9%B8%A0%E6%91%A9%E6%90%9C%E4%B9%A6.user.js",
+    "code_size": 17662,
+    "license": null,
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

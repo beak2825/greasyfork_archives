@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 487605,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-18T11:37:06.000Z",
+    "code_updated_at": "2024-02-18T11:37:06.000Z",
+    "namespace": "https://thdog.moe/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 551667,
+        "name": "shirokurakana",
+        "created_at": "2020-05-04T13:08:43.000Z",
+        "url": "https://greasyfork.org/users/551667-shirokurakana"
+      }
+    ],
+    "name": "THBWiki跳过简单对话",
+    "description": "为方便校对翻译，直接转到中日对照页面",
+    "url": "https://greasyfork.org/scripts/487605-thbwiki%E8%B7%B3%E8%BF%87%E7%AE%80%E5%8D%95%E5%AF%B9%E8%AF%9D",
+    "code_url": "https://update.greasyfork.org/scripts/487605/THBWiki%E8%B7%B3%E8%BF%87%E7%AE%80%E5%8D%95%E5%AF%B9%E8%AF%9D.user.js",
+    "code_size": 1002,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,33 @@
+{
+  "id": 420125,
+  "daily_installs": 0,
+  "total_installs": 286,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-13T10:05:06.000Z",
+  "code_updated_at": "2021-01-13T10:05:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 524378,
+      "name": "JellyBeanXiewh",
+      "created_at": "2020-04-20T07:53:22.000Z",
+      "url": "https://greasyfork.org/users/524378-jellybeanxiewh"
+    }
+  ],
+  "name": "爱奇艺视频去Logo",
+  "description": "去除爱奇艺视频的非内嵌水印",
+  "url": "https://greasyfork.org/scripts/420125-%E7%88%B1%E5%A5%87%E8%89%BA%E8%A7%86%E9%A2%91%E5%8E%BBlogo",
+  "code_url": "https://update.greasyfork.org/scripts/420125/%E7%88%B1%E5%A5%87%E8%89%BA%E8%A7%86%E9%A2%91%E5%8E%BBLogo.user.js",
+  "code_size": 597,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

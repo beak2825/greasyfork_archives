@@ -1,0 +1,33 @@
+{
+  "id": 441652,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-17T11:30:35.000Z",
+  "code_updated_at": "2022-03-22T09:56:46.000Z",
+  "namespace": "github.com.music.player.tiktok",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 888578,
+      "name": "qthang-git",
+      "created_at": "2022-03-17T10:37:01.000Z",
+      "url": "https://greasyfork.org/users/888578-qthang-git"
+    }
+  ],
+  "name": "Music Player TikTok",
+  "description": "Get songs from account tiktok for MediaPlayer",
+  "url": "https://greasyfork.org/scripts/441652-music-player-tiktok",
+  "code_url": "https://update.greasyfork.org/scripts/441652/Music%20Player%20TikTok.user.js",
+  "code_size": 20683,
+  "license": "MIT License",
+  "version": "1.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

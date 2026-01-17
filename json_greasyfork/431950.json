@@ -1,0 +1,59 @@
+{
+  "id": 431950,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-05T13:25:01.000Z",
+  "code_updated_at": "2021-09-05T13:37:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 812429,
+      "name": "LiuRobert",
+      "created_at": "2021-09-05T12:59:16.000Z",
+      "url": "https://greasyfork.org/users/812429-liurobert",
+      "scripts": [
+        {
+          "id": 431950,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-05T13:25:01.000Z",
+          "code_updated_at": "2021-09-05T13:37:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mer info på foodora",
+          "description": "Visar minsta minsta summan man måste beställa för när man sökt fram restauranger på foodora.",
+          "url": "https://greasyfork.org/scripts/431950-mer-info-p%C3%A5-foodora",
+          "code_url": "https://update.greasyfork.org/scripts/431950/Mer%20info%20p%C3%A5%20foodora.user.js",
+          "code_size": 1219,
+          "license": null,
+          "version": "1.1",
+          "locale": "sv",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mer info på foodora",
+  "description": "Visar minsta minsta summan man måste beställa för när man sökt fram restauranger på foodora.",
+  "url": "https://greasyfork.org/scripts/431950-mer-info-p%C3%A5-foodora",
+  "code_url": "https://update.greasyfork.org/scripts/431950/Mer%20info%20p%C3%A5%20foodora.user.js",
+  "code_size": 1219,
+  "license": null,
+  "version": "1.1",
+  "locale": "sv",
+  "deleted": false,
+  "visibility": "public"
+}

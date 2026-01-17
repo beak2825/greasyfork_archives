@@ -196,5 +196,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 422406,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-28T04:03:14.000Z",
+    "code_updated_at": "2021-02-28T04:03:13.000Z",
+    "namespace": "https://greasyfork.org/users/322117",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 322117,
+        "name": "mechagotch",
+        "created_at": "2019-07-30T17:40:37.000Z",
+        "url": "https://greasyfork.org/users/322117-mechagotch"
+      }
+    ],
+    "name": "Goatlings: Closet Check",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/422406-goatlings-closet-check",
+    "code_url": "https://update.greasyfork.org/scripts/422406/Goatlings%3A%20Closet%20Check.user.js",
+    "code_size": 3612,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

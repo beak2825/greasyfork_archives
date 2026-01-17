@@ -1,0 +1,59 @@
+{
+  "id": 428088,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-17T11:05:50.000Z",
+  "code_updated_at": "2021-06-17T11:05:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 784414,
+      "name": "2001Y",
+      "created_at": "2021-06-17T10:57:53.000Z",
+      "url": "https://greasyfork.org/users/784414-2001y",
+      "scripts": [
+        {
+          "id": 428088,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-17T11:05:50.000Z",
+          "code_updated_at": "2021-06-17T11:05:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google検索に英語だけの検索結果を表示させるボタンを追加",
+          "description": "Google検索にはツール機能を使うことで日本語のみの検索結果にはできるが、英語のみの検索結果を表示できないため作成した。",
+          "url": "https://greasyfork.org/scripts/428088-google%E6%A4%9C%E7%B4%A2%E3%81%AB%E8%8B%B1%E8%AA%9E%E3%81%A0%E3%81%91%E3%81%AE%E6%A4%9C%E7%B4%A2%E7%B5%90%E6%9E%9C%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%95%E3%81%9B%E3%82%8B%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%BF%BD%E5%8A%A0",
+          "code_url": "https://update.greasyfork.org/scripts/428088/Google%E6%A4%9C%E7%B4%A2%E3%81%AB%E8%8B%B1%E8%AA%9E%E3%81%A0%E3%81%91%E3%81%AE%E6%A4%9C%E7%B4%A2%E7%B5%90%E6%9E%9C%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%95%E3%81%9B%E3%82%8B%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%BF%BD%E5%8A%A0.user.js",
+          "code_size": 1605,
+          "license": null,
+          "version": "1.0",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google検索に英語だけの検索結果を表示させるボタンを追加",
+  "description": "Google検索にはツール機能を使うことで日本語のみの検索結果にはできるが、英語のみの検索結果を表示できないため作成した。",
+  "url": "https://greasyfork.org/scripts/428088-google%E6%A4%9C%E7%B4%A2%E3%81%AB%E8%8B%B1%E8%AA%9E%E3%81%A0%E3%81%91%E3%81%AE%E6%A4%9C%E7%B4%A2%E7%B5%90%E6%9E%9C%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%95%E3%81%9B%E3%82%8B%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%BF%BD%E5%8A%A0",
+  "code_url": "https://update.greasyfork.org/scripts/428088/Google%E6%A4%9C%E7%B4%A2%E3%81%AB%E8%8B%B1%E8%AA%9E%E3%81%A0%E3%81%91%E3%81%AE%E6%A4%9C%E7%B4%A2%E7%B5%90%E6%9E%9C%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%95%E3%81%9B%E3%82%8B%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%BF%BD%E5%8A%A0.user.js",
+  "code_size": 1605,
+  "license": null,
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

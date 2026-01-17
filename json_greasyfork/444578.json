@@ -1,0 +1,59 @@
+{
+  "id": 444578,
+  "daily_installs": 0,
+  "total_installs": 78,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-07T04:58:14.000Z",
+  "code_updated_at": "2022-05-07T08:14:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 911276,
+      "name": "416586652",
+      "created_at": "2022-05-07T03:28:37.000Z",
+      "url": "https://greasyfork.org/users/911276-416586652",
+      "scripts": [
+        {
+          "id": 444578,
+          "daily_installs": 0,
+          "total_installs": 78,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-07T04:58:14.000Z",
+          "code_updated_at": "2022-05-07T08:14:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SCBOY养乌龟插件",
+          "description": "在论坛分区页右侧添加养乌龟区域，可交互调戏乌龟，点击乌龟周围可投食",
+          "url": "https://greasyfork.org/scripts/444578-scboy%E5%85%BB%E4%B9%8C%E9%BE%9F%E6%8F%92%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/444578/SCBOY%E5%85%BB%E4%B9%8C%E9%BE%9F%E6%8F%92%E4%BB%B6.user.js",
+          "code_size": 1667,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SCBOY养乌龟插件",
+  "description": "在论坛分区页右侧添加养乌龟区域，可交互调戏乌龟，点击乌龟周围可投食",
+  "url": "https://greasyfork.org/scripts/444578-scboy%E5%85%BB%E4%B9%8C%E9%BE%9F%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/444578/SCBOY%E5%85%BB%E4%B9%8C%E9%BE%9F%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 1667,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

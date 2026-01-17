@@ -1,0 +1,34 @@
+{
+  "id": 474128,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-29T07:33:55.000Z",
+  "code_updated_at": "2024-05-29T03:14:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 755806,
+      "name": "ErickCharles",
+      "created_at": "2021-04-07T05:07:34.000Z",
+      "url": "https://greasyfork.org/users/755806-erickcharles",
+      "scripts": []
+    }
+  ],
+  "name": "E10总部系统快速访问按钮",
+  "description": "托管定时执行一些代码",
+  "url": "https://greasyfork.org/scripts/474128-e10%E6%80%BB%E9%83%A8%E7%B3%BB%E7%BB%9F%E5%BF%AB%E9%80%9F%E8%AE%BF%E9%97%AE%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/474128/E10%E6%80%BB%E9%83%A8%E7%B3%BB%E7%BB%9F%E5%BF%AB%E9%80%9F%E8%AE%BF%E9%97%AE%E6%8C%89%E9%92%AE.user.js",
+  "code_size": 13610,
+  "license": "123",
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

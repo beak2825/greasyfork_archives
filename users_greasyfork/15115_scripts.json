@@ -1,0 +1,134 @@
+[
+  {
+    "id": 485607,
+    "daily_installs": 1,
+    "total_installs": 130,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-24T22:18:06.000Z",
+    "code_updated_at": "2024-02-03T18:19:58.000Z",
+    "namespace": "copyMister",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 15115,
+        "name": "copyMister",
+        "created_at": "2015-09-09T19:32:35.000Z",
+        "url": "https://greasyfork.org/users/15115-copymister"
+      }
+    ],
+    "name": "RuTracker Infinite Scroll",
+    "description": "Autoloads next pages when scrolling down torrents, topics, messages, etc.",
+    "url": "https://greasyfork.org/scripts/485607-rutracker-infinite-scroll",
+    "code_url": "https://update.greasyfork.org/scripts/485607/RuTracker%20Infinite%20Scroll.user.js",
+    "code_size": 14926,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485020,
+    "daily_installs": 5,
+    "total_installs": 3671,
+    "fan_score": "75.4",
+    "good_ratings": 18,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-01-17T01:00:50.000Z",
+    "code_updated_at": "2025-10-29T20:20:16.000Z",
+    "namespace": "YTBetter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 15115,
+        "name": "copyMister",
+        "created_at": "2015-09-09T19:32:35.000Z",
+        "url": "https://greasyfork.org/users/15115-copymister"
+      }
+    ],
+    "name": "YTBetter - Enable Rewind/DVR",
+    "description": "Unlocks rewind for YouTube live streams with disabled DVR and longer than 12 hours",
+    "url": "https://greasyfork.org/scripts/485020-ytbetter-enable-rewind-dvr",
+    "code_url": "https://update.greasyfork.org/scripts/485020/YTBetter%20-%20Enable%20RewindDVR.user.js",
+    "code_size": 4107,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484622,
+    "daily_installs": 0,
+    "total_installs": 161,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-12T00:33:12.000Z",
+    "code_updated_at": "2024-01-16T02:38:24.000Z",
+    "namespace": "copyMister",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 15115,
+        "name": "copyMister",
+        "created_at": "2015-09-09T19:32:35.000Z",
+        "url": "https://greasyfork.org/users/15115-copymister"
+      }
+    ],
+    "name": "RuTracker Full-Text Search in Topics",
+    "description": "Allows to search for text on all pages of RuTracker topics",
+    "url": "https://greasyfork.org/scripts/484622-rutracker-full-text-search-in-topics",
+    "code_url": "https://update.greasyfork.org/scripts/484622/RuTracker%20Full-Text%20Search%20in%20Topics.user.js",
+    "code_size": 8225,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484010,
+    "daily_installs": 1,
+    "total_installs": 51,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-05T23:54:48.000Z",
+    "code_updated_at": "2024-01-05T23:54:48.000Z",
+    "namespace": "copyMister",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 15115,
+        "name": "copyMister",
+        "created_at": "2015-09-09T19:32:35.000Z",
+        "url": "https://greasyfork.org/users/15115-copymister"
+      }
+    ],
+    "name": "RuTracker User Search in Topics",
+    "description": "Adds a dropdown with quick search links for users in forum topics (e.g. messages by author)",
+    "url": "https://greasyfork.org/scripts/484010-rutracker-user-search-in-topics",
+    "code_url": "https://update.greasyfork.org/scripts/484010/RuTracker%20User%20Search%20in%20Topics.user.js",
+    "code_size": 1935,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

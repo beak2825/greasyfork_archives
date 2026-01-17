@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435382,
+    "daily_installs": 0,
+    "total_installs": 1476,
+    "fan_score": "39.6",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-11-12T07:25:55.000Z",
+    "code_updated_at": "2021-11-29T06:55:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 837607,
+        "name": "JJ Spades",
+        "created_at": "2021-11-12T07:17:50.000Z",
+        "url": "https://greasyfork.org/users/837607-jj-spades"
+      }
+    ],
+    "name": "宝武微学苑挂机脚本",
+    "description": "跳过挂机判断，自动续播，列表播放完毕自动关闭当前标签页",
+    "url": "https://greasyfork.org/scripts/435382-%E5%AE%9D%E6%AD%A6%E5%BE%AE%E5%AD%A6%E8%8B%91%E6%8C%82%E6%9C%BA%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/435382/%E5%AE%9D%E6%AD%A6%E5%BE%AE%E5%AD%A6%E8%8B%91%E6%8C%82%E6%9C%BA%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 4119,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

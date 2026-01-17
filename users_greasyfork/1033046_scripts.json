@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460757,
+    "daily_installs": 0,
+    "total_installs": 3267,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-26T07:00:45.000Z",
+    "code_updated_at": "2024-11-05T16:16:17.000Z",
+    "namespace": "https://greasyfork.org/users/1033046",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1033046,
+        "name": "窗外的麻雀",
+        "created_at": "2023-02-26T00:00:32.000Z",
+        "url": "https://greasyfork.org/users/1033046-%E7%AA%97%E5%A4%96%E7%9A%84%E9%BA%BB%E9%9B%80"
+      }
+    ],
+    "name": "小草帮手",
+    "description": "屏蔽頁面廣告|優化圖片鏈接|增加磁力鏈接|在線成人影院主動加載視頻and屏蔽視頻悬浮文字菜單",
+    "url": "https://greasyfork.org/scripts/460757-%E5%B0%8F%E8%8D%89%E5%B8%AE%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/460757/%E5%B0%8F%E8%8D%89%E5%B8%AE%E6%89%8B.user.js",
+    "code_size": 11750,
+    "license": "FBI WARNING",
+    "version": "3.0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

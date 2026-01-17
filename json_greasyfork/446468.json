@@ -1,0 +1,34 @@
+{
+  "id": 446468,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-14T12:16:13.000Z",
+  "code_updated_at": "2022-06-14T12:16:13.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/19988800",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 925532,
+      "name": "JackiMa",
+      "created_at": "2022-06-14T11:57:39.000Z",
+      "url": "https://greasyfork.org/users/925532-jackima",
+      "scripts": []
+    }
+  ],
+  "name": "古剑逍遥辅助",
+  "description": "古剑逍遥",
+  "url": "https://greasyfork.org/scripts/446468-%E5%8F%A4%E5%89%91%E9%80%8D%E9%81%A5%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/446468/%E5%8F%A4%E5%89%91%E9%80%8D%E9%81%A5%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 720,
+  "license": null,
+  "version": "1.11",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

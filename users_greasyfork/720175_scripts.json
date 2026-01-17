@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481992,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-12T03:14:42.000Z",
+    "code_updated_at": "2024-03-05T03:28:31.000Z",
+    "namespace": "xywc-s",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 720175,
+        "name": "xywc-s",
+        "created_at": "2020-12-23T13:12:42.000Z",
+        "url": "https://greasyfork.org/users/720175-xywc-s"
+      }
+    ],
+    "name": "网页样式格式化",
+    "description": "一些网页的样式格式化",
+    "url": "https://greasyfork.org/scripts/481992-%E7%BD%91%E9%A1%B5%E6%A0%B7%E5%BC%8F%E6%A0%BC%E5%BC%8F%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/481992/%E7%BD%91%E9%A1%B5%E6%A0%B7%E5%BC%8F%E6%A0%BC%E5%BC%8F%E5%8C%96.user.js",
+    "code_size": 1792,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -163,5 +163,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 476119,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-26T17:52:07.000Z",
+    "code_updated_at": "2024-09-05T01:48:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018091,
+        "name": "Dr bobo",
+        "created_at": "2023-01-28T21:46:42.000Z",
+        "url": "https://greasyfork.org/users/1018091-dr-bobo"
+      }
+    ],
+    "name": "erai-raws sub preview Image",
+    "description": "Show image preview next to the anime subtitles.",
+    "url": "https://greasyfork.org/scripts/476119-erai-raws-sub-preview-image",
+    "code_url": "https://update.greasyfork.org/scripts/476119/erai-raws%20sub%20preview%20Image.user.js",
+    "code_size": 4275,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466535,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-17T23:49:21.000Z",
+    "code_updated_at": "2025-09-28T05:11:31.000Z",
+    "namespace": "https://www.cpasbien.moe/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018091,
+        "name": "Dr bobo",
+        "created_at": "2023-01-28T21:46:42.000Z",
+        "url": "https://greasyfork.org/users/1018091-dr-bobo"
+      }
+    ],
+    "name": "cpasbien preview Image",
+    "description": "Show image preview next to the titles by hovering the mouse (without caching and forcefully deleting old cache).",
+    "url": "https://greasyfork.org/scripts/466535-cpasbien-preview-image",
+    "code_url": "https://update.greasyfork.org/scripts/466535/cpasbien%20preview%20Image.user.js",
+    "code_size": 5001,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466533,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-17T23:12:44.000Z",
+    "code_updated_at": "2024-09-01T03:00:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018091,
+        "name": "Dr bobo",
+        "created_at": "2023-01-28T21:46:42.000Z",
+        "url": "https://greasyfork.org/users/1018091-dr-bobo"
+      }
+    ],
+    "name": "oxtorrent preview Image with Cache Management",
+    "description": "Show image preview next to the titles by hovering the mouse, with caching and cleanup.",
+    "url": "https://greasyfork.org/scripts/466533-oxtorrent-preview-image-with-cache-management",
+    "code_url": "https://update.greasyfork.org/scripts/466533/oxtorrent%20preview%20Image%20with%20Cache%20Management.user.js",
+    "code_size": 5260,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

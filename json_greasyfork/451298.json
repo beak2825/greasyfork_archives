@@ -1,0 +1,34 @@
+{
+  "id": 451298,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-13T09:39:13.000Z",
+  "code_updated_at": "2022-09-13T09:46:48.000Z",
+  "namespace": "https://greasyfork.org/users/144763",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 144763,
+      "name": "pcrock",
+      "created_at": "2017-07-29T12:43:58.000Z",
+      "url": "https://greasyfork.org/users/144763-pcrock",
+      "scripts": []
+    }
+  ],
+  "name": "pcrock CSDN",
+  "description": "去广告",
+  "url": "https://greasyfork.org/scripts/451298-pcrock-csdn",
+  "code_url": "https://update.greasyfork.org/scripts/451298/pcrock%20CSDN.user.js",
+  "code_size": 2003,
+  "license": null,
+  "version": "0.0.1.20220913094648",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

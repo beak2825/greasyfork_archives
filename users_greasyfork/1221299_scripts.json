@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 490739,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-24T11:31:35.000Z",
+    "code_updated_at": "2025-09-30T19:43:20.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1221299,
+        "name": "popular-software",
+        "created_at": "2023-11-21T16:02:36.000Z",
+        "url": "https://greasyfork.org/users/1221299-popular-software"
+      }
+    ],
+    "name": "Dictionary.com fullscreen crossword",
+    "description": "3/24/2024, 12:07:21 PM",
+    "url": "https://greasyfork.org/scripts/490739-dictionary-com-fullscreen-crossword",
+    "code_url": "https://update.greasyfork.org/scripts/490739/Dictionarycom%20fullscreen%20crossword.user.js",
+    "code_size": 840,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

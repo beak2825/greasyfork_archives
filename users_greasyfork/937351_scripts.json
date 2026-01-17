@@ -1,0 +1,101 @@
+[
+  {
+    "id": 450003,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-22T20:12:34.000Z",
+    "code_updated_at": "2022-08-22T20:12:34.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937351,
+        "name": "dozianka",
+        "created_at": "2022-07-19T19:31:20.000Z",
+        "url": "https://greasyfork.org/users/937351-dozianka"
+      }
+    ],
+    "name": "Для ЗГА от Дози",
+    "description": "Скрипт для Зга by Doze_Sulaymonov",
+    "url": "https://greasyfork.org/scripts/450003-%D0%B4%D0%BB%D1%8F-%D0%B7%D0%B3%D0%B0-%D0%BE%D1%82-%D0%B4%D0%BE%D0%B7%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/450003/%D0%94%D0%BB%D1%8F%20%D0%97%D0%93%D0%90%20%D0%BE%D1%82%20%D0%94%D0%BE%D0%B7%D0%B8.user.js",
+    "code_size": 21154,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "uk",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449217,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-09T12:02:15.000Z",
+    "code_updated_at": "2022-08-22T20:33:53.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937351,
+        "name": "dozianka",
+        "created_at": "2022-07-19T19:31:20.000Z",
+        "url": "https://greasyfork.org/users/937351-dozianka"
+      }
+    ],
+    "name": "Скрипт для кф от Дози",
+    "description": "КФ // by Doze_sulaymonov",
+    "url": "https://greasyfork.org/scripts/449217-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%84-%D0%BE%D1%82-%D0%B4%D0%BE%D0%B7%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/449217/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%84%20%D0%BE%D1%82%20%D0%94%D0%BE%D0%B7%D0%B8.user.js",
+    "code_size": 60295,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "uk",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449094,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-07T04:46:46.000Z",
+    "code_updated_at": "2022-08-22T20:10:54.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 937351,
+        "name": "dozianka",
+        "created_at": "2022-07-19T19:31:20.000Z",
+        "url": "https://greasyfork.org/users/937351-dozianka"
+      }
+    ],
+    "name": "Для ЗГА от Дози",
+    "description": "Скрипт для Зга by Doze_Sulaymonov",
+    "url": "https://greasyfork.org/scripts/449094-%D0%B4%D0%BB%D1%8F-%D0%B7%D0%B3%D0%B0-%D0%BE%D1%82-%D0%B4%D0%BE%D0%B7%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/449094/%D0%94%D0%BB%D1%8F%20%D0%97%D0%93%D0%90%20%D0%BE%D1%82%20%D0%94%D0%BE%D0%B7%D0%B8.user.js",
+    "code_size": 21154,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

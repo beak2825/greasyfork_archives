@@ -1,0 +1,59 @@
+{
+  "id": 429125,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-09T11:31:18.000Z",
+  "code_updated_at": "2022-04-04T10:41:05.000Z",
+  "namespace": "http://cyle.xyz",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 791866,
+      "name": "CyleAR",
+      "created_at": "2021-07-09T11:29:36.000Z",
+      "url": "https://greasyfork.org/users/791866-cylear",
+      "scripts": [
+        {
+          "id": 429125,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-07-09T11:31:18.000Z",
+          "code_updated_at": "2022-04-04T10:41:05.000Z",
+          "namespace": "http://cyle.xyz",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Web Script Lain",
+          "description": "Multilangual support userscript for LainTSX",
+          "url": "https://greasyfork.org/scripts/429125-web-script-lain",
+          "code_url": "https://update.greasyfork.org/scripts/429125/Web%20Script%20Lain.user.js",
+          "code_size": 5741,
+          "license": null,
+          "version": "1.24",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Web Script Lain",
+  "description": "Multilangual support userscript for LainTSX",
+  "url": "https://greasyfork.org/scripts/429125-web-script-lain",
+  "code_url": "https://update.greasyfork.org/scripts/429125/Web%20Script%20Lain.user.js",
+  "code_size": 5741,
+  "license": null,
+  "version": "1.24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

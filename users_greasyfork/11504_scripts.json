@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443218,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-12T06:36:02.000Z",
+    "code_updated_at": "2022-04-12T06:59:10.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/443218",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 11504,
+        "name": "chouchoui",
+        "created_at": "2015-05-18T10:02:25.000Z",
+        "url": "https://greasyfork.org/users/11504-chouchoui"
+      }
+    ],
+    "name": "SCP-CN Wiki Recently Created Page Show Rating",
+    "description": "SCP中分最近发布页面显示实际评分",
+    "url": "https://greasyfork.org/scripts/443218-scp-cn-wiki-recently-created-page-show-rating",
+    "code_url": "https://update.greasyfork.org/scripts/443218/SCP-CN%20Wiki%20Recently%20Created%20Page%20Show%20Rating.user.js",
+    "code_size": 1194,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

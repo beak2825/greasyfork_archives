@@ -63,6 +63,105 @@
     "version": "0.3",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478806,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-11-01T16:01:46.000Z",
+    "code_updated_at": "2023-11-01T16:03:58.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 187968,
+        "name": "Shaun Mitchell",
+        "created_at": "2018-05-27T09:56:40.000Z",
+        "url": "https://greasyfork.org/users/187968-shaun-mitchell"
+      }
+    ],
+    "name": "Discord Sidebar Toggle",
+    "description": "7/17/2023, 9:38:40 AM",
+    "url": "https://greasyfork.org/scripts/478806-discord-sidebar-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/478806/Discord%20Sidebar%20Toggle.user.js",
+    "code_size": 6724,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461150,
+    "daily_installs": 0,
+    "total_installs": 1256,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-03-04T06:32:08.000Z",
+    "code_updated_at": "2023-03-05T22:25:23.000Z",
+    "namespace": "https://github.com/shitchell",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 187968,
+        "name": "Shaun Mitchell",
+        "created_at": "2018-05-27T09:56:40.000Z",
+        "url": "https://greasyfork.org/users/187968-shaun-mitchell"
+      }
+    ],
+    "name": "adblockblockblock",
+    "description": "Remove anti-adblock",
+    "url": "https://greasyfork.org/scripts/461150-adblockblockblock",
+    "code_url": "https://update.greasyfork.org/scripts/461150/adblockblockblock.user.js",
+    "code_size": 6838,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 435913,
+    "daily_installs": 0,
+    "total_installs": 189,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-22T21:17:27.000Z",
+    "code_updated_at": "2021-11-23T08:35:05.000Z",
+    "namespace": "https://shitchell.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 187968,
+        "name": "Shaun Mitchell",
+        "created_at": "2018-05-27T09:56:40.000Z",
+        "url": "https://greasyfork.org/users/187968-shaun-mitchell"
+      }
+    ],
+    "name": "WebRTC IP Tracker",
+    "description": "alerts whenever a WebRTC connection is made and shows its info in the js console",
+    "url": "https://greasyfork.org/scripts/435913-webrtc-ip-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/435913/WebRTC%20IP%20Tracker.user.js",
+    "code_size": 1895,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

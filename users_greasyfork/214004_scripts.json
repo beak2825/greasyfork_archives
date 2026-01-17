@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487238,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-13T14:28:14.000Z",
+    "code_updated_at": "2024-02-13T14:32:12.000Z",
+    "namespace": "https://github.com/sss63232",
+    "support_url": "https://github.com/sss63232/katakana-terminator/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 214004,
+        "name": "sss63232",
+        "created_at": "2018-09-19T13:12:28.000Z",
+        "url": "https://greasyfork.org/users/214004-sss63232"
+      }
+    ],
+    "name": "Katakana Terminator cyx",
+    "description": "Convert gairaigo (Japanese loan words) back to English",
+    "url": "https://greasyfork.org/scripts/487238-katakana-terminator-cyx",
+    "code_url": "https://update.greasyfork.org/scripts/487238/Katakana%20Terminator%20cyx.user.js",
+    "code_size": 11247,
+    "license": "MIT License",
+    "version": "2024.02.14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 470263,
+  "daily_installs": 0,
+  "total_installs": 178,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-06T07:33:57.000Z",
+  "code_updated_at": "2025-10-31T04:49:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 789966,
+      "name": "hackettk",
+      "created_at": "2021-07-03T13:11:14.000Z",
+      "url": "https://greasyfork.org/users/789966-hackettk",
+      "scripts": []
+    }
+  ],
+  "name": "自动讲解",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/470263-%E8%87%AA%E5%8A%A8%E8%AE%B2%E8%A7%A3",
+  "code_url": "https://update.greasyfork.org/scripts/470263/%E8%87%AA%E5%8A%A8%E8%AE%B2%E8%A7%A3.user.js",
+  "code_size": 3121,
+  "license": "MIT License",
+  "version": "0.2.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

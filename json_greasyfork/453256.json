@@ -1,0 +1,34 @@
+{
+  "id": 453256,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-18T05:46:42.000Z",
+  "code_updated_at": "2022-10-18T05:52:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972187,
+      "name": "nanlingtt",
+      "created_at": "2022-10-18T04:24:30.000Z",
+      "url": "https://greasyfork.org/users/972187-nanlingtt",
+      "scripts": []
+    }
+  ],
+  "name": "lib42class2",
+  "description": "青骄第二课堂禁毒知识竞赛2022版题库",
+  "url": "https://greasyfork.org/scripts/453256-lib42class2",
+  "code_url": "https://update.greasyfork.org/scripts/453256/1106152/lib42class2.js",
+  "code_size": 19656,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

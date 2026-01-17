@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468562,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-13T09:04:07.000Z",
+    "code_updated_at": "2023-06-13T09:18:15.000Z",
+    "namespace": "http://your-site-name-here/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 901405,
+        "name": "Jintao Li",
+        "created_at": "2022-04-12T23:26:47.000Z",
+        "url": "https://greasyfork.org/users/901405-jintao-li"
+      }
+    ],
+    "name": "Proxy Server Web Browsing with Authentication",
+    "description": "Use a proxy server with authentication to browse the web",
+    "url": "https://greasyfork.org/scripts/468562-proxy-server-web-browsing-with-authentication",
+    "code_url": "https://update.greasyfork.org/scripts/468562/Proxy%20Server%20Web%20Browsing%20with%20Authentication.user.js",
+    "code_size": 1465,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

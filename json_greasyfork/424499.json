@@ -1,0 +1,33 @@
+{
+  "id": 424499,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-04-04T23:30:59.000Z",
+  "code_updated_at": "2025-12-29T23:31:15.000Z",
+  "namespace": "brazenvoid",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 220654,
+      "name": "brazenvoid",
+      "created_at": "2018-10-21T10:26:32.000Z",
+      "url": "https://greasyfork.org/users/220654-brazenvoid"
+    }
+  ],
+  "name": "Brazen Paginator",
+  "description": "Helper for client side customized pagination",
+  "url": "https://greasyfork.org/scripts/424499-brazen-paginator",
+  "code_url": "https://update.greasyfork.org/scripts/424499/1723642/Brazen%20Paginator.js",
+  "code_size": 6925,
+  "license": "GNU General Public License v3.0 only",
+  "version": "3.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

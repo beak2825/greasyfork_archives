@@ -1,0 +1,34 @@
+{
+  "id": 456539,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-13T14:28:25.000Z",
+  "code_updated_at": "2022-12-13T14:28:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 970687,
+      "name": "JardaK",
+      "created_at": "2022-10-14T13:33:21.000Z",
+      "url": "https://greasyfork.org/users/970687-jardak",
+      "scripts": []
+    }
+  ],
+  "name": "Házená - Dánsko",
+  "description": "Vygeneruje odkaz na live url pro všechny zápasy",
+  "url": "https://greasyfork.org/scripts/456539-h%C3%A1zen%C3%A1-d%C3%A1nsko",
+  "code_url": "https://update.greasyfork.org/scripts/456539/H%C3%A1zen%C3%A1%20-%20D%C3%A1nsko.user.js",
+  "code_size": 1003,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443458,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-16T06:42:05.000Z",
+    "code_updated_at": "2022-04-16T06:42:05.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 902881,
+        "name": "Aoi Ogata",
+        "created_at": "2022-04-16T06:16:30.000Z",
+        "url": "https://greasyfork.org/users/902881-aoi-ogata"
+      }
+    ],
+    "name": "yolk supreme",
+    "description": "lol",
+    "url": "https://greasyfork.org/scripts/443458-yolk-supreme",
+    "code_url": "https://update.greasyfork.org/scripts/443458/1040580/yolk%20supreme.js",
+    "code_size": 1916,
+    "license": null,
+    "version": "0.0.1.20220416064205",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

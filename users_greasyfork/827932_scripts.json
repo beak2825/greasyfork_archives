@@ -1,0 +1,68 @@
+[
+  {
+    "id": 441482,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-14T00:37:38.000Z",
+    "code_updated_at": "2022-03-14T00:37:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 827932,
+        "name": "letsgo0",
+        "created_at": "2021-10-23T07:50:12.000Z",
+        "url": "https://greasyfork.org/users/827932-letsgo0"
+      }
+    ],
+    "name": "changeBackgroundColor",
+    "description": "change background color and basic layout",
+    "url": "https://greasyfork.org/scripts/441482-changebackgroundcolor",
+    "code_url": "https://update.greasyfork.org/scripts/441482/changeBackgroundColor.user.js",
+    "code_size": 2245,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441379,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-12T04:29:19.000Z",
+    "code_updated_at": "2022-03-12T04:29:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 827932,
+        "name": "letsgo0",
+        "created_at": "2021-10-23T07:50:12.000Z",
+        "url": "https://greasyfork.org/users/827932-letsgo0"
+      }
+    ],
+    "name": "jump in input box when '+' is pressed.",
+    "description": "按下+键，将页面焦点跳到输入框",
+    "url": "https://greasyfork.org/scripts/441379-jump-in-input-box-when-is-pressed",
+    "code_url": "https://update.greasyfork.org/scripts/441379/jump%20in%20input%20box%20when%20%27%2B%27%20is%20pressed.user.js",
+    "code_size": 1162,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

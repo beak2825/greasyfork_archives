@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483805,
+    "daily_installs": 0,
+    "total_installs": 577,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-04T03:34:58.000Z",
+    "code_updated_at": "2024-01-04T03:39:58.000Z",
+    "namespace": "https://greasyfork.org/users/1242980",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242980,
+        "name": "JessHHHH",
+        "created_at": "2024-01-04T03:29:28.000Z",
+        "url": "https://greasyfork.org/users/1242980-jesshhhh"
+      }
+    ],
+    "name": "进化（Evolve）自动建造(含自定义倍速)",
+    "description": "通过劫持Worker.prototype.postMessage方法进行加速",
+    "url": "https://greasyfork.org/scripts/483805-%E8%BF%9B%E5%8C%96-evolve-%E8%87%AA%E5%8A%A8%E5%BB%BA%E9%80%A0-%E5%90%AB%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%8D%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/483805/%E8%BF%9B%E5%8C%96%EF%BC%88Evolve%EF%BC%89%E8%87%AA%E5%8A%A8%E5%BB%BA%E9%80%A0%28%E5%90%AB%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%8D%E9%80%9F%29.user.js",
+    "code_size": 4233,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

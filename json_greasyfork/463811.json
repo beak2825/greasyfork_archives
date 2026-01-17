@@ -1,0 +1,33 @@
+{
+  "id": 463811,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-12T07:30:51.000Z",
+  "code_updated_at": "2023-04-12T07:30:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1058625,
+      "name": "bowlong",
+      "created_at": "2023-04-12T07:18:25.000Z",
+      "url": "https://greasyfork.org/users/1058625-bowlong"
+    }
+  ],
+  "name": "985/211/双一流提示",
+  "description": "可用于研招网和学科评估网的985/211、双一流院校提示，红色背景为985学校，粉色背景为211学校，红色字体为双一流学校，学校数据截止2021-6-17",
+  "url": "https://greasyfork.org/scripts/463811-985-211-%E5%8F%8C%E4%B8%80%E6%B5%81%E6%8F%90%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/463811/985211%E5%8F%8C%E4%B8%80%E6%B5%81%E6%8F%90%E7%A4%BA.user.js",
+  "code_size": 7530,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

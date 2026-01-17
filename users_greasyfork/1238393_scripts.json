@@ -1,0 +1,68 @@
+[
+  {
+    "id": 490675,
+    "daily_installs": 1,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-23T17:12:13.000Z",
+    "code_updated_at": "2025-04-20T09:23:13.000Z",
+    "namespace": "https://greasyfork.org/en/users/1238393-hannaddev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1238393,
+        "name": "hannadDev",
+        "created_at": "2023-12-23T19:17:22.000Z",
+        "url": "https://greasyfork.org/users/1238393-hannaddev"
+      }
+    ],
+    "name": "MH - Journal Log Tracker",
+    "description": "Tracks when your journal log is going to show up next and shows a button to access your last journal log",
+    "url": "https://greasyfork.org/scripts/490675-mh-journal-log-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/490675/MH%20-%20Journal%20Log%20Tracker.user.js",
+    "code_size": 23794,
+    "license": "MIT License",
+    "version": "1.4.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 482957,
+    "daily_installs": 0,
+    "total_installs": 171,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-23T19:22:00.000Z",
+    "code_updated_at": "2025-12-11T21:29:39.000Z",
+    "namespace": "https://greasyfork.org/en/users/1238393-hannaddev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1238393,
+        "name": "hannadDev",
+        "created_at": "2023-12-23T19:17:22.000Z",
+        "url": "https://greasyfork.org/users/1238393-hannaddev"
+      }
+    ],
+    "name": "MH - Golem Visit Stats",
+    "description": "Shows golem visit numbers without having to bell your golem or have an idle one. Also adds a small tooltip in the aura to inform you of the hours left until max aura and the number of golems / hats needed for it.",
+    "url": "https://greasyfork.org/scripts/482957-mh-golem-visit-stats",
+    "code_url": "https://update.greasyfork.org/scripts/482957/MH%20-%20Golem%20Visit%20Stats.user.js",
+    "code_size": 23364,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 444429,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-03T17:39:54.000Z",
+    "code_updated_at": "2022-05-03T17:39:54.000Z",
+    "namespace": "https://blog.bgme.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 243072,
+        "name": "bgme",
+        "created_at": "2019-01-29T12:35:37.000Z",
+        "url": "https://greasyfork.org/users/243072-bgme"
+      }
+    ],
+    "name": "Mastodon Trending posts 辅助脚本",
+    "description": "在待审查流行嘟文条目下标注该用户注册时间、嘟文数、正在关注数、关注者数",
+    "url": "https://greasyfork.org/scripts/444429-mastodon-trending-posts-%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/444429/Mastodon%20Trending%20posts%20%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 1237,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 439276,
+    "daily_installs": 0,
+    "total_installs": 101,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-28T12:26:17.000Z",
+    "code_updated_at": "2022-01-29T03:15:25.000Z",
+    "namespace": "https://blog.bgme.me",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 243072,
+        "name": "bgme",
+        "created_at": "2019-01-29T12:35:37.000Z",
+        "url": "https://greasyfork.org/users/243072-bgme"
+      }
+    ],
+    "name": "真白萌新站添加全部订阅按钮",
+    "description": "在真白萌新站作品目录页添加全部订阅按钮，一键订阅所有章节",
+    "url": "https://greasyfork.org/scripts/439276-%E7%9C%9F%E7%99%BD%E8%90%8C%E6%96%B0%E7%AB%99%E6%B7%BB%E5%8A%A0%E5%85%A8%E9%83%A8%E8%AE%A2%E9%98%85%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/439276/%E7%9C%9F%E7%99%BD%E8%90%8C%E6%96%B0%E7%AB%99%E6%B7%BB%E5%8A%A0%E5%85%A8%E9%83%A8%E8%AE%A2%E9%98%85%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 2364,
+    "license": "AGPL 3.0",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425673,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-28T16:50:29.000Z",
+    "code_updated_at": "2021-11-13T08:57:01.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 243072,
+        "name": "bgme",
+        "created_at": "2019-01-29T12:35:37.000Z",
+        "url": "https://greasyfork.org/users/243072-bgme"
+      }
+    ],
+    "name": "晋江文学城防盗字符解码",
+    "description": "将晋江文学城防盗替换为正常字符",
+    "url": "https://greasyfork.org/scripts/425673-%E6%99%8B%E6%B1%9F%E6%96%87%E5%AD%A6%E5%9F%8E%E9%98%B2%E7%9B%97%E5%AD%97%E7%AC%A6%E8%A7%A3%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/425673/987740/%E6%99%8B%E6%B1%9F%E6%96%87%E5%AD%A6%E5%9F%8E%E9%98%B2%E7%9B%97%E5%AD%97%E7%AC%A6%E8%A7%A3%E7%A0%81.js",
+    "code_size": 1315,
+    "license": null,
+    "version": "0.0.1.20211113085701",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 416083,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-14T11:23:53.000Z",
+    "code_updated_at": "2020-11-14T11:23:53.000Z",
+    "namespace": "https://blog.bgme.me",
+    "support_url": "https://github.com/yingziwu/Greasemonkey/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 243072,
+        "name": "bgme",
+        "created_at": "2019-01-29T12:35:37.000Z",
+        "url": "https://greasyfork.org/users/243072-bgme"
+      }
+    ],
+    "name": "长毛象抽奖脚本",
+    "description": "点击“开始抽奖”后，随机抽出五名中奖候选者。",
+    "url": "https://greasyfork.org/scripts/416083-%E9%95%BF%E6%AF%9B%E8%B1%A1%E6%8A%BD%E5%A5%96%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/416083/%E9%95%BF%E6%AF%9B%E8%B1%A1%E6%8A%BD%E5%A5%96%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 9868,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

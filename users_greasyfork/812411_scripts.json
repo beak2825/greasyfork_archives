@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431945,
+    "daily_installs": 0,
+    "total_installs": 139,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-09-05T11:47:07.000Z",
+    "code_updated_at": "2023-01-10T14:14:08.000Z",
+    "namespace": "https://mihiru.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 812411,
+        "name": "mihirukiss",
+        "created_at": "2021-09-05T11:39:48.000Z",
+        "url": "https://greasyfork.org/users/812411-mihirukiss"
+      }
+    ],
+    "name": "孟宝直播间表情选择器",
+    "description": "提供在B站Mahiru直播间直接点选输入表情的功能",
+    "url": "https://greasyfork.org/scripts/431945-%E5%AD%9F%E5%AE%9D%E7%9B%B4%E6%92%AD%E9%97%B4%E8%A1%A8%E6%83%85%E9%80%89%E6%8B%A9%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/431945/%E5%AD%9F%E5%AE%9D%E7%9B%B4%E6%92%AD%E9%97%B4%E8%A1%A8%E6%83%85%E9%80%89%E6%8B%A9%E5%99%A8.user.js",
+    "code_size": 7901,
+    "license": null,
+    "version": "1.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

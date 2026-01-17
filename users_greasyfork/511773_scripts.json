@@ -1,0 +1,35 @@
+[
+  {
+    "id": 416176,
+    "daily_installs": 0,
+    "total_installs": 86,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-16T05:07:36.000Z",
+    "code_updated_at": "2020-11-16T06:37:48.000Z",
+    "namespace": "czzonet",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 511773,
+        "name": "czzonet",
+        "created_at": "2020-04-15T02:21:41.000Z",
+        "url": "https://greasyfork.org/users/511773-czzonet"
+      }
+    ],
+    "name": "掘金复制功能防篡改",
+    "description": "回归单纯的复制",
+    "url": "https://greasyfork.org/scripts/416176-%E6%8E%98%E9%87%91%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD%E9%98%B2%E7%AF%A1%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/416176/%E6%8E%98%E9%87%91%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD%E9%98%B2%E7%AF%A1%E6%94%B9.user.js",
+    "code_size": 2158,
+    "license": "MIT License",
+    "version": "1.0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

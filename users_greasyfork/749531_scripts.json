@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423852,
+    "daily_installs": 1,
+    "total_installs": 15432,
+    "fan_score": "71.1",
+    "good_ratings": 18,
+    "ok_ratings": 2,
+    "bad_ratings": 1,
+    "created_at": "2021-03-23T16:07:18.000Z",
+    "code_updated_at": "2021-05-27T06:16:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 749531,
+        "name": "JucyZhu",
+        "created_at": "2021-03-20T12:55:25.000Z",
+        "url": "https://greasyfork.org/users/749531-jucyzhu"
+      }
+    ],
+    "name": "起点小说vip自动换源",
+    "description": "对起点的vip小说自动搜索笔趣阁，要设置滚动模式，自动加载形式,支持手机和网页",
+    "url": "https://greasyfork.org/scripts/423852-%E8%B5%B7%E7%82%B9%E5%B0%8F%E8%AF%B4vip%E8%87%AA%E5%8A%A8%E6%8D%A2%E6%BA%90",
+    "code_url": "https://update.greasyfork.org/scripts/423852/%E8%B5%B7%E7%82%B9%E5%B0%8F%E8%AF%B4vip%E8%87%AA%E5%8A%A8%E6%8D%A2%E6%BA%90.user.js",
+    "code_size": 16595,
+    "license": null,
+    "version": "2.4.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444776,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-10T05:29:05.000Z",
+    "code_updated_at": "2022-05-10T05:29:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731517,
+        "name": "KingKoncorde (KingKoncorde)",
+        "created_at": "2021-01-26T13:57:25.000Z",
+        "url": "https://greasyfork.org/users/731517-kingkoncorde-kingkoncorde"
+      }
+    ],
+    "name": "r26's modloader for Istrolid",
+    "description": "a modloader for the game Istrolid",
+    "url": "https://greasyfork.org/scripts/444776-r26-s-modloader-for-istrolid",
+    "code_url": "https://update.greasyfork.org/scripts/444776/r26%27s%20modloader%20for%20Istrolid.user.js",
+    "code_size": 13342,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

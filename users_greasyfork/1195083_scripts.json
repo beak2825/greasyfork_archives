@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477357,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-13T10:20:22.000Z",
+    "code_updated_at": "2023-10-13T10:20:21.000Z",
+    "namespace": "www.bilibili.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1195083,
+        "name": "Coner0721",
+        "created_at": "2023-10-13T10:11:12.000Z",
+        "url": "https://greasyfork.org/users/1195083-coner0721"
+      }
+    ],
+    "name": "三相之力",
+    "description": "wwwa",
+    "url": "https://greasyfork.org/scripts/477357-%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B",
+    "code_url": "https://update.greasyfork.org/scripts/477357/%E4%B8%89%E7%9B%B8%E4%B9%8B%E5%8A%9B.user.js",
+    "code_size": 20531,
+    "license": "MIT License",
+    "version": "1.12",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

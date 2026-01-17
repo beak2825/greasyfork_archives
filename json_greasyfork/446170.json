@@ -1,0 +1,59 @@
+{
+  "id": 446170,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-08T04:13:48.000Z",
+  "code_updated_at": "2022-06-08T06:40:27.000Z",
+  "namespace": "https://theo.im",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 923251,
+      "name": "timonwong",
+      "created_at": "2022-06-08T04:07:52.000Z",
+      "url": "https://greasyfork.org/users/923251-timonwong",
+      "scripts": [
+        {
+          "id": 446170,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-08T04:13:48.000Z",
+          "code_updated_at": "2022-06-08T06:40:27.000Z",
+          "namespace": "https://theo.im",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Confluence NavBar Fix",
+          "description": "Fix missing NavBar Button",
+          "url": "https://greasyfork.org/scripts/446170-confluence-navbar-fix",
+          "code_url": "https://update.greasyfork.org/scripts/446170/Confluence%20NavBar%20Fix.user.js",
+          "code_size": 591,
+          "license": "MIT License",
+          "version": "0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Confluence NavBar Fix",
+  "description": "Fix missing NavBar Button",
+  "url": "https://greasyfork.org/scripts/446170-confluence-navbar-fix",
+  "code_url": "https://update.greasyfork.org/scripts/446170/Confluence%20NavBar%20Fix.user.js",
+  "code_size": 591,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

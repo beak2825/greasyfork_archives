@@ -1,0 +1,33 @@
+{
+  "id": 428990,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-06T17:45:28.000Z",
+  "code_updated_at": "2021-07-06T17:45:28.000Z",
+  "namespace": "https://greasyfork.org/users/133827",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 133827,
+      "name": "denlekke",
+      "created_at": "2017-06-18T18:19:26.000Z",
+      "url": "https://greasyfork.org/users/133827-denlekke"
+    }
+  ],
+  "name": "Apple Music Quality + DL Links",
+  "description": "add quality description and dl link to apple music page",
+  "url": "https://greasyfork.org/scripts/428990-apple-music-quality-dl-links",
+  "code_url": "https://update.greasyfork.org/scripts/428990/Apple%20Music%20Quality%20%2B%20DL%20Links.user.js",
+  "code_size": 2713,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

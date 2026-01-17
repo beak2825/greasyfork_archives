@@ -1,0 +1,59 @@
+{
+  "id": 425789,
+  "daily_installs": 0,
+  "total_installs": 786,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-01T14:48:00.000Z",
+  "code_updated_at": "2021-05-01T15:21:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 757721,
+      "name": "imldy",
+      "created_at": "2021-04-12T01:48:32.000Z",
+      "url": "https://greasyfork.org/users/757721-imldy",
+      "scripts": [
+        {
+          "id": 425789,
+          "daily_installs": 0,
+          "total_installs": 786,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-05-01T14:48:00.000Z",
+          "code_updated_at": "2021-05-01T15:21:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili.com精简",
+          "description": "精简bilibili.com，对标YouTube。",
+          "url": "https://greasyfork.org/scripts/425789-bilibili-com%E7%B2%BE%E7%AE%80",
+          "code_url": "https://update.greasyfork.org/scripts/425789/bilibilicom%E7%B2%BE%E7%AE%80.user.js",
+          "code_size": 2244,
+          "license": null,
+          "version": "0.21",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili.com精简",
+  "description": "精简bilibili.com，对标YouTube。",
+  "url": "https://greasyfork.org/scripts/425789-bilibili-com%E7%B2%BE%E7%AE%80",
+  "code_url": "https://update.greasyfork.org/scripts/425789/bilibilicom%E7%B2%BE%E7%AE%80.user.js",
+  "code_size": 2244,
+  "license": null,
+  "version": "0.21",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

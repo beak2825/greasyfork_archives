@@ -1,0 +1,233 @@
+[
+  {
+    "id": 440410,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-21T17:55:13.000Z",
+    "code_updated_at": "2022-02-21T17:55:12.000Z",
+    "namespace": "https://opensea.io/WilliamSL",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10384,
+        "name": "Bob The Zealot",
+        "created_at": "2015-04-11T18:20:54.000Z",
+        "url": "https://greasyfork.org/users/10384-bob-the-zealot"
+      }
+    ],
+    "name": "OpenSea Listings Scraper",
+    "description": "Scrapes OpenSea listings",
+    "url": "https://greasyfork.org/scripts/440410-opensea-listings-scraper",
+    "code_url": "https://update.greasyfork.org/scripts/440410/OpenSea%20Listings%20Scraper.user.js",
+    "code_size": 1351,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 440383,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-21T07:46:55.000Z",
+    "code_updated_at": "2022-02-21T20:15:12.000Z",
+    "namespace": "https://opensea.io/WilliamSL",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10384,
+        "name": "Bob The Zealot",
+        "created_at": "2015-04-11T18:20:54.000Z",
+        "url": "https://greasyfork.org/users/10384-bob-the-zealot"
+      }
+    ],
+    "name": "OpenSea Rankings Scraper",
+    "description": "Scrapes OpenSea rankings",
+    "url": "https://greasyfork.org/scripts/440383-opensea-rankings-scraper",
+    "code_url": "https://update.greasyfork.org/scripts/440383/OpenSea%20Rankings%20Scraper.user.js",
+    "code_size": 6430,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432157,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-09T17:19:40.000Z",
+    "code_updated_at": "2021-09-09T17:19:40.000Z",
+    "namespace": "PapaAndreas [2169463]",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10384,
+        "name": "Bob The Zealot",
+        "created_at": "2015-04-11T18:20:54.000Z",
+        "url": "https://greasyfork.org/users/10384-bob-the-zealot"
+      }
+    ],
+    "name": "Stock Autofill",
+    "description": "Autofills the values in the stock order page of a company",
+    "url": "https://greasyfork.org/scripts/432157-stock-autofill",
+    "code_url": "https://update.greasyfork.org/scripts/432157/Stock%20Autofill.user.js",
+    "code_size": 3272,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432156,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-09T17:17:19.000Z",
+    "code_updated_at": "2021-09-09T17:17:19.000Z",
+    "namespace": "BobTheZealot",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10384,
+        "name": "Bob The Zealot",
+        "created_at": "2015-04-11T18:20:54.000Z",
+        "url": "https://greasyfork.org/users/10384-bob-the-zealot"
+      }
+    ],
+    "name": "Diva Quiz Instant Next",
+    "description": "Next",
+    "url": "https://greasyfork.org/scripts/432156-diva-quiz-instant-next",
+    "code_url": "https://update.greasyfork.org/scripts/432156/Diva%20Quiz%20Instant%20Next.user.js",
+    "code_size": 4957,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 425602,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-27T04:44:58.000Z",
+    "code_updated_at": "2021-07-19T16:59:27.000Z",
+    "namespace": "MikePence [2029670]",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10384,
+        "name": "Bob The Zealot",
+        "created_at": "2015-04-11T18:20:54.000Z",
+        "url": "https://greasyfork.org/users/10384-bob-the-zealot"
+      }
+    ],
+    "name": "Torn MP Tools",
+    "description": "Stuff",
+    "url": "https://greasyfork.org/scripts/425602-torn-mp-tools",
+    "code_url": "https://update.greasyfork.org/scripts/425602/Torn%20MP%20Tools.user.js",
+    "code_size": 17389,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 425188,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-18T03:13:50.000Z",
+    "code_updated_at": "2021-04-18T03:13:50.000Z",
+    "namespace": "https://www.torn.com/profiles.php?XID=2029670",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10384,
+        "name": "Bob The Zealot",
+        "created_at": "2015-04-11T18:20:54.000Z",
+        "url": "https://greasyfork.org/users/10384-bob-the-zealot"
+      }
+    ],
+    "name": "Torn RR New",
+    "description": "Make RR great again",
+    "url": "https://greasyfork.org/scripts/425188-torn-rr-new",
+    "code_url": "https://update.greasyfork.org/scripts/425188/Torn%20RR%20New.user.js",
+    "code_size": 5444,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 422966,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-09T21:59:17.000Z",
+    "code_updated_at": "2021-03-09T21:59:17.000Z",
+    "namespace": "MikePence [2029670]",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10384,
+        "name": "Bob The Zealot",
+        "created_at": "2015-04-11T18:20:54.000Z",
+        "url": "https://greasyfork.org/users/10384-bob-the-zealot"
+      }
+    ],
+    "name": "Torn War Bounty",
+    "description": "War bounty",
+    "url": "https://greasyfork.org/scripts/422966-torn-war-bounty",
+    "code_url": "https://update.greasyfork.org/scripts/422966/Torn%20War%20Bounty.user.js",
+    "code_size": 3557,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

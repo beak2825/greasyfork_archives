@@ -1,0 +1,33 @@
+{
+  "id": 438374,
+  "daily_installs": 0,
+  "total_installs": 58,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-11T13:31:39.000Z",
+  "code_updated_at": "2022-09-14T04:47:23.000Z",
+  "namespace": "https://github.com/community-plugins/Userscripts",
+  "support_url": "https://github.com/community-plugins/Userscripts/labels/Useful%20Forks",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 863638,
+      "name": "odnar-dev",
+      "created_at": "2022-01-11T13:30:16.000Z",
+      "url": "https://greasyfork.org/users/863638-odnar-dev"
+    }
+  ],
+  "name": "Useful Forks",
+  "description": "Displays GitHub forks ordered by stars, and with additional information and automatic filters.",
+  "url": "https://greasyfork.org/scripts/438374-useful-forks",
+  "code_url": "https://update.greasyfork.org/scripts/438374/Useful%20Forks.user.js",
+  "code_size": 16504,
+  "license": "MIT License",
+  "version": "1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

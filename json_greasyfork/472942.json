@@ -1,0 +1,59 @@
+{
+  "id": 472942,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-12T10:49:07.000Z",
+  "code_updated_at": "2023-08-12T16:58:36.000Z",
+  "namespace": "https://greasyfork.org/users/1149746",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1149746,
+      "name": "blackvoid",
+      "created_at": "2023-08-12T09:41:14.000Z",
+      "url": "https://greasyfork.org/users/1149746-blackvoid",
+      "scripts": [
+        {
+          "id": 472942,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-12T10:49:07.000Z",
+          "code_updated_at": "2023-08-12T16:58:36.000Z",
+          "namespace": "https://greasyfork.org/users/1149746",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[Lemmy] Scroll to parent comment",
+          "description": "Adds a scroll to parent comment button to nested comments when clicking the more (three dots) button on a nested comment, and a button to the parent comment to scroll back to that comment from the parent (also after clicking the parent comment more button).",
+          "url": "https://greasyfork.org/scripts/472942-lemmy-scroll-to-parent-comment",
+          "code_url": "https://update.greasyfork.org/scripts/472942/%5BLemmy%5D%20Scroll%20to%20parent%20comment.user.js",
+          "code_size": 5616,
+          "license": "GNU General Public License v3.0 only",
+          "version": "0.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[Lemmy] Scroll to parent comment",
+  "description": "Adds a scroll to parent comment button to nested comments when clicking the more (three dots) button on a nested comment, and a button to the parent comment to scroll back to that comment from the parent (also after clicking the parent comment more button).",
+  "url": "https://greasyfork.org/scripts/472942-lemmy-scroll-to-parent-comment",
+  "code_url": "https://update.greasyfork.org/scripts/472942/%5BLemmy%5D%20Scroll%20to%20parent%20comment.user.js",
+  "code_size": 5616,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

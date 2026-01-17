@@ -1,0 +1,59 @@
+{
+  "id": 483732,
+  "daily_installs": 8,
+  "total_installs": 1854,
+  "fan_score": "36.5",
+  "good_ratings": 4,
+  "ok_ratings": 1,
+  "bad_ratings": 1,
+  "created_at": "2024-01-03T02:10:35.000Z",
+  "code_updated_at": "2025-03-27T20:25:03.000Z",
+  "namespace": "snapenhance-web",
+  "support_url": "https://github.com/SnapEnhance/web/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1242486,
+      "name": "authorisation",
+      "created_at": "2024-01-03T01:51:56.000Z",
+      "url": "https://greasyfork.org/users/1242486-authorisation",
+      "scripts": [
+        {
+          "id": 483732,
+          "daily_installs": 8,
+          "total_installs": 1854,
+          "fan_score": "36.5",
+          "good_ratings": 4,
+          "ok_ratings": 1,
+          "bad_ratings": 1,
+          "created_at": "2024-01-03T02:10:35.000Z",
+          "code_updated_at": "2025-03-27T20:25:03.000Z",
+          "namespace": "snapenhance-web",
+          "support_url": "https://github.com/SnapEnhance/web/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SnapEnhance Web",
+          "description": "A userscript to Enhance the User experience on Snapchat Web",
+          "url": "https://greasyfork.org/scripts/483732-snapenhance-web",
+          "code_url": "https://update.greasyfork.org/scripts/483732/SnapEnhance%20Web.user.js",
+          "code_size": 5698,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SnapEnhance Web",
+  "description": "A userscript to Enhance the User experience on Snapchat Web",
+  "url": "https://greasyfork.org/scripts/483732-snapenhance-web",
+  "code_url": "https://update.greasyfork.org/scripts/483732/SnapEnhance%20Web.user.js",
+  "code_size": 5698,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

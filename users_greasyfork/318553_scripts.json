@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437141,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-16T11:33:03.000Z",
+    "code_updated_at": "2021-12-16T13:04:06.000Z",
+    "namespace": "https://github.com/Benzenoil/my_tampermonkey_inall",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 318553,
+        "name": "Benzenoil",
+        "created_at": "2019-07-18T00:54:38.000Z",
+        "url": "https://greasyfork.org/users/318553-benzenoil"
+      }
+    ],
+    "name": "cake cart better",
+    "description": "let cake cart better",
+    "url": "https://greasyfork.org/scripts/437141-cake-cart-better",
+    "code_url": "https://update.greasyfork.org/scripts/437141/cake%20cart%20better.user.js",
+    "code_size": 2060,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

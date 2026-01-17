@@ -1,0 +1,68 @@
+[
+  {
+    "id": 493861,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-30T15:04:54.000Z",
+    "code_updated_at": "2024-04-30T15:04:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293137,
+        "name": "Kinjaz",
+        "created_at": "2024-04-25T20:24:12.000Z",
+        "url": "https://greasyfork.org/users/1293137-kinjaz"
+      }
+    ],
+    "name": "自动输入密码123456",
+    "description": "这是一个还在测试的输入验证码功能",
+    "url": "https://greasyfork.org/scripts/493861-%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81123456",
+    "code_url": "https://update.greasyfork.org/scripts/493861/%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81123456.user.js",
+    "code_size": 1926,
+    "license": "MIT License",
+    "version": "2024年4月30日",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 493496,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T20:29:36.000Z",
+    "code_updated_at": "2024-04-30T12:26:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293137,
+        "name": "Kinjaz",
+        "created_at": "2024-04-25T20:24:12.000Z",
+        "url": "https://greasyfork.org/users/1293137-kinjaz"
+      }
+    ],
+    "name": "EA跳转到忘记密码页面",
+    "description": "这是一个帮助同事帮忙加快效率的东西",
+    "url": "https://greasyfork.org/scripts/493496-ea%E8%B7%B3%E8%BD%AC%E5%88%B0%E5%BF%98%E8%AE%B0%E5%AF%86%E7%A0%81%E9%A1%B5%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/493496/EA%E8%B7%B3%E8%BD%AC%E5%88%B0%E5%BF%98%E8%AE%B0%E5%AF%86%E7%A0%81%E9%A1%B5%E9%9D%A2.user.js",
+    "code_size": 5357,
+    "license": null,
+    "version": "2024-04-30",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

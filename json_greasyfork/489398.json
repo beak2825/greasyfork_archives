@@ -1,0 +1,33 @@
+{
+  "id": 489398,
+  "daily_installs": 0,
+  "total_installs": 95,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-09T15:10:50.000Z",
+  "code_updated_at": "2024-03-09T15:10:50.000Z",
+  "namespace": "https://greasyfork.org/users/1272292",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1272292,
+      "name": "Exciting-Desk-3678",
+      "created_at": "2024-03-09T15:00:30.000Z",
+      "url": "https://greasyfork.org/users/1272292-exciting-desk-3678"
+    }
+  ],
+  "name": "Deny google precise location question",
+  "description": "Block google precise location question popup (\"See results closer to you?\") by automatically telling it no",
+  "url": "https://greasyfork.org/scripts/489398-deny-google-precise-location-question",
+  "code_url": "https://update.greasyfork.org/scripts/489398/Deny%20google%20precise%20location%20question.user.js",
+  "code_size": 1167,
+  "license": "MIT License",
+  "version": "2024-03-08",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

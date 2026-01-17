@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466185,
+    "daily_installs": 1,
+    "total_installs": 7314,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-05-13T07:46:22.000Z",
+    "code_updated_at": "2023-05-13T07:46:22.000Z",
+    "namespace": "http://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1078297,
+        "name": "pecador_tor",
+        "created_at": "2023-05-13T07:38:00.000Z",
+        "url": "https://greasyfork.org/users/1078297-pecador-tor"
+      }
+    ],
+    "name": "Spotify ad skipper",
+    "description": "Detects and skips ads on spotify",
+    "url": "https://greasyfork.org/scripts/466185-spotify-ad-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/466185/Spotify%20ad%20skipper.user.js",
+    "code_size": 3081,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

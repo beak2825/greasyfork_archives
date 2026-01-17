@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480839,
+    "daily_installs": 0,
+    "total_installs": 389,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-11-26T19:15:43.000Z",
+    "code_updated_at": "2023-11-27T04:57:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1207103,
+        "name": "自考云课堂-批量处理",
+        "created_at": "2023-10-30T05:14:01.000Z",
+        "url": "https://greasyfork.org/users/1207103-%E8%87%AA%E8%80%83%E4%BA%91%E8%AF%BE%E5%A0%82-%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86"
+      }
+    ],
+    "name": "🦄️广东开放大学-广开-小猪手-回顾答案保存🦄️",
+    "description": "回顾答案保存，降低难度",
+    "url": "https://greasyfork.org/scripts/480839-%E5%B9%BF%E4%B8%9C%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E5%B9%BF%E5%BC%80-%E5%B0%8F%E7%8C%AA%E6%89%8B-%E5%9B%9E%E9%A1%BE%E7%AD%94%E6%A1%88%E4%BF%9D%E5%AD%98",
+    "code_url": "https://update.greasyfork.org/scripts/480839/%F0%9F%A6%84%EF%B8%8F%E5%B9%BF%E4%B8%9C%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E5%B9%BF%E5%BC%80-%E5%B0%8F%E7%8C%AA%E6%89%8B-%E5%9B%9E%E9%A1%BE%E7%AD%94%E6%A1%88%E4%BF%9D%E5%AD%98%F0%9F%A6%84%EF%B8%8F.user.js",
+    "code_size": 6941,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

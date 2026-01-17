@@ -1,0 +1,59 @@
+{
+  "id": 470836,
+  "daily_installs": 0,
+  "total_installs": 95,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-14T14:36:14.000Z",
+  "code_updated_at": "2023-07-14T14:36:14.000Z",
+  "namespace": "colinphill.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1126776,
+      "name": "Colin P. Hill",
+      "created_at": "2023-07-14T14:27:39.000Z",
+      "url": "https://greasyfork.org/users/1126776-colin-p-hill",
+      "scripts": [
+        {
+          "id": 470836,
+          "daily_installs": 0,
+          "total_installs": 95,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-14T14:36:14.000Z",
+          "code_updated_at": "2023-07-14T14:36:14.000Z",
+          "namespace": "colinphill.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Easy Breezy Fandom",
+          "description": "Automatically redirects from Fandom to various Breezewiki instances.",
+          "url": "https://greasyfork.org/scripts/470836-easy-breezy-fandom",
+          "code_url": "https://update.greasyfork.org/scripts/470836/Easy%20Breezy%20Fandom.user.js",
+          "code_size": 2906,
+          "license": "CC0",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Easy Breezy Fandom",
+  "description": "Automatically redirects from Fandom to various Breezewiki instances.",
+  "url": "https://greasyfork.org/scripts/470836-easy-breezy-fandom",
+  "code_url": "https://update.greasyfork.org/scripts/470836/Easy%20Breezy%20Fandom.user.js",
+  "code_size": 2906,
+  "license": "CC0",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

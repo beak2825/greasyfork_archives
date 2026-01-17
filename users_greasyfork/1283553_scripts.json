@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492374,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-12T17:51:03.000Z",
+    "code_updated_at": "2024-04-12T17:58:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1283553,
+        "name": "Thomas Blackwell",
+        "created_at": "2024-04-04T00:02:55.000Z",
+        "url": "https://greasyfork.org/users/1283553-thomas-blackwell"
+      }
+    ],
+    "name": "Productivity Booster",
+    "description": "Unleash your potential with this revolutionary productivity tool!",
+    "url": "https://greasyfork.org/scripts/492374-productivity-booster",
+    "code_url": "https://update.greasyfork.org/scripts/492374/Productivity%20Booster.user.js",
+    "code_size": 6621,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

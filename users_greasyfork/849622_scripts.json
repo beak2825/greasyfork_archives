@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442910,
+    "daily_installs": 0,
+    "total_installs": 142,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-04-07T02:23:08.000Z",
+    "code_updated_at": "2022-04-07T07:47:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 849622,
+        "name": "MoMingLog",
+        "created_at": "2021-12-07T04:30:20.000Z",
+        "url": "https://greasyfork.org/users/849622-mominglog"
+      }
+    ],
+    "name": "青年大学习",
+    "description": "用来获取未学习的人员名单",
+    "url": "https://greasyfork.org/scripts/442910-%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0",
+    "code_url": "https://update.greasyfork.org/scripts/442910/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0.user.js",
+    "code_size": 54714,
+    "license": "GNU GPLv3",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 471502,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-23T08:07:06.000Z",
+    "code_updated_at": "2023-07-23T08:07:05.000Z",
+    "namespace": "tolix123.github.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1133842,
+        "name": "Tolix123",
+        "created_at": "2023-07-23T07:45:52.000Z",
+        "url": "https://greasyfork.org/users/1133842-tolix123"
+      }
+    ],
+    "name": "PDF Dark Reader",
+    "description": "as the plugin name suggests, the 'PDF Dark Reader' plugin provides you a dark PDF page. Local files are not supported due to browser restrictions.",
+    "url": "https://greasyfork.org/scripts/471502-pdf-dark-reader",
+    "code_url": "https://update.greasyfork.org/scripts/471502/PDF%20Dark%20Reader.user.js",
+    "code_size": 824,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

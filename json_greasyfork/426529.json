@@ -1,0 +1,33 @@
+{
+  "id": 426529,
+  "daily_installs": 0,
+  "total_installs": 225,
+  "fan_score": "39.6",
+  "good_ratings": 3,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-05-15T15:50:57.000Z",
+  "code_updated_at": "2021-07-20T16:17:35.000Z",
+  "namespace": "https://blog.chrxw.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 719636,
+      "name": "chr233",
+      "created_at": "2020-12-22T05:17:18.000Z",
+      "url": "https://greasyfork.org/users/719636-chr233"
+    }
+  ],
+  "name": "Steam_Commit_Crypto",
+  "description": "快速加解密评测文本",
+  "url": "https://greasyfork.org/scripts/426529-steam-commit-crypto",
+  "code_url": "https://update.greasyfork.org/scripts/426529/Steam_Commit_Crypto.user.js",
+  "code_size": 12131,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "0.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

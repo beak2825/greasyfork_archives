@@ -97,5 +97,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 484985,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-16T14:03:48.000Z",
+    "code_updated_at": "2024-01-16T14:03:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 738969,
+        "name": "Meteora",
+        "created_at": "2021-02-19T16:24:13.000Z",
+        "url": "https://greasyfork.org/users/738969-meteora"
+      }
+    ],
+    "name": "google翻译快捷键聚焦输入框",
+    "description": "按 / 键聚焦到输入框",
+    "url": "https://greasyfork.org/scripts/484985-google%E7%BF%BB%E8%AF%91%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%81%9A%E7%84%A6%E8%BE%93%E5%85%A5%E6%A1%86",
+    "code_url": "https://update.greasyfork.org/scripts/484985/google%E7%BF%BB%E8%AF%91%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%81%9A%E7%84%A6%E8%BE%93%E5%85%A5%E6%A1%86.user.js",
+    "code_size": 829,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484659,
+    "daily_installs": 0,
+    "total_installs": 67,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-12T10:59:10.000Z",
+    "code_updated_at": "2024-01-12T10:59:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 738969,
+        "name": "Meteora",
+        "created_at": "2021-02-19T16:24:13.000Z",
+        "url": "https://greasyfork.org/users/738969-meteora"
+      }
+    ],
+    "name": "skrbt 磁力链接直接复制",
+    "description": "无需进入详情页即可直接复制磁力链接，仅 skrbtuo.top 域名有效",
+    "url": "https://greasyfork.org/scripts/484659-skrbt-%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5%E7%9B%B4%E6%8E%A5%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/484659/skrbt%20%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5%E7%9B%B4%E6%8E%A5%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 2058,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469636,
+    "daily_installs": 1,
+    "total_installs": 421,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-28T09:36:04.000Z",
+    "code_updated_at": "2023-09-06T14:56:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 738969,
+        "name": "Meteora",
+        "created_at": "2021-02-19T16:24:13.000Z",
+        "url": "https://greasyfork.org/users/738969-meteora"
+      }
+    ],
+    "name": "强制页面在新标签页打开",
+    "description": "强制链接在新标签页打开，脚本采用白名单的模式，在油猴自带的菜单里面控制开关",
+    "url": "https://greasyfork.org/scripts/469636-%E5%BC%BA%E5%88%B6%E9%A1%B5%E9%9D%A2%E5%9C%A8%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/469636/%E5%BC%BA%E5%88%B6%E9%A1%B5%E9%9D%A2%E5%9C%A8%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80.user.js",
+    "code_size": 3223,
+    "license": "MIT License",
+    "version": "0.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 446917,
+    "daily_installs": 0,
+    "total_installs": 96,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-23T13:57:55.000Z",
+    "code_updated_at": "2025-01-02T01:14:10.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/446917-%E5%BC%BA%E5%88%B6%E6%89%80%E6%9C%89%E9%93%BE%E6%8E%A5%E5%9C%A8%E5%BD%93%E5%89%8D%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 738969,
+        "name": "Meteora",
+        "created_at": "2021-02-19T16:24:13.000Z",
+        "url": "https://greasyfork.org/users/738969-meteora"
+      }
+    ],
+    "name": "强制所有链接在当前标签打开",
+    "description": "强制所有链接在当前标签打开，本脚本采用白名单机制，需手动点击油猴脚本的菜单生效",
+    "url": "https://greasyfork.org/scripts/446917-%E5%BC%BA%E5%88%B6%E6%89%80%E6%9C%89%E9%93%BE%E6%8E%A5%E5%9C%A8%E5%BD%93%E5%89%8D%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/446917/%E5%BC%BA%E5%88%B6%E6%89%80%E6%9C%89%E9%93%BE%E6%8E%A5%E5%9C%A8%E5%BD%93%E5%89%8D%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80.user.js",
+    "code_size": 6231,
+    "license": "MIT License",
+    "version": "0.33",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

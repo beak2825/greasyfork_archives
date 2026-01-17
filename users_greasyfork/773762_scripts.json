@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426698,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-19T07:03:46.000Z",
+    "code_updated_at": "2024-03-02T06:04:24.000Z",
+    "namespace": "jwapobie",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 773762,
+        "name": "jwapobie",
+        "created_at": "2021-05-19T06:38:43.000Z",
+        "url": "https://greasyfork.org/users/773762-jwapobie"
+      }
+    ],
+    "name": "Lichess Umineko Sound Pack",
+    "description": "Battle like a true witch with this sound pack for lichess.",
+    "url": "https://greasyfork.org/scripts/426698-lichess-umineko-sound-pack",
+    "code_url": "https://update.greasyfork.org/scripts/426698/Lichess%20Umineko%20Sound%20Pack.user.js",
+    "code_size": 3504,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

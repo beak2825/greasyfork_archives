@@ -1,0 +1,33 @@
+{
+  "id": 480695,
+  "daily_installs": 0,
+  "total_installs": 96,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-24T17:05:01.000Z",
+  "code_updated_at": "2023-11-24T17:07:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1115027,
+      "name": "Agreasyforkuser",
+      "created_at": "2023-06-29T12:11:18.000Z",
+      "url": "https://greasyfork.org/users/1115027-agreasyforkuser"
+    }
+  ],
+  "name": "Reddit Expand Everything Except Automod 🛡️",
+  "description": "automatically collapses Automod but uncollapses all other comments (only old.reddit.com)",
+  "url": "https://greasyfork.org/scripts/480695-reddit-expand-everything-except-automod",
+  "code_url": "https://update.greasyfork.org/scripts/480695/Reddit%20Expand%20Everything%20Except%20Automod%20%F0%9F%9B%A1%EF%B8%8F.user.js",
+  "code_size": 1757,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

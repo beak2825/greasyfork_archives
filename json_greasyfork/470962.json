@@ -1,0 +1,33 @@
+{
+  "id": 470962,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-16T10:21:17.000Z",
+  "code_updated_at": "2023-07-17T08:00:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 219927,
+      "name": "My1",
+      "created_at": "2018-10-17T12:00:20.000Z",
+      "url": "https://greasyfork.org/users/219927-my1"
+    }
+  ],
+  "name": "Crunchyroll Sub/Dub Filter",
+  "description": "Filter Crunchyroll Simulcast Calendar by Subs or Dubs",
+  "url": "https://greasyfork.org/scripts/470962-crunchyroll-sub-dub-filter",
+  "code_url": "https://update.greasyfork.org/scripts/470962/Crunchyroll%20SubDub%20Filter.user.js",
+  "code_size": 2024,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

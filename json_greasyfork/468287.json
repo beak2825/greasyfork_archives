@@ -1,0 +1,34 @@
+{
+  "id": 468287,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-09T10:37:47.000Z",
+  "code_updated_at": "2023-06-30T15:55:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1064385,
+      "name": "xxdamage xxdamage",
+      "created_at": "2023-04-20T19:30:03.000Z",
+      "url": "https://greasyfork.org/users/1064385-xxdamage-xxdamage",
+      "scripts": []
+    }
+  ],
+  "name": "Ofertas flash de Miravia",
+  "description": "Muestra que ofertas flash de Miravia están subidas a MC",
+  "url": "https://greasyfork.org/scripts/468287-ofertas-flash-de-miravia",
+  "code_url": "https://update.greasyfork.org/scripts/468287/Ofertas%20flash%20de%20Miravia.user.js",
+  "code_size": 10156,
+  "license": null,
+  "version": "1.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

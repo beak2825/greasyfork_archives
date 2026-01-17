@@ -1,0 +1,59 @@
+{
+  "id": 477655,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-18T06:14:54.000Z",
+  "code_updated_at": "2023-10-18T06:14:54.000Z",
+  "namespace": "https://greasyfork.org/users/1198586",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1198586,
+      "name": "xiaoheidashushu",
+      "created_at": "2023-10-18T06:07:19.000Z",
+      "url": "https://greasyfork.org/users/1198586-xiaoheidashushu",
+      "scripts": [
+        {
+          "id": 477655,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-18T06:14:54.000Z",
+          "code_updated_at": "2023-10-18T06:14:54.000Z",
+          "namespace": "https://greasyfork.org/users/1198586",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "果仁网每日签到",
+          "description": "自动刷新签到",
+          "url": "https://greasyfork.org/scripts/477655-%E6%9E%9C%E4%BB%81%E7%BD%91%E6%AF%8F%E6%97%A5%E7%AD%BE%E5%88%B0",
+          "code_url": "https://update.greasyfork.org/scripts/477655/%E6%9E%9C%E4%BB%81%E7%BD%91%E6%AF%8F%E6%97%A5%E7%AD%BE%E5%88%B0.user.js",
+          "code_size": 977,
+          "license": null,
+          "version": "1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "果仁网每日签到",
+  "description": "自动刷新签到",
+  "url": "https://greasyfork.org/scripts/477655-%E6%9E%9C%E4%BB%81%E7%BD%91%E6%AF%8F%E6%97%A5%E7%AD%BE%E5%88%B0",
+  "code_url": "https://update.greasyfork.org/scripts/477655/%E6%9E%9C%E4%BB%81%E7%BD%91%E6%AF%8F%E6%97%A5%E7%AD%BE%E5%88%B0.user.js",
+  "code_size": 977,
+  "license": null,
+  "version": "1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

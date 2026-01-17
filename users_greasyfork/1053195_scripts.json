@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463286,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-04T23:22:28.000Z",
+    "code_updated_at": "2023-04-04T23:22:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1053195,
+        "name": "PyraElysium",
+        "created_at": "2023-04-04T23:21:19.000Z",
+        "url": "https://greasyfork.org/users/1053195-pyraelysium"
+      }
+    ],
+    "name": "Replace Twitter Icon/Doge with Gormotti Pyra",
+    "description": "What it says",
+    "url": "https://greasyfork.org/scripts/463286-replace-twitter-icon-doge-with-gormotti-pyra",
+    "code_url": "https://update.greasyfork.org/scripts/463286/Replace%20Twitter%20IconDoge%20with%20Gormotti%20Pyra.user.js",
+    "code_size": 7451,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

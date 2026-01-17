@@ -1,0 +1,59 @@
+{
+  "id": 453062,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-14T16:21:39.000Z",
+  "code_updated_at": "2022-10-14T16:21:38.000Z",
+  "namespace": "whatever",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 101260,
+      "name": "ryodorei liu",
+      "created_at": "2017-02-09T13:25:25.000Z",
+      "url": "https://greasyfork.org/users/101260-ryodorei-liu",
+      "scripts": [
+        {
+          "id": 451774,
+          "daily_installs": 0,
+          "total_installs": 53,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-21T15:16:47.000Z",
+          "code_updated_at": "2023-06-23T06:24:57.000Z",
+          "namespace": "steamdb_steam_help",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "steamdb跳转至客服页面",
+          "description": "在steambd.info的app和sub页面添加steam客服页面跳转",
+          "url": "https://greasyfork.org/scripts/451774-steamdb%E8%B7%B3%E8%BD%AC%E8%87%B3%E5%AE%A2%E6%9C%8D%E9%A1%B5%E9%9D%A2",
+          "code_url": "https://update.greasyfork.org/scripts/451774/steamdb%E8%B7%B3%E8%BD%AC%E8%87%B3%E5%AE%A2%E6%9C%8D%E9%A1%B5%E9%9D%A2.user.js",
+          "code_size": 2507,
+          "license": null,
+          "version": "0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Steam - Old Auth",
+  "description": "none",
+  "url": "https://greasyfork.org/scripts/453062-steam-old-auth",
+  "code_url": "https://update.greasyfork.org/scripts/453062/Steam%20-%20Old%20Auth.user.js",
+  "code_size": 819,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

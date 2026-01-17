@@ -1,0 +1,34 @@
+{
+  "id": 431326,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-25T06:01:07.000Z",
+  "code_updated_at": "2021-11-20T19:20:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 808346,
+      "name": "Dimitri Seaborn",
+      "created_at": "2021-08-25T05:57:14.000Z",
+      "url": "https://greasyfork.org/users/808346-dimitri-seaborn",
+      "scripts": []
+    }
+  ],
+  "name": "Mini search box for docs",
+  "description": "Press alt + m or click the arrow to get a smaller search box in google docs when doing an advanced search (search and remplace/use regular expressions)",
+  "url": "https://greasyfork.org/scripts/431326-mini-search-box-for-docs",
+  "code_url": "https://update.greasyfork.org/scripts/431326/Mini%20search%20box%20for%20docs.user.js",
+  "code_size": 4223,
+  "license": null,
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

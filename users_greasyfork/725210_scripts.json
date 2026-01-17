@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419903,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-08T17:18:04.000Z",
+    "code_updated_at": "2021-01-08T20:20:48.000Z",
+    "namespace": "https://greasyfork.org/users/725210",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725210,
+        "name": "DaniConD",
+        "created_at": "2021-01-08T16:00:26.000Z",
+        "url": "https://greasyfork.org/users/725210-danicond"
+      }
+    ],
+    "name": "PoE Trade fuzzy search",
+    "description": "Prepends '~' to all filter searches. Type a space ' ' before a search to use non-fuzzy search.",
+    "url": "https://greasyfork.org/scripts/419903-poe-trade-fuzzy-search",
+    "code_url": "https://update.greasyfork.org/scripts/419903/PoE%20Trade%20fuzzy%20search.user.js",
+    "code_size": 916,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

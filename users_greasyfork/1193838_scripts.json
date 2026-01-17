@@ -64,5 +64,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 486666,
+    "daily_installs": 0,
+    "total_installs": 149,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-05T08:20:13.000Z",
+    "code_updated_at": "2024-02-10T12:12:40.000Z",
+    "namespace": "m-youtube-com-allow-background-play",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1193838,
+        "name": "hlorand",
+        "created_at": "2023-10-12T00:37:53.000Z",
+        "url": "https://greasyfork.org/users/1193838-hlorand"
+      }
+    ],
+    "name": "m.YouTube.com allow background play TEST SCRIPT",
+    "description": "Allows m.YouTube.com background play, especially useful for iPhone users",
+    "url": "https://greasyfork.org/scripts/486666-m-youtube-com-allow-background-play-test-script",
+    "code_url": "https://update.greasyfork.org/scripts/486666/mYouTubecom%20allow%20background%20play%20TEST%20SCRIPT.user.js",
+    "code_size": 2632,
+    "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477524,
+    "daily_installs": 1,
+    "total_installs": 136,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-16T11:29:57.000Z",
+    "code_updated_at": "2024-02-10T12:11:10.000Z",
+    "namespace": "m-youtube-com-auto-fullcreen-on-rotate",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1193838,
+        "name": "hlorand",
+        "created_at": "2023-10-12T00:37:53.000Z",
+        "url": "https://greasyfork.org/users/1193838-hlorand"
+      }
+    ],
+    "name": "m.YouTube.com auto fullscreen on rotate",
+    "description": "Switches the video to full-screen mode when you rotate your smart device",
+    "url": "https://greasyfork.org/scripts/477524-m-youtube-com-auto-fullscreen-on-rotate",
+    "code_url": "https://update.greasyfork.org/scripts/477524/mYouTubecom%20auto%20fullscreen%20on%20rotate.user.js",
+    "code_size": 1527,
+    "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477219,
+    "daily_installs": 0,
+    "total_installs": 386,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-12T00:59:36.000Z",
+    "code_updated_at": "2025-01-01T14:01:34.000Z",
+    "namespace": "m-youtube-com-quality-change-buttons",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1193838,
+        "name": "hlorand",
+        "created_at": "2023-10-12T00:37:53.000Z",
+        "url": "https://greasyfork.org/users/1193838-hlorand"
+      }
+    ],
+    "name": "YouTube.com quality change buttons (Mobile / Desktop)",
+    "description": "Adds quality change buttons below the video (144p, 240p, 360p, 480p, 720p, 1080p...) works on mobile (m.youtube.com) and on desktop.",
+    "url": "https://greasyfork.org/scripts/477219-youtube-com-quality-change-buttons-mobile-desktop",
+    "code_url": "https://update.greasyfork.org/scripts/477219/YouTubecom%20quality%20change%20buttons%20%28Mobile%20%20Desktop%29.user.js",
+    "code_size": 3769,
+    "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "1.14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477218,
+    "daily_installs": 0,
+    "total_installs": 233,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-12T00:52:35.000Z",
+    "code_updated_at": "2025-01-01T14:01:18.000Z",
+    "namespace": "m-youtube-com-more-playback-speeds",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1193838,
+        "name": "hlorand",
+        "created_at": "2023-10-12T00:37:53.000Z",
+        "url": "https://greasyfork.org/users/1193838-hlorand"
+      }
+    ],
+    "name": "YouTube.com more playback speeds (Mobile / Desktop)",
+    "description": "Adds 2.25x 2.5x 2.75x 3x speed buttons below the video. Works on mobile, tablet (m.youtube.com) and on desktop.",
+    "url": "https://greasyfork.org/scripts/477218-youtube-com-more-playback-speeds-mobile-desktop",
+    "code_url": "https://update.greasyfork.org/scripts/477218/YouTubecom%20more%20playback%20speeds%20%28Mobile%20%20Desktop%29.user.js",
+    "code_size": 3392,
+    "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "1.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

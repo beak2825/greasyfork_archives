@@ -1,0 +1,59 @@
+{
+  "id": 432272,
+  "daily_installs": 0,
+  "total_installs": 208,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2021-09-12T02:25:26.000Z",
+  "code_updated_at": "2021-09-13T03:26:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 814500,
+      "name": "Unkownname",
+      "created_at": "2021-09-11T23:15:03.000Z",
+      "url": "https://greasyfork.org/users/814500-unkownname",
+      "scripts": [
+        {
+          "id": 432272,
+          "daily_installs": 0,
+          "total_installs": 208,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2021-09-12T02:25:26.000Z",
+          "code_updated_at": "2021-09-13T03:26:03.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google Play Redeem",
+          "description": "Fake Google Play Card Redeem",
+          "url": "https://greasyfork.org/scripts/432272-google-play-redeem",
+          "code_url": "https://update.greasyfork.org/scripts/432272/Google%20Play%20Redeem.user.js",
+          "code_size": 13810,
+          "license": null,
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google Play Redeem",
+  "description": "Fake Google Play Card Redeem",
+  "url": "https://greasyfork.org/scripts/432272-google-play-redeem",
+  "code_url": "https://update.greasyfork.org/scripts/432272/Google%20Play%20Redeem.user.js",
+  "code_size": 13810,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 440364,
+    "daily_installs": 0,
+    "total_installs": 96,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-20T23:03:41.000Z",
+    "code_updated_at": "2022-02-21T00:07:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 877508,
+        "name": "Gi11i4m",
+        "created_at": "2022-02-17T08:59:05.000Z",
+        "url": "https://greasyfork.org/users/877508-gi11i4m"
+      }
+    ],
+    "name": "YouTube float video",
+    "description": "Float YouTube videos on scroll",
+    "url": "https://greasyfork.org/scripts/440364-youtube-float-video",
+    "code_url": "https://update.greasyfork.org/scripts/440364/YouTube%20float%20video.user.js",
+    "code_size": 7237,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440365,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-20T23:03:41.000Z",
+    "code_updated_at": "2022-02-20T23:03:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 877508,
+        "name": "Gi11i4m",
+        "created_at": "2022-02-17T08:59:05.000Z",
+        "url": "https://greasyfork.org/users/877508-gi11i4m"
+      }
+    ],
+    "name": "YouTube mark all as read",
+    "description": "Mark all subscriptions as read in one click",
+    "url": "https://greasyfork.org/scripts/440365-youtube-mark-all-as-read",
+    "code_url": "https://update.greasyfork.org/scripts/440365/YouTube%20mark%20all%20as%20read.user.js",
+    "code_size": 7781,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

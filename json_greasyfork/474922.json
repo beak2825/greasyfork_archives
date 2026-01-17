@@ -1,0 +1,33 @@
+{
+  "id": 474922,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-09T20:27:02.000Z",
+  "code_updated_at": "2023-09-10T01:50:38.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1169776,
+      "name": "MxMossy",
+      "created_at": "2023-09-09T20:20:05.000Z",
+      "url": "https://greasyfork.org/users/1169776-mxmossy"
+    }
+  ],
+  "name": "Jstris table sort",
+  "description": "add sorting to tables",
+  "url": "https://greasyfork.org/scripts/474922-jstris-table-sort",
+  "code_url": "https://update.greasyfork.org/scripts/474922/Jstris%20table%20sort.user.js",
+  "code_size": 1807,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

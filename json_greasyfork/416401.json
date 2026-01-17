@@ -1,0 +1,59 @@
+{
+  "id": 416401,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-19T15:48:09.000Z",
+  "code_updated_at": "2020-11-19T15:48:09.000Z",
+  "namespace": "salembeats",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 36708,
+      "name": "klyde",
+      "created_at": "2016-04-02T11:01:21.000Z",
+      "url": "https://greasyfork.org/users/36708-klyde",
+      "scripts": [
+        {
+          "id": 416402,
+          "daily_installs": 0,
+          "total_installs": 32,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-19T16:03:48.000Z",
+          "code_updated_at": "2020-11-19T16:03:48.000Z",
+          "namespace": "salembeats",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "mTurk Parent Window Command Accepter",
+          "description": "Updated for the Worker-only (no WWW) world.",
+          "url": "https://greasyfork.org/scripts/416402-mturk-parent-window-command-accepter",
+          "code_url": "https://update.greasyfork.org/scripts/416402/mTurk%20Parent%20Window%20Command%20Accepter.user.js",
+          "code_size": 2760,
+          "license": null,
+          "version": "2.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "mTurk Frame->Parent Interface Library",
+  "description": "Library to make it easier to send messages to mTurk parent windows from the worker iFrames.",
+  "url": "https://greasyfork.org/scripts/416401-mturk-frame-parent-interface-library",
+  "code_url": "https://update.greasyfork.org/scripts/416401/mTurk%20Frame-%3EParent%20Interface%20Library.user.js",
+  "code_size": 6564,
+  "license": null,
+  "version": "5.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 478016,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-22T17:36:16.000Z",
+  "code_updated_at": "2023-10-22T17:40:06.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 847611,
+      "name": "RedTTG",
+      "created_at": "2021-12-02T11:35:59.000Z",
+      "url": "https://greasyfork.org/users/847611-redttg"
+    }
+  ],
+  "name": "Shkolo fake",
+  "description": "22/10/2023, 18:50:05",
+  "url": "https://greasyfork.org/scripts/478016-shkolo-fake",
+  "code_url": "https://update.greasyfork.org/scripts/478016/Shkolo%20fake.user.js",
+  "code_size": 1909,
+  "license": null,
+  "version": "1.1",
+  "locale": "bg",
+  "deleted": false,
+  "visibility": "public"
+}

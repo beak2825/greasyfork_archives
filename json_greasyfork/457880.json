@@ -1,0 +1,59 @@
+{
+  "id": 457880,
+  "daily_installs": 0,
+  "total_installs": 60,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-09T01:40:39.000Z",
+  "code_updated_at": "2023-01-09T01:40:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 945353,
+      "name": "Natriumchlorid",
+      "created_at": "2022-08-11T12:22:48.000Z",
+      "url": "https://greasyfork.org/users/945353-natriumchlorid",
+      "scripts": [
+        {
+          "id": 457880,
+          "daily_installs": 0,
+          "total_installs": 60,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-09T01:40:39.000Z",
+          "code_updated_at": "2023-01-09T01:40:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "编程猫反劫持脚本",
+          "description": "编程猫反帖子劫持脚本",
+          "url": "https://greasyfork.org/scripts/457880-%E7%BC%96%E7%A8%8B%E7%8C%AB%E5%8F%8D%E5%8A%AB%E6%8C%81%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/457880/%E7%BC%96%E7%A8%8B%E7%8C%AB%E5%8F%8D%E5%8A%AB%E6%8C%81%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 835,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "编程猫反劫持脚本",
+  "description": "编程猫反帖子劫持脚本",
+  "url": "https://greasyfork.org/scripts/457880-%E7%BC%96%E7%A8%8B%E7%8C%AB%E5%8F%8D%E5%8A%AB%E6%8C%81%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/457880/%E7%BC%96%E7%A8%8B%E7%8C%AB%E5%8F%8D%E5%8A%AB%E6%8C%81%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 835,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

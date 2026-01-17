@@ -1,0 +1,35 @@
+[
+  {
+    "id": 479258,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-07T18:18:44.000Z",
+    "code_updated_at": "2023-11-07T18:18:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1212935,
+        "name": "anonimuslegion",
+        "created_at": "2023-11-07T18:08:47.000Z",
+        "url": "https://greasyfork.org/users/1212935-anonimuslegion"
+      }
+    ],
+    "name": "2ch-thread-list",
+    "description": "thread list instead of board list for 2ch",
+    "url": "https://greasyfork.org/scripts/479258-2ch-thread-list",
+    "code_url": "https://update.greasyfork.org/scripts/479258/2ch-thread-list.user.js",
+    "code_size": 2427,
+    "license": "GNU GPL",
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

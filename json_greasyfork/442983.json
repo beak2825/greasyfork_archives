@@ -1,0 +1,34 @@
+{
+  "id": 442983,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-08T12:27:16.000Z",
+  "code_updated_at": "2022-04-08T12:27:15.000Z",
+  "namespace": "https://greasyfork.org/users/897898",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 897898,
+      "name": "chenjiahui66",
+      "created_at": "2022-04-05T01:37:54.000Z",
+      "url": "https://greasyfork.org/users/897898-chenjiahui66",
+      "scripts": []
+    }
+  ],
+  "name": "CSGO饰品价格对比脚本",
+  "description": "将各个CSGO饰品交易平台的价格放在一起显示，省去打开多个网页的繁琐操作！",
+  "url": "https://greasyfork.org/scripts/442983-csgo%E9%A5%B0%E5%93%81%E4%BB%B7%E6%A0%BC%E5%AF%B9%E6%AF%94%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/442983/CSGO%E9%A5%B0%E5%93%81%E4%BB%B7%E6%A0%BC%E5%AF%B9%E6%AF%94%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 29798,
+  "license": "MIT License",
+  "version": "1.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

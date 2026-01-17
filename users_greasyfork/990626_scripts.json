@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455814,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-02T00:52:32.000Z",
+    "code_updated_at": "2022-12-02T00:52:31.000Z",
+    "namespace": "color",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 990626,
+        "name": "ckpro",
+        "created_at": "2022-12-01T09:01:16.000Z",
+        "url": "https://greasyfork.org/users/990626-ckpro"
+      }
+    ],
+    "name": "fuck grayscale",
+    "description": "移除网页公祭日效果",
+    "url": "https://greasyfork.org/scripts/455814-grayscale",
+    "code_url": "https://update.greasyfork.org/scripts/455814/fuck%20grayscale.user.js",
+    "code_size": 1470,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

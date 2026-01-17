@@ -1,0 +1,101 @@
+[
+  {
+    "id": 491328,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-31T11:54:24.000Z",
+    "code_updated_at": "2024-04-06T11:05:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093833,
+        "name": "IAM03K",
+        "created_at": "2023-06-08T07:43:28.000Z",
+        "url": "https://greasyfork.org/users/1093833-iam03k"
+      }
+    ],
+    "name": "mail-download",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/491328-mail-download",
+    "code_url": "https://update.greasyfork.org/scripts/491328/mail-download.user.js",
+    "code_size": 1923,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 482186,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-14T10:41:52.000Z",
+    "code_updated_at": "2023-12-14T10:41:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093833,
+        "name": "IAM03K",
+        "created_at": "2023-06-08T07:43:28.000Z",
+        "url": "https://greasyfork.org/users/1093833-iam03k"
+      }
+    ],
+    "name": "tapd-extensions-for-chenyq",
+    "description": "extensions",
+    "url": "https://greasyfork.org/scripts/482186-tapd-extensions-for-chenyq",
+    "code_url": "https://update.greasyfork.org/scripts/482186/tapd-extensions-for-chenyq.user.js",
+    "code_size": 5010,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 468694,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-15T03:20:02.000Z",
+    "code_updated_at": "2023-06-15T03:27:48.000Z",
+    "namespace": "judicial service",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093833,
+        "name": "IAM03K",
+        "created_at": "2023-06-08T07:43:28.000Z",
+        "url": "https://greasyfork.org/users/1093833-iam03k"
+      }
+    ],
+    "name": "judicial service",
+    "description": "a judicial service",
+    "url": "https://greasyfork.org/scripts/468694-judicial-service",
+    "code_url": "https://update.greasyfork.org/scripts/468694/judicial%20service.user.js",
+    "code_size": 1310,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

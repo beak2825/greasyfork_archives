@@ -30,6 +30,72 @@
     "version": "0.1.20240902",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 433009,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-27T00:04:28.000Z",
+    "code_updated_at": "2021-09-27T00:04:28.000Z",
+    "namespace": "https://greasyfork.org/users/433510",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433510,
+        "name": "lingyer",
+        "created_at": "2020-01-09T00:04:20.000Z",
+        "url": "https://greasyfork.org/users/433510-lingyer"
+      }
+    ],
+    "name": "中石化网络学院自动保存",
+    "description": "每二十分钟自动保存中石化网络学院学习进度",
+    "url": "https://greasyfork.org/scripts/433009-%E4%B8%AD%E7%9F%B3%E5%8C%96%E7%BD%91%E7%BB%9C%E5%AD%A6%E9%99%A2%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98",
+    "code_url": "https://update.greasyfork.org/scripts/433009/%E4%B8%AD%E7%9F%B3%E5%8C%96%E7%BD%91%E7%BB%9C%E5%AD%A6%E9%99%A2%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98.user.js",
+    "code_size": 619,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412191,
+    "daily_installs": 0,
+    "total_installs": 116,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-29T03:59:41.000Z",
+    "code_updated_at": "2020-12-12T22:37:30.000Z",
+    "namespace": "https://greasyfork.org/users/433510",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433510,
+        "name": "lingyer",
+        "created_at": "2020-01-09T00:04:20.000Z",
+        "url": "https://greasyfork.org/users/433510-lingyer"
+      }
+    ],
+    "name": "河洛农场-手机用",
+    "description": "限定河洛论坛专用，自动种植农场，纯脚本版，手机可用",
+    "url": "https://greasyfork.org/scripts/412191-%E6%B2%B3%E6%B4%9B%E5%86%9C%E5%9C%BA-%E6%89%8B%E6%9C%BA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/412191/%E6%B2%B3%E6%B4%9B%E5%86%9C%E5%9C%BA-%E6%89%8B%E6%9C%BA%E7%94%A8.user.js",
+    "code_size": 10067,
+    "license": null,
+    "version": "0.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

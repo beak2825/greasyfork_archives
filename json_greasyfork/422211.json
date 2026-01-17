@@ -1,0 +1,34 @@
+{
+  "id": 422211,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-23T19:42:43.000Z",
+  "code_updated_at": "2021-02-23T19:43:53.000Z",
+  "namespace": "caidenblockalwaysrickroll",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 740460,
+      "name": "CaidenBlock",
+      "created_at": "2021-02-23T19:40:34.000Z",
+      "url": "https://greasyfork.org/users/740460-caidenblock",
+      "scripts": []
+    }
+  ],
+  "name": "Always Rickroll",
+  "description": "Replaces the url of any links to rick astley never gonna give you up",
+  "url": "https://greasyfork.org/scripts/422211-always-rickroll",
+  "code_url": "https://update.greasyfork.org/scripts/422211/Always%20Rickroll.user.js",
+  "code_size": 1398,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

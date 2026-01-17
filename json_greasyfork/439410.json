@@ -1,0 +1,59 @@
+{
+  "id": 439410,
+  "daily_installs": 0,
+  "total_installs": 63,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-31T10:00:39.000Z",
+  "code_updated_at": "2025-10-20T09:18:04.000Z",
+  "namespace": "moduon",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 871344,
+      "name": "Shide",
+      "created_at": "2022-01-31T09:48:59.000Z",
+      "url": "https://greasyfork.org/users/871344-shide",
+      "scripts": [
+        {
+          "id": 439410,
+          "daily_installs": 0,
+          "total_installs": 63,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-31T10:00:39.000Z",
+          "code_updated_at": "2025-10-20T09:18:04.000Z",
+          "namespace": "moduon",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OdooTasksLinks",
+          "description": "Adds some features on github.com, gitlab.com, moduon.team, loom.com and youtube.com to integrate it with Moduon Team and Odoo (Odoo v18+)",
+          "url": "https://greasyfork.org/scripts/439410-odootaskslinks",
+          "code_url": "https://update.greasyfork.org/scripts/439410/OdooTasksLinks.user.js",
+          "code_size": 6558,
+          "license": null,
+          "version": "18.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OdooTasksLinks",
+  "description": "Adds some features on github.com, gitlab.com, moduon.team, loom.com and youtube.com to integrate it with Moduon Team and Odoo (Odoo v18+)",
+  "url": "https://greasyfork.org/scripts/439410-odootaskslinks",
+  "code_url": "https://update.greasyfork.org/scripts/439410/OdooTasksLinks.user.js",
+  "code_size": 6558,
+  "license": null,
+  "version": "18.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

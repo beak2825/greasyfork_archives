@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474017,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-27T12:57:48.000Z",
+    "code_updated_at": "2023-08-28T00:57:48.000Z",
+    "namespace": "https://github.com/julyrunt/userscripts/blob/main/Hide%20Twitter%20Promotion%20Tweets/Hide%20Twitter%20Promotion%20Tweets.js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1160437,
+        "name": "julyrunt",
+        "created_at": "2023-08-27T05:44:34.000Z",
+        "url": "https://greasyfork.org/users/1160437-julyrunt"
+      }
+    ],
+    "name": "Hide Twitter Promotion Tweets",
+    "description": "Check and hide tweets containing promotional icons every 0.5 seconds.",
+    "url": "https://greasyfork.org/scripts/474017-hide-twitter-promotion-tweets",
+    "code_url": "https://update.greasyfork.org/scripts/474017/Hide%20Twitter%20Promotion%20Tweets.user.js",
+    "code_size": 1578,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

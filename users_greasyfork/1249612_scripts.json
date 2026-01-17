@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485157,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-18T12:38:48.000Z",
+    "code_updated_at": "2024-01-18T12:38:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1249612,
+        "name": "hsl313",
+        "created_at": "2024-01-18T01:48:03.000Z",
+        "url": "https://greasyfork.org/users/1249612-hsl313"
+      }
+    ],
+    "name": "统计月报表插件",
+    "description": "将URL中指定参数的值替换为新的值",
+    "url": "https://greasyfork.org/scripts/485157-%E7%BB%9F%E8%AE%A1%E6%9C%88%E6%8A%A5%E8%A1%A8%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/485157/%E7%BB%9F%E8%AE%A1%E6%9C%88%E6%8A%A5%E8%A1%A8%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 1203,
+    "license": "heshenglong313@163.com",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

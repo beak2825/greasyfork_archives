@@ -1,0 +1,33 @@
+{
+  "id": 442728,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-04T11:41:41.000Z",
+  "code_updated_at": "2022-04-04T11:41:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 797290,
+      "name": "panandaQ",
+      "created_at": "2021-07-26T08:13:08.000Z",
+      "url": "https://greasyfork.org/users/797290-panandaq"
+    }
+  ],
+  "name": "在qq中点击链接自动跳转到目标网址",
+  "description": "省去复制,点击QQ中的网址,在提示页面会跳转目标网址",
+  "url": "https://greasyfork.org/scripts/442728-%E5%9C%A8qq%E4%B8%AD%E7%82%B9%E5%87%BB%E9%93%BE%E6%8E%A5%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E5%88%B0%E7%9B%AE%E6%A0%87%E7%BD%91%E5%9D%80",
+  "code_url": "https://update.greasyfork.org/scripts/442728/%E5%9C%A8qq%E4%B8%AD%E7%82%B9%E5%87%BB%E9%93%BE%E6%8E%A5%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E5%88%B0%E7%9B%AE%E6%A0%87%E7%BD%91%E5%9D%80.user.js",
+  "code_size": 742,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

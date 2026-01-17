@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495143,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-16T09:56:12.000Z",
+    "code_updated_at": "2024-05-16T10:00:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199995,
+        "name": "bchooxg",
+        "created_at": "2023-10-20T03:34:07.000Z",
+        "url": "https://greasyfork.org/users/1199995-bchooxg"
+      }
+    ],
+    "name": "Prevent Automatic Logout",
+    "description": "No logout",
+    "url": "https://greasyfork.org/scripts/495143-prevent-automatic-logout",
+    "code_url": "https://update.greasyfork.org/scripts/495143/Prevent%20Automatic%20Logout.user.js",
+    "code_size": 1773,
+    "license": "MIT License",
+    "version": "2024-05-16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 477818,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-20T03:38:11.000Z",
+    "code_updated_at": "2023-12-26T17:21:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199995,
+        "name": "bchooxg",
+        "created_at": "2023-10-20T03:34:07.000Z",
+        "url": "https://greasyfork.org/users/1199995-bchooxg"
+      }
+    ],
+    "name": "HDB Flat Availability",
+    "description": "Script to get the current available / taken flats for HDB BTO Selection",
+    "url": "https://greasyfork.org/scripts/477818-hdb-flat-availability",
+    "code_url": "https://update.greasyfork.org/scripts/477818/HDB%20Flat%20Availability.user.js",
+    "code_size": 9074,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

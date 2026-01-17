@@ -1,0 +1,33 @@
+{
+  "id": 459039,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-29T02:05:54.000Z",
+  "code_updated_at": "2023-01-29T02:05:54.000Z",
+  "namespace": "Glen",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 950827,
+      "name": "y734451909",
+      "created_at": "2022-08-26T01:38:44.000Z",
+      "url": "https://greasyfork.org/users/950827-y734451909"
+    }
+  ],
+  "name": "修改网页标题脚本",
+  "description": "语雀、CSDN标题修改",
+  "url": "https://greasyfork.org/scripts/459039-%E4%BF%AE%E6%94%B9%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/459039/%E4%BF%AE%E6%94%B9%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 2190,
+  "license": "End-User License Agreement",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

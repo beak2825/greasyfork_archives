@@ -1,0 +1,101 @@
+[
+  {
+    "id": 468738,
+    "daily_installs": 0,
+    "total_installs": 287,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-15T14:37:50.000Z",
+    "code_updated_at": "2024-02-17T15:51:15.000Z",
+    "namespace": "https://github.com/hymccord",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 953403,
+        "name": "hymccord",
+        "created_at": "2022-09-01T15:23:24.000Z",
+        "url": "https://greasyfork.org/users/953403-hymccord"
+      }
+    ],
+    "name": "Bountiful Beanstalk HUD Enhancer",
+    "description": "Enhance the Bountiful Beanstalk HUD with useful information!",
+    "url": "https://greasyfork.org/scripts/468738-bountiful-beanstalk-hud-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/468738/Bountiful%20Beanstalk%20HUD%20Enhancer.user.js",
+    "code_size": 54071,
+    "license": null,
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461319,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-06T16:42:04.000Z",
+    "code_updated_at": "2023-03-06T22:05:02.000Z",
+    "namespace": "http://github.com/hymccord",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 953403,
+        "name": "hymccord",
+        "created_at": "2022-09-01T15:23:24.000Z",
+        "url": "https://greasyfork.org/users/953403-hymccord"
+      }
+    ],
+    "name": "MouseHunt - Fix HUD Shadow",
+    "description": "Can't unsee the weird shadow? Now you can!",
+    "url": "https://greasyfork.org/scripts/461319-mousehunt-fix-hud-shadow",
+    "code_url": "https://update.greasyfork.org/scripts/461319/MouseHunt%20-%20Fix%20HUD%20Shadow.user.js",
+    "code_size": 1734,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 459989,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-14T04:06:52.000Z",
+    "code_updated_at": "2023-03-31T13:49:19.000Z",
+    "namespace": "https://github.com/hymccord",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 953403,
+        "name": "hymccord",
+        "created_at": "2022-09-01T15:23:24.000Z",
+        "url": "https://greasyfork.org/users/953403-hymccord"
+      }
+    ],
+    "name": "MouseHunt - Mass Convertible Submit",
+    "description": "Add button to open many convertibles one-by-one so MHCT can record singles.",
+    "url": "https://greasyfork.org/scripts/459989-mousehunt-mass-convertible-submit",
+    "code_url": "https://update.greasyfork.org/scripts/459989/MouseHunt%20-%20Mass%20Convertible%20Submit.user.js",
+    "code_size": 7660,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

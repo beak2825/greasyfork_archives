@@ -1,0 +1,34 @@
+{
+  "id": 489164,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-06T13:50:36.000Z",
+  "code_updated_at": "2024-03-16T15:05:38.000Z",
+  "namespace": "nexterot",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1134791,
+      "name": "nexterot",
+      "created_at": "2023-07-24T12:54:34.000Z",
+      "url": "https://greasyfork.org/users/1134791-nexterot",
+      "scripts": []
+    }
+  ],
+  "name": "Статистика по кузнецам",
+  "description": "Статистика по клановым кузнецам",
+  "url": "https://greasyfork.org/scripts/489164-%D1%81%D1%82%D0%B0%D1%82%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B0-%D0%BF%D0%BE-%D0%BA%D1%83%D0%B7%D0%BD%D0%B5%D1%86%D0%B0%D0%BC",
+  "code_url": "https://update.greasyfork.org/scripts/489164/%D0%A1%D1%82%D0%B0%D1%82%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B0%20%D0%BF%D0%BE%20%D0%BA%D1%83%D0%B7%D0%BD%D0%B5%D1%86%D0%B0%D0%BC.user.js",
+  "code_size": 8851,
+  "license": "MIT License",
+  "version": "2.0.2",
+  "locale": "sr",
+  "deleted": false,
+  "visibility": "public"
+}

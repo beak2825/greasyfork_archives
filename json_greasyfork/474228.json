@@ -1,0 +1,34 @@
+{
+  "id": 474228,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-30T15:43:29.000Z",
+  "code_updated_at": "2023-08-30T15:43:29.000Z",
+  "namespace": "mexc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 676705,
+      "name": "lanhaha",
+      "created_at": "2020-08-16T12:58:18.000Z",
+      "url": "https://greasyfork.org/users/676705-lanhaha",
+      "scripts": []
+    }
+  ],
+  "name": "Mexc助手 - client",
+  "description": "Mexc Helper",
+  "url": "https://greasyfork.org/scripts/474228-mexc%E5%8A%A9%E6%89%8B-client",
+  "code_url": "https://update.greasyfork.org/scripts/474228/Mexc%E5%8A%A9%E6%89%8B%20-%20client.user.js",
+  "code_size": 47535,
+  "license": "MIT License",
+  "version": "2.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

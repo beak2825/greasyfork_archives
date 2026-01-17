@@ -96,6 +96,171 @@
     "version": "0.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 493480,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-25T15:17:21.000Z",
+    "code_updated_at": "2024-04-25T15:18:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1071832,
+        "name": "Ronald Cochic",
+        "created_at": "2023-05-02T14:41:26.000Z",
+        "url": "https://greasyfork.org/users/1071832-ronald-cochic"
+      }
+    ],
+    "name": "Prolific Daily Earnings Counter",
+    "description": "Add up money values from Prolific earnings",
+    "url": "https://greasyfork.org/scripts/493480-prolific-daily-earnings-counter",
+    "code_url": "https://update.greasyfork.org/scripts/493480/Prolific%20Daily%20Earnings%20Counter.user.js",
+    "code_size": 3699,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 471227,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-19T20:49:36.000Z",
+    "code_updated_at": "2023-07-19T20:50:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1071832,
+        "name": "Ronald Cochic",
+        "created_at": "2023-05-02T14:41:26.000Z",
+        "url": "https://greasyfork.org/users/1071832-ronald-cochic"
+      }
+    ],
+    "name": "Highlight Hourly Rates on Prolific",
+    "description": "Highlight hourly rates based on their values.",
+    "url": "https://greasyfork.org/scripts/471227-highlight-hourly-rates-on-prolific",
+    "code_url": "https://update.greasyfork.org/scripts/471227/Highlight%20Hourly%20Rates%20on%20Prolific.user.js",
+    "code_size": 1813,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467098,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-25T15:01:28.000Z",
+    "code_updated_at": "2023-05-25T15:01:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1071832,
+        "name": "Ronald Cochic",
+        "created_at": "2023-05-02T14:41:26.000Z",
+        "url": "https://greasyfork.org/users/1071832-ronald-cochic"
+      }
+    ],
+    "name": "Cloud Connect New Project Alert Voice",
+    "description": "Scans the page every 4000ms and plays a voice that say \"New task on Cloud connect\" if the words \"New Project\" are detected anywhere on the page",
+    "url": "https://greasyfork.org/scripts/467098-cloud-connect-new-project-alert-voice",
+    "code_url": "https://update.greasyfork.org/scripts/467098/Cloud%20Connect%20New%20Project%20Alert%20Voice.user.js",
+    "code_size": 690,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467096,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-25T14:55:35.000Z",
+    "code_updated_at": "2023-06-01T14:44:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1071832,
+        "name": "Ronald Cochic",
+        "created_at": "2023-05-02T14:41:26.000Z",
+        "url": "https://greasyfork.org/users/1071832-ronald-cochic"
+      }
+    ],
+    "name": "Copy Mturk ID to Clipboard Button",
+    "description": "Adds a copy to clipboard button in the upper right corner of the page",
+    "url": "https://greasyfork.org/scripts/467096-copy-mturk-id-to-clipboard-button",
+    "code_url": "https://update.greasyfork.org/scripts/467096/Copy%20Mturk%20ID%20to%20Clipboard%20Button.user.js",
+    "code_size": 1433,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467095,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-25T14:50:27.000Z",
+    "code_updated_at": "2023-06-01T14:46:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1071832,
+        "name": "Ronald Cochic",
+        "created_at": "2023-05-02T14:41:26.000Z",
+        "url": "https://greasyfork.org/users/1071832-ronald-cochic"
+      }
+    ],
+    "name": "Copy Prolific ID to clipboard Button",
+    "description": "Adds a copy to clipboard button in the upper right corner of the page",
+    "url": "https://greasyfork.org/scripts/467095-copy-prolific-id-to-clipboard-button",
+    "code_url": "https://update.greasyfork.org/scripts/467095/Copy%20Prolific%20ID%20to%20clipboard%20Button.user.js",
+    "code_size": 1442,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

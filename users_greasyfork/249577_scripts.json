@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427085,
+    "daily_installs": 0,
+    "total_installs": 147,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-27T05:55:26.000Z",
+    "code_updated_at": "2021-05-27T05:58:57.000Z",
+    "namespace": "https://greasyfork.org/users/249577",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 249577,
+        "name": "Janemon",
+        "created_at": "2019-02-24T11:37:02.000Z",
+        "url": "https://greasyfork.org/users/249577-janemon"
+      }
+    ],
+    "name": "谷歌搜索+百度（极简）",
+    "description": "google with baidu",
+    "url": "https://greasyfork.org/scripts/427085-%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2-%E7%99%BE%E5%BA%A6-%E6%9E%81%E7%AE%80",
+    "code_url": "https://update.greasyfork.org/scripts/427085/%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%2B%E7%99%BE%E5%BA%A6%EF%BC%88%E6%9E%81%E7%AE%80%EF%BC%89.user.js",
+    "code_size": 1239,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

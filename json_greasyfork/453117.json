@@ -1,0 +1,33 @@
+{
+  "id": 453117,
+  "daily_installs": 0,
+  "total_installs": 69,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-15T16:57:40.000Z",
+  "code_updated_at": "2022-10-15T18:12:24.000Z",
+  "namespace": "https://atcoder.jp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 610617,
+      "name": "magurofly",
+      "created_at": "2020-06-19T20:07:51.000Z",
+      "url": "https://greasyfork.org/users/610617-magurofly"
+    }
+  ],
+  "name": "AtCoder Efficient Layout",
+  "description": "入力形式やサンプルを横並びにします。",
+  "url": "https://greasyfork.org/scripts/453117-atcoder-efficient-layout",
+  "code_url": "https://update.greasyfork.org/scripts/453117/AtCoder%20Efficient%20Layout.user.js",
+  "code_size": 3666,
+  "license": "CC0-1.0 Universal",
+  "version": "0.3",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

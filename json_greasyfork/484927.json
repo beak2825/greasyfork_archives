@@ -1,0 +1,59 @@
+{
+  "id": 484927,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-15T16:24:30.000Z",
+  "code_updated_at": "2024-08-20T21:00:59.000Z",
+  "namespace": "https://forum.hr-rp.ru/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1248549,
+      "name": "Skalnikov",
+      "created_at": "2024-01-15T16:16:17.000Z",
+      "url": "https://greasyfork.org/users/1248549-skalnikov",
+      "scripts": [
+        {
+          "id": 484927,
+          "daily_installs": 0,
+          "total_installs": 41,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-15T16:24:30.000Z",
+          "code_updated_at": "2024-08-20T21:00:59.000Z",
+          "namespace": "https://forum.hr-rp.ru/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "hr-admin tools",
+          "description": "HR-Tools - скрипт предназначенный для модерации форума forum.hr-rp.ru. Сделано Takumi_Saito - vk.com/williamwolves.",
+          "url": "https://greasyfork.org/scripts/484927-hr-admin-tools",
+          "code_url": "https://update.greasyfork.org/scripts/484927/hr-admin%20tools.user.js",
+          "code_size": 53887,
+          "license": "MIT License",
+          "version": "1.6.",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "hr-admin tools",
+  "description": "HR-Tools - скрипт предназначенный для модерации форума forum.hr-rp.ru. Сделано Takumi_Saito - vk.com/williamwolves.",
+  "url": "https://greasyfork.org/scripts/484927-hr-admin-tools",
+  "code_url": "https://update.greasyfork.org/scripts/484927/hr-admin%20tools.user.js",
+  "code_size": 53887,
+  "license": "MIT License",
+  "version": "1.6.",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

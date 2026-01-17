@@ -1,0 +1,59 @@
+{
+  "id": 491455,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-02T04:05:12.000Z",
+  "code_updated_at": "2024-04-02T04:05:12.000Z",
+  "namespace": "https://greasyfork.org/users/1077492",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1282727,
+      "name": "Instrument Player",
+      "created_at": "2024-04-02T03:57:39.000Z",
+      "url": "https://greasyfork.org/users/1282727-instrument-player",
+      "scripts": [
+        {
+          "id": 491456,
+          "daily_installs": 1,
+          "total_installs": 246,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-02T04:14:07.000Z",
+          "code_updated_at": "2024-04-02T04:14:07.000Z",
+          "namespace": "https://greasyfork.org/users/1077492",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Character Selector",
+          "description": "Summon  any character in a normal chat",
+          "url": "https://greasyfork.org/scripts/491456-character-selector",
+          "code_url": "https://update.greasyfork.org/scripts/491456/Character%20Selector.user.js",
+          "code_size": 16867,
+          "license": null,
+          "version": "1.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Character Selector",
+  "description": "Summon  any character in a normal chat",
+  "url": "https://greasyfork.org/scripts/491455-character-selector",
+  "code_url": "https://update.greasyfork.org/scripts/491455/Character%20Selector.user.js",
+  "code_size": 16867,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

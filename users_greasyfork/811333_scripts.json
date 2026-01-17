@@ -1,0 +1,35 @@
+[
+  {
+    "id": 431784,
+    "daily_installs": 0,
+    "total_installs": 384,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-02T05:42:32.000Z",
+    "code_updated_at": "2021-09-10T03:01:40.000Z",
+    "namespace": "http://v1.xianbao.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811333,
+        "name": "Jeffer Xue",
+        "created_at": "2021-09-02T05:39:41.000Z",
+        "url": "https://greasyfork.org/users/811333-jeffer-xue"
+      }
+    ],
+    "name": "赚吧简化插件",
+    "description": "变成在线浏览文档界面",
+    "url": "https://greasyfork.org/scripts/431784-%E8%B5%9A%E5%90%A7%E7%AE%80%E5%8C%96%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/431784/%E8%B5%9A%E5%90%A7%E7%AE%80%E5%8C%96%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 69855,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

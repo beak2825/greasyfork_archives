@@ -1,0 +1,33 @@
+{
+  "id": 427115,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-27T14:35:59.000Z",
+  "code_updated_at": "2021-05-27T14:42:42.000Z",
+  "namespace": "http://172.20.2.205/ctas/student.htm/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 776846,
+      "name": "lomirus",
+      "created_at": "2021-05-27T14:25:11.000Z",
+      "url": "https://greasyfork.org/users/776846-lomirus"
+    }
+  ],
+  "name": "Copy Code From CQUPT Code Question Lib",
+  "description": "Copy code from CQUPT code question lib",
+  "url": "https://greasyfork.org/scripts/427115-copy-code-from-cqupt-code-question-lib",
+  "code_url": "https://update.greasyfork.org/scripts/427115/Copy%20Code%20From%20CQUPT%20Code%20Question%20Lib.user.js",
+  "code_size": 1676,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

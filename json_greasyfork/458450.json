@@ -1,0 +1,59 @@
+{
+  "id": 458450,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-17T19:30:04.000Z",
+  "code_updated_at": "2023-01-18T07:11:02.000Z",
+  "namespace": "cc QA",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1013552,
+      "name": "Oleg Konev",
+      "created_at": "2023-01-17T19:26:34.000Z",
+      "url": "https://greasyfork.org/users/1013552-oleg-konev",
+      "scripts": [
+        {
+          "id": 467573,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-31T13:56:56.000Z",
+          "code_updated_at": "2023-06-01T08:02:05.000Z",
+          "namespace": "cc QA",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Show Logger State",
+          "description": "Show Logger State in div block",
+          "url": "https://greasyfork.org/scripts/467573-show-logger-state",
+          "code_url": "https://update.greasyfork.org/scripts/467573/Show%20Logger%20State.user.js",
+          "code_size": 729,
+          "license": null,
+          "version": "1.5",
+          "locale": "da",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Show BalanceUsageMode input",
+  "description": "unhide and set border to BalanceUsageMode input",
+  "url": "https://greasyfork.org/scripts/458450-show-balanceusagemode-input",
+  "code_url": "https://update.greasyfork.org/scripts/458450/Show%20BalanceUsageMode%20input.user.js",
+  "code_size": 702,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

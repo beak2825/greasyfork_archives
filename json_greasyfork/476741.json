@@ -1,0 +1,34 @@
+{
+  "id": 476741,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-05T06:04:04.000Z",
+  "code_updated_at": "2024-02-19T01:16:15.000Z",
+  "namespace": "https://greasyfork.org/users/1126115",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1126115,
+      "name": "何伟铭",
+      "created_at": "2023-07-14T01:33:43.000Z",
+      "url": "https://greasyfork.org/users/1126115-%E4%BD%95%E4%BC%9F%E9%93%AD",
+      "scripts": []
+    }
+  ],
+  "name": "TEMU商家中心弹窗关闭",
+  "description": "👆👆👆👆👆👆👆 - 自动关闭TEMU商家中心弹窗",
+  "url": "https://greasyfork.org/scripts/476741-temu%E5%95%86%E5%AE%B6%E4%B8%AD%E5%BF%83%E5%BC%B9%E7%AA%97%E5%85%B3%E9%97%AD",
+  "code_url": "https://update.greasyfork.org/scripts/476741/TEMU%E5%95%86%E5%AE%B6%E4%B8%AD%E5%BF%83%E5%BC%B9%E7%AA%97%E5%85%B3%E9%97%AD.user.js",
+  "code_size": 3373,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "0.1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 443198,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-11T15:35:28.000Z",
+  "code_updated_at": "2022-06-29T14:38:14.000Z",
+  "namespace": "https://github.com/TentacleTenticals",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 900401,
+      "name": "TentacleTenticals",
+      "created_at": "2022-04-10T18:10:03.000Z",
+      "url": "https://greasyfork.org/users/900401-tentacletenticals"
+    }
+  ],
+  "name": "DTF.ru. Show me avatars (NEW)",
+  "description": "Показ аватарок пользователей, а также копирование ссылки на аватарку. Курсор на аватарку и Ctrl для её показа, или Ctrl+Shift для копирования URL ссылки в буфер обмена.",
+  "url": "https://greasyfork.org/scripts/443198-dtf-ru-show-me-avatars-new",
+  "code_url": "https://update.greasyfork.org/scripts/443198/DTFru%20Show%20me%20avatars%20%28NEW%29.user.js",
+  "code_size": 16762,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

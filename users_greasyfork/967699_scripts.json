@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 481188,
+    "daily_installs": 1,
+    "total_installs": 1365,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2023-12-01T19:24:18.000Z",
+    "code_updated_at": "2024-04-13T19:02:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 967699,
+        "name": "TheKatDev2",
+        "created_at": "2022-10-07T23:27:43.000Z",
+        "url": "https://greasyfork.org/users/967699-thekatdev2"
+      }
+    ],
+    "name": "TikTok video downloader (broken)",
+    "description": "Downloads videos from TikTok without the watermark.",
+    "url": "https://greasyfork.org/scripts/481188-tiktok-video-downloader-broken",
+    "code_url": "https://update.greasyfork.org/scripts/481188/TikTok%20video%20downloader%20%28broken%29.user.js",
+    "code_size": 5475,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

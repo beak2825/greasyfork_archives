@@ -1,0 +1,34 @@
+{
+  "id": 459405,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-03T20:14:58.000Z",
+  "code_updated_at": "2023-03-08T12:35:38.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 898174,
+      "name": "Dragon278",
+      "created_at": "2022-04-05T15:23:52.000Z",
+      "url": "https://greasyfork.org/users/898174-dragon278",
+      "scripts": []
+    }
+  ],
+  "name": "Lofrein and Marvanov Squad",
+  "description": "Always remember who you are!",
+  "url": "https://greasyfork.org/scripts/459405-lofrein-and-marvanov-squad",
+  "code_url": "https://update.greasyfork.org/scripts/459405/Lofrein%20and%20Marvanov%20Squad.user.js",
+  "code_size": 115879,
+  "license": "MIT License",
+  "version": "beta 2.32",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 461681,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-12T07:35:19.000Z",
+  "code_updated_at": "2023-03-12T07:35:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1040213,
+      "name": "layvv",
+      "created_at": "2023-03-11T05:38:01.000Z",
+      "url": "https://greasyfork.org/users/1040213-layvv",
+      "scripts": [
+        {
+          "id": 461681,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-12T07:35:19.000Z",
+          "code_updated_at": "2023-03-12T07:35:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili视频时长统计",
+          "description": "none",
+          "url": "https://greasyfork.org/scripts/461681-bilibili%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%E7%BB%9F%E8%AE%A1",
+          "code_url": "https://update.greasyfork.org/scripts/461681/bilibili%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%E7%BB%9F%E8%AE%A1.user.js",
+          "code_size": 4933,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili视频时长统计",
+  "description": "none",
+  "url": "https://greasyfork.org/scripts/461681-bilibili%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%E7%BB%9F%E8%AE%A1",
+  "code_url": "https://update.greasyfork.org/scripts/461681/bilibili%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF%E7%BB%9F%E8%AE%A1.user.js",
+  "code_size": 4933,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

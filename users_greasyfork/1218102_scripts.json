@@ -1,0 +1,68 @@
+[
+  {
+    "id": 484812,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-14T09:47:33.000Z",
+    "code_updated_at": "2024-01-14T09:47:33.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218102,
+        "name": "Todo Pertin",
+        "created_at": "2023-11-15T16:18:41.000Z",
+        "url": "https://greasyfork.org/users/1218102-todo-pertin"
+      }
+    ],
+    "name": "Disable Auto-Refresh on Indian Express",
+    "description": "This script can be used to disable the auto-refresh feature of The Indian Express",
+    "url": "https://greasyfork.org/scripts/484812-disable-auto-refresh-on-indian-express",
+    "code_url": "https://update.greasyfork.org/scripts/484812/Disable%20Auto-Refresh%20on%20Indian%20Express.user.js",
+    "code_size": 578,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 479978,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-15T16:24:40.000Z",
+    "code_updated_at": "2023-11-15T18:53:53.000Z",
+    "namespace": "http://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218102,
+        "name": "Todo Pertin",
+        "created_at": "2023-11-15T16:18:41.000Z",
+        "url": "https://greasyfork.org/users/1218102-todo-pertin"
+      }
+    ],
+    "name": "Element Hider for The Indian Express and The Hindu",
+    "description": "Hides ad placeholders and empty ads on The Indian Express and The Hindu",
+    "url": "https://greasyfork.org/scripts/479978-element-hider-for-the-indian-express-and-the-hindu",
+    "code_url": "https://update.greasyfork.org/scripts/479978/Element%20Hider%20for%20The%20Indian%20Express%20and%20The%20Hindu.user.js",
+    "code_size": 1503,
+    "license": "GNU GPLv3",
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

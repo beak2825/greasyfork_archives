@@ -1,0 +1,34 @@
+{
+  "id": 433184,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-30T00:02:55.000Z",
+  "code_updated_at": "2021-09-30T00:02:54.000Z",
+  "namespace": "twitter.com/Amgm_life",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 818324,
+      "name": "ぱらす",
+      "created_at": "2021-09-23T13:25:23.000Z",
+      "url": "https://greasyfork.org/users/818324-%E3%81%B1%E3%82%89%E3%81%99",
+      "scripts": []
+    }
+  ],
+  "name": "Amgm_Script{Twitter}",
+  "description": "HomeTLの自動更新, ユーザー詳細ページでユーザーのメタデータを取得, ツイ時刻を表示",
+  "url": "https://greasyfork.org/scripts/433184-amgm-script-twitter",
+  "code_url": "https://update.greasyfork.org/scripts/433184/Amgm_Script%7BTwitter%7D.user.js",
+  "code_size": 11318,
+  "license": null,
+  "version": "0.4.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

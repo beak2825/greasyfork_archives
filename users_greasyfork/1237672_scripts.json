@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482870,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-22T08:35:29.000Z",
+    "code_updated_at": "2023-12-22T10:22:55.000Z",
+    "namespace": "https://greasyfork.org/users/1237672",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1237672,
+        "name": "AveAcVale",
+        "created_at": "2023-12-22T08:34:51.000Z",
+        "url": "https://greasyfork.org/users/1237672-aveacvale"
+      }
+    ],
+    "name": "Моя страница",
+    "description": "Добавляет кнопку \"Моя страница\" справа от \"Сообщения\". Требуется редактирование скрипта под себя.",
+    "url": "https://greasyfork.org/scripts/482870-%D0%BC%D0%BE%D1%8F-%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/482870/%D0%9C%D0%BE%D1%8F%20%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0.user.js",
+    "code_size": 1653,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "0.2",
+    "locale": "sr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

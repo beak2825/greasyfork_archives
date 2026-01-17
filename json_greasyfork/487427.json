@@ -1,0 +1,59 @@
+{
+  "id": 487427,
+  "daily_installs": 0,
+  "total_installs": 156,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2024-02-16T01:50:37.000Z",
+  "code_updated_at": "2024-02-19T19:56:00.000Z",
+  "namespace": "Pampas",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1219667,
+      "name": "redteamtest woo",
+      "created_at": "2023-11-18T13:16:33.000Z",
+      "url": "https://greasyfork.org/users/1219667-redteamtest-woo",
+      "scripts": [
+        {
+          "id": 487427,
+          "daily_installs": 0,
+          "total_installs": 156,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2024-02-16T01:50:37.000Z",
+          "code_updated_at": "2024-02-19T19:56:00.000Z",
+          "namespace": "Pampas",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Stocks Info",
+          "description": "Fetch Torn stocks information using API and display adjusted profit/loss percentage as a list on the stocks page with manual and automatic refresh",
+          "url": "https://greasyfork.org/scripts/487427-torn-stocks-info",
+          "code_url": "https://update.greasyfork.org/scripts/487427/Torn%20Stocks%20Info.user.js",
+          "code_size": 7028,
+          "license": null,
+          "version": "1.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn Stocks Info",
+  "description": "Fetch Torn stocks information using API and display adjusted profit/loss percentage as a list on the stocks page with manual and automatic refresh",
+  "url": "https://greasyfork.org/scripts/487427-torn-stocks-info",
+  "code_url": "https://update.greasyfork.org/scripts/487427/Torn%20Stocks%20Info.user.js",
+  "code_size": 7028,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

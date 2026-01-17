@@ -1,0 +1,68 @@
+[
+  {
+    "id": 460191,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-17T13:08:14.000Z",
+    "code_updated_at": "2023-04-12T14:59:30.000Z",
+    "namespace": "https://github.com/lucascudo/otdc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 712729,
+        "name": "lucascudo",
+        "created_at": "2020-12-04T13:59:22.000Z",
+        "url": "https://greasyfork.org/users/712729-lucascudo"
+      }
+    ],
+    "name": "Oracle Timecard Day Counter",
+    "description": "Shows the sum of selected timecards in days",
+    "url": "https://greasyfork.org/scripts/460191-oracle-timecard-day-counter",
+    "code_url": "https://update.greasyfork.org/scripts/460191/Oracle%20Timecard%20Day%20Counter.user.js",
+    "code_size": 1387,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417871,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-04T14:01:56.000Z",
+    "code_updated_at": "2020-12-04T14:04:53.000Z",
+    "namespace": "https://github.com/lucascudo/myrealvida.monkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 712729,
+        "name": "lucascudo",
+        "created_at": "2020-12-04T13:59:22.000Z",
+        "url": "https://greasyfork.org/users/712729-lucascudo"
+      }
+    ],
+    "name": "myrealvida.monkey",
+    "description": "Facilite sua vida ao acessar https://myrealvida.pt/ com este script para Greasemonkey ou Tampermonkey!.",
+    "url": "https://greasyfork.org/scripts/417871-myrealvida-monkey",
+    "code_url": "https://update.greasyfork.org/scripts/417871/myrealvidamonkey.user.js",
+    "code_size": 1668,
+    "license": null,
+    "version": "1.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

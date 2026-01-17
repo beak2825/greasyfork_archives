@@ -1,0 +1,35 @@
+[
+  {
+    "id": 469131,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-21T06:54:50.000Z",
+    "code_updated_at": "2023-06-21T07:06:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1107794,
+        "name": "meituan",
+        "created_at": "2023-06-21T06:42:42.000Z",
+        "url": "https://greasyfork.org/users/1107794-meituan"
+      }
+    ],
+    "name": "奥狐美团酒店",
+    "description": "获取美团酒店文本测试",
+    "url": "https://greasyfork.org/scripts/469131-%E5%A5%A5%E7%8B%90%E7%BE%8E%E5%9B%A2%E9%85%92%E5%BA%97",
+    "code_url": "https://update.greasyfork.org/scripts/469131/%E5%A5%A5%E7%8B%90%E7%BE%8E%E5%9B%A2%E9%85%92%E5%BA%97.user.js",
+    "code_size": 386,
+    "license": "MIT License",
+    "version": "1.2.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 467178,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-26T20:45:05.000Z",
+    "code_updated_at": "2023-05-26T20:47:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 920231,
+        "name": "Vyatcheslav Ganin",
+        "created_at": "2022-05-30T12:49:07.000Z",
+        "url": "https://greasyfork.org/users/920231-vyatcheslav-ganin"
+      }
+    ],
+    "name": "Zetflix Downloader",
+    "description": "Добавляет кнопку \"Скачать\" для сайта zetflix.online...",
+    "url": "https://greasyfork.org/scripts/467178-zetflix-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/467178/Zetflix%20Downloader.user.js",
+    "code_size": 947,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445763,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-30T12:50:59.000Z",
+    "code_updated_at": "2022-05-30T12:50:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 920231,
+        "name": "Vyatcheslav Ganin",
+        "created_at": "2022-05-30T12:49:07.000Z",
+        "url": "https://greasyfork.org/users/920231-vyatcheslav-ganin"
+      }
+    ],
+    "name": "VK Get VK Users Profiles",
+    "description": "Описание скрипта",
+    "url": "https://greasyfork.org/scripts/445763-vk-get-vk-users-profiles",
+    "code_url": "https://update.greasyfork.org/scripts/445763/VK%20Get%20VK%20Users%20Profiles.user.js",
+    "code_size": 2346,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

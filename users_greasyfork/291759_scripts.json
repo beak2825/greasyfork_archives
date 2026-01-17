@@ -1,0 +1,68 @@
+[
+  {
+    "id": 425560,
+    "daily_installs": 0,
+    "total_installs": 725,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-26T01:27:41.000Z",
+    "code_updated_at": "2021-04-26T01:27:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 291759,
+        "name": "Apex",
+        "created_at": "2019-04-13T08:39:56.000Z",
+        "url": "https://greasyfork.org/users/291759-apex"
+      }
+    ],
+    "name": "Zombs.io Populations",
+    "description": "Population of the entire game and each region",
+    "url": "https://greasyfork.org/scripts/425560-zombs-io-populations",
+    "code_url": "https://update.greasyfork.org/scripts/425560/Zombsio%20Populations.user.js",
+    "code_size": 1038,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416061,
+    "daily_installs": 0,
+    "total_installs": 2718,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-13T23:42:34.000Z",
+    "code_updated_at": "2023-01-05T09:19:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 291759,
+        "name": "Apex",
+        "created_at": "2019-04-13T08:39:56.000Z",
+        "url": "https://greasyfork.org/users/291759-apex"
+      }
+    ],
+    "name": "Zombs.io Zoom",
+    "description": "Zoom",
+    "url": "https://greasyfork.org/scripts/416061-zombs-io-zoom",
+    "code_url": "https://update.greasyfork.org/scripts/416061/Zombsio%20Zoom.user.js",
+    "code_size": 1227,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

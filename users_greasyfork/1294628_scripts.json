@@ -1,0 +1,35 @@
+[
+  {
+    "id": 493742,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-29T07:35:46.000Z",
+    "code_updated_at": "2024-04-29T15:27:06.000Z",
+    "namespace": "https://github.com/analit1538",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1294628,
+        "name": "analit1538",
+        "created_at": "2024-04-29T06:56:51.000Z",
+        "url": "https://greasyfork.org/users/1294628-analit1538"
+      }
+    ],
+    "name": "Helper",
+    "description": "for a happy admin.",
+    "url": "https://greasyfork.org/scripts/493742-helper",
+    "code_url": "https://update.greasyfork.org/scripts/493742/Helper.user.js",
+    "code_size": 4004,
+    "license": null,
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

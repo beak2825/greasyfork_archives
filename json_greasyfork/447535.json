@@ -1,0 +1,34 @@
+{
+  "id": 447535,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-07T03:30:44.000Z",
+  "code_updated_at": "2022-07-07T03:30:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 703560,
+      "name": "vk2211",
+      "created_at": "2020-11-10T08:17:47.000Z",
+      "url": "https://greasyfork.org/users/703560-vk2211",
+      "scripts": []
+    }
+  ],
+  "name": "HioVideo Helper",
+  "description": "help you better to pass the video",
+  "url": "https://greasyfork.org/scripts/447535-hiovideo-helper",
+  "code_url": "https://update.greasyfork.org/scripts/447535/HioVideo%20Helper.user.js",
+  "code_size": 2352,
+  "license": "GPLv3",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

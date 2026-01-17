@@ -1,0 +1,35 @@
+[
+  {
+    "id": 469102,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-20T20:53:44.000Z",
+    "code_updated_at": "2023-06-20T21:37:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1107518,
+        "name": "piotrek96",
+        "created_at": "2023-06-20T20:17:34.000Z",
+        "url": "https://greasyfork.org/users/1107518-piotrek96"
+      }
+    ],
+    "name": "Jira comments sort order switcher",
+    "description": "Ensures natural (i.e. Oldest first) sort order of comments in Jira (v9+) issues",
+    "url": "https://greasyfork.org/scripts/469102-jira-comments-sort-order-switcher",
+    "code_url": "https://update.greasyfork.org/scripts/469102/Jira%20comments%20sort%20order%20switcher.user.js",
+    "code_size": 3640,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

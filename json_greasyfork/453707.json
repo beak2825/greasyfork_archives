@@ -1,0 +1,34 @@
+{
+  "id": 453707,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-25T14:02:20.000Z",
+  "code_updated_at": "2023-11-22T02:01:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 975099,
+      "name": "路过打酱油",
+      "created_at": "2022-10-25T13:27:06.000Z",
+      "url": "https://greasyfork.org/users/975099-%E8%B7%AF%E8%BF%87%E6%89%93%E9%85%B1%E6%B2%B9",
+      "scripts": []
+    }
+  ],
+  "name": "青骄第二课堂自动登录和知识竞赛自动答题（通吃版）",
+  "description": "青骄第二课堂自动登录和知识竞赛自动答题",
+  "url": "https://greasyfork.org/scripts/453707-%E9%9D%92%E9%AA%84%E7%AC%AC%E4%BA%8C%E8%AF%BE%E5%A0%82%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E5%92%8C%E7%9F%A5%E8%AF%86%E7%AB%9E%E8%B5%9B%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E9%80%9A%E5%90%83%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/453707/%E9%9D%92%E9%AA%84%E7%AC%AC%E4%BA%8C%E8%AF%BE%E5%A0%82%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E5%92%8C%E7%9F%A5%E8%AF%86%E7%AB%9E%E8%B5%9B%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%EF%BC%88%E9%80%9A%E5%90%83%E7%89%88%EF%BC%89.user.js",
+  "code_size": 41793,
+  "license": "MIT License",
+  "version": "0.13",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

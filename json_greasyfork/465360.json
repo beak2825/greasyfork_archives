@@ -1,0 +1,59 @@
+{
+  "id": 465360,
+  "daily_installs": 0,
+  "total_installs": 116,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-02T08:53:07.000Z",
+  "code_updated_at": "2023-05-02T08:53:07.000Z",
+  "namespace": "https://synthetic.garden",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 302480,
+      "name": "twilightsparkle",
+      "created_at": "2019-05-16T22:49:21.000Z",
+      "url": "https://greasyfork.org/users/302480-twilightsparkle",
+      "scripts": [
+        {
+          "id": 465360,
+          "daily_installs": 0,
+          "total_installs": 116,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-02T08:53:07.000Z",
+          "code_updated_at": "2023-05-02T08:53:07.000Z",
+          "namespace": "https://synthetic.garden",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "I want mo scrubs",
+          "description": "A scrub is the act of skipping through a track for free",
+          "url": "https://greasyfork.org/scripts/465360-i-want-mo-scrubs",
+          "code_url": "https://update.greasyfork.org/scripts/465360/I%20want%20mo%20scrubs.user.js",
+          "code_size": 1791,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "I want mo scrubs",
+  "description": "A scrub is the act of skipping through a track for free",
+  "url": "https://greasyfork.org/scripts/465360-i-want-mo-scrubs",
+  "code_url": "https://update.greasyfork.org/scripts/465360/I%20want%20mo%20scrubs.user.js",
+  "code_size": 1791,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

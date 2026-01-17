@@ -1,0 +1,33 @@
+{
+  "id": 427360,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-01T13:39:34.000Z",
+  "code_updated_at": "2021-06-01T13:39:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 701043,
+      "name": "xkcdjerry",
+      "created_at": "2020-11-03T14:35:23.000Z",
+      "url": "https://greasyfork.org/users/701043-xkcdjerry"
+    }
+  ],
+  "name": "xkcdjerry Cheater",
+  "description": "xkcdjerry屎名了，tcl！！！",
+  "url": "https://greasyfork.org/scripts/427360-xkcdjerry-cheater",
+  "code_url": "https://update.greasyfork.org/scripts/427360/xkcdjerry%20Cheater.user.js",
+  "code_size": 1186,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

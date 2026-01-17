@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481151,
+    "daily_installs": 0,
+    "total_installs": 145,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-01T07:07:53.000Z",
+    "code_updated_at": "2023-12-01T07:10:18.000Z",
+    "namespace": "https://github.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 704746,
+        "name": "beijiyouyu",
+        "created_at": "2020-11-13T15:38:11.000Z",
+        "url": "https://greasyfork.org/users/704746-beijiyouyu"
+      }
+    ],
+    "name": "HideImages",
+    "description": "hide web images",
+    "url": "https://greasyfork.org/scripts/481151-hideimages",
+    "code_url": "https://update.greasyfork.org/scripts/481151/HideImages.user.js",
+    "code_size": 3008,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

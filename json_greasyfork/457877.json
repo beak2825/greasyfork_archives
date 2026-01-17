@@ -1,0 +1,59 @@
+{
+  "id": 457877,
+  "daily_installs": 0,
+  "total_installs": 539,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-01-09T00:17:32.000Z",
+  "code_updated_at": "2023-01-16T21:21:38.000Z",
+  "namespace": "Inellok Labs.",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 860794,
+      "name": "Inellok",
+      "created_at": "2022-01-03T19:41:01.000Z",
+      "url": "https://greasyfork.org/users/860794-inellok",
+      "scripts": [
+        {
+          "id": 457877,
+          "daily_installs": 0,
+          "total_installs": 539,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-01-09T00:17:32.000Z",
+          "code_updated_at": "2023-01-16T21:21:38.000Z",
+          "namespace": "Inellok Labs.",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Arras.io Chat",
+          "description": "Use Right Shift button to enable/disable chat",
+          "url": "https://greasyfork.org/scripts/457877-arras-io-chat",
+          "code_url": "https://update.greasyfork.org/scripts/457877/Arrasio%20Chat.user.js",
+          "code_size": 5852,
+          "license": "MIT License",
+          "version": "2.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Arras.io Chat",
+  "description": "Use Right Shift button to enable/disable chat",
+  "url": "https://greasyfork.org/scripts/457877-arras-io-chat",
+  "code_url": "https://update.greasyfork.org/scripts/457877/Arrasio%20Chat.user.js",
+  "code_size": 5852,
+  "license": "MIT License",
+  "version": "2.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

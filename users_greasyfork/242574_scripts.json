@@ -31,5 +31,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 448252,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-21T18:44:18.000Z",
+    "code_updated_at": "2023-04-07T18:47:16.000Z",
+    "namespace": "V2EX Redirect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 242574,
+        "name": "uJZk",
+        "created_at": "2019-01-27T18:50:53.000Z",
+        "url": "https://greasyfork.org/users/242574-ujzk"
+      }
+    ],
+    "name": "V2EX 重定向",
+    "description": "v2ex.com 重定向至 www.v2ex.com",
+    "url": "https://greasyfork.org/scripts/448252-v2ex-%E9%87%8D%E5%AE%9A%E5%90%91",
+    "code_url": "https://update.greasyfork.org/scripts/448252/V2EX%20%E9%87%8D%E5%AE%9A%E5%90%91.user.js",
+    "code_size": 347,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 443548,
+    "daily_installs": 0,
+    "total_installs": 4215,
+    "fan_score": "4.6",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 3,
+    "created_at": "2022-04-18T04:13:10.000Z",
+    "code_updated_at": "2023-10-22T21:13:30.000Z",
+    "namespace": "Chegg Search Always See All",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 242574,
+        "name": "uJZk",
+        "created_at": "2019-01-27T18:50:53.000Z",
+        "url": "https://greasyfork.org/users/242574-ujzk"
+      }
+    ],
+    "name": "Chegg Search Always See All",
+    "description": "Automatically add \"contentType=study\" to show all result of Solutions in search page.",
+    "url": "https://greasyfork.org/scripts/443548-chegg-search-always-see-all",
+    "code_url": "https://update.greasyfork.org/scripts/443548/Chegg%20Search%20Always%20See%20All.user.js",
+    "code_size": 846,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438331,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-10T22:14:21.000Z",
+    "code_updated_at": "2022-01-10T23:49:47.000Z",
+    "namespace": "YouTube Embedded Player Replace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 242574,
+        "name": "uJZk",
+        "created_at": "2019-01-27T18:50:53.000Z",
+        "url": "https://greasyfork.org/users/242574-ujzk"
+      }
+    ],
+    "name": "YouTube Embedded Player Replace",
+    "description": "Replace \"youtube-nocookie.com\" to \"www.youtube.com\" for a better experience.",
+    "url": "https://greasyfork.org/scripts/438331-youtube-embedded-player-replace",
+    "code_url": "https://update.greasyfork.org/scripts/438331/YouTube%20Embedded%20Player%20Replace.user.js",
+    "code_size": 466,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421931,
+    "daily_installs": 0,
+    "total_installs": 751,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-18T08:40:06.000Z",
+    "code_updated_at": "2023-10-27T23:37:51.000Z",
+    "namespace": "Bilibili Embedded Player Replace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 242574,
+        "name": "uJZk",
+        "created_at": "2019-01-27T18:50:53.000Z",
+        "url": "https://greasyfork.org/users/242574-ujzk"
+      }
+    ],
+    "name": "哔哩哔哩（bilibili）内嵌播放器替换",
+    "description": "替换哔哩哔哩（bilibili）内嵌播放器以支持 1080P 及更高分辨率。",
+    "url": "https://greasyfork.org/scripts/421931-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-bilibili-%E5%86%85%E5%B5%8C%E6%92%AD%E6%94%BE%E5%99%A8%E6%9B%BF%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/421931/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%EF%BC%88bilibili%EF%BC%89%E5%86%85%E5%B5%8C%E6%92%AD%E6%94%BE%E5%99%A8%E6%9B%BF%E6%8D%A2.user.js",
+    "code_size": 564,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

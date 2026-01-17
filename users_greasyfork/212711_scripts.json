@@ -163,5 +163,170 @@
     "locale": "zh-TW",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 486082,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-30T18:04:28.000Z",
+    "code_updated_at": "2024-01-30T19:22:01.000Z",
+    "namespace": "https://userstyles.world/user/hollen9",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 212711,
+        "name": "hollen9",
+        "created_at": "2018-09-13T13:51:54.000Z",
+        "url": "https://greasyfork.org/users/212711-hollen9"
+      }
+    ],
+    "name": "AWBW: Color-Blinded-Friendly Status Icon",
+    "description": "Make respective status icon unique shape that looks just like discord",
+    "url": "https://greasyfork.org/scripts/486082-awbw-color-blinded-friendly-status-icon",
+    "code_url": "https://update.greasyfork.org/scripts/486082/AWBW%3A%20Color-Blinded-Friendly%20Status%20Icon.user.css",
+    "code_size": 1544,
+    "license": "MIT License",
+    "version": "20240130.19.14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486080,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-30T17:15:31.000Z",
+    "code_updated_at": "2024-01-30T17:15:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 212711,
+        "name": "hollen9",
+        "created_at": "2018-09-13T13:51:54.000Z",
+        "url": "https://greasyfork.org/users/212711-hollen9"
+      }
+    ],
+    "name": "AWBW: Disable Right Click in game",
+    "description": "Just disable right click context menu and that's it.",
+    "url": "https://greasyfork.org/scripts/486080-awbw-disable-right-click-in-game",
+    "code_url": "https://update.greasyfork.org/scripts/486080/AWBW%3A%20Disable%20Right%20Click%20in%20game.user.js",
+    "code_size": 762,
+    "license": "MIT License",
+    "version": "2024-01-30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486076,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-30T16:21:46.000Z",
+    "code_updated_at": "2024-02-10T01:11:02.000Z",
+    "namespace": "https://awbw.amarriner.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 212711,
+        "name": "hollen9",
+        "created_at": "2018-09-13T13:51:54.000Z",
+        "url": "https://greasyfork.org/users/212711-hollen9"
+      }
+    ],
+    "name": "AWBW Join Game (Lobby) Show Players Official Scores",
+    "description": "Fetch and display official scores for users from their profile pages next to their name on Join Game page.",
+    "url": "https://greasyfork.org/scripts/486076-awbw-join-game-lobby-show-players-official-scores",
+    "code_url": "https://update.greasyfork.org/scripts/486076/AWBW%20Join%20Game%20%28Lobby%29%20Show%20Players%20Official%20Scores.user.js",
+    "code_size": 5278,
+    "license": "MIT License",
+    "version": "0.33",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 471716,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-25T18:30:20.000Z",
+    "code_updated_at": "2024-01-31T03:05:21.000Z",
+    "namespace": "https://greasyfork.org/users/212711",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 212711,
+        "name": "hollen9",
+        "created_at": "2018-09-13T13:51:54.000Z",
+        "url": "https://greasyfork.org/users/212711-hollen9"
+      }
+    ],
+    "name": "Koishi Fumo DVD (Google)",
+    "description": "Bouncing Fumo like a DVD icon",
+    "url": "https://greasyfork.org/scripts/471716-koishi-fumo-dvd-google",
+    "code_url": "https://update.greasyfork.org/scripts/471716/Koishi%20Fumo%20DVD%20%28Google%29.user.js",
+    "code_size": 8420,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470069,
+    "daily_installs": 0,
+    "total_installs": 108,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-03T18:27:00.000Z",
+    "code_updated_at": "2023-07-03T18:27:00.000Z",
+    "namespace": "https://greasyfork.org/users/212711",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 212711,
+        "name": "hollen9",
+        "created_at": "2018-09-13T13:51:54.000Z",
+        "url": "https://greasyfork.org/users/212711-hollen9"
+      }
+    ],
+    "name": "Eyny Auto login",
+    "description": "自動填入登入資訊，並點擊「登入」按鈕。",
+    "url": "https://greasyfork.org/scripts/470069-eyny-auto-login",
+    "code_url": "https://update.greasyfork.org/scripts/470069/Eyny%20Auto%20login.user.js",
+    "code_size": 1780,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

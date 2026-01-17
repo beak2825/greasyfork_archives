@@ -1,0 +1,34 @@
+{
+  "id": 462081,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-18T12:06:56.000Z",
+  "code_updated_at": "2023-03-18T12:06:56.000Z",
+  "namespace": "map_",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 979737,
+      "name": "kote1",
+      "created_at": "2022-11-05T20:04:37.000Z",
+      "url": "https://greasyfork.org/users/979737-kote1",
+      "scripts": []
+    }
+  ],
+  "name": "hwm_map_forever",
+  "description": "Перемещение по карте в 1 клик с любой страницы (только с конём и выше)",
+  "url": "https://greasyfork.org/scripts/462081-hwm-map-forever",
+  "code_url": "https://update.greasyfork.org/scripts/462081/hwm_map_forever.user.js",
+  "code_size": 1139788,
+  "license": "MIT License",
+  "version": "2.23",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

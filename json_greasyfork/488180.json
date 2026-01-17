@@ -1,0 +1,33 @@
+{
+  "id": 488180,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-24T13:52:20.000Z",
+  "code_updated_at": "2024-02-24T14:28:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1266442,
+      "name": "JAGU",
+      "created_at": "2024-02-24T13:51:04.000Z",
+      "url": "https://greasyfork.org/users/1266442-jagu"
+    }
+  ],
+  "name": "LunarCrush",
+  "description": "帮助你更好的使用lunarcrush，笑傲江湖DAO万岁！！",
+  "url": "https://greasyfork.org/scripts/488180-lunarcrush",
+  "code_url": "https://update.greasyfork.org/scripts/488180/LunarCrush.user.js",
+  "code_size": 1122,
+  "license": "MIT License",
+  "version": "2024-02-26",
+  "locale": "lg",
+  "deleted": false,
+  "visibility": "public"
+}

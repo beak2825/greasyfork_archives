@@ -1,0 +1,33 @@
+{
+  "id": 437361,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-20T22:30:41.000Z",
+  "code_updated_at": "2025-04-24T00:05:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 855874,
+      "name": "Ramille Estarles",
+      "created_at": "2021-12-20T22:24:35.000Z",
+      "url": "https://greasyfork.org/users/855874-ramille-estarles"
+    }
+  ],
+  "name": "Ajout rapide d'ingrédient RecipeShopping - Migros",
+  "description": "Ajoute un bouton sur le site de la Migros (et de la coop) pour facilement ajouter un ingrédient sur l'app RecipeShopping",
+  "url": "https://greasyfork.org/scripts/437361-ajout-rapide-d-ingr%C3%A9dient-recipeshopping-migros",
+  "code_url": "https://update.greasyfork.org/scripts/437361/Ajout%20rapide%20d%27ingr%C3%A9dient%20RecipeShopping%20-%20Migros.user.js",
+  "code_size": 24383,
+  "license": "MIT License",
+  "version": "2025.04.24",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

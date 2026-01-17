@@ -1,0 +1,33 @@
+{
+  "id": 434252,
+  "daily_installs": 0,
+  "total_installs": 76,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-21T11:30:42.000Z",
+  "code_updated_at": "2021-10-24T04:14:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 827376,
+      "name": "up55",
+      "created_at": "2021-10-21T11:18:47.000Z",
+      "url": "https://greasyfork.org/users/827376-up55"
+    }
+  ],
+  "name": "九职校园网自动登录",
+  "description": "简单脚本，打开登录页后自动输入账号密码并提交，解放双手",
+  "url": "https://greasyfork.org/scripts/434252-%E4%B9%9D%E8%81%8C%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/434252/%E4%B9%9D%E8%81%8C%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 836,
+  "license": null,
+  "version": "0.11",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

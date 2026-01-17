@@ -1,0 +1,167 @@
+[
+  {
+    "id": 434935,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-03T12:58:50.000Z",
+    "code_updated_at": "2021-11-03T12:58:49.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 798439,
+        "name": "Theodore Goe",
+        "created_at": "2021-07-29T22:54:15.000Z",
+        "url": "https://greasyfork.org/users/798439-theodore-goe"
+      }
+    ],
+    "name": "Performance Improver",
+    "description": "Try to take over the world!",
+    "url": "https://greasyfork.org/scripts/434935-performance-improver",
+    "code_url": "https://update.greasyfork.org/scripts/434935/Performance%20Improver.user.js",
+    "code_size": 1125,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432191,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-10T08:42:45.000Z",
+    "code_updated_at": "2021-09-10T08:42:45.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 798439,
+        "name": "Theodore Goe",
+        "created_at": "2021-07-29T22:54:15.000Z",
+        "url": "https://greasyfork.org/users/798439-theodore-goe"
+      }
+    ],
+    "name": "Name Reverser",
+    "description": "lol",
+    "url": "https://greasyfork.org/scripts/432191-name-reverser",
+    "code_url": "https://update.greasyfork.org/scripts/432191/Name%20Reverser.user.js",
+    "code_size": 677,
+    "license": null,
+    "version": "-",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 432137,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-09T09:42:26.000Z",
+    "code_updated_at": "2021-09-09T09:42:26.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 798439,
+        "name": "Theodore Goe",
+        "created_at": "2021-07-29T22:54:15.000Z",
+        "url": "https://greasyfork.org/users/798439-theodore-goe"
+      }
+    ],
+    "name": "Random Name Generator",
+    "description": "try to take over the world",
+    "url": "https://greasyfork.org/scripts/432137-random-name-generator",
+    "code_url": "https://update.greasyfork.org/scripts/432137/Random%20Name%20Generator.user.js",
+    "code_size": 777,
+    "license": null,
+    "version": "-",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 431510,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-28T05:46:14.000Z",
+    "code_updated_at": "2021-08-28T05:46:14.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 798439,
+        "name": "Theodore Goe",
+        "created_at": "2021-07-29T22:54:15.000Z",
+        "url": "https://greasyfork.org/users/798439-theodore-goe"
+      }
+    ],
+    "name": "Private Server",
+    "description": "Private Server to Enjoy with Friends!!!",
+    "url": "https://greasyfork.org/scripts/431510-private-server",
+    "code_url": "https://update.greasyfork.org/scripts/431510/Private%20Server.user.js",
+    "code_size": 1439,
+    "license": null,
+    "version": "-",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 431471,
+    "daily_installs": 0,
+    "total_installs": 1314,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-27T09:12:19.000Z",
+    "code_updated_at": "2021-08-27T09:12:19.000Z",
+    "namespace": "https://greasyfork.org/users/798439",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 798439,
+        "name": "Theodore Goe",
+        "created_at": "2021-07-29T22:54:15.000Z",
+        "url": "https://greasyfork.org/users/798439-theodore-goe"
+      }
+    ],
+    "name": "Zoom + FCv2 + undetectable ws sender (compatible with any script) DONE",
+    "description": "lol",
+    "url": "https://greasyfork.org/scripts/431471-zoom-fcv2-undetectable-ws-sender-compatible-with-any-script-done",
+    "code_url": "https://update.greasyfork.org/scripts/431471/Zoom%20%2B%20FCv2%20%2B%20undetectable%20ws%20sender%20%28compatible%20with%20any%20script%29%20DONE.user.js",
+    "code_size": 3722,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

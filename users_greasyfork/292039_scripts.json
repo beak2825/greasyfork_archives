@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 474183,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-30T04:38:55.000Z",
+    "code_updated_at": "2024-06-01T08:33:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 292039,
+        "name": "AmaiAya",
+        "created_at": "2019-04-14T11:17:16.000Z",
+        "url": "https://greasyfork.org/users/292039-amaiaya"
+      }
+    ],
+    "name": "SkebHelper",
+    "description": "Get and sort the price(omakase/lowest) of works or creators on various pages of skeb. (Based on zappo's \"Skeb Price Sorter\")",
+    "url": "https://greasyfork.org/scripts/474183-skebhelper",
+    "code_url": "https://update.greasyfork.org/scripts/474183/SkebHelper.user.js",
+    "code_size": 16697,
+    "license": "MIT License",
+    "version": "0.7.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

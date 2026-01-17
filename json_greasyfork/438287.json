@@ -1,0 +1,59 @@
+{
+  "id": 438287,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-09T17:35:52.000Z",
+  "code_updated_at": "2022-01-19T18:29:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/JacobLinCool/Bahamut-Anime-Comment-Mountains/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 862897,
+      "name": "JacobLinCool",
+      "created_at": "2022-01-09T16:24:39.000Z",
+      "url": "https://greasyfork.org/users/862897-jacoblincool",
+      "scripts": [
+        {
+          "id": 438287,
+          "daily_installs": 0,
+          "total_installs": 40,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-09T17:35:52.000Z",
+          "code_updated_at": "2022-01-19T18:29:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://github.com/JacobLinCool/Bahamut-Anime-Comment-Mountains/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bahamut Anime Comment Mountains",
+          "description": "彈幕密度山脈 for 巴哈姆特動畫瘋",
+          "url": "https://greasyfork.org/scripts/438287-bahamut-anime-comment-mountains",
+          "code_url": "https://update.greasyfork.org/scripts/438287/Bahamut%20Anime%20Comment%20Mountains.user.js",
+          "code_size": 30687,
+          "license": "MIT License",
+          "version": "0.2.2",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bahamut Anime Comment Mountains",
+  "description": "彈幕密度山脈 for 巴哈姆特動畫瘋",
+  "url": "https://greasyfork.org/scripts/438287-bahamut-anime-comment-mountains",
+  "code_url": "https://update.greasyfork.org/scripts/438287/Bahamut%20Anime%20Comment%20Mountains.user.js",
+  "code_size": 30687,
+  "license": "MIT License",
+  "version": "0.2.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 421461,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-09T03:10:13.000Z",
+  "code_updated_at": "2021-02-09T03:10:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 673074,
+      "name": "brown green",
+      "created_at": "2020-08-04T04:47:25.000Z",
+      "url": "https://greasyfork.org/users/673074-brown-green",
+      "scripts": []
+    }
+  ],
+  "name": "Showdown Translation",
+  "description": "PSChina Server Translation剑盾测试先行版汉化脚本已发布，对汉化内容有疑问请联系圣光(QQ:964323779)",
+  "url": "https://greasyfork.org/scripts/421461-showdown-translation",
+  "code_url": "https://update.greasyfork.org/scripts/421461/Showdown%20Translation.user.js",
+  "code_size": 287217,
+  "license": null,
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

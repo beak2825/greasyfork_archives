@@ -1,0 +1,59 @@
+{
+  "id": 488109,
+  "daily_installs": 0,
+  "total_installs": 360,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-23T13:46:32.000Z",
+  "code_updated_at": "2024-02-23T13:46:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265887,
+      "name": "HouXinyv",
+      "created_at": "2024-02-23T11:29:52.000Z",
+      "url": "https://greasyfork.org/users/1265887-houxinyv",
+      "scripts": [
+        {
+          "id": 488109,
+          "daily_installs": 0,
+          "total_installs": 360,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-23T13:46:32.000Z",
+          "code_updated_at": "2024-02-23T13:46:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "问卷星回答",
+          "description": "自动答题问卷星，支持单选多选，不支持自动提交",
+          "url": "https://greasyfork.org/scripts/488109-%E9%97%AE%E5%8D%B7%E6%98%9F%E5%9B%9E%E7%AD%94",
+          "code_url": "https://update.greasyfork.org/scripts/488109/%E9%97%AE%E5%8D%B7%E6%98%9F%E5%9B%9E%E7%AD%94.user.js",
+          "code_size": 1925,
+          "license": "MIT License",
+          "version": "2024-02-23",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "问卷星回答",
+  "description": "自动答题问卷星，支持单选多选，不支持自动提交",
+  "url": "https://greasyfork.org/scripts/488109-%E9%97%AE%E5%8D%B7%E6%98%9F%E5%9B%9E%E7%AD%94",
+  "code_url": "https://update.greasyfork.org/scripts/488109/%E9%97%AE%E5%8D%B7%E6%98%9F%E5%9B%9E%E7%AD%94.user.js",
+  "code_size": 1925,
+  "license": "MIT License",
+  "version": "2024-02-23",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

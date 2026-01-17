@@ -196,5 +196,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 479498,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-11T02:34:16.000Z",
+    "code_updated_at": "2023-11-11T02:34:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1029249,
+        "name": "moony",
+        "created_at": "2023-02-18T10:13:17.000Z",
+        "url": "https://greasyfork.org/users/1029249-moony"
+      }
+    ],
+    "name": "Stable Diffusion simple string cleaner",
+    "description": "Replace Selected Text by remove duplciated string",
+    "url": "https://greasyfork.org/scripts/479498-stable-diffusion-simple-string-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/479498/Stable%20Diffusion%20simple%20string%20cleaner.user.js",
+    "code_size": 2035,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469615,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-28T03:15:36.000Z",
+    "code_updated_at": "2025-07-24T01:23:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1029249,
+        "name": "moony",
+        "created_at": "2023-02-18T10:13:17.000Z",
+        "url": "https://greasyfork.org/users/1029249-moony"
+      }
+    ],
+    "name": "[Outdated] Stable Diffusion Metadata Discord Image Overlay",
+    "description": "[Outdated] Displays Stable Diffusion metadata generated as an overlay on Discord images.",
+    "url": "https://greasyfork.org/scripts/469615-outdated-stable-diffusion-metadata-discord-image-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/469615/%5BOutdated%5D%20Stable%20Diffusion%20Metadata%20Discord%20Image%20Overlay.user.js",
+    "code_size": 5018,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460235,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-18T10:19:40.000Z",
+    "code_updated_at": "2023-02-27T07:42:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1029249,
+        "name": "moony",
+        "created_at": "2023-02-18T10:13:17.000Z",
+        "url": "https://greasyfork.org/users/1029249-moony"
+      }
+    ],
+    "name": "sleep prediction",
+    "description": "Keep track of time spent on any website to predict sleeping time",
+    "url": "https://greasyfork.org/scripts/460235-sleep-prediction",
+    "code_url": "https://update.greasyfork.org/scripts/460235/sleep%20prediction.user.js",
+    "code_size": 12157,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 480172,
+  "daily_installs": 0,
+  "total_installs": 797,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2023-11-18T08:48:58.000Z",
+  "code_updated_at": "2023-11-19T08:34:14.000Z",
+  "namespace": "https://greasyfork.org/users/1064285-vcrazy-gaming",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1040904,
+      "name": "sajid magomedov",
+      "created_at": "2023-03-12T09:00:20.000Z",
+      "url": "https://greasyfork.org/users/1040904-sajid-magomedov",
+      "scripts": [
+        {
+          "id": 480172,
+          "daily_installs": 0,
+          "total_installs": 797,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2023-11-18T08:48:58.000Z",
+          "code_updated_at": "2023-11-19T08:34:14.000Z",
+          "namespace": "https://greasyfork.org/users/1064285-vcrazy-gaming",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "macro X, this mod consists of several mods and optimization has been added",
+          "description": "autoheal, macro, menu, this mod consists of several mods and optimization has been added",
+          "url": "https://greasyfork.org/scripts/480172-macro-x-this-mod-consists-of-several-mods-and-optimization-has-been-added",
+          "code_url": "https://update.greasyfork.org/scripts/480172/macro%20X%2C%20this%20mod%20consists%20of%20several%20mods%20and%20optimization%20has%20been%20added.user.js",
+          "code_size": 20542,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "macro X, this mod consists of several mods and optimization has been added",
+  "description": "autoheal, macro, menu, this mod consists of several mods and optimization has been added",
+  "url": "https://greasyfork.org/scripts/480172-macro-x-this-mod-consists-of-several-mods-and-optimization-has-been-added",
+  "code_url": "https://update.greasyfork.org/scripts/480172/macro%20X%2C%20this%20mod%20consists%20of%20several%20mods%20and%20optimization%20has%20been%20added.user.js",
+  "code_size": 20542,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

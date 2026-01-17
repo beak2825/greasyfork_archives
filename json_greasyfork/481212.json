@@ -1,0 +1,59 @@
+{
+  "id": 481212,
+  "daily_installs": 0,
+  "total_installs": 58,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-02T07:48:06.000Z",
+  "code_updated_at": "2023-12-02T07:48:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1226668,
+      "name": "Haz3mn (Người chủ trì)",
+      "created_at": "2023-12-02T07:39:46.000Z",
+      "url": "https://greasyfork.org/users/1226668-haz3mn-ng%C6%B0%E1%BB%9Di-ch%E1%BB%A7-tr%C3%AC",
+      "scripts": [
+        {
+          "id": 481212,
+          "daily_installs": 0,
+          "total_installs": 58,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-02T07:48:06.000Z",
+          "code_updated_at": "2023-12-02T07:48:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hack10fastfingers",
+          "description": "try it",
+          "url": "https://greasyfork.org/scripts/481212-hack10fastfingers",
+          "code_url": "https://update.greasyfork.org/scripts/481212/Hack10fastfingers.user.js",
+          "code_size": 453,
+          "license": "MIT  k",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hack10fastfingers",
+  "description": "try it",
+  "url": "https://greasyfork.org/scripts/481212-hack10fastfingers",
+  "code_url": "https://update.greasyfork.org/scripts/481212/Hack10fastfingers.user.js",
+  "code_size": 453,
+  "license": "MIT  k",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

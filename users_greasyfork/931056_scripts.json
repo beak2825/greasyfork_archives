@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447372,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-03T03:19:00.000Z",
+    "code_updated_at": "2022-07-06T09:31:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931056,
+        "name": "罗森",
+        "created_at": "2022-07-01T13:56:28.000Z",
+        "url": "https://greasyfork.org/users/931056-%E7%BD%97%E6%A3%AE"
+      }
+    ],
+    "name": "让 Flowus 多维表单元格显示颜色",
+    "description": "当单元格的内容是 #AABBCC 这样的颜色值时，给单元格背景上色！",
+    "url": "https://greasyfork.org/scripts/447372-%E8%AE%A9-flowus-%E5%A4%9A%E7%BB%B4%E8%A1%A8%E5%8D%95%E5%85%83%E6%A0%BC%E6%98%BE%E7%A4%BA%E9%A2%9C%E8%89%B2",
+    "code_url": "https://update.greasyfork.org/scripts/447372/%E8%AE%A9%20Flowus%20%E5%A4%9A%E7%BB%B4%E8%A1%A8%E5%8D%95%E5%85%83%E6%A0%BC%E6%98%BE%E7%A4%BA%E9%A2%9C%E8%89%B2.user.js",
+    "code_size": 4588,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

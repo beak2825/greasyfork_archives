@@ -1,0 +1,59 @@
+{
+  "id": 421498,
+  "daily_installs": 0,
+  "total_installs": 598,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-09T23:48:34.000Z",
+  "code_updated_at": "2021-02-09T23:48:34.000Z",
+  "namespace": "https://greasyfork.org/users/736156",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 736156,
+      "name": "MatthewWangRBLX",
+      "created_at": "2021-02-09T23:39:00.000Z",
+      "url": "https://greasyfork.org/users/736156-matthewwangrblx",
+      "scripts": [
+        {
+          "id": 421498,
+          "daily_installs": 0,
+          "total_installs": 598,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-09T23:48:34.000Z",
+          "code_updated_at": "2021-02-09T23:48:34.000Z",
+          "namespace": "https://greasyfork.org/users/736156",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Telegram Auto Spammer",
+          "description": "Allows you to spam in chat on Telegram",
+          "url": "https://greasyfork.org/scripts/421498-telegram-auto-spammer",
+          "code_url": "https://update.greasyfork.org/scripts/421498/Telegram%20Auto%20Spammer.user.js",
+          "code_size": 731,
+          "license": "MIT License",
+          "version": "0.0.1.20210209234834",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Telegram Auto Spammer",
+  "description": "Allows you to spam in chat on Telegram",
+  "url": "https://greasyfork.org/scripts/421498-telegram-auto-spammer",
+  "code_url": "https://update.greasyfork.org/scripts/421498/Telegram%20Auto%20Spammer.user.js",
+  "code_size": 731,
+  "license": "MIT License",
+  "version": "0.0.1.20210209234834",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

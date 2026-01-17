@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 475436,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-16T16:07:08.000Z",
+    "code_updated_at": "2025-06-30T14:48:37.000Z",
+    "namespace": "http://bi2nb9o3.xyz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1174523,
+        "name": "Bi2Nb9O3-Studio",
+        "created_at": "2023-09-16T15:41:02.000Z",
+        "url": "https://greasyfork.org/users/1174523-bi2nb9o3-studio"
+      }
+    ],
+    "name": "🚓QQSecurityURLSkipper",
+    "description": "block the QQ's security URL",
+    "url": "https://greasyfork.org/scripts/475436-qqsecurityurlskipper",
+    "code_url": "https://update.greasyfork.org/scripts/475436/%F0%9F%9A%93QQSecurityURLSkipper.user.js",
+    "code_size": 1090,
+    "license": "GPL 3.0",
+    "version": "0.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

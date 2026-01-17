@@ -1,0 +1,33 @@
+{
+  "id": 420808,
+  "daily_installs": 0,
+  "total_installs": 80,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-28T12:30:43.000Z",
+  "code_updated_at": "2021-01-28T12:33:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 732194,
+      "name": "רפאל בלזם-לבנון",
+      "created_at": "2021-01-28T12:28:42.000Z",
+      "url": "https://greasyfork.org/users/732194-%D7%A8%D7%A4%D7%90%D7%9C-%D7%91%D7%9C%D7%96%D7%9D-%D7%9C%D7%91%D7%A0%D7%95%D7%9F"
+    }
+  ],
+  "name": "hide globalsearch",
+  "description": "hide global search from telegram web",
+  "url": "https://greasyfork.org/scripts/420808-hide-globalsearch",
+  "code_url": "https://update.greasyfork.org/scripts/420808/hide%20globalsearch.user.js",
+  "code_size": 943,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

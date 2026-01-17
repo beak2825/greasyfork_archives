@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437411,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-22T00:03:54.000Z",
+    "code_updated_at": "2023-03-23T15:01:09.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 856262,
+        "name": "frogadier",
+        "created_at": "2021-12-21T23:44:12.000Z",
+        "url": "https://greasyfork.org/users/856262-frogadier"
+      }
+    ],
+    "name": "Filled and bounty colors (BTN)",
+    "description": "Changes already filled requests and bounty colors",
+    "url": "https://greasyfork.org/scripts/437411-filled-and-bounty-colors-btn",
+    "code_url": "https://update.greasyfork.org/scripts/437411/Filled%20and%20bounty%20colors%20%28BTN%29.user.js",
+    "code_size": 2875,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

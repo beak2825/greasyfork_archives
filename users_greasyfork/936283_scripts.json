@@ -1,0 +1,68 @@
+[
+  {
+    "id": 459302,
+    "daily_installs": 0,
+    "total_installs": 68,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-02T07:34:01.000Z",
+    "code_updated_at": "2023-02-03T17:42:45.000Z",
+    "namespace": "https://gitee.com/inch_whf/tampermonkey-script-inch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 936283,
+        "name": "inch-whf",
+        "created_at": "2022-07-16T10:48:17.000Z",
+        "url": "https://greasyfork.org/users/936283-inch-whf"
+      }
+    ],
+    "name": "直接访问链接",
+    "description": "避免链接的二次点击",
+    "url": "https://greasyfork.org/scripts/459302-%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/459302/%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 1029,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448216,
+    "daily_installs": 0,
+    "total_installs": 553,
+    "fan_score": "12.5",
+    "good_ratings": 0,
+    "ok_ratings": 3,
+    "bad_ratings": 0,
+    "created_at": "2022-07-21T09:51:24.000Z",
+    "code_updated_at": "2023-03-30T19:57:03.000Z",
+    "namespace": "https://gitee.com/inch_whf/tampermonkey-script-inch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 936283,
+        "name": "inch-whf",
+        "created_at": "2022-07-16T10:48:17.000Z",
+        "url": "https://greasyfork.org/users/936283-inch-whf"
+      }
+    ],
+    "name": "只看博客内容",
+    "description": "支持【CSDN，简书，博客园，知乎，掘金，51CTO，51CTO文章，阿里云开发者社区，腾讯云开发者社区，微信，InfoQ，Github】等。 必要时临时关闭脚本，可能是需要验证。",
+    "url": "https://greasyfork.org/scripts/448216-%E5%8F%AA%E7%9C%8B%E5%8D%9A%E5%AE%A2%E5%86%85%E5%AE%B9",
+    "code_url": "https://update.greasyfork.org/scripts/448216/%E5%8F%AA%E7%9C%8B%E5%8D%9A%E5%AE%A2%E5%86%85%E5%AE%B9.user.js",
+    "code_size": 10872,
+    "license": "MIT License",
+    "version": "1.26",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

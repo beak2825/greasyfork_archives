@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466795,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-21T19:53:53.000Z",
+    "code_updated_at": "2023-05-21T20:11:15.000Z",
+    "namespace": "MeldelisteMeldeportal",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1081204,
+        "name": "Markus Schlick",
+        "created_at": "2023-05-18T20:37:10.000Z",
+        "url": "https://greasyfork.org/users/1081204-markus-schlick"
+      }
+    ],
+    "name": "Meldeliste meldeportal.rudern.de",
+    "description": "Alle Meldungen, sowie gemeldete Sportler als Liste darstellen",
+    "url": "https://greasyfork.org/scripts/466795-meldeliste-meldeportal-rudern-de",
+    "code_url": "https://update.greasyfork.org/scripts/466795/Meldeliste%20meldeportalrudernde.user.js",
+    "code_size": 4797,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

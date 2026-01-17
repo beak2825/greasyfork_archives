@@ -1,0 +1,68 @@
+[
+  {
+    "id": 491701,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-05T11:14:31.000Z",
+    "code_updated_at": "2024-04-07T08:44:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1207265,
+        "name": "KAM1KAZE",
+        "created_at": "2023-10-30T08:54:29.000Z",
+        "url": "https://greasyfork.org/users/1207265-kam1kaze"
+      }
+    ],
+    "name": "Atcoder Easy Jump",
+    "description": "Atcoderから外部のリンクへ素早くジャンプしたい方へ",
+    "url": "https://greasyfork.org/scripts/491701-atcoder-easy-jump",
+    "code_url": "https://update.greasyfork.org/scripts/491701/Atcoder%20Easy%20Jump.user.js",
+    "code_size": 776,
+    "license": "MIT License",
+    "version": "2024-04-07",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 478609,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-30T09:08:08.000Z",
+    "code_updated_at": "2023-10-30T09:28:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1207265,
+        "name": "KAM1KAZE",
+        "created_at": "2023-10-30T08:54:29.000Z",
+        "url": "https://greasyfork.org/users/1207265-kam1kaze"
+      }
+    ],
+    "name": "AC Custom",
+    "description": "Atcoderの結果表示に飽きた人へ",
+    "url": "https://greasyfork.org/scripts/478609-ac-custom",
+    "code_url": "https://update.greasyfork.org/scripts/478609/AC%20Custom.user.js",
+    "code_size": 657,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

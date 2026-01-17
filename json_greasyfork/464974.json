@@ -1,0 +1,33 @@
+{
+  "id": 464974,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-27T12:21:31.000Z",
+  "code_updated_at": "2023-04-27T12:21:31.000Z",
+  "namespace": "Ringeal007",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 991303,
+      "name": "yonggaoya",
+      "created_at": "2022-12-02T11:44:28.000Z",
+      "url": "https://greasyfork.org/users/991303-yonggaoya"
+    }
+  ],
+  "name": "Ringeal007的《我的世界》基岩版专用服务器下载按钮",
+  "description": "对中文Minecraft Wiki镜像站的基岩版专用服务器页面中的表格作出修改。每个版本对应的行的最右侧都增加一个单元格，包含两个下载按钮，第一个默认采用第一接口，第二个默认采用第二接口。如果该版本为测试版或未发布Linux版，则将按钮设置为不可点击。按钮名称分别为“下载（Windows）”和“下载（Ubuntu（Linux））”。",
+  "url": "https://greasyfork.org/scripts/464974-ringeal007%E7%9A%84-%E6%88%91%E7%9A%84%E4%B8%96%E7%95%8C-%E5%9F%BA%E5%B2%A9%E7%89%88%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8B%E8%BD%BD%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/464974/Ringeal007%E7%9A%84%E3%80%8A%E6%88%91%E7%9A%84%E4%B8%96%E7%95%8C%E3%80%8B%E5%9F%BA%E5%B2%A9%E7%89%88%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8B%E8%BD%BD%E6%8C%89%E9%92%AE.user.js",
+  "code_size": 3328,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

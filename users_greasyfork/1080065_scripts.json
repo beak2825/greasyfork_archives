@@ -1,0 +1,68 @@
+[
+  {
+    "id": 466565,
+    "daily_installs": 1,
+    "total_installs": 52,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-18T10:47:13.000Z",
+    "code_updated_at": "2026-01-05T08:48:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1080065,
+        "name": "Luciano Stanziani",
+        "created_at": "2023-05-16T13:40:25.000Z",
+        "url": "https://greasyfork.org/users/1080065-luciano-stanziani"
+      }
+    ],
+    "name": "Add Google Search Buttons to DuckDuckGo & Brave Search",
+    "description": "Adds Google and Google Shopping buttons to DuckDuckGo and Brave Search with DuckDuckGo color scheme (desktop & mobile)",
+    "url": "https://greasyfork.org/scripts/466565-add-google-search-buttons-to-duckduckgo-brave-search",
+    "code_url": "https://update.greasyfork.org/scripts/466565/Add%20Google%20Search%20Buttons%20to%20DuckDuckGo%20%20Brave%20Search.user.js",
+    "code_size": 8497,
+    "license": "CC BY-NC-ND 4.0",
+    "version": "9.0.2026",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 466448,
+    "daily_installs": 0,
+    "total_installs": 134,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-16T17:03:44.000Z",
+    "code_updated_at": "2023-06-07T17:42:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1080065,
+        "name": "Luciano Stanziani",
+        "created_at": "2023-05-16T13:40:25.000Z",
+        "url": "https://greasyfork.org/users/1080065-luciano-stanziani"
+      }
+    ],
+    "name": "DuckDuckGo Search Buttons to other search engines Google, Amazon, ecc -Tampermonkey",
+    "description": "Adds Google, Google Shopping, YouTube, Amazon, eBay, Bing, Reddit, and GitHub search buttons to DuckDuckGo search results with a visually appealing design for small and large displays, super optimized cache loading.",
+    "url": "https://greasyfork.org/scripts/466448-duckduckgo-search-buttons-to-other-search-engines-google-amazon-ecc-tampermonkey",
+    "code_url": "https://update.greasyfork.org/scripts/466448/DuckDuckGo%20Search%20Buttons%20to%20other%20search%20engines%20Google%2C%20Amazon%2C%20ecc%20-Tampermonkey.user.js",
+    "code_size": 5301,
+    "license": "CC BY-NC-ND 4.0",
+    "version": "7.6.2023",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

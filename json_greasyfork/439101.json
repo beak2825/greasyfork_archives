@@ -1,0 +1,59 @@
+{
+  "id": 439101,
+  "daily_installs": 0,
+  "total_installs": 154,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-01-25T10:07:07.000Z",
+  "code_updated_at": "2022-01-25T10:07:07.000Z",
+  "namespace": "https://git.arun.cloud/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 667168,
+      "name": "as0",
+      "created_at": "2020-07-15T18:18:02.000Z",
+      "url": "https://greasyfork.org/users/667168-as0",
+      "scripts": [
+        {
+          "id": 439101,
+          "daily_installs": 0,
+          "total_installs": 154,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-01-25T10:07:07.000Z",
+          "code_updated_at": "2022-01-25T10:07:07.000Z",
+          "namespace": "https://git.arun.cloud/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hacker News Dark Mode + QoL",
+          "description": "Dark mode for Hacker News",
+          "url": "https://greasyfork.org/scripts/439101-hacker-news-dark-mode-qol",
+          "code_url": "https://update.greasyfork.org/scripts/439101/Hacker%20News%20Dark%20Mode%20%2B%20QoL.user.js",
+          "code_size": 1568,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hacker News Dark Mode + QoL",
+  "description": "Dark mode for Hacker News",
+  "url": "https://greasyfork.org/scripts/439101-hacker-news-dark-mode-qol",
+  "code_url": "https://update.greasyfork.org/scripts/439101/Hacker%20News%20Dark%20Mode%20%2B%20QoL.user.js",
+  "code_size": 1568,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

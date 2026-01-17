@@ -1,0 +1,35 @@
+[
+  {
+    "id": 458022,
+    "daily_installs": 0,
+    "total_installs": 489,
+    "fan_score": "75.7",
+    "good_ratings": 12,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-11T10:05:00.000Z",
+    "code_updated_at": "2025-05-18T11:12:48.000Z",
+    "namespace": "EX",
+    "support_url": "https://github.com/no5ix/auto-toc/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951920,
+        "name": "no5ix",
+        "created_at": "2022-08-29T03:01:32.000Z",
+        "url": "https://greasyfork.org/users/951920-no5ix"
+      }
+    ],
+    "name": "auto-toc",
+    "description": "Generate table of contents for any website. By default, it is not open. You need to go to the plug-in menu to open the switch for the website that wants to open the toc. The plug-in will remember this switch, and the toc will be generated automatically according to the switch when you open the website the next time.",
+    "url": "https://greasyfork.org/scripts/458022-auto-toc",
+    "code_url": "https://update.greasyfork.org/scripts/458022/auto-toc.user.js",
+    "code_size": 214258,
+    "license": "MIT License",
+    "version": "1.64",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

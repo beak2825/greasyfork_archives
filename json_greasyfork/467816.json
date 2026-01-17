@@ -1,0 +1,59 @@
+{
+  "id": 467816,
+  "daily_installs": 0,
+  "total_installs": 124,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-06-03T17:58:51.000Z",
+  "code_updated_at": "2024-11-03T20:31:12.000Z",
+  "namespace": "https://greasyfork.org/users/1090156",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1090156,
+      "name": "KZiad",
+      "created_at": "2023-06-03T17:51:19.000Z",
+      "url": "https://greasyfork.org/users/1090156-kziad",
+      "scripts": [
+        {
+          "id": 467816,
+          "daily_installs": 0,
+          "total_installs": 124,
+          "fan_score": "19.8",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2023-06-03T17:58:51.000Z",
+          "code_updated_at": "2024-11-03T20:31:12.000Z",
+          "namespace": "https://greasyfork.org/users/1090156",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bing Videos redirector",
+          "description": "Redirects to youtube/tiktok when you open a video on bing videos. Credit goes to qoiqoi (https://greasyfork.org/en/users/1328793-qoiqoi) for making the script more reliable",
+          "url": "https://greasyfork.org/scripts/467816-bing-videos-redirector",
+          "code_url": "https://update.greasyfork.org/scripts/467816/Bing%20Videos%20redirector.user.js",
+          "code_size": 2106,
+          "license": "MIT License",
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bing Videos redirector",
+  "description": "Redirects to youtube/tiktok when you open a video on bing videos. Credit goes to qoiqoi (https://greasyfork.org/en/users/1328793-qoiqoi) for making the script more reliable",
+  "url": "https://greasyfork.org/scripts/467816-bing-videos-redirector",
+  "code_url": "https://update.greasyfork.org/scripts/467816/Bing%20Videos%20redirector.user.js",
+  "code_size": 2106,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442607,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-03T03:53:06.000Z",
+    "code_updated_at": "2022-04-04T22:11:19.000Z",
+    "namespace": "https://greastfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2340,
+        "name": "TheVirus",
+        "created_at": "2014-05-30T15:22:25.000Z",
+        "url": "https://greasyfork.org/users/2340-thevirus"
+      }
+    ],
+    "name": "KOTD Place Overlay",
+    "description": "Shows an overlay for KOTD. Might not be perfect due to Hamis changes.",
+    "url": "https://greasyfork.org/scripts/442607-kotd-place-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/442607/KOTD%20Place%20Overlay.user.js",
+    "code_size": 1021,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.64",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

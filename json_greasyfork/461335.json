@@ -1,0 +1,34 @@
+{
+  "id": 461335,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-06T22:16:27.000Z",
+  "code_updated_at": "2023-05-02T09:28:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1037734,
+      "name": "Mostafa Armandi",
+      "created_at": "2023-03-06T22:11:51.000Z",
+      "url": "https://greasyfork.org/users/1037734-mostafa-armandi",
+      "scripts": []
+    }
+  ],
+  "name": "DVSA change practical test",
+  "description": "This script shows only free slots",
+  "url": "https://greasyfork.org/scripts/461335-dvsa-change-practical-test",
+  "code_url": "https://update.greasyfork.org/scripts/461335/DVSA%20change%20practical%20test.user.js",
+  "code_size": 4553,
+  "license": null,
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

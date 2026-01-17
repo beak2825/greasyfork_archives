@@ -1,0 +1,35 @@
+[
+  {
+    "id": 471535,
+    "daily_installs": 0,
+    "total_installs": 161,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-23T19:08:35.000Z",
+    "code_updated_at": "2023-12-11T20:04:12.000Z",
+    "namespace": "http://www.saypi.ai/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1134286,
+        "name": "rosscado",
+        "created_at": "2023-07-23T19:00:48.000Z",
+        "url": "https://greasyfork.org/users/1134286-rosscado"
+      }
+    ],
+    "name": "Say, Pi",
+    "description": "Seamless speech-to-text enhancement for Pi, the conversational AI. Enjoy hands-free, high-accuracy conversations in any language.",
+    "url": "https://greasyfork.org/scripts/471535-say-pi",
+    "code_url": "https://update.greasyfork.org/scripts/471535/Say%2C%20Pi.user.js",
+    "code_size": 1063588,
+    "license": "MIT License",
+    "version": "1.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

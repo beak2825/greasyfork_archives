@@ -1,0 +1,33 @@
+{
+  "id": 480407,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-20T21:54:23.000Z",
+  "code_updated_at": "2024-04-01T20:45:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1220863,
+      "name": "MoonSculptor",
+      "created_at": "2023-11-20T21:48:12.000Z",
+      "url": "https://greasyfork.org/users/1220863-moonsculptor"
+    }
+  ],
+  "name": "Travian Legends - Hourly Raid",
+  "description": "Show hourly raid for top 10 raiders",
+  "url": "https://greasyfork.org/scripts/480407-travian-legends-hourly-raid",
+  "code_url": "https://update.greasyfork.org/scripts/480407/Travian%20Legends%20-%20Hourly%20Raid.user.js",
+  "code_size": 1441,
+  "license": "MIT License",
+  "version": "0.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

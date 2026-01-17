@@ -1,0 +1,34 @@
+{
+  "id": 456880,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-20T10:00:42.000Z",
+  "code_updated_at": "2022-12-20T10:00:42.000Z",
+  "namespace": "MidiShowDownloader_ByOldLiu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1000350,
+      "name": "夜神冥天零",
+      "created_at": "2022-12-20T09:57:11.000Z",
+      "url": "https://greasyfork.org/users/1000350-%E5%A4%9C%E7%A5%9E%E5%86%A5%E5%A4%A9%E9%9B%B6",
+      "scripts": []
+    }
+  ],
+  "name": "MidiShow免积分下载",
+  "description": "登录后点击播放按钮，自动弹出下载。",
+  "url": "https://greasyfork.org/scripts/456880-midishow%E5%85%8D%E7%A7%AF%E5%88%86%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/456880/MidiShow%E5%85%8D%E7%A7%AF%E5%88%86%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 1782,
+  "license": null,
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

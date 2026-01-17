@@ -63,6 +63,138 @@
     "version": "2024-09-24",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 430751,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-13T13:03:36.000Z",
+    "code_updated_at": "2022-12-19T17:03:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239805,
+        "name": "Tyler Jones",
+        "created_at": "2019-01-15T17:25:00.000Z",
+        "url": "https://greasyfork.org/users/239805-tyler-jones"
+      }
+    ],
+    "name": "Client Info Quick Copy",
+    "description": "Adds several buttons to quickly copy customer info",
+    "url": "https://greasyfork.org/scripts/430751-client-info-quick-copy",
+    "code_url": "https://update.greasyfork.org/scripts/430751/Client%20Info%20Quick%20Copy.user.js",
+    "code_size": 3493,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 420463,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-20T16:47:44.000Z",
+    "code_updated_at": "2026-01-06T15:24:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239805,
+        "name": "Tyler Jones",
+        "created_at": "2019-01-15T17:25:00.000Z",
+        "url": "https://greasyfork.org/users/239805-tyler-jones"
+      }
+    ],
+    "name": "SA Translate",
+    "description": "Adds an option to translate SA Notes",
+    "url": "https://greasyfork.org/scripts/420463-sa-translate",
+    "code_url": "https://update.greasyfork.org/scripts/420463/SA%20Translate.user.js",
+    "code_size": 2468,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 416398,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-19T15:13:38.000Z",
+    "code_updated_at": "2021-04-12T15:39:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239805,
+        "name": "Tyler Jones",
+        "created_at": "2019-01-15T17:25:00.000Z",
+        "url": "https://greasyfork.org/users/239805-tyler-jones"
+      }
+    ],
+    "name": "Call Note Fix",
+    "description": "Adds a call note input box to SA Client screen",
+    "url": "https://greasyfork.org/scripts/416398-call-note-fix",
+    "code_url": "https://update.greasyfork.org/scripts/416398/Call%20Note%20Fix.user.js",
+    "code_size": 1540,
+    "license": null,
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 413248,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-14T18:20:41.000Z",
+    "code_updated_at": "2020-10-14T18:22:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239805,
+        "name": "Tyler Jones",
+        "created_at": "2019-01-15T17:25:00.000Z",
+        "url": "https://greasyfork.org/users/239805-tyler-jones"
+      }
+    ],
+    "name": "Clear Automatic Todos",
+    "description": "Clears any system created todos",
+    "url": "https://greasyfork.org/scripts/413248-clear-automatic-todos",
+    "code_url": "https://update.greasyfork.org/scripts/413248/Clear%20Automatic%20Todos.user.js",
+    "code_size": 1759,
+    "license": null,
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

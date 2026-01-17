@@ -1,0 +1,34 @@
+{
+  "id": 446398,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-13T01:40:01.000Z",
+  "code_updated_at": "2022-06-19T22:54:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 785573,
+      "name": "吴大师",
+      "created_at": "2021-06-21T01:33:16.000Z",
+      "url": "https://greasyfork.org/users/785573-%E5%90%B4%E5%A4%A7%E5%B8%88",
+      "scripts": []
+    }
+  ],
+  "name": "银行作业提交(人民银行)",
+  "description": "自动获取题库，自动选择，人工提交",
+  "url": "https://greasyfork.org/scripts/446398-%E9%93%B6%E8%A1%8C%E4%BD%9C%E4%B8%9A%E6%8F%90%E4%BA%A4-%E4%BA%BA%E6%B0%91%E9%93%B6%E8%A1%8C",
+  "code_url": "https://update.greasyfork.org/scripts/446398/%E9%93%B6%E8%A1%8C%E4%BD%9C%E4%B8%9A%E6%8F%90%E4%BA%A4%28%E4%BA%BA%E6%B0%91%E9%93%B6%E8%A1%8C%29.user.js",
+  "code_size": 3476,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

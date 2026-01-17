@@ -1,0 +1,59 @@
+{
+  "id": 435795,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-20T12:13:30.000Z",
+  "code_updated_at": "2022-02-05T15:38:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841601,
+      "name": "iDokki",
+      "created_at": "2021-11-20T12:04:10.000Z",
+      "url": "https://greasyfork.org/users/841601-idokki",
+      "scripts": [
+        {
+          "id": 435795,
+          "daily_installs": 0,
+          "total_installs": 23,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-20T12:13:30.000Z",
+          "code_updated_at": "2022-02-05T15:38:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Seasonvar tooltip",
+          "description": "Show the tooltip with info on history items and main page as like in sidebar",
+          "url": "https://greasyfork.org/scripts/435795-seasonvar-tooltip",
+          "code_url": "https://update.greasyfork.org/scripts/435795/Seasonvar%20tooltip.user.js",
+          "code_size": 2296,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Seasonvar tooltip",
+  "description": "Show the tooltip with info on history items and main page as like in sidebar",
+  "url": "https://greasyfork.org/scripts/435795-seasonvar-tooltip",
+  "code_url": "https://update.greasyfork.org/scripts/435795/Seasonvar%20tooltip.user.js",
+  "code_size": 2296,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

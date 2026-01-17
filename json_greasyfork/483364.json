@@ -1,0 +1,34 @@
+{
+  "id": 483364,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-29T03:32:20.000Z",
+  "code_updated_at": "2025-06-12T08:37:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1240545,
+      "name": "Gene M Gonzales",
+      "created_at": "2023-12-29T03:29:12.000Z",
+      "url": "https://greasyfork.org/users/1240545-gene-m-gonzales",
+      "scripts": []
+    }
+  ],
+  "name": "Kageshi Mode Stumblechat",
+  "description": "Automatically add new users to localStorage HideList",
+  "url": "https://greasyfork.org/scripts/483364-kageshi-mode-stumblechat",
+  "code_url": "https://update.greasyfork.org/scripts/483364/Kageshi%20Mode%20Stumblechat.user.js",
+  "code_size": 2431,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

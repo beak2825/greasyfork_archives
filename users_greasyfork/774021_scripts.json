@@ -1,0 +1,35 @@
+[
+  {
+    "id": 426738,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-20T00:10:15.000Z",
+    "code_updated_at": "2021-05-20T00:10:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 774021,
+        "name": "Глеб Фомичев",
+        "created_at": "2021-05-20T00:08:01.000Z",
+        "url": "https://greasyfork.org/users/774021-%D0%B3%D0%BB%D0%B5%D0%B1-%D1%84%D0%BE%D0%BC%D0%B8%D1%87%D0%B5%D0%B2"
+      }
+    ],
+    "name": "playmafia 2.0",
+    "description": "playmafia useful scripts",
+    "url": "https://greasyfork.org/scripts/426738-playmafia-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/426738/playmafia%2020.user.js",
+    "code_size": 11928,
+    "license": null,
+    "version": "2.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

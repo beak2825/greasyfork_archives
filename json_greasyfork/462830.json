@@ -1,0 +1,33 @@
+{
+  "id": 462830,
+  "daily_installs": 0,
+  "total_installs": 2534,
+  "fan_score": "40.9",
+  "good_ratings": 6,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2023-03-29T08:46:50.000Z",
+  "code_updated_at": "2023-03-29T08:46:49.000Z",
+  "namespace": "http://tampermonkey.net/Henry",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 990954,
+      "name": "HenryTSZ",
+      "created_at": "2022-12-02T01:16:57.000Z",
+      "url": "https://greasyfork.org/users/990954-henrytsz"
+    }
+  ],
+  "name": "FIX for \"Bing Search returns to the top\" !",
+  "description": "Stop doing weird things, Bing ! ;)",
+  "url": "https://greasyfork.org/scripts/462830-fix-for-bing-search-returns-to-the-top",
+  "code_url": "https://update.greasyfork.org/scripts/462830/FIX%20for%20%22Bing%20Search%20returns%20to%20the%20top%22%20%21.user.js",
+  "code_size": 1939,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

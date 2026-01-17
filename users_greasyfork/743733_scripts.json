@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422686,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-05T03:15:13.000Z",
+    "code_updated_at": "2021-03-10T07:16:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 743733,
+        "name": "dubonumber2",
+        "created_at": "2021-03-05T03:08:29.000Z",
+        "url": "https://greasyfork.org/users/743733-dubonumber2"
+      }
+    ],
+    "name": "tyc_data_helper",
+    "description": "tyc data helper",
+    "url": "https://greasyfork.org/scripts/422686-tyc-data-helper",
+    "code_url": "https://update.greasyfork.org/scripts/422686/tyc_data_helper.user.js",
+    "code_size": 8821,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

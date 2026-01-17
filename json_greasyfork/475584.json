@@ -1,0 +1,59 @@
+{
+  "id": 475584,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-18T10:40:38.000Z",
+  "code_updated_at": "2023-09-24T02:38:43.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1175676,
+      "name": "obwebsys",
+      "created_at": "2023-09-18T10:32:16.000Z",
+      "url": "https://greasyfork.org/users/1175676-obwebsys",
+      "scripts": [
+        {
+          "id": 475584,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-18T10:40:38.000Z",
+          "code_updated_at": "2023-09-24T02:38:43.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "youtube-create-sorted-playlist-related-channnels-when-clicked",
+          "description": "2023/9/18 17:09:04",
+          "url": "https://greasyfork.org/scripts/475584-youtube-create-sorted-playlist-related-channnels-when-clicked",
+          "code_url": "https://update.greasyfork.org/scripts/475584/youtube-create-sorted-playlist-related-channnels-when-clicked.user.js",
+          "code_size": 1678,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "youtube-create-sorted-playlist-related-channnels-when-clicked",
+  "description": "2023/9/18 17:09:04",
+  "url": "https://greasyfork.org/scripts/475584-youtube-create-sorted-playlist-related-channnels-when-clicked",
+  "code_url": "https://update.greasyfork.org/scripts/475584/youtube-create-sorted-playlist-related-channnels-when-clicked.user.js",
+  "code_size": 1678,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

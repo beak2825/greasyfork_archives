@@ -1,0 +1,101 @@
+[
+  {
+    "id": 484983,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-16T13:47:01.000Z",
+    "code_updated_at": "2024-01-16T13:47:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093086,
+        "name": "aaa8041",
+        "created_at": "2023-06-07T08:22:04.000Z",
+        "url": "https://greasyfork.org/users/1093086-aaa8041"
+      }
+    ],
+    "name": "hj2.0",
+    "description": "可以查看大部分视频，但必须手动注册登录",
+    "url": "https://greasyfork.org/scripts/484983-hj2-0",
+    "code_url": "https://update.greasyfork.org/scripts/484983/hj20.user.js",
+    "code_size": 90656,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 476269,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-28T11:03:42.000Z",
+    "code_updated_at": "2023-09-28T11:03:42.000Z",
+    "namespace": "haijiao-script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093086,
+        "name": "aaa8041",
+        "created_at": "2023-06-07T08:22:04.000Z",
+        "url": "https://greasyfork.org/users/1093086-aaa8041"
+      }
+    ],
+    "name": "hj-ge yi di",
+    "description": "安装后就不要卸载了！切记！QQ2106433033QQ2095553763QQ1664471349",
+    "url": "https://greasyfork.org/scripts/476269-hj-ge-yi-di",
+    "code_url": "https://update.greasyfork.org/scripts/476269/hj-ge%20yi%20di.user.js",
+    "code_size": 11314,
+    "license": "MIT License",
+    "version": "18.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474657,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-06T07:27:49.000Z",
+    "code_updated_at": "2023-09-06T07:38:18.000Z",
+    "namespace": "haijiao-script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1093086,
+        "name": "aaa8041",
+        "created_at": "2023-06-07T08:22:04.000Z",
+        "url": "https://greasyfork.org/users/1093086-aaa8041"
+      }
+    ],
+    "name": "海角社区插件",
+    "description": "歌义狄网络提示：安装后就不要卸载了，切记！！！",
+    "url": "https://greasyfork.org/scripts/474657-%E6%B5%B7%E8%A7%92%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/474657/%E6%B5%B7%E8%A7%92%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 7942,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

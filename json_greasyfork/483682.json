@@ -1,0 +1,34 @@
+{
+  "id": 483682,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-02T11:10:56.000Z",
+  "code_updated_at": "2024-01-02T11:10:56.000Z",
+  "namespace": "https://greasyfork.org/users/1237311",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1237311,
+      "name": "Hollywood",
+      "created_at": "2023-12-21T12:39:48.000Z",
+      "url": "https://greasyfork.org/users/1237311-hollywood",
+      "scripts": []
+    }
+  ],
+  "name": "Автоответ на секретный вопрос",
+  "description": "Остальные полезные скрипты - https://zelenka.guru/threads/5310268/",
+  "url": "https://greasyfork.org/scripts/483682-%D0%B0%D0%B2%D1%82%D0%BE%D0%BE%D1%82%D0%B2%D0%B5%D1%82-%D0%BD%D0%B0-%D1%81%D0%B5%D0%BA%D1%80%D0%B5%D1%82%D0%BD%D1%8B%D0%B9-%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81",
+  "code_url": "https://update.greasyfork.org/scripts/483682/%D0%90%D0%B2%D1%82%D0%BE%D0%BE%D1%82%D0%B2%D0%B5%D1%82%20%D0%BD%D0%B0%20%D1%81%D0%B5%D0%BA%D1%80%D0%B5%D1%82%D0%BD%D1%8B%D0%B9%20%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81.user.js",
+  "code_size": 854,
+  "license": null,
+  "version": "0.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

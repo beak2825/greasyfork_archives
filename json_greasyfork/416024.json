@@ -1,0 +1,59 @@
+{
+  "id": 416024,
+  "daily_installs": 2,
+  "total_installs": 18941,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-13T05:42:12.000Z",
+  "code_updated_at": "2020-11-13T05:43:42.000Z",
+  "namespace": "https://www.twitch.tv/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 559205,
+      "name": "vburnin8tor",
+      "created_at": "2020-05-11T12:30:39.000Z",
+      "url": "https://greasyfork.org/users/559205-vburnin8tor",
+      "scripts": [
+        {
+          "id": 416024,
+          "daily_installs": 2,
+          "total_installs": 18941,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-13T05:42:12.000Z",
+          "code_updated_at": "2020-11-13T05:43:42.000Z",
+          "namespace": "https://www.twitch.tv/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "twitchAdSkip",
+          "description": "Bezos is already too rich;i didn't make this",
+          "url": "https://greasyfork.org/scripts/416024-twitchadskip",
+          "code_url": "https://update.greasyfork.org/scripts/416024/twitchAdSkip.user.js",
+          "code_size": 1430,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "twitchAdSkip",
+  "description": "Bezos is already too rich;i didn't make this",
+  "url": "https://greasyfork.org/scripts/416024-twitchadskip",
+  "code_url": "https://update.greasyfork.org/scripts/416024/twitchAdSkip.user.js",
+  "code_size": 1430,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

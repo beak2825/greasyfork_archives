@@ -1,0 +1,34 @@
+{
+  "id": 473325,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-17T21:42:28.000Z",
+  "code_updated_at": "2025-05-15T14:07:24.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/473325-1_decrypt-day",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906522,
+      "name": "sports_wook",
+      "created_at": "2022-04-25T00:32:15.000Z",
+      "url": "https://greasyfork.org/users/906522-sports-wook",
+      "scripts": []
+    }
+  ],
+  "name": "1_decrypt.day",
+  "description": "block ads",
+  "url": "https://greasyfork.org/scripts/473325-1-decrypt-day",
+  "code_url": "https://update.greasyfork.org/scripts/473325/1_decryptday.user.js",
+  "code_size": 886,
+  "license": null,
+  "version": "2025.05.15",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

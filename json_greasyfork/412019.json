@@ -1,0 +1,34 @@
+{
+  "id": 412019,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-26T16:16:46.000Z",
+  "code_updated_at": "2020-09-26T16:16:46.000Z",
+  "namespace": "https://www.quora.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 149802,
+      "name": "AngeloNdira",
+      "created_at": "2017-08-20T07:48:43.000Z",
+      "url": "https://greasyfork.org/users/149802-angelondira",
+      "scripts": []
+    }
+  ],
+  "name": "removes quora question page adverts",
+  "description": "removes quora question page adverts spacing_log_question_page_ad",
+  "url": "https://greasyfork.org/scripts/412019-removes-quora-question-page-adverts",
+  "code_url": "https://update.greasyfork.org/scripts/412019/removes%20quora%20question%20page%20adverts.user.js",
+  "code_size": 853,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

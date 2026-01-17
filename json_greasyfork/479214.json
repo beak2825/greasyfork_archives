@@ -1,0 +1,59 @@
+{
+  "id": 479214,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-07T04:09:00.000Z",
+  "code_updated_at": "2023-11-07T04:09:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 39191,
+      "name": "chengzi 2",
+      "created_at": "2016-04-17T07:20:36.000Z",
+      "url": "https://greasyfork.org/users/39191-chengzi-2",
+      "scripts": [
+        {
+          "id": 479214,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-07T04:09:00.000Z",
+          "code_updated_at": "2023-11-07T04:09:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "维基百科随机页面跳转",
+          "description": "在维基百科中添加一个随机页面跳转按钮",
+          "url": "https://greasyfork.org/scripts/479214-%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC",
+          "code_url": "https://update.greasyfork.org/scripts/479214/%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC.user.js",
+          "code_size": 957,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "维基百科随机页面跳转",
+  "description": "在维基百科中添加一个随机页面跳转按钮",
+  "url": "https://greasyfork.org/scripts/479214-%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/479214/%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 957,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

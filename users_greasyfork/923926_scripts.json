@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 446291,
+    "daily_installs": 0,
+    "total_installs": 419,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-10T05:55:05.000Z",
+    "code_updated_at": "2022-06-13T08:51:52.000Z",
+    "namespace": "http://server.jcdev.cc:52126/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 923926,
+        "name": "LFTEC",
+        "created_at": "2022-06-09T23:56:25.000Z",
+        "url": "https://greasyfork.org/users/923926-lftec"
+      }
+    ],
+    "name": "万华学习题库搜索",
+    "description": "使用档案里的题库，对正在答卷的试题进行匹配，对于匹配到的试题给出正确答案",
+    "url": "https://greasyfork.org/scripts/446291-%E4%B8%87%E5%8D%8E%E5%AD%A6%E4%B9%A0%E9%A2%98%E5%BA%93%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/446291/%E4%B8%87%E5%8D%8E%E5%AD%A6%E4%B9%A0%E9%A2%98%E5%BA%93%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 5192,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

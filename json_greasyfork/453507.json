@@ -1,0 +1,34 @@
+{
+  "id": 453507,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-21T22:07:30.000Z",
+  "code_updated_at": "2022-10-21T22:07:30.000Z",
+  "namespace": "https://greasyfork.org/users/973636",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 973636,
+      "name": "빨간망토",
+      "created_at": "2022-10-21T21:51:59.000Z",
+      "url": "https://greasyfork.org/users/973636-%EB%B9%A8%EA%B0%84%EB%A7%9D%ED%86%A0",
+      "scripts": []
+    }
+  ],
+  "name": "노벨클립태거",
+  "description": "copy and f10",
+  "url": "https://greasyfork.org/scripts/453507-%EB%85%B8%EB%B2%A8%ED%81%B4%EB%A6%BD%ED%83%9C%EA%B1%B0",
+  "code_url": "https://update.greasyfork.org/scripts/453507/%EB%85%B8%EB%B2%A8%ED%81%B4%EB%A6%BD%ED%83%9C%EA%B1%B0.user.js",
+  "code_size": 2906,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

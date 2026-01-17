@@ -1,0 +1,33 @@
+{
+  "id": 437769,
+  "daily_installs": 0,
+  "total_installs": 66,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-29T20:54:30.000Z",
+  "code_updated_at": "2021-12-30T15:10:01.000Z",
+  "namespace": "a-pav",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 859062,
+      "name": "a-pav",
+      "created_at": "2021-12-29T18:00:38.000Z",
+      "url": "https://greasyfork.org/users/859062-a-pav"
+    }
+  ],
+  "name": "f-droid.org - Supplemental!",
+  "description": "Adds more helpful links, such as link to Google Play store and etc. inside the app's page. Adds required Android OS version and last update date of the app to top of its page. Press ' / ' to focus search. And more..",
+  "url": "https://greasyfork.org/scripts/437769-f-droid-org-supplemental",
+  "code_url": "https://update.greasyfork.org/scripts/437769/f-droidorg%20-%20Supplemental%21.user.js",
+  "code_size": 3051,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

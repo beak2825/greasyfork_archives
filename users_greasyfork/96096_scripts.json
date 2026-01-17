@@ -64,5 +64,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 468833,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-17T00:01:45.000Z",
+    "code_updated_at": "2023-06-17T00:01:45.000Z",
+    "namespace": "https://greasyfork.org/en/users/96096-purplepinapples",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 96096,
+        "name": "purplepinapples",
+        "created_at": "2017-01-19T08:21:53.000Z",
+        "url": "https://greasyfork.org/users/96096-purplepinapples"
+      }
+    ],
+    "name": "Add Trakt Button to Letterboxd Film Pages",
+    "description": "6/16/2023, 4:53:06 PM",
+    "url": "https://greasyfork.org/scripts/468833-add-trakt-button-to-letterboxd-film-pages",
+    "code_url": "https://update.greasyfork.org/scripts/468833/Add%20Trakt%20Button%20to%20Letterboxd%20Film%20Pages.user.js",
+    "code_size": 1084,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453183,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-16T17:30:44.000Z",
+    "code_updated_at": "2022-10-17T06:30:38.000Z",
+    "namespace": "https://greasyfork.org/en/users/96096",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 96096,
+        "name": "purplepinapples",
+        "created_at": "2017-01-19T08:21:53.000Z",
+        "url": "https://greasyfork.org/users/96096-purplepinapples"
+      }
+    ],
+    "name": "CSTimer Auto Download",
+    "description": "Companion script for cstimer-save-server to update a local file with my cstimer.net solves",
+    "url": "https://greasyfork.org/scripts/453183-cstimer-auto-download",
+    "code_url": "https://update.greasyfork.org/scripts/453183/CSTimer%20Auto%20Download.user.js",
+    "code_size": 828,
+    "license": "GPL3",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 419436,
+    "daily_installs": 1,
+    "total_installs": 98,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-31T10:34:02.000Z",
+    "code_updated_at": "2021-01-16T17:42:21.000Z",
+    "namespace": "https://greasyfork.org/en/users/96096-purplepinapples",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 96096,
+        "name": "purplepinapples",
+        "created_at": "2017-01-19T08:21:53.000Z",
+        "url": "https://greasyfork.org/users/96096-purplepinapples"
+      }
+    ],
+    "name": "AniList - Search Title on AnimeBytes",
+    "description": "adds a button on AniList anime pages to search AnimeBytes for the title",
+    "url": "https://greasyfork.org/scripts/419436-anilist-search-title-on-animebytes",
+    "code_url": "https://update.greasyfork.org/scripts/419436/AniList%20-%20Search%20Title%20on%20AnimeBytes.user.js",
+    "code_size": 1265,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

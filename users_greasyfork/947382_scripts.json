@@ -1,0 +1,101 @@
+[
+  {
+    "id": 462047,
+    "daily_installs": 0,
+    "total_installs": 149,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-18T00:18:41.000Z",
+    "code_updated_at": "2023-03-18T00:18:41.000Z",
+    "namespace": "https://stay.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 947382,
+        "name": "Z3r0CooL",
+        "created_at": "2022-08-17T08:57:52.000Z",
+        "url": "https://greasyfork.org/users/947382-z3r0cool"
+      }
+    ],
+    "name": "Google Search No Sponsors",
+    "description": "Remove Sponsors Ads from Google Search results",
+    "url": "https://greasyfork.org/scripts/462047-google-search-no-sponsors",
+    "code_url": "https://update.greasyfork.org/scripts/462047/Google%20Search%20No%20Sponsors.user.js",
+    "code_size": 423,
+    "license": "Apache License 2.0",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 454553,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-10T02:55:18.000Z",
+    "code_updated_at": "2022-11-10T02:56:08.000Z",
+    "namespace": "Z3r0.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 947382,
+        "name": "Z3r0CooL",
+        "created_at": "2022-08-17T08:57:52.000Z",
+        "url": "https://greasyfork.org/users/947382-z3r0cool"
+      }
+    ],
+    "name": "Fix SVGs on HackerRank.com",
+    "description": "If you have a hard time reading some of the text on HackerRank.com this may help. Some of the text in the problems are SVG and the stoke creates a messy, jagged edge unless you zoom in on them. This removes the stroke of all svgs on challenge screens and allows you to change the SVG fill color to whatever you want (by editing the commented line in the script).",
+    "url": "https://greasyfork.org/scripts/454553-fix-svgs-on-hackerrank-com",
+    "code_url": "https://update.greasyfork.org/scripts/454553/Fix%20SVGs%20on%20HackerRankcom.user.js",
+    "code_size": 1525,
+    "license": "Apache 2.0",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 449700,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-17T09:02:29.000Z",
+    "code_updated_at": "2022-08-17T09:05:57.000Z",
+    "namespace": "z3r0cool",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 947382,
+        "name": "Z3r0CooL",
+        "created_at": "2022-08-17T08:57:52.000Z",
+        "url": "https://greasyfork.org/users/947382-z3r0cool"
+      }
+    ],
+    "name": "Fix SVGs on HackerRank.com",
+    "description": "If you have a hard time reading some of the text on HackerRank.com this may help. Some of the text in the problems are SVG and the stoke creates a messy, jagged edge unless you zoom in on them. This removes the stoke of all svgs on challenge screens and allows you to change the SVG fill color to whatever you want (by editing the commented line in the script).",
+    "url": "https://greasyfork.org/scripts/449700-fix-svgs-on-hackerrank-com",
+    "code_url": "https://update.greasyfork.org/scripts/449700/Fix%20SVGs%20on%20HackerRankcom.user.js",
+    "code_size": 1385,
+    "license": "Apache 2.0",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

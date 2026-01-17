@@ -1,0 +1,59 @@
+{
+  "id": 466616,
+  "daily_installs": 0,
+  "total_installs": 103,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-05-19T01:55:49.000Z",
+  "code_updated_at": "2023-06-15T05:41:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1081232,
+      "name": "overling1",
+      "created_at": "2023-05-19T00:11:54.000Z",
+      "url": "https://greasyfork.org/users/1081232-overling1",
+      "scripts": [
+        {
+          "id": 466616,
+          "daily_installs": 0,
+          "total_installs": 103,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-05-19T01:55:49.000Z",
+          "code_updated_at": "2023-06-15T05:41:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "小黑盒",
+          "description": "小黑盒跳转社区，搜索部分社区，自动翻页",
+          "url": "https://greasyfork.org/scripts/466616-%E5%B0%8F%E9%BB%91%E7%9B%92",
+          "code_url": "https://update.greasyfork.org/scripts/466616/%E5%B0%8F%E9%BB%91%E7%9B%92.user.js",
+          "code_size": 4759,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "小黑盒",
+  "description": "小黑盒跳转社区，搜索部分社区，自动翻页",
+  "url": "https://greasyfork.org/scripts/466616-%E5%B0%8F%E9%BB%91%E7%9B%92",
+  "code_url": "https://update.greasyfork.org/scripts/466616/%E5%B0%8F%E9%BB%91%E7%9B%92.user.js",
+  "code_size": 4759,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

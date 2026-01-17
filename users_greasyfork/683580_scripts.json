@@ -1,0 +1,68 @@
+[
+  {
+    "id": 433434,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-05T09:27:49.000Z",
+    "code_updated_at": "2022-02-10T17:44:04.000Z",
+    "namespace": "Kongregate Chatroom Switcher",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 683580,
+        "name": "Lexiebean",
+        "created_at": "2020-08-29T04:31:20.000Z",
+        "url": "https://greasyfork.org/users/683580-lexiebean"
+      }
+    ],
+    "name": "Kongregate Chatroom Switcher",
+    "description": "Adds a chatroom to all games on Kongregate and lets you switch between the remaining chat rooms.",
+    "url": "https://greasyfork.org/scripts/433434-kongregate-chatroom-switcher",
+    "code_url": "https://update.greasyfork.org/scripts/433434/Kongregate%20Chatroom%20Switcher.user.js",
+    "code_size": 6967,
+    "license": "GNU GPLv3",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425771,
+    "daily_installs": 0,
+    "total_installs": 124,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-05-01T03:43:54.000Z",
+    "code_updated_at": "2022-02-10T17:45:14.000Z",
+    "namespace": "SSE Warning",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 683580,
+        "name": "Lexiebean",
+        "created_at": "2020-08-29T04:31:20.000Z",
+        "url": "https://greasyfork.org/users/683580-lexiebean"
+      }
+    ],
+    "name": "SSE Warning",
+    "description": "Adds a warning to Nexusmods' Skyrim page to remind me to download mods for the right fucking game.",
+    "url": "https://greasyfork.org/scripts/425771-sse-warning",
+    "code_url": "https://update.greasyfork.org/scripts/425771/SSE%20Warning.user.js",
+    "code_size": 1788,
+    "license": "GNU GPLv3",
+    "version": "1.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

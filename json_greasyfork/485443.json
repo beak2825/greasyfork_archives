@@ -1,0 +1,34 @@
+{
+  "id": 485443,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-22T13:58:13.000Z",
+  "code_updated_at": "2024-01-22T13:58:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Req Combined DIANA BÖTHFÜER",
+  "description": "Insert",
+  "url": "https://greasyfork.org/scripts/485443-req-combined-diana-b%C3%B6thf%C3%BCer",
+  "code_url": "https://update.greasyfork.org/scripts/485443/Req%20Combined%20DIANA%20B%C3%96THF%C3%9CER.user.js",
+  "code_size": 1034,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

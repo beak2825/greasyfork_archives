@@ -30,6 +30,39 @@
     "version": "0.0.3",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459834,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-11T11:34:56.000Z",
+    "code_updated_at": "2023-02-12T17:32:01.000Z",
+    "namespace": "https://cn.bing.com/search",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890415,
+        "name": "Conard-Ferenc",
+        "created_at": "2022-03-21T13:34:02.000Z",
+        "url": "https://greasyfork.org/users/890415-conard-ferenc"
+      }
+    ],
+    "name": "bingSearchFix",
+    "description": "修复bing国内版搜索框异常",
+    "url": "https://greasyfork.org/scripts/459834-bingsearchfix",
+    "code_url": "https://update.greasyfork.org/scripts/459834/bingSearchFix.user.js",
+    "code_size": 939,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 440193,
+  "daily_installs": 0,
+  "total_installs": 111,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-17T13:01:58.000Z",
+  "code_updated_at": "2022-02-17T14:51:39.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 877606,
+      "name": "remiferia",
+      "created_at": "2022-02-17T12:54:31.000Z",
+      "url": "https://greasyfork.org/users/877606-remiferia",
+      "scripts": [
+        {
+          "id": 440193,
+          "daily_installs": 0,
+          "total_installs": 111,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-17T13:01:58.000Z",
+          "code_updated_at": "2022-02-17T14:51:39.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "高亮显示豆瓣追踪ID",
+          "description": "本脚本将豆瓣网页上隐蔽的追踪ID高亮显示，并予以移除。",
+          "url": "https://greasyfork.org/scripts/440193-%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA%E8%B1%86%E7%93%A3%E8%BF%BD%E8%B8%AAid",
+          "code_url": "https://update.greasyfork.org/scripts/440193/%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA%E8%B1%86%E7%93%A3%E8%BF%BD%E8%B8%AAID.user.js",
+          "code_size": 1013,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "高亮显示豆瓣追踪ID",
+  "description": "本脚本将豆瓣网页上隐蔽的追踪ID高亮显示，并予以移除。",
+  "url": "https://greasyfork.org/scripts/440193-%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA%E8%B1%86%E7%93%A3%E8%BF%BD%E8%B8%AAid",
+  "code_url": "https://update.greasyfork.org/scripts/440193/%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA%E8%B1%86%E7%93%A3%E8%BF%BD%E8%B8%AAID.user.js",
+  "code_size": 1013,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

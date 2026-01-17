@@ -130,5 +130,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 460515,
+    "daily_installs": 0,
+    "total_installs": 333,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-22T16:49:10.000Z",
+    "code_updated_at": "2023-02-22T16:49:09.000Z",
+    "namespace": "https://www.facebook.com/m.a.n.h.h.ieeu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1031405,
+        "name": "Hiếu Xuân",
+        "created_at": "2023-02-22T16:45:38.000Z",
+        "url": "https://greasyfork.org/users/1031405-hi%E1%BA%BFu-xu%C3%A2n"
+      }
+    ],
+    "name": "Bypass ChatGPT",
+    "description": "bypass chatGPT khi quá tải",
+    "url": "https://greasyfork.org/scripts/460515-bypass-chatgpt",
+    "code_url": "https://update.greasyfork.org/scripts/460515/Bypass%20ChatGPT.user.js",
+    "code_size": 633,
+    "license": null,
+    "version": "0.8.1.0.1",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

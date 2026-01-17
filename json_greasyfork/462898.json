@@ -1,0 +1,33 @@
+{
+  "id": 462898,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-30T06:21:21.000Z",
+  "code_updated_at": "2023-03-30T09:23:01.000Z",
+  "namespace": "https://greasyfork.org/en/users/1050283",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1050283,
+      "name": "sbm202",
+      "created_at": "2023-03-30T06:15:04.000Z",
+      "url": "https://greasyfork.org/users/1050283-sbm202"
+    }
+  ],
+  "name": "NixOS Search Copy shell-command to clipboard button",
+  "description": "Add a button when hovering over an element with the class shell-command. When the button is clicked it should copy the value of the element with the class shell-command to the clipboard",
+  "url": "https://greasyfork.org/scripts/462898-nixos-search-copy-shell-command-to-clipboard-button",
+  "code_url": "https://update.greasyfork.org/scripts/462898/NixOS%20Search%20Copy%20shell-command%20to%20clipboard%20button.user.js",
+  "code_size": 2395,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

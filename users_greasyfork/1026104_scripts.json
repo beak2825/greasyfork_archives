@@ -1,0 +1,35 @@
+[
+  {
+    "id": 459955,
+    "daily_installs": 0,
+    "total_installs": 1955,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-13T13:03:34.000Z",
+    "code_updated_at": "2023-02-13T13:03:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/kangyue92/tlscontact-slot-helper",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1026104,
+        "name": "康悦",
+        "created_at": "2023-02-12T15:21:46.000Z",
+        "url": "https://greasyfork.org/users/1026104-%E5%BA%B7%E6%82%A6"
+      }
+    ],
+    "name": "TLSContact Slot Helper",
+    "description": "Style for TLSContact website to avoid scrolling the time table, makes slots easier to find.",
+    "url": "https://greasyfork.org/scripts/459955-tlscontact-slot-helper",
+    "code_url": "https://update.greasyfork.org/scripts/459955/TLSContact%20Slot%20Helper.user.js",
+    "code_size": 1202,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

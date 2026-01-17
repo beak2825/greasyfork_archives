@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428007,
+    "daily_installs": 0,
+    "total_installs": 230,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-06-15T17:18:51.000Z",
+    "code_updated_at": "2023-12-20T19:11:27.000Z",
+    "namespace": "Genshin Impact daily check-in rewards",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 783346,
+        "name": "NoxPi",
+        "created_at": "2021-06-14T12:28:01.000Z",
+        "url": "https://greasyfork.org/users/783346-noxpi"
+      }
+    ],
+    "name": "Genshin Impact daily check-in rewards",
+    "description": "A script to collect Genshin Impact daily check-in rewards at startup and on an open tab at a random interval after reward reset. As long as you leave a tab with the page in the on startup and in the background, it will be collected.",
+    "url": "https://greasyfork.org/scripts/428007-genshin-impact-daily-check-in-rewards",
+    "code_url": "https://update.greasyfork.org/scripts/428007/Genshin%20Impact%20daily%20check-in%20rewards.user.js",
+    "code_size": 4108,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

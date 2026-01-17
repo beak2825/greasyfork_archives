@@ -1,0 +1,33 @@
+{
+  "id": 459431,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-04T13:02:07.000Z",
+  "code_updated_at": "2023-02-04T13:02:07.000Z",
+  "namespace": "https://greasyfork.org/users/205894",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 205894,
+      "name": "SekaReal",
+      "created_at": "2018-08-18T23:20:29.000Z",
+      "url": "https://greasyfork.org/users/205894-sekareal"
+    }
+  ],
+  "name": "File Karelia randomizer",
+  "description": "Just random links. If link is valid - left's it here",
+  "url": "https://greasyfork.org/scripts/459431-file-karelia-randomizer",
+  "code_url": "https://update.greasyfork.org/scripts/459431/File%20Karelia%20randomizer.user.js",
+  "code_size": 1890,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,48 @@
+{
+  "id": 467709,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-02T10:49:18.000Z",
+  "code_updated_at": "2024-10-10T13:29:03.000Z",
+  "namespace": "https://github.com/BackMarket/akenator-userscript",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1089062,
+      "name": "gregoiredx",
+      "created_at": "2023-06-02T10:37:47.000Z",
+      "url": "https://greasyfork.org/users/1089062-gregoiredx",
+      "scripts": []
+    },
+    {
+      "id": 1343048,
+      "name": "JulianMaurin",
+      "created_at": "2024-07-31T09:43:25.000Z",
+      "url": "https://greasyfork.org/users/1343048-julianmaurin",
+      "scripts": []
+    },
+    {
+      "id": 1362539,
+      "name": "jbertran",
+      "created_at": "2024-09-03T12:38:24.000Z",
+      "url": "https://greasyfork.org/users/1362539-jbertran",
+      "scripts": []
+    }
+  ],
+  "name": "Akeneo codes",
+  "description": "Add codes to Akeneo tables",
+  "url": "https://greasyfork.org/scripts/467709-akeneo-codes",
+  "code_url": "https://update.greasyfork.org/scripts/467709/Akeneo%20codes.user.js",
+  "code_size": 6144,
+  "license": null,
+  "version": "7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

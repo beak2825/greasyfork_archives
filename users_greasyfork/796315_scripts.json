@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429744,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-22T21:31:14.000Z",
+    "code_updated_at": "2021-07-22T21:31:14.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 796315,
+        "name": "koarasenpai",
+        "created_at": "2021-07-22T21:29:11.000Z",
+        "url": "https://greasyfork.org/users/796315-koarasenpai"
+      }
+    ],
+    "name": "No Blur RespondeAí",
+    "description": "Libera o acesso aos conteúdos da plataforma sem precisar fazer login",
+    "url": "https://greasyfork.org/scripts/429744-no-blur-respondea%C3%AD",
+    "code_url": "https://update.greasyfork.org/scripts/429744/No%20Blur%20RespondeA%C3%AD.user.js",
+    "code_size": 3242,
+    "license": null,
+    "version": "2.6",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

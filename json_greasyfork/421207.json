@@ -1,0 +1,34 @@
+{
+  "id": 421207,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-04T15:40:20.000Z",
+  "code_updated_at": "2021-02-05T05:35:30.000Z",
+  "namespace": "virtonomica",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 113261,
+      "name": "chippa",
+      "created_at": "2017-03-28T14:31:17.000Z",
+      "url": "https://greasyfork.org/users/113261-chippa",
+      "scripts": []
+    }
+  ],
+  "name": "virtonomica: mayor helper",
+  "description": "Помощь мэру",
+  "url": "https://greasyfork.org/scripts/421207-virtonomica-mayor-helper",
+  "code_url": "https://update.greasyfork.org/scripts/421207/virtonomica%3A%20mayor%20helper.user.js",
+  "code_size": 3599,
+  "license": null,
+  "version": "0.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

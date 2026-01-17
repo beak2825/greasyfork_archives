@@ -1,0 +1,59 @@
+{
+  "id": 463761,
+  "daily_installs": 0,
+  "total_installs": 287,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2023-04-11T14:07:53.000Z",
+  "code_updated_at": "2023-04-11T14:07:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1058174,
+      "name": "wizen",
+      "created_at": "2023-04-11T12:23:45.000Z",
+      "url": "https://greasyfork.org/users/1058174-wizen",
+      "scripts": [
+        {
+          "id": 463761,
+          "daily_installs": 0,
+          "total_installs": 287,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 2,
+          "created_at": "2023-04-11T14:07:53.000Z",
+          "code_updated_at": "2023-04-11T14:07:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Amz销量提取器 | 逍遥哥",
+          "description": "最近AMZ在前台公布了部分品类的销量数据，市面暂无使用亚马逊官方数据进行销量统计的插件，自己写一个",
+          "url": "https://greasyfork.org/scripts/463761-amz%E9%94%80%E9%87%8F%E6%8F%90%E5%8F%96%E5%99%A8-%E9%80%8D%E9%81%A5%E5%93%A5",
+          "code_url": "https://update.greasyfork.org/scripts/463761/Amz%E9%94%80%E9%87%8F%E6%8F%90%E5%8F%96%E5%99%A8%20%7C%20%E9%80%8D%E9%81%A5%E5%93%A5.user.js",
+          "code_size": 11803,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Amz销量提取器 | 逍遥哥",
+  "description": "最近AMZ在前台公布了部分品类的销量数据，市面暂无使用亚马逊官方数据进行销量统计的插件，自己写一个",
+  "url": "https://greasyfork.org/scripts/463761-amz%E9%94%80%E9%87%8F%E6%8F%90%E5%8F%96%E5%99%A8-%E9%80%8D%E9%81%A5%E5%93%A5",
+  "code_url": "https://update.greasyfork.org/scripts/463761/Amz%E9%94%80%E9%87%8F%E6%8F%90%E5%8F%96%E5%99%A8%20%7C%20%E9%80%8D%E9%81%A5%E5%93%A5.user.js",
+  "code_size": 11803,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

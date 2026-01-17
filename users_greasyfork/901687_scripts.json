@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443322,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-13T12:08:12.000Z",
+    "code_updated_at": "2022-04-13T12:10:14.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 901687,
+        "name": "rahulraj80",
+        "created_at": "2022-04-13T12:06:33.000Z",
+        "url": "https://greasyfork.org/users/901687-rahulraj80"
+      }
+    ],
+    "name": "Discord SpellCheck",
+    "description": "Enable spellcheck 4/13/2022, 13:30:00",
+    "url": "https://greasyfork.org/scripts/443322-discord-spellcheck",
+    "code_url": "https://update.greasyfork.org/scripts/443322/Discord%20SpellCheck.user.js",
+    "code_size": 2800,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

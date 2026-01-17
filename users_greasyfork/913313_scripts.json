@@ -97,5 +97,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 491879,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-07T09:01:12.000Z",
+    "code_updated_at": "2024-04-07T09:03:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913313,
+        "name": "sdozxm0618",
+        "created_at": "2022-05-12T04:07:25.000Z",
+        "url": "https://greasyfork.org/users/913313-sdozxm0618"
+      }
+    ],
+    "name": "U77驰援英雄自动",
+    "description": "没得介绍!",
+    "url": "https://greasyfork.org/scripts/491879-u77%E9%A9%B0%E6%8F%B4%E8%8B%B1%E9%9B%84%E8%87%AA%E5%8A%A8",
+    "code_url": "https://update.greasyfork.org/scripts/491879/U77%E9%A9%B0%E6%8F%B4%E8%8B%B1%E9%9B%84%E8%87%AA%E5%8A%A8.user.js",
+    "code_size": 1111,
+    "license": "MIT License",
+    "version": "20240407",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444853,
+    "daily_installs": 0,
+    "total_installs": 174,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-05-12T04:26:48.000Z",
+    "code_updated_at": "2024-04-07T08:56:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913313,
+        "name": "sdozxm0618",
+        "created_at": "2022-05-12T04:07:25.000Z",
+        "url": "https://greasyfork.org/users/913313-sdozxm0618"
+      }
+    ],
+    "name": "灵动游戏免登录",
+    "description": "灵动游戏屏蔽登录遮挡",
+    "url": "https://greasyfork.org/scripts/444853-%E7%81%B5%E5%8A%A8%E6%B8%B8%E6%88%8F%E5%85%8D%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/444853/%E7%81%B5%E5%8A%A8%E6%B8%B8%E6%88%8F%E5%85%8D%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 505,
+    "license": null,
+    "version": "2024-01-30",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

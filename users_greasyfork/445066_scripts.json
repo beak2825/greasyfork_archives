@@ -1,0 +1,200 @@
+[
+  {
+    "id": 427504,
+    "daily_installs": 0,
+    "total_installs": 108,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-04T08:34:44.000Z",
+    "code_updated_at": "2021-06-04T08:34:43.000Z",
+    "namespace": "https://github.com/stu43005",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445066,
+        "name": "stu43005",
+        "created_at": "2020-02-14T13:05:51.000Z",
+        "url": "https://greasyfork.org/users/445066-stu43005"
+      }
+    ],
+    "name": "Workaround For Youtube Embed Preview",
+    "description": "Fix Youtube Embed Preview",
+    "url": "https://greasyfork.org/scripts/427504-workaround-for-youtube-embed-preview",
+    "code_url": "https://update.greasyfork.org/scripts/427504/Workaround%20For%20Youtube%20Embed%20Preview.user.js",
+    "code_size": 970,
+    "license": "BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422886,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-08T16:37:37.000Z",
+    "code_updated_at": "2021-03-08T16:37:36.000Z",
+    "namespace": "https://greasyfork.org/users/445066",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445066,
+        "name": "stu43005",
+        "created_at": "2020-02-14T13:05:51.000Z",
+        "url": "https://greasyfork.org/users/445066-stu43005"
+      }
+    ],
+    "name": "DM5 image zoom",
+    "description": "動漫屋放大鏡",
+    "url": "https://greasyfork.org/scripts/422886-dm5-image-zoom",
+    "code_url": "https://update.greasyfork.org/scripts/422886/DM5%20image%20zoom.user.js",
+    "code_size": 2842,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422885,
+    "daily_installs": 0,
+    "total_installs": 83,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-08T16:37:36.000Z",
+    "code_updated_at": "2021-03-08T16:37:35.000Z",
+    "namespace": "https://greasyfork.org/users/445066",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445066,
+        "name": "stu43005",
+        "created_at": "2020-02-14T13:05:51.000Z",
+        "url": "https://greasyfork.org/users/445066-stu43005"
+      }
+    ],
+    "name": "DM5 image download",
+    "description": "動漫屋圖片下載",
+    "url": "https://greasyfork.org/scripts/422885-dm5-image-download",
+    "code_url": "https://update.greasyfork.org/scripts/422885/DM5%20image%20download.user.js",
+    "code_size": 1065,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422884,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-08T16:36:01.000Z",
+    "code_updated_at": "2021-03-08T16:36:01.000Z",
+    "namespace": "Plurk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445066,
+        "name": "stu43005",
+        "created_at": "2020-02-14T13:05:51.000Z",
+        "url": "https://greasyfork.org/users/445066-stu43005"
+      }
+    ],
+    "name": "Plurk Clique Timeline",
+    "description": "噗浪小圈圈河道",
+    "url": "https://greasyfork.org/scripts/422884-plurk-clique-timeline",
+    "code_url": "https://update.greasyfork.org/scripts/422884/Plurk%20Clique%20Timeline.user.js",
+    "code_size": 764,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422883,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-08T16:36:00.000Z",
+    "code_updated_at": "2021-03-08T16:36:00.000Z",
+    "namespace": "Plurk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445066,
+        "name": "stu43005",
+        "created_at": "2020-02-14T13:05:51.000Z",
+        "url": "https://greasyfork.org/users/445066-stu43005"
+      }
+    ],
+    "name": "Plurk R18 Timeline",
+    "description": "噗浪 R18 河道",
+    "url": "https://greasyfork.org/scripts/422883-plurk-r18-timeline",
+    "code_url": "https://update.greasyfork.org/scripts/422883/Plurk%20R18%20Timeline.user.js",
+    "code_size": 749,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 422882,
+    "daily_installs": 0,
+    "total_installs": 84,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-08T16:34:42.000Z",
+    "code_updated_at": "2021-12-19T06:39:59.000Z",
+    "namespace": "OpenYoutubeOnHolodex",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445066,
+        "name": "stu43005",
+        "created_at": "2020-02-14T13:05:51.000Z",
+        "url": "https://greasyfork.org/users/445066-stu43005"
+      }
+    ],
+    "name": "Open Youtube video on Holodex",
+    "description": "Add a button under the video to open the video on Holodex.net",
+    "url": "https://greasyfork.org/scripts/422882-open-youtube-video-on-holodex",
+    "code_url": "https://update.greasyfork.org/scripts/422882/Open%20Youtube%20video%20on%20Holodex.user.js",
+    "code_size": 2653,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

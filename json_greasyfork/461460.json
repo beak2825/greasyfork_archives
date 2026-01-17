@@ -1,0 +1,59 @@
+{
+  "id": 461460,
+  "daily_installs": 0,
+  "total_installs": 71,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-08T14:58:47.000Z",
+  "code_updated_at": "2023-03-12T14:05:17.000Z",
+  "namespace": "https://greasyfork.org/users/1038738",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1038738,
+      "name": "toonaive2333",
+      "created_at": "2023-03-08T14:28:24.000Z",
+      "url": "https://greasyfork.org/users/1038738-toonaive2333",
+      "scripts": [
+        {
+          "id": 461460,
+          "daily_installs": 0,
+          "total_installs": 71,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-08T14:58:47.000Z",
+          "code_updated_at": "2023-03-12T14:05:17.000Z",
+          "namespace": "https://greasyfork.org/users/1038738",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "b站（bilibili）稍后再看链接替换",
+          "description": "从 稍后再看样式播放器 进入 正常样式的播放器",
+          "url": "https://greasyfork.org/scripts/461460-b%E7%AB%99-bilibili-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%93%BE%E6%8E%A5%E6%9B%BF%E6%8D%A2",
+          "code_url": "https://update.greasyfork.org/scripts/461460/b%E7%AB%99%EF%BC%88bilibili%EF%BC%89%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%93%BE%E6%8E%A5%E6%9B%BF%E6%8D%A2.user.js",
+          "code_size": 1689,
+          "license": "MIT License",
+          "version": "0.0111",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "b站（bilibili）稍后再看链接替换",
+  "description": "从 稍后再看样式播放器 进入 正常样式的播放器",
+  "url": "https://greasyfork.org/scripts/461460-b%E7%AB%99-bilibili-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%93%BE%E6%8E%A5%E6%9B%BF%E6%8D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/461460/b%E7%AB%99%EF%BC%88bilibili%EF%BC%89%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%93%BE%E6%8E%A5%E6%9B%BF%E6%8D%A2.user.js",
+  "code_size": 1689,
+  "license": "MIT License",
+  "version": "0.0111",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

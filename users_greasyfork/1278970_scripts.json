@@ -1,0 +1,35 @@
+[
+  {
+    "id": 490776,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-24T19:33:39.000Z",
+    "code_updated_at": "2024-03-24T19:33:39.000Z",
+    "namespace": "https://www.blutv.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1278970,
+        "name": "cmd64",
+        "created_at": "2024-03-24T19:31:23.000Z",
+        "url": "https://greasyfork.org/users/1278970-cmd64"
+      }
+    ],
+    "name": "BluTV Extractor",
+    "description": "Download MPD and subtitles files from BluTV",
+    "url": "https://greasyfork.org/scripts/490776-blutv-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/490776/BluTV%20Extractor.user.js",
+    "code_size": 4280,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

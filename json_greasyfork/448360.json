@@ -1,0 +1,33 @@
+{
+  "id": 448360,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-23T10:14:18.000Z",
+  "code_updated_at": "2022-07-23T10:16:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 938582,
+      "name": "Hayks Test Group",
+      "created_at": "2022-07-23T09:52:31.000Z",
+      "url": "https://greasyfork.org/users/938582-hayks-test-group"
+    }
+  ],
+  "name": "Top 300 Racer Badge (ERROR!) Don’t use anymore.",
+  "description": "Get The Top 300 Racer Badge In Your garage!",
+  "url": "https://greasyfork.org/scripts/448360-top-300-racer-badge-error-don-t-use-anymore",
+  "code_url": "https://update.greasyfork.org/scripts/448360/Top%20300%20Racer%20Badge%20%28ERROR%21%29%20Don%E2%80%99t%20use%20anymore.user.js",
+  "code_size": 976,
+  "license": "MIT License",
+  "version": "1.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

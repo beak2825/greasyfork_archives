@@ -1,0 +1,233 @@
+[
+  {
+    "id": 488888,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-03T13:44:20.000Z",
+    "code_updated_at": "2024-03-03T13:44:20.000Z",
+    "namespace": "Guardar tropas",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262264,
+        "name": "holamegustanlosbots",
+        "created_at": "2024-02-17T01:58:51.000Z",
+        "url": "https://greasyfork.org/users/1262264-holamegustanlosbots"
+      }
+    ],
+    "name": "Guardar tropas",
+    "description": "Viva el betis",
+    "url": "https://greasyfork.org/scripts/488888-guardar-tropas",
+    "code_url": "https://update.greasyfork.org/scripts/488888/Guardar%20tropas.user.js",
+    "code_size": 4910,
+    "license": null,
+    "version": "2024-03-03",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488466,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-27T18:28:18.000Z",
+    "code_updated_at": "2024-02-27T18:28:18.000Z",
+    "namespace": "Chivatear",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262264,
+        "name": "holamegustanlosbots",
+        "created_at": "2024-02-17T01:58:51.000Z",
+        "url": "https://greasyfork.org/users/1262264-holamegustanlosbots"
+      }
+    ],
+    "name": "Chivatear",
+    "description": "Crea un botón en la ventana de info de isla para chivatear todas las ciudades de la isla automáticamente",
+    "url": "https://greasyfork.org/scripts/488466-chivatear",
+    "code_url": "https://update.greasyfork.org/scripts/488466/Chivatear.user.js",
+    "code_size": 5462,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488364,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-26T19:08:37.000Z",
+    "code_updated_at": "2024-02-26T19:08:37.000Z",
+    "namespace": "Subir aldeas",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262264,
+        "name": "holamegustanlosbots",
+        "created_at": "2024-02-17T01:58:51.000Z",
+        "url": "https://greasyfork.org/users/1262264-holamegustanlosbots"
+      }
+    ],
+    "name": "Subir aldeas",
+    "description": "Agrega un botón en las aldeas para subir todas las de la isla de nivel con un click",
+    "url": "https://greasyfork.org/scripts/488364-subir-aldeas",
+    "code_url": "https://update.greasyfork.org/scripts/488364/Subir%20aldeas.user.js",
+    "code_size": 2830,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488340,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-26T13:50:49.000Z",
+    "code_updated_at": "2024-03-21T16:29:56.000Z",
+    "namespace": "Ajustar ataque",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262264,
+        "name": "holamegustanlosbots",
+        "created_at": "2024-02-17T01:58:51.000Z",
+        "url": "https://greasyfork.org/users/1262264-holamegustanlosbots"
+      }
+    ],
+    "name": "Ajustar ataque",
+    "description": "Versión alternativa de ajustar ataques",
+    "url": "https://greasyfork.org/scripts/488340-ajustar-ataque",
+    "code_url": "https://update.greasyfork.org/scripts/488340/Ajustar%20ataque.user.js",
+    "code_size": 25783,
+    "license": null,
+    "version": "0.1.5",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488054,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-22T22:39:25.000Z",
+    "code_updated_at": "2024-02-22T22:39:25.000Z",
+    "namespace": "https://greasyfork.org/users/978964",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262264,
+        "name": "holamegustanlosbots",
+        "created_at": "2024-02-17T01:58:51.000Z",
+        "url": "https://greasyfork.org/users/1262264-holamegustanlosbots"
+      }
+    ],
+    "name": "Ajustar Ataque con Heroe - MODIFICADO",
+    "description": "Ajustar Ataque con Heroe - MODIFICADO.",
+    "url": "https://greasyfork.org/scripts/488054-ajustar-ataque-con-heroe-modificado",
+    "code_url": "https://update.greasyfork.org/scripts/488054/Ajustar%20Ataque%20con%20Heroe%20-%20MODIFICADO.user.js",
+    "code_size": 24330,
+    "license": null,
+    "version": "0.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 487487,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-17T02:07:39.000Z",
+    "code_updated_at": "2024-02-17T02:07:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262264,
+        "name": "holamegustanlosbots",
+        "created_at": "2024-02-17T01:58:51.000Z",
+        "url": "https://greasyfork.org/users/1262264-holamegustanlosbots"
+      }
+    ],
+    "name": "AutoFarm",
+    "description": "el del senyor",
+    "url": "https://greasyfork.org/scripts/487487-autofarm",
+    "code_url": "https://update.greasyfork.org/scripts/487487/AutoFarm.user.js",
+    "code_size": 10783,
+    "license": null,
+    "version": "0.1",
+    "locale": "ca",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 487486,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-17T02:06:02.000Z",
+    "code_updated_at": "2024-02-26T19:29:58.000Z",
+    "namespace": "Decepticon",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262264,
+        "name": "holamegustanlosbots",
+        "created_at": "2024-02-17T01:58:51.000Z",
+        "url": "https://greasyfork.org/users/1262264-holamegustanlosbots"
+      }
+    ],
+    "name": "Decepticon",
+    "description": "Es un bot malvado",
+    "url": "https://greasyfork.org/scripts/487486-decepticon",
+    "code_url": "https://update.greasyfork.org/scripts/487486/Decepticon.user.js",
+    "code_size": 12699,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

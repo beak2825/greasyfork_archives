@@ -97,5 +97,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 462548,
+    "daily_installs": 0,
+    "total_installs": 1318,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-25T10:20:14.000Z",
+    "code_updated_at": "2023-03-25T10:20:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 745108,
+        "name": "imgreasy",
+        "created_at": "2021-03-09T04:58:49.000Z",
+        "url": "https://greasyfork.org/users/745108-imgreasy"
+      }
+    ],
+    "name": "ChatGPT heartbeat",
+    "description": "减少 ChatGPT 官方网页需要频繁刷新的简单办法",
+    "url": "https://greasyfork.org/scripts/462548-chatgpt-heartbeat",
+    "code_url": "https://update.greasyfork.org/scripts/462548/ChatGPT%20heartbeat.user.js",
+    "code_size": 1447,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457597,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-04T04:23:14.000Z",
+    "code_updated_at": "2024-02-13T01:12:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 745108,
+        "name": "imgreasy",
+        "created_at": "2021-03-09T04:58:49.000Z",
+        "url": "https://greasyfork.org/users/745108-imgreasy"
+      }
+    ],
+    "name": "新标签打开",
+    "description": "新页面(标签)打开",
+    "url": "https://greasyfork.org/scripts/457597-%E6%96%B0%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/457597/%E6%96%B0%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80.user.js",
+    "code_size": 2202,
+    "license": "MIT License",
+    "version": "0.1.10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457590,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-04T02:25:35.000Z",
+    "code_updated_at": "2023-01-04T13:27:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 745108,
+        "name": "imgreasy",
+        "created_at": "2021-03-09T04:58:49.000Z",
+        "url": "https://greasyfork.org/users/745108-imgreasy"
+      }
+    ],
+    "name": "不要新标签打开",
+    "description": "不要新页面(标签)打开",
+    "url": "https://greasyfork.org/scripts/457590-%E4%B8%8D%E8%A6%81%E6%96%B0%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/457590/%E4%B8%8D%E8%A6%81%E6%96%B0%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80.user.js",
+    "code_size": 797,
+    "license": "MIT License",
+    "version": "0.1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 451644,
+    "daily_installs": 0,
+    "total_installs": 248,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-19T17:34:16.000Z",
+    "code_updated_at": "2022-09-28T10:27:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 745108,
+        "name": "imgreasy",
+        "created_at": "2021-03-09T04:58:49.000Z",
+        "url": "https://greasyfork.org/users/745108-imgreasy"
+      }
+    ],
+    "name": "NGA域名重定向",
+    "description": "NGA社区域名重定向到nga.178.com，不然不显示评论。",
+    "url": "https://greasyfork.org/scripts/451644-nga%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91",
+    "code_url": "https://update.greasyfork.org/scripts/451644/NGA%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91.user.js",
+    "code_size": 583,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

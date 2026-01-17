@@ -1,0 +1,167 @@
+[
+  {
+    "id": 469692,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-29T03:44:45.000Z",
+    "code_updated_at": "2023-06-29T03:45:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790766,
+        "name": "1812735056",
+        "created_at": "2021-07-06T02:33:08.000Z",
+        "url": "https://greasyfork.org/users/790766-1812735056"
+      }
+    ],
+    "name": "国家中小学智慧教育平台",
+    "description": "国家中小学智慧教育平台1.0",
+    "url": "https://greasyfork.org/scripts/469692-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0",
+    "code_url": "https://update.greasyfork.org/scripts/469692/%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0.user.js",
+    "code_size": 2365,
+    "license": "MIT License",
+    "version": "v1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 456161,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-07T07:30:36.000Z",
+    "code_updated_at": "2022-12-08T01:50:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790766,
+        "name": "1812735056",
+        "created_at": "2021-07-06T02:33:08.000Z",
+        "url": "https://greasyfork.org/users/790766-1812735056"
+      }
+    ],
+    "name": "华东师范大学培训",
+    "description": "华东师范大学培训脚本",
+    "url": "https://greasyfork.org/scripts/456161-%E5%8D%8E%E4%B8%9C%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E5%9F%B9%E8%AE%AD",
+    "code_url": "https://update.greasyfork.org/scripts/456161/%E5%8D%8E%E4%B8%9C%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E5%9F%B9%E8%AE%AD.user.js",
+    "code_size": 2037,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 447403,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-04T01:38:41.000Z",
+    "code_updated_at": "2022-07-07T03:57:06.000Z",
+    "namespace": "https://greasyfork.org/users/790766",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790766,
+        "name": "1812735056",
+        "created_at": "2021-07-06T02:33:08.000Z",
+        "url": "https://greasyfork.org/users/790766-1812735056"
+      }
+    ],
+    "name": "河南省专业技术人员继续教育网2022",
+    "description": "1.0",
+    "url": "https://greasyfork.org/scripts/447403-%E6%B2%B3%E5%8D%97%E7%9C%81%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E7%BD%912022",
+    "code_url": "https://update.greasyfork.org/scripts/447403/%E6%B2%B3%E5%8D%97%E7%9C%81%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E7%BD%912022.user.js",
+    "code_size": 17669,
+    "license": "MIT License",
+    "version": "7.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 444584,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-07T06:16:57.000Z",
+    "code_updated_at": "2022-05-07T06:16:57.000Z",
+    "namespace": "https://greasyfork.org/users/790766",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790766,
+        "name": "1812735056",
+        "created_at": "2021-07-06T02:33:08.000Z",
+        "url": "https://greasyfork.org/users/790766-1812735056"
+      }
+    ],
+    "name": "河南专技学习辅助",
+    "description": "河南专技学习辅助(仅供学习交流使用)",
+    "url": "https://greasyfork.org/scripts/444584-%E6%B2%B3%E5%8D%97%E4%B8%93%E6%8A%80%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/444584/%E6%B2%B3%E5%8D%97%E4%B8%93%E6%8A%80%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9.user.js",
+    "code_size": 4389,
+    "license": null,
+    "version": "v1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 444583,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-07T06:14:25.000Z",
+    "code_updated_at": "2022-05-07T06:14:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790766,
+        "name": "1812735056",
+        "created_at": "2021-07-06T02:33:08.000Z",
+        "url": "https://greasyfork.org/users/790766-1812735056"
+      }
+    ],
+    "name": "中国教研网3.8",
+    "description": "尝试修复网络卡顿页面自动刷新",
+    "url": "https://greasyfork.org/scripts/444583-%E4%B8%AD%E5%9B%BD%E6%95%99%E7%A0%94%E7%BD%913-8",
+    "code_url": "https://update.greasyfork.org/scripts/444583/%E4%B8%AD%E5%9B%BD%E6%95%99%E7%A0%94%E7%BD%9138.user.js",
+    "code_size": 14474,
+    "license": "MIT License",
+    "version": "v3.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

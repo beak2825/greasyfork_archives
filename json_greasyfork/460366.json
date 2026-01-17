@@ -1,0 +1,34 @@
+{
+  "id": 460366,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-20T09:01:41.000Z",
+  "code_updated_at": "2023-02-20T09:10:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1030208,
+      "name": "Wynor",
+      "created_at": "2023-02-20T08:45:52.000Z",
+      "url": "https://greasyfork.org/users/1030208-wynor",
+      "scripts": []
+    }
+  ],
+  "name": "Sun Yat-Sen University Course Registering Tool",
+  "description": "GUI tool for course registering of Sun Yat-Sen University",
+  "url": "https://greasyfork.org/scripts/460366-sun-yat-sen-university-course-registering-tool",
+  "code_url": "https://update.greasyfork.org/scripts/460366/Sun%20Yat-Sen%20University%20Course%20Registering%20Tool.user.js",
+  "code_size": 30911,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 469593,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-27T21:29:36.000Z",
+  "code_updated_at": "2025-07-05T16:51:52.000Z",
+  "namespace": "bluebug",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1113758,
+      "name": "zihan1997",
+      "created_at": "2023-06-27T21:26:02.000Z",
+      "url": "https://greasyfork.org/users/1113758-zihan1997",
+      "scripts": []
+    }
+  ],
+  "name": "iftv plugin, button to remove sections(streaming, ads, photo sharing...)",
+  "description": "remove ads in iyf webpage",
+  "url": "https://greasyfork.org/scripts/469593-iftv-plugin-button-to-remove-sections-streaming-ads-photo-sharing",
+  "code_url": "https://update.greasyfork.org/scripts/469593/iftv%20plugin%2C%20button%20to%20remove%20sections%28streaming%2C%20ads%2C%20photo%20sharing%29.user.js",
+  "code_size": 3614,
+  "license": "MIT License",
+  "version": "0.0.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

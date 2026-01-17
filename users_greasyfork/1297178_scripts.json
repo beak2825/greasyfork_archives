@@ -1,0 +1,68 @@
+[
+  {
+    "id": 494134,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-05T10:08:08.000Z",
+    "code_updated_at": "2024-05-05T10:08:08.000Z",
+    "namespace": "Belet film unlocker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297178,
+        "name": "siydizorku@gufum.com",
+        "created_at": "2024-05-05T10:01:58.000Z",
+        "url": "https://greasyfork.org/users/1297178-siydizorku-gufum-com"
+      }
+    ],
+    "name": "Belet film unlocker",
+    "description": "Free belet film",
+    "url": "https://greasyfork.org/scripts/494134-belet-film-unlocker",
+    "code_url": "https://update.greasyfork.org/scripts/494134/Belet%20film%20unlocker.user.js",
+    "code_size": 930,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 494133,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-05T10:06:32.000Z",
+    "code_updated_at": "2024-05-05T10:06:32.000Z",
+    "namespace": "Hinlen unlocker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297178,
+        "name": "siydizorku@gufum.com",
+        "created_at": "2024-05-05T10:01:58.000Z",
+        "url": "https://greasyfork.org/users/1297178-siydizorku-gufum-com"
+      }
+    ],
+    "name": "Hinlen unlocker",
+    "description": "Free hinlen.com",
+    "url": "https://greasyfork.org/scripts/494133-hinlen-unlocker",
+    "code_url": "https://update.greasyfork.org/scripts/494133/Hinlen%20unlocker.user.js",
+    "code_size": 428,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 444591,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-07T07:55:42.000Z",
+  "code_updated_at": "2022-05-07T07:55:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 877018,
+      "name": "Ikaros-521",
+      "created_at": "2022-02-16T02:33:08.000Z",
+      "url": "https://greasyfork.org/users/877018-ikaros-521"
+    }
+  ],
+  "name": "GitHub工程快捷载入在线VS Code",
+  "description": "F1载入‘github1s’，F2载入‘gitpod.io’",
+  "url": "https://greasyfork.org/scripts/444591-github%E5%B7%A5%E7%A8%8B%E5%BF%AB%E6%8D%B7%E8%BD%BD%E5%85%A5%E5%9C%A8%E7%BA%BFvs-code",
+  "code_url": "https://update.greasyfork.org/scripts/444591/GitHub%E5%B7%A5%E7%A8%8B%E5%BF%AB%E6%8D%B7%E8%BD%BD%E5%85%A5%E5%9C%A8%E7%BA%BFVS%20Code.user.js",
+  "code_size": 858,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

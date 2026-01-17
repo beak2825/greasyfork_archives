@@ -31,5 +31,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 462993,
+    "daily_installs": 0,
+    "total_installs": 586,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-31T13:58:24.000Z",
+    "code_updated_at": "2023-08-30T16:58:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 893587,
+        "name": "limbopro",
+        "created_at": "2022-03-26T18:49:45.000Z",
+        "url": "https://greasyfork.org/users/893587-limbopro"
+      }
+    ],
+    "name": "泥巴影视去广告(nbys/nivod)",
+    "description": "泥巴影视去广告(nbys/nivod)视频广告/图片广告；iPhone（搜索毒奶去广告计划）/PC/Mac/iPad端均可食用；",
+    "url": "https://greasyfork.org/scripts/462993-%E6%B3%A5%E5%B7%B4%E5%BD%B1%E8%A7%86%E5%8E%BB%E5%B9%BF%E5%91%8A-nbys-nivod",
+    "code_url": "https://update.greasyfork.org/scripts/462993/%E6%B3%A5%E5%B7%B4%E5%BD%B1%E8%A7%86%E5%8E%BB%E5%B9%BF%E5%91%8A%28nbysnivod%29.user.js",
+    "code_size": 7068,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "0.1.1",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 447080,
+    "daily_installs": 0,
+    "total_installs": 917,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2022-06-26T17:16:38.000Z",
+    "code_updated_at": "2022-06-26T17:16:38.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/443290-adblock4limbo-adsremoveproject",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 893587,
+        "name": "limbopro",
+        "created_at": "2022-03-26T18:49:45.000Z",
+        "url": "https://greasyfork.org/users/893587-limbopro"
+      }
+    ],
+    "name": "ublock instagram copy",
+    "description": "解除 Instagram 桌面浏览器版“禁用右键复制图片”",
+    "url": "https://greasyfork.org/scripts/447080-ublock-instagram-copy",
+    "code_url": "https://update.greasyfork.org/scripts/447080/ublock%20instagram%20copy.user.js",
+    "code_size": 1054,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 443993,
+    "daily_installs": 0,
+    "total_installs": 911,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-25T17:46:50.000Z",
+    "code_updated_at": "2022-06-27T02:59:07.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/893587-limbopro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 893587,
+        "name": "limbopro",
+        "created_at": "2022-03-26T18:49:45.000Z",
+        "url": "https://greasyfork.org/users/893587-limbopro"
+      }
+    ],
+    "name": "知乎浏览体验优化",
+    "description": "优化PC端浏览未登录状态下浏览知乎体验：动态移除登录窗口、规避新标签页打开链接、首页登录页重定向至热门页面；",
+    "url": "https://greasyfork.org/scripts/443993-%E7%9F%A5%E4%B9%8E%E6%B5%8F%E8%A7%88%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/443993/%E7%9F%A5%E4%B9%8E%E6%B5%8F%E8%A7%88%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 7187,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "0.0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 442253,
+    "daily_installs": 0,
+    "total_installs": 3547,
+    "fan_score": "48.7",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-03-28T13:31:55.000Z",
+    "code_updated_at": "2025-05-30T01:55:15.000Z",
+    "namespace": "https://greasyfork.org/scripts/442253-%E5%B1%8F%E8%94%BD%E5%86%85%E5%AE%B9%E5%86%9C%E5%9C%BA-with-%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC/code/%E5%B1%8F%E8%94%BD%E5%86%85%E5%AE%B9%E5%86%9C%E5%9C%BA%EF%BC%88with%20%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%EF%BC%89.user.js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 893587,
+        "name": "limbopro",
+        "created_at": "2022-03-26T18:49:45.000Z",
+        "url": "https://greasyfork.org/users/893587-limbopro"
+      }
+    ],
+    "name": "屏蔽内容农场（with 油猴脚本）X",
+    "description": "利用 JavaScript/CSS 屏蔽【谷歌/Bing国际】搜索结果中的「内容农场」内容，顺便在清除谷歌搜索结果中的Adsense广告，还你清爽的 Google/Bing 中文搜索体验！",
+    "url": "https://greasyfork.org/scripts/442253-%E5%B1%8F%E8%94%BD%E5%86%85%E5%AE%B9%E5%86%9C%E5%9C%BA-with-%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC-x",
+    "code_url": "https://update.greasyfork.org/scripts/442253/%E5%B1%8F%E8%94%BD%E5%86%85%E5%AE%B9%E5%86%9C%E5%9C%BA%EF%BC%88with%20%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%EF%BC%89X.user.js",
+    "code_size": 141828,
+    "license": "MIT License",
+    "version": "0.4.06.04",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

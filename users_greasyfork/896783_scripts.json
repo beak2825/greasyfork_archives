@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442587,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-02T22:36:58.000Z",
+    "code_updated_at": "2022-04-04T13:29:52.000Z",
+    "namespace": "https://github.com/stevebel/rPlaceOverlay",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 896783,
+        "name": "Stevebel",
+        "created_at": "2022-04-02T21:48:54.000Z",
+        "url": "https://greasyfork.org/users/896783-stevebel"
+      }
+    ],
+    "name": "r/Place RubberRoss Newgrounds Overlay",
+    "description": "R/Place Newgrounds Overlay by RubberRoss community",
+    "url": "https://greasyfork.org/scripts/442587-r-place-rubberross-newgrounds-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/442587/rPlace%20RubberRoss%20Newgrounds%20Overlay.user.js",
+    "code_size": 1114,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

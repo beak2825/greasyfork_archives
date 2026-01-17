@@ -1,0 +1,59 @@
+{
+  "id": 467449,
+  "daily_installs": 0,
+  "total_installs": 99,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-30T02:05:57.000Z",
+  "code_updated_at": "2023-05-30T02:05:57.000Z",
+  "namespace": "Twitter, but better.",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1087000,
+      "name": "0x0292394847282",
+      "created_at": "2023-05-30T01:33:43.000Z",
+      "url": "https://greasyfork.org/users/1087000-0x0292394847282",
+      "scripts": [
+        {
+          "id": 467449,
+          "daily_installs": 0,
+          "total_installs": 99,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-30T02:05:57.000Z",
+          "code_updated_at": "2023-05-30T02:05:57.000Z",
+          "namespace": "Twitter, but better.",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Download videos, watch videos at 30fps (with highest quality), and hide verified users.",
+          "description": "A simple extension that allows users to hide verified users, download videos, and play videos at the highest quality with 30fps.",
+          "url": "https://greasyfork.org/scripts/467449-download-videos-watch-videos-at-30fps-with-highest-quality-and-hide-verified-users",
+          "code_url": "https://update.greasyfork.org/scripts/467449/Download%20videos%2C%20watch%20videos%20at%2030fps%20%28with%20highest%20quality%29%2C%20and%20hide%20verified%20users.user.js",
+          "code_size": 2414,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Download videos, watch videos at 30fps (with highest quality), and hide verified users.",
+  "description": "A simple extension that allows users to hide verified users, download videos, and play videos at the highest quality with 30fps.",
+  "url": "https://greasyfork.org/scripts/467449-download-videos-watch-videos-at-30fps-with-highest-quality-and-hide-verified-users",
+  "code_url": "https://update.greasyfork.org/scripts/467449/Download%20videos%2C%20watch%20videos%20at%2030fps%20%28with%20highest%20quality%29%2C%20and%20hide%20verified%20users.user.js",
+  "code_size": 2414,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

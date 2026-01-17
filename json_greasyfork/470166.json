@@ -1,0 +1,33 @@
+{
+  "id": 470166,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-04T19:46:43.000Z",
+  "code_updated_at": "2023-07-07T05:09:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1119042,
+      "name": "hao pu",
+      "created_at": "2023-07-04T19:46:02.000Z",
+      "url": "https://greasyfork.org/users/1119042-hao-pu"
+    }
+  ],
+  "name": "迅雷云盘",
+  "description": "获取迅雷云盘的文件链接，可利用本地播放器看视频；可将播放列表导入坚果云；可利用其他工具下载（如idm，curl，Xdown，Motrix，Aria2）。",
+  "url": "https://greasyfork.org/scripts/470166-%E8%BF%85%E9%9B%B7%E4%BA%91%E7%9B%98",
+  "code_url": "https://update.greasyfork.org/scripts/470166/%E8%BF%85%E9%9B%B7%E4%BA%91%E7%9B%98.user.js",
+  "code_size": 3426,
+  "license": null,
+  "version": "1.6.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 445818,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-31T16:32:52.000Z",
+    "code_updated_at": "2022-05-31T16:32:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918082,
+        "name": "Redgeioz",
+        "created_at": "2022-05-24T13:35:47.000Z",
+        "url": "https://greasyfork.org/users/918082-redgeioz"
+      }
+    ],
+    "name": "ꜱᴀᴏ ᴛᴏᴏʟ ᴘʟᴜꜱ",
+    "description": "extension for senpai-agar.online. don't share it to others",
+    "url": "https://greasyfork.org/scripts/445818-%EA%9C%B1%E1%B4%80%E1%B4%8F-%E1%B4%9B%E1%B4%8F%E1%B4%8F%CA%9F-%E1%B4%98%CA%9F%E1%B4%9C%EA%9C%B1",
+    "code_url": "https://update.greasyfork.org/scripts/445818/%EA%9C%B1%E1%B4%80%E1%B4%8F%20%E1%B4%9B%E1%B4%8F%E1%B4%8F%CA%9F%20%E1%B4%98%CA%9F%E1%B4%9C%EA%9C%B1.user.js",
+    "code_size": 2430,
+    "license": null,
+    "version": "1.0.7.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 445509,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-25T07:33:53.000Z",
+    "code_updated_at": "2022-05-25T12:26:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918082,
+        "name": "Redgeioz",
+        "created_at": "2022-05-24T13:35:47.000Z",
+        "url": "https://greasyfork.org/users/918082-redgeioz"
+      }
+    ],
+    "name": "ʀꜱᴛ",
+    "description": "extension for senpai-agar.online",
+    "url": "https://greasyfork.org/scripts/445509-%CA%80%EA%9C%B1%E1%B4%9B",
+    "code_url": "https://update.greasyfork.org/scripts/445509/%CA%80%EA%9C%B1%E1%B4%9B.user.js",
+    "code_size": 2380,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

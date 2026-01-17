@@ -1,0 +1,59 @@
+{
+  "id": 438020,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-04T05:47:25.000Z",
+  "code_updated_at": "2022-01-04T05:50:54.000Z",
+  "namespace": "https://github.com/yzs981130/st-disable-password-check/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 76754,
+      "name": "yzs981130",
+      "created_at": "2016-10-30T04:40:16.000Z",
+      "url": "https://greasyfork.org/users/76754-yzs981130",
+      "scripts": [
+        {
+          "id": 443755,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-21T13:43:02.000Z",
+          "code_updated_at": "2023-12-14T12:25:13.000Z",
+          "namespace": "https://github.com/yzs981130/ArxivMirror",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ArxivMirror",
+          "description": "Arxiv mirror for personal use",
+          "url": "https://greasyfork.org/scripts/443755-arxivmirror",
+          "code_url": "https://update.greasyfork.org/scripts/443755/ArxivMirror.user.js",
+          "code_size": 2340,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Disable password check",
+  "description": "Disable password complexity check",
+  "url": "https://greasyfork.org/scripts/438020-disable-password-check",
+  "code_url": "https://update.greasyfork.org/scripts/438020/Disable%20password%20check.user.js",
+  "code_size": 2581,
+  "license": "GPLv3",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

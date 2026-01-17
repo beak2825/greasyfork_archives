@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461922,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-16T01:53:10.000Z",
+    "code_updated_at": "2023-04-04T02:11:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1042775,
+        "name": "quantum66",
+        "created_at": "2023-03-16T01:26:02.000Z",
+        "url": "https://greasyfork.org/users/1042775-quantum66"
+      }
+    ],
+    "name": "去除网页中讨厌元素的小工具",
+    "description": "通过css去掉网页中那些令人讨厌的东西，比如腾讯课堂的正在观看弹幕，简书的推荐故事等",
+    "url": "https://greasyfork.org/scripts/461922-%E5%8E%BB%E9%99%A4%E7%BD%91%E9%A1%B5%E4%B8%AD%E8%AE%A8%E5%8E%8C%E5%85%83%E7%B4%A0%E7%9A%84%E5%B0%8F%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/461922/%E5%8E%BB%E9%99%A4%E7%BD%91%E9%A1%B5%E4%B8%AD%E8%AE%A8%E5%8E%8C%E5%85%83%E7%B4%A0%E7%9A%84%E5%B0%8F%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 1570,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

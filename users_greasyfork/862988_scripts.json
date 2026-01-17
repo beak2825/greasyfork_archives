@@ -1,0 +1,68 @@
+[
+  {
+    "id": 443166,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-11T07:43:16.000Z",
+    "code_updated_at": "2023-08-11T07:13:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862988,
+        "name": "Leom",
+        "created_at": "2022-01-10T03:23:48.000Z",
+        "url": "https://greasyfork.org/users/862988-leom"
+      }
+    ],
+    "name": "电子科大在线助手",
+    "description": "登录后进入“在线学习模块”自动开始学习",
+    "url": "https://greasyfork.org/scripts/443166-%E7%94%B5%E5%AD%90%E7%A7%91%E5%A4%A7%E5%9C%A8%E7%BA%BF%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/443166/%E7%94%B5%E5%AD%90%E7%A7%91%E5%A4%A7%E5%9C%A8%E7%BA%BF%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 42019,
+    "license": "for shengda education.",
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438298,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-10T03:37:11.000Z",
+    "code_updated_at": "2022-03-02T10:12:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862988,
+        "name": "Leom",
+        "created_at": "2022-01-10T03:23:48.000Z",
+        "url": "https://greasyfork.org/users/862988-leom"
+      }
+    ],
+    "name": "工商课程在线助手",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/438298-%E5%B7%A5%E5%95%86%E8%AF%BE%E7%A8%8B%E5%9C%A8%E7%BA%BF%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/438298/%E5%B7%A5%E5%95%86%E8%AF%BE%E7%A8%8B%E5%9C%A8%E7%BA%BF%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 20504,
+    "license": "for shengda education.",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

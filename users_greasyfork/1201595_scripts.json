@@ -1,0 +1,68 @@
+[
+  {
+    "id": 495225,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-17T06:17:38.000Z",
+    "code_updated_at": "2024-05-17T10:05:16.000Z",
+    "namespace": "自动刷单",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201595,
+        "name": "杜申奥",
+        "created_at": "2023-10-22T02:31:26.000Z",
+        "url": "https://greasyfork.org/users/1201595-%E6%9D%9C%E7%94%B3%E5%A5%A5"
+      }
+    ],
+    "name": "刷单号脚本",
+    "description": "刷单号脚本测试",
+    "url": "https://greasyfork.org/scripts/495225-%E5%88%B7%E5%8D%95%E5%8F%B7%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/495225/%E5%88%B7%E5%8D%95%E5%8F%B7%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 7969,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478366,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-27T02:31:56.000Z",
+    "code_updated_at": "2024-09-09T07:37:37.000Z",
+    "namespace": "https://www.vmall.com/*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201595,
+        "name": "杜申奥",
+        "created_at": "2023-10-22T02:31:26.000Z",
+        "url": "https://greasyfork.org/users/1201595-%E6%9D%9C%E7%94%B3%E5%A5%A5"
+      }
+    ],
+    "name": "测试脚本",
+    "description": "测试脚本测试",
+    "url": "https://greasyfork.org/scripts/478366-%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/478366/%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 3094,
+    "license": null,
+    "version": "5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

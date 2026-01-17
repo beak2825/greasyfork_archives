@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429260,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-12T13:13:34.000Z",
+    "code_updated_at": "2021-07-12T13:16:59.000Z",
+    "namespace": "super_video_helper_cat",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 782886,
+        "name": "asd41520782",
+        "created_at": "2021-06-13T08:09:47.000Z",
+        "url": "https://greasyfork.org/users/782886-asd41520782"
+      }
+    ],
+    "name": "DK的解锁B站大会员,番剧,全网VIP视频免费破解去广告,全网音乐直接下载;AB站视频解析下载;Facebook等国外视频解析下载;高清电视频道观看等",
+    "description": "解锁B站大会员，番剧；爱奇艺、腾讯、优酷、芒果等全网VIP视频免费破解去广告(免跳出观影特方便，支持【PC端+移动端，支持自定义接口】)；网易云音乐、QQ音乐、酷狗、蜻蜓FM、荔枝FM、喜马拉雅等音乐和有声书音频免客户端下载；B站、A站视频解析下载；油管、Facebook等国外视频解析下载；高清电视频道观看(CCTV、湖南卫视等100多个台)；优惠券查询等【👊👊脚本长期维护更新，完全免费，无广告】",
+    "url": "https://greasyfork.org/scripts/429260-dk%E7%9A%84%E8%A7%A3%E9%94%81b%E7%AB%99%E5%A4%A7%E4%BC%9A%E5%91%98-%E7%95%AA%E5%89%A7-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A-%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD-ab%E7%AB%99%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD-facebook%E7%AD%89%E5%9B%BD%E5%A4%96%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD-%E9%AB%98%E6%B8%85%E7%94%B5%E8%A7%86%E9%A2%91%E9%81%93%E8%A7%82%E7%9C%8B%E7%AD%89",
+    "code_url": "https://update.greasyfork.org/scripts/429260/DK%E7%9A%84%E8%A7%A3%E9%94%81B%E7%AB%99%E5%A4%A7%E4%BC%9A%E5%91%98%2C%E7%95%AA%E5%89%A7%2C%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A%2C%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD%3BAB%E7%AB%99%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD%3BFacebook%E7%AD%89%E5%9B%BD%E5%A4%96%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E4%B8%8B%E8%BD%BD%3B%E9%AB%98%E6%B8%85%E7%94%B5%E8%A7%86%E9%A2%91%E9%81%93%E8%A7%82%E7%9C%8B%E7%AD%89.user.js",
+    "code_size": 57472,
+    "license": "GPL License",
+    "version": "3.1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

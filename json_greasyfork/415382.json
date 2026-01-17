@@ -1,0 +1,59 @@
+{
+  "id": 415382,
+  "daily_installs": 0,
+  "total_installs": 217,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-11-03T06:17:32.000Z",
+  "code_updated_at": "2020-11-03T06:17:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 700859,
+      "name": "aSmileBoyxxx",
+      "created_at": "2020-11-03T06:07:57.000Z",
+      "url": "https://greasyfork.org/users/700859-asmileboyxxx",
+      "scripts": [
+        {
+          "id": 415382,
+          "daily_installs": 0,
+          "total_installs": 217,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-03T06:17:32.000Z",
+          "code_updated_at": "2020-11-03T06:17:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自由改变bilibili视频播放速度",
+          "description": "bilibili视频播放速度自定义",
+          "url": "https://greasyfork.org/scripts/415382-%E8%87%AA%E7%94%B1%E6%94%B9%E5%8F%98bilibili%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6",
+          "code_url": "https://update.greasyfork.org/scripts/415382/%E8%87%AA%E7%94%B1%E6%94%B9%E5%8F%98bilibili%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6.user.js",
+          "code_size": 2184,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自由改变bilibili视频播放速度",
+  "description": "bilibili视频播放速度自定义",
+  "url": "https://greasyfork.org/scripts/415382-%E8%87%AA%E7%94%B1%E6%94%B9%E5%8F%98bilibili%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6",
+  "code_url": "https://update.greasyfork.org/scripts/415382/%E8%87%AA%E7%94%B1%E6%94%B9%E5%8F%98bilibili%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6.user.js",
+  "code_size": 2184,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

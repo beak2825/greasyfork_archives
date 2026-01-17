@@ -1,0 +1,33 @@
+{
+  "id": 475256,
+  "daily_installs": 0,
+  "total_installs": 587,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-09-14T05:43:33.000Z",
+  "code_updated_at": "2023-09-14T05:43:33.000Z",
+  "namespace": "https://greasyfork.org/users/248965",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 248965,
+      "name": "酒店英语",
+      "created_at": "2019-02-21T12:59:25.000Z",
+      "url": "https://greasyfork.org/users/248965-%E9%85%92%E5%BA%97%E8%8B%B1%E8%AF%AD"
+    }
+  ],
+  "name": "Remove Shutterstock Watermark",
+  "description": "Remove the Shutterstock watermark from images",
+  "url": "https://greasyfork.org/scripts/475256-remove-shutterstock-watermark",
+  "code_url": "https://update.greasyfork.org/scripts/475256/Remove%20Shutterstock%20Watermark.user.js",
+  "code_size": 438,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

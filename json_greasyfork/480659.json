@@ -1,0 +1,34 @@
+{
+  "id": 480659,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-24T04:30:14.000Z",
+  "code_updated_at": "2023-11-24T04:30:14.000Z",
+  "namespace": "https://ad.oceanengine.com/oceanus/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1222570,
+      "name": "ryanvan2000",
+      "created_at": "2023-11-24T02:06:06.000Z",
+      "url": "https://greasyfork.org/users/1222570-ryanvan2000",
+      "scripts": []
+    }
+  ],
+  "name": "Fill Request ID",
+  "description": "巨量引擎-资产-转化-事件管理-联调工具-小程序API回传-启动参数自动填充",
+  "url": "https://greasyfork.org/scripts/480659-fill-request-id",
+  "code_url": "https://update.greasyfork.org/scripts/480659/Fill%20Request%20ID.user.js",
+  "code_size": 14148,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

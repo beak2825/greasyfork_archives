@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477511,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-16T05:06:25.000Z",
+    "code_updated_at": "2023-10-16T05:06:25.000Z",
+    "namespace": "https://burles.co/",
+    "support_url": "https://burles.co",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1197094,
+        "name": "rodorgas",
+        "created_at": "2023-10-16T05:05:04.000Z",
+        "url": "https://greasyfork.org/users/1197094-rodorgas"
+      }
+    ],
+    "name": "Burlesco",
+    "description": "Leia notícias sem ser assinante, burle o paywall",
+    "url": "https://greasyfork.org/scripts/477511-burlesco",
+    "code_url": "https://update.greasyfork.org/scripts/477511/Burlesco.user.js",
+    "code_size": 18914,
+    "license": null,
+    "version": "14.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

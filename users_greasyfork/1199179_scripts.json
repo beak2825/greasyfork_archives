@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477725,
+    "daily_installs": 1,
+    "total_installs": 6910,
+    "fan_score": "56.6",
+    "good_ratings": 16,
+    "ok_ratings": 6,
+    "bad_ratings": 3,
+    "created_at": "2023-10-18T21:41:23.000Z",
+    "code_updated_at": "2023-10-18T21:41:23.000Z",
+    "namespace": "Booth-Stash",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199179,
+        "name": "JordanRO2",
+        "created_at": "2023-10-18T21:37:45.000Z",
+        "url": "https://greasyfork.org/users/1199179-jordanro2"
+      }
+    ],
+    "name": "YouTube iFrame AdBlocker",
+    "description": "Bypass YouTube's ad-blocker detection by dynamically replacing the video player with an iframe.",
+    "url": "https://greasyfork.org/scripts/477725-youtube-iframe-adblocker",
+    "code_url": "https://update.greasyfork.org/scripts/477725/YouTube%20iFrame%20AdBlocker.user.js",
+    "code_size": 5743,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

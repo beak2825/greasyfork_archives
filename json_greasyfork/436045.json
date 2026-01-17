@@ -1,0 +1,59 @@
+{
+  "id": 436045,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-25T08:49:01.000Z",
+  "code_updated_at": "2022-04-10T10:26:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 844003,
+      "name": "eucalyzlx",
+      "created_at": "2021-11-25T08:33:36.000Z",
+      "url": "https://greasyfork.org/users/844003-eucalyzlx",
+      "scripts": [
+        {
+          "id": 436045,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-25T08:49:01.000Z",
+          "code_updated_at": "2022-04-10T10:26:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "cqcet_eucaly",
+          "description": "cqcet优化使用脚本",
+          "url": "https://greasyfork.org/scripts/436045-cqcet-eucaly",
+          "code_url": "https://update.greasyfork.org/scripts/436045/cqcet_eucaly.user.js",
+          "code_size": 5682,
+          "license": "AGPL-3.0                     //脚本的授权许可信息",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "cqcet_eucaly",
+  "description": "cqcet优化使用脚本",
+  "url": "https://greasyfork.org/scripts/436045-cqcet-eucaly",
+  "code_url": "https://update.greasyfork.org/scripts/436045/cqcet_eucaly.user.js",
+  "code_size": 5682,
+  "license": "AGPL-3.0                     //脚本的授权许可信息",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

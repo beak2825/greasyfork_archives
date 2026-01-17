@@ -1,0 +1,33 @@
+{
+  "id": 494383,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-08T10:05:22.000Z",
+  "code_updated_at": "2024-05-08T10:05:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1298449,
+      "name": "littlecowherd",
+      "created_at": "2024-05-08T10:02:51.000Z",
+      "url": "https://greasyfork.org/users/1298449-littlecowherd"
+    }
+  ],
+  "name": "ChatGPT请求计数器",
+  "description": "记录ChatGPT各个模型的调用情况",
+  "url": "https://greasyfork.org/scripts/494383-chatgpt%E8%AF%B7%E6%B1%82%E8%AE%A1%E6%95%B0%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/494383/ChatGPT%E8%AF%B7%E6%B1%82%E8%AE%A1%E6%95%B0%E5%99%A8.user.js",
+  "code_size": 22067,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

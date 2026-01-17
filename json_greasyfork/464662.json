@@ -1,0 +1,33 @@
+{
+  "id": 464662,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-23T06:01:51.000Z",
+  "code_updated_at": "2023-04-23T06:01:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 745287,
+      "name": "Juncheng Xiang",
+      "created_at": "2021-03-09T13:27:25.000Z",
+      "url": "https://greasyfork.org/users/745287-juncheng-xiang"
+    }
+  ],
+  "name": "APPLE自动选中过期TF",
+  "description": "用于自动勾选TF包注册时间超过90天的用户，注意：最好在点击编辑按钮后再进行勾选，选中后需要手动下滑来加载更多用户列表",
+  "url": "https://greasyfork.org/scripts/464662-apple%E8%87%AA%E5%8A%A8%E9%80%89%E4%B8%AD%E8%BF%87%E6%9C%9Ftf",
+  "code_url": "https://update.greasyfork.org/scripts/464662/APPLE%E8%87%AA%E5%8A%A8%E9%80%89%E4%B8%AD%E8%BF%87%E6%9C%9FTF.user.js",
+  "code_size": 4388,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

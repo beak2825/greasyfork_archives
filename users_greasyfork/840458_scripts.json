@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435675,
+    "daily_installs": 0,
+    "total_installs": 136,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-18T07:23:05.000Z",
+    "code_updated_at": "2025-12-26T01:44:25.000Z",
+    "namespace": "x_jianp",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 840458,
+        "name": "x_jianp",
+        "created_at": "2021-11-18T06:30:39.000Z",
+        "url": "https://greasyfork.org/users/840458-x-jianp"
+      }
+    ],
+    "name": "hbjs质量技术网络学习助手",
+    "description": "答题进度提示,答案备份和恢复",
+    "url": "https://greasyfork.org/scripts/435675-hbjs%E8%B4%A8%E9%87%8F%E6%8A%80%E6%9C%AF%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/435675/hbjs%E8%B4%A8%E9%87%8F%E6%8A%80%E6%9C%AF%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 53583,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2026.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

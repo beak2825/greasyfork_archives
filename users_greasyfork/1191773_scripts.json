@@ -1,0 +1,233 @@
+[
+  {
+    "id": 490880,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-26T03:29:34.000Z",
+    "code_updated_at": "2024-03-26T03:40:48.000Z",
+    "namespace": "https://greasyfork.org/users/1191773",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1191773,
+        "name": "不喝水的绘星",
+        "created_at": "2023-10-09T06:20:07.000Z",
+        "url": "https://greasyfork.org/users/1191773-%E4%B8%8D%E5%96%9D%E6%B0%B4%E7%9A%84%E7%BB%98%E6%98%9F"
+      }
+    ],
+    "name": "样式库",
+    "description": "常用样式",
+    "url": "https://greasyfork.org/scripts/490880-%E6%A0%B7%E5%BC%8F%E5%BA%93",
+    "code_url": "https://update.greasyfork.org/scripts/490880/%E6%A0%B7%E5%BC%8F%E5%BA%93.user.css",
+    "code_size": 137,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477565,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-17T05:24:51.000Z",
+    "code_updated_at": "2023-10-21T14:41:18.000Z",
+    "namespace": "hx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1191773,
+        "name": "不喝水的绘星",
+        "created_at": "2023-10-09T06:20:07.000Z",
+        "url": "https://greasyfork.org/users/1191773-%E4%B8%8D%E5%96%9D%E6%B0%B4%E7%9A%84%E7%BB%98%E6%98%9F"
+      }
+    ],
+    "name": "每日养铁",
+    "description": "自动关注养铁池中媒体号进行评论互动，互动博均为媒体号发布过的与宝有关或人畜无害博，养铁池中媒体号分为三级，一级为近期重点养铁脚本运行一次即互动一次，二级为暂不急用慢慢培养脚本运行一次依次取3个媒体号互动，三级为保持铁粉级脚本运行一次依次取2个媒体号互动，养铁池内容将结合实事不定期调整",
+    "url": "https://greasyfork.org/scripts/477565-%E6%AF%8F%E6%97%A5%E5%85%BB%E9%93%81",
+    "code_url": "https://update.greasyfork.org/scripts/477565/%E6%AF%8F%E6%97%A5%E5%85%BB%E9%93%81.user.js",
+    "code_size": 5244,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477354,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-13T09:26:55.000Z",
+    "code_updated_at": "2023-10-21T15:12:04.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1191773,
+        "name": "不喝水的绘星",
+        "created_at": "2023-10-09T06:20:07.000Z",
+        "url": "https://greasyfork.org/users/1191773-%E4%B8%8D%E5%96%9D%E6%B0%B4%E7%9A%84%E7%BB%98%E6%98%9F"
+      }
+    ],
+    "name": "养铁池",
+    "description": "养铁账号池",
+    "url": "https://greasyfork.org/scripts/477354-%E5%85%BB%E9%93%81%E6%B1%A0",
+    "code_url": "https://update.greasyfork.org/scripts/477354/1268224/%E5%85%BB%E9%93%81%E6%B1%A0.js",
+    "code_size": 3294,
+    "license": null,
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477298,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-13T01:53:40.000Z",
+    "code_updated_at": "2023-10-13T09:14:45.000Z",
+    "namespace": "hx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1191773,
+        "name": "不喝水的绘星",
+        "created_at": "2023-10-09T06:20:07.000Z",
+        "url": "https://greasyfork.org/users/1191773-%E4%B8%8D%E5%96%9D%E6%B0%B4%E7%9A%84%E7%BB%98%E6%98%9F"
+      }
+    ],
+    "name": "一键养号",
+    "description": "自动关注阳光信用+每日一善超话、签到、发布微博各一条",
+    "url": "https://greasyfork.org/scripts/477298-%E4%B8%80%E9%94%AE%E5%85%BB%E5%8F%B7",
+    "code_url": "https://update.greasyfork.org/scripts/477298/%E4%B8%80%E9%94%AE%E5%85%BB%E5%8F%B7.user.js",
+    "code_size": 2945,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477240,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-12T09:01:31.000Z",
+    "code_updated_at": "2023-10-17T03:51:50.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1191773,
+        "name": "不喝水的绘星",
+        "created_at": "2023-10-09T06:20:07.000Z",
+        "url": "https://greasyfork.org/users/1191773-%E4%B8%8D%E5%96%9D%E6%B0%B4%E7%9A%84%E7%BB%98%E6%98%9F"
+      }
+    ],
+    "name": "语料库-微博表情",
+    "description": "微博表情语料库",
+    "url": "https://greasyfork.org/scripts/477240-%E8%AF%AD%E6%96%99%E5%BA%93-%E5%BE%AE%E5%8D%9A%E8%A1%A8%E6%83%85",
+    "code_url": "https://update.greasyfork.org/scripts/477240/1265823/%E8%AF%AD%E6%96%99%E5%BA%93-%E5%BE%AE%E5%8D%9A%E8%A1%A8%E6%83%85.js",
+    "code_size": 677,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477028,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-09T07:50:01.000Z",
+    "code_updated_at": "2023-10-09T07:50:01.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1191773,
+        "name": "不喝水的绘星",
+        "created_at": "2023-10-09T06:20:07.000Z",
+        "url": "https://greasyfork.org/users/1191773-%E4%B8%8D%E5%96%9D%E6%B0%B4%E7%9A%84%E7%BB%98%E6%98%9F"
+      }
+    ],
+    "name": "语料库-歌词",
+    "description": "歌词语料库",
+    "url": "https://greasyfork.org/scripts/477028-%E8%AF%AD%E6%96%99%E5%BA%93-%E6%AD%8C%E8%AF%8D",
+    "code_url": "https://update.greasyfork.org/scripts/477028/1261962/%E8%AF%AD%E6%96%99%E5%BA%93-%E6%AD%8C%E8%AF%8D.js",
+    "code_size": 162,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477024,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-09T06:38:28.000Z",
+    "code_updated_at": "2024-02-04T02:24:46.000Z",
+    "namespace": "hx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1191773,
+        "name": "不喝水的绘星",
+        "created_at": "2023-10-09T06:20:07.000Z",
+        "url": "https://greasyfork.org/users/1191773-%E4%B8%8D%E5%96%9D%E6%B0%B4%E7%9A%84%E7%BB%98%E6%98%9F"
+      }
+    ],
+    "name": "百万工程",
+    "description": "模仿手动方式进行点z，非刷z，默认20一组 每隔15分钟进行一轮 上限200，可自行调整参数，一组z只取按时间排序的近20个进行点z，如已点过z会自动跳过，计数z为确认成功数量，可能存在点上z但没计数的情况，不建议频率过高，以稳为主 细水长流。",
+    "url": "https://greasyfork.org/scripts/477024-%E7%99%BE%E4%B8%87%E5%B7%A5%E7%A8%8B",
+    "code_url": "https://update.greasyfork.org/scripts/477024/%E7%99%BE%E4%B8%87%E5%B7%A5%E7%A8%8B.user.js",
+    "code_size": 6273,
+    "license": null,
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

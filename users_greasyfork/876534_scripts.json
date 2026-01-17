@@ -1,0 +1,35 @@
+[
+  {
+    "id": 440573,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-25T06:10:53.000Z",
+    "code_updated_at": "2022-02-25T06:10:52.000Z",
+    "namespace": "我的博客地址",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 876534,
+        "name": "1181434433",
+        "created_at": "2022-02-14T13:54:18.000Z",
+        "url": "https://greasyfork.org/users/876534-1181434433"
+      }
+    ],
+    "name": "跳过bilibili充电鸣谢",
+    "description": "描述我的功能",
+    "url": "https://greasyfork.org/scripts/440573-%E8%B7%B3%E8%BF%87bilibili%E5%85%85%E7%94%B5%E9%B8%A3%E8%B0%A2",
+    "code_url": "https://update.greasyfork.org/scripts/440573/%E8%B7%B3%E8%BF%87bilibili%E5%85%85%E7%94%B5%E9%B8%A3%E8%B0%A2.user.js",
+    "code_size": 746,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

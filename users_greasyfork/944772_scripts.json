@@ -1,0 +1,167 @@
+[
+  {
+    "id": 454161,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-02T22:34:00.000Z",
+    "code_updated_at": "2022-11-02T22:33:59.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/435698",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 944772,
+        "name": "超星神探",
+        "created_at": "2022-08-09T16:33:45.000Z",
+        "url": "https://greasyfork.org/users/944772-%E8%B6%85%E6%98%9F%E7%A5%9E%E6%8E%A2"
+      }
+    ],
+    "name": "全网VIP视频自动解析播放器(已适配手机)现行版",
+    "description": "无需跳转新网址，打开官网直接看，超清 无广告 随机去水印。支持：腾讯，爱奇艺，优酷，哔哩哔哩，咪咕，乐视，搜狐，芒果，西瓜，PPTV，1905电影网，华数。支持解析失败自动切换推荐解析源。适配各种浏览器，酷睿i5-8300 CPU性能测试消耗仅1%。请关闭浏览器阻止第三方Cookie的功能，否则解析源会解析失败，解析源解析失败作者无力解决。",
+    "url": "https://greasyfork.org/scripts/454161-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E6%92%AD%E6%94%BE%E5%99%A8-%E5%B7%B2%E9%80%82%E9%85%8D%E6%89%8B%E6%9C%BA-%E7%8E%B0%E8%A1%8C%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/454161/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E6%92%AD%E6%94%BE%E5%99%A8%28%E5%B7%B2%E9%80%82%E9%85%8D%E6%89%8B%E6%9C%BA%29%E7%8E%B0%E8%A1%8C%E7%89%88.user.js",
+    "code_size": 940,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "current",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 449992,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-22T17:06:05.000Z",
+    "code_updated_at": "2022-08-22T17:06:05.000Z",
+    "namespace": "https://www.tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 944772,
+        "name": "超星神探",
+        "created_at": "2022-08-09T16:33:45.000Z",
+        "url": "https://greasyfork.org/users/944772-%E8%B6%85%E6%98%9F%E7%A5%9E%E6%8E%A2"
+      }
+    ],
+    "name": "自动解析",
+    "description": "无需跳转新网址",
+    "url": "https://greasyfork.org/scripts/449992-%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/449992/%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 67170,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.09",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 449991,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-22T17:05:24.000Z",
+    "code_updated_at": "2022-08-22T17:05:24.000Z",
+    "namespace": "https://www.tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 944772,
+        "name": "超星神探",
+        "created_at": "2022-08-09T16:33:45.000Z",
+        "url": "https://greasyfork.org/users/944772-%E8%B6%85%E6%98%9F%E7%A5%9E%E6%8E%A2"
+      }
+    ],
+    "name": "自动解析",
+    "description": "无需跳转新网址",
+    "url": "https://greasyfork.org/scripts/449991-%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/449991/%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 67170,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.09",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 449989,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-22T17:02:38.000Z",
+    "code_updated_at": "2022-08-22T17:02:38.000Z",
+    "namespace": "https://www.tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 944772,
+        "name": "超星神探",
+        "created_at": "2022-08-09T16:33:45.000Z",
+        "url": "https://greasyfork.org/users/944772-%E8%B6%85%E6%98%9F%E7%A5%9E%E6%8E%A2"
+      }
+    ],
+    "name": "自动解析",
+    "description": "无需跳转新网址",
+    "url": "https://greasyfork.org/scripts/449989-%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/449989/%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 67146,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "2.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 449633,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-16T05:36:46.000Z",
+    "code_updated_at": "2022-08-16T05:36:46.000Z",
+    "namespace": "lanhaha",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 944772,
+        "name": "超星神探",
+        "created_at": "2022-08-09T16:33:45.000Z",
+        "url": "https://greasyfork.org/users/944772-%E8%B6%85%E6%98%9F%E7%A5%9E%E6%8E%A2"
+      }
+    ],
+    "name": "全网解析",
+    "description": "自用多功能脚本工具箱",
+    "url": "https://greasyfork.org/scripts/449633-%E5%85%A8%E7%BD%91%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/449633/%E5%85%A8%E7%BD%91%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 238589,
+    "license": "AGPL License",
+    "version": "5.4.16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

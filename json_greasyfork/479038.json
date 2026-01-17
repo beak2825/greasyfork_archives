@@ -1,0 +1,59 @@
+{
+  "id": 479038,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-04T17:51:42.000Z",
+  "code_updated_at": "2023-11-04T17:57:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1208260,
+      "name": "Chris Alves",
+      "created_at": "2023-10-31T19:42:16.000Z",
+      "url": "https://greasyfork.org/users/1208260-chris-alves",
+      "scripts": [
+        {
+          "id": 479038,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-04T17:51:42.000Z",
+          "code_updated_at": "2023-11-04T17:57:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Giant Coupon Clip",
+          "description": "Easily clip all visible coupons on the Giant grocery store website. https://github.com/Chrisae9/monkeyscripts/blob/main/giant-coupon-clipper/giant-coupon-clipper.js",
+          "url": "https://greasyfork.org/scripts/479038-giant-coupon-clip",
+          "code_url": "https://update.greasyfork.org/scripts/479038/Giant%20Coupon%20Clip.user.js",
+          "code_size": 2017,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Giant Coupon Clip",
+  "description": "Easily clip all visible coupons on the Giant grocery store website. https://github.com/Chrisae9/monkeyscripts/blob/main/giant-coupon-clipper/giant-coupon-clipper.js",
+  "url": "https://greasyfork.org/scripts/479038-giant-coupon-clip",
+  "code_url": "https://update.greasyfork.org/scripts/479038/Giant%20Coupon%20Clip.user.js",
+  "code_size": 2017,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 444061,
+  "daily_installs": 0,
+  "total_installs": 47,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-27T00:48:08.000Z",
+  "code_updated_at": "2022-04-27T00:49:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 824569,
+      "name": "Mixa Mega",
+      "created_at": "2021-10-13T00:18:55.000Z",
+      "url": "https://greasyfork.org/users/824569-mixa-mega",
+      "scripts": [
+        {
+          "id": 444061,
+          "daily_installs": 0,
+          "total_installs": 47,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-27T00:48:08.000Z",
+          "code_updated_at": "2022-04-27T00:49:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Add face button",
+          "description": "Adds the ability to render faces on brick hill",
+          "url": "https://greasyfork.org/scripts/444061-add-face-button",
+          "code_url": "https://update.greasyfork.org/scripts/444061/Add%20face%20button.user.js",
+          "code_size": 1128,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Add face button",
+  "description": "Adds the ability to render faces on brick hill",
+  "url": "https://greasyfork.org/scripts/444061-add-face-button",
+  "code_url": "https://update.greasyfork.org/scripts/444061/Add%20face%20button.user.js",
+  "code_size": 1128,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

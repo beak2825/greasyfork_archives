@@ -1,0 +1,123 @@
+{
+  "id": 433115,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-28T15:45:02.000Z",
+  "code_updated_at": "2022-06-12T18:48:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 819919,
+      "name": "Matthieu Auger",
+      "created_at": "2021-09-28T15:34:43.000Z",
+      "url": "https://greasyfork.org/users/819919-matthieu-auger",
+      "scripts": [
+        {
+          "id": 433115,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-28T15:45:02.000Z",
+          "code_updated_at": "2022-06-12T18:48:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PYS++",
+          "description": "Display green cards for valid TACE",
+          "url": "https://greasyfork.org/scripts/433115-pys",
+          "code_url": "https://update.greasyfork.org/scripts/433115/PYS%2B%2B.user.js",
+          "code_size": 4973,
+          "license": "MIT License",
+          "version": "1.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    },
+    {
+      "id": 819929,
+      "name": "Arthur de Fommervault",
+      "created_at": "2021-09-28T16:10:16.000Z",
+      "url": "https://greasyfork.org/users/819929-arthur-de-fommervault",
+      "scripts": [
+        {
+          "id": 433115,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-28T15:45:02.000Z",
+          "code_updated_at": "2022-06-12T18:48:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PYS++",
+          "description": "Display green cards for valid TACE",
+          "url": "https://greasyfork.org/scripts/433115-pys",
+          "code_url": "https://update.greasyfork.org/scripts/433115/PYS%2B%2B.user.js",
+          "code_size": 4973,
+          "license": "MIT License",
+          "version": "1.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    },
+    {
+      "id": 822204,
+      "name": "Frédéric Barthelet",
+      "created_at": "2021-10-05T16:58:23.000Z",
+      "url": "https://greasyfork.org/users/822204-fr%C3%A9d%C3%A9ric-barthelet",
+      "scripts": [
+        {
+          "id": 433115,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-09-28T15:45:02.000Z",
+          "code_updated_at": "2022-06-12T18:48:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PYS++",
+          "description": "Display green cards for valid TACE",
+          "url": "https://greasyfork.org/scripts/433115-pys",
+          "code_url": "https://update.greasyfork.org/scripts/433115/PYS%2B%2B.user.js",
+          "code_size": 4973,
+          "license": "MIT License",
+          "version": "1.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PYS++",
+  "description": "Display green cards for valid TACE",
+  "url": "https://greasyfork.org/scripts/433115-pys",
+  "code_url": "https://update.greasyfork.org/scripts/433115/PYS%2B%2B.user.js",
+  "code_size": 4973,
+  "license": "MIT License",
+  "version": "1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -63,6 +63,39 @@
     "version": "2024.09.01",
     "locale": "ja",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 494585,
+    "daily_installs": 0,
+    "total_installs": 230,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-10T13:20:26.000Z",
+    "code_updated_at": "2024-09-21T11:57:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1299457,
+        "name": "迷失鹿",
+        "created_at": "2024-05-10T11:52:55.000Z",
+        "url": "https://greasyfork.org/users/1299457-%E8%BF%B7%E5%A4%B1%E9%B9%BF"
+      }
+    ],
+    "name": "无剑外传辅助V2(21修改版)",
+    "description": "脚本有风险 使用需谨慎",
+    "url": "https://greasyfork.org/scripts/494585-%E6%97%A0%E5%89%91%E5%A4%96%E4%BC%A0%E8%BE%85%E5%8A%A9v2-21%E4%BF%AE%E6%94%B9%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/494585/%E6%97%A0%E5%89%91%E5%A4%96%E4%BC%A0%E8%BE%85%E5%8A%A9V2%2821%E4%BF%AE%E6%94%B9%E7%89%88%29.user.js",
+    "code_size": 1183609,
+    "license": null,
+    "version": "2024.09.21",
+    "locale": "ja",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,233 @@
+[
+  {
+    "id": 484759,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-13T16:59:52.000Z",
+    "code_updated_at": "2024-03-12T23:20:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986211,
+        "name": "Aporiz Sub",
+        "created_at": "2022-11-21T23:56:36.000Z",
+        "url": "https://greasyfork.org/users/986211-aporiz-sub"
+      }
+    ],
+    "name": "TWITTER BLUR",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/484759-twitter-blur",
+    "code_url": "https://update.greasyfork.org/scripts/484759/TWITTER%20BLUR.user.js",
+    "code_size": 2808,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 466602,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-18T19:55:07.000Z",
+    "code_updated_at": "2023-05-18T20:35:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986211,
+        "name": "Aporiz Sub",
+        "created_at": "2022-11-21T23:56:36.000Z",
+        "url": "https://greasyfork.org/users/986211-aporiz-sub"
+      }
+    ],
+    "name": "Nehan mobile",
+    "description": "fix nehan reader on mobile",
+    "url": "https://greasyfork.org/scripts/466602-nehan-mobile",
+    "code_url": "https://update.greasyfork.org/scripts/466602/Nehan%20mobile.user.js",
+    "code_size": 1405,
+    "license": "Mozilla Public License 2.0; http://www.mozilla.org/MPL/2.0/",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 464590,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-21T23:30:21.000Z",
+    "code_updated_at": "2023-04-21T23:34:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986211,
+        "name": "Aporiz Sub",
+        "created_at": "2022-11-21T23:56:36.000Z",
+        "url": "https://greasyfork.org/users/986211-aporiz-sub"
+      }
+    ],
+    "name": "twimaru font",
+    "description": "futaba sumaho to yomichan",
+    "url": "https://greasyfork.org/scripts/464590-twimaru-font",
+    "code_url": "https://update.greasyfork.org/scripts/464590/twimaru%20font.user.js",
+    "code_size": 545,
+    "license": "Mozilla Public License 2.0; http://www.mozilla.org/MPL/2.0/",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459340,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-02T20:05:44.000Z",
+    "code_updated_at": "2023-02-02T20:33:06.000Z",
+    "namespace": "Bookwalker Zoom Auto",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986211,
+        "name": "Aporiz Sub",
+        "created_at": "2022-11-21T23:56:36.000Z",
+        "url": "https://greasyfork.org/users/986211-aporiz-sub"
+      }
+    ],
+    "name": "Bookwalker Zoom Auto",
+    "description": "自動にズーム",
+    "url": "https://greasyfork.org/scripts/459340-bookwalker-zoom-auto",
+    "code_url": "https://update.greasyfork.org/scripts/459340/Bookwalker%20Zoom%20Auto.user.js",
+    "code_size": 689,
+    "license": "Mozilla Public License 2.0; http://www.mozilla.org/MPL/2.0/",
+    "version": "0.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 459100,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-29T23:13:34.000Z",
+    "code_updated_at": "2023-01-29T23:40:51.000Z",
+    "namespace": "wikicleannamespace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986211,
+        "name": "Aporiz Sub",
+        "created_at": "2022-11-21T23:56:36.000Z",
+        "url": "https://greasyfork.org/users/986211-aporiz-sub"
+      }
+    ],
+    "name": "wikiclean",
+    "description": "wikicleanbook",
+    "url": "https://greasyfork.org/scripts/459100-wikiclean",
+    "code_url": "https://update.greasyfork.org/scripts/459100/wikiclean.user.js",
+    "code_size": 1275,
+    "license": "Mozilla Public License 2.0; http://www.mozilla.org/MPL/2.0/",
+    "version": "0.6",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458361,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-16T19:29:15.000Z",
+    "code_updated_at": "2023-01-16T19:29:15.000Z",
+    "namespace": "futapo_fixed",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986211,
+        "name": "Aporiz Sub",
+        "created_at": "2022-11-21T23:56:36.000Z",
+        "url": "https://greasyfork.org/users/986211-aporiz-sub"
+      }
+    ],
+    "name": "futapo fixed",
+    "description": "futapo fixed ok",
+    "url": "https://greasyfork.org/scripts/458361-futapo-fixed",
+    "code_url": "https://update.greasyfork.org/scripts/458361/futapo%20fixed.user.js",
+    "code_size": 469,
+    "license": "Mozilla Public License 2.0; http://www.mozilla.org/MPL/2.0/",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 456862,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-20T03:16:06.000Z",
+    "code_updated_at": "2022-12-20T03:16:05.000Z",
+    "namespace": "futabaredirect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986211,
+        "name": "Aporiz Sub",
+        "created_at": "2022-11-21T23:56:36.000Z",
+        "url": "https://greasyfork.org/users/986211-aporiz-sub"
+      }
+    ],
+    "name": "futabaredirect",
+    "description": "futabaredirectd",
+    "url": "https://greasyfork.org/scripts/456862-futabaredirect",
+    "code_url": "https://update.greasyfork.org/scripts/456862/futabaredirect.user.js",
+    "code_size": 482,
+    "license": "Mozilla Public License 2.0; http://www.mozilla.org/MPL/2.0/",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

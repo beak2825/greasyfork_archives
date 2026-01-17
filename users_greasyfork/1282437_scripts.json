@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491403,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-01T10:49:51.000Z",
+    "code_updated_at": "2024-04-01T10:49:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282437,
+        "name": "xinwei deng",
+        "created_at": "2024-04-01T10:48:11.000Z",
+        "url": "https://greasyfork.org/users/1282437-xinwei-deng"
+      }
+    ],
+    "name": "coze布局调整工具",
+    "description": "调整coze界面为两栏式",
+    "url": "https://greasyfork.org/scripts/491403-coze%E5%B8%83%E5%B1%80%E8%B0%83%E6%95%B4%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/491403/coze%E5%B8%83%E5%B1%80%E8%B0%83%E6%95%B4%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 679,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

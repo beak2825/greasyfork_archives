@@ -1,0 +1,35 @@
+[
+  {
+    "id": 461474,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-08T22:16:48.000Z",
+    "code_updated_at": "2023-03-08T22:16:48.000Z",
+    "namespace": "https://github.com/fagwizard",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1038813,
+        "name": "Anton Shatokhin",
+        "created_at": "2023-03-08T18:23:06.000Z",
+        "url": "https://greasyfork.org/users/1038813-anton-shatokhin"
+      }
+    ],
+    "name": "BackOffice Extended version 0.1 (Alpha)",
+    "description": "Extension that will save you some nerves.",
+    "url": "https://greasyfork.org/scripts/461474-backoffice-extended-version-0-1-alpha",
+    "code_url": "https://update.greasyfork.org/scripts/461474/BackOffice%20Extended%20version%2001%20%28Alpha%29.user.js",
+    "code_size": 3656,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

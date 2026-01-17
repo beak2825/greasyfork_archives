@@ -1,0 +1,59 @@
+{
+  "id": 447591,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-08T08:23:34.000Z",
+  "code_updated_at": "2022-07-08T09:15:51.000Z",
+  "namespace": "http://www.jackdye.co.uk/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 933624,
+      "name": "xortuna",
+      "created_at": "2022-07-08T08:18:58.000Z",
+      "url": "https://greasyfork.org/users/933624-xortuna",
+      "scripts": [
+        {
+          "id": 447591,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-08T08:23:34.000Z",
+          "code_updated_at": "2022-07-08T09:15:51.000Z",
+          "namespace": "http://www.jackdye.co.uk/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Music - Disable are you sure dialog",
+          "description": "Simply disables the window.beforeunload handler by hooking the handler",
+          "url": "https://greasyfork.org/scripts/447591-youtube-music-disable-are-you-sure-dialog",
+          "code_url": "https://update.greasyfork.org/scripts/447591/YouTube%20Music%20-%20Disable%20are%20you%20sure%20dialog.user.js",
+          "code_size": 939,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Music - Disable are you sure dialog",
+  "description": "Simply disables the window.beforeunload handler by hooking the handler",
+  "url": "https://greasyfork.org/scripts/447591-youtube-music-disable-are-you-sure-dialog",
+  "code_url": "https://update.greasyfork.org/scripts/447591/YouTube%20Music%20-%20Disable%20are%20you%20sure%20dialog.user.js",
+  "code_size": 939,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

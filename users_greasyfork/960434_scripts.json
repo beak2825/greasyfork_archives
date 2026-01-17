@@ -1,0 +1,134 @@
+[
+  {
+    "id": 487489,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-17T03:21:04.000Z",
+    "code_updated_at": "2024-02-19T02:47:36.000Z",
+    "namespace": "a",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 960434,
+        "name": "Nicholas Kiraly",
+        "created_at": "2022-09-17T13:59:33.000Z",
+        "url": "https://greasyfork.org/users/960434-nicholas-kiraly"
+      }
+    ],
+    "name": "StakeUsPlus",
+    "description": "StakeUs plugin framework",
+    "url": "https://greasyfork.org/scripts/487489-stakeusplus",
+    "code_url": "https://update.greasyfork.org/scripts/487489/1329632/StakeUsPlus.js",
+    "code_size": 28787,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 482962,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-23T21:37:56.000Z",
+    "code_updated_at": "2024-02-18T14:22:44.000Z",
+    "namespace": "Auto99",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 960434,
+        "name": "Nicholas Kiraly",
+        "created_at": "2022-09-17T13:59:33.000Z",
+        "url": "https://greasyfork.org/users/960434-nicholas-kiraly"
+      }
+    ],
+    "name": "Dice(COM)",
+    "description": "99 Dice (COM)",
+    "url": "https://greasyfork.org/scripts/482962-dice-com",
+    "code_url": "https://update.greasyfork.org/scripts/482962/Dice%28COM%29.user.js",
+    "code_size": 6357,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 480138,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-17T17:20:57.000Z",
+    "code_updated_at": "2024-12-30T07:01:01.000Z",
+    "namespace": "a",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 960434,
+        "name": "Nicholas Kiraly",
+        "created_at": "2022-09-17T13:59:33.000Z",
+        "url": "https://greasyfork.org/users/960434-nicholas-kiraly"
+      }
+    ],
+    "name": "StakeUs+",
+    "description": "Stake.US plugin framework",
+    "url": "https://greasyfork.org/scripts/480138-stakeus",
+    "code_url": "https://update.greasyfork.org/scripts/480138/1511853/StakeUs%2B.js",
+    "code_size": 7744,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454084,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-01T13:14:46.000Z",
+    "code_updated_at": "2022-11-07T02:10:00.000Z",
+    "namespace": "pokeclicker.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 960434,
+        "name": "Nicholas Kiraly",
+        "created_at": "2022-09-17T13:59:33.000Z",
+        "url": "https://greasyfork.org/users/960434-nicholas-kiraly"
+      }
+    ],
+    "name": "PokeClicker+",
+    "description": "PokeClicker plugin framework",
+    "url": "https://greasyfork.org/scripts/454084-pokeclicker",
+    "code_url": "https://update.greasyfork.org/scripts/454084/1114168/PokeClicker%2B.js",
+    "code_size": 29913,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 474176,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-30T02:18:37.000Z",
+  "code_updated_at": "2024-02-28T12:12:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 955582,
+      "name": "xiajie",
+      "created_at": "2022-09-07T07:40:31.000Z",
+      "url": "https://greasyfork.org/users/955582-xiajie"
+    }
+  ],
+  "name": "河北工程大学-自动答题",
+  "description": "考试自动获取答案",
+  "url": "https://greasyfork.org/scripts/474176-%E6%B2%B3%E5%8C%97%E5%B7%A5%E7%A8%8B%E5%A4%A7%E5%AD%A6-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/474176/%E6%B2%B3%E5%8C%97%E5%B7%A5%E7%A8%8B%E5%A4%A7%E5%AD%A6-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98.user.js",
+  "code_size": 6945,
+  "license": "GPL",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

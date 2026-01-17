@@ -1,0 +1,59 @@
+{
+  "id": 493436,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-25T06:51:38.000Z",
+  "code_updated_at": "2024-04-25T06:51:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 842851,
+      "name": "Shesaid-No",
+      "created_at": "2021-11-23T01:54:51.000Z",
+      "url": "https://greasyfork.org/users/842851-shesaid-no",
+      "scripts": [
+        {
+          "id": 493436,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-25T06:51:38.000Z",
+          "code_updated_at": "2024-04-25T06:51:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MantisBT自动更新",
+          "description": "...!",
+          "url": "https://greasyfork.org/scripts/493436-mantisbt%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0",
+          "code_url": "https://update.greasyfork.org/scripts/493436/MantisBT%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0.user.js",
+          "code_size": 13802,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MantisBT自动更新",
+  "description": "...!",
+  "url": "https://greasyfork.org/scripts/493436-mantisbt%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0",
+  "code_url": "https://update.greasyfork.org/scripts/493436/MantisBT%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0.user.js",
+  "code_size": 13802,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

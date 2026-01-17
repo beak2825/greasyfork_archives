@@ -1,0 +1,33 @@
+{
+  "id": 481347,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-04T02:30:24.000Z",
+  "code_updated_at": "2024-06-26T06:33:22.000Z",
+  "namespace": "http://github.com/zhichengroup/kuanurl",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 209732,
+      "name": "zhichengroup",
+      "created_at": "2018-09-02T06:01:48.000Z",
+      "url": "https://greasyfork.org/users/209732-zhichengroup"
+    }
+  ],
+  "name": "kuan-url-copy",
+  "description": "2023/12/4 09:11:30",
+  "url": "https://greasyfork.org/scripts/481347-kuan-url-copy",
+  "code_url": "https://update.greasyfork.org/scripts/481347/kuan-url-copy.user.js",
+  "code_size": 975,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 453107,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-15T13:48:01.000Z",
+    "code_updated_at": "2022-10-15T13:48:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 971171,
+        "name": "jonbakerfish",
+        "created_at": "2022-10-15T13:35:08.000Z",
+        "url": "https://greasyfork.org/users/971171-jonbakerfish"
+      }
+    ],
+    "name": "Zhihu direct link access",
+    "description": "在知乎点击外网链接时，自动跳转到目标链接地址，避免人工点击“继续访问”按钮",
+    "url": "https://greasyfork.org/scripts/453107-zhihu-direct-link-access",
+    "code_url": "https://update.greasyfork.org/scripts/453107/Zhihu%20direct%20link%20access.user.js",
+    "code_size": 638,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

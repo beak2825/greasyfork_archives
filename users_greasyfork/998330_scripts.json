@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456654,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-16T04:12:28.000Z",
+    "code_updated_at": "2023-06-05T07:32:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 998330,
+        "name": "Null-NorE",
+        "created_at": "2022-12-16T04:08:29.000Z",
+        "url": "https://greasyfork.org/users/998330-null-nore"
+      }
+    ],
+    "name": "浙江理工大学教评系统 一键选择“非常满意”选项",
+    "description": "点击出现的按钮就可以自动勾选当前页面全部的非常满意选项！~",
+    "url": "https://greasyfork.org/scripts/456654-%E6%B5%99%E6%B1%9F%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6%E6%95%99%E8%AF%84%E7%B3%BB%E7%BB%9F-%E4%B8%80%E9%94%AE%E9%80%89%E6%8B%A9-%E9%9D%9E%E5%B8%B8%E6%BB%A1%E6%84%8F-%E9%80%89%E9%A1%B9",
+    "code_url": "https://update.greasyfork.org/scripts/456654/%E6%B5%99%E6%B1%9F%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6%E6%95%99%E8%AF%84%E7%B3%BB%E7%BB%9F%20%E4%B8%80%E9%94%AE%E9%80%89%E6%8B%A9%E2%80%9C%E9%9D%9E%E5%B8%B8%E6%BB%A1%E6%84%8F%E2%80%9D%E9%80%89%E9%A1%B9.user.js",
+    "code_size": 1207,
+    "license": "MIT License",
+    "version": "beta-0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

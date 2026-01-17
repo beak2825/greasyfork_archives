@@ -1,0 +1,35 @@
+[
+  {
+    "id": 487298,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-14T14:10:44.000Z",
+    "code_updated_at": "2024-02-15T14:02:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1260527,
+        "name": "Dltrost",
+        "created_at": "2024-02-12T21:36:12.000Z",
+        "url": "https://greasyfork.org/users/1260527-dltrost"
+      }
+    ],
+    "name": "SchoolModMenu",
+    "description": "A mod menu to use at school ! Shortcuts / Apps / chatgpt include !",
+    "url": "https://greasyfork.org/scripts/487298-schoolmodmenu",
+    "code_url": "https://update.greasyfork.org/scripts/487298/SchoolModMenu.user.js",
+    "code_size": 23644,
+    "license": null,
+    "version": "3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

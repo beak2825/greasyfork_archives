@@ -1,0 +1,59 @@
+{
+  "id": 463896,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-13T09:41:52.000Z",
+  "code_updated_at": "2023-04-13T09:41:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1059406,
+      "name": "simmy",
+      "created_at": "2023-04-13T09:31:41.000Z",
+      "url": "https://greasyfork.org/users/1059406-simmy",
+      "scripts": [
+        {
+          "id": 463896,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-13T09:41:52.000Z",
+          "code_updated_at": "2023-04-13T09:41:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "skip feishu security warning page",
+          "description": "skip feishu security page",
+          "url": "https://greasyfork.org/scripts/463896-skip-feishu-security-warning-page",
+          "code_url": "https://update.greasyfork.org/scripts/463896/skip%20feishu%20security%20warning%20page.user.js",
+          "code_size": 739,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "skip feishu security warning page",
+  "description": "skip feishu security page",
+  "url": "https://greasyfork.org/scripts/463896-skip-feishu-security-warning-page",
+  "code_url": "https://update.greasyfork.org/scripts/463896/skip%20feishu%20security%20warning%20page.user.js",
+  "code_size": 739,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

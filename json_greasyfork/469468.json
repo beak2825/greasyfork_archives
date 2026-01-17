@@ -1,0 +1,33 @@
+{
+  "id": 469468,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-26T07:13:00.000Z",
+  "code_updated_at": "2023-06-27T07:15:10.000Z",
+  "namespace": "Sssss",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 302687,
+      "name": "Bar Food",
+      "created_at": "2019-05-17T15:30:22.000Z",
+      "url": "https://greasyfork.org/users/302687-bar-food"
+    }
+  ],
+  "name": "虎slslsls",
+  "description": "我在，不用担心。 —— 瑶瑶·加入队伍·其三",
+  "url": "https://greasyfork.org/scripts/469468-%E8%99%8Eslslsls",
+  "code_url": "https://update.greasyfork.org/scripts/469468/%E8%99%8Eslslsls.user.css",
+  "code_size": 481,
+  "license": "MIT License",
+  "version": "1.0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

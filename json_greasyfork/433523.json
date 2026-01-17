@@ -1,0 +1,59 @@
+{
+  "id": 433523,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-06T19:53:21.000Z",
+  "code_updated_at": "2024-05-19T18:11:41.000Z",
+  "namespace": "https://gist.github.com/eggbean/ba4daf82f132421c69dbd2c2e0b3e061/raw/twitter_go_back.user.js",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 489627,
+      "name": "Jason Gomez",
+      "created_at": "2020-04-09T07:33:28.000Z",
+      "url": "https://greasyfork.org/users/489627-jason-gomez",
+      "scripts": [
+        {
+          "id": 433523,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-06T19:53:21.000Z",
+          "code_updated_at": "2024-05-19T18:11:41.000Z",
+          "namespace": "https://gist.github.com/eggbean/ba4daf82f132421c69dbd2c2e0b3e061/raw/twitter_go_back.user.js",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitter Go Back with H key",
+          "description": "Makes the unused H key a browser back button for better H,J,K,L keyboard navigation",
+          "url": "https://greasyfork.org/scripts/433523-twitter-go-back-with-h-key",
+          "code_url": "https://update.greasyfork.org/scripts/433523/Twitter%20Go%20Back%20with%20H%20key.user.js",
+          "code_size": 1152,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitter Go Back with H key",
+  "description": "Makes the unused H key a browser back button for better H,J,K,L keyboard navigation",
+  "url": "https://greasyfork.org/scripts/433523-twitter-go-back-with-h-key",
+  "code_url": "https://update.greasyfork.org/scripts/433523/Twitter%20Go%20Back%20with%20H%20key.user.js",
+  "code_size": 1152,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

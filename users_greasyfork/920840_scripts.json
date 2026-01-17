@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445848,
+    "daily_installs": 0,
+    "total_installs": 117,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-01T07:30:26.000Z",
+    "code_updated_at": "2023-12-13T03:23:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 920840,
+        "name": "zhangjf",
+        "created_at": "2022-06-01T07:11:49.000Z",
+        "url": "https://greasyfork.org/users/920840-zhangjf"
+      }
+    ],
+    "name": "GD_CDAP",
+    "description": "Create advantage and enhance efficiency.",
+    "url": "https://greasyfork.org/scripts/445848-gd-cdap",
+    "code_url": "https://update.greasyfork.org/scripts/445848/GD_CDAP.user.js",
+    "code_size": 211465,
+    "license": "ZhangJinFeng",
+    "version": "4.2.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 420320,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-17T13:10:48.000Z",
+  "code_updated_at": "2021-01-18T15:55:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 728361,
+      "name": "D W",
+      "created_at": "2021-01-17T13:09:04.000Z",
+      "url": "https://greasyfork.org/users/728361-d-w",
+      "scripts": []
+    }
+  ],
+  "name": "游戏年轮自动评论",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/420320-%E6%B8%B8%E6%88%8F%E5%B9%B4%E8%BD%AE%E8%87%AA%E5%8A%A8%E8%AF%84%E8%AE%BA",
+  "code_url": "https://update.greasyfork.org/scripts/420320/%E6%B8%B8%E6%88%8F%E5%B9%B4%E8%BD%AE%E8%87%AA%E5%8A%A8%E8%AF%84%E8%AE%BA.user.js",
+  "code_size": 2194,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

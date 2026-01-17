@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436990,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-13T14:01:19.000Z",
+    "code_updated_at": "2021-12-13T14:01:19.000Z",
+    "namespace": "https://greasyfork.org/users/421059",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 421059,
+        "name": "shenyi97",
+        "created_at": "2019-12-16T16:00:39.000Z",
+        "url": "https://greasyfork.org/users/421059-shenyi97"
+      }
+    ],
+    "name": "S1变灰",
+    "description": "限定stage1st论坛专用",
+    "url": "https://greasyfork.org/scripts/436990-s1%E5%8F%98%E7%81%B0",
+    "code_url": "https://update.greasyfork.org/scripts/436990/S1%E5%8F%98%E7%81%B0.user.js",
+    "code_size": 421,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

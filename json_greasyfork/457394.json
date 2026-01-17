@@ -1,0 +1,59 @@
+{
+  "id": 457394,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-31T10:37:56.000Z",
+  "code_updated_at": "2022-12-31T10:41:50.000Z",
+  "namespace": "https://github.com/FaterYU",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1005010,
+      "name": "FaterYU",
+      "created_at": "2022-12-31T08:11:31.000Z",
+      "url": "https://greasyfork.org/users/1005010-fateryu",
+      "scripts": [
+        {
+          "id": 457394,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-31T10:37:56.000Z",
+          "code_updated_at": "2022-12-31T10:41:50.000Z",
+          "namespace": "https://github.com/FaterYU",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SCNU 教务系统 学生评价 辅助工具",
+          "description": "SCNU教务系统学生评价辅助工具",
+          "url": "https://greasyfork.org/scripts/457394-scnu-%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F-%E5%AD%A6%E7%94%9F%E8%AF%84%E4%BB%B7-%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/457394/SCNU%20%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%20%E5%AD%A6%E7%94%9F%E8%AF%84%E4%BB%B7%20%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 1579,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SCNU 教务系统 学生评价 辅助工具",
+  "description": "SCNU教务系统学生评价辅助工具",
+  "url": "https://greasyfork.org/scripts/457394-scnu-%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F-%E5%AD%A6%E7%94%9F%E8%AF%84%E4%BB%B7-%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/457394/SCNU%20%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%20%E5%AD%A6%E7%94%9F%E8%AF%84%E4%BB%B7%20%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 1579,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

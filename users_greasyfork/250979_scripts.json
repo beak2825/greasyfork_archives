@@ -1,0 +1,68 @@
+[
+  {
+    "id": 456688,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-16T17:50:41.000Z",
+    "code_updated_at": "2022-12-16T17:50:41.000Z",
+    "namespace": "MrMike/StackOverflowCookiePromptHider",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 250979,
+        "name": "MrMike",
+        "created_at": "2019-03-01T13:38:27.000Z",
+        "url": "https://greasyfork.org/users/250979-mrmike"
+      }
+    ],
+    "name": "StackOverflowCookiePromptHider",
+    "description": "StackOverflow - Cookie Prompt Hider",
+    "url": "https://greasyfork.org/scripts/456688-stackoverflowcookieprompthider",
+    "code_url": "https://update.greasyfork.org/scripts/456688/StackOverflowCookiePromptHider.user.js",
+    "code_size": 558,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 430904,
+    "daily_installs": 0,
+    "total_installs": 369,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-16T15:38:23.000Z",
+    "code_updated_at": "2022-03-17T19:19:45.000Z",
+    "namespace": "MrMike/GeoGuessr/GeoHintr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 250979,
+        "name": "MrMike",
+        "created_at": "2019-03-01T13:38:27.000Z",
+        "url": "https://greasyfork.org/users/250979-mrmike"
+      }
+    ],
+    "name": "GeoHintr",
+    "description": "GeoHintr - Allows you to place written hints on your maps",
+    "url": "https://greasyfork.org/scripts/430904-geohintr",
+    "code_url": "https://update.greasyfork.org/scripts/430904/GeoHintr.user.js",
+    "code_size": 9981,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -63,7 +63,7 @@
     "version": "0.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 531400,
@@ -97,5 +97,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 438847,
+    "daily_installs": 1,
+    "total_installs": 3929,
+    "fan_score": "57.1",
+    "good_ratings": 8,
+    "ok_ratings": 3,
+    "bad_ratings": 0,
+    "created_at": "2022-01-20T04:12:19.000Z",
+    "code_updated_at": "2025-06-23T12:30:26.000Z",
+    "namespace": "https://github.com/Meteor8",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 546998,
+        "name": "Meteor8",
+        "created_at": "2020-04-30T05:13:57.000Z",
+        "url": "https://greasyfork.org/users/546998-meteor8"
+      }
+    ],
+    "name": "微博批量删除隐藏助手（适配新版微博）",
+    "description": "可指定日期、关键字对微博进行批量删除或设置为仅个人可见，可自动翻页",
+    "url": "https://greasyfork.org/scripts/438847-%E5%BE%AE%E5%8D%9A%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E9%9A%90%E8%97%8F%E5%8A%A9%E6%89%8B-%E9%80%82%E9%85%8D%E6%96%B0%E7%89%88%E5%BE%AE%E5%8D%9A",
+    "code_url": "https://update.greasyfork.org/scripts/438847/%E5%BE%AE%E5%8D%9A%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E9%9A%90%E8%97%8F%E5%8A%A9%E6%89%8B%EF%BC%88%E9%80%82%E9%85%8D%E6%96%B0%E7%89%88%E5%BE%AE%E5%8D%9A%EF%BC%89.user.js",
+    "code_size": 27672,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

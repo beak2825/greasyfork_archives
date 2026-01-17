@@ -1,0 +1,59 @@
+{
+  "id": 440759,
+  "daily_installs": 0,
+  "total_installs": 70,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-01T07:34:41.000Z",
+  "code_updated_at": "2022-03-01T07:34:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 881647,
+      "name": "cutepuppy",
+      "created_at": "2022-03-01T04:02:14.000Z",
+      "url": "https://greasyfork.org/users/881647-cutepuppy",
+      "scripts": [
+        {
+          "id": 440759,
+          "daily_installs": 0,
+          "total_installs": 70,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-01T07:34:41.000Z",
+          "code_updated_at": "2022-03-01T07:34:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "UE Marketplace redirect remover",
+          "description": "Removes the annoying \"Redirect to external site\" notification screen on the UE marketplace that appears when clicking on external links such as to a YouTube preview video.",
+          "url": "https://greasyfork.org/scripts/440759-ue-marketplace-redirect-remover",
+          "code_url": "https://update.greasyfork.org/scripts/440759/UE%20Marketplace%20redirect%20remover.user.js",
+          "code_size": 1174,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "UE Marketplace redirect remover",
+  "description": "Removes the annoying \"Redirect to external site\" notification screen on the UE marketplace that appears when clicking on external links such as to a YouTube preview video.",
+  "url": "https://greasyfork.org/scripts/440759-ue-marketplace-redirect-remover",
+  "code_url": "https://update.greasyfork.org/scripts/440759/UE%20Marketplace%20redirect%20remover.user.js",
+  "code_size": 1174,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

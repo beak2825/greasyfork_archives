@@ -1,0 +1,33 @@
+{
+  "id": 476937,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-08T08:37:44.000Z",
+  "code_updated_at": "2024-04-03T16:36:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 856347,
+      "name": "鮪魚大師",
+      "created_at": "2021-12-22T05:00:09.000Z",
+      "url": "https://greasyfork.org/users/856347-%E9%AE%AA%E9%AD%9A%E5%A4%A7%E5%B8%AB"
+    }
+  ],
+  "name": "自動點擊4Gamers已滿18歲按鈕",
+  "description": "自動點擊按鈕，哪次沒滿18歲",
+  "url": "https://greasyfork.org/scripts/476937-%E8%87%AA%E5%8B%95%E9%BB%9E%E6%93%8A4gamers%E5%B7%B2%E6%BB%BF18%E6%AD%B2%E6%8C%89%E9%88%95",
+  "code_url": "https://update.greasyfork.org/scripts/476937/%E8%87%AA%E5%8B%95%E9%BB%9E%E6%93%8A4Gamers%E5%B7%B2%E6%BB%BF18%E6%AD%B2%E6%8C%89%E9%88%95.user.js",
+  "code_size": 693,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445909,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-02T09:21:55.000Z",
+    "code_updated_at": "2022-06-02T09:21:55.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 192279,
+        "name": "Chomik",
+        "created_at": "2018-06-20T08:33:31.000Z",
+        "url": "https://greasyfork.org/users/192279-chomik"
+      }
+    ],
+    "name": "Match info - botwars.io",
+    "description": "Display more informations about the match",
+    "url": "https://greasyfork.org/scripts/445909-match-info-botwars-io",
+    "code_url": "https://update.greasyfork.org/scripts/445909/Match%20info%20-%20botwarsio.user.js",
+    "code_size": 6956,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

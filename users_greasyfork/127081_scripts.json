@@ -1,0 +1,68 @@
+[
+  {
+    "id": 485660,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-25T17:17:56.000Z",
+    "code_updated_at": "2024-01-25T17:17:56.000Z",
+    "namespace": "https://www.superpowerdaily.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 127081,
+        "name": "Koolstr",
+        "created_at": "2017-05-25T23:35:29.000Z",
+        "url": "https://greasyfork.org/users/127081-koolstr"
+      }
+    ],
+    "name": "Auto-Close Superpower Daily Tab",
+    "description": "Auto-closes the incredibly annoying tab opened daily from the Superpower Daily browser extension. Note, this breaks access to the home page root address entirely.",
+    "url": "https://greasyfork.org/scripts/485660-auto-close-superpower-daily-tab",
+    "code_url": "https://update.greasyfork.org/scripts/485660/Auto-Close%20Superpower%20Daily%20Tab.user.js",
+    "code_size": 673,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434892,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-02T20:34:19.000Z",
+    "code_updated_at": "2022-01-07T16:02:28.000Z",
+    "namespace": "https://rebatekey.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 127081,
+        "name": "Koolstr",
+        "created_at": "2017-05-25T23:35:29.000Z",
+        "url": "https://greasyfork.org/users/127081-koolstr"
+      }
+    ],
+    "name": "RebateKey - Show & Sort by Release Time and Show Reminders",
+    "description": "Always shows rebate release time instead of in a tooltip, sorts list of rebate cards on the Favorites page by the nearest release times, hides the share button on cards, and displays browser notification or alert when a fave rebate releases in 1 minute.",
+    "url": "https://greasyfork.org/scripts/434892-rebatekey-show-sort-by-release-time-and-show-reminders",
+    "code_url": "https://update.greasyfork.org/scripts/434892/RebateKey%20-%20Show%20%20Sort%20by%20Release%20Time%20and%20Show%20Reminders.user.js",
+    "code_size": 5015,
+    "license": "MIT License",
+    "version": "0.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 481850,
+  "daily_installs": 0,
+  "total_installs": 377,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-10T07:53:27.000Z",
+  "code_updated_at": "2023-12-11T03:43:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1231523,
+      "name": "luphoria",
+      "created_at": "2023-12-10T07:48:15.000Z",
+      "url": "https://greasyfork.org/users/1231523-luphoria",
+      "scripts": [
+        {
+          "id": 481850,
+          "daily_installs": 0,
+          "total_installs": 377,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-10T07:53:27.000Z",
+          "code_updated_at": "2023-12-11T03:43:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "JKLM Bomb Party: view opponent bonus letter status",
+          "description": "Displays the status of bonus letter use for opponents.",
+          "url": "https://greasyfork.org/scripts/481850-jklm-bomb-party-view-opponent-bonus-letter-status",
+          "code_url": "https://update.greasyfork.org/scripts/481850/JKLM%20Bomb%20Party%3A%20view%20opponent%20bonus%20letter%20status.user.js",
+          "code_size": 7715,
+          "license": "GPL-3",
+          "version": "2023-12-10.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JKLM Bomb Party: view opponent bonus letter status",
+  "description": "Displays the status of bonus letter use for opponents.",
+  "url": "https://greasyfork.org/scripts/481850-jklm-bomb-party-view-opponent-bonus-letter-status",
+  "code_url": "https://update.greasyfork.org/scripts/481850/JKLM%20Bomb%20Party%3A%20view%20opponent%20bonus%20letter%20status.user.js",
+  "code_size": 7715,
+  "license": "GPL-3",
+  "version": "2023-12-10.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

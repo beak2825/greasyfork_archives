@@ -1,0 +1,33 @@
+{
+  "id": 459306,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-02T09:06:26.000Z",
+  "code_updated_at": "2023-03-31T02:24:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 799122,
+      "name": "MY200",
+      "created_at": "2021-08-01T02:25:01.000Z",
+      "url": "https://greasyfork.org/users/799122-my200"
+    }
+  ],
+  "name": "微学苑",
+  "description": "看视频",
+  "url": "https://greasyfork.org/scripts/459306-%E5%BE%AE%E5%AD%A6%E8%8B%91",
+  "code_url": "https://update.greasyfork.org/scripts/459306/%E5%BE%AE%E5%AD%A6%E8%8B%91.user.js",
+  "code_size": 15467,
+  "license": null,
+  "version": "1.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

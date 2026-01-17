@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454859,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-15T07:46:42.000Z",
+    "code_updated_at": "2023-02-24T07:35:16.000Z",
+    "namespace": "zys",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983490,
+        "name": "Zhangyanshen",
+        "created_at": "2022-11-15T06:43:35.000Z",
+        "url": "https://greasyfork.org/users/983490-zhangyanshen"
+      }
+    ],
+    "name": "【Jensen】bugly次数crash率计算",
+    "description": "bugly次数crash率只有每天的，如果想知道一段时间段的次数crash率需要自己手动计算，该脚本可以自动计算次数crash率",
+    "url": "https://greasyfork.org/scripts/454859-jensen-bugly%E6%AC%A1%E6%95%B0crash%E7%8E%87%E8%AE%A1%E7%AE%97",
+    "code_url": "https://update.greasyfork.org/scripts/454859/%E3%80%90Jensen%E3%80%91bugly%E6%AC%A1%E6%95%B0crash%E7%8E%87%E8%AE%A1%E7%AE%97.user.js",
+    "code_size": 4906,
+    "license": "AGPL License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

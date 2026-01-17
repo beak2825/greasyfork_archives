@@ -1,0 +1,34 @@
+{
+  "id": 473101,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-15T04:13:33.000Z",
+  "code_updated_at": "2023-08-15T04:13:33.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1050491,
+      "name": "Moses Maloney",
+      "created_at": "2023-03-30T13:51:16.000Z",
+      "url": "https://greasyfork.org/users/1050491-moses-maloney",
+      "scripts": []
+    }
+  ],
+  "name": "Ebook to GGN Check",
+  "description": "Check MaM and Anna's Archive searches on GGN",
+  "url": "https://greasyfork.org/scripts/473101-ebook-to-ggn-check",
+  "code_url": "https://update.greasyfork.org/scripts/473101/Ebook%20to%20GGN%20Check.user.js",
+  "code_size": 3621,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

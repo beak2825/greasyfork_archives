@@ -1,0 +1,34 @@
+{
+  "id": 447448,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-05T09:53:10.000Z",
+  "code_updated_at": "2023-09-05T12:29:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 928737,
+      "name": "BSuser",
+      "created_at": "2022-06-24T06:18:15.000Z",
+      "url": "https://greasyfork.org/users/928737-bsuser",
+      "scripts": []
+    }
+  ],
+  "name": "Większe ikony kurierów na liście zamówień",
+  "description": "Większe ikony kurierów w panelu butosklep",
+  "url": "https://greasyfork.org/scripts/447448-wi%C4%99ksze-ikony-kurier%C3%B3w-na-li%C5%9Bcie-zam%C3%B3wie%C5%84",
+  "code_url": "https://update.greasyfork.org/scripts/447448/Wi%C4%99ksze%20ikony%20kurier%C3%B3w%20na%20li%C5%9Bcie%20zam%C3%B3wie%C5%84.user.js",
+  "code_size": 655,
+  "license": null,
+  "version": "2.2",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473791,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-24T08:46:14.000Z",
+    "code_updated_at": "2024-05-21T07:59:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1158147,
+        "name": "Mohammed Charrad",
+        "created_at": "2023-08-24T08:42:52.000Z",
+        "url": "https://greasyfork.org/users/1158147-mohammed-charrad"
+      }
+    ],
+    "name": "1337 MED Logtime Calculator",
+    "description": "Calculates logtime starting from the 29th of each month.",
+    "url": "https://greasyfork.org/scripts/473791-1337-med-logtime-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/473791/1337%20MED%20Logtime%20Calculator.user.js",
+    "code_size": 15871,
+    "license": "MIT License",
+    "version": "0.9.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 489716,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-13T10:16:55.000Z",
+    "code_updated_at": "2024-03-13T10:16:55.000Z",
+    "namespace": "fb-ad-copyer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1243623,
+        "name": "双开门大冰箱",
+        "created_at": "2024-01-05T11:35:41.000Z",
+        "url": "https://greasyfork.org/users/1243623-%E5%8F%8C%E5%BC%80%E9%97%A8%E5%A4%A7%E5%86%B0%E7%AE%B1"
+      }
+    ],
+    "name": "fb-ad-copyer",
+    "description": "fb ad copyer",
+    "url": "https://greasyfork.org/scripts/489716-fb-ad-copyer",
+    "code_url": "https://update.greasyfork.org/scripts/489716/fb-ad-copyer.user.js",
+    "code_size": 3622,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 483954,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-05T11:40:51.000Z",
+    "code_updated_at": "2024-03-21T01:48:52.000Z",
+    "namespace": "ptc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1243623,
+        "name": "双开门大冰箱",
+        "created_at": "2024-01-05T11:35:41.000Z",
+        "url": "https://greasyfork.org/users/1243623-%E5%8F%8C%E5%BC%80%E9%97%A8%E5%A4%A7%E5%86%B0%E7%AE%B1"
+      }
+    ],
+    "name": "ptc",
+    "description": "product collect tool",
+    "url": "https://greasyfork.org/scripts/483954-ptc",
+    "code_url": "https://update.greasyfork.org/scripts/483954/ptc.user.js",
+    "code_size": 17609,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

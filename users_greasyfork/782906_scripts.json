@@ -1,0 +1,68 @@
+[
+  {
+    "id": 443781,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-22T01:38:10.000Z",
+    "code_updated_at": "2022-04-22T01:38:10.000Z",
+    "namespace": "http://kenngsimply.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 782906,
+        "name": "Ken Ng",
+        "created_at": "2021-06-13T09:07:44.000Z",
+        "url": "https://greasyfork.org/users/782906-ken-ng"
+      }
+    ],
+    "name": "Gitlab code review mouse shortcut",
+    "description": "Add mouse shortcut to Gitlab code review (NOTE: only for settings: show one file at a time)",
+    "url": "https://greasyfork.org/scripts/443781-gitlab-code-review-mouse-shortcut",
+    "code_url": "https://update.greasyfork.org/scripts/443781/Gitlab%20code%20review%20mouse%20shortcut.user.js",
+    "code_size": 1574,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427888,
+    "daily_installs": 0,
+    "total_installs": 125,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-06-13T09:13:45.000Z",
+    "code_updated_at": "2021-06-18T10:04:53.000Z",
+    "namespace": "https://github.com/kenng/whatsapp-chatbox-resizer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 782906,
+        "name": "Ken Ng",
+        "created_at": "2021-06-13T09:07:44.000Z",
+        "url": "https://greasyfork.org/users/782906-ken-ng"
+      }
+    ],
+    "name": "Whatsapp TextArea Resize",
+    "description": "resizable chatbox text area",
+    "url": "https://greasyfork.org/scripts/427888-whatsapp-textarea-resize",
+    "code_url": "https://update.greasyfork.org/scripts/427888/Whatsapp%20TextArea%20Resize.user.js",
+    "code_size": 3328,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

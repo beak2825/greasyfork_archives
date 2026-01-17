@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468026,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-06T03:49:43.000Z",
+    "code_updated_at": "2023-06-06T03:49:43.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1092047,
+        "name": "Thubear",
+        "created_at": "2023-06-06T03:36:04.000Z",
+        "url": "https://greasyfork.org/users/1092047-thubear"
+      }
+    ],
+    "name": "应用开发二部核工业网课助手",
+    "description": "专题和课程页面点击右下角的自动播放按钮，可以实现无人值守挂课。考试页面右上方点击允许切屏/复制，可以解开切屏/复制限制。",
+    "url": "https://greasyfork.org/scripts/468026-%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E4%BA%8C%E9%83%A8%E6%A0%B8%E5%B7%A5%E4%B8%9A%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/468026/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E4%BA%8C%E9%83%A8%E6%A0%B8%E5%B7%A5%E4%B8%9A%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 9399,
+    "license": "MIT License",
+    "version": "0.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

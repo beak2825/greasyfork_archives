@@ -1,0 +1,59 @@
+{
+  "id": 481527,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-06T12:44:56.000Z",
+  "code_updated_at": "2023-12-06T12:44:55.000Z",
+  "namespace": "http://star-space.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 54927,
+      "name": "Erik Ortiz",
+      "created_at": "2016-07-15T04:38:21.000Z",
+      "url": "https://greasyfork.org/users/54927-erik-ortiz",
+      "scripts": [
+        {
+          "id": 481527,
+          "daily_installs": 0,
+          "total_installs": 45,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-06T12:44:56.000Z",
+          "code_updated_at": "2023-12-06T12:44:55.000Z",
+          "namespace": "http://star-space.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NP一键认领",
+          "description": "适用于NP架构的一键认领",
+          "url": "https://greasyfork.org/scripts/481527-np%E4%B8%80%E9%94%AE%E8%AE%A4%E9%A2%86",
+          "code_url": "https://update.greasyfork.org/scripts/481527/NP%E4%B8%80%E9%94%AE%E8%AE%A4%E9%A2%86.user.js",
+          "code_size": 12360,
+          "license": "MIT License",
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NP一键认领",
+  "description": "适用于NP架构的一键认领",
+  "url": "https://greasyfork.org/scripts/481527-np%E4%B8%80%E9%94%AE%E8%AE%A4%E9%A2%86",
+  "code_url": "https://update.greasyfork.org/scripts/481527/NP%E4%B8%80%E9%94%AE%E8%AE%A4%E9%A2%86.user.js",
+  "code_size": 12360,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

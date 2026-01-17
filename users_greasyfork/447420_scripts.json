@@ -1,0 +1,35 @@
+[
+  {
+    "id": 423209,
+    "daily_installs": 0,
+    "total_installs": 88,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-14T14:47:49.000Z",
+    "code_updated_at": "2022-06-15T03:30:35.000Z",
+    "namespace": "Discuz！ Emoji display",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 447420,
+        "name": "mxdh",
+        "created_at": "2020-02-20T06:31:25.000Z",
+        "url": "https://greasyfork.org/users/447420-mxdh"
+      }
+    ],
+    "name": "Discuz！ Emoji display",
+    "description": "修复部分Diszuz！论坛的Emoji显示问题 Fixed an issue where Emoji could not be displayed normally in some forums based on Discuz!",
+    "url": "https://greasyfork.org/scripts/423209-discuz-emoji-display",
+    "code_url": "https://update.greasyfork.org/scripts/423209/Discuz%EF%BC%81%20Emoji%20display.user.js",
+    "code_size": 2093,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435494,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-14T10:20:45.000Z",
+    "code_updated_at": "2021-11-14T10:20:45.000Z",
+    "namespace": "https://greasyfork.org/ja/users/17828-amaicoffee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 17828,
+        "name": "amaicoffee",
+        "created_at": "2015-10-12T16:34:14.000Z",
+        "url": "https://greasyfork.org/users/17828-amaicoffee"
+      }
+    ],
+    "name": "PF not OOP Test for PC",
+    "description": "ブロックされたタグを持つ作品をランキング上で非表示にします。",
+    "url": "https://greasyfork.org/scripts/435494-pf-not-oop-test-for-pc",
+    "code_url": "https://update.greasyfork.org/scripts/435494/PF%20not%20OOP%20Test%20for%20PC.user.js",
+    "code_size": 3272,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

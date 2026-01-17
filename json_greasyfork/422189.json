@@ -1,0 +1,34 @@
+{
+  "id": 422189,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-23T10:19:44.000Z",
+  "code_updated_at": "2021-02-23T10:21:12.000Z",
+  "namespace": "https://twitter.com/r1825_java",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 287751,
+      "name": "r1825",
+      "created_at": "2019-03-31T08:34:15.000Z",
+      "url": "https://greasyfork.org/users/287751-r1825",
+      "scripts": []
+    }
+  ],
+  "name": "niconico tagrepo",
+  "description": "niconicoのフォローページにタグレポへのリンクを追加します。",
+  "url": "https://greasyfork.org/scripts/422189-niconico-tagrepo",
+  "code_url": "https://update.greasyfork.org/scripts/422189/niconico%20tagrepo.user.js",
+  "code_size": 4194,
+  "license": null,
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 464689,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-23T13:21:45.000Z",
+  "code_updated_at": "2023-04-23T13:21:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1066261,
+      "name": "BIRDIE13",
+      "created_at": "2023-04-23T13:20:00.000Z",
+      "url": "https://greasyfork.org/users/1066261-birdie13",
+      "scripts": []
+    }
+  ],
+  "name": "Hide leftAHol div",
+  "description": "Hide the leftAHol div on the specified website",
+  "url": "https://greasyfork.org/scripts/464689-hide-leftahol-div",
+  "code_url": "https://update.greasyfork.org/scripts/464689/Hide%20leftAHol%20div.user.js",
+  "code_size": 453,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

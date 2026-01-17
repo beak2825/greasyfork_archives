@@ -1,0 +1,35 @@
+[
+  {
+    "id": 425712,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-29T18:23:53.000Z",
+    "code_updated_at": "2021-04-29T18:23:53.000Z",
+    "namespace": "http://example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 766631,
+        "name": "jXBtyqBwV1TgEFhJ8I4W",
+        "created_at": "2021-04-29T18:02:30.000Z",
+        "url": "https://greasyfork.org/users/766631-jxbtyqbwv1tgefhj8i4w"
+      }
+    ],
+    "name": "Old Mobile Reddit Please!",
+    "description": "Converts reddit.com links to i.reddit.com links",
+    "url": "https://greasyfork.org/scripts/425712-old-mobile-reddit-please",
+    "code_url": "https://update.greasyfork.org/scripts/425712/Old%20Mobile%20Reddit%20Please%21.user.js",
+    "code_size": 1162,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

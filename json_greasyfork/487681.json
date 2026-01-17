@@ -1,0 +1,33 @@
+{
+  "id": 487681,
+  "daily_installs": 0,
+  "total_installs": 885,
+  "fan_score": "51.0",
+  "good_ratings": 4,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-19T04:38:02.000Z",
+  "code_updated_at": "2024-09-07T09:28:20.000Z",
+  "namespace": "https://greasyfork.org/users/452911",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 452911,
+      "name": "大萌主",
+      "created_at": "2020-03-02T12:02:52.000Z",
+      "url": "https://greasyfork.org/users/452911-%E5%A4%A7%E8%90%8C%E4%B8%BB"
+    }
+  ],
+  "name": "图片样式屏蔽器",
+  "description": "隐藏所有图片元素，可以用来看网页小说和视频，脚本菜单启用/禁用脚本，也可以通过A键加B键触发",
+  "url": "https://greasyfork.org/scripts/487681-%E5%9B%BE%E7%89%87%E6%A0%B7%E5%BC%8F%E5%B1%8F%E8%94%BD%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/487681/%E5%9B%BE%E7%89%87%E6%A0%B7%E5%BC%8F%E5%B1%8F%E8%94%BD%E5%99%A8.user.js",
+  "code_size": 3938,
+  "license": null,
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

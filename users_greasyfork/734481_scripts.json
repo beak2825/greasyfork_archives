@@ -1,0 +1,68 @@
+[
+  {
+    "id": 422181,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-23T03:51:57.000Z",
+    "code_updated_at": "2021-02-23T03:51:56.000Z",
+    "namespace": "https://greasyfork.org/users/734481",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 734481,
+        "name": "pyokopyoko",
+        "created_at": "2021-02-04T14:28:06.000Z",
+        "url": "https://greasyfork.org/users/734481-pyokopyoko"
+      }
+    ],
+    "name": "PR TIMESの画像を高画質化",
+    "description": "PR TIMESに埋め込まれている画像を高解像度なものに差し替えます",
+    "url": "https://greasyfork.org/scripts/422181-pr-times%E3%81%AE%E7%94%BB%E5%83%8F%E3%82%92%E9%AB%98%E7%94%BB%E8%B3%AA%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/422181/PR%20TIMES%E3%81%AE%E7%94%BB%E5%83%8F%E3%82%92%E9%AB%98%E7%94%BB%E8%B3%AA%E5%8C%96.user.js",
+    "code_size": 519,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421212,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-04T16:47:18.000Z",
+    "code_updated_at": "2021-02-04T16:47:18.000Z",
+    "namespace": "pyokopyoko",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 734481,
+        "name": "pyokopyoko",
+        "created_at": "2021-02-04T14:28:06.000Z",
+        "url": "https://greasyfork.org/users/734481-pyokopyoko"
+      }
+    ],
+    "name": "Tweet CopyPasta の動画URLから ?tag=.. を消すやつ",
+    "description": "コピーボタンを押した時に ?tag=.. を消してからコピーするように変更します",
+    "url": "https://greasyfork.org/scripts/421212-tweet-copypasta-%E3%81%AE%E5%8B%95%E7%94%BBurl%E3%81%8B%E3%82%89-tag-%E3%82%92%E6%B6%88%E3%81%99%E3%82%84%E3%81%A4",
+    "code_url": "https://update.greasyfork.org/scripts/421212/Tweet%20CopyPasta%20%E3%81%AE%E5%8B%95%E7%94%BBURL%E3%81%8B%E3%82%89%20tag%3D%20%E3%82%92%E6%B6%88%E3%81%99%E3%82%84%E3%81%A4.user.js",
+    "code_size": 632,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

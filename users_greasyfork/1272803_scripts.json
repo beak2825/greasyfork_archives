@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489508,
+    "daily_installs": 10,
+    "total_installs": 6821,
+    "fan_score": "42.0",
+    "good_ratings": 5,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2024-03-10T19:19:17.000Z",
+    "code_updated_at": "2025-12-23T20:37:07.000Z",
+    "namespace": "4chan-XT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1272803,
+        "name": "TuxedoTako",
+        "created_at": "2024-03-10T19:13:25.000Z",
+        "url": "https://greasyfork.org/users/1272803-tuxedotako"
+      }
+    ],
+    "name": "4chan XT",
+    "description": "4chan XT is a script that adds various features to anonymous imageboards.",
+    "url": "https://greasyfork.org/scripts/489508-4chan-xt",
+    "code_url": "https://update.greasyfork.org/scripts/489508/4chan%20XT.user.js",
+    "code_size": 907283,
+    "license": "MIT; https://github.com/TuxedoTako/4chan-xt/blob/project-XT/LICENSE",
+    "version": "2.24.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

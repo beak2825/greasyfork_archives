@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464997,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-27T16:50:52.000Z",
+    "code_updated_at": "2023-05-08T16:07:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 839635,
+        "name": "DDDDEEP",
+        "created_at": "2021-11-16T10:46:31.000Z",
+        "url": "https://greasyfork.org/users/839635-ddddeep"
+      }
+    ],
+    "name": "微信黑白模式适配",
+    "description": "微信公众号，黑暗模式下，字体变亮",
+    "url": "https://greasyfork.org/scripts/464997-%E5%BE%AE%E4%BF%A1%E9%BB%91%E7%99%BD%E6%A8%A1%E5%BC%8F%E9%80%82%E9%85%8D",
+    "code_url": "https://update.greasyfork.org/scripts/464997/%E5%BE%AE%E4%BF%A1%E9%BB%91%E7%99%BD%E6%A8%A1%E5%BC%8F%E9%80%82%E9%85%8D.user.js",
+    "code_size": 805,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

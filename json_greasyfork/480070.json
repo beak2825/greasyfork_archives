@@ -1,0 +1,33 @@
+{
+  "id": 480070,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-16T21:00:38.000Z",
+  "code_updated_at": "2023-11-16T21:00:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1217428,
+      "name": "heloess",
+      "created_at": "2023-11-14T17:12:14.000Z",
+      "url": "https://greasyfork.org/users/1217428-heloess"
+    }
+  ],
+  "name": "Reddit hide blocked accounts on comments",
+  "description": "Hide comments with class starting pattern \"Comment\" if they contain \"Blocked account\"",
+  "url": "https://greasyfork.org/scripts/480070-reddit-hide-blocked-accounts-on-comments",
+  "code_url": "https://update.greasyfork.org/scripts/480070/Reddit%20hide%20blocked%20accounts%20on%20comments.user.js",
+  "code_size": 1275,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

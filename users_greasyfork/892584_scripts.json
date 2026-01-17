@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442077,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-25T13:14:35.000Z",
+    "code_updated_at": "2022-03-25T13:14:35.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892584,
+        "name": "Immortal 9100",
+        "created_at": "2022-03-25T13:03:39.000Z",
+        "url": "https://greasyfork.org/users/892584-immortal-9100"
+      }
+    ],
+    "name": "himanlol",
+    "description": "TO get rid of join us popup on every page",
+    "url": "https://greasyfork.org/scripts/442077-himanlol",
+    "code_url": "https://update.greasyfork.org/scripts/442077/himanlol.user.js",
+    "code_size": 321,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

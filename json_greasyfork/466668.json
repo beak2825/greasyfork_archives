@@ -1,0 +1,34 @@
+{
+  "id": 466668,
+  "daily_installs": 0,
+  "total_installs": 91,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-19T19:51:35.000Z",
+  "code_updated_at": "2025-12-03T15:50:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 206502,
+      "name": "TomaszFromasz",
+      "created_at": "2018-08-21T06:06:43.000Z",
+      "url": "https://greasyfork.org/users/206502-tomaszfromasz",
+      "scripts": []
+    }
+  ],
+  "name": "YMS ASSISTANT",
+  "description": "Dodaje przyciski do opisywania assetow w yms, oraz opisuje kolejność assetów na polach",
+  "url": "https://greasyfork.org/scripts/466668-yms-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/466668/YMS%20ASSISTANT.user.js",
+  "code_size": 53442,
+  "license": null,
+  "version": "3.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

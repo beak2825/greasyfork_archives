@@ -1,0 +1,59 @@
+{
+  "id": 492681,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-16T17:56:38.000Z",
+  "code_updated_at": "2024-04-16T17:56:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1289136,
+      "name": "anthonyk2923",
+      "created_at": "2024-04-16T17:55:36.000Z",
+      "url": "https://greasyfork.org/users/1289136-anthonyk2923",
+      "scripts": [
+        {
+          "id": 492681,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-16T17:56:38.000Z",
+          "code_updated_at": "2024-04-16T17:56:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chronophoto cheat",
+          "description": "Automaticaly gets 1000 points per question. Simply press next round.",
+          "url": "https://greasyfork.org/scripts/492681-chronophoto-cheat",
+          "code_url": "https://update.greasyfork.org/scripts/492681/Chronophoto%20cheat.user.js",
+          "code_size": 864,
+          "license": "MIT License",
+          "version": "2024-04-16",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chronophoto cheat",
+  "description": "Automaticaly gets 1000 points per question. Simply press next round.",
+  "url": "https://greasyfork.org/scripts/492681-chronophoto-cheat",
+  "code_url": "https://update.greasyfork.org/scripts/492681/Chronophoto%20cheat.user.js",
+  "code_size": 864,
+  "license": "MIT License",
+  "version": "2024-04-16",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

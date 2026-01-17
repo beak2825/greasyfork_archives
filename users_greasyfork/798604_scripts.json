@@ -1,0 +1,35 @@
+[
+  {
+    "id": 430102,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-30T08:58:16.000Z",
+    "code_updated_at": "2021-08-03T03:02:04.000Z",
+    "namespace": "https://gaozhengtao.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 798604,
+        "name": "CodePythonFollow",
+        "created_at": "2021-07-30T08:57:31.000Z",
+        "url": "https://greasyfork.org/users/798604-codepythonfollow"
+      }
+    ],
+    "name": "快捷配置",
+    "description": "try to config from excel!",
+    "url": "https://greasyfork.org/scripts/430102-%E5%BF%AB%E6%8D%B7%E9%85%8D%E7%BD%AE",
+    "code_url": "https://update.greasyfork.org/scripts/430102/%E5%BF%AB%E6%8D%B7%E9%85%8D%E7%BD%AE.user.js",
+    "code_size": 3058,
+    "license": null,
+    "version": "1.6",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

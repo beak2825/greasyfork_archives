@@ -1,0 +1,68 @@
+[
+  {
+    "id": 446619,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-17T10:16:38.000Z",
+    "code_updated_at": "2022-06-17T10:16:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913464,
+        "name": "Leochens",
+        "created_at": "2022-05-12T12:53:37.000Z",
+        "url": "https://greasyfork.org/users/913464-leochens"
+      }
+    ],
+    "name": "CodeTop Token获取",
+    "description": "获得CodeTop 登录后的token",
+    "url": "https://greasyfork.org/scripts/446619-codetop-token%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/446619/CodeTop%20Token%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 756,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 444881,
+    "daily_installs": 0,
+    "total_installs": 156,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-12T14:08:30.000Z",
+    "code_updated_at": "2022-06-17T10:14:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913464,
+        "name": "Leochens",
+        "created_at": "2022-05-12T12:53:37.000Z",
+        "url": "https://greasyfork.org/users/913464-leochens"
+      }
+    ],
+    "name": "LeetCode 刷题小助手",
+    "description": "查询LeetCode考题最近的考察频率、显示codeTop评论",
+    "url": "https://greasyfork.org/scripts/444881-leetcode-%E5%88%B7%E9%A2%98%E5%B0%8F%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/444881/LeetCode%20%E5%88%B7%E9%A2%98%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 8410,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

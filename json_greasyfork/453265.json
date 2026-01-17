@@ -1,0 +1,59 @@
+{
+  "id": 453265,
+  "daily_installs": 0,
+  "total_installs": 93,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-18T06:44:01.000Z",
+  "code_updated_at": "2022-10-22T15:35:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 26519,
+      "name": "miros",
+      "created_at": "2016-01-08T10:23:17.000Z",
+      "url": "https://greasyfork.org/users/26519-miros",
+      "scripts": [
+        {
+          "id": 453265,
+          "daily_installs": 0,
+          "total_installs": 93,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-18T06:44:01.000Z",
+          "code_updated_at": "2022-10-22T15:35:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Add crime stats to result",
+          "description": "Add the new number of crimes in the category to the result  message",
+          "url": "https://greasyfork.org/scripts/453265-add-crime-stats-to-result",
+          "code_url": "https://update.greasyfork.org/scripts/453265/Add%20crime%20stats%20to%20result.user.js",
+          "code_size": 9564,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Add crime stats to result",
+  "description": "Add the new number of crimes in the category to the result  message",
+  "url": "https://greasyfork.org/scripts/453265-add-crime-stats-to-result",
+  "code_url": "https://update.greasyfork.org/scripts/453265/Add%20crime%20stats%20to%20result.user.js",
+  "code_size": 9564,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 492976,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-19T23:55:46.000Z",
+    "code_updated_at": "2024-04-19T23:55:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1290593,
+        "name": "TibuMods",
+        "created_at": "2024-04-19T23:43:42.000Z",
+        "url": "https://greasyfork.org/users/1290593-tibumods"
+      }
+    ],
+    "name": "Letterboxd IMDb Code Extractor",
+    "description": "Extract and copy IMDb code on Letterboxd film pages",
+    "url": "https://greasyfork.org/scripts/492976-letterboxd-imdb-code-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/492976/Letterboxd%20IMDb%20Code%20Extractor.user.js",
+    "code_size": 2485,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

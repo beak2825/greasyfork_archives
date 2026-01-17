@@ -1,0 +1,34 @@
+{
+  "id": 458172,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-13T11:13:13.000Z",
+  "code_updated_at": "2023-02-04T02:55:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "http://www.burningall.com",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 933911,
+      "name": "Zhixu Chen",
+      "created_at": "2022-07-09T06:33:38.000Z",
+      "url": "https://greasyfork.org/users/933911-zhixu-chen",
+      "scripts": []
+    }
+  ],
+  "name": "显示及抓取aliexpress bought信息",
+  "description": "显示抓取aliexpress bought信息",
+  "url": "https://greasyfork.org/scripts/458172-%E6%98%BE%E7%A4%BA%E5%8F%8A%E6%8A%93%E5%8F%96aliexpress-bought%E4%BF%A1%E6%81%AF",
+  "code_url": "https://update.greasyfork.org/scripts/458172/%E6%98%BE%E7%A4%BA%E5%8F%8A%E6%8A%93%E5%8F%96aliexpress%20bought%E4%BF%A1%E6%81%AF.user.js",
+  "code_size": 9009,
+  "license": "No License",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

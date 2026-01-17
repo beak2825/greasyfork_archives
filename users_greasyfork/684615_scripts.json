@@ -1,0 +1,35 @@
+[
+  {
+    "id": 427798,
+    "daily_installs": 0,
+    "total_installs": 330,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-11T10:06:16.000Z",
+    "code_updated_at": "2021-12-29T06:27:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 684615,
+        "name": "zyl315",
+        "created_at": "2020-09-02T11:59:20.000Z",
+        "url": "https://greasyfork.org/users/684615-zyl315"
+      }
+    ],
+    "name": "Acfun ThrowBanana",
+    "description": "一键5蕉",
+    "url": "https://greasyfork.org/scripts/427798-acfun-throwbanana",
+    "code_url": "https://update.greasyfork.org/scripts/427798/Acfun%20ThrowBanana.user.js",
+    "code_size": 4463,
+    "license": "MIT License",
+    "version": "1.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

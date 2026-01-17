@@ -1,0 +1,34 @@
+{
+  "id": 440537,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-24T07:26:35.000Z",
+  "code_updated_at": "2022-02-24T07:26:34.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 877447,
+      "name": "王安明",
+      "created_at": "2022-02-17T06:05:19.000Z",
+      "url": "https://greasyfork.org/users/877447-%E7%8E%8B%E5%AE%89%E6%98%8E",
+      "scripts": []
+    }
+  ],
+  "name": "nunjucks",
+  "description": "用户日志分析检测工具的调用",
+  "url": "https://greasyfork.org/scripts/440537-nunjucks",
+  "code_url": "https://update.greasyfork.org/scripts/440537/1021756/nunjucks.js",
+  "code_size": 110785,
+  "license": null,
+  "version": "0.0.1.20220224072634",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

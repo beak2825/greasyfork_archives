@@ -1,0 +1,68 @@
+[
+  {
+    "id": 493866,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-30T16:39:20.000Z",
+    "code_updated_at": "2025-07-05T09:14:10.000Z",
+    "namespace": "basedfloppagigachad",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268888,
+        "name": "cursedkuzya",
+        "created_at": "2024-03-01T12:57:43.000Z",
+        "url": "https://greasyfork.org/users/1268888-cursedkuzya"
+      }
+    ],
+    "name": "базированный шлепа гигачад catwar.net",
+    "description": "заменяет изображение котенка каракала на версию художника с ID 505212",
+    "url": "https://greasyfork.org/scripts/493866-%D0%B1%D0%B0%D0%B7%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B9-%D1%88%D0%BB%D0%B5%D0%BF%D0%B0-%D0%B3%D0%B8%D0%B3%D0%B0%D1%87%D0%B0%D0%B4-catwar-net",
+    "code_url": "https://update.greasyfork.org/scripts/493866/%D0%B1%D0%B0%D0%B7%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B9%20%D1%88%D0%BB%D0%B5%D0%BF%D0%B0%20%D0%B3%D0%B8%D0%B3%D0%B0%D1%87%D0%B0%D0%B4%20catwarnet.user.js",
+    "code_size": 1238,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 488706,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-01T12:59:36.000Z",
+    "code_updated_at": "2025-07-05T09:12:16.000Z",
+    "namespace": "cw3zemleroyka",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268888,
+        "name": "cursedkuzya",
+        "created_at": "2024-03-01T12:57:43.000Z",
+        "url": "https://greasyfork.org/users/1268888-cursedkuzya"
+      }
+    ],
+    "name": "смешная землеройка catwar.net",
+    "description": "заменяет изображение землеройки на смешное",
+    "url": "https://greasyfork.org/scripts/488706-%D1%81%D0%BC%D0%B5%D1%88%D0%BD%D0%B0%D1%8F-%D0%B7%D0%B5%D0%BC%D0%BB%D0%B5%D1%80%D0%BE%D0%B9%D0%BA%D0%B0-catwar-net",
+    "code_url": "https://update.greasyfork.org/scripts/488706/%D1%81%D0%BC%D0%B5%D1%88%D0%BD%D0%B0%D1%8F%20%D0%B7%D0%B5%D0%BC%D0%BB%D0%B5%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%20catwarnet.user.js",
+    "code_size": 805,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 450088,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-24T11:14:13.000Z",
+  "code_updated_at": "2022-08-24T11:14:13.000Z",
+  "namespace": "TTD Sticky Notes",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 197274,
+      "name": "M C KRISH",
+      "created_at": "2018-07-20T17:13:25.000Z",
+      "url": "https://greasyfork.org/users/197274-m-c-krish",
+      "scripts": []
+    }
+  ],
+  "name": "TTD Sticky Notes",
+  "description": "TTD Sticky Notes TTD Sticky Notes TTD Sticky Notes",
+  "url": "https://greasyfork.org/scripts/450088-ttd-sticky-notes",
+  "code_url": "https://update.greasyfork.org/scripts/450088/TTD%20Sticky%20Notes.user.js",
+  "code_size": 5414,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

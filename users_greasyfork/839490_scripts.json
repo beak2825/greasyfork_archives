@@ -1,0 +1,35 @@
+[
+  {
+    "id": 451729,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-21T00:42:12.000Z",
+    "code_updated_at": "2022-09-21T08:02:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 839490,
+        "name": "torwe",
+        "created_at": "2021-11-16T03:34:26.000Z",
+        "url": "https://greasyfork.org/users/839490-torwe"
+      }
+    ],
+    "name": "enetedu",
+    "description": "enetedu助手",
+    "url": "https://greasyfork.org/scripts/451729-enetedu",
+    "code_url": "https://update.greasyfork.org/scripts/451729/enetedu.user.js",
+    "code_size": 2436,
+    "license": "AGPL License",
+    "version": "0.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 487291,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-14T13:02:39.000Z",
+  "code_updated_at": "2024-04-16T07:04:57.000Z",
+  "namespace": "https://github.com/R0g3rT",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1261153,
+      "name": "Robert Lippert",
+      "created_at": "2024-02-14T12:53:13.000Z",
+      "url": "https://greasyfork.org/users/1261153-robert-lippert",
+      "scripts": []
+    }
+  ],
+  "name": "onlyMpos",
+  "description": "burn rubber not your soul!!",
+  "url": "https://greasyfork.org/scripts/487291-onlympos",
+  "code_url": "https://update.greasyfork.org/scripts/487291/onlyMpos.user.js",
+  "code_size": 2580,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

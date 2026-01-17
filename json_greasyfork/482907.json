@@ -1,0 +1,59 @@
+{
+  "id": 482907,
+  "daily_installs": 1,
+  "total_installs": 565,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-22T20:29:15.000Z",
+  "code_updated_at": "2025-08-18T21:54:49.000Z",
+  "namespace": "https://www.aishort.top/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 161006,
+      "name": "rockben",
+      "created_at": "2017-11-27T11:36:28.000Z",
+      "url": "https://greasyfork.org/users/161006-rockben",
+      "scripts": [
+        {
+          "id": 482907,
+          "daily_installs": 1,
+          "total_installs": 565,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-22T20:29:15.000Z",
+          "code_updated_at": "2025-08-18T21:54:49.000Z",
+          "namespace": "https://www.aishort.top/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT Shortcut Anywhere",
+          "description": "Toggle AiShort sidebar on the page",
+          "url": "https://greasyfork.org/scripts/482907-chatgpt-shortcut-anywhere",
+          "code_url": "https://update.greasyfork.org/scripts/482907/ChatGPT%20Shortcut%20Anywhere.user.js",
+          "code_size": 6951,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT Shortcut Anywhere",
+  "description": "Toggle AiShort sidebar on the page",
+  "url": "https://greasyfork.org/scripts/482907-chatgpt-shortcut-anywhere",
+  "code_url": "https://update.greasyfork.org/scripts/482907/ChatGPT%20Shortcut%20Anywhere.user.js",
+  "code_size": 6951,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

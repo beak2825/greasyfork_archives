@@ -163,5 +163,170 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493978,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-02T15:32:34.000Z",
+    "code_updated_at": "2024-05-02T15:37:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972353,
+        "name": "iuroc",
+        "created_at": "2022-10-18T12:39:44.000Z",
+        "url": "https://greasyfork.org/users/972353-iuroc"
+      }
+    ],
+    "name": "MT 论坛自动回帖",
+    "description": "自动回复",
+    "url": "https://greasyfork.org/scripts/493978-mt-%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%B8%96",
+    "code_url": "https://update.greasyfork.org/scripts/493978/MT%20%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%B8%96.user.js",
+    "code_size": 1245,
+    "license": null,
+    "version": "2024-05-02-2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 479381,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-09T15:33:08.000Z",
+    "code_updated_at": "2023-11-09T15:33:08.000Z",
+    "namespace": "https://iuroc.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972353,
+        "name": "iuroc",
+        "created_at": "2022-10-18T12:39:44.000Z",
+        "url": "https://greasyfork.org/users/972353-iuroc"
+      }
+    ],
+    "name": "一键清空通义千问对话",
+    "description": "打开通义千问，左下角出现按钮，点击即可清空对话列表。",
+    "url": "https://greasyfork.org/scripts/479381-%E4%B8%80%E9%94%AE%E6%B8%85%E7%A9%BA%E9%80%9A%E4%B9%89%E5%8D%83%E9%97%AE%E5%AF%B9%E8%AF%9D",
+    "code_url": "https://update.greasyfork.org/scripts/479381/%E4%B8%80%E9%94%AE%E6%B8%85%E7%A9%BA%E9%80%9A%E4%B9%89%E5%8D%83%E9%97%AE%E5%AF%B9%E8%AF%9D.user.js",
+    "code_size": 2775,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 465431,
+    "daily_installs": 0,
+    "total_installs": 96,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-03T13:04:57.000Z",
+    "code_updated_at": "2023-05-03T13:04:57.000Z",
+    "namespace": "apee.top",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972353,
+        "name": "iuroc",
+        "created_at": "2022-10-18T12:39:44.000Z",
+        "url": "https://greasyfork.org/users/972353-iuroc"
+      }
+    ],
+    "name": "修改网页字体和其他 CSS 属性值",
+    "description": "修改网页字体，支持不同网站不同规则",
+    "url": "https://greasyfork.org/scripts/465431-%E4%BF%AE%E6%94%B9%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E5%92%8C%E5%85%B6%E4%BB%96-css-%E5%B1%9E%E6%80%A7%E5%80%BC",
+    "code_url": "https://update.greasyfork.org/scripts/465431/%E4%BF%AE%E6%94%B9%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E5%92%8C%E5%85%B6%E4%BB%96%20CSS%20%E5%B1%9E%E6%80%A7%E5%80%BC.user.js",
+    "code_size": 1599,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 454281,
+    "daily_installs": 0,
+    "total_installs": 173,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-05T05:16:35.000Z",
+    "code_updated_at": "2022-11-05T05:16:35.000Z",
+    "namespace": "contenteditable",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972353,
+        "name": "iuroc",
+        "created_at": "2022-10-18T12:39:44.000Z",
+        "url": "https://greasyfork.org/users/972353-iuroc"
+      }
+    ],
+    "name": "使网页可编辑",
+    "description": "对于网页中无法复制的区域，本脚本为网页启用 contenteditable 属性，使网页可以像编辑器一样自由编辑，解决无法复制问题",
+    "url": "https://greasyfork.org/scripts/454281-%E4%BD%BF%E7%BD%91%E9%A1%B5%E5%8F%AF%E7%BC%96%E8%BE%91",
+    "code_url": "https://update.greasyfork.org/scripts/454281/%E4%BD%BF%E7%BD%91%E9%A1%B5%E5%8F%AF%E7%BC%96%E8%BE%91.user.js",
+    "code_size": 635,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453284,
+    "daily_installs": 0,
+    "total_installs": 154,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-18T12:40:11.000Z",
+    "code_updated_at": "2022-11-06T11:22:28.000Z",
+    "namespace": "https://github.com/oyps/jiaoben/tree/main/%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%99%A8%E5%A2%9E%E5%8A%A0%E6%92%AD%E6%94%BE%E5%88%97%E8%A1%A8",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972353,
+        "name": "iuroc",
+        "created_at": "2022-10-18T12:39:44.000Z",
+        "url": "https://greasyfork.org/users/972353-iuroc"
+      }
+    ],
+    "name": "视频解析器显示播放列表",
+    "description": "为你的视频解析页面增加播放列表，无需再回原网页找链接，目前已支持爱奇艺电视剧、腾讯视频电视剧，增加双击全屏",
+    "url": "https://greasyfork.org/scripts/453284-%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%99%A8%E6%98%BE%E7%A4%BA%E6%92%AD%E6%94%BE%E5%88%97%E8%A1%A8",
+    "code_url": "https://update.greasyfork.org/scripts/453284/%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%99%A8%E6%98%BE%E7%A4%BA%E6%92%AD%E6%94%BE%E5%88%97%E8%A1%A8.user.js",
+    "code_size": 12408,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

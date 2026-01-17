@@ -1,0 +1,33 @@
+{
+  "id": 428383,
+  "daily_installs": 0,
+  "total_installs": 854,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-24T06:49:33.000Z",
+  "code_updated_at": "2021-06-24T06:49:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 786806,
+      "name": "HLR",
+      "created_at": "2021-06-24T06:42:29.000Z",
+      "url": "https://greasyfork.org/users/786806-hlr"
+    }
+  ],
+  "name": "HEU成绩助手",
+  "description": "简单的统计和计算成绩，输出到控制台",
+  "url": "https://greasyfork.org/scripts/428383-heu%E6%88%90%E7%BB%A9%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/428383/HEU%E6%88%90%E7%BB%A9%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 4622,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 450791,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-05T15:17:04.000Z",
+  "code_updated_at": "2022-09-05T15:17:03.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 954968,
+      "name": "WILKI GRACZ MINECRAFT-GTA5-FIFA 17 -FIFA16- FIFA15",
+      "created_at": "2022-09-05T15:16:16.000Z",
+      "url": "https://greasyfork.org/users/954968-wilki-gracz-minecraft-gta5-fifa-17-fifa16-fifa15",
+      "scripts": []
+    }
+  ],
+  "name": "New script - key-drop.com",
+  "description": "15/08/2022, 16:46:46",
+  "url": "https://greasyfork.org/scripts/450791-new-script-key-drop-com",
+  "code_url": "https://update.greasyfork.org/scripts/450791/1090058/New%20script%20-%20key-dropcom.js",
+  "code_size": 855,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489383,
+    "daily_installs": 1,
+    "total_installs": 11507,
+    "fan_score": "56.1",
+    "good_ratings": 6,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-03-09T09:24:01.000Z",
+    "code_updated_at": "2024-03-14T07:22:08.000Z",
+    "namespace": "https://greasyfork.org/users/1272145",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1272145,
+        "name": "可乐.",
+        "created_at": "2024-03-09T08:32:52.000Z",
+        "url": "https://greasyfork.org/users/1272145-%E5%8F%AF%E4%B9%90"
+      }
+    ],
+    "name": "大麦抢票",
+    "description": "学习分享",
+    "url": "https://greasyfork.org/scripts/489383-%E5%A4%A7%E9%BA%A6%E6%8A%A2%E7%A5%A8",
+    "code_url": "https://update.greasyfork.org/scripts/489383/%E5%A4%A7%E9%BA%A6%E6%8A%A2%E7%A5%A8.user.js",
+    "code_size": 7083,
+    "license": "MIT License",
+    "version": "2024-03-14（加了人数）",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 459151,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-30T18:41:21.000Z",
+  "code_updated_at": "2023-01-31T17:07:06.000Z",
+  "namespace": "bilibili_vdesc_exchange",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 969403,
+      "name": "Wern -Vio (Beafty_win)",
+      "created_at": "2022-10-11T23:40:04.000Z",
+      "url": "https://greasyfork.org/users/969403-wern-vio-beafty-win",
+      "scripts": [
+        {
+          "id": 459151,
+          "daily_installs": 0,
+          "total_installs": 40,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-30T18:41:21.000Z",
+          "code_updated_at": "2023-01-31T17:07:06.000Z",
+          "namespace": "bilibili_vdesc_exchange",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BILIBILI视频描述中的N站链接的域名替换及脚本",
+          "description": "刷新网页简介里的那个sm号应该就能用了（猜测）",
+          "url": "https://greasyfork.org/scripts/459151-bilibili%E8%A7%86%E9%A2%91%E6%8F%8F%E8%BF%B0%E4%B8%AD%E7%9A%84n%E7%AB%99%E9%93%BE%E6%8E%A5%E7%9A%84%E5%9F%9F%E5%90%8D%E6%9B%BF%E6%8D%A2%E5%8F%8A%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/459151/BILIBILI%E8%A7%86%E9%A2%91%E6%8F%8F%E8%BF%B0%E4%B8%AD%E7%9A%84N%E7%AB%99%E9%93%BE%E6%8E%A5%E7%9A%84%E5%9F%9F%E5%90%8D%E6%9B%BF%E6%8D%A2%E5%8F%8A%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 601,
+          "license": null,
+          "version": "114.514",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BILIBILI视频描述中的N站链接的域名替换及脚本",
+  "description": "刷新网页简介里的那个sm号应该就能用了（猜测）",
+  "url": "https://greasyfork.org/scripts/459151-bilibili%E8%A7%86%E9%A2%91%E6%8F%8F%E8%BF%B0%E4%B8%AD%E7%9A%84n%E7%AB%99%E9%93%BE%E6%8E%A5%E7%9A%84%E5%9F%9F%E5%90%8D%E6%9B%BF%E6%8D%A2%E5%8F%8A%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/459151/BILIBILI%E8%A7%86%E9%A2%91%E6%8F%8F%E8%BF%B0%E4%B8%AD%E7%9A%84N%E7%AB%99%E9%93%BE%E6%8E%A5%E7%9A%84%E5%9F%9F%E5%90%8D%E6%9B%BF%E6%8D%A2%E5%8F%8A%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 601,
+  "license": null,
+  "version": "114.514",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

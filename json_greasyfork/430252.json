@@ -1,0 +1,59 @@
+{
+  "id": 430252,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-02T16:34:49.000Z",
+  "code_updated_at": "2021-10-16T18:34:45.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/430252-wn-navigation",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 799690,
+      "name": "Matthew Ward",
+      "created_at": "2021-08-02T16:32:55.000Z",
+      "url": "https://greasyfork.org/users/799690-matthew-ward",
+      "scripts": [
+        {
+          "id": 430252,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-08-02T16:34:49.000Z",
+          "code_updated_at": "2021-10-16T18:34:45.000Z",
+          "namespace": "https://greasyfork.org/en/scripts/430252-wn-navigation",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WN navigation",
+          "description": "navigate sites that don't support left/right arrow keys",
+          "url": "https://greasyfork.org/scripts/430252-wn-navigation",
+          "code_url": "https://update.greasyfork.org/scripts/430252/WN%20navigation.user.js",
+          "code_size": 2364,
+          "license": null,
+          "version": "1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WN navigation",
+  "description": "navigate sites that don't support left/right arrow keys",
+  "url": "https://greasyfork.org/scripts/430252-wn-navigation",
+  "code_url": "https://update.greasyfork.org/scripts/430252/WN%20navigation.user.js",
+  "code_size": 2364,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

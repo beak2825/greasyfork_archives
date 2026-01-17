@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424509,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-05T05:35:28.000Z",
+    "code_updated_at": "2021-04-05T05:35:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 755045,
+        "name": "Chad Gauthier",
+        "created_at": "2021-04-05T05:33:04.000Z",
+        "url": "https://greasyfork.org/users/755045-chad-gauthier"
+      }
+    ],
+    "name": "BBRT",
+    "description": "enlarges thumbnails",
+    "url": "https://greasyfork.org/scripts/424509-bbrt",
+    "code_url": "https://update.greasyfork.org/scripts/424509/BBRT.user.js",
+    "code_size": 466,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

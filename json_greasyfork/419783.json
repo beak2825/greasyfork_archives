@@ -1,0 +1,33 @@
+{
+  "id": 419783,
+  "daily_installs": 0,
+  "total_installs": 95,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-07T04:48:07.000Z",
+  "code_updated_at": "2025-05-23T18:21:22.000Z",
+  "namespace": "https://github.com/CC11001100/ast-explorer-helper",
+  "support_url": "https://github.com/CC11001100/ast-explorer-helper/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 715051,
+      "name": "CC11001100 CC11001100",
+      "created_at": "2020-12-09T15:11:25.000Z",
+      "url": "https://greasyfork.org/users/715051-cc11001100-cc11001100"
+    }
+  ],
+  "name": "ast explorer助手",
+  "description": "用于分析ast时辅助提高效率，支持复制和右键菜单，以及元素高亮",
+  "url": "https://greasyfork.org/scripts/419783-ast-explorer%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/419783/ast%20explorer%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 350150,
+  "license": "MIT License",
+  "version": "0.3.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

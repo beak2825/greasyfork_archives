@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489318,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-08T13:53:54.000Z",
+    "code_updated_at": "2024-03-08T14:01:22.000Z",
+    "namespace": "https://greasyfork.org/users/908886",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 908886,
+        "name": "Phil Ellis",
+        "created_at": "2022-04-30T12:35:57.000Z",
+        "url": "https://greasyfork.org/users/908886-phil-ellis"
+      }
+    ],
+    "name": "Removes button blocking IT Glue tooltips",
+    "description": "Removes content button blocking IT Glue tooltips in the password dialog and all tooltips but I'm unaware of any others in IT Glue. YMMV",
+    "url": "https://greasyfork.org/scripts/489318-removes-button-blocking-it-glue-tooltips",
+    "code_url": "https://update.greasyfork.org/scripts/489318/Removes%20button%20blocking%20IT%20Glue%20tooltips.user.js",
+    "code_size": 801,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

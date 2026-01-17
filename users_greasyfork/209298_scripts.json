@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464021,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-14T16:20:37.000Z",
+    "code_updated_at": "2023-08-22T09:00:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 209298,
+        "name": "dianli",
+        "created_at": "2018-08-31T13:29:11.000Z",
+        "url": "https://greasyfork.org/users/209298-dianli"
+      }
+    ],
+    "name": "禁用掘金标题动画",
+    "description": "动画给他禁用！",
+    "url": "https://greasyfork.org/scripts/464021-%E7%A6%81%E7%94%A8%E6%8E%98%E9%87%91%E6%A0%87%E9%A2%98%E5%8A%A8%E7%94%BB",
+    "code_url": "https://update.greasyfork.org/scripts/464021/%E7%A6%81%E7%94%A8%E6%8E%98%E9%87%91%E6%A0%87%E9%A2%98%E5%8A%A8%E7%94%BB.user.js",
+    "code_size": 711,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

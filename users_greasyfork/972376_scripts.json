@@ -1,0 +1,200 @@
+[
+  {
+    "id": 459102,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-30T00:00:29.000Z",
+    "code_updated_at": "2023-01-30T00:00:29.000Z",
+    "namespace": "https://github.com/charlie-moomoo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972376,
+        "name": "charlie-moomoo",
+        "created_at": "2022-10-18T13:37:17.000Z",
+        "url": "https://greasyfork.org/users/972376-charlie-moomoo"
+      }
+    ],
+    "name": "Custom YouTube Logo Color",
+    "description": "Custom the color of the YouTube Logo on the nav bar!",
+    "url": "https://greasyfork.org/scripts/459102-custom-youtube-logo-color",
+    "code_url": "https://update.greasyfork.org/scripts/459102/Custom%20YouTube%20Logo%20Color.user.js",
+    "code_size": 734,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 458834,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-25T13:17:36.000Z",
+    "code_updated_at": "2023-01-25T13:17:36.000Z",
+    "namespace": "https://github.com/charlie-moomoo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972376,
+        "name": "charlie-moomoo",
+        "created_at": "2022-10-18T13:37:17.000Z",
+        "url": "https://greasyfork.org/users/972376-charlie-moomoo"
+      }
+    ],
+    "name": "Custom YouTube Country Code",
+    "description": "Replace the country code next to the logo with anything you want.",
+    "url": "https://greasyfork.org/scripts/458834-custom-youtube-country-code",
+    "code_url": "https://update.greasyfork.org/scripts/458834/Custom%20YouTube%20Country%20Code.user.js",
+    "code_size": 766,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457846,
+    "daily_installs": 1,
+    "total_installs": 122,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-08T11:50:08.000Z",
+    "code_updated_at": "2023-01-08T12:23:11.000Z",
+    "namespace": "https://github.com/charlie-moomoo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972376,
+        "name": "charlie-moomoo",
+        "created_at": "2022-10-18T13:37:17.000Z",
+        "url": "https://greasyfork.org/users/972376-charlie-moomoo"
+      }
+    ],
+    "name": "Adfly Skipper",
+    "description": "This script does almost all the work for you, letting you skip Adfly. (except Click here to continue)",
+    "url": "https://greasyfork.org/scripts/457846-adfly-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/457846/Adfly%20Skipper.user.js",
+    "code_size": 984,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 455437,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-26T08:20:40.000Z",
+    "code_updated_at": "2022-11-26T08:35:41.000Z",
+    "namespace": "https://github.com/charlie-moomoo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972376,
+        "name": "charlie-moomoo",
+        "created_at": "2022-10-18T13:37:17.000Z",
+        "url": "https://greasyfork.org/users/972376-charlie-moomoo"
+      }
+    ],
+    "name": "AntiRickroll",
+    "description": "Removes the page when you're trying to access a Rickroll page.",
+    "url": "https://greasyfork.org/scripts/455437-antirickroll",
+    "code_url": "https://update.greasyfork.org/scripts/455437/AntiRickroll.user.js",
+    "code_size": 1241,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453343,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-19T08:15:07.000Z",
+    "code_updated_at": "2022-10-19T08:15:07.000Z",
+    "namespace": "https://github.com/charlie-moomoo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972376,
+        "name": "charlie-moomoo",
+        "created_at": "2022-10-18T13:37:17.000Z",
+        "url": "https://greasyfork.org/users/972376-charlie-moomoo"
+      }
+    ],
+    "name": "Scrollable Minecraft.net",
+    "description": "Fix unscrollable bug on Minecraft.net",
+    "url": "https://greasyfork.org/scripts/453343-scrollable-minecraft-net",
+    "code_url": "https://update.greasyfork.org/scripts/453343/Scrollable%20Minecraftnet.user.js",
+    "code_size": 568,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453289,
+    "daily_installs": 0,
+    "total_installs": 87,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-18T13:43:22.000Z",
+    "code_updated_at": "2022-10-22T12:12:22.000Z",
+    "namespace": "https://github.com/charlie-moomoo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972376,
+        "name": "charlie-moomoo",
+        "created_at": "2022-10-18T13:37:17.000Z",
+        "url": "https://greasyfork.org/users/972376-charlie-moomoo"
+      }
+    ],
+    "name": "YouTube Shorts Redirector",
+    "description": "Auto redirects /shorts link to /watch?v= link on YouTube.",
+    "url": "https://greasyfork.org/scripts/453289-youtube-shorts-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/453289/YouTube%20Shorts%20Redirector.user.js",
+    "code_size": 765,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

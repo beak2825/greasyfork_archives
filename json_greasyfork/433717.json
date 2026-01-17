@@ -1,0 +1,33 @@
+{
+  "id": 433717,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-11T07:55:11.000Z",
+  "code_updated_at": "2021-10-11T07:55:10.000Z",
+  "namespace": "http://tampermonkey.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 823973,
+      "name": "PENGHAO WANG",
+      "created_at": "2021-10-11T06:53:14.000Z",
+      "url": "https://greasyfork.org/users/823973-penghao-wang"
+    }
+  ],
+  "name": "Hide Unavailable Services For WHMCS",
+  "description": "A script to hide unavailable services in the Client Area.",
+  "url": "https://greasyfork.org/scripts/433717-hide-unavailable-services-for-whmcs",
+  "code_url": "https://update.greasyfork.org/scripts/433717/Hide%20Unavailable%20Services%20For%20WHMCS.user.js",
+  "code_size": 1152,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

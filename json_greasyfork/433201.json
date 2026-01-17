@@ -1,0 +1,33 @@
+{
+  "id": 433201,
+  "daily_installs": 0,
+  "total_installs": 226,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-09-30T04:15:40.000Z",
+  "code_updated_at": "2021-09-30T04:15:39.000Z",
+  "namespace": "disable_youtube_autoplay",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 316827,
+      "name": "shellster",
+      "created_at": "2019-07-10T13:56:40.000Z",
+      "url": "https://greasyfork.org/users/316827-shellster"
+    }
+  ],
+  "name": "Disable Youtube autoplay",
+  "description": "This script turns off Youtube autoplay feature after the page loads",
+  "url": "https://greasyfork.org/scripts/433201-disable-youtube-autoplay",
+  "code_url": "https://update.greasyfork.org/scripts/433201/Disable%20Youtube%20autoplay.user.js",
+  "code_size": 1065,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

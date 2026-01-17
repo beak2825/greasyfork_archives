@@ -394,5 +394,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 493021,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-20T16:22:12.000Z",
+    "code_updated_at": "2025-02-05T13:05:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1037952,
+        "name": "hgztask",
+        "created_at": "2023-03-07T08:40:33.000Z",
+        "url": "https://greasyfork.org/users/1037952-hgztask"
+      }
+    ],
+    "name": "卡世界数据导出器",
+    "description": "卡世界功能拓展",
+    "url": "https://greasyfork.org/scripts/493021-%E5%8D%A1%E4%B8%96%E7%95%8C%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/493021/%E5%8D%A1%E4%B8%96%E7%95%8C%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA%E5%99%A8.user.js",
+    "code_size": 19208,
+    "license": "Apache License 2.0",
+    "version": "0.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 489577,
+    "daily_installs": 0,
+    "total_installs": 111,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-11T16:23:56.000Z",
+    "code_updated_at": "2024-03-11T16:23:56.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1037952,
+        "name": "hgztask",
+        "created_at": "2023-03-07T08:40:33.000Z",
+        "url": "https://greasyfork.org/users/1037952-hgztask"
+      }
+    ],
+    "name": "b站动态设置",
+    "description": "调整b站动态首页得展示",
+    "url": "https://greasyfork.org/scripts/489577-b%E7%AB%99%E5%8A%A8%E6%80%81%E8%AE%BE%E7%BD%AE",
+    "code_url": "https://update.greasyfork.org/scripts/489577/b%E7%AB%99%E5%8A%A8%E6%80%81%E8%AE%BE%E7%BD%AE.user.js",
+    "code_size": 5322,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 489538,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-11T09:14:09.000Z",
+    "code_updated_at": "2024-07-30T16:52:39.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1037952,
+        "name": "hgztask",
+        "created_at": "2023-03-07T08:40:33.000Z",
+        "url": "https://greasyfork.org/users/1037952-hgztask"
+      }
+    ],
+    "name": "github链接新标签打开",
+    "description": "github站内所有的链接都从新的标签页打开，而不从当前页面打开",
+    "url": "https://greasyfork.org/scripts/489538-github%E9%93%BE%E6%8E%A5%E6%96%B0%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/489538/github%E9%93%BE%E6%8E%A5%E6%96%B0%E6%A0%87%E7%AD%BE%E6%89%93%E5%BC%80.user.js",
+    "code_size": 1900,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 481719,
+    "daily_installs": 0,
+    "total_installs": 110,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-08T16:28:09.000Z",
+    "code_updated_at": "2023-12-08T16:28:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1037952,
+        "name": "hgztask",
+        "created_at": "2023-03-07T08:40:33.000Z",
+        "url": "https://greasyfork.org/users/1037952-hgztask"
+      }
+    ],
+    "name": "b站频道生成器",
+    "description": "恢复哔哩哔哩(b站)频道页内容访问，可通过主面板选择推送的频道或专区内容视频推送到首页，目前仅支持将频道和专区视频推送到首页，后续调整",
+    "url": "https://greasyfork.org/scripts/481719-b%E7%AB%99%E9%A2%91%E9%81%93%E7%94%9F%E6%88%90%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/481719/b%E7%AB%99%E9%A2%91%E9%81%93%E7%94%9F%E6%88%90%E5%99%A8.user.js",
+    "code_size": 116293,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461382,
+    "daily_installs": 4,
+    "total_installs": 9103,
+    "fan_score": "87.0",
+    "good_ratings": 43,
+    "ok_ratings": 3,
+    "bad_ratings": 0,
+    "created_at": "2023-03-07T14:24:35.000Z",
+    "code_updated_at": "2025-10-31T15:51:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1037952,
+        "name": "hgztask",
+        "created_at": "2023-03-07T08:40:33.000Z",
+        "url": "https://greasyfork.org/users/1037952-hgztask"
+      }
+    ],
+    "name": "哔哩哔哩屏蔽增强器",
+    "description": "对B站视频或评论进行屏蔽，支持关键词模糊正则等，支持时长播放弹幕过滤等，如视频、评论、动态、直播间的评论等，详情可看下面支持的屏蔽类型",
+    "url": "https://greasyfork.org/scripts/461382-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%B1%8F%E8%94%BD%E5%A2%9E%E5%BC%BA%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/461382/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%B1%8F%E8%94%BD%E5%A2%9E%E5%BC%BA%E5%99%A8.user.js",
+    "code_size": 488224,
+    "license": "Apache License 2.0",
+    "version": "2.16.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

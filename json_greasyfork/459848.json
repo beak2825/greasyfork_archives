@@ -1,0 +1,33 @@
+{
+  "id": 459848,
+  "daily_installs": 3,
+  "total_installs": 4626,
+  "fan_score": "76.6",
+  "good_ratings": 23,
+  "ok_ratings": 4,
+  "bad_ratings": 0,
+  "created_at": "2023-02-11T15:47:17.000Z",
+  "code_updated_at": "2025-12-14T04:39:29.000Z",
+  "namespace": "https://v2p.leoku.dev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1022908,
+      "name": "Codennnn",
+      "created_at": "2023-02-07T02:18:15.000Z",
+      "url": "https://greasyfork.org/users/1022908-codennnn"
+    }
+  ],
+  "name": "▲V2EX Polish - 体验更现代化的 V2EX 🟢",
+  "description": "一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！✨",
+  "url": "https://greasyfork.org/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex",
+  "code_url": "https://update.greasyfork.org/scripts/459848/%E2%96%B2V2EX%20Polish%20-%20%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84%20V2EX%20%F0%9F%9F%A2.user.js",
+  "code_size": 249261,
+  "license": "MIT License",
+  "version": "2.0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

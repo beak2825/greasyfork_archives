@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418499,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-11T12:42:05.000Z",
+    "code_updated_at": "2020-12-11T12:42:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 715713,
+        "name": "Ercümend",
+        "created_at": "2020-12-11T12:12:51.000Z",
+        "url": "https://greasyfork.org/users/715713-erc%C3%BCmend"
+      }
+    ],
+    "name": "Netflix DataTable",
+    "description": "search/sort movies and TV shows by imdb scores usign Datatables!",
+    "url": "https://greasyfork.org/scripts/418499-netflix-datatable",
+    "code_url": "https://update.greasyfork.org/scripts/418499/Netflix%20DataTable.user.js",
+    "code_size": 9417,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 455763,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-01T07:29:44.000Z",
+  "code_updated_at": "2022-12-01T07:30:57.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 990586,
+      "name": "vowzero",
+      "created_at": "2022-12-01T07:27:05.000Z",
+      "url": "https://greasyfork.org/users/990586-vowzero",
+      "scripts": [
+        {
+          "id": 455763,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-01T07:29:44.000Z",
+          "code_updated_at": "2022-12-01T07:30:57.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NoGray，逝去灰色，彩色地带",
+          "description": "2022/12/1 15:14:17",
+          "url": "https://greasyfork.org/scripts/455763-nogray-%E9%80%9D%E5%8E%BB%E7%81%B0%E8%89%B2-%E5%BD%A9%E8%89%B2%E5%9C%B0%E5%B8%A6",
+          "code_url": "https://update.greasyfork.org/scripts/455763/NoGray%EF%BC%8C%E9%80%9D%E5%8E%BB%E7%81%B0%E8%89%B2%EF%BC%8C%E5%BD%A9%E8%89%B2%E5%9C%B0%E5%B8%A6.user.js",
+          "code_size": 542,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NoGray，逝去灰色，彩色地带",
+  "description": "2022/12/1 15:14:17",
+  "url": "https://greasyfork.org/scripts/455763-nogray-%E9%80%9D%E5%8E%BB%E7%81%B0%E8%89%B2-%E5%BD%A9%E8%89%B2%E5%9C%B0%E5%B8%A6",
+  "code_url": "https://update.greasyfork.org/scripts/455763/NoGray%EF%BC%8C%E9%80%9D%E5%8E%BB%E7%81%B0%E8%89%B2%EF%BC%8C%E5%BD%A9%E8%89%B2%E5%9C%B0%E5%B8%A6.user.js",
+  "code_size": 542,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 423799,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-22T22:10:19.000Z",
+  "code_updated_at": "2021-03-26T09:02:50.000Z",
+  "namespace": "dannysaurus.camamba",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 13216,
+      "name": "dannysaurus",
+      "created_at": "2015-07-11T17:22:05.000Z",
+      "url": "https://greasyfork.org/users/13216-dannysaurus"
+    }
+  ],
+  "name": "Camamba Chat Enable all rooms",
+  "description": "enables to join all rooms",
+  "url": "https://greasyfork.org/scripts/423799-camamba-chat-enable-all-rooms",
+  "code_url": "https://update.greasyfork.org/scripts/423799/Camamba%20Chat%20Enable%20all%20rooms.user.js",
+  "code_size": 2015,
+  "license": "MIT License",
+  "version": "0.0.2a",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

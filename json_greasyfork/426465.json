@@ -1,0 +1,34 @@
+{
+  "id": 426465,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-14T13:28:47.000Z",
+  "code_updated_at": "2021-05-14T13:28:47.000Z",
+  "namespace": "http://tamper.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 772036,
+      "name": "George Abitbol",
+      "created_at": "2021-05-14T13:26:54.000Z",
+      "url": "https://greasyfork.org/users/772036-george-abitbol",
+      "scripts": []
+    }
+  ],
+  "name": "IdlescapeBOUILLIENBOTTE",
+  "description": "TEAM HOMMEFER",
+  "url": "https://greasyfork.org/scripts/426465-idlescapebouillienbotte",
+  "code_url": "https://update.greasyfork.org/scripts/426465/IdlescapeBOUILLIENBOTTE.user.js",
+  "code_size": 406,
+  "license": null,
+  "version": "0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

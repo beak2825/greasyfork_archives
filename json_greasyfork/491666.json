@@ -1,0 +1,59 @@
+{
+  "id": 491666,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-04T17:56:19.000Z",
+  "code_updated_at": "2024-08-22T23:32:57.000Z",
+  "namespace": "https://greasyfork.org/en/users/1265537-kloob",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265537,
+      "name": "kloob",
+      "created_at": "2024-02-22T18:21:33.000Z",
+      "url": "https://greasyfork.org/users/1265537-kloob",
+      "scripts": [
+        {
+          "id": 488040,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-22T18:43:31.000Z",
+          "code_updated_at": "2024-02-22T19:12:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Runway Winners On Homepage - Gaia Online",
+          "description": "Display contests, winner name, and winner avatar for each Runway contest",
+          "url": "https://greasyfork.org/scripts/488040-runway-winners-on-homepage-gaia-online",
+          "code_url": "https://update.greasyfork.org/scripts/488040/Runway%20Winners%20On%20Homepage%20-%20Gaia%20Online.user.js",
+          "code_size": 4684,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "URL & Timpestamp Buttons",
+  "description": "Add buttons to copy topic and post URLs, thread titles, timestamps, and display post IDs.",
+  "url": "https://greasyfork.org/scripts/491666-url-timpestamp-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/491666/URL%20%20Timpestamp%20Buttons.user.js",
+  "code_size": 6446,
+  "license": null,
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

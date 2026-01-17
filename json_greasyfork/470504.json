@@ -1,0 +1,34 @@
+{
+  "id": 470504,
+  "daily_installs": 0,
+  "total_installs": 221,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-07-09T18:24:03.000Z",
+  "code_updated_at": "2023-07-27T09:42:28.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1122830,
+      "name": "Chesnok_Moore",
+      "created_at": "2023-07-09T18:11:33.000Z",
+      "url": "https://greasyfork.org/users/1122830-chesnok-moore",
+      "scripts": []
+    }
+  ],
+  "name": "Belgorod Kurator's Forums || Script",
+  "description": "Comfort moderation",
+  "url": "https://greasyfork.org/scripts/470504-belgorod-kurator-s-forums-script",
+  "code_url": "https://update.greasyfork.org/scripts/470504/Belgorod%20Kurator%27s%20Forums%20%7C%7C%20Script.user.js",
+  "code_size": 20605,
+  "license": "MIT License",
+  "version": "1.8.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

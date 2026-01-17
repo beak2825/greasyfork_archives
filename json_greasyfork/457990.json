@@ -1,0 +1,59 @@
+{
+  "id": 457990,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-10T16:12:05.000Z",
+  "code_updated_at": "2023-01-10T16:12:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1010037,
+      "name": "metaperl",
+      "created_at": "2023-01-10T16:08:14.000Z",
+      "url": "https://greasyfork.org/users/1010037-metaperl",
+      "scripts": [
+        {
+          "id": 457990,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-10T16:12:05.000Z",
+          "code_updated_at": "2023-01-10T16:12:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove OGS (Online Go Server) Nav Logo",
+          "description": "if you would like to remove the OGS logo from your navigation bar while playing at the Online Go Server (OGS), then this script is for you.",
+          "url": "https://greasyfork.org/scripts/457990-remove-ogs-online-go-server-nav-logo",
+          "code_url": "https://update.greasyfork.org/scripts/457990/Remove%20OGS%20%28Online%20Go%20Server%29%20Nav%20Logo.user.js",
+          "code_size": 761,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove OGS (Online Go Server) Nav Logo",
+  "description": "if you would like to remove the OGS logo from your navigation bar while playing at the Online Go Server (OGS), then this script is for you.",
+  "url": "https://greasyfork.org/scripts/457990-remove-ogs-online-go-server-nav-logo",
+  "code_url": "https://update.greasyfork.org/scripts/457990/Remove%20OGS%20%28Online%20Go%20Server%29%20Nav%20Logo.user.js",
+  "code_size": 761,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

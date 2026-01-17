@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463122,
+    "daily_installs": 0,
+    "total_installs": 161,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-02T16:39:28.000Z",
+    "code_updated_at": "2023-04-04T03:01:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051691,
+        "name": "刘长宏",
+        "created_at": "2023-04-02T01:51:16.000Z",
+        "url": "https://greasyfork.org/users/1051691-%E5%88%98%E9%95%BF%E5%AE%8F"
+      }
+    ],
+    "name": "ChatGPT聊天记录助手",
+    "description": "1、复制页面对话信息到剪贴板并发送到飞书webhook；2、记录GPT-4调用次数并发送每次调用的时间至webhook；",
+    "url": "https://greasyfork.org/scripts/463122-chatgpt%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/463122/ChatGPT%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 8367,
+    "license": null,
+    "version": "0.11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

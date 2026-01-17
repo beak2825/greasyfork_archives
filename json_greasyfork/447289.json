@@ -1,0 +1,59 @@
+{
+  "id": 447289,
+  "daily_installs": 0,
+  "total_installs": 869,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-01T07:25:46.000Z",
+  "code_updated_at": "2022-07-05T08:36:22.000Z",
+  "namespace": "4d4y-tools-by-2200",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 31419,
+      "name": "johntomato",
+      "created_at": "2016-02-23T08:24:12.000Z",
+      "url": "https://greasyfork.org/users/31419-johntomato",
+      "scripts": [
+        {
+          "id": 447289,
+          "daily_installs": 0,
+          "total_installs": 869,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-07-01T07:25:46.000Z",
+          "code_updated_at": "2022-07-05T08:36:22.000Z",
+          "namespace": "4d4y-tools-by-2200",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "4d4y tools",
+          "description": "屏蔽用户、名单同步；标识新帖；好孩子也看的见；",
+          "url": "https://greasyfork.org/scripts/447289-4d4y-tools",
+          "code_url": "https://update.greasyfork.org/scripts/447289/4d4y%20tools.user.js",
+          "code_size": 76254,
+          "license": "MIT License",
+          "version": "5.2.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "4d4y tools",
+  "description": "屏蔽用户、名单同步；标识新帖；好孩子也看的见；",
+  "url": "https://greasyfork.org/scripts/447289-4d4y-tools",
+  "code_url": "https://update.greasyfork.org/scripts/447289/4d4y%20tools.user.js",
+  "code_size": 76254,
+  "license": "MIT License",
+  "version": "5.2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

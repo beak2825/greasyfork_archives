@@ -1,0 +1,35 @@
+[
+  {
+    "id": 454033,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-31T13:40:34.000Z",
+    "code_updated_at": "2022-10-31T13:40:34.000Z",
+    "namespace": "afk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 853827,
+        "name": "Hotrod287 willet",
+        "created_at": "2021-12-15T21:26:19.000Z",
+        "url": "https://greasyfork.org/users/853827-hotrod287-willet"
+      }
+    ],
+    "name": "A-ware",
+    "description": "none",
+    "url": "https://greasyfork.org/scripts/454033-a-ware",
+    "code_url": "https://update.greasyfork.org/scripts/454033/A-ware.user.js",
+    "code_size": 609329,
+    "license": null,
+    "version": "0.0.1.20221031134034",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

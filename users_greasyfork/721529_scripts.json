@@ -1,0 +1,68 @@
+[
+  {
+    "id": 460984,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-01T14:25:38.000Z",
+    "code_updated_at": "2023-03-01T14:25:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 721529,
+        "name": "somi93",
+        "created_at": "2020-12-27T16:12:24.000Z",
+        "url": "https://greasyfork.org/users/721529-somi93"
+      }
+    ],
+    "name": "PP Aparat",
+    "description": "PP Aparat skripta",
+    "url": "https://greasyfork.org/scripts/460984-pp-aparat",
+    "code_url": "https://update.greasyfork.org/scripts/460984/PP%20Aparat.user.js",
+    "code_size": 39692,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420966,
+    "daily_installs": 0,
+    "total_installs": 485,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-31T20:46:32.000Z",
+    "code_updated_at": "2021-08-14T18:53:24.000Z",
+    "namespace": "https://greasyfork.org/users/721529",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 721529,
+        "name": "somi93",
+        "created_at": "2020-12-27T16:12:24.000Z",
+        "url": "https://greasyfork.org/users/721529-somi93"
+      }
+    ],
+    "name": "League form, upcoming and previous schedule",
+    "description": "League table form. You can check previous and upcoming matches.",
+    "url": "https://greasyfork.org/scripts/420966-league-form-upcoming-and-previous-schedule",
+    "code_url": "https://update.greasyfork.org/scripts/420966/League%20form%2C%20upcoming%20and%20previous%20schedule.user.js",
+    "code_size": 10254,
+    "license": null,
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 445614,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-27T05:04:26.000Z",
+    "code_updated_at": "2022-11-02T09:36:23.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/919030",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 919030,
+        "name": "0805926",
+        "created_at": "2022-05-27T04:20:27.000Z",
+        "url": "https://greasyfork.org/users/919030-0805926"
+      }
+    ],
+    "name": "自用挂机",
+    "description": "练习",
+    "url": "https://greasyfork.org/scripts/445614-%E8%87%AA%E7%94%A8%E6%8C%82%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/445614/%E8%87%AA%E7%94%A8%E6%8C%82%E6%9C%BA.user.js",
+    "code_size": 2272,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

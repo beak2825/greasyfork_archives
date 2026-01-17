@@ -460,5 +460,38 @@
     "locale": "zh-TW",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 482892,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-22T14:36:25.000Z",
+    "code_updated_at": "2024-01-11T08:55:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1237813,
+        "name": "abc0922001",
+        "created_at": "2023-12-22T14:32:36.000Z",
+        "url": "https://greasyfork.org/users/1237813-abc0922001"
+      }
+    ],
+    "name": "隱藏 Mojim 更多更詳盡歌詞",
+    "description": "把 Mojim 的更多更詳盡歌詞及其所在行隱藏起來",
+    "url": "https://greasyfork.org/scripts/482892-%E9%9A%B1%E8%97%8F-mojim-%E6%9B%B4%E5%A4%9A%E6%9B%B4%E8%A9%B3%E7%9B%A1%E6%AD%8C%E8%A9%9E",
+    "code_url": "https://update.greasyfork.org/scripts/482892/%E9%9A%B1%E8%97%8F%20Mojim%20%E6%9B%B4%E5%A4%9A%E6%9B%B4%E8%A9%B3%E7%9B%A1%E6%AD%8C%E8%A9%9E.user.js",
+    "code_size": 1346,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

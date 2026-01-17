@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480313,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-20T00:03:57.000Z",
+    "code_updated_at": "2023-11-20T00:03:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220369,
+        "name": "Asio Gipe",
+        "created_at": "2023-11-20T00:02:37.000Z",
+        "url": "https://greasyfork.org/users/1220369-asio-gipe"
+      }
+    ],
+    "name": "Nakrutka Babok",
+    "description": "Cash money flex anus",
+    "url": "https://greasyfork.org/scripts/480313-nakrutka-babok",
+    "code_url": "https://update.greasyfork.org/scripts/480313/Nakrutka%20Babok.user.js",
+    "code_size": 622,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

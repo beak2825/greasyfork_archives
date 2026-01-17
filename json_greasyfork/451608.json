@@ -1,0 +1,34 @@
+{
+  "id": 451608,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-19T03:17:02.000Z",
+  "code_updated_at": "2022-09-19T03:17:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 946197,
+      "name": "Stephanie Brandnew",
+      "created_at": "2022-08-14T06:43:28.000Z",
+      "url": "https://greasyfork.org/users/946197-stephanie-brandnew",
+      "scripts": []
+    }
+  ],
+  "name": "BC.Game CoinDrops_Modified",
+  "description": "CoinGrabber_Modified",
+  "url": "https://greasyfork.org/scripts/451608-bc-game-coindrops-modified",
+  "code_url": "https://update.greasyfork.org/scripts/451608/BCGame%20CoinDrops_Modified.user.js",
+  "code_size": 3916,
+  "license": null,
+  "version": "666",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

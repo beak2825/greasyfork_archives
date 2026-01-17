@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441159,
+    "daily_installs": 0,
+    "total_installs": 304,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-08T16:34:04.000Z",
+    "code_updated_at": "2022-03-08T16:34:03.000Z",
+    "namespace": "https://greasyfork.org/users/884123",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884123,
+        "name": "lucidobservor",
+        "created_at": "2022-03-07T16:14:10.000Z",
+        "url": "https://greasyfork.org/users/884123-lucidobservor"
+      }
+    ],
+    "name": "Melvor Astrology Upgrade",
+    "description": "Adds a button to upgrade an existing Astrology modifier",
+    "url": "https://greasyfork.org/scripts/441159-melvor-astrology-upgrade",
+    "code_url": "https://update.greasyfork.org/scripts/441159/Melvor%20Astrology%20Upgrade.user.js",
+    "code_size": 5343,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

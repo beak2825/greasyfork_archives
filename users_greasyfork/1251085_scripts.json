@@ -1,0 +1,68 @@
+[
+  {
+    "id": 491631,
+    "daily_installs": 0,
+    "total_installs": 214,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-04T11:45:32.000Z",
+    "code_updated_at": "2024-10-19T17:47:32.000Z",
+    "namespace": "https://liubanlaobanzhang.github.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1251085,
+        "name": "liubanlaobanzhang",
+        "created_at": "2024-01-21T01:41:57.000Z",
+        "url": "https://greasyfork.org/users/1251085-liubanlaobanzhang"
+      }
+    ],
+    "name": "菁优网格式优化",
+    "description": "菁优网格式优化（模仿教研云）",
+    "url": "https://greasyfork.org/scripts/491631-%E8%8F%81%E4%BC%98%E7%BD%91%E6%A0%BC%E5%BC%8F%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/491631/%E8%8F%81%E4%BC%98%E7%BD%91%E6%A0%BC%E5%BC%8F%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 832,
+    "license": null,
+    "version": "2315A-removed!",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485849,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-28T03:21:48.000Z",
+    "code_updated_at": "2024-10-02T06:29:27.000Z",
+    "namespace": "https://greasyfork.org/zh-CN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1251085,
+        "name": "liubanlaobanzhang",
+        "created_at": "2024-01-21T01:41:57.000Z",
+        "url": "https://greasyfork.org/users/1251085-liubanlaobanzhang"
+      }
+    ],
+    "name": "教研云解析修复",
+    "description": "用于修复教研云解析",
+    "url": "https://greasyfork.org/scripts/485849-%E6%95%99%E7%A0%94%E4%BA%91%E8%A7%A3%E6%9E%90%E4%BF%AE%E5%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/485849/%E6%95%99%E7%A0%94%E4%BA%91%E8%A7%A3%E6%9E%90%E4%BF%AE%E5%A4%8D.user.js",
+    "code_size": 4539,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1919.810-alpha17",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

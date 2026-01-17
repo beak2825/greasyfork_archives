@@ -1,0 +1,33 @@
+{
+  "id": 430523,
+  "daily_installs": 0,
+  "total_installs": 424,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-09T01:15:23.000Z",
+  "code_updated_at": "2021-08-09T01:15:23.000Z",
+  "namespace": "https://greasyfork.org/users/802364",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 802364,
+      "name": "D a r l y",
+      "created_at": "2021-08-09T01:10:21.000Z",
+      "url": "https://greasyfork.org/users/802364-d-a-r-l-y"
+    }
+  ],
+  "name": "Darly Asthetic Extensions For Gota.io V1.0 💜",
+  "description": "Official Gota.io Darly",
+  "url": "https://greasyfork.org/scripts/430523-darly-asthetic-extensions-for-gota-io-v1-0",
+  "code_url": "https://update.greasyfork.org/scripts/430523/Darly%20Asthetic%20Extensions%20For%20Gotaio%20V10%20%F0%9F%92%9C.user.js",
+  "code_size": 38933,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

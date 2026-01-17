@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452499,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-05T04:33:00.000Z",
+    "code_updated_at": "2022-10-05T04:33:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 966669,
+        "name": "Russell Tan",
+        "created_at": "2022-10-05T04:31:37.000Z",
+        "url": "https://greasyfork.org/users/966669-russell-tan"
+      }
+    ],
+    "name": "Scuffed Ass ToC farm",
+    "description": "yee yee ass script ty geruciapamer",
+    "url": "https://greasyfork.org/scripts/452499-scuffed-ass-toc-farm",
+    "code_url": "https://update.greasyfork.org/scripts/452499/Scuffed%20Ass%20ToC%20farm.user.js",
+    "code_size": 9337,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

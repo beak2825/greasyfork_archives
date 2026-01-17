@@ -1,0 +1,34 @@
+{
+  "id": 453324,
+  "daily_installs": 0,
+  "total_installs": 80,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-19T03:16:38.000Z",
+  "code_updated_at": "2023-03-01T07:50:49.000Z",
+  "namespace": "super_page_fill_order",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972533,
+      "name": "LVPlum",
+      "created_at": "2022-10-19T03:10:04.000Z",
+      "url": "https://greasyfork.org/users/972533-lvplum",
+      "scripts": []
+    }
+  ],
+  "name": "中兴商旅填单助手",
+  "description": "中兴商旅自动填单小助手，仅限内部人员使用",
+  "url": "https://greasyfork.org/scripts/453324-%E4%B8%AD%E5%85%B4%E5%95%86%E6%97%85%E5%A1%AB%E5%8D%95%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/453324/%E4%B8%AD%E5%85%B4%E5%95%86%E6%97%85%E5%A1%AB%E5%8D%95%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 31413,
+  "license": "AGPL License",
+  "version": "0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

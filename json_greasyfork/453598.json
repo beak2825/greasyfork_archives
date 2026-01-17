@@ -1,0 +1,33 @@
+{
+  "id": 453598,
+  "daily_installs": 0,
+  "total_installs": 426,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-23T17:49:33.000Z",
+  "code_updated_at": "2022-11-07T20:49:36.000Z",
+  "namespace": "https://github.com/tanapok/Seeding-Statistics",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 974380,
+      "name": "tanapok",
+      "created_at": "2022-10-23T16:46:17.000Z",
+      "url": "https://greasyfork.org/users/974380-tanapok"
+    }
+  ],
+  "name": "保种统计",
+  "description": "保种统计是一个用于统计用户做种情况的脚本，可用于 NexusPHP 架构的 PT 站点。脚本可以统计用户的做种数据，并根据站点进行分类汇总，详细展示用户做种详情。可以统计的数据包括站点名称、做种数量、做种体积、平均保种人数、做种上传总量、做种下载总量、平均做种时间等。",
+  "url": "https://greasyfork.org/scripts/453598-%E4%BF%9D%E7%A7%8D%E7%BB%9F%E8%AE%A1",
+  "code_url": "https://update.greasyfork.org/scripts/453598/%E4%BF%9D%E7%A7%8D%E7%BB%9F%E8%AE%A1.user.js",
+  "code_size": 61398,
+  "license": "GNU GPLv3",
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

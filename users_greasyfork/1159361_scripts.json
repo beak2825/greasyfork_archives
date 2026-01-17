@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 473907,
+    "daily_installs": 0,
+    "total_installs": 166,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-26T02:02:19.000Z",
+    "code_updated_at": "2024-11-24T03:08:59.000Z",
+    "namespace": "https://greasyfork.org/users/1159361",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1159361,
+        "name": "Liam T",
+        "created_at": "2023-08-26T00:01:49.000Z",
+        "url": "https://greasyfork.org/users/1159361-liam-t"
+      }
+    ],
+    "name": "DOTV To Next Level Timer",
+    "description": "Estimates Time needed to naturally level",
+    "url": "https://greasyfork.org/scripts/473907-dotv-to-next-level-timer",
+    "code_url": "https://update.greasyfork.org/scripts/473907/DOTV%20To%20Next%20Level%20Timer.user.js",
+    "code_size": 3522,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

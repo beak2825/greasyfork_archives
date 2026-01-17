@@ -1,0 +1,33 @@
+{
+  "id": 412210,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-29T10:32:56.000Z",
+  "code_updated_at": "2020-09-29T10:32:55.000Z",
+  "namespace": "a",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 691178,
+      "name": "VIGIL33T",
+      "created_at": "2020-09-29T10:32:34.000Z",
+      "url": "https://greasyfork.org/users/691178-vigil33t"
+    }
+  ],
+  "name": "Ditch \"Messenger\" in VK",
+  "description": "Some meme for meme",
+  "url": "https://greasyfork.org/scripts/412210-ditch-messenger-in-vk",
+  "code_url": "https://update.greasyfork.org/scripts/412210/Ditch%20%22Messenger%22%20in%20VK.user.js",
+  "code_size": 451,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

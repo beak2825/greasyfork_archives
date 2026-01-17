@@ -1,0 +1,33 @@
+{
+  "id": 463660,
+  "daily_installs": 0,
+  "total_installs": 145,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-10T08:02:01.000Z",
+  "code_updated_at": "2024-06-18T05:14:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1057303,
+      "name": "vruses",
+      "created_at": "2023-04-10T07:04:23.000Z",
+      "url": "https://greasyfork.org/users/1057303-vruses"
+    }
+  ],
+  "name": "教务处自动评教",
+  "description": "全自动评教表单。",
+  "url": "https://greasyfork.org/scripts/463660-%E6%95%99%E5%8A%A1%E5%A4%84%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/463660/%E6%95%99%E5%8A%A1%E5%A4%84%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+  "code_size": 1432,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

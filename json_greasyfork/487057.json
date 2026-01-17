@@ -1,0 +1,59 @@
+{
+  "id": 487057,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-11T04:16:41.000Z",
+  "code_updated_at": "2024-02-11T04:16:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1259878,
+      "name": "fujio nakazono",
+      "created_at": "2024-02-11T04:15:34.000Z",
+      "url": "https://greasyfork.org/users/1259878-fujio-nakazono",
+      "scripts": [
+        {
+          "id": 487057,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-11T04:16:41.000Z",
+          "code_updated_at": "2024-02-11T04:16:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "日本語版Quora用、自動でもっと読むクリック+回答初期並び順変更",
+          "description": "日本語版Quoraで質問をクリックしたときに、並び順を最新にします。また、スクロール時にもっと読むを自動クリックします。",
+          "url": "https://greasyfork.org/scripts/487057-%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88quora%E7%94%A8-%E8%87%AA%E5%8B%95%E3%81%A7%E3%82%82%E3%81%A3%E3%81%A8%E8%AA%AD%E3%82%80%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF-%E5%9B%9E%E7%AD%94%E5%88%9D%E6%9C%9F%E4%B8%A6%E3%81%B3%E9%A0%86%E5%A4%89%E6%9B%B4",
+          "code_url": "https://update.greasyfork.org/scripts/487057/%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88Quora%E7%94%A8%E3%80%81%E8%87%AA%E5%8B%95%E3%81%A7%E3%82%82%E3%81%A3%E3%81%A8%E8%AA%AD%E3%82%80%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%2B%E5%9B%9E%E7%AD%94%E5%88%9D%E6%9C%9F%E4%B8%A6%E3%81%B3%E9%A0%86%E5%A4%89%E6%9B%B4.user.js",
+          "code_size": 1727,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "日本語版Quora用、自動でもっと読むクリック+回答初期並び順変更",
+  "description": "日本語版Quoraで質問をクリックしたときに、並び順を最新にします。また、スクロール時にもっと読むを自動クリックします。",
+  "url": "https://greasyfork.org/scripts/487057-%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88quora%E7%94%A8-%E8%87%AA%E5%8B%95%E3%81%A7%E3%82%82%E3%81%A3%E3%81%A8%E8%AA%AD%E3%82%80%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF-%E5%9B%9E%E7%AD%94%E5%88%9D%E6%9C%9F%E4%B8%A6%E3%81%B3%E9%A0%86%E5%A4%89%E6%9B%B4",
+  "code_url": "https://update.greasyfork.org/scripts/487057/%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88Quora%E7%94%A8%E3%80%81%E8%87%AA%E5%8B%95%E3%81%A7%E3%82%82%E3%81%A3%E3%81%A8%E8%AA%AD%E3%82%80%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%2B%E5%9B%9E%E7%AD%94%E5%88%9D%E6%9C%9F%E4%B8%A6%E3%81%B3%E9%A0%86%E5%A4%89%E6%9B%B4.user.js",
+  "code_size": 1727,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

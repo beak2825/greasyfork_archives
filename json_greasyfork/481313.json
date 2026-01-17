@@ -1,0 +1,33 @@
+{
+  "id": 481313,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-03T13:50:07.000Z",
+  "code_updated_at": "2023-12-03T14:11:13.000Z",
+  "namespace": "https://www.cinelounge.org/Direct/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 133030,
+      "name": "Tadanobu",
+      "created_at": "2017-06-15T23:56:41.000Z",
+      "url": "https://greasyfork.org/users/133030-tadanobu"
+    }
+  ],
+  "name": "KG2CL - Update films pays",
+  "description": "Met à jour le nombre de torrents par pays de KG dans la BDD CL",
+  "url": "https://greasyfork.org/scripts/481313-kg2cl-update-films-pays",
+  "code_url": "https://update.greasyfork.org/scripts/481313/KG2CL%20-%20Update%20films%20pays.user.js",
+  "code_size": 2498,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

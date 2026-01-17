@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481186,
+    "daily_installs": 0,
+    "total_installs": 753,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-01T18:48:13.000Z",
+    "code_updated_at": "2023-12-06T15:57:36.000Z",
+    "namespace": "doveboy_js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1226426,
+        "name": "tianyu qing",
+        "created_at": "2023-12-01T18:41:58.000Z",
+        "url": "https://greasyfork.org/users/1226426-tianyu-qing"
+      }
+    ],
+    "name": "豆瓣资源下载观看大师：（增加H243影视资源，方便通过豆瓣搜索后直接观看）豆瓣电影|音乐|图书下载",
+    "description": "【基本就是原作者代码的基础上添加了H243影视资源搜索】聚合数百家资源网站，通过右侧边栏1秒告诉你哪些网站能下载豆瓣页面上的电影|电视剧|纪录片|综艺|动画|音乐|图书等，有资源的网站显示绿色，没资源的网站显示黄色，就这么直观！所有豆瓣条目均提供在线播放|阅读、字幕|歌词下载及PT|NZB|BT|磁力|百度盘|115网盘等下载链接，加入官网打死也不出的豆列搜索功能，此外还能给豆瓣条目额外添加IMDB评分|IMDB TOP 250|Metascore评分|烂番茄评分|AniDB评分|Bgm评分|MAL|亚马逊评分等更多评分形式。也可以直接访问观看：https://www.h243.top",
+    "url": "https://greasyfork.org/scripts/481186-%E8%B1%86%E7%93%A3%E8%B5%84%E6%BA%90%E4%B8%8B%E8%BD%BD%E8%A7%82%E7%9C%8B%E5%A4%A7%E5%B8%88-%E5%A2%9E%E5%8A%A0h243%E5%BD%B1%E8%A7%86%E8%B5%84%E6%BA%90-%E6%96%B9%E4%BE%BF%E9%80%9A%E8%BF%87%E8%B1%86%E7%93%A3%E6%90%9C%E7%B4%A2%E5%90%8E%E7%9B%B4%E6%8E%A5%E8%A7%82%E7%9C%8B-%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1-%E9%9F%B3%E4%B9%90-%E5%9B%BE%E4%B9%A6%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/481186/%E8%B1%86%E7%93%A3%E8%B5%84%E6%BA%90%E4%B8%8B%E8%BD%BD%E8%A7%82%E7%9C%8B%E5%A4%A7%E5%B8%88%EF%BC%9A%EF%BC%88%E5%A2%9E%E5%8A%A0H243%E5%BD%B1%E8%A7%86%E8%B5%84%E6%BA%90%EF%BC%8C%E6%96%B9%E4%BE%BF%E9%80%9A%E8%BF%87%E8%B1%86%E7%93%A3%E6%90%9C%E7%B4%A2%E5%90%8E%E7%9B%B4%E6%8E%A5%E8%A7%82%E7%9C%8B%EF%BC%89%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1%7C%E9%9F%B3%E4%B9%90%7C%E5%9B%BE%E4%B9%A6%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 168332,
+    "license": "Zlib/Libpng License",
+    "version": "8.3.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

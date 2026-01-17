@@ -1,0 +1,33 @@
+{
+  "id": 474902,
+  "daily_installs": 0,
+  "total_installs": 47,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-09T14:11:04.000Z",
+  "code_updated_at": "2023-09-09T14:11:04.000Z",
+  "namespace": "https://ks.wjx.top/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1058579,
+      "name": "tidys",
+      "created_at": "2023-04-12T05:41:36.000Z",
+      "url": "https://greasyfork.org/users/1058579-tidys"
+    }
+  ],
+  "name": "问卷答题",
+  "description": "i am number one",
+  "url": "https://greasyfork.org/scripts/474902-%E9%97%AE%E5%8D%B7%E7%AD%94%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/474902/%E9%97%AE%E5%8D%B7%E7%AD%94%E9%A2%98.user.js",
+  "code_size": 115733,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

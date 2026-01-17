@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422399,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-28T02:52:35.000Z",
+    "code_updated_at": "2021-02-28T02:52:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 741919,
+        "name": "alfozr",
+        "created_at": "2021-02-28T02:21:31.000Z",
+        "url": "https://greasyfork.org/users/741919-alfozr"
+      }
+    ],
+    "name": "FBA原価計算機",
+    "description": "fulfillment by amazon price simulator in Profit margin calculator",
+    "url": "https://greasyfork.org/scripts/422399-fba%E5%8E%9F%E4%BE%A1%E8%A8%88%E7%AE%97%E6%A9%9F",
+    "code_url": "https://update.greasyfork.org/scripts/422399/FBA%E5%8E%9F%E4%BE%A1%E8%A8%88%E7%AE%97%E6%A9%9F.user.js",
+    "code_size": 3591,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

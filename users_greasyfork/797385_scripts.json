@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429902,
+    "daily_installs": 0,
+    "total_installs": 788,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-26T13:47:18.000Z",
+    "code_updated_at": "2021-07-26T13:47:18.000Z",
+    "namespace": "http://www.gzjxjy.gzsrs.cn/personback/#/learning?id=1409765570891055105",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 797385,
+        "name": "a493221632",
+        "created_at": "2021-07-26T13:25:17.000Z",
+        "url": "https://greasyfork.org/users/797385-a493221632"
+      }
+    ],
+    "name": "自动播放插件",
+    "description": "autoplay",
+    "url": "https://greasyfork.org/scripts/429902-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/429902/%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 1436,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

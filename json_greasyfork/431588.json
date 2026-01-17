@@ -1,0 +1,33 @@
+{
+  "id": 431588,
+  "daily_installs": 3,
+  "total_installs": 3818,
+  "fan_score": "68.5",
+  "good_ratings": 13,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-08-29T15:51:36.000Z",
+  "code_updated_at": "2021-09-10T12:51:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 790854,
+      "name": "GAEE",
+      "created_at": "2021-07-06T07:13:02.000Z",
+      "url": "https://greasyfork.org/users/790854-gaee"
+    }
+  ],
+  "name": "贴吧丸",
+  "description": "浏览移动端贴吧网页无需跳转登录",
+  "url": "https://greasyfork.org/scripts/431588-%E8%B4%B4%E5%90%A7%E4%B8%B8",
+  "code_url": "https://update.greasyfork.org/scripts/431588/%E8%B4%B4%E5%90%A7%E4%B8%B8.user.js",
+  "code_size": 1587,
+  "license": null,
+  "version": "0.1.2.210910",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

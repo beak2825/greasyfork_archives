@@ -1,0 +1,59 @@
+{
+  "id": 418490,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-11T08:59:31.000Z",
+  "code_updated_at": "2020-12-11T09:09:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 715637,
+      "name": "xinggedaxia",
+      "created_at": "2020-12-11T08:51:11.000Z",
+      "url": "https://greasyfork.org/users/715637-xinggedaxia",
+      "scripts": [
+        {
+          "id": 418490,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-12-11T08:59:31.000Z",
+          "code_updated_at": "2020-12-11T09:09:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "对github面试题顺序进行倒置",
+          "description": "fe-interview的面试题是按照发布顺序排列的，新的在最上面。一般来说最先发布的是最常见的面试题，我们在复习时想要从最先发布的面试题开始复习，于是该脚本对面试题进行了倒序排列。",
+          "url": "https://greasyfork.org/scripts/418490-%E5%AF%B9github%E9%9D%A2%E8%AF%95%E9%A2%98%E9%A1%BA%E5%BA%8F%E8%BF%9B%E8%A1%8C%E5%80%92%E7%BD%AE",
+          "code_url": "https://update.greasyfork.org/scripts/418490/%E5%AF%B9github%E9%9D%A2%E8%AF%95%E9%A2%98%E9%A1%BA%E5%BA%8F%E8%BF%9B%E8%A1%8C%E5%80%92%E7%BD%AE.user.js",
+          "code_size": 1090,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "对github面试题顺序进行倒置",
+  "description": "fe-interview的面试题是按照发布顺序排列的，新的在最上面。一般来说最先发布的是最常见的面试题，我们在复习时想要从最先发布的面试题开始复习，于是该脚本对面试题进行了倒序排列。",
+  "url": "https://greasyfork.org/scripts/418490-%E5%AF%B9github%E9%9D%A2%E8%AF%95%E9%A2%98%E9%A1%BA%E5%BA%8F%E8%BF%9B%E8%A1%8C%E5%80%92%E7%BD%AE",
+  "code_url": "https://update.greasyfork.org/scripts/418490/%E5%AF%B9github%E9%9D%A2%E8%AF%95%E9%A2%98%E9%A1%BA%E5%BA%8F%E8%BF%9B%E8%A1%8C%E5%80%92%E7%BD%AE.user.js",
+  "code_size": 1090,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 473687,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-22T16:49:30.000Z",
+  "code_updated_at": "2023-10-29T17:23:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 973872,
+      "name": "nickburrows",
+      "created_at": "2022-10-22T11:37:25.000Z",
+      "url": "https://greasyfork.org/users/973872-nickburrows",
+      "scripts": [
+        {
+          "id": 478914,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-03T02:48:48.000Z",
+          "code_updated_at": "2023-11-16T20:07:46.000Z",
+          "namespace": "https://github.com/nickburrows/userscript-copy-link",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Copy URL Link",
+          "description": "一個用來複製連結網址的userscript",
+          "url": "https://greasyfork.org/scripts/478914-copy-url-link",
+          "code_url": "https://update.greasyfork.org/scripts/478914/Copy%20URL%20Link.user.js",
+          "code_size": 1326,
+          "license": null,
+          "version": "0.0.44",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Copy URL",
+  "description": "當滑鼠移動到文字連結時，並按下`⌘ C`，即可將網址連結複製到剪貼簿中.",
+  "url": "https://greasyfork.org/scripts/473687-copy-url",
+  "code_url": "https://update.greasyfork.org/scripts/473687/Copy%20URL.user.js",
+  "code_size": 2828,
+  "license": "MIT License",
+  "version": "0.1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

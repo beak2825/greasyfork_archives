@@ -1,0 +1,34 @@
+{
+  "id": 413184,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-10-14T09:16:37.000Z",
+  "code_updated_at": "2021-09-02T06:37:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 661669,
+      "name": "jackie198512@126.com",
+      "created_at": "2020-06-30T07:57:02.000Z",
+      "url": "https://greasyfork.org/users/661669-jackie198512-126-com",
+      "scripts": []
+    }
+  ],
+  "name": "Dx replacer",
+  "description": "try to take over the world! https://greasyfork.org/zh-CN/scripts/413184-dx-replacer",
+  "url": "https://greasyfork.org/scripts/413184-dx-replacer",
+  "code_url": "https://update.greasyfork.org/scripts/413184/Dx%20replacer.user.js",
+  "code_size": 86706,
+  "license": null,
+  "version": "0.20",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 460975,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-01T11:39:00.000Z",
+  "code_updated_at": "2023-03-01T11:38:59.000Z",
+  "namespace": "https://coopdevs.coop",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1034750,
+      "name": "laicoop",
+      "created_at": "2023-03-01T11:33:10.000Z",
+      "url": "https://greasyfork.org/users/1034750-laicoop"
+    }
+  ],
+  "name": "PyPI package name and version fetcher",
+  "description": "Fetches all the package names displayed in a PyPI search along with their last version and copies it to clipboard. Crafted for copy all OCA metapackages when searching for \"odoo14-addons-oca\"",
+  "url": "https://greasyfork.org/scripts/460975-pypi-package-name-and-version-fetcher",
+  "code_url": "https://update.greasyfork.org/scripts/460975/PyPI%20package%20name%20and%20version%20fetcher.user.js",
+  "code_size": 5227,
+  "license": "AGPL-3",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

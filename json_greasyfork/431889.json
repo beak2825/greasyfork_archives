@@ -1,0 +1,34 @@
+{
+  "id": 431889,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-04T04:04:18.000Z",
+  "code_updated_at": "2024-05-25T05:29:39.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 233941,
+      "name": "karlcheong",
+      "created_at": "2018-12-20T11:12:36.000Z",
+      "url": "https://greasyfork.org/users/233941-karlcheong",
+      "scripts": []
+    }
+  ],
+  "name": "ctmo_wechat_recharge_js",
+  "description": "1888網站繳費的代碼庫(WeChat版)",
+  "url": "https://greasyfork.org/scripts/431889-ctmo-wechat-recharge-js",
+  "code_url": "https://update.greasyfork.org/scripts/431889/1382771/ctmo_wechat_recharge_js.js",
+  "code_size": 13442,
+  "license": null,
+  "version": "0.0.1.20240525052939",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

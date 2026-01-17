@@ -1,0 +1,35 @@
+[
+  {
+    "id": 474246,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-30T19:51:29.000Z",
+    "code_updated_at": "2023-08-30T19:51:29.000Z",
+    "namespace": "Android/lolzteam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163158,
+        "name": "Androidev",
+        "created_at": "2023-08-30T19:44:29.000Z",
+        "url": "https://greasyfork.org/users/1163158-androidev"
+      }
+    ],
+    "name": "Lolz VoiceInput",
+    "description": "Добавляет голосовой ввод на лолз",
+    "url": "https://greasyfork.org/scripts/474246-lolz-voiceinput",
+    "code_url": "https://update.greasyfork.org/scripts/474246/Lolz%20VoiceInput.user.js",
+    "code_size": 5120,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 470122,
+    "daily_installs": 0,
+    "total_installs": 199,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-04T07:48:02.000Z",
+    "code_updated_at": "2023-07-04T07:48:02.000Z",
+    "namespace": "ACGMN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1046143,
+        "name": "ACGNnsj",
+        "created_at": "2023-03-22T11:00:24.000Z",
+        "url": "https://greasyfork.org/users/1046143-acgnnsj"
+      }
+    ],
+    "name": "Steam Workshop Cover Fix",
+    "description": "Fix Steam workshop cover images    修复Steam创意工坊封面图",
+    "url": "https://greasyfork.org/scripts/470122-steam-workshop-cover-fix",
+    "code_url": "https://update.greasyfork.org/scripts/470122/Steam%20Workshop%20Cover%20Fix.user.js",
+    "code_size": 944,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 464792,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-25T03:53:13.000Z",
+    "code_updated_at": "2023-04-25T04:14:51.000Z",
+    "namespace": "ACGMN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1046143,
+        "name": "ACGNnsj",
+        "created_at": "2023-03-22T11:00:24.000Z",
+        "url": "https://greasyfork.org/users/1046143-acgnnsj"
+      }
+    ],
+    "name": "Remove Bilibili WebP Suffix",
+    "description": "Remove gift panel from bilibili live page 去除b站图片webp后缀",
+    "url": "https://greasyfork.org/scripts/464792-remove-bilibili-webp-suffix",
+    "code_url": "https://update.greasyfork.org/scripts/464792/Remove%20Bilibili%20WebP%20Suffix.user.js",
+    "code_size": 973,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 462321,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-22T11:01:57.000Z",
+    "code_updated_at": "2023-03-22T11:38:27.000Z",
+    "namespace": "ACGMN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1046143,
+        "name": "ACGNnsj",
+        "created_at": "2023-03-22T11:00:24.000Z",
+        "url": "https://greasyfork.org/users/1046143-acgnnsj"
+      }
+    ],
+    "name": "Remove Bilibili Live Gift Panel",
+    "description": "Remove gift panel from bilibili live page 去除b站直播间礼物面板",
+    "url": "https://greasyfork.org/scripts/462321-remove-bilibili-live-gift-panel",
+    "code_url": "https://update.greasyfork.org/scripts/462321/Remove%20Bilibili%20Live%20Gift%20Panel.user.js",
+    "code_size": 1156,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

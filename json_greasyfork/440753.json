@@ -1,0 +1,59 @@
+{
+  "id": 440753,
+  "daily_installs": 0,
+  "total_installs": 402,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2022-03-01T06:12:13.000Z",
+  "code_updated_at": "2024-10-08T18:37:36.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 881687,
+      "name": "derek Yu",
+      "created_at": "2022-03-01T06:10:42.000Z",
+      "url": "https://greasyfork.org/users/881687-derek-yu",
+      "scripts": [
+        {
+          "id": 440753,
+          "daily_installs": 0,
+          "total_installs": 402,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2022-03-01T06:12:13.000Z",
+          "code_updated_at": "2024-10-08T18:37:36.000Z",
+          "namespace": "https://greasyfork.org/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "知乎、简书、CSDN、掘金、51CTO、infoq链接直接跳转",
+          "description": "去除知乎、简书、CSDN、掘金、51CTO、infoq链接跳转提示，点击链接直接跳转网页",
+          "url": "https://greasyfork.org/scripts/440753-%E7%9F%A5%E4%B9%8E-%E7%AE%80%E4%B9%A6-csdn-%E6%8E%98%E9%87%91-51cto-infoq%E9%93%BE%E6%8E%A5%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC",
+          "code_url": "https://update.greasyfork.org/scripts/440753/%E7%9F%A5%E4%B9%8E%E3%80%81%E7%AE%80%E4%B9%A6%E3%80%81CSDN%E3%80%81%E6%8E%98%E9%87%91%E3%80%8151CTO%E3%80%81infoq%E9%93%BE%E6%8E%A5%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC.user.js",
+          "code_size": 3071,
+          "license": "MIT License",
+          "version": "0.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "知乎、简书、CSDN、掘金、51CTO、infoq链接直接跳转",
+  "description": "去除知乎、简书、CSDN、掘金、51CTO、infoq链接跳转提示，点击链接直接跳转网页",
+  "url": "https://greasyfork.org/scripts/440753-%E7%9F%A5%E4%B9%8E-%E7%AE%80%E4%B9%A6-csdn-%E6%8E%98%E9%87%91-51cto-infoq%E9%93%BE%E6%8E%A5%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/440753/%E7%9F%A5%E4%B9%8E%E3%80%81%E7%AE%80%E4%B9%A6%E3%80%81CSDN%E3%80%81%E6%8E%98%E9%87%91%E3%80%8151CTO%E3%80%81infoq%E9%93%BE%E6%8E%A5%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 3071,
+  "license": "MIT License",
+  "version": "0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

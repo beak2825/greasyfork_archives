@@ -1,0 +1,68 @@
+[
+  {
+    "id": 484121,
+    "daily_installs": 1,
+    "total_installs": 1682,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-07T09:29:01.000Z",
+    "code_updated_at": "2024-01-07T09:31:15.000Z",
+    "namespace": "https://greasyfork.org/users/1239133",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1239133,
+        "name": "HiraganaDev",
+        "created_at": "2023-12-25T15:51:32.000Z",
+        "url": "https://greasyfork.org/users/1239133-hiraganadev"
+      }
+    ],
+    "name": "TurboType for Monkeytype 🤖",
+    "description": "This script automates typing tests on Monkeytype by simulating character input at random intervals when the \"CtrlLeft\" key is pressed. Keyboard events are intercepted and transmitted to the input field, providing a configurable automated typing test experience. The test can be started or stopped through a menu accessible with the \"CtrlLeft\" key.",
+    "url": "https://greasyfork.org/scripts/484121-turbotype-for-monkeytype",
+    "code_url": "https://update.greasyfork.org/scripts/484121/TurboType%20for%20Monkeytype%20%F0%9F%A4%96.user.js",
+    "code_size": 10642,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 483090,
+    "daily_installs": 0,
+    "total_installs": 218,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-25T15:52:21.000Z",
+    "code_updated_at": "2023-12-26T08:56:18.000Z",
+    "namespace": "https://popcat.click",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1239133,
+        "name": "HiraganaDev",
+        "created_at": "2023-12-25T15:51:32.000Z",
+        "url": "https://greasyfork.org/users/1239133-hiraganadev"
+      }
+    ],
+    "name": "PopCat Auto Clicker + Menu (Improved)",
+    "description": "Automatically clicks the cat on the PopCat website at a faster rate and provides additional features when the Z key is pressed.",
+    "url": "https://greasyfork.org/scripts/483090-popcat-auto-clicker-menu-improved",
+    "code_url": "https://update.greasyfork.org/scripts/483090/PopCat%20Auto%20Clicker%20%2B%20Menu%20%28Improved%29.user.js",
+    "code_size": 6542,
+    "license": null,
+    "version": "4.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

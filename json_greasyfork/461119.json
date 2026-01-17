@@ -1,0 +1,59 @@
+{
+  "id": 461119,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-03T17:58:22.000Z",
+  "code_updated_at": "2023-03-03T17:58:22.000Z",
+  "namespace": "http://tampermonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 983287,
+      "name": "Thomas Ngan",
+      "created_at": "2022-11-14T15:02:32.000Z",
+      "url": "https://greasyfork.org/users/983287-thomas-ngan",
+      "scripts": [
+        {
+          "id": 461119,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-03T17:58:22.000Z",
+          "code_updated_at": "2023-03-03T17:58:22.000Z",
+          "namespace": "http://tampermonkey",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Draw Shapes with Color and Line Thickness Options",
+          "description": "Draw shapes using HTML5 Canvas with color and line thickness options. Keybinds: c = change color t = change width x = clear all",
+          "url": "https://greasyfork.org/scripts/461119-draw-shapes-with-color-and-line-thickness-options",
+          "code_url": "https://update.greasyfork.org/scripts/461119/Draw%20Shapes%20with%20Color%20and%20Line%20Thickness%20Options.user.js",
+          "code_size": 2427,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Draw Shapes with Color and Line Thickness Options",
+  "description": "Draw shapes using HTML5 Canvas with color and line thickness options. Keybinds: c = change color t = change width x = clear all",
+  "url": "https://greasyfork.org/scripts/461119-draw-shapes-with-color-and-line-thickness-options",
+  "code_url": "https://update.greasyfork.org/scripts/461119/Draw%20Shapes%20with%20Color%20and%20Line%20Thickness%20Options.user.js",
+  "code_size": 2427,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

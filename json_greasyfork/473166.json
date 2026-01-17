@@ -1,0 +1,33 @@
+{
+  "id": 473166,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-16T08:01:19.000Z",
+  "code_updated_at": "2023-08-30T08:36:23.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 157837,
+      "name": "刘云",
+      "created_at": "2017-11-02T05:23:00.000Z",
+      "url": "https://greasyfork.org/users/157837-%E5%88%98%E4%BA%91"
+    }
+  ],
+  "name": "来客推送电话到后台 - douyin.com",
+  "description": "2023/8/16 下午2:29:10",
+  "url": "https://greasyfork.org/scripts/473166-%E6%9D%A5%E5%AE%A2%E6%8E%A8%E9%80%81%E7%94%B5%E8%AF%9D%E5%88%B0%E5%90%8E%E5%8F%B0-douyin-com",
+  "code_url": "https://update.greasyfork.org/scripts/473166/%E6%9D%A5%E5%AE%A2%E6%8E%A8%E9%80%81%E7%94%B5%E8%AF%9D%E5%88%B0%E5%90%8E%E5%8F%B0%20-%20douyincom.user.js",
+  "code_size": 4767,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

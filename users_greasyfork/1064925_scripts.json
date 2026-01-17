@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464565,
+    "daily_installs": 0,
+    "total_installs": 322,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-21T14:35:18.000Z",
+    "code_updated_at": "2023-04-21T16:52:22.000Z",
+    "namespace": "civitai-exporter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1064925,
+        "name": "xiaojiangnb",
+        "created_at": "2023-04-21T14:21:37.000Z",
+        "url": "https://greasyfork.org/users/1064925-xiaojiangnb"
+      }
+    ],
+    "name": "c站触发词一键保存",
+    "description": "将 Civitai 内容导出，并包含触发词和源网址。",
+    "url": "https://greasyfork.org/scripts/464565-c%E7%AB%99%E8%A7%A6%E5%8F%91%E8%AF%8D%E4%B8%80%E9%94%AE%E4%BF%9D%E5%AD%98",
+    "code_url": "https://update.greasyfork.org/scripts/464565/c%E7%AB%99%E8%A7%A6%E5%8F%91%E8%AF%8D%E4%B8%80%E9%94%AE%E4%BF%9D%E5%AD%98.user.js",
+    "code_size": 2060,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

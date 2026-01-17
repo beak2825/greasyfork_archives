@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449087,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-07T03:05:56.000Z",
+    "code_updated_at": "2023-03-02T15:49:11.000Z",
+    "namespace": "https://kobayashilin1.run/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 943815,
+        "name": "kobayashilin1",
+        "created_at": "2022-08-07T02:22:42.000Z",
+        "url": "https://greasyfork.org/users/943815-kobayashilin1"
+      }
+    ],
+    "name": "tax-code-helper",
+    "description": "A script to check CN tax code!",
+    "url": "https://greasyfork.org/scripts/449087-tax-code-helper",
+    "code_url": "https://update.greasyfork.org/scripts/449087/tax-code-helper.user.js",
+    "code_size": 35469,
+    "license": "MIT License",
+    "version": "0.2.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

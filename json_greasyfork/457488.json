@@ -1,0 +1,59 @@
+{
+  "id": 457488,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-02T09:58:21.000Z",
+  "code_updated_at": "2023-01-02T10:08:52.000Z",
+  "namespace": "VKPLAYRATE",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1005751,
+      "name": "alphatoasterous",
+      "created_at": "2023-01-02T09:53:21.000Z",
+      "url": "https://greasyfork.org/users/1005751-alphatoasterous",
+      "scripts": [
+        {
+          "id": 457488,
+          "daily_installs": 0,
+          "total_installs": 51,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-01-02T09:58:21.000Z",
+          "code_updated_at": "2023-01-02T10:08:52.000Z",
+          "namespace": "VKPLAYRATE",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VK Скорость Музыки",
+          "description": "Добавляет на vk.com регулировку скорости воспроизведения музыки в левом нижнем углу страницы. На даблклик по слайдеру возвращает исходное значение скорости.",
+          "url": "https://greasyfork.org/scripts/457488-vk-%D1%81%D0%BA%D0%BE%D1%80%D0%BE%D1%81%D1%82%D1%8C-%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B8",
+          "code_url": "https://update.greasyfork.org/scripts/457488/VK%20%D0%A1%D0%BA%D0%BE%D1%80%D0%BE%D1%81%D1%82%D1%8C%20%D0%9C%D1%83%D0%B7%D1%8B%D0%BA%D0%B8.user.js",
+          "code_size": 4013,
+          "license": null,
+          "version": "1.15",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VK Скорость Музыки",
+  "description": "Добавляет на vk.com регулировку скорости воспроизведения музыки в левом нижнем углу страницы. На даблклик по слайдеру возвращает исходное значение скорости.",
+  "url": "https://greasyfork.org/scripts/457488-vk-%D1%81%D0%BA%D0%BE%D1%80%D0%BE%D1%81%D1%82%D1%8C-%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B8",
+  "code_url": "https://update.greasyfork.org/scripts/457488/VK%20%D0%A1%D0%BA%D0%BE%D1%80%D0%BE%D1%81%D1%82%D1%8C%20%D0%9C%D1%83%D0%B7%D1%8B%D0%BA%D0%B8.user.js",
+  "code_size": 4013,
+  "license": null,
+  "version": "1.15",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

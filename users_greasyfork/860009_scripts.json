@@ -1,0 +1,35 @@
+[
+  {
+    "id": 437910,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-01T19:03:48.000Z",
+    "code_updated_at": "2022-01-01T19:03:47.000Z",
+    "namespace": "Miracle Scripts names colored",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860009,
+        "name": "Yasko 972",
+        "created_at": "2022-01-01T13:56:16.000Z",
+        "url": "https://greasyfork.org/users/860009-yasko-972"
+      }
+    ],
+    "name": "Miracle Scripts names colored",
+    "description": "Best Agma.io script with tons of features",
+    "url": "https://greasyfork.org/scripts/437910-miracle-scripts-names-colored",
+    "code_url": "https://update.greasyfork.org/scripts/437910/Miracle%20Scripts%20names%20colored.user.js",
+    "code_size": 147644,
+    "license": "MIT License",
+    "version": "5.7.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

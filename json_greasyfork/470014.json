@@ -1,0 +1,59 @@
+{
+  "id": 470014,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-03T03:07:50.000Z",
+  "code_updated_at": "2023-07-03T03:07:50.000Z",
+  "namespace": "https://greasyfork.org/users/1117666",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1117666,
+      "name": "SpitMeUp",
+      "created_at": "2023-07-03T02:48:40.000Z",
+      "url": "https://greasyfork.org/users/1117666-spitmeup",
+      "scripts": [
+        {
+          "id": 470014,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-03T03:07:50.000Z",
+          "code_updated_at": "2023-07-03T03:07:50.000Z",
+          "namespace": "https://greasyfork.org/users/1117666",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ResetEra Remove Unread from URL - Unread link in the line under",
+          "description": "Removes /unread from the threads' links and adds a \"unread\" button underneath",
+          "url": "https://greasyfork.org/scripts/470014-resetera-remove-unread-from-url-unread-link-in-the-line-under",
+          "code_url": "https://update.greasyfork.org/scripts/470014/ResetEra%20Remove%20Unread%20from%20URL%20-%20Unread%20link%20in%20the%20line%20under.user.js",
+          "code_size": 1556,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ResetEra Remove Unread from URL - Unread link in the line under",
+  "description": "Removes /unread from the threads' links and adds a \"unread\" button underneath",
+  "url": "https://greasyfork.org/scripts/470014-resetera-remove-unread-from-url-unread-link-in-the-line-under",
+  "code_url": "https://update.greasyfork.org/scripts/470014/ResetEra%20Remove%20Unread%20from%20URL%20-%20Unread%20link%20in%20the%20line%20under.user.js",
+  "code_size": 1556,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

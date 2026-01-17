@@ -1,0 +1,34 @@
+{
+  "id": 487812,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-20T08:36:05.000Z",
+  "code_updated_at": "2024-02-20T08:36:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Req Raif CH Combined Laury Herren",
+  "description": "Insert",
+  "url": "https://greasyfork.org/scripts/487812-req-raif-ch-combined-laury-herren",
+  "code_url": "https://update.greasyfork.org/scripts/487812/Req%20Raif%20CH%20Combined%20Laury%20Herren.user.js",
+  "code_size": 1038,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 483788,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-03T19:32:43.000Z",
+    "code_updated_at": "2024-01-13T12:26:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242870,
+        "name": "Xoder",
+        "created_at": "2024-01-03T17:30:47.000Z",
+        "url": "https://greasyfork.org/users/1242870-xoder"
+      }
+    ],
+    "name": "Evades Sensei",
+    "description": "try to take over the world! (2024-01-03)",
+    "url": "https://greasyfork.org/scripts/483788-evades-sensei",
+    "code_url": "https://update.greasyfork.org/scripts/483788/Evades%20Sensei.user.js",
+    "code_size": 215221,
+    "license": null,
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

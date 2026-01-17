@@ -1,0 +1,35 @@
+[
+  {
+    "id": 491784,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-04-06T09:36:51.000Z",
+    "code_updated_at": "2024-06-23T10:29:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1284611,
+        "name": "hmty hmy",
+        "created_at": "2024-04-06T09:30:32.000Z",
+        "url": "https://greasyfork.org/users/1284611-hmty-hmy"
+      }
+    ],
+    "name": "Auto Scroll Chat Enhancer",
+    "description": "Streamline your character.ai chat experience with the Auto Scroll Chat Enhancer! This script features a control panel with \"Start\" and \"Stop\" for key press simulations and an \"Auto Scroll\" toggle. Activate \"Auto Scroll\" to automatically view the latest messages, keeping you in the conversation flow seamlessly. Perfect for users seeking an efficient chatting experience.",
+    "url": "https://greasyfork.org/scripts/491784-auto-scroll-chat-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/491784/Auto%20Scroll%20Chat%20Enhancer.user.js",
+    "code_size": 15627,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 466339,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-15T12:30:47.000Z",
+  "code_updated_at": "2023-07-29T10:18:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 925361,
+      "name": "Knk3em9JEJc9Ak",
+      "created_at": "2022-06-14T01:37:06.000Z",
+      "url": "https://greasyfork.org/users/925361-knk3em9jejc9ak",
+      "scripts": []
+    }
+  ],
+  "name": "oafor",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/466339-oafor",
+  "code_url": "https://update.greasyfork.org/scripts/466339/oafor.user.js",
+  "code_size": 6171,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

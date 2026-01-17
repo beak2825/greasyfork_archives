@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433866,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-14T02:00:47.000Z",
+    "code_updated_at": "2021-11-04T01:20:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 797201,
+        "name": "Forgetmenot",
+        "created_at": "2021-07-26T02:30:15.000Z",
+        "url": "https://greasyfork.org/users/797201-forgetmenot"
+      }
+    ],
+    "name": "邦德提取网页广告链接ajax",
+    "description": "提取网页(如色情)广告链接",
+    "url": "https://greasyfork.org/scripts/433866-%E9%82%A6%E5%BE%B7%E6%8F%90%E5%8F%96%E7%BD%91%E9%A1%B5%E5%B9%BF%E5%91%8A%E9%93%BE%E6%8E%A5ajax",
+    "code_url": "https://update.greasyfork.org/scripts/433866/%E9%82%A6%E5%BE%B7%E6%8F%90%E5%8F%96%E7%BD%91%E9%A1%B5%E5%B9%BF%E5%91%8A%E9%93%BE%E6%8E%A5ajax.user.js",
+    "code_size": 9859,
+    "license": null,
+    "version": "1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436871,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-10T20:44:43.000Z",
+    "code_updated_at": "2021-12-10T20:44:43.000Z",
+    "namespace": "http://tampermonkey.net/JClouseau42",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 851471,
+        "name": "JClouseau42",
+        "created_at": "2021-12-10T20:38:22.000Z",
+        "url": "https://greasyfork.org/users/851471-jclouseau42"
+      }
+    ],
+    "name": "ChooseMyGift Linkafy to Amazon and Google",
+    "description": "Change all SKUs to Amazon/Google links (based on SKU/text)",
+    "url": "https://greasyfork.org/scripts/436871-choosemygift-linkafy-to-amazon-and-google",
+    "code_url": "https://update.greasyfork.org/scripts/436871/ChooseMyGift%20Linkafy%20to%20Amazon%20and%20Google.user.js",
+    "code_size": 2165,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

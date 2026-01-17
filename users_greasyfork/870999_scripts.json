@@ -64,5 +64,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 471635,
+    "daily_installs": 0,
+    "total_installs": 148,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-24T21:08:26.000Z",
+    "code_updated_at": "2024-12-04T18:26:03.000Z",
+    "namespace": "aubymori.github.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 870999,
+        "name": "aubymori",
+        "created_at": "2022-01-30T06:15:04.000Z",
+        "url": "https://greasyfork.org/users/870999-aubymori"
+      }
+    ],
+    "name": "Twitter Tab Revert",
+    "description": "Reverts the Twitter favicon and tab title",
+    "url": "https://greasyfork.org/scripts/471635-twitter-tab-revert",
+    "code_url": "https://update.greasyfork.org/scripts/471635/Twitter%20Tab%20Revert.user.js",
+    "code_size": 1406,
+    "license": "The Unlicense",
+    "version": "2.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 448131,
+    "daily_installs": 1,
+    "total_installs": 1124,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-19T16:25:01.000Z",
+    "code_updated_at": "2022-07-24T15:32:10.000Z",
+    "namespace": "aubymori",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 870999,
+        "name": "aubymori",
+        "created_at": "2022-01-30T06:15:04.000Z",
+        "url": "https://greasyfork.org/users/870999-aubymori"
+      }
+    ],
+    "name": "Old Roblox Header",
+    "description": "Restores the old \"Hello, {username}!\" header on the Roblox homepage.",
+    "url": "https://greasyfork.org/scripts/448131-old-roblox-header",
+    "code_url": "https://update.greasyfork.org/scripts/448131/Old%20Roblox%20Header.user.js",
+    "code_size": 2480,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 447202,
+    "daily_installs": 0,
+    "total_installs": 208,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-29T00:47:14.000Z",
+    "code_updated_at": "2022-06-29T01:43:02.000Z",
+    "namespace": "aubymori",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 870999,
+        "name": "aubymori",
+        "created_at": "2022-01-30T06:15:04.000Z",
+        "url": "https://greasyfork.org/users/870999-aubymori"
+      }
+    ],
+    "name": "Remove Clip, Thanks, and Download",
+    "description": "Removes the \"CLIP\", \"THANKS\", and \"DOWNLOAD\" buttons from the Watch page",
+    "url": "https://greasyfork.org/scripts/447202-remove-clip-thanks-and-download",
+    "code_url": "https://update.greasyfork.org/scripts/447202/Remove%20Clip%2C%20Thanks%2C%20and%20Download.user.js",
+    "code_size": 1249,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 447194,
+    "daily_installs": 0,
+    "total_installs": 442,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-06-28T20:45:03.000Z",
+    "code_updated_at": "2022-09-29T01:06:03.000Z",
+    "namespace": "aubymori",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 870999,
+        "name": "aubymori",
+        "created_at": "2022-01-30T06:15:04.000Z",
+        "url": "https://greasyfork.org/users/870999-aubymori"
+      }
+    ],
+    "name": "Watch9 Reconstruct",
+    "description": "Restores the old watch layout from before 2019",
+    "url": "https://greasyfork.org/scripts/447194-watch9-reconstruct",
+    "code_url": "https://update.greasyfork.org/scripts/447194/Watch9%20Reconstruct.user.js",
+    "code_size": 20227,
+    "license": "The Unlicense",
+    "version": "2.5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

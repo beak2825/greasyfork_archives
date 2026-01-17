@@ -1,0 +1,59 @@
+{
+  "id": 465613,
+  "daily_installs": 0,
+  "total_installs": 117,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-05T20:23:04.000Z",
+  "code_updated_at": "2023-06-13T16:47:58.000Z",
+  "namespace": "Remove YouTube Shorts automatically by pressing a button(by NOface312)",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1073144,
+      "name": "NOface312",
+      "created_at": "2023-05-04T17:02:50.000Z",
+      "url": "https://greasyfork.org/users/1073144-noface312",
+      "scripts": [
+        {
+          "id": 465613,
+          "daily_installs": 0,
+          "total_installs": 117,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-05T20:23:04.000Z",
+          "code_updated_at": "2023-06-13T16:47:58.000Z",
+          "namespace": "Remove YouTube Shorts automatically by pressing a button(by NOface312)",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove YouTube Shorts and Recommendation(by NOface312)",
+          "description": "Working on Desktop & Mobile.",
+          "url": "https://greasyfork.org/scripts/465613-remove-youtube-shorts-and-recommendation-by-noface312",
+          "code_url": "https://update.greasyfork.org/scripts/465613/Remove%20YouTube%20Shorts%20and%20Recommendation%28by%20NOface312%29.user.js",
+          "code_size": 7383,
+          "license": "MIT License",
+          "version": "2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove YouTube Shorts and Recommendation(by NOface312)",
+  "description": "Working on Desktop & Mobile.",
+  "url": "https://greasyfork.org/scripts/465613-remove-youtube-shorts-and-recommendation-by-noface312",
+  "code_url": "https://update.greasyfork.org/scripts/465613/Remove%20YouTube%20Shorts%20and%20Recommendation%28by%20NOface312%29.user.js",
+  "code_size": 7383,
+  "license": "MIT License",
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 427173,
+  "daily_installs": 0,
+  "total_installs": 330,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-28T15:22:28.000Z",
+  "code_updated_at": "2022-11-29T00:58:59.000Z",
+  "namespace": "https://greasyfork.org/de/users/777213-tripzz-ѕкιηѕ-lpwsand",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 777213,
+      "name": "Tripzz ѕкιηѕ/LPwSand",
+      "created_at": "2021-05-28T15:09:02.000Z",
+      "url": "https://greasyfork.org/users/777213-tripzz-%D1%95%D0%BA%CE%B9%CE%B7%D1%95-lpwsand"
+    }
+  ],
+  "name": "Maximum Audio output for Youtube",
+  "description": "It will make some of your youtube videos louder, the reason why this is possible is because sometimes you can slide to 100% music output, but youtube validates it in it's javascript to a lower music output then 100%, in this skript I make a new slider which makes your youtube videos always the maximux output when you make your videos on 100%",
+  "url": "https://greasyfork.org/scripts/427173-maximum-audio-output-for-youtube",
+  "code_url": "https://update.greasyfork.org/scripts/427173/Maximum%20Audio%20output%20for%20Youtube.user.js",
+  "code_size": 11120,
+  "license": null,
+  "version": "0.8.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

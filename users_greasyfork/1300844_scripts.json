@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494806,
+    "daily_installs": 0,
+    "total_installs": 5552,
+    "fan_score": "77.1",
+    "good_ratings": 16,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-05-13T06:40:33.000Z",
+    "code_updated_at": "2025-04-16T02:54:43.000Z",
+    "namespace": "https://greasyfork.org/users/1300844",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1300844,
+        "name": "Akito0723",
+        "created_at": "2024-05-13T06:33:24.000Z",
+        "url": "https://greasyfork.org/users/1300844-akito0723"
+      }
+    ],
+    "name": "中国保密在线网-♿️",
+    "description": "2025年度全国保密教育线上培训-学时/答题轮椅",
+    "url": "https://greasyfork.org/scripts/494806-%E4%B8%AD%E5%9B%BD%E4%BF%9D%E5%AF%86%E5%9C%A8%E7%BA%BF%E7%BD%91",
+    "code_url": "https://update.greasyfork.org/scripts/494806/%E4%B8%AD%E5%9B%BD%E4%BF%9D%E5%AF%86%E5%9C%A8%E7%BA%BF%E7%BD%91-%E2%99%BF%EF%B8%8F.user.js",
+    "code_size": 3673,
+    "license": "MIT License",
+    "version": "2025.4.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

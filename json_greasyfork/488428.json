@@ -1,0 +1,34 @@
+{
+  "id": 488428,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-27T12:29:53.000Z",
+  "code_updated_at": "2024-02-27T12:29:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed Volks combined Martin Ludwig",
+  "description": "Modify account balance values, update data-positive attribute, and remove currency elements",
+  "url": "https://greasyfork.org/scripts/488428-ed-volks-combined-martin-ludwig",
+  "code_url": "https://update.greasyfork.org/scripts/488428/Ed%20Volks%20combined%20Martin%20Ludwig.user.js",
+  "code_size": 58843,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

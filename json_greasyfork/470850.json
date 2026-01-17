@@ -1,0 +1,59 @@
+{
+  "id": 470850,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-14T19:04:06.000Z",
+  "code_updated_at": "2023-07-14T19:04:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1078477,
+      "name": "GreasyDonkey",
+      "created_at": "2023-05-13T12:40:12.000Z",
+      "url": "https://greasyfork.org/users/1078477-greasydonkey",
+      "scripts": [
+        {
+          "id": 470850,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-14T19:04:06.000Z",
+          "code_updated_at": "2023-07-14T19:04:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MyDealz AntiGender",
+          "description": "Entfernt das Gendern auf mydealz und weitere unnötige Bereiche",
+          "url": "https://greasyfork.org/scripts/470850-mydealz-antigender",
+          "code_url": "https://update.greasyfork.org/scripts/470850/MyDealz%20AntiGender.user.js",
+          "code_size": 962,
+          "license": null,
+          "version": "0.1",
+          "locale": "de",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MyDealz AntiGender",
+  "description": "Entfernt das Gendern auf mydealz und weitere unnötige Bereiche",
+  "url": "https://greasyfork.org/scripts/470850-mydealz-antigender",
+  "code_url": "https://update.greasyfork.org/scripts/470850/MyDealz%20AntiGender.user.js",
+  "code_size": 962,
+  "license": null,
+  "version": "0.1",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

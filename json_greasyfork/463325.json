@@ -1,0 +1,34 @@
+{
+  "id": 463325,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-05T11:28:18.000Z",
+  "code_updated_at": "2025-05-08T02:57:31.000Z",
+  "namespace": "com.epoint.zsyf.5b",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1053586,
+      "name": "998hcy",
+      "created_at": "2023-04-05T10:49:42.000Z",
+      "url": "https://greasyfork.org/users/1053586-998hcy",
+      "scripts": []
+    }
+  ],
+  "name": "政数5部-项目维护工具",
+  "description": "项目维护工具",
+  "url": "https://greasyfork.org/scripts/463325-%E6%94%BF%E6%95%B05%E9%83%A8-%E9%A1%B9%E7%9B%AE%E7%BB%B4%E6%8A%A4%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/463325/%E6%94%BF%E6%95%B05%E9%83%A8-%E9%A1%B9%E7%9B%AE%E7%BB%B4%E6%8A%A4%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 19936,
+  "license": "MIT License",
+  "version": "1.6.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

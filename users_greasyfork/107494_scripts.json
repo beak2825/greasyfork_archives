@@ -1,0 +1,35 @@
+[
+  {
+    "id": 488317,
+    "daily_installs": 0,
+    "total_installs": 80,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-26T10:09:23.000Z",
+    "code_updated_at": "2024-02-28T09:00:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 107494,
+        "name": "蓝芷怡",
+        "created_at": "2017-03-06T01:49:09.000Z",
+        "url": "https://greasyfork.org/users/107494-%E8%93%9D%E8%8A%B7%E6%80%A1"
+      }
+    ],
+    "name": "强化1lou搜索",
+    "description": "强化搜索界面，显示资源类型，强化标签名称",
+    "url": "https://greasyfork.org/scripts/488317-%E5%BC%BA%E5%8C%961lou%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/488317/%E5%BC%BA%E5%8C%961lou%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 45623,
+    "license": "MIT License",
+    "version": "2024-02-26",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

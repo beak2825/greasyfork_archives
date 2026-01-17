@@ -1,0 +1,34 @@
+{
+  "id": 494890,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-14T07:07:55.000Z",
+  "code_updated_at": "2024-05-14T07:07:54.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 747776,
+      "name": "idcz F",
+      "created_at": "2021-03-16T05:08:25.000Z",
+      "url": "https://greasyfork.org/users/747776-idcz-f",
+      "scripts": []
+    }
+  ],
+  "name": "xxtea-js",
+  "description": "xxtea",
+  "url": "https://greasyfork.org/scripts/494890-xxtea-js",
+  "code_url": "https://update.greasyfork.org/scripts/494890/1376202/xxtea-js.js",
+  "code_size": 5415,
+  "license": null,
+  "version": "0.0.1.20240514070754",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

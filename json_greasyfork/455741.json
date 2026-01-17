@@ -1,0 +1,59 @@
+{
+  "id": 455741,
+  "daily_installs": 5,
+  "total_installs": 161473,
+  "fan_score": "76.7",
+  "good_ratings": 43,
+  "ok_ratings": 9,
+  "bad_ratings": 2,
+  "created_at": "2022-12-01T03:21:37.000Z",
+  "code_updated_at": "2025-08-12T18:47:55.000Z",
+  "namespace": "http://tampermonkey.net/xbox/nft",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 990459,
+      "name": "奈非天",
+      "created_at": "2022-12-01T02:54:05.000Z",
+      "url": "https://greasyfork.org/users/990459-%E5%A5%88%E9%9D%9E%E5%A4%A9",
+      "scripts": [
+        {
+          "id": 455741,
+          "daily_installs": 5,
+          "total_installs": 161473,
+          "fan_score": "76.7",
+          "good_ratings": 43,
+          "ok_ratings": 9,
+          "bad_ratings": 2,
+          "created_at": "2022-12-01T03:21:37.000Z",
+          "code_updated_at": "2025-08-12T18:47:55.000Z",
+          "namespace": "http://tampermonkey.net/xbox/nft",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Xbox CLoud Gaming优化整合",
+          "description": "脚本免费！谨防上当受骗！整合和修改现有脚本，优化项详见脚本说明。【若你有好的想法或者BUG可以进xbox云游戏QQ交流1群531602832，2群313340764，3群826510890,4群82737876反馈】",
+          "url": "https://greasyfork.org/scripts/455741-xbox-cloud-gaming%E4%BC%98%E5%8C%96%E6%95%B4%E5%90%88",
+          "code_url": "https://update.greasyfork.org/scripts/455741/Xbox%20CLoud%20Gaming%E4%BC%98%E5%8C%96%E6%95%B4%E5%90%88.user.js",
+          "code_size": 165085,
+          "license": "MIT License",
+          "version": "3.10.3.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Xbox CLoud Gaming优化整合",
+  "description": "脚本免费！谨防上当受骗！整合和修改现有脚本，优化项详见脚本说明。【若你有好的想法或者BUG可以进xbox云游戏QQ交流1群531602832，2群313340764，3群826510890,4群82737876反馈】",
+  "url": "https://greasyfork.org/scripts/455741-xbox-cloud-gaming%E4%BC%98%E5%8C%96%E6%95%B4%E5%90%88",
+  "code_url": "https://update.greasyfork.org/scripts/455741/Xbox%20CLoud%20Gaming%E4%BC%98%E5%8C%96%E6%95%B4%E5%90%88.user.js",
+  "code_size": 165085,
+  "license": "MIT License",
+  "version": "3.10.3.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

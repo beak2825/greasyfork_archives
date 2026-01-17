@@ -1,0 +1,35 @@
+[
+  {
+    "id": 484915,
+    "daily_installs": 0,
+    "total_installs": 797,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-15T13:22:03.000Z",
+    "code_updated_at": "2025-10-24T13:34:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1248460,
+        "name": "joyofa7487",
+        "created_at": "2024-01-15T13:21:00.000Z",
+        "url": "https://greasyfork.org/users/1248460-joyofa7487"
+      }
+    ],
+    "name": "FuckYoutubeAds",
+    "description": "Automatically mute and blur video YouTube ads and hide YouTube static ads from feed",
+    "url": "https://greasyfork.org/scripts/484915-youtubeads",
+    "code_url": "https://update.greasyfork.org/scripts/484915/FuckYoutubeAds.user.js",
+    "code_size": 3840,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

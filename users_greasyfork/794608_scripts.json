@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429523,
+    "daily_installs": 0,
+    "total_installs": 104,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-17T14:23:37.000Z",
+    "code_updated_at": "2021-07-17T14:23:37.000Z",
+    "namespace": "https://steve02081504.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 794608,
+        "name": "steve02081504",
+        "created_at": "2021-07-17T13:46:01.000Z",
+        "url": "https://greasyfork.org/users/794608-steve02081504"
+      }
+    ],
+    "name": "warframe兑换码优化",
+    "description": "批量兑换，回车分开，来自灰机用户Pa001024",
+    "url": "https://greasyfork.org/scripts/429523-warframe%E5%85%91%E6%8D%A2%E7%A0%81%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/429523/warframe%E5%85%91%E6%8D%A2%E7%A0%81%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 4560,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

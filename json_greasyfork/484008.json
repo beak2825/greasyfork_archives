@@ -1,0 +1,33 @@
+{
+  "id": 484008,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-05T22:50:06.000Z",
+  "code_updated_at": "2024-01-05T23:14:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1243818,
+      "name": "ZackOrs",
+      "created_at": "2024-01-05T22:46:24.000Z",
+      "url": "https://greasyfork.org/users/1243818-zackors"
+    }
+  ],
+  "name": "/r/manga cubari",
+  "description": "Adds basic cubari redirect button",
+  "url": "https://greasyfork.org/scripts/484008-r-manga-cubari",
+  "code_url": "https://update.greasyfork.org/scripts/484008/rmanga%20cubari.user.js",
+  "code_size": 1823,
+  "license": "MIT License",
+  "version": "2024-01-05",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

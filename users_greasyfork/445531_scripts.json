@@ -1,0 +1,68 @@
+[
+  {
+    "id": 462052,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-18T02:37:15.000Z",
+    "code_updated_at": "2023-03-18T03:58:14.000Z",
+    "namespace": "https://github.com/zhuozhiyongde/PKU-Tool",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445531,
+        "name": "zhuozhiyongde",
+        "created_at": "2020-02-15T16:43:37.000Z",
+        "url": "https://greasyfork.org/users/445531-zhuozhiyongde"
+      }
+    ],
+    "name": "PKU-Tool/Treehole-enhancer",
+    "description": "取消树洞内容高度限制",
+    "url": "https://greasyfork.org/scripts/462052-pku-tool-treehole-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/462052/PKU-ToolTreehole-enhancer.user.js",
+    "code_size": 761,
+    "license": "GPL-3.0 license",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 450540,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-31T13:20:18.000Z",
+    "code_updated_at": "2022-08-31T13:20:17.000Z",
+    "namespace": "Dont-waste-time-in-treehole",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445531,
+        "name": "zhuozhiyongde",
+        "created_at": "2020-02-15T16:43:37.000Z",
+        "url": "https://greasyfork.org/users/445531-zhuozhiyongde"
+      }
+    ],
+    "name": "Don't waste time in treehole.",
+    "description": "当进入树洞时，自动跳转到pku.edu.cn.",
+    "url": "https://greasyfork.org/scripts/450540-don-t-waste-time-in-treehole",
+    "code_url": "https://update.greasyfork.org/scripts/450540/Don%27t%20waste%20time%20in%20treehole.user.js",
+    "code_size": 543,
+    "license": "GPL-3.0 license",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

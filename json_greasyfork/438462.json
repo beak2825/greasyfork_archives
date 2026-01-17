@@ -1,0 +1,33 @@
+{
+  "id": 438462,
+  "daily_installs": 0,
+  "total_installs": 70,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-01-13T08:10:17.000Z",
+  "code_updated_at": "2023-04-13T09:50:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 650900,
+      "name": "PRO-2684",
+      "created_at": "2020-06-25T07:52:09.000Z",
+      "url": "https://greasyfork.org/users/650900-pro-2684"
+    }
+  ],
+  "name": "Auto login",
+  "description": "绕过中科大统一身份认证的验证码并自动聚焦至登录按钮",
+  "url": "https://greasyfork.org/scripts/438462-auto-login",
+  "code_url": "https://update.greasyfork.org/scripts/438462/Auto%20login.user.js",
+  "code_size": 1532,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

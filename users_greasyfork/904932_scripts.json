@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477183,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-11T13:40:22.000Z",
+    "code_updated_at": "2023-10-11T13:40:22.000Z",
+    "namespace": "https://greasyfork.org/users/904932",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 904932,
+        "name": "Chrisann",
+        "created_at": "2022-04-21T00:13:55.000Z",
+        "url": "https://greasyfork.org/users/904932-chrisann"
+      }
+    ],
+    "name": "Codeforces Better! (a different version)",
+    "description": "Codeforces界面汉化、黑暗模式支持、题目翻译、markdown视图、一键复制题目、跳转到洛谷、评论区分页、ClistRating分显示、榜单重新着色",
+    "url": "https://greasyfork.org/scripts/477183-codeforces-better-a-different-version",
+    "code_url": "https://update.greasyfork.org/scripts/477183/Codeforces%20Better%21%20%28a%20different%20version%29.user.js",
+    "code_size": 222471,
+    "license": "MIT License",
+    "version": "1.68",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

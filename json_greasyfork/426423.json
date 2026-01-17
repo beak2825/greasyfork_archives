@@ -1,0 +1,59 @@
+{
+  "id": 426423,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-13T14:38:36.000Z",
+  "code_updated_at": "2021-05-13T14:38:36.000Z",
+  "namespace": "https://www.mycinema.pro/",
+  "support_url": "https://www.mycinema.pro/support.html",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 771686,
+      "name": "c02adaniel",
+      "created_at": "2021-05-13T14:22:42.000Z",
+      "url": "https://greasyfork.org/users/771686-c02adaniel",
+      "scripts": [
+        {
+          "id": 426423,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-05-13T14:38:36.000Z",
+          "code_updated_at": "2021-05-13T14:38:36.000Z",
+          "namespace": "https://www.mycinema.pro/",
+          "support_url": "https://www.mycinema.pro/support.html",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Magic Actions Fix",
+          "description": "A temporary fix for the Magic Buttons panel.",
+          "url": "https://greasyfork.org/scripts/426423-magic-actions-fix",
+          "code_url": "https://update.greasyfork.org/scripts/426423/Magic%20Actions%20Fix.user.js",
+          "code_size": 988,
+          "license": null,
+          "version": "1.0.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Magic Actions Fix",
+  "description": "A temporary fix for the Magic Buttons panel.",
+  "url": "https://greasyfork.org/scripts/426423-magic-actions-fix",
+  "code_url": "https://update.greasyfork.org/scripts/426423/Magic%20Actions%20Fix.user.js",
+  "code_size": 988,
+  "license": null,
+  "version": "1.0.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

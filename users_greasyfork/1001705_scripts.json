@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457041,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-23T09:04:48.000Z",
+    "code_updated_at": "2023-12-26T20:28:45.000Z",
+    "namespace": "https://www.swcombine.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1001705,
+        "name": "code-syl",
+        "created_at": "2022-12-23T09:00:47.000Z",
+        "url": "https://greasyfork.org/users/1001705-code-syl"
+      }
+    ],
+    "name": "SWC Events Clipboard",
+    "description": "Adds an \"Copy\" button to the SWC Events page, which adds the event details to the clipboard.",
+    "url": "https://greasyfork.org/scripts/457041-swc-events-clipboard",
+    "code_url": "https://update.greasyfork.org/scripts/457041/SWC%20Events%20Clipboard.user.js",
+    "code_size": 1983,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

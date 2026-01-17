@@ -31,5 +31,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 476356,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-29T18:00:38.000Z",
+    "code_updated_at": "2023-09-29T18:00:38.000Z",
+    "namespace": "https://greasyfork.org/users/759046",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 759046,
+        "name": "233YUZI",
+        "created_at": "2021-04-14T10:06:50.000Z",
+        "url": "https://greasyfork.org/users/759046-233yuzi"
+      }
+    ],
+    "name": "B站搜索页自动展开“更多筛选”",
+    "description": "自动展开搜索详情页的“自动筛选”选项",
+    "url": "https://greasyfork.org/scripts/476356-b%E7%AB%99%E6%90%9C%E7%B4%A2%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80-%E6%9B%B4%E5%A4%9A%E7%AD%9B%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/476356/B%E7%AB%99%E6%90%9C%E7%B4%A2%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E2%80%9C%E6%9B%B4%E5%A4%9A%E7%AD%9B%E9%80%89%E2%80%9D.user.js",
+    "code_size": 575,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 476354,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-29T17:29:44.000Z",
+    "code_updated_at": "2023-09-29T17:29:44.000Z",
+    "namespace": "https://greasyfork.org/users/759046",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 759046,
+        "name": "233YUZI",
+        "created_at": "2021-04-14T10:06:50.000Z",
+        "url": "https://greasyfork.org/users/759046-233yuzi"
+      }
+    ],
+    "name": "B站悬浮窗视频自动跳转视频页",
+    "description": "自动将你在搜索引擎页中点击的B站视频链接跳转至视频主页面",
+    "url": "https://greasyfork.org/scripts/476354-b%E7%AB%99%E6%82%AC%E6%B5%AE%E7%AA%97%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E8%A7%86%E9%A2%91%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/476354/B%E7%AB%99%E6%82%AC%E6%B5%AE%E7%AA%97%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E8%A7%86%E9%A2%91%E9%A1%B5.user.js",
+    "code_size": 780,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 467481,
+    "daily_installs": 0,
+    "total_installs": 165,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-30T09:47:47.000Z",
+    "code_updated_at": "2023-06-05T10:09:22.000Z",
+    "namespace": "https://greasyfork.org/users/759046",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 759046,
+        "name": "233YUZI",
+        "created_at": "2021-04-14T10:06:50.000Z",
+        "url": "https://greasyfork.org/users/759046-233yuzi"
+      }
+    ],
+    "name": "虎扑各项细节优化",
+    "description": "手机虎扑自动跳转网页版+清空多余参数+操作细节优化",
+    "url": "https://greasyfork.org/scripts/467481-%E8%99%8E%E6%89%91%E5%90%84%E9%A1%B9%E7%BB%86%E8%8A%82%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/467481/%E8%99%8E%E6%89%91%E5%90%84%E9%A1%B9%E7%BB%86%E8%8A%82%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 1869,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

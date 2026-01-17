@@ -1,0 +1,33 @@
+{
+  "id": 448181,
+  "daily_installs": 0,
+  "total_installs": 681,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-07-20T13:26:52.000Z",
+  "code_updated_at": "2024-03-24T23:07:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 580902,
+      "name": "anjude",
+      "created_at": "2020-06-05T02:30:46.000Z",
+      "url": "https://greasyfork.org/users/580902-anjude"
+    }
+  ],
+  "name": "【小破站必备2022】 哔哩哔哩（bilibili|B站）自动增强--功能快捷键，观看进度保存，每日任务等",
+  "description": "🔥🔥🔥推荐！ 浸入式功能智能自动化，让你的 B站 比别人的更强。自动跳转多 P 视频（UP 上传视频）上次观看进度,快捷键增强，每日任务（签到&分享），视频已看标签等等，具体看脚本介绍~",
+  "url": "https://greasyfork.org/scripts/448181-%E5%B0%8F%E7%A0%B4%E7%AB%99%E5%BF%85%E5%A4%872022-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-bilibili-b%E7%AB%99-%E8%87%AA%E5%8A%A8%E5%A2%9E%E5%BC%BA-%E5%8A%9F%E8%83%BD%E5%BF%AB%E6%8D%B7%E9%94%AE-%E8%A7%82%E7%9C%8B%E8%BF%9B%E5%BA%A6%E4%BF%9D%E5%AD%98-%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1%E7%AD%89",
+  "code_url": "https://update.greasyfork.org/scripts/448181/%E3%80%90%E5%B0%8F%E7%A0%B4%E7%AB%99%E5%BF%85%E5%A4%872022%E3%80%91%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%EF%BC%88bilibili%7CB%E7%AB%99%EF%BC%89%E8%87%AA%E5%8A%A8%E5%A2%9E%E5%BC%BA--%E5%8A%9F%E8%83%BD%E5%BF%AB%E6%8D%B7%E9%94%AE%EF%BC%8C%E8%A7%82%E7%9C%8B%E8%BF%9B%E5%BA%A6%E4%BF%9D%E5%AD%98%EF%BC%8C%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1%E7%AD%89.user.js",
+  "code_size": 30797,
+  "license": null,
+  "version": "0.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

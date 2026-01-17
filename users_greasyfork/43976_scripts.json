@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420994,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-01T11:34:30.000Z",
+    "code_updated_at": "2021-02-01T12:17:33.000Z",
+    "namespace": "rushersTmpTheme",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 43976,
+        "name": "Johnnie Johansen",
+        "created_at": "2016-05-16T10:13:50.000Z",
+        "url": "https://greasyfork.org/users/43976-johnnie-johansen"
+      }
+    ],
+    "name": "Rushers.dk temp theme",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/420994-rushers-dk-temp-theme",
+    "code_url": "https://update.greasyfork.org/scripts/420994/Rushersdk%20temp%20theme.user.js",
+    "code_size": 3353,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

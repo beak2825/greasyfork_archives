@@ -1,0 +1,33 @@
+{
+  "id": 465860,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-05-09T12:53:00.000Z",
+  "code_updated_at": "2023-05-09T12:52:59.000Z",
+  "namespace": "ytnewtoyou",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1050079,
+      "name": "ytg22",
+      "created_at": "2023-03-29T16:58:50.000Z",
+      "url": "https://greasyfork.org/users/1050079-ytg22"
+    }
+  ],
+  "name": "e Youtube Homepage Auto Click \"New to you\" May 2023",
+  "description": "Emulate mouse click on the \"New to you\" button",
+  "url": "https://greasyfork.org/scripts/465860-e-youtube-homepage-auto-click-new-to-you-may-2023",
+  "code_url": "https://update.greasyfork.org/scripts/465860/e%20Youtube%20Homepage%20Auto%20Click%20%22New%20to%20you%22%20May%202023.user.js",
+  "code_size": 908,
+  "license": "public domain",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

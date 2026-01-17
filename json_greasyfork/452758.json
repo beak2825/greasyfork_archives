@@ -1,0 +1,33 @@
+{
+  "id": 452758,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-09T15:54:46.000Z",
+  "code_updated_at": "2022-10-09T15:54:45.000Z",
+  "namespace": "https://greasyfork.org/users/967692-victheturtle",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 967692,
+      "name": "victheturtle",
+      "created_at": "2022-10-07T22:19:20.000Z",
+      "url": "https://greasyfork.org/users/967692-victheturtle"
+    }
+  ],
+  "name": "Geoguessr Learning Mode",
+  "description": "Lets you observe the panorama and the location on the map at the same time, and optionally hide the panorama initially",
+  "url": "https://greasyfork.org/scripts/452758-geoguessr-learning-mode",
+  "code_url": "https://update.greasyfork.org/scripts/452758/Geoguessr%20Learning%20Mode.user.js",
+  "code_size": 10936,
+  "license": "MIT License",
+  "version": "1.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

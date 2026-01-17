@@ -1,0 +1,59 @@
+{
+  "id": 482412,
+  "daily_installs": 0,
+  "total_installs": 282,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-16T17:52:05.000Z",
+  "code_updated_at": "2023-12-22T17:57:06.000Z",
+  "namespace": "https://greasyfork.org/users/1235006",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1235006,
+      "name": "Michael Mooney",
+      "created_at": "2023-12-16T17:50:15.000Z",
+      "url": "https://greasyfork.org/users/1235006-michael-mooney",
+      "scripts": [
+        {
+          "id": 482412,
+          "daily_installs": 0,
+          "total_installs": 282,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-16T17:52:05.000Z",
+          "code_updated_at": "2023-12-22T17:57:06.000Z",
+          "namespace": "https://greasyfork.org/users/1235006",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Better FMovies",
+          "description": "Stay Fullscreen and Switch to Next Season on Last Episode",
+          "url": "https://greasyfork.org/scripts/482412-better-fmovies",
+          "code_url": "https://update.greasyfork.org/scripts/482412/Better%20FMovies.user.js",
+          "code_size": 3091,
+          "license": null,
+          "version": "0.1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Better FMovies",
+  "description": "Stay Fullscreen and Switch to Next Season on Last Episode",
+  "url": "https://greasyfork.org/scripts/482412-better-fmovies",
+  "code_url": "https://update.greasyfork.org/scripts/482412/Better%20FMovies.user.js",
+  "code_size": 3091,
+  "license": null,
+  "version": "0.1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

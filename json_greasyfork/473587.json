@@ -1,0 +1,33 @@
+{
+  "id": 473587,
+  "daily_installs": 0,
+  "total_installs": 387,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-08-21T14:48:10.000Z",
+  "code_updated_at": "2023-08-22T18:00:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1156284,
+      "name": "Mining Bitcoin / Investimentos",
+      "created_at": "2023-08-21T14:16:37.000Z",
+      "url": "https://greasyfork.org/users/1156284-mining-bitcoin-investimentos"
+    }
+  ],
+  "name": "Fttronn -TesteScriptAlpha- PTC, Madfaucet, Shortlinks, Autofaucet",
+  "description": "-TesteScriptAlpha- PTC, Madfaucet, Shortlinks, Autofaucet.",
+  "url": "https://greasyfork.org/scripts/473587-fttronn-testescriptalpha-ptc-madfaucet-shortlinks-autofaucet",
+  "code_url": "https://update.greasyfork.org/scripts/473587/Fttronn%20-TesteScriptAlpha-%20PTC%2C%20Madfaucet%2C%20Shortlinks%2C%20Autofaucet.user.js",
+  "code_size": 22221,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

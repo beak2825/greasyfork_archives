@@ -1,0 +1,59 @@
+{
+  "id": 495010,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-15T06:23:02.000Z",
+  "code_updated_at": "2024-05-15T06:40:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1301853,
+      "name": "MJZXIN",
+      "created_at": "2024-05-15T06:16:29.000Z",
+      "url": "https://greasyfork.org/users/1301853-mjzxin",
+      "scripts": [
+        {
+          "id": 495010,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-15T06:23:02.000Z",
+          "code_updated_at": "2024-05-15T06:40:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove siemens login",
+          "description": "Remove siemens login, 自己学着编的, 不一定稳定, 如果不成功可以适当调整延时时间",
+          "url": "https://greasyfork.org/scripts/495010-remove-siemens-login",
+          "code_url": "https://update.greasyfork.org/scripts/495010/Remove%20siemens%20login.user.js",
+          "code_size": 930,
+          "license": "MIT License",
+          "version": "0.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove siemens login",
+  "description": "Remove siemens login, 自己学着编的, 不一定稳定, 如果不成功可以适当调整延时时间",
+  "url": "https://greasyfork.org/scripts/495010-remove-siemens-login",
+  "code_url": "https://update.greasyfork.org/scripts/495010/Remove%20siemens%20login.user.js",
+  "code_size": 930,
+  "license": "MIT License",
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

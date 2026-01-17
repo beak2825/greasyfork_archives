@@ -1,0 +1,34 @@
+{
+  "id": 467601,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-01T00:58:42.000Z",
+  "code_updated_at": "2023-06-05T18:44:26.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1088117,
+      "name": "Eduardo Alves de Pontes",
+      "created_at": "2023-06-01T00:53:00.000Z",
+      "url": "https://greasyfork.org/users/1088117-eduardo-alves-de-pontes",
+      "scripts": []
+    }
+  ],
+  "name": "Overlay QuiverPRO - Coneccta",
+  "description": "Interface overlay",
+  "url": "https://greasyfork.org/scripts/467601-overlay-quiverpro-coneccta",
+  "code_url": "https://update.greasyfork.org/scripts/467601/1200546/Overlay%20QuiverPRO%20-%20Coneccta.js",
+  "code_size": 10818,
+  "license": null,
+  "version": "0.0.1.20230605184426",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

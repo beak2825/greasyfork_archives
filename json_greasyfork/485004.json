@@ -1,0 +1,33 @@
+{
+  "id": 485004,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-16T19:22:17.000Z",
+  "code_updated_at": "2024-02-05T07:13:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1245572,
+      "name": "00xVap",
+      "created_at": "2024-01-09T12:49:52.000Z",
+      "url": "https://greasyfork.org/users/1245572-00xvap"
+    }
+  ],
+  "name": "[Diep.io] Lobby Crowdsourcing Script",
+  "description": "Script to help my Discord bot Angel on displaying lobbies.",
+  "url": "https://greasyfork.org/scripts/485004-diep-io-lobby-crowdsourcing-script",
+  "code_url": "https://update.greasyfork.org/scripts/485004/%5BDiepio%5D%20Lobby%20Crowdsourcing%20Script.user.js",
+  "code_size": 1931,
+  "license": "dont copy",
+  "version": "4830483",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

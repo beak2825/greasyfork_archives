@@ -1,0 +1,34 @@
+{
+  "id": 453680,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-25T04:56:17.000Z",
+  "code_updated_at": "2022-10-25T06:29:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 973469,
+      "name": "hwj1988wo",
+      "created_at": "2022-10-21T11:10:07.000Z",
+      "url": "https://greasyfork.org/users/973469-hwj1988wo",
+      "scripts": []
+    }
+  ],
+  "name": "青骄第二课堂（小学版）何维杰",
+  "description": "青骄第二课堂自动登录和知识竞赛自动答题",
+  "url": "https://greasyfork.org/scripts/453680-%E9%9D%92%E9%AA%84%E7%AC%AC%E4%BA%8C%E8%AF%BE%E5%A0%82-%E5%B0%8F%E5%AD%A6%E7%89%88-%E4%BD%95%E7%BB%B4%E6%9D%B0",
+  "code_url": "https://update.greasyfork.org/scripts/453680/%E9%9D%92%E9%AA%84%E7%AC%AC%E4%BA%8C%E8%AF%BE%E5%A0%82%EF%BC%88%E5%B0%8F%E5%AD%A6%E7%89%88%EF%BC%89%E4%BD%95%E7%BB%B4%E6%9D%B0.user.js",
+  "code_size": 20079,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

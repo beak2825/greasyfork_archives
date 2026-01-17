@@ -1,0 +1,68 @@
+[
+  {
+    "id": 438679,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-17T13:29:05.000Z",
+    "code_updated_at": "2022-01-17T13:35:32.000Z",
+    "namespace": "bleh",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 411414,
+        "name": "Juan Brunet",
+        "created_at": "2019-12-02T11:54:08.000Z",
+        "url": "https://greasyfork.org/users/411414-juan-brunet"
+      }
+    ],
+    "name": "Cambiar reproductor",
+    "description": "ayy lmoa",
+    "url": "https://greasyfork.org/scripts/438679-cambiar-reproductor",
+    "code_url": "https://update.greasyfork.org/scripts/438679/Cambiar%20reproductor.user.js",
+    "code_size": 679,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 438678,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-01-17T13:28:17.000Z",
+    "code_updated_at": "2022-01-17T13:28:17.000Z",
+    "namespace": "blah",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 411414,
+        "name": "Juan Brunet",
+        "created_at": "2019-12-02T11:54:08.000Z",
+        "url": "https://greasyfork.org/users/411414-juan-brunet"
+      }
+    ],
+    "name": "Pillar videos excel",
+    "description": "ayy lmao",
+    "url": "https://greasyfork.org/scripts/438678-pillar-videos-excel",
+    "code_url": "https://update.greasyfork.org/scripts/438678/Pillar%20videos%20excel.user.js",
+    "code_size": 824,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

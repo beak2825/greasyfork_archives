@@ -1,0 +1,35 @@
+[
+  {
+    "id": 425092,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-15T15:29:16.000Z",
+    "code_updated_at": "2021-04-16T12:37:41.000Z",
+    "namespace": "https://wiki.roll20.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 759700,
+        "name": "Braiba Grasshand",
+        "created_at": "2021-04-15T15:25:23.000Z",
+        "url": "https://greasyfork.org/users/759700-braiba-grasshand"
+      }
+    ],
+    "name": "Roll20 FX Playground Tools",
+    "description": "Improved UI for Roll20's FX Playground",
+    "url": "https://greasyfork.org/scripts/425092-roll20-fx-playground-tools",
+    "code_url": "https://update.greasyfork.org/scripts/425092/Roll20%20FX%20Playground%20Tools.user.js",
+    "code_size": 30055,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

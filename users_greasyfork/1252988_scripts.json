@@ -1,0 +1,35 @@
+[
+  {
+    "id": 485636,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-25T09:02:33.000Z",
+    "code_updated_at": "2024-01-25T09:40:50.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1252988,
+        "name": "odusi2",
+        "created_at": "2024-01-25T08:57:06.000Z",
+        "url": "https://greasyfork.org/users/1252988-odusi2"
+      }
+    ],
+    "name": "cs.rin Steam Info in Topics List",
+    "description": "Adds steam info to games in the topics list",
+    "url": "https://greasyfork.org/scripts/485636-cs-rin-steam-info-in-topics-list",
+    "code_url": "https://update.greasyfork.org/scripts/485636/csrin%20Steam%20Info%20in%20Topics%20List.user.js",
+    "code_size": 5261,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

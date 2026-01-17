@@ -1,0 +1,59 @@
+{
+  "id": 453414,
+  "daily_installs": 0,
+  "total_installs": 234,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-20T08:22:10.000Z",
+  "code_updated_at": "2023-06-26T10:07:51.000Z",
+  "namespace": "YuuRa1n",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972997,
+      "name": "YuuRa1n",
+      "created_at": "2022-10-20T08:19:00.000Z",
+      "url": "https://greasyfork.org/users/972997-yuura1n",
+      "scripts": [
+        {
+          "id": 453414,
+          "daily_installs": 0,
+          "total_installs": 234,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-10-20T08:22:10.000Z",
+          "code_updated_at": "2023-06-26T10:07:51.000Z",
+          "namespace": "YuuRa1n",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "计算B站分P视频在自己所看P数的视频剩余时长",
+          "description": "获取分P视频剩余时间",
+          "url": "https://greasyfork.org/scripts/453414-%E8%AE%A1%E7%AE%97b%E7%AB%99%E5%88%86p%E8%A7%86%E9%A2%91%E5%9C%A8%E8%87%AA%E5%B7%B1%E6%89%80%E7%9C%8Bp%E6%95%B0%E7%9A%84%E8%A7%86%E9%A2%91%E5%89%A9%E4%BD%99%E6%97%B6%E9%95%BF",
+          "code_url": "https://update.greasyfork.org/scripts/453414/%E8%AE%A1%E7%AE%97B%E7%AB%99%E5%88%86P%E8%A7%86%E9%A2%91%E5%9C%A8%E8%87%AA%E5%B7%B1%E6%89%80%E7%9C%8BP%E6%95%B0%E7%9A%84%E8%A7%86%E9%A2%91%E5%89%A9%E4%BD%99%E6%97%B6%E9%95%BF.user.js",
+          "code_size": 5009,
+          "license": "MIT License",
+          "version": "0.6.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "计算B站分P视频在自己所看P数的视频剩余时长",
+  "description": "获取分P视频剩余时间",
+  "url": "https://greasyfork.org/scripts/453414-%E8%AE%A1%E7%AE%97b%E7%AB%99%E5%88%86p%E8%A7%86%E9%A2%91%E5%9C%A8%E8%87%AA%E5%B7%B1%E6%89%80%E7%9C%8Bp%E6%95%B0%E7%9A%84%E8%A7%86%E9%A2%91%E5%89%A9%E4%BD%99%E6%97%B6%E9%95%BF",
+  "code_url": "https://update.greasyfork.org/scripts/453414/%E8%AE%A1%E7%AE%97B%E7%AB%99%E5%88%86P%E8%A7%86%E9%A2%91%E5%9C%A8%E8%87%AA%E5%B7%B1%E6%89%80%E7%9C%8BP%E6%95%B0%E7%9A%84%E8%A7%86%E9%A2%91%E5%89%A9%E4%BD%99%E6%97%B6%E9%95%BF.user.js",
+  "code_size": 5009,
+  "license": "MIT License",
+  "version": "0.6.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

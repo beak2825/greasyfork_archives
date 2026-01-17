@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466711,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-20T12:45:15.000Z",
+    "code_updated_at": "2023-05-20T12:45:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 699407,
+        "name": "AKKH",
+        "created_at": "2020-10-29T11:38:55.000Z",
+        "url": "https://greasyfork.org/users/699407-akkh"
+      }
+    ],
+    "name": "GSCloud-Application",
+    "description": "Help you to use GSClound-Application",
+    "url": "https://greasyfork.org/scripts/466711-gscloud-application",
+    "code_url": "https://update.greasyfork.org/scripts/466711/GSCloud-Application.user.js",
+    "code_size": 1324,
+    "license": "GPL-3.0 License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

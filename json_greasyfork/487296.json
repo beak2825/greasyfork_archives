@@ -1,0 +1,33 @@
+{
+  "id": 487296,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-14T13:47:44.000Z",
+  "code_updated_at": "2024-04-04T09:46:09.000Z",
+  "namespace": "https://greasyfork.org/users/1261172",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1261172,
+      "name": "aakqaj",
+      "created_at": "2024-02-14T13:42:10.000Z",
+      "url": "https://greasyfork.org/users/1261172-aakqaj"
+    }
+  ],
+  "name": "WebNovalHindener",
+  "description": "导入txt小说阅读.",
+  "url": "https://greasyfork.org/scripts/487296-webnovalhindener",
+  "code_url": "https://update.greasyfork.org/scripts/487296/WebNovalHindener.user.js",
+  "code_size": 74004,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443481,
+    "daily_installs": 1,
+    "total_installs": 503,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-16T15:15:36.000Z",
+    "code_updated_at": "2022-04-16T15:15:35.000Z",
+    "namespace": "sagiegurari",
+    "support_url": "https://github.com/sagiegurari/userscripts-ads-dom-remover/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 903128,
+        "name": "yadthehet",
+        "created_at": "2022-04-16T15:13:54.000Z",
+        "url": "https://greasyfork.org/users/903128-yadthehet"
+      }
+    ],
+    "name": "Ads DOM Remover",
+    "description": "Removes Ad Containers from DOM (doesn't replace adblocker extension, but blocks dynamic content which the adblocker fails to block by removing whole sections from the HTML DOM.)",
+    "url": "https://greasyfork.org/scripts/443481-ads-dom-remover",
+    "code_url": "https://update.greasyfork.org/scripts/443481/Ads%20DOM%20Remover.user.js",
+    "code_size": 8178,
+    "license": "MIT License",
+    "version": "1.36",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 460954,
+  "daily_installs": 0,
+  "total_installs": 163,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2023-03-01T04:33:00.000Z",
+  "code_updated_at": "2023-07-01T01:21:48.000Z",
+  "namespace": "https://noxplay.us.to/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1034565,
+      "name": "dummy account",
+      "created_at": "2023-03-01T04:19:22.000Z",
+      "url": "https://greasyfork.org/users/1034565-dummy-account"
+    }
+  ],
+  "name": "b站直播表情下载",
+  "description": "下载b站直播间的表情",
+  "url": "https://greasyfork.org/scripts/460954-b%E7%AB%99%E7%9B%B4%E6%92%AD%E8%A1%A8%E6%83%85%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/460954/b%E7%AB%99%E7%9B%B4%E6%92%AD%E8%A1%A8%E6%83%85%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 5529,
+  "license": "GPLv3",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

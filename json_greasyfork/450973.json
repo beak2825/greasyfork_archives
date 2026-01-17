@@ -1,0 +1,33 @@
+{
+  "id": 450973,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-08T09:29:52.000Z",
+  "code_updated_at": "2022-09-08T09:29:52.000Z",
+  "namespace": "ucdrs.superlib.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 839489,
+      "name": "Theron",
+      "created_at": "2021-11-16T03:29:48.000Z",
+      "url": "https://greasyfork.org/users/839489-theron"
+    }
+  ],
+  "name": "GB2312UTF8",
+  "description": "utf-8 and gb2312 converter",
+  "url": "https://greasyfork.org/scripts/450973-gb2312utf8",
+  "code_url": "https://update.greasyfork.org/scripts/450973/1091107/GB2312UTF8.js",
+  "code_size": 4072,
+  "license": "copyright http://freecode-freecode.blogspot.com/2008/11/how-to-gbkgb2312-and-utf-8-encoding.html, mod by https://gist.github.com/19317362/a1d8e40bfb6587463d4d",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

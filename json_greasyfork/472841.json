@@ -1,0 +1,33 @@
+{
+  "id": 472841,
+  "daily_installs": 0,
+  "total_installs": 3931,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-10T13:36:13.000Z",
+  "code_updated_at": "2023-08-10T13:36:13.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1148433,
+      "name": "jonjones33333",
+      "created_at": "2023-08-10T13:34:36.000Z",
+      "url": "https://greasyfork.org/users/1148433-jonjones33333"
+    }
+  ],
+  "name": "Tinder Deblur",
+  "description": "Simple script using the official Tinder API to get clean photos of the users who liked you",
+  "url": "https://greasyfork.org/scripts/472841-tinder-deblur",
+  "code_url": "https://update.greasyfork.org/scripts/472841/Tinder%20Deblur.user.js",
+  "code_size": 1596,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

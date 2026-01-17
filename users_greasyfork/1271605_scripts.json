@@ -1,0 +1,101 @@
+[
+  {
+    "id": 489394,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-09T13:51:44.000Z",
+    "code_updated_at": "2024-03-09T13:51:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1271605,
+        "name": "Matias Bais",
+        "created_at": "2024-03-08T02:49:16.000Z",
+        "url": "https://greasyfork.org/users/1271605-matias-bais"
+      }
+    ],
+    "name": "Empaquetar todo",
+    "description": "Vende todo a uno de oro en el mercado de la alianza (lo tenes que tener seteado asi en el crazy addon)",
+    "url": "https://greasyfork.org/scripts/489394-empaquetar-todo",
+    "code_url": "https://update.greasyfork.org/scripts/489394/Empaquetar%20todo.user.js",
+    "code_size": 2723,
+    "license": "MIT License",
+    "version": "2024-03-09",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489271,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-08T04:38:33.000Z",
+    "code_updated_at": "2024-03-08T04:38:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1271605,
+        "name": "Matias Bais",
+        "created_at": "2024-03-08T02:49:16.000Z",
+        "url": "https://greasyfork.org/users/1271605-matias-bais"
+      }
+    ],
+    "name": "Curar",
+    "description": "consume primer item de comida que encuentra en la mochila que indiques si tiene menos vida de la indicada",
+    "url": "https://greasyfork.org/scripts/489271-curar",
+    "code_url": "https://update.greasyfork.org/scripts/489271/Curar.user.js",
+    "code_size": 5467,
+    "license": "MIT License",
+    "version": "2024-03-08",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489268,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-08T03:02:52.000Z",
+    "code_updated_at": "2024-03-08T03:02:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1271605,
+        "name": "Matias Bais",
+        "created_at": "2024-03-08T02:49:16.000Z",
+        "url": "https://greasyfork.org/users/1271605-matias-bais"
+      }
+    ],
+    "name": "Vender Todo",
+    "description": "vende todo al mercader",
+    "url": "https://greasyfork.org/scripts/489268-vender-todo",
+    "code_url": "https://update.greasyfork.org/scripts/489268/Vender%20Todo.user.js",
+    "code_size": 1595,
+    "license": "MIT License",
+    "version": "2024-03-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 431113,
+  "daily_installs": 0,
+  "total_installs": 94,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-20T15:57:47.000Z",
+  "code_updated_at": "2021-08-20T15:57:46.000Z",
+  "namespace": "lytning98_CSDN-copy-without-login",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 806671,
+      "name": "lytning98",
+      "created_at": "2021-08-20T15:18:02.000Z",
+      "url": "https://greasyfork.org/users/806671-lytning98"
+    }
+  ],
+  "name": "CSDN-copy-without-login",
+  "description": "Allow copying code in CSDN posts without logging in.",
+  "url": "https://greasyfork.org/scripts/431113-csdn-copy-without-login",
+  "code_url": "https://update.greasyfork.org/scripts/431113/CSDN-copy-without-login.user.js",
+  "code_size": 857,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 464204,
+  "daily_installs": 0,
+  "total_installs": 100,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-17T06:36:35.000Z",
+  "code_updated_at": "2023-04-19T17:22:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1061778,
+      "name": "stakira",
+      "created_at": "2023-04-17T06:32:27.000Z",
+      "url": "https://greasyfork.org/users/1061778-stakira",
+      "scripts": [
+        {
+          "id": 464204,
+          "daily_installs": 0,
+          "total_installs": 100,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-17T06:36:35.000Z",
+          "code_updated_at": "2023-04-19T17:22:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "淘宝买家订单导出-颜色分类",
+          "description": "基于Greasy Fork上的`淘宝买家订单导出`添加了`店铺`，`颜色分类`及`退款`导出。使用方法为到淘宝网页版，已买到的宝贝页面会增加两个按。点击添加本页订单即可将订单添加到带保存的订单列表中，点击导出即可导出CSV文件。",
+          "url": "https://greasyfork.org/scripts/464204-%E6%B7%98%E5%AE%9D%E4%B9%B0%E5%AE%B6%E8%AE%A2%E5%8D%95%E5%AF%BC%E5%87%BA-%E9%A2%9C%E8%89%B2%E5%88%86%E7%B1%BB",
+          "code_url": "https://update.greasyfork.org/scripts/464204/%E6%B7%98%E5%AE%9D%E4%B9%B0%E5%AE%B6%E8%AE%A2%E5%8D%95%E5%AF%BC%E5%87%BA-%E9%A2%9C%E8%89%B2%E5%88%86%E7%B1%BB.user.js",
+          "code_size": 6081,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "淘宝买家订单导出-颜色分类",
+  "description": "基于Greasy Fork上的`淘宝买家订单导出`添加了`店铺`，`颜色分类`及`退款`导出。使用方法为到淘宝网页版，已买到的宝贝页面会增加两个按。点击添加本页订单即可将订单添加到带保存的订单列表中，点击导出即可导出CSV文件。",
+  "url": "https://greasyfork.org/scripts/464204-%E6%B7%98%E5%AE%9D%E4%B9%B0%E5%AE%B6%E8%AE%A2%E5%8D%95%E5%AF%BC%E5%87%BA-%E9%A2%9C%E8%89%B2%E5%88%86%E7%B1%BB",
+  "code_url": "https://update.greasyfork.org/scripts/464204/%E6%B7%98%E5%AE%9D%E4%B9%B0%E5%AE%B6%E8%AE%A2%E5%8D%95%E5%AF%BC%E5%87%BA-%E9%A2%9C%E8%89%B2%E5%88%86%E7%B1%BB.user.js",
+  "code_size": 6081,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

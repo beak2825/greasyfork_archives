@@ -1,0 +1,167 @@
+[
+  {
+    "id": 434502,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-26T08:54:30.000Z",
+    "code_updated_at": "2021-10-26T08:54:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 828510,
+        "name": "びおっく",
+        "created_at": "2021-10-25T06:20:15.000Z",
+        "url": "https://greasyfork.org/users/828510-%E3%81%B3%E3%81%8A%E3%81%A3%E3%81%8F"
+      }
+    ],
+    "name": "chatPadu",
+    "description": "チャットパッド　ログ保存＆自動マッチング",
+    "url": "https://greasyfork.org/scripts/434502-chatpadu",
+    "code_url": "https://update.greasyfork.org/scripts/434502/chatPadu.user.js",
+    "code_size": 12836,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434491,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-26T03:11:19.000Z",
+    "code_updated_at": "2021-10-26T03:11:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 828510,
+        "name": "びおっく",
+        "created_at": "2021-10-25T06:20:15.000Z",
+        "url": "https://greasyfork.org/users/828510-%E3%81%B3%E3%81%8A%E3%81%A3%E3%81%8F"
+      }
+    ],
+    "name": "dr_Base",
+    "description": "デュラチャ　ルームログ保存＆部屋リストとチャット人口を保存",
+    "url": "https://greasyfork.org/scripts/434491-dr-base",
+    "code_url": "https://update.greasyfork.org/scripts/434491/dr_Base.user.js",
+    "code_size": 31839,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434452,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-25T07:48:49.000Z",
+    "code_updated_at": "2021-10-26T00:18:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 828510,
+        "name": "びおっく",
+        "created_at": "2021-10-25T06:20:15.000Z",
+        "url": "https://greasyfork.org/users/828510-%E3%81%B3%E3%81%8A%E3%81%A3%E3%81%8F"
+      }
+    ],
+    "name": "dr_NightMode",
+    "description": "デュラチャ　ボスが来たモードorダークモード",
+    "url": "https://greasyfork.org/scripts/434452-dr-nightmode",
+    "code_url": "https://update.greasyfork.org/scripts/434452/dr_NightMode.user.js",
+    "code_size": 7398,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434449,
+    "daily_installs": 0,
+    "total_installs": 149,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-25T07:20:48.000Z",
+    "code_updated_at": "2021-10-25T07:20:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 828510,
+        "name": "びおっく",
+        "created_at": "2021-10-25T06:20:15.000Z",
+        "url": "https://greasyfork.org/users/828510-%E3%81%B3%E3%81%8A%E3%81%A3%E3%81%8F"
+      }
+    ],
+    "name": "dr_RoomuserView",
+    "description": "デュラチャ　ユーザー情報拡張表示",
+    "url": "https://greasyfork.org/scripts/434449-dr-roomuserview",
+    "code_url": "https://update.greasyfork.org/scripts/434449/dr_RoomuserView.user.js",
+    "code_size": 5032,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 434448,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-10-25T06:32:19.000Z",
+    "code_updated_at": "2021-10-25T07:56:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 828510,
+        "name": "びおっく",
+        "created_at": "2021-10-25T06:20:15.000Z",
+        "url": "https://greasyfork.org/users/828510-%E3%81%B3%E3%81%8A%E3%81%A3%E3%81%8F"
+      }
+    ],
+    "name": "dr_loungeIgroneRoom",
+    "description": "デュラチャ　ラウンジ荒らし対策",
+    "url": "https://greasyfork.org/scripts/434448-dr-loungeigroneroom",
+    "code_url": "https://update.greasyfork.org/scripts/434448/dr_loungeIgroneRoom.user.js",
+    "code_size": 1656,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

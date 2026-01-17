@@ -1,0 +1,59 @@
+{
+  "id": 419929,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-09T09:46:49.000Z",
+  "code_updated_at": "2021-01-09T10:09:45.000Z",
+  "namespace": "https://github.com/mshavliuk/youtube-blocker-userscript",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 725392,
+      "name": "Rylee.Hermann",
+      "created_at": "2021-01-09T08:55:57.000Z",
+      "url": "https://greasyfork.org/users/725392-rylee-hermann",
+      "scripts": [
+        {
+          "id": 419929,
+          "daily_installs": 0,
+          "total_installs": 46,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-09T09:46:49.000Z",
+          "code_updated_at": "2021-01-09T10:09:45.000Z",
+          "namespace": "https://github.com/mshavliuk/youtube-blocker-userscript",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Youtube Blocker",
+          "description": "Block youtube usage by configured rules",
+          "url": "https://greasyfork.org/scripts/419929-youtube-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/419929/Youtube%20Blocker.user.js",
+          "code_size": 403414,
+          "license": "MIT; https://opensource.org/licenses/MIT",
+          "version": "0.5.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Youtube Blocker",
+  "description": "Block youtube usage by configured rules",
+  "url": "https://greasyfork.org/scripts/419929-youtube-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/419929/Youtube%20Blocker.user.js",
+  "code_size": 403414,
+  "license": "MIT; https://opensource.org/licenses/MIT",
+  "version": "0.5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

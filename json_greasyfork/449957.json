@@ -1,0 +1,59 @@
+{
+  "id": 449957,
+  "daily_installs": 0,
+  "total_installs": 970,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-22T05:04:07.000Z",
+  "code_updated_at": "2022-08-22T05:04:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 882105,
+      "name": "fanhuazhiyuan",
+      "created_at": "2022-03-02T08:29:40.000Z",
+      "url": "https://greasyfork.org/users/882105-fanhuazhiyuan",
+      "scripts": [
+        {
+          "id": 449957,
+          "daily_installs": 0,
+          "total_installs": 970,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-22T05:04:07.000Z",
+          "code_updated_at": "2022-08-22T05:04:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "谷歌原生网页翻译",
+          "description": "用谷歌翻译接口翻译整个网站",
+          "url": "https://greasyfork.org/scripts/449957-%E8%B0%B7%E6%AD%8C%E5%8E%9F%E7%94%9F%E7%BD%91%E9%A1%B5%E7%BF%BB%E8%AF%91",
+          "code_url": "https://update.greasyfork.org/scripts/449957/%E8%B0%B7%E6%AD%8C%E5%8E%9F%E7%94%9F%E7%BD%91%E9%A1%B5%E7%BF%BB%E8%AF%91.user.js",
+          "code_size": 4619,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "谷歌原生网页翻译",
+  "description": "用谷歌翻译接口翻译整个网站",
+  "url": "https://greasyfork.org/scripts/449957-%E8%B0%B7%E6%AD%8C%E5%8E%9F%E7%94%9F%E7%BD%91%E9%A1%B5%E7%BF%BB%E8%AF%91",
+  "code_url": "https://update.greasyfork.org/scripts/449957/%E8%B0%B7%E6%AD%8C%E5%8E%9F%E7%94%9F%E7%BD%91%E9%A1%B5%E7%BF%BB%E8%AF%91.user.js",
+  "code_size": 4619,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

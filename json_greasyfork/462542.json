@@ -1,0 +1,59 @@
+{
+  "id": 462542,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-25T09:20:33.000Z",
+  "code_updated_at": "2023-04-04T21:51:03.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/462542",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 302687,
+      "name": "Bar Food",
+      "created_at": "2019-05-17T15:30:22.000Z",
+      "url": "https://greasyfork.org/users/302687-bar-food",
+      "scripts": [
+        {
+          "id": 461596,
+          "daily_installs": 0,
+          "total_installs": 53,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-10T18:28:08.000Z",
+          "code_updated_at": "2023-03-10T23:06:22.000Z",
+          "namespace": "敲掉我不想看到的部分",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "虎扑屏蔽用",
+          "description": "Bonk!",
+          "url": "https://greasyfork.org/scripts/461596-%E8%99%8E%E6%89%91%E5%B1%8F%E8%94%BD%E7%94%A8",
+          "code_url": "https://update.greasyfork.org/scripts/461596/%E8%99%8E%E6%89%91%E5%B1%8F%E8%94%BD%E7%94%A8.user.js",
+          "code_size": 2197,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "虎扑 - 需要和指定css文件配合使用的虎扑网页元素修改",
+  "description": "在失智许久之后我选择把css文件直接一个地扔",
+  "url": "https://greasyfork.org/scripts/462542-%E8%99%8E%E6%89%91-%E9%9C%80%E8%A6%81%E5%92%8C%E6%8C%87%E5%AE%9Acss%E6%96%87%E4%BB%B6%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8%E7%9A%84%E8%99%8E%E6%89%91%E7%BD%91%E9%A1%B5%E5%85%83%E7%B4%A0%E4%BF%AE%E6%94%B9",
+  "code_url": "https://update.greasyfork.org/scripts/462542/%E8%99%8E%E6%89%91%20-%20%E9%9C%80%E8%A6%81%E5%92%8C%E6%8C%87%E5%AE%9Acss%E6%96%87%E4%BB%B6%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8%E7%9A%84%E8%99%8E%E6%89%91%E7%BD%91%E9%A1%B5%E5%85%83%E7%B4%A0%E4%BF%AE%E6%94%B9.user.js",
+  "code_size": 4154,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

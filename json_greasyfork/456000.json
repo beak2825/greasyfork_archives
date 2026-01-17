@@ -1,0 +1,59 @@
+{
+  "id": 456000,
+  "daily_installs": 0,
+  "total_installs": 103,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-04T15:31:51.000Z",
+  "code_updated_at": "2022-12-04T15:39:07.000Z",
+  "namespace": "https://github.com/hope88888888/bilibili_chachengfen",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 986947,
+      "name": "hope88888888",
+      "created_at": "2022-11-23T13:09:03.000Z",
+      "url": "https://greasyfork.org/users/986947-hope88888888",
+      "scripts": [
+        {
+          "id": 456000,
+          "daily_installs": 0,
+          "total_installs": 103,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-04T15:31:51.000Z",
+          "code_updated_at": "2022-12-04T15:39:07.000Z",
+          "namespace": "https://github.com/hope88888888/bilibili_chachengfen",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili_when_when_need_v",
+          "description": "基于三相之力改的，2万粉丝以上的vtuber查成分，一共1293个",
+          "url": "https://greasyfork.org/scripts/456000-bilibili-when-when-need-v",
+          "code_url": "https://update.greasyfork.org/scripts/456000/bilibili_when_when_need_v.user.js",
+          "code_size": 1079964,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili_when_when_need_v",
+  "description": "基于三相之力改的，2万粉丝以上的vtuber查成分，一共1293个",
+  "url": "https://greasyfork.org/scripts/456000-bilibili-when-when-need-v",
+  "code_url": "https://update.greasyfork.org/scripts/456000/bilibili_when_when_need_v.user.js",
+  "code_size": 1079964,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

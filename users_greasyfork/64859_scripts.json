@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415806,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-09T11:08:38.000Z",
+    "code_updated_at": "2020-11-09T13:19:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 64859,
+        "name": "jhuriez",
+        "created_at": "2016-09-08T13:30:41.000Z",
+        "url": "https://greasyfork.org/users/64859-jhuriez"
+      }
+    ],
+    "name": "FUT21 Autobuyer",
+    "description": "FUT21 Autobuyer (JHU)",
+    "url": "https://greasyfork.org/scripts/415806-fut21-autobuyer",
+    "code_url": "https://update.greasyfork.org/scripts/415806/FUT21%20Autobuyer.user.js",
+    "code_size": 28743,
+    "license": null,
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 454392,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-07T08:45:16.000Z",
+    "code_updated_at": "2022-11-07T08:45:15.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 189596,
+        "name": "Peaceof Furriani",
+        "created_at": "2018-06-05T09:24:55.000Z",
+        "url": "https://greasyfork.org/users/189596-peaceof-furriani"
+      }
+    ],
+    "name": "VATS 18 redirect",
+    "description": "07.11.2022, 11:43:32",
+    "url": "https://greasyfork.org/scripts/454392-vats-18-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/454392/VATS%2018%20redirect.user.js",
+    "code_size": 348,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 422590,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-03T14:30:56.000Z",
+    "code_updated_at": "2022-04-08T12:38:47.000Z",
+    "namespace": "OEcreatorScript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 189596,
+        "name": "Peaceof Furriani",
+        "created_at": "2018-06-05T09:24:55.000Z",
+        "url": "https://greasyfork.org/users/189596-peaceof-furriani"
+      }
+    ],
+    "name": "OEcreator",
+    "description": "04.02.2021, 11:56:21",
+    "url": "https://greasyfork.org/scripts/422590-oecreator",
+    "code_url": "https://update.greasyfork.org/scripts/422590/OEcreator.user.js",
+    "code_size": 59517,
+    "license": null,
+    "version": "1.92",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 420184,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-14T08:43:04.000Z",
+    "code_updated_at": "2021-01-14T08:43:03.000Z",
+    "namespace": "PRESredirector",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 189596,
+        "name": "Peaceof Furriani",
+        "created_at": "2018-06-05T09:24:55.000Z",
+        "url": "https://greasyfork.org/users/189596-peaceof-furriani"
+      }
+    ],
+    "name": "PRES http redirect",
+    "description": "16.04.2020, 13:35:45",
+    "url": "https://greasyfork.org/scripts/420184-pres-http-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/420184/PRES%20http%20redirect.user.js",
+    "code_size": 368,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 440055,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-15T02:56:39.000Z",
+  "code_updated_at": "2022-02-15T06:38:03.000Z",
+  "namespace": "tapd",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 9992,
+      "name": "yaxin",
+      "created_at": "2015-03-27T08:59:45.000Z",
+      "url": "https://greasyfork.org/users/9992-yaxin",
+      "scripts": [
+        {
+          "id": 440055,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-15T02:56:39.000Z",
+          "code_updated_at": "2022-02-15T06:38:03.000Z",
+          "namespace": "tapd",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tapd小助手",
+          "description": "Tpad小助手",
+          "url": "https://greasyfork.org/scripts/440055-tapd%E5%B0%8F%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/440055/Tapd%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 2778,
+          "license": "Private",
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Tapd小助手",
+  "description": "Tpad小助手",
+  "url": "https://greasyfork.org/scripts/440055-tapd%E5%B0%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/440055/Tapd%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 2778,
+  "license": "Private",
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

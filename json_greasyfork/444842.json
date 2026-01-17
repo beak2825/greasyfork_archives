@@ -1,0 +1,59 @@
+{
+  "id": 444842,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-11T20:11:39.000Z",
+  "code_updated_at": "2022-05-11T20:11:39.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 913210,
+      "name": "Kolya Cruz",
+      "created_at": "2022-05-11T19:37:29.000Z",
+      "url": "https://greasyfork.org/users/913210-kolya-cruz",
+      "scripts": [
+        {
+          "id": 445969,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-03T17:40:01.000Z",
+          "code_updated_at": "2022-06-03T17:40:01.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Пробный скрипт",
+          "description": "Внимательнее прочтите инструкцию.",
+          "url": "https://greasyfork.org/scripts/445969-%D0%BF%D1%80%D0%BE%D0%B1%D0%BD%D1%8B%D0%B9-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82",
+          "code_url": "https://update.greasyfork.org/scripts/445969/%D0%9F%D1%80%D0%BE%D0%B1%D0%BD%D1%8B%D0%B9%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82.user.js",
+          "code_size": 11074,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Кураторы Форума | ICE",
+  "description": "Для холодного сервера.",
+  "url": "https://greasyfork.org/scripts/444842-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-ice",
+  "code_url": "https://update.greasyfork.org/scripts/444842/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%7C%20ICE.user.js",
+  "code_size": 10283,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

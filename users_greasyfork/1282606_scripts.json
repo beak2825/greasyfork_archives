@@ -262,5 +262,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 492016,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-08T20:52:30.000Z",
+    "code_updated_at": "2024-04-08T20:52:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282606,
+        "name": "bertigert",
+        "created_at": "2024-04-01T18:23:54.000Z",
+        "url": "https://greasyfork.org/users/1282606-bertigert"
+      }
+    ],
+    "name": "50 Plus Crossword Helper",
+    "description": "Helper for https://www.50plus.de/spiele/raetsel/kreuzwortraetsel-*.html",
+    "url": "https://greasyfork.org/scripts/492016-50-plus-crossword-helper",
+    "code_url": "https://update.greasyfork.org/scripts/492016/50%20Plus%20Crossword%20Helper.user.js",
+    "code_size": 2925,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491441,
+    "daily_installs": 5,
+    "total_installs": 3912,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-01T19:56:53.000Z",
+    "code_updated_at": "2024-09-12T13:33:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282606,
+        "name": "bertigert",
+        "created_at": "2024-04-01T18:23:54.000Z",
+        "url": "https://greasyfork.org/users/1282606-bertigert"
+      }
+    ],
+    "name": "Reddit Age Bypass",
+    "description": "Bypass the \"open in app prompt\" for nsfw posts",
+    "url": "https://greasyfork.org/scripts/491441-reddit-age-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/491441/Reddit%20Age%20Bypass.user.js",
+    "code_size": 2022,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

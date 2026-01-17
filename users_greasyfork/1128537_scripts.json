@@ -1,0 +1,35 @@
+[
+  {
+    "id": 470981,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-16T16:49:29.000Z",
+    "code_updated_at": "2023-07-16T16:49:29.000Z",
+    "namespace": "snow_EndWay",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128537,
+        "name": "Click-a",
+        "created_at": "2023-07-16T16:48:43.000Z",
+        "url": "https://greasyfork.org/users/1128537-click-a"
+      }
+    ],
+    "name": "Snow End Way",
+    "description": "Снежный фон для EndWay",
+    "url": "https://greasyfork.org/scripts/470981-snow-end-way",
+    "code_url": "https://update.greasyfork.org/scripts/470981/Snow%20End%20Way.user.js",
+    "code_size": 2551,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

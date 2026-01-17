@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447587,
+    "daily_installs": 0,
+    "total_installs": 539,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-08T07:34:44.000Z",
+    "code_updated_at": "2022-07-08T07:45:48.000Z",
+    "namespace": "https://blog.alljc.cc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 895283,
+        "name": "yxwmok",
+        "created_at": "2022-03-30T06:38:04.000Z",
+        "url": "https://greasyfork.org/users/895283-yxwmok"
+      }
+    ],
+    "name": "解锁CSDN",
+    "description": "解锁CSDN未登录各种限制!",
+    "url": "https://greasyfork.org/scripts/447587-%E8%A7%A3%E9%94%81csdn",
+    "code_url": "https://update.greasyfork.org/scripts/447587/%E8%A7%A3%E9%94%81CSDN.user.js",
+    "code_size": 793,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419511,
+    "daily_installs": 0,
+    "total_installs": 994,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-02T05:19:57.000Z",
+    "code_updated_at": "2021-01-05T14:56:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 723205,
+        "name": "mixingyu",
+        "created_at": "2021-01-02T05:18:24.000Z",
+        "url": "https://greasyfork.org/users/723205-mixingyu"
+      }
+    ],
+    "name": "优酷VIP站外解析",
+    "description": "替换页内播放器并可以点击vip转跳外部网站播放",
+    "url": "https://greasyfork.org/scripts/419511-%E4%BC%98%E9%85%B7vip%E7%AB%99%E5%A4%96%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/419511/%E4%BC%98%E9%85%B7VIP%E7%AB%99%E5%A4%96%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 5990,
+    "license": null,
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

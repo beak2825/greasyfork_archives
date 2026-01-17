@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435506,
+    "daily_installs": 0,
+    "total_installs": 319,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-14T17:08:44.000Z",
+    "code_updated_at": "2021-11-14T17:08:43.000Z",
+    "namespace": "BetterInstagram",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 830961,
+        "name": "failed-404",
+        "created_at": "2021-11-01T11:54:57.000Z",
+        "url": "https://greasyfork.org/users/830961-failed-404"
+      }
+    ],
+    "name": "BetterInstagram",
+    "description": "An awesome theme for Instagram. White is trash.",
+    "url": "https://greasyfork.org/scripts/435506-betterinstagram",
+    "code_url": "https://update.greasyfork.org/scripts/435506/BetterInstagram.user.js",
+    "code_size": 5761,
+    "license": null,
+    "version": "Beta",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

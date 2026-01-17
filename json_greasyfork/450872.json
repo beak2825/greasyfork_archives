@@ -1,0 +1,33 @@
+{
+  "id": 450872,
+  "daily_installs": 0,
+  "total_installs": 93,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-07T00:50:13.000Z",
+  "code_updated_at": "2022-12-07T06:40:51.000Z",
+  "namespace": "snomiao@gmail.com",
+  "support_url": "https://github.com/snomiao/userscript.js/issues",
+  "contribution_url": "https://snomiao.com/donate",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 31387,
+      "name": "Snowstar Miao",
+      "created_at": "2016-02-23T01:56:48.000Z",
+      "url": "https://greasyfork.org/users/31387-snowstar-miao"
+    }
+  ],
+  "name": "[SNOLAB] [Mulango] Telegram Translator",
+  "description": "[SNOLAB] [Mulango] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received in your learning language 2. Speak what you just send in your learning language. 3. Send what you saying in your learning language (for example saying something start with CQ CQ ...).",
+  "url": "https://greasyfork.org/scripts/450872-snolab-mulango-telegram-translator",
+  "code_url": "https://update.greasyfork.org/scripts/450872/%5BSNOLAB%5D%20%5BMulango%5D%20Telegram%20Translator.user.js",
+  "code_size": 16183,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "1.7.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 452514,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-05T11:52:35.000Z",
+  "code_updated_at": "2022-10-05T11:52:35.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 931352,
+      "name": "Lexa Rei",
+      "created_at": "2022-07-02T12:07:13.000Z",
+      "url": "https://greasyfork.org/users/931352-lexa-rei",
+      "scripts": []
+    }
+  ],
+  "name": "для старшей администрации сервера SPB",
+  "description": "I don't know what to write here",
+  "url": "https://greasyfork.org/scripts/452514-%D0%B4%D0%BB%D1%8F-%D1%81%D1%82%D0%B0%D1%80%D1%88%D0%B5%D0%B9-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D0%B8-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0-spb",
+  "code_url": "https://update.greasyfork.org/scripts/452514/%D0%B4%D0%BB%D1%8F%20%D1%81%D1%82%D0%B0%D1%80%D1%88%D0%B5%D0%B9%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D0%B8%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0%20SPB.user.js",
+  "code_size": 23403,
+  "license": "MIT License",
+  "version": "3.3",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

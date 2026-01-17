@@ -1,0 +1,33 @@
+{
+  "id": 491073,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-28T08:29:34.000Z",
+  "code_updated_at": "2024-03-28T08:29:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 970031,
+      "name": "yunxilyf",
+      "created_at": "2022-10-13T06:12:31.000Z",
+      "url": "https://greasyfork.org/users/970031-yunxilyf"
+    }
+  ],
+  "name": "亚马逊卖家大学视频下载",
+  "description": "卖家大学视频下载",
+  "url": "https://greasyfork.org/scripts/491073-%E4%BA%9A%E9%A9%AC%E9%80%8A%E5%8D%96%E5%AE%B6%E5%A4%A7%E5%AD%A6%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/491073/%E4%BA%9A%E9%A9%AC%E9%80%8A%E5%8D%96%E5%AE%B6%E5%A4%A7%E5%AD%A6%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 3899,
+  "license": "Yunxi",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

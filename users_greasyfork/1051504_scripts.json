@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463220,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-04T07:41:27.000Z",
+    "code_updated_at": "2023-04-04T07:41:27.000Z",
+    "namespace": "zc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051504,
+        "name": "dbruidb berenjena",
+        "created_at": "2023-04-01T14:17:30.000Z",
+        "url": "https://greasyfork.org/users/1051504-dbruidb-berenjena"
+      }
+    ],
+    "name": "Formato ZC Duel Links",
+    "description": "Añade un contador de precios para duelinks meta",
+    "url": "https://greasyfork.org/scripts/463220-formato-zc-duel-links",
+    "code_url": "https://update.greasyfork.org/scripts/463220/Formato%20ZC%20Duel%20Links.user.js",
+    "code_size": 5758,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

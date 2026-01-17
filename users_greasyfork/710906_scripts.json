@@ -1,0 +1,101 @@
+[
+  {
+    "id": 417285,
+    "daily_installs": 0,
+    "total_installs": 1568,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-01T09:51:57.000Z",
+    "code_updated_at": "2021-09-22T11:11:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 710906,
+        "name": "charghet",
+        "created_at": "2020-12-01T08:27:14.000Z",
+        "url": "https://greasyfork.org/users/710906-charghet"
+      }
+    ],
+    "name": "轻之国度百度盘无提取码跳转",
+    "description": "在发布的百度网盘链接后添加一个无提取码跳转的链接，需要安装“百度盘分享提取码自动跳转”脚本，否则无法自动输入提取码。由于轻之国度发布者分享链接无固定格式，故可能无法识别到。如果无法识别，请将链接反馈给我，我将尽量适配。",
+    "url": "https://greasyfork.org/scripts/417285-%E8%BD%BB%E4%B9%8B%E5%9B%BD%E5%BA%A6%E7%99%BE%E5%BA%A6%E7%9B%98%E6%97%A0%E6%8F%90%E5%8F%96%E7%A0%81%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/417285/%E8%BD%BB%E4%B9%8B%E5%9B%BD%E5%BA%A6%E7%99%BE%E5%BA%A6%E7%9B%98%E6%97%A0%E6%8F%90%E5%8F%96%E7%A0%81%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 4014,
+    "license": "GPL",
+    "version": "1.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417282,
+    "daily_installs": 1,
+    "total_installs": 4348,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-01T09:27:50.000Z",
+    "code_updated_at": "2021-09-22T10:20:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 710906,
+        "name": "charghet",
+        "created_at": "2020-12-01T08:27:14.000Z",
+        "url": "https://greasyfork.org/users/710906-charghet"
+      }
+    ],
+    "name": "百度盘分享提取码自动跳转",
+    "description": "通过附加url参数pwd来自动跳转，为其他脚本作为接口使用。接口链接https://pan.baidu.com/share/init?surl=[链接/s/1后面的字符串]&pwd=[提取码] 如：https://pan.baidu.com/s/1SreJxiY_iHRI8n2_XgH8TA ,提取码:hmp2 则接口链接为https://pan.baidu.com/share/init?surl=SreJxiY_iHRI8n2_XgH8TA&pwd=hmp2",
+    "url": "https://greasyfork.org/scripts/417282-%E7%99%BE%E5%BA%A6%E7%9B%98%E5%88%86%E4%BA%AB%E6%8F%90%E5%8F%96%E7%A0%81%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/417282/%E7%99%BE%E5%BA%A6%E7%9B%98%E5%88%86%E4%BA%AB%E6%8F%90%E5%8F%96%E7%A0%81%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 1411,
+    "license": "GPL",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417269,
+    "daily_installs": 3,
+    "total_installs": 20619,
+    "fan_score": "81.5",
+    "good_ratings": 21,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-12-01T08:53:54.000Z",
+    "code_updated_at": "2025-08-04T11:59:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 710906,
+        "name": "charghet",
+        "created_at": "2020-12-01T08:27:14.000Z",
+        "url": "https://greasyfork.org/users/710906-charghet"
+      }
+    ],
+    "name": "广告屏蔽",
+    "description": "自用，屏蔽一些网站的广告，如果也符合你的需求就下载吧(=・ω・=) 具体屏蔽列表看简介，不需要的屏蔽可以注释掉。",
+    "url": "https://greasyfork.org/scripts/417269-%E5%B9%BF%E5%91%8A%E5%B1%8F%E8%94%BD",
+    "code_url": "https://update.greasyfork.org/scripts/417269/%E5%B9%BF%E5%91%8A%E5%B1%8F%E8%94%BD.user.js",
+    "code_size": 10936,
+    "license": "GPL",
+    "version": "1.8.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

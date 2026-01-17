@@ -1,0 +1,35 @@
+[
+  {
+    "id": 467225,
+    "daily_installs": 0,
+    "total_installs": 751,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-27T11:56:23.000Z",
+    "code_updated_at": "2023-06-07T11:02:51.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1085642,
+        "name": "Rapt0r974",
+        "created_at": "2023-05-27T11:53:32.000Z",
+        "url": "https://greasyfork.org/users/1085642-rapt0r974"
+      }
+    ],
+    "name": "Zombs.io scripts pack by raptor",
+    "description": "Best script pack for zombs.io, scripts used: cipher, Zombs.io Bad Hack, 24k UNOBFUSCATED (zombs.io)",
+    "url": "https://greasyfork.org/scripts/467225-zombs-io-scripts-pack-by-raptor",
+    "code_url": "https://update.greasyfork.org/scripts/467225/Zombsio%20scripts%20pack%20by%20raptor.user.js",
+    "code_size": 183936,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

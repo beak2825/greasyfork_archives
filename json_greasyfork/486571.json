@@ -1,0 +1,33 @@
+{
+  "id": 486571,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-04T12:51:53.000Z",
+  "code_updated_at": "2024-02-04T12:51:53.000Z",
+  "namespace": "gaeulbyul.userscript",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1257299,
+      "name": "위로",
+      "created_at": "2024-02-04T12:50:35.000Z",
+      "url": "https://greasyfork.org/users/1257299-%EC%9C%84%EB%A1%9C"
+    }
+  ],
+  "name": "TweetDeck Paste Image",
+  "description": "트윗덱에 클립보드 붙여넣기(Ctrl-V)로 이미지를 업로드하는 기능을 추가한다. (이미지 복사 기능 추가)",
+  "url": "https://greasyfork.org/scripts/486571-tweetdeck-paste-image",
+  "code_url": "https://update.greasyfork.org/scripts/486571/TweetDeck%20Paste%20Image.user.js",
+  "code_size": 2494,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "0.3b4",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

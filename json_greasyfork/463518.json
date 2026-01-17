@@ -1,0 +1,34 @@
+{
+  "id": 463518,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-08T06:13:18.000Z",
+  "code_updated_at": "2023-04-08T06:13:17.000Z",
+  "namespace": "大麦定制",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1055828,
+      "name": "xyzzz66",
+      "created_at": "2023-04-08T06:00:52.000Z",
+      "url": "https://greasyfork.org/users/1055828-xyzzz66",
+      "scripts": []
+    }
+  ],
+  "name": "大麦抢票",
+  "description": "辅助大麦抢票，订单提交，预勾选",
+  "url": "https://greasyfork.org/scripts/463518-%E5%A4%A7%E9%BA%A6%E6%8A%A2%E7%A5%A8",
+  "code_url": "https://update.greasyfork.org/scripts/463518/%E5%A4%A7%E9%BA%A6%E6%8A%A2%E7%A5%A8.user.js",
+  "code_size": 31255,
+  "license": "xyzzz66",
+  "version": "3.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

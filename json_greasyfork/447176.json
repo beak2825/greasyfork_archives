@@ -1,0 +1,59 @@
+{
+  "id": 447176,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-28T14:05:55.000Z",
+  "code_updated_at": "2022-06-28T14:05:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 930055,
+      "name": "AllureLove",
+      "created_at": "2022-06-28T10:53:40.000Z",
+      "url": "https://greasyfork.org/users/930055-allurelove",
+      "scripts": [
+        {
+          "id": 447176,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-06-28T14:05:55.000Z",
+          "code_updated_at": "2022-06-28T14:05:55.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili回车登录",
+          "description": "绑定回车和登录",
+          "url": "https://greasyfork.org/scripts/447176-bilibili%E5%9B%9E%E8%BD%A6%E7%99%BB%E5%BD%95",
+          "code_url": "https://update.greasyfork.org/scripts/447176/bilibili%E5%9B%9E%E8%BD%A6%E7%99%BB%E5%BD%95.user.js",
+          "code_size": 679,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili回车登录",
+  "description": "绑定回车和登录",
+  "url": "https://greasyfork.org/scripts/447176-bilibili%E5%9B%9E%E8%BD%A6%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/447176/bilibili%E5%9B%9E%E8%BD%A6%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 679,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

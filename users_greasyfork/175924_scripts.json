@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 436250,
+    "daily_installs": 0,
+    "total_installs": 1205,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-29T06:42:38.000Z",
+    "code_updated_at": "2023-10-18T08:48:56.000Z",
+    "namespace": "http://lab.wsl.moe/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175924,
+        "name": "YJSNPI",
+        "created_at": "2018-03-22T06:31:19.000Z",
+        "url": "https://greasyfork.org/users/175924-yjsnpi"
+      }
+    ],
+    "name": "Allow F12",
+    "description": "Allow to open Dev Tools on some website.",
+    "url": "https://greasyfork.org/scripts/436250-allow-f12",
+    "code_url": "https://update.greasyfork.org/scripts/436250/Allow%20F12.user.js",
+    "code_size": 6197,
+    "license": "MIT License",
+    "version": "0.3.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 417178,
+    "daily_installs": 0,
+    "total_installs": 217,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-01T02:12:22.000Z",
+    "code_updated_at": "2020-12-02T13:30:47.000Z",
+    "namespace": "https://lab.wsl.moe/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175924,
+        "name": "YJSNPI",
+        "created_at": "2018-03-22T06:31:19.000Z",
+        "url": "https://greasyfork.org/users/175924-yjsnpi"
+      }
+    ],
+    "name": "屏蔽知乎不能关闭的登录框",
+    "description": "屏蔽知乎进入网页即加载的登录框",
+    "url": "https://greasyfork.org/scripts/417178-%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E4%B8%8D%E8%83%BD%E5%85%B3%E9%97%AD%E7%9A%84%E7%99%BB%E5%BD%95%E6%A1%86",
+    "code_url": "https://update.greasyfork.org/scripts/417178/%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E4%B8%8D%E8%83%BD%E5%85%B3%E9%97%AD%E7%9A%84%E7%99%BB%E5%BD%95%E6%A1%86.user.js",
+    "code_size": 1186,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

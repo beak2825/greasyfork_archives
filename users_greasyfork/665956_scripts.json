@@ -1,0 +1,68 @@
+[
+  {
+    "id": 415086,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-30T15:11:48.000Z",
+    "code_updated_at": "2021-01-07T22:46:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665956,
+        "name": "Numbered",
+        "created_at": "2020-07-12T03:03:51.000Z",
+        "url": "https://greasyfork.org/users/665956-numbered"
+      }
+    ],
+    "name": "pso2 catalog2table",
+    "description": "スク品のメモ蝶とワンクリックでアイテム名コピー",
+    "url": "https://greasyfork.org/scripts/415086-pso2-catalog2table",
+    "code_url": "https://update.greasyfork.org/scripts/415086/pso2%20catalog2table.user.js",
+    "code_size": 25852,
+    "license": null,
+    "version": "0.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 415082,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-30T13:43:18.000Z",
+    "code_updated_at": "2020-10-30T17:17:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665956,
+        "name": "Numbered",
+        "created_at": "2020-07-12T03:03:51.000Z",
+        "url": "https://greasyfork.org/users/665956-numbered"
+      }
+    ],
+    "name": "Game8 Idola - この状態異常何？",
+    "description": "キャラクターのページに直接に状態異常などの説明を表示させる",
+    "url": "https://greasyfork.org/scripts/415082-game8-idola-%E3%81%93%E3%81%AE%E7%8A%B6%E6%85%8B%E7%95%B0%E5%B8%B8%E4%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/415082/Game8%20Idola%20-%20%E3%81%93%E3%81%AE%E7%8A%B6%E6%85%8B%E7%95%B0%E5%B8%B8%E4%BD%95%EF%BC%9F.user.js",
+    "code_size": 4740,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

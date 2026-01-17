@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489969,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-16T12:25:55.000Z",
+    "code_updated_at": "2024-03-16T12:25:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1275309,
+        "name": "MSOJS",
+        "created_at": "2024-03-16T12:17:43.000Z",
+        "url": "https://greasyfork.org/users/1275309-msojs"
+      }
+    ],
+    "name": "arcalive hotdeal post counter",
+    "description": "count hot deal post and display post description",
+    "url": "https://greasyfork.org/scripts/489969-arcalive-hotdeal-post-counter",
+    "code_url": "https://update.greasyfork.org/scripts/489969/arcalive%20hotdeal%20post%20counter.user.js",
+    "code_size": 1350,
+    "license": "MIT License",
+    "version": "2024-03-16",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

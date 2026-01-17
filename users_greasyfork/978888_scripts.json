@@ -1,0 +1,101 @@
+[
+  {
+    "id": 469978,
+    "daily_installs": 0,
+    "total_installs": 53,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-02T13:25:52.000Z",
+    "code_updated_at": "2023-07-04T13:12:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 978888,
+        "name": "xunbu",
+        "created_at": "2022-11-03T15:17:08.000Z",
+        "url": "https://greasyfork.org/users/978888-xunbu"
+      }
+    ],
+    "name": "jd秒杀购物车",
+    "description": "jd秒杀购物车脚本",
+    "url": "https://greasyfork.org/scripts/469978-jd%E7%A7%92%E6%9D%80%E8%B4%AD%E7%89%A9%E8%BD%A6",
+    "code_url": "https://update.greasyfork.org/scripts/469978/jd%E7%A7%92%E6%9D%80%E8%B4%AD%E7%89%A9%E8%BD%A6.user.js",
+    "code_size": 11236,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 469893,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-01T08:07:59.000Z",
+    "code_updated_at": "2023-07-01T15:09:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 978888,
+        "name": "xunbu",
+        "created_at": "2022-11-03T15:17:08.000Z",
+        "url": "https://greasyfork.org/users/978888-xunbu"
+      }
+    ],
+    "name": "jd抢购",
+    "description": "jd秒杀抢购脚本",
+    "url": "https://greasyfork.org/scripts/469893-jd%E6%8A%A2%E8%B4%AD",
+    "code_url": "https://update.greasyfork.org/scripts/469893/jd%E6%8A%A2%E8%B4%AD.user.js",
+    "code_size": 8155,
+    "license": "MIT License",
+    "version": "0.1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454200,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-03T15:18:43.000Z",
+    "code_updated_at": "2022-11-03T15:18:42.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 978888,
+        "name": "xunbu",
+        "created_at": "2022-11-03T15:17:08.000Z",
+        "url": "https://greasyfork.org/users/978888-xunbu"
+      }
+    ],
+    "name": "起始页加书签Helper",
+    "description": "X浏览器专用",
+    "url": "https://greasyfork.org/scripts/454200-%E8%B5%B7%E5%A7%8B%E9%A1%B5%E5%8A%A0%E4%B9%A6%E7%AD%BEhelper",
+    "code_url": "https://update.greasyfork.org/scripts/454200/%E8%B5%B7%E5%A7%8B%E9%A1%B5%E5%8A%A0%E4%B9%A6%E7%AD%BEHelper.user.js",
+    "code_size": 2873,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

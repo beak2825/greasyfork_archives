@@ -1,0 +1,68 @@
+[
+  {
+    "id": 484272,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-08T18:01:35.000Z",
+    "code_updated_at": "2024-01-08T18:01:35.000Z",
+    "namespace": "twitch.tv/simplevar",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1062124,
+        "name": "Simple Var",
+        "created_at": "2023-04-17T15:05:05.000Z",
+        "url": "https://greasyfork.org/users/1062124-simple-var"
+      }
+    ],
+    "name": "Video Area Inverter",
+    "description": "Dark mode but for videos. Remembered your options per channel. ctrl+i to show/hide options, 'i' to toggle the area",
+    "url": "https://greasyfork.org/scripts/484272-video-area-inverter",
+    "code_url": "https://update.greasyfork.org/scripts/484272/Video%20Area%20Inverter.user.js",
+    "code_size": 7874,
+    "license": "The Unlicense",
+    "version": "2024-01-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 484271,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-08T17:58:39.000Z",
+    "code_updated_at": "2024-01-08T17:58:39.000Z",
+    "namespace": "https://www.twitch.tv/simplevar",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1062124,
+        "name": "Simple Var",
+        "created_at": "2023-04-17T15:05:05.000Z",
+        "url": "https://greasyfork.org/users/1062124-simple-var"
+      }
+    ],
+    "name": "Better ReplayPoker",
+    "description": "ReplayPoker hotkeys",
+    "url": "https://greasyfork.org/scripts/484271-better-replaypoker",
+    "code_url": "https://update.greasyfork.org/scripts/484271/Better%20ReplayPoker.user.js",
+    "code_size": 6252,
+    "license": "The Unlicense",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

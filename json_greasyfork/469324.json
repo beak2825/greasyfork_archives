@@ -1,0 +1,59 @@
+{
+  "id": 469324,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-23T23:54:45.000Z",
+  "code_updated_at": "2023-06-28T18:21:49.000Z",
+  "namespace": "https://potereinteriore.it",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 859328,
+      "name": "Flejta",
+      "created_at": "2021-12-30T11:04:09.000Z",
+      "url": "https://greasyfork.org/users/859328-flejta",
+      "scripts": [
+        {
+          "id": 533163,
+          "daily_installs": 2,
+          "total_installs": 1019,
+          "fan_score": "39.6",
+          "good_ratings": 3,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-04-17T18:37:00.000Z",
+          "code_updated_at": "2025-04-29T13:44:06.000Z",
+          "namespace": "https://greasyfork.org/users/859328",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Premium Experience - Ad Blocker",
+          "description": "Enhances YouTube experience by blocking ads and improving video playback",
+          "url": "https://greasyfork.org/scripts/533163-youtube-premium-experience-ad-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/533163/YouTube%20Premium%20Experience%20-%20Ad%20Blocker.user.js",
+          "code_size": 38287,
+          "license": "MIT License",
+          "version": "1.0.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Risveglia il tuo potere interiore",
+  "description": "Visualizza video Risveglia il tuo potere interiore con Roy e Joy Martina",
+  "url": "https://greasyfork.org/scripts/469324-risveglia-il-tuo-potere-interiore",
+  "code_url": "https://update.greasyfork.org/scripts/469324/Risveglia%20il%20tuo%20potere%20interiore.user.js",
+  "code_size": 63343,
+  "license": null,
+  "version": "0.6F",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

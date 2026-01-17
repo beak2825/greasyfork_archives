@@ -1,0 +1,33 @@
+{
+  "id": 459825,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-11T08:21:10.000Z",
+  "code_updated_at": "2023-02-11T08:21:10.000Z",
+  "namespace": "https://greasyfork.org/users/1025348",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1025348,
+      "name": "Gregory Booth",
+      "created_at": "2023-02-11T08:15:04.000Z",
+      "url": "https://greasyfork.org/users/1025348-gregory-booth"
+    }
+  ],
+  "name": "Bricklink Links for Lego.com",
+  "description": "Adds a link to Bricklink for each product on Lego.com",
+  "url": "https://greasyfork.org/scripts/459825-bricklink-links-for-lego-com",
+  "code_url": "https://update.greasyfork.org/scripts/459825/Bricklink%20Links%20for%20Legocom.user.js",
+  "code_size": 995,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

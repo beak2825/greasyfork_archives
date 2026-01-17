@@ -1,0 +1,33 @@
+{
+  "id": 442325,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-29T16:46:23.000Z",
+  "code_updated_at": "2022-03-30T08:56:19.000Z",
+  "namespace": "https://tishka.xyz/sdt",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841407,
+      "name": "Tishka",
+      "created_at": "2021-11-20T05:38:55.000Z",
+      "url": "https://greasyfork.org/users/841407-tishka"
+    }
+  ],
+  "name": "RestoreLegacy",
+  "description": "removes whitespaces & normalize numbers",
+  "url": "https://greasyfork.org/scripts/442325-restorelegacy",
+  "code_url": "https://update.greasyfork.org/scripts/442325/RestoreLegacy.user.js",
+  "code_size": 1048,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

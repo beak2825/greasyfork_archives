@@ -1,0 +1,34 @@
+{
+  "id": 429944,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-27T09:15:02.000Z",
+  "code_updated_at": "2021-07-28T10:36:27.000Z",
+  "namespace": "https://greasyfork.org/users/232210",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 232210,
+      "name": "FAUser",
+      "created_at": "2018-12-12T18:16:00.000Z",
+      "url": "https://greasyfork.org/users/232210-fauser",
+      "scripts": []
+    }
+  ],
+  "name": "Monitor Royal Mail site",
+  "description": "Get notified of changes",
+  "url": "https://greasyfork.org/scripts/429944-monitor-royal-mail-site",
+  "code_url": "https://update.greasyfork.org/scripts/429944/Monitor%20Royal%20Mail%20site.user.js",
+  "code_size": 2764,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

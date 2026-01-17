@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424356,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-02T01:23:48.000Z",
+    "code_updated_at": "2021-04-02T01:23:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 753195,
+        "name": "zhouwei_nx",
+        "created_at": "2021-03-31T03:55:51.000Z",
+        "url": "https://greasyfork.org/users/753195-zhouwei-nx"
+      }
+    ],
+    "name": "百度去广告",
+    "description": "没有广告，百度真白。",
+    "url": "https://greasyfork.org/scripts/424356-%E7%99%BE%E5%BA%A6%E5%8E%BB%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/424356/%E7%99%BE%E5%BA%A6%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 104730,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

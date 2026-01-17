@@ -1,0 +1,59 @@
+{
+  "id": 437296,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-19T18:04:42.000Z",
+  "code_updated_at": "2021-12-19T18:04:42.000Z",
+  "namespace": "https://greasyfork.org/users/855411",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 855411,
+      "name": "LordEliasTM",
+      "created_at": "2021-12-19T17:56:03.000Z",
+      "url": "https://greasyfork.org/users/855411-lordeliastm",
+      "scripts": [
+        {
+          "id": 440471,
+          "daily_installs": 0,
+          "total_installs": 227,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-22T22:42:27.000Z",
+          "code_updated_at": "2022-02-22T22:42:27.000Z",
+          "namespace": "https://greasyfork.org/users/855411",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TankiChatRight",
+          "description": "Moves the tanki chat icon back to the right position",
+          "url": "https://greasyfork.org/scripts/440471-tankichatright",
+          "code_url": "https://update.greasyfork.org/scripts/440471/TankiChatRight.user.js",
+          "code_size": 1094,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mini Cheat",
+  "description": "Idk lol",
+  "url": "https://greasyfork.org/scripts/437296-mini-cheat",
+  "code_url": "https://update.greasyfork.org/scripts/437296/Mini%20Cheat.user.js",
+  "code_size": 512,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

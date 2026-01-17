@@ -1,0 +1,34 @@
+{
+  "id": 481016,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-29T11:41:25.000Z",
+  "code_updated_at": "2024-04-09T13:25:08.000Z",
+  "namespace": "MVToMoVe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1004569,
+      "name": "幻影121",
+      "created_at": "2022-12-30T05:37:07.000Z",
+      "url": "https://greasyfork.org/users/1004569-%E5%B9%BB%E5%BD%B1121",
+      "scripts": []
+    }
+  ],
+  "name": "MVToMoVe",
+  "description": "MV转点播",
+  "url": "https://greasyfork.org/scripts/481016-mvtomove",
+  "code_url": "https://update.greasyfork.org/scripts/481016/MVToMoVe.user.css",
+  "code_size": 11138,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 493792,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-29T19:56:33.000Z",
+  "code_updated_at": "2024-04-29T19:56:33.000Z",
+  "namespace": "https://github.com/MiaoZang",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294891,
+      "name": "MiaoZang",
+      "created_at": "2024-04-29T18:50:32.000Z",
+      "url": "https://greasyfork.org/users/1294891-miaozang",
+      "scripts": [
+        {
+          "id": 493792,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-29T19:56:33.000Z",
+          "code_updated_at": "2024-04-29T19:56:33.000Z",
+          "namespace": "https://github.com/MiaoZang",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YY直播绿化",
+          "description": "🔥功能介绍🔥：🎉 YY直播绿化",
+          "url": "https://greasyfork.org/scripts/493792-yy%E7%9B%B4%E6%92%AD%E7%BB%BF%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/493792/YY%E7%9B%B4%E6%92%AD%E7%BB%BF%E5%8C%96.user.js",
+          "code_size": 4626,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YY直播绿化",
+  "description": "🔥功能介绍🔥：🎉 YY直播绿化",
+  "url": "https://greasyfork.org/scripts/493792-yy%E7%9B%B4%E6%92%AD%E7%BB%BF%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/493792/YY%E7%9B%B4%E6%92%AD%E7%BB%BF%E5%8C%96.user.js",
+  "code_size": 4626,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 457716,
+    "daily_installs": 0,
+    "total_installs": 617,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-06T07:42:10.000Z",
+    "code_updated_at": "2023-01-06T07:42:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 998356,
+        "name": "DOFURA",
+        "created_at": "2022-12-16T04:58:58.000Z",
+        "url": "https://greasyfork.org/users/998356-dofura"
+      }
+    ],
+    "name": "voxoim.io Wireframe View cant work",
+    "description": "Let's you see players behind walls. やったるでぇ",
+    "url": "https://greasyfork.org/scripts/457716-voxoim-io-wireframe-view-cant-work",
+    "code_url": "https://update.greasyfork.org/scripts/457716/voxoimio%20Wireframe%20View%20cant%20work.user.js",
+    "code_size": 2205,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

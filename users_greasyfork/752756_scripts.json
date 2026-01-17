@@ -1,0 +1,35 @@
+[
+  {
+    "id": 436228,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-28T22:18:05.000Z",
+    "code_updated_at": "2021-11-28T22:18:05.000Z",
+    "namespace": "https://www.youtube.com/watch?v=kJQP7kiw5Fk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 752756,
+        "name": "Memer",
+        "created_at": "2021-03-29T18:43:13.000Z",
+        "url": "https://greasyfork.org/users/752756-memer"
+      }
+    ],
+    "name": "Why Despacito?",
+    "description": "Automatically dislikes Despacito :)",
+    "url": "https://greasyfork.org/scripts/436228-why-despacito",
+    "code_url": "https://update.greasyfork.org/scripts/436228/Why%20Despacito.user.js",
+    "code_size": 414,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

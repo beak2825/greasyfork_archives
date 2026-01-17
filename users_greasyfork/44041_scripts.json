@@ -129,7 +129,7 @@
     "version": "2024-10-21",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 516619,
@@ -163,5 +163,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 491999,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-08T15:49:42.000Z",
+    "code_updated_at": "2024-04-08T15:49:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44041,
+        "name": "thompcha",
+        "created_at": "2016-05-16T18:39:59.000Z",
+        "url": "https://greasyfork.org/users/44041-thompcha"
+      }
+    ],
+    "name": "1440 Remove Character",
+    "description": "Remove character from newsletter. Searches all text nodes for a certain character and removes it.",
+    "url": "https://greasyfork.org/scripts/491999-1440-remove-character",
+    "code_url": "https://update.greasyfork.org/scripts/491999/1440%20Remove%20Character.user.js",
+    "code_size": 833,
+    "license": "none",
+    "version": "2024-04-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 485296,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-20T04:07:39.000Z",
+    "code_updated_at": "2024-01-20T18:55:36.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44041,
+        "name": "thompcha",
+        "created_at": "2016-05-16T18:39:59.000Z",
+        "url": "https://greasyfork.org/users/44041-thompcha"
+      }
+    ],
+    "name": "Download KBOO Episodes",
+    "description": "Make archived episodes on kboo.fm downloadable",
+    "url": "https://greasyfork.org/scripts/485296-download-kboo-episodes",
+    "code_url": "https://update.greasyfork.org/scripts/485296/Download%20KBOO%20Episodes.user.js",
+    "code_size": 1112,
+    "license": "none",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 481475,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-05T18:54:11.000Z",
+    "code_updated_at": "2023-12-05T18:54:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44041,
+        "name": "thompcha",
+        "created_at": "2016-05-16T18:39:59.000Z",
+        "url": "https://greasyfork.org/users/44041-thompcha"
+      }
+    ],
+    "name": "Shazam Content",
+    "description": "Optimize Shazam artist and title for copy and paste",
+    "url": "https://greasyfork.org/scripts/481475-shazam-content",
+    "code_url": "https://update.greasyfork.org/scripts/481475/Shazam%20Content.user.js",
+    "code_size": 1722,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458863,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-25T19:29:22.000Z",
+    "code_updated_at": "2023-01-25T19:29:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44041,
+        "name": "thompcha",
+        "created_at": "2016-05-16T18:39:59.000Z",
+        "url": "https://greasyfork.org/users/44041-thompcha"
+      }
+    ],
+    "name": "ARM Rip Elapsed",
+    "description": "Show elapsed time of current rip",
+    "url": "https://greasyfork.org/scripts/458863-arm-rip-elapsed",
+    "code_url": "https://update.greasyfork.org/scripts/458863/ARM%20Rip%20Elapsed.user.js",
+    "code_size": 788,
+    "license": "FSF All Permissive License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 423113,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-12T08:27:58.000Z",
+    "code_updated_at": "2021-03-12T08:27:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44041,
+        "name": "thompcha",
+        "created_at": "2016-05-16T18:39:59.000Z",
+        "url": "https://greasyfork.org/users/44041-thompcha"
+      }
+    ],
+    "name": "Shorten YouTube Music Share Link",
+    "description": "Turns the share link dialog on YouTube music into a youtu.be share link",
+    "url": "https://greasyfork.org/scripts/423113-shorten-youtube-music-share-link",
+    "code_url": "https://update.greasyfork.org/scripts/423113/Shorten%20YouTube%20Music%20Share%20Link.user.js",
+    "code_size": 707,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 491069,
+    "daily_installs": 0,
+    "total_installs": 974,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-28T06:51:41.000Z",
+    "code_updated_at": "2024-03-28T06:54:24.000Z",
+    "namespace": "https://greasyfork.org/users/278051",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 278051,
+        "name": "AIScripter",
+        "created_at": "2019-03-14T17:27:50.000Z",
+        "url": "https://greasyfork.org/users/278051-aiscripter"
+      }
+    ],
+    "name": "青书学堂自动答题",
+    "description": "青书学堂作业答案自动填入，解放双手。",
+    "url": "https://greasyfork.org/scripts/491069-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/491069/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98.user.js",
+    "code_size": 3784,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

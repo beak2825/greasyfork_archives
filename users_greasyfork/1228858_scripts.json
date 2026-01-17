@@ -1,0 +1,35 @@
+[
+  {
+    "id": 481478,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-05T19:41:41.000Z",
+    "code_updated_at": "2023-12-05T19:41:41.000Z",
+    "namespace": "https://greasyfork.org/users/1228858",
+    "support_url": "https://github.com/bluelaned/Gartic.io-Cheats/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1228858,
+        "name": "asfdawqfdgasfasfasfdsaffaddsagfasgfqsw",
+        "created_at": "2023-12-05T19:38:27.000Z",
+        "url": "https://greasyfork.org/users/1228858-asfdawqfdgasfasfasfdsaffaddsagfasgfqsw"
+      }
+    ],
+    "name": "gartic.io mod menu",
+    "description": "drawing bot (beta), answer assistant and many more features",
+    "url": "https://greasyfork.org/scripts/481478-gartic-io-mod-menu",
+    "code_url": "https://update.greasyfork.org/scripts/481478/garticio%20mod%20menu.user.js",
+    "code_size": 64316,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

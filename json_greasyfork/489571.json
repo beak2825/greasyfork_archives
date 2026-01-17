@@ -1,0 +1,59 @@
+{
+  "id": 489571,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-03-11T15:16:37.000Z",
+  "code_updated_at": "2024-03-16T16:43:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1273149,
+      "name": "Curious, aren't we?",
+      "created_at": "2024-03-11T15:07:24.000Z",
+      "url": "https://greasyfork.org/users/1273149-curious-aren-t-we",
+      "scripts": [
+        {
+          "id": 489571,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-03-11T15:16:37.000Z",
+          "code_updated_at": "2024-03-16T16:43:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Moby Credits Textifier 2024",
+          "description": "extract credits from mobygames - I'm using a temporary email for this greasyfork so don't expect updates <3",
+          "url": "https://greasyfork.org/scripts/489571-moby-credits-textifier-2024",
+          "code_url": "https://update.greasyfork.org/scripts/489571/Moby%20Credits%20Textifier%202024.user.js",
+          "code_size": 2494,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Moby Credits Textifier 2024",
+  "description": "extract credits from mobygames - I'm using a temporary email for this greasyfork so don't expect updates <3",
+  "url": "https://greasyfork.org/scripts/489571-moby-credits-textifier-2024",
+  "code_url": "https://update.greasyfork.org/scripts/489571/Moby%20Credits%20Textifier%202024.user.js",
+  "code_size": 2494,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 460056,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-15T09:47:05.000Z",
+  "code_updated_at": "2023-02-15T09:47:05.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 6865,
+      "name": "wdssmq",
+      "created_at": "2014-11-15T05:00:20.000Z",
+      "url": "https://greasyfork.org/users/6865-wdssmq"
+    }
+  ],
+  "name": "mzLibMenu",
+  "description": "一个居中显示的菜单，使用 ctrl + m 快捷键打开，供其他脚本调用；",
+  "url": "https://greasyfork.org/scripts/460056-mzlibmenu",
+  "code_url": "https://update.greasyfork.org/scripts/460056/1149985/mzLibMenu.js",
+  "code_size": 4996,
+  "license": null,
+  "version": "0.0.1.20230215094705",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

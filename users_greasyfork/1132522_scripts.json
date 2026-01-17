@@ -1,0 +1,35 @@
+[
+  {
+    "id": 471388,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-21T15:55:30.000Z",
+    "code_updated_at": "2023-07-21T15:55:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1132522,
+        "name": "Eggstatic",
+        "created_at": "2023-07-21T15:53:47.000Z",
+        "url": "https://greasyfork.org/users/1132522-eggstatic"
+      }
+    ],
+    "name": "r/place 2023 Kanye Gradbear Overlay",
+    "description": "Script that adds a button to toggle an hardcoded image shown in the 2023's r/place canvas",
+    "url": "https://greasyfork.org/scripts/471388-r-place-2023-kanye-gradbear-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/471388/rplace%202023%20Kanye%20Gradbear%20Overlay.user.js",
+    "code_size": 3578,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480935,
+    "daily_installs": 0,
+    "total_installs": 234,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-28T10:16:54.000Z",
+    "code_updated_at": "2023-11-28T10:16:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1224687,
+        "name": "k0w581k",
+        "created_at": "2023-11-28T09:03:16.000Z",
+        "url": "https://greasyfork.org/users/1224687-k0w581k"
+      }
+    ],
+    "name": "Mega Register Form Filling",
+    "description": "Automate Mega.nz registration with random data and a draggable icon using a Tampermonkey user script",
+    "url": "https://greasyfork.org/scripts/480935-mega-register-form-filling",
+    "code_url": "https://update.greasyfork.org/scripts/480935/Mega%20Register%20Form%20Filling.user.js",
+    "code_size": 3233,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

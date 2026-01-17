@@ -1,0 +1,33 @@
+{
+  "id": 455714,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-30T19:35:14.000Z",
+  "code_updated_at": "2022-12-06T13:29:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 990355,
+      "name": "Wurmi",
+      "created_at": "2022-11-30T19:32:15.000Z",
+      "url": "https://greasyfork.org/users/990355-wurmi"
+    }
+  ],
+  "name": "komga and kavita 3D page effect",
+  "description": "adds 3d page effect",
+  "url": "https://greasyfork.org/scripts/455714-komga-and-kavita-3d-page-effect",
+  "code_url": "https://update.greasyfork.org/scripts/455714/komga%20and%20kavita%203D%20page%20effect.user.js",
+  "code_size": 1843,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

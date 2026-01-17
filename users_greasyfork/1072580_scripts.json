@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465853,
+    "daily_installs": 0,
+    "total_installs": 108,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-09T10:44:42.000Z",
+    "code_updated_at": "2023-06-01T00:40:19.000Z",
+    "namespace": "ksgx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1072580,
+        "name": "a38386189",
+        "created_at": "2023-05-04T02:23:54.000Z",
+        "url": "https://greasyfork.org/users/1072580-a38386189"
+      }
+    ],
+    "name": "dm",
+    "description": "全自动抢票，自动提交订单",
+    "url": "https://greasyfork.org/scripts/465853-dm",
+    "code_url": "https://update.greasyfork.org/scripts/465853/dm.user.js",
+    "code_size": 20935,
+    "license": "xu991115",
+    "version": "4.4.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

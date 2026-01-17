@@ -1,0 +1,59 @@
+{
+  "id": 457374,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-30T19:16:16.000Z",
+  "code_updated_at": "2022-12-31T11:37:19.000Z",
+  "namespace": "https://greasyfork.org/users/1004839",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1004839,
+      "name": "ByBatuu",
+      "created_at": "2022-12-30T19:14:25.000Z",
+      "url": "https://greasyfork.org/users/1004839-bybatuu",
+      "scripts": [
+        {
+          "id": 457374,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-30T19:16:16.000Z",
+          "code_updated_at": "2022-12-31T11:37:19.000Z",
+          "namespace": "https://greasyfork.org/users/1004839",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DailyMissionRewards",
+          "description": "Daily Mission Reward Helper",
+          "url": "https://greasyfork.org/scripts/457374-dailymissionrewards",
+          "code_url": "https://update.greasyfork.org/scripts/457374/DailyMissionRewards.user.js",
+          "code_size": 3500,
+          "license": "MIT License",
+          "version": "1.21",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DailyMissionRewards",
+  "description": "Daily Mission Reward Helper",
+  "url": "https://greasyfork.org/scripts/457374-dailymissionrewards",
+  "code_url": "https://update.greasyfork.org/scripts/457374/DailyMissionRewards.user.js",
+  "code_size": 3500,
+  "license": "MIT License",
+  "version": "1.21",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

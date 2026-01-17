@@ -987,6 +987,105 @@
     "version": "1.01",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 490406,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-21T00:55:38.000Z",
+    "code_updated_at": "2024-04-16T06:23:52.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265194,
+        "name": "루시퍼홍",
+        "created_at": "2024-02-22T04:51:34.000Z",
+        "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D"
+      }
+    ],
+    "name": "[루시퍼홍]시세지도 만들기",
+    "description": "2024. 3. 10. 오전 9:57:03",
+    "url": "https://greasyfork.org/scripts/490406-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EC%8B%9C%EC%84%B8%EC%A7%80%EB%8F%84-%EB%A7%8C%EB%93%A4%EA%B8%B0",
+    "code_url": "https://update.greasyfork.org/scripts/490406/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%EC%8B%9C%EC%84%B8%EC%A7%80%EB%8F%84%20%EB%A7%8C%EB%93%A4%EA%B8%B0.user.js",
+    "code_size": 50090,
+    "license": null,
+    "version": "1.02",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 490141,
+    "daily_installs": 3,
+    "total_installs": 350,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-18T02:29:07.000Z",
+    "code_updated_at": "2024-10-15T01:02:26.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265194,
+        "name": "루시퍼홍",
+        "created_at": "2024-02-22T04:51:34.000Z",
+        "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D"
+      }
+    ],
+    "name": "[루시퍼홍] 호갱노노 단지 테두리 그리기",
+    "description": "2024. 5. 3. 오후 14:05:18",
+    "url": "https://greasyfork.org/scripts/490141-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%ED%98%B8%EA%B0%B1%EB%85%B8%EB%85%B8-%EB%8B%A8%EC%A7%80-%ED%85%8C%EB%91%90%EB%A6%AC-%EA%B7%B8%EB%A6%AC%EA%B8%B0",
+    "code_url": "https://update.greasyfork.org/scripts/490141/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%ED%98%B8%EA%B0%B1%EB%85%B8%EB%85%B8%20%EB%8B%A8%EC%A7%80%20%ED%85%8C%EB%91%90%EB%A6%AC%20%EA%B7%B8%EB%A6%AC%EA%B8%B0.user.js",
+    "code_size": 18695,
+    "license": null,
+    "version": "1.09",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 487983,
+    "daily_installs": 4,
+    "total_installs": 1140,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-22T05:03:19.000Z",
+    "code_updated_at": "2025-12-11T04:47:15.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265194,
+        "name": "루시퍼홍",
+        "created_at": "2024-02-22T04:51:34.000Z",
+        "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D"
+      }
+    ],
+    "name": "[루시퍼홍] 네이버부동산 단지라벨 색상변경",
+    "description": "2024. 5. 27. 오후 16:43:18",
+    "url": "https://greasyfork.org/scripts/487983-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EB%84%A4%EC%9D%B4%EB%B2%84%EB%B6%80%EB%8F%99%EC%82%B0-%EB%8B%A8%EC%A7%80%EB%9D%BC%EB%B2%A8-%EC%83%89%EC%83%81%EB%B3%80%EA%B2%BD",
+    "code_url": "https://update.greasyfork.org/scripts/487983/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EB%84%A4%EC%9D%B4%EB%B2%84%EB%B6%80%EB%8F%99%EC%82%B0%20%EB%8B%A8%EC%A7%80%EB%9D%BC%EB%B2%A8%20%EC%83%89%EC%83%81%EB%B3%80%EA%B2%BD.user.js",
+    "code_size": 105398,
+    "license": null,
+    "version": "3.32",
+    "locale": "ko",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

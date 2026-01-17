@@ -1,0 +1,68 @@
+[
+  {
+    "id": 488031,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-22T16:32:09.000Z",
+    "code_updated_at": "2024-02-22T16:32:09.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257973,
+        "name": "bitmover",
+        "created_at": "2024-02-05T22:55:55.000Z",
+        "url": "https://greasyfork.org/users/1257973-bitmover"
+      }
+    ],
+    "name": "Bitcoindata extension",
+    "description": "A web browser extension that provides additional features to bitcointalk.org and altcoinstalks.com, such as price image, address balance, transaction details.",
+    "url": "https://greasyfork.org/scripts/488031-bitcoindata-extension",
+    "code_url": "https://update.greasyfork.org/scripts/488031/Bitcoindata%20extension.user.js",
+    "code_size": 7523,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 486714,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-05T23:01:22.000Z",
+    "code_updated_at": "2024-02-06T20:57:35.000Z",
+    "namespace": "Ignore User in altcoinstalks",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257973,
+        "name": "bitmover",
+        "created_at": "2024-02-05T22:55:55.000Z",
+        "url": "https://greasyfork.org/users/1257973-bitmover"
+      }
+    ],
+    "name": "Ignore User in altcoinstalks.com forum",
+    "description": "2/2/2024, 12:32:37 PM",
+    "url": "https://greasyfork.org/scripts/486714-ignore-user-in-altcoinstalks-com-forum",
+    "code_url": "https://update.greasyfork.org/scripts/486714/Ignore%20User%20in%20altcoinstalkscom%20forum.user.js",
+    "code_size": 1708,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

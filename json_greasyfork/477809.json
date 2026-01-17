@@ -1,0 +1,59 @@
+{
+  "id": 477809,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-19T23:45:35.000Z",
+  "code_updated_at": "2023-11-14T21:09:13.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1153766,
+      "name": "Richard Pena",
+      "created_at": "2023-08-17T23:26:27.000Z",
+      "url": "https://greasyfork.org/users/1153766-richard-pena",
+      "scripts": [
+        {
+          "id": 473382,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-18T15:59:04.000Z",
+          "code_updated_at": "2023-08-18T15:59:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "get QR from Loglevel",
+          "description": "It will generate a button that will add the QR code for each person in the table.",
+          "url": "https://greasyfork.org/scripts/473382-get-qr-from-loglevel",
+          "code_url": "https://update.greasyfork.org/scripts/473382/get%20QR%20from%20Loglevel.user.js",
+          "code_size": 1680,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pull Loglevel Script",
+  "description": "10/19/2023, 7:42PM",
+  "url": "https://greasyfork.org/scripts/477809-pull-loglevel-script",
+  "code_url": "https://update.greasyfork.org/scripts/477809/Pull%20Loglevel%20Script.user.js",
+  "code_size": 1733,
+  "license": "MIT License",
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

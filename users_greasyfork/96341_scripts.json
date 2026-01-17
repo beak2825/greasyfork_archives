@@ -1,0 +1,35 @@
+[
+  {
+    "id": 439942,
+    "daily_installs": 0,
+    "total_installs": 334,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-13T00:30:20.000Z",
+    "code_updated_at": "2022-02-13T16:05:11.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 96341,
+        "name": "TimFx",
+        "created_at": "2017-01-20T08:08:22.000Z",
+        "url": "https://greasyfork.org/users/96341-timfx"
+      }
+    ],
+    "name": "Auto hide Youtube controls when paused",
+    "description": "Automatically hide youtube control bar when pause ( Embedded videos included ). If desired, control bar can be made visible again, with the mouse movement. Pressing the space key or the right-left arrow keys ensures that the control bar remains hidden during pause. if the script doesn't work properly, reflesh web page .",
+    "url": "https://greasyfork.org/scripts/439942-auto-hide-youtube-controls-when-paused",
+    "code_url": "https://update.greasyfork.org/scripts/439942/Auto%20hide%20Youtube%20controls%20when%20paused.user.js",
+    "code_size": 1718,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

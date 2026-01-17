@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460888,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-28T03:14:14.000Z",
+    "code_updated_at": "2023-02-28T03:17:58.000Z",
+    "namespace": "https://www.CY9999.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034026,
+        "name": "CY9999",
+        "created_at": "2023-02-28T02:33:56.000Z",
+        "url": "https://greasyfork.org/users/1034026-cy9999"
+      }
+    ],
+    "name": "天津大学外事平台弹窗修复",
+    "description": "修复因学校文件上传弹窗无法弹出的 bug",
+    "url": "https://greasyfork.org/scripts/460888-%E5%A4%A9%E6%B4%A5%E5%A4%A7%E5%AD%A6%E5%A4%96%E4%BA%8B%E5%B9%B3%E5%8F%B0%E5%BC%B9%E7%AA%97%E4%BF%AE%E5%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/460888/%E5%A4%A9%E6%B4%A5%E5%A4%A7%E5%AD%A6%E5%A4%96%E4%BA%8B%E5%B9%B3%E5%8F%B0%E5%BC%B9%E7%AA%97%E4%BF%AE%E5%A4%8D.user.js",
+    "code_size": 633,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

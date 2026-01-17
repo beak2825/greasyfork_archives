@@ -1,0 +1,59 @@
+{
+  "id": 428251,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-21T05:05:31.000Z",
+  "code_updated_at": "2022-01-29T02:02:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 446472,
+      "name": "0322 nyzx",
+      "created_at": "2020-02-18T04:08:47.000Z",
+      "url": "https://greasyfork.org/users/446472-0322-nyzx",
+      "scripts": [
+        {
+          "id": 428251,
+          "daily_installs": 0,
+          "total_installs": 32,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-21T05:05:31.000Z",
+          "code_updated_at": "2022-01-29T02:02:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "豆瓣模拟点击加载更多",
+          "description": "一无是处！",
+          "url": "https://greasyfork.org/scripts/428251-%E8%B1%86%E7%93%A3%E6%A8%A1%E6%8B%9F%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E6%9B%B4%E5%A4%9A",
+          "code_url": "https://update.greasyfork.org/scripts/428251/%E8%B1%86%E7%93%A3%E6%A8%A1%E6%8B%9F%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E6%9B%B4%E5%A4%9A.user.js",
+          "code_size": 715,
+          "license": null,
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "豆瓣模拟点击加载更多",
+  "description": "一无是处！",
+  "url": "https://greasyfork.org/scripts/428251-%E8%B1%86%E7%93%A3%E6%A8%A1%E6%8B%9F%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E6%9B%B4%E5%A4%9A",
+  "code_url": "https://update.greasyfork.org/scripts/428251/%E8%B1%86%E7%93%A3%E6%A8%A1%E6%8B%9F%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E6%9B%B4%E5%A4%9A.user.js",
+  "code_size": 715,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

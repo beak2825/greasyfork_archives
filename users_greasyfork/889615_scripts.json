@@ -1,0 +1,35 @@
+[
+  {
+    "id": 441766,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-19T17:06:21.000Z",
+    "code_updated_at": "2022-03-19T17:06:20.000Z",
+    "namespace": "epicNamespace69420",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 889615,
+        "name": "GEGAKE_REAL",
+        "created_at": "2022-03-19T17:01:01.000Z",
+        "url": "https://greasyfork.org/users/889615-gegake-real"
+      }
+    ],
+    "name": "SAM DOWNLOAD SCRIPT BY GEGAKE",
+    "description": "Download your creepy SAM voice using this script",
+    "url": "https://greasyfork.org/scripts/441766-sam-download-script-by-gegake",
+    "code_url": "https://update.greasyfork.org/scripts/441766/SAM%20DOWNLOAD%20SCRIPT%20BY%20GEGAKE.user.js",
+    "code_size": 1470730,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

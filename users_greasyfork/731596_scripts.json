@@ -1,0 +1,68 @@
+[
+  {
+    "id": 421588,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-11T14:04:46.000Z",
+    "code_updated_at": "2023-10-12T15:23:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731596,
+        "name": "loikein",
+        "created_at": "2021-01-26T19:11:18.000Z",
+        "url": "https://greasyfork.org/users/731596-loikein"
+      }
+    ],
+    "name": "Google redirection",
+    "description": "Redirect from other Google sites to the US site.",
+    "url": "https://greasyfork.org/scripts/421588-google-redirection",
+    "code_url": "https://update.greasyfork.org/scripts/421588/Google%20redirection.user.js",
+    "code_size": 554,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 420708,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-26T19:13:19.000Z",
+    "code_updated_at": "2022-04-17T18:05:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731596,
+        "name": "loikein",
+        "created_at": "2021-01-26T19:11:18.000Z",
+        "url": "https://greasyfork.org/users/731596-loikein"
+      }
+    ],
+    "name": "AEA web redirection",
+    "description": "aeaweb is annoying.",
+    "url": "https://greasyfork.org/scripts/420708-aea-web-redirection",
+    "code_url": "https://update.greasyfork.org/scripts/420708/AEA%20web%20redirection.user.js",
+    "code_size": 619,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

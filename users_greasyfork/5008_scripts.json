@@ -1,0 +1,167 @@
+[
+  {
+    "id": 485848,
+    "daily_installs": 2,
+    "total_installs": 334,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-28T03:10:53.000Z",
+    "code_updated_at": "2024-01-29T07:58:25.000Z",
+    "namespace": "aolko",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5008,
+        "name": "aolko",
+        "created_at": "2014-09-04T07:42:05.000Z",
+        "url": "https://greasyfork.org/users/5008-aolko"
+      }
+    ],
+    "name": "CivitAI without BS",
+    "description": "Scrape the BS out of civitai",
+    "url": "https://greasyfork.org/scripts/485848-civitai-without-bs",
+    "code_url": "https://update.greasyfork.org/scripts/485848/CivitAI%20without%20BS.user.js",
+    "code_size": 4988,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 471264,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-20T15:45:54.000Z",
+    "code_updated_at": "2023-07-20T19:07:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5008,
+        "name": "aolko",
+        "created_at": "2014-09-04T07:42:05.000Z",
+        "url": "https://greasyfork.org/users/5008-aolko"
+      }
+    ],
+    "name": "MagicScraper",
+    "description": "Scrapes and displays data from the web page based on rules.",
+    "url": "https://greasyfork.org/scripts/471264-magicscraper",
+    "code_url": "https://update.greasyfork.org/scripts/471264/1222840/MagicScraper.js",
+    "code_size": 4983,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 458252,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-14T19:50:09.000Z",
+    "code_updated_at": "2023-01-16T14:41:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5008,
+        "name": "aolko",
+        "created_at": "2014-09-04T07:42:05.000Z",
+        "url": "https://greasyfork.org/users/5008-aolko"
+      }
+    ],
+    "name": "Fandom wikis sidebar cleanup",
+    "description": "No description for you",
+    "url": "https://greasyfork.org/scripts/458252-fandom-wikis-sidebar-cleanup",
+    "code_url": "https://update.greasyfork.org/scripts/458252/Fandom%20wikis%20sidebar%20cleanup.user.js",
+    "code_size": 1053,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453075,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-15T02:58:03.000Z",
+    "code_updated_at": "2023-01-19T06:15:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5008,
+        "name": "aolko",
+        "created_at": "2014-09-04T07:42:05.000Z",
+        "url": "https://greasyfork.org/users/5008-aolko"
+      }
+    ],
+    "name": "Figma scroll fix",
+    "description": "https://forum.figma.com/t/horizontal-scroll-on-the-layers-panel/643/54",
+    "url": "https://greasyfork.org/scripts/453075-figma-scroll-fix",
+    "code_url": "https://update.greasyfork.org/scripts/453075/Figma%20scroll%20fix.user.js",
+    "code_size": 2021,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 452513,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-05T11:06:43.000Z",
+    "code_updated_at": "2022-10-05T13:53:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5008,
+        "name": "aolko",
+        "created_at": "2014-09-04T07:42:05.000Z",
+        "url": "https://greasyfork.org/users/5008-aolko"
+      }
+    ],
+    "name": "Emojipedia bandaid 🩹",
+    "description": "Fixes for emojipedia",
+    "url": "https://greasyfork.org/scripts/452513-emojipedia-bandaid",
+    "code_url": "https://update.greasyfork.org/scripts/452513/Emojipedia%20bandaid%20%F0%9F%A9%B9.user.js",
+    "code_size": 1274,
+    "license": "Creative Commons Attribution Share Alike 4.0 International",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

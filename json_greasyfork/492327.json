@@ -1,0 +1,59 @@
+{
+  "id": 492327,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-12T09:12:34.000Z",
+  "code_updated_at": "2024-04-12T09:12:34.000Z",
+  "namespace": "http://your.namespace.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 768949,
+      "name": "nibabadebaba",
+      "created_at": "2021-05-06T03:51:51.000Z",
+      "url": "https://greasyfork.org/users/768949-nibabadebaba",
+      "scripts": [
+        {
+          "id": 492329,
+          "daily_installs": 0,
+          "total_installs": 92,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-12T09:22:20.000Z",
+          "code_updated_at": "2024-04-12T09:22:20.000Z",
+          "namespace": "http://your.namespace.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "（德诚）Auto Watch Video",
+          "description": "Automatically watch videos with status \"学习中\" or \"未学习\", mute them, and set playback speed to 1.5x",
+          "url": "https://greasyfork.org/scripts/492329-%E5%BE%B7%E8%AF%9A-auto-watch-video",
+          "code_url": "https://update.greasyfork.org/scripts/492329/%EF%BC%88%E5%BE%B7%E8%AF%9A%EF%BC%89Auto%20Watch%20Video.user.js",
+          "code_size": 3784,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动点击按钮",
+  "description": "在 https://v3.dconline.net.cn/student.html#/index/home 页面加载后自动点击第一个“继续学习”或“去学习”按钮，并每隔一段时间检查是否需要点击",
+  "url": "https://greasyfork.org/scripts/492327-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/492327/%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E6%8C%89%E9%92%AE.user.js",
+  "code_size": 1588,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

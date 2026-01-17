@@ -1,0 +1,33 @@
+{
+  "id": 458874,
+  "daily_installs": 0,
+  "total_installs": 1009,
+  "fan_score": "51.0",
+  "good_ratings": 4,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-26T02:04:05.000Z",
+  "code_updated_at": "2023-05-09T02:16:05.000Z",
+  "namespace": "https://www.nexusmods.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 843220,
+      "name": "sylin527",
+      "created_at": "2021-11-23T14:19:54.000Z",
+      "url": "https://greasyfork.org/users/843220-sylin527"
+    }
+  ],
+  "name": "Download No Wait by sylin527",
+  "description": "Download No Wait. No memory leak, performance. When you open mod files page or click files tab, it will add buttons, texted \"Download No Wait\", below file description. Also works on archived files.",
+  "url": "https://greasyfork.org/scripts/458874-download-no-wait-by-sylin527",
+  "code_url": "https://update.greasyfork.org/scripts/458874/Download%20No%20Wait%20by%20sylin527.user.js",
+  "code_size": 15110,
+  "license": "GPLv3",
+  "version": "0.2.1.23.5.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

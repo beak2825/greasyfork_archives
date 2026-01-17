@@ -63,6 +63,39 @@
     "version": "1.2.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 450696,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-04T03:09:19.000Z",
+    "code_updated_at": "2022-09-12T15:28:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922151,
+        "name": "Tebayaki",
+        "created_at": "2022-06-05T03:00:05.000Z",
+        "url": "https://greasyfork.org/users/922151-tebayaki"
+      }
+    ],
+    "name": "ahkcn代码块增强",
+    "description": "使用highlight.js为ahkcn高亮代码, 使用highlightjs-line-numbers.js和highlightjs-copy提供行号和一键复制功能",
+    "url": "https://greasyfork.org/scripts/450696-ahkcn%E4%BB%A3%E7%A0%81%E5%9D%97%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/450696/ahkcn%E4%BB%A3%E7%A0%81%E5%9D%97%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 28226,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

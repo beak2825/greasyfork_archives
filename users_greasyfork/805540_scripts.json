@@ -1,0 +1,101 @@
+[
+  {
+    "id": 459440,
+    "daily_installs": 0,
+    "total_installs": 193,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-04T18:42:49.000Z",
+    "code_updated_at": "2023-02-04T18:42:49.000Z",
+    "namespace": "XJTU-WebVPN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805540,
+        "name": "lvfg",
+        "created_at": "2021-08-17T09:18:49.000Z",
+        "url": "https://greasyfork.org/users/805540-lvfg"
+      }
+    ],
+    "name": "XJTU-WebVPN",
+    "description": "连接西安交通大学的WebVPN",
+    "url": "https://greasyfork.org/scripts/459440-xjtu-webvpn",
+    "code_url": "https://update.greasyfork.org/scripts/459440/XJTU-WebVPN.user.js",
+    "code_size": 2553,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 459439,
+    "daily_installs": 0,
+    "total_installs": 134,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-04T18:42:11.000Z",
+    "code_updated_at": "2023-02-04T18:42:11.000Z",
+    "namespace": "XJTU-VPN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805540,
+        "name": "lvfg",
+        "created_at": "2021-08-17T09:18:49.000Z",
+        "url": "https://greasyfork.org/users/805540-lvfg"
+      }
+    ],
+    "name": "XJTU-VPN",
+    "description": "跳转西交VPN网关",
+    "url": "https://greasyfork.org/scripts/459439-xjtu-vpn",
+    "code_url": "https://update.greasyfork.org/scripts/459439/XJTU-VPN.user.js",
+    "code_size": 1045,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 430952,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-08-17T09:30:17.000Z",
+    "code_updated_at": "2021-08-17T09:30:16.000Z",
+    "namespace": "XTJUloginHTTPS",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805540,
+        "name": "lvfg",
+        "created_at": "2021-08-17T09:18:49.000Z",
+        "url": "https://greasyfork.org/users/805540-lvfg"
+      }
+    ],
+    "name": "XJT登录跳转HTTPS",
+    "description": "XJT登录跳转HTTPS,解决有时候打开登陆页面乱序的问题",
+    "url": "https://greasyfork.org/scripts/430952-xjt%E7%99%BB%E5%BD%95%E8%B7%B3%E8%BD%AChttps",
+    "code_url": "https://update.greasyfork.org/scripts/430952/XJT%E7%99%BB%E5%BD%95%E8%B7%B3%E8%BD%ACHTTPS.user.js",
+    "code_size": 554,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

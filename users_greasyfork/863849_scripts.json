@@ -1,0 +1,35 @@
+[
+  {
+    "id": 448234,
+    "daily_installs": 0,
+    "total_installs": 378,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-07-21T14:53:34.000Z",
+    "code_updated_at": "2022-07-21T15:36:43.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 863849,
+        "name": "iceynano",
+        "created_at": "2022-01-12T06:06:47.000Z",
+        "url": "https://greasyfork.org/users/863849-iceynano"
+      }
+    ],
+    "name": "Bilibili简洁化",
+    "description": "隐藏Bilibili视频播放页面几乎所有视频以外的元素,音频仅去除评论区",
+    "url": "https://greasyfork.org/scripts/448234-bilibili%E7%AE%80%E6%B4%81%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/448234/Bilibili%E7%AE%80%E6%B4%81%E5%8C%96.user.js",
+    "code_size": 4287,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

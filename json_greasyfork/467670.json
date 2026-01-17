@@ -1,0 +1,33 @@
+{
+  "id": 467670,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-01T23:24:17.000Z",
+  "code_updated_at": "2023-06-01T23:24:16.000Z",
+  "namespace": "lol",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 949619,
+      "name": "levisurely",
+      "created_at": "2022-08-22T21:26:33.000Z",
+      "url": "https://greasyfork.org/users/949619-levisurely"
+    }
+  ],
+  "name": "Better Roblox Friendslist Icon Hider",
+  "description": "Hides Better Roblox Friendslist Icon",
+  "url": "https://greasyfork.org/scripts/467670-better-roblox-friendslist-icon-hider",
+  "code_url": "https://update.greasyfork.org/scripts/467670/Better%20Roblox%20Friendslist%20Icon%20Hider.user.js",
+  "code_size": 695,
+  "license": "Apache License 2.0",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

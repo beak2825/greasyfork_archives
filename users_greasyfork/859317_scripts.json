@@ -1,0 +1,134 @@
+[
+  {
+    "id": 441917,
+    "daily_installs": 0,
+    "total_installs": 133,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-22T15:29:16.000Z",
+    "code_updated_at": "2022-03-22T15:39:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 859317,
+        "name": "吞吞",
+        "created_at": "2021-12-30T10:42:27.000Z",
+        "url": "https://greasyfork.org/users/859317-%E5%90%9E%E5%90%9E"
+      }
+    ],
+    "name": "哔哩哔哩去除弹幕投票器与一键三连提示器",
+    "description": "去除弹幕投票器与一键三连提示器",
+    "url": "https://greasyfork.org/scripts/441917-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%8E%BB%E9%99%A4%E5%BC%B9%E5%B9%95%E6%8A%95%E7%A5%A8%E5%99%A8%E4%B8%8E%E4%B8%80%E9%94%AE%E4%B8%89%E8%BF%9E%E6%8F%90%E7%A4%BA%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/441917/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%8E%BB%E9%99%A4%E5%BC%B9%E5%B9%95%E6%8A%95%E7%A5%A8%E5%99%A8%E4%B8%8E%E4%B8%80%E9%94%AE%E4%B8%89%E8%BF%9E%E6%8F%90%E7%A4%BA%E5%99%A8.user.js",
+    "code_size": 841,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441875,
+    "daily_installs": 0,
+    "total_installs": 109,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-21T18:04:16.000Z",
+    "code_updated_at": "2022-03-21T18:30:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 859317,
+        "name": "吞吞",
+        "created_at": "2021-12-30T10:42:27.000Z",
+        "url": "https://greasyfork.org/users/859317-%E5%90%9E%E5%90%9E"
+      }
+    ],
+    "name": "BiliBili视频助手",
+    "description": "BiliBili视频助手，提供自动宽屏、自动洗脑循环等功能",
+    "url": "https://greasyfork.org/scripts/441875-bilibili%E8%A7%86%E9%A2%91%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/441875/BiliBili%E8%A7%86%E9%A2%91%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 2924,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438739,
+    "daily_installs": 0,
+    "total_installs": 487,
+    "fan_score": "30.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-01-18T15:14:44.000Z",
+    "code_updated_at": "2022-04-19T05:00:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 859317,
+        "name": "吞吞",
+        "created_at": "2021-12-30T10:42:27.000Z",
+        "url": "https://greasyfork.org/users/859317-%E5%90%9E%E5%90%9E"
+      }
+    ],
+    "name": "bilibili动态首页布局优化",
+    "description": "改变哔哩哔哩动态首页布局",
+    "url": "https://greasyfork.org/scripts/438739-bilibili%E5%8A%A8%E6%80%81%E9%A6%96%E9%A1%B5%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/438739/bilibili%E5%8A%A8%E6%80%81%E9%A6%96%E9%A1%B5%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 1652,
+    "license": "MIT License",
+    "version": "0.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 438461,
+    "daily_installs": 0,
+    "total_installs": 460,
+    "fan_score": "30.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-01-13T07:16:26.000Z",
+    "code_updated_at": "2022-05-13T04:33:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 859317,
+        "name": "吞吞",
+        "created_at": "2021-12-30T10:42:27.000Z",
+        "url": "https://greasyfork.org/users/859317-%E5%90%9E%E5%90%9E"
+      }
+    ],
+    "name": "B站动态首页展示所有正在直播列表",
+    "description": "直接在动态首页展示所有的正在直播名单，而不是默认10个",
+    "url": "https://greasyfork.org/scripts/438461-b%E7%AB%99%E5%8A%A8%E6%80%81%E9%A6%96%E9%A1%B5%E5%B1%95%E7%A4%BA%E6%89%80%E6%9C%89%E6%AD%A3%E5%9C%A8%E7%9B%B4%E6%92%AD%E5%88%97%E8%A1%A8",
+    "code_url": "https://update.greasyfork.org/scripts/438461/B%E7%AB%99%E5%8A%A8%E6%80%81%E9%A6%96%E9%A1%B5%E5%B1%95%E7%A4%BA%E6%89%80%E6%9C%89%E6%AD%A3%E5%9C%A8%E7%9B%B4%E6%92%AD%E5%88%97%E8%A1%A8.user.js",
+    "code_size": 9710,
+    "license": "MIT License",
+    "version": "0.2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

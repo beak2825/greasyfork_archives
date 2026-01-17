@@ -1,0 +1,59 @@
+{
+  "id": 433538,
+  "daily_installs": 0,
+  "total_installs": 58,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-10-07T06:46:51.000Z",
+  "code_updated_at": "2021-10-07T09:38:41.000Z",
+  "namespace": "https://github.com/kailiang-zhao",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 822658,
+      "name": "kailiang-zhao",
+      "created_at": "2021-10-07T06:40:52.000Z",
+      "url": "https://greasyfork.org/users/822658-kailiang-zhao",
+      "scripts": [
+        {
+          "id": 433538,
+          "daily_installs": 0,
+          "total_installs": 58,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2021-10-07T06:46:51.000Z",
+          "code_updated_at": "2021-10-07T09:38:41.000Z",
+          "namespace": "https://github.com/kailiang-zhao",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "github一键跳转vsCode在线浏览",
+          "description": "github一键跳转vsCode在线浏览，更直观的在线查看代码",
+          "url": "https://greasyfork.org/scripts/433538-github%E4%B8%80%E9%94%AE%E8%B7%B3%E8%BD%ACvscode%E5%9C%A8%E7%BA%BF%E6%B5%8F%E8%A7%88",
+          "code_url": "https://update.greasyfork.org/scripts/433538/github%E4%B8%80%E9%94%AE%E8%B7%B3%E8%BD%ACvsCode%E5%9C%A8%E7%BA%BF%E6%B5%8F%E8%A7%88.user.js",
+          "code_size": 1567,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "github一键跳转vsCode在线浏览",
+  "description": "github一键跳转vsCode在线浏览，更直观的在线查看代码",
+  "url": "https://greasyfork.org/scripts/433538-github%E4%B8%80%E9%94%AE%E8%B7%B3%E8%BD%ACvscode%E5%9C%A8%E7%BA%BF%E6%B5%8F%E8%A7%88",
+  "code_url": "https://update.greasyfork.org/scripts/433538/github%E4%B8%80%E9%94%AE%E8%B7%B3%E8%BD%ACvsCode%E5%9C%A8%E7%BA%BF%E6%B5%8F%E8%A7%88.user.js",
+  "code_size": 1567,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

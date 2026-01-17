@@ -1,0 +1,34 @@
+{
+  "id": 474171,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-30T00:47:48.000Z",
+  "code_updated_at": "2023-09-04T09:57:23.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 998645,
+      "name": "xiaotaiyang",
+      "created_at": "2022-12-16T14:20:31.000Z",
+      "url": "https://greasyfork.org/users/998645-xiaotaiyang",
+      "scripts": []
+    }
+  ],
+  "name": "11.自动回复（只回复一个人）",
+  "description": "抖音控制",
+  "url": "https://greasyfork.org/scripts/474171-11-%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D-%E5%8F%AA%E5%9B%9E%E5%A4%8D%E4%B8%80%E4%B8%AA%E4%BA%BA",
+  "code_url": "https://update.greasyfork.org/scripts/474171/11%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D%EF%BC%88%E5%8F%AA%E5%9B%9E%E5%A4%8D%E4%B8%80%E4%B8%AA%E4%BA%BA%EF%BC%89.user.js",
+  "code_size": 19892,
+  "license": "MIT License",
+  "version": "1.0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

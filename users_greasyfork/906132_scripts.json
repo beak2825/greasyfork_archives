@@ -1,0 +1,68 @@
+[
+  {
+    "id": 443892,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-23T18:26:25.000Z",
+    "code_updated_at": "2022-04-23T18:26:25.000Z",
+    "namespace": "asdasdasdasdasdasdasdas",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906132,
+        "name": "Heatron YT",
+        "created_at": "2022-04-23T18:02:10.000Z",
+        "url": "https://greasyfork.org/users/906132-heatron-yt"
+      }
+    ],
+    "name": "Shell Shock Aimbot a$$",
+    "description": "Hooks shellshock functions to make an aimbot",
+    "url": "https://greasyfork.org/scripts/443892-shell-shock-aimbot-a",
+    "code_url": "https://update.greasyfork.org/scripts/443892/Shell%20Shock%20Aimbot%20a%24%24.user.js",
+    "code_size": 7242,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 443890,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-23T18:07:36.000Z",
+    "code_updated_at": "2022-04-23T18:17:05.000Z",
+    "namespace": "ShellShockers Multifunction Script - Aimbot, ESP, No-Scope, All Skins Mod, FPS Improver and more!",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906132,
+        "name": "Heatron YT",
+        "created_at": "2022-04-23T18:02:10.000Z",
+        "url": "https://greasyfork.org/users/906132-heatron-yt"
+      }
+    ],
+    "name": "ShellShockers Multifunction Script - Aimbot, ESP, No-Scope, All Skins Mod, FPS Improver and more!",
+    "description": "A compilation of multiple other JS scripts for shellshockers",
+    "url": "https://greasyfork.org/scripts/443890-shellshockers-multifunction-script-aimbot-esp-no-scope-all-skins-mod-fps-improver-and-more",
+    "code_url": "https://update.greasyfork.org/scripts/443890/ShellShockers%20Multifunction%20Script%20-%20Aimbot%2C%20ESP%2C%20No-Scope%2C%20All%20Skins%20Mod%2C%20FPS%20Improver%20and%20more%21.user.js",
+    "code_size": 12004,
+    "license": "MIT License",
+    "version": "0.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

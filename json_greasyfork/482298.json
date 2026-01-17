@@ -1,0 +1,34 @@
+{
+  "id": 482298,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-15T13:17:41.000Z",
+  "code_updated_at": "2023-12-15T13:17:41.000Z",
+  "namespace": "https://sistemas.caesb/gcom/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1019092,
+      "name": "Willian Verri",
+      "created_at": "2023-01-30T19:20:41.000Z",
+      "url": "https://greasyfork.org/users/1019092-willian-verri",
+      "scripts": []
+    }
+  ],
+  "name": "PEGAR ID's NA TELA REFATURAMENTO",
+  "description": "Pega os IDs dinâmicos na tela de faturamento de conta",
+  "url": "https://greasyfork.org/scripts/482298-pegar-id-s-na-tela-refaturamento",
+  "code_url": "https://update.greasyfork.org/scripts/482298/PEGAR%20ID%27s%20NA%20TELA%20REFATURAMENTO.user.js",
+  "code_size": 3680,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

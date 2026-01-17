@@ -1,0 +1,35 @@
+[
+  {
+    "id": 489205,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-07T05:16:16.000Z",
+    "code_updated_at": "2024-12-30T05:17:31.000Z",
+    "namespace": "lax2333",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1271230,
+        "name": "lax2333",
+        "created_at": "2024-03-07T05:00:01.000Z",
+        "url": "https://greasyfork.org/users/1271230-lax2333"
+      }
+    ],
+    "name": "自动刷网课",
+    "description": "继续教育平台刷网课",
+    "url": "https://greasyfork.org/scripts/489205-%E8%87%AA%E5%8A%A8%E5%88%B7%E7%BD%91%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/489205/%E8%87%AA%E5%8A%A8%E5%88%B7%E7%BD%91%E8%AF%BE.user.js",
+    "code_size": 14367,
+    "license": "MIT License",
+    "version": "1.01.202412301317",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

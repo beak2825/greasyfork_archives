@@ -1,0 +1,167 @@
+[
+  {
+    "id": 485465,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-22T19:32:22.000Z",
+    "code_updated_at": "2024-01-22T19:32:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1160264,
+        "name": "Luis AguilarZevallos",
+        "created_at": "2023-08-27T00:48:35.000Z",
+        "url": "https://greasyfork.org/users/1160264-luis-aguilarzevallos"
+      }
+    ],
+    "name": "freematic",
+    "description": "Freematic auto roll",
+    "url": "https://greasyfork.org/scripts/485465-freematic",
+    "code_url": "https://update.greasyfork.org/scripts/485465/freematic.user.js",
+    "code_size": 12410,
+    "license": "MIT License",
+    "version": "1.11.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 475391,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-16T01:18:38.000Z",
+    "code_updated_at": "2024-01-22T19:29:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1160264,
+        "name": "Luis AguilarZevallos",
+        "created_at": "2023-08-27T00:48:35.000Z",
+        "url": "https://greasyfork.org/users/1160264-luis-aguilarzevallos"
+      }
+    ],
+    "name": "freedash",
+    "description": "Freedash auto roll",
+    "url": "https://greasyfork.org/scripts/475391-freedash",
+    "code_url": "https://update.greasyfork.org/scripts/475391/freedash.user.js",
+    "code_size": 12493,
+    "license": "MIT License",
+    "version": "1.11.11",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474190,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-30T06:28:39.000Z",
+    "code_updated_at": "2023-09-07T17:49:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1160264,
+        "name": "Luis AguilarZevallos",
+        "created_at": "2023-08-27T00:48:35.000Z",
+        "url": "https://greasyfork.org/users/1160264-luis-aguilarzevallos"
+      }
+    ],
+    "name": "freebitcoin wof",
+    "description": "Script para lanzar los WOF de freebitco.in",
+    "url": "https://greasyfork.org/scripts/474190-freebitcoin-wof",
+    "code_url": "https://update.greasyfork.org/scripts/474190/freebitcoin%20wof.user.js",
+    "code_size": 2290,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474189,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-30T06:27:12.000Z",
+    "code_updated_at": "2023-09-16T01:17:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1160264,
+        "name": "Luis AguilarZevallos",
+        "created_at": "2023-08-27T00:48:35.000Z",
+        "url": "https://greasyfork.org/users/1160264-luis-aguilarzevallos"
+      }
+    ],
+    "name": "freebitco.in spin",
+    "description": "Script para ejecutar automaticamente el spin de freebitco.in",
+    "url": "https://greasyfork.org/scripts/474189-freebitco-in-spin",
+    "code_url": "https://update.greasyfork.org/scripts/474189/freebitcoin%20spin.user.js",
+    "code_size": 3004,
+    "license": "MIT License",
+    "version": "0.5.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 473979,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-27T00:53:57.000Z",
+    "code_updated_at": "2025-02-20T20:38:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1160264,
+        "name": "Luis AguilarZevallos",
+        "created_at": "2023-08-27T00:48:35.000Z",
+        "url": "https://greasyfork.org/users/1160264-luis-aguilarzevallos"
+      }
+    ],
+    "name": "laz_autoroll_frebitcoin",
+    "description": "try to take over the world! https://greasyfork.org/es/scripts/473979-laz-autoroll-frebitcoin",
+    "url": "https://greasyfork.org/scripts/473979-laz-autoroll-frebitcoin",
+    "code_url": "https://update.greasyfork.org/scripts/473979/laz_autoroll_frebitcoin.user.js",
+    "code_size": 46595,
+    "license": "MIT License",
+    "version": "0.9.08",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

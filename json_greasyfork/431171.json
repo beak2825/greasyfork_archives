@@ -1,0 +1,59 @@
+{
+  "id": 431171,
+  "daily_installs": 0,
+  "total_installs": 295,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-22T08:05:07.000Z",
+  "code_updated_at": "2021-08-22T08:05:07.000Z",
+  "namespace": "https://greasyfork.org/users/807263",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 807263,
+      "name": "RaghavP",
+      "created_at": "2021-08-22T07:59:27.000Z",
+      "url": "https://greasyfork.org/users/807263-raghavp",
+      "scripts": [
+        {
+          "id": 431171,
+          "daily_installs": 0,
+          "total_installs": 295,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-08-22T08:05:07.000Z",
+          "code_updated_at": "2021-08-22T08:05:07.000Z",
+          "namespace": "https://greasyfork.org/users/807263",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Dark Mode",
+          "description": "Enable Dark Mode for all websites",
+          "url": "https://greasyfork.org/scripts/431171-dark-mode",
+          "code_url": "https://update.greasyfork.org/scripts/431171/Dark%20Mode.user.js",
+          "code_size": 473,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Dark Mode",
+  "description": "Enable Dark Mode for all websites",
+  "url": "https://greasyfork.org/scripts/431171-dark-mode",
+  "code_url": "https://update.greasyfork.org/scripts/431171/Dark%20Mode.user.js",
+  "code_size": 473,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

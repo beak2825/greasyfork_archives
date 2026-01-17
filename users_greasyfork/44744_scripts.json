@@ -1,0 +1,134 @@
+[
+  {
+    "id": 460549,
+    "daily_installs": 0,
+    "total_installs": 342,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-23T05:31:41.000Z",
+    "code_updated_at": "2023-03-07T07:34:46.000Z",
+    "namespace": "https://github.com/amorphobia/pt-helper",
+    "support_url": "https://github.com/amorphobia/pt-helper/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44744,
+        "name": "amorphobia",
+        "created_at": "2016-05-21T04:16:47.000Z",
+        "url": "https://greasyfork.org/users/44744-amorphobia"
+      }
+    ],
+    "name": "PT Helper",
+    "description": "A helper for private trackers",
+    "url": "https://greasyfork.org/scripts/460549-pt-helper",
+    "code_url": "https://update.greasyfork.org/scripts/460549/PT%20Helper.user.js",
+    "code_size": 251362,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "0.1.23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460013,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-14T11:43:15.000Z",
+    "code_updated_at": "2023-02-21T09:26:31.000Z",
+    "namespace": "https://github.com/amorphobia/tampermonkey-scripts",
+    "support_url": "https://github.com/amorphobia/tampermonkey-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44744,
+        "name": "amorphobia",
+        "created_at": "2016-05-21T04:16:47.000Z",
+        "url": "https://greasyfork.org/users/44744-amorphobia"
+      }
+    ],
+    "name": "TJUPT Tweaks",
+    "description": "Current tweaks: fold / hide the bannar, hide sticky torrents, botton to copy direct link on torrent list page, color blind mode, automatically say thanks",
+    "url": "https://greasyfork.org/scripts/460013-tjupt-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/460013/TJUPT%20Tweaks.user.js",
+    "code_size": 9596,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "0.5.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 454442,
+    "daily_installs": 0,
+    "total_installs": 142,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-08T04:51:01.000Z",
+    "code_updated_at": "2022-11-08T04:51:01.000Z",
+    "namespace": "https://github.com/amorphobia/tampermonkey-scripts",
+    "support_url": "https://github.com/amorphobia/tampermonkey-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44744,
+        "name": "amorphobia",
+        "created_at": "2016-05-21T04:16:47.000Z",
+        "url": "https://greasyfork.org/users/44744-amorphobia"
+      }
+    ],
+    "name": "默认谷歌搜索",
+    "description": "用谷歌替代系统默认搜索引擎",
+    "url": "https://greasyfork.org/scripts/454442-%E9%BB%98%E8%AE%A4%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/454442/%E9%BB%98%E8%AE%A4%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 5358,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 452864,
+    "daily_installs": 0,
+    "total_installs": 202,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-11T09:21:58.000Z",
+    "code_updated_at": "2022-10-11T09:55:06.000Z",
+    "namespace": "https://github.com/amorphobia/tampermonkey-scripts",
+    "support_url": "https://github.com/amorphobia/tampermonkey-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44744,
+        "name": "amorphobia",
+        "created_at": "2016-05-21T04:16:47.000Z",
+        "url": "https://greasyfork.org/users/44744-amorphobia"
+      }
+    ],
+    "name": "谷歌搜索重定向",
+    "description": "自动从 google.cn 跳转到 google.com.hk",
+    "url": "https://greasyfork.org/scripts/452864-%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%E9%87%8D%E5%AE%9A%E5%90%91",
+    "code_url": "https://update.greasyfork.org/scripts/452864/%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%E9%87%8D%E5%AE%9A%E5%90%91.user.js",
+    "code_size": 660,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

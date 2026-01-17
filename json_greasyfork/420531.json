@@ -1,0 +1,59 @@
+{
+  "id": 420531,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-01-22T06:35:37.000Z",
+  "code_updated_at": "2021-01-22T06:35:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 729981,
+      "name": "lan x06",
+      "created_at": "2021-01-22T05:57:04.000Z",
+      "url": "https://greasyfork.org/users/729981-lan-x06",
+      "scripts": [
+        {
+          "id": 420531,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-01-22T06:35:37.000Z",
+          "code_updated_at": "2021-01-22T06:35:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "change google style",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/420531-change-google-style",
+          "code_url": "https://update.greasyfork.org/scripts/420531/change%20google%20style.user.js",
+          "code_size": 1213,
+          "license": null,
+          "version": "0.1.20210121",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "change google style",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/420531-change-google-style",
+  "code_url": "https://update.greasyfork.org/scripts/420531/change%20google%20style.user.js",
+  "code_size": 1213,
+  "license": null,
+  "version": "0.1.20210121",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

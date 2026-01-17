@@ -1,0 +1,34 @@
+{
+  "id": 472625,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-07T08:21:13.000Z",
+  "code_updated_at": "2023-12-12T11:44:27.000Z",
+  "namespace": "https://ysslang.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 108435,
+      "name": "ysslang",
+      "created_at": "2017-03-09T15:18:37.000Z",
+      "url": "https://greasyfork.org/users/108435-ysslang",
+      "scripts": []
+    }
+  ],
+  "name": "_XdemoFDL",
+  "description": "brute force FDL demo!",
+  "url": "https://greasyfork.org/scripts/472625-xdemofdl",
+  "code_url": "https://update.greasyfork.org/scripts/472625/_XdemoFDL.user.js",
+  "code_size": 11434,
+  "license": "CC-BY-NC-SA-4.0; https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode",
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

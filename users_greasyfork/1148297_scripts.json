@@ -1,0 +1,68 @@
+[
+  {
+    "id": 472833,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-10T09:57:32.000Z",
+    "code_updated_at": "2023-08-10T09:57:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148297,
+        "name": "SkrNeymar",
+        "created_at": "2023-08-10T09:53:51.000Z",
+        "url": "https://greasyfork.org/users/1148297-skrneymar"
+      }
+    ],
+    "name": "FCFS ATC",
+    "description": "FIFA WWC 2023 FCFS ATC",
+    "url": "https://greasyfork.org/scripts/472833-fcfs-atc",
+    "code_url": "https://update.greasyfork.org/scripts/472833/FCFS%20ATC.user.js",
+    "code_size": 1801,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 472832,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-10T09:56:05.000Z",
+    "code_updated_at": "2023-08-10T09:56:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1148297,
+        "name": "SkrNeymar",
+        "created_at": "2023-08-10T09:53:51.000Z",
+        "url": "https://greasyfork.org/users/1148297-skrneymar"
+      }
+    ],
+    "name": "Resale ATC",
+    "description": "遍历 class=\"table_container\" 的 div 下的 table 的 tbody 中的特定 tr，并获取特定类的内容",
+    "url": "https://greasyfork.org/scripts/472832-resale-atc",
+    "code_url": "https://update.greasyfork.org/scripts/472832/Resale%20ATC.user.js",
+    "code_size": 5033,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 451926,
+  "daily_installs": 0,
+  "total_installs": 69,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-24T07:39:08.000Z",
+  "code_updated_at": "2022-09-24T07:39:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 962935,
+      "name": "anbano",
+      "created_at": "2022-09-24T06:30:17.000Z",
+      "url": "https://greasyfork.org/users/962935-anbano",
+      "scripts": [
+        {
+          "id": 451926,
+          "daily_installs": 0,
+          "total_installs": 69,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-24T07:39:08.000Z",
+          "code_updated_at": "2022-09-24T07:39:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FUT 23 Transfer list to 100",
+          "description": "Increase size of Transfer list to 100 (instead of default 30)",
+          "url": "https://greasyfork.org/scripts/451926-fut-23-transfer-list-to-100",
+          "code_url": "https://update.greasyfork.org/scripts/451926/FUT%2023%20Transfer%20list%20to%20100.user.js",
+          "code_size": 580,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FUT 23 Transfer list to 100",
+  "description": "Increase size of Transfer list to 100 (instead of default 30)",
+  "url": "https://greasyfork.org/scripts/451926-fut-23-transfer-list-to-100",
+  "code_url": "https://update.greasyfork.org/scripts/451926/FUT%2023%20Transfer%20list%20to%20100.user.js",
+  "code_size": 580,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

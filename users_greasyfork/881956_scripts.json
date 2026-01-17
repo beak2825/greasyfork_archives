@@ -1,0 +1,134 @@
+[
+  {
+    "id": 444709,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-09T00:42:40.000Z",
+    "code_updated_at": "2022-05-09T03:51:26.000Z",
+    "namespace": "https://www.tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 881956,
+        "name": "冥飞",
+        "created_at": "2022-03-02T00:46:28.000Z",
+        "url": "https://greasyfork.org/users/881956-%E5%86%A5%E9%A3%9E"
+      }
+    ],
+    "name": "全网VIP视频自动解析蓝光播放器(已适配苹果，安卓，PC端)",
+    "description": "无需跳转新网址，打开官网直接看，蓝光 4k 无广告 随机去水印。支持：腾讯，爱奇艺，优酷，哔哩哔哩，咪咕，乐视，搜狐，芒果，西瓜，PPTV，1905电影网，华数。支持解析失败自动切换推荐解析源。适配各种浏览器。",
+    "url": "https://greasyfork.org/scripts/444709-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E8%93%9D%E5%85%89%E6%92%AD%E6%94%BE%E5%99%A8-%E5%B7%B2%E9%80%82%E9%85%8D%E8%8B%B9%E6%9E%9C-%E5%AE%89%E5%8D%93-pc%E7%AB%AF",
+    "code_url": "https://update.greasyfork.org/scripts/444709/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E8%93%9D%E5%85%89%E6%92%AD%E6%94%BE%E5%99%A8%28%E5%B7%B2%E9%80%82%E9%85%8D%E8%8B%B9%E6%9E%9C%EF%BC%8C%E5%AE%89%E5%8D%93%EF%BC%8CPC%E7%AB%AF%29.user.js",
+    "code_size": 85734,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.1.8.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 441186,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-09T00:22:24.000Z",
+    "code_updated_at": "2023-02-08T02:00:09.000Z",
+    "namespace": "https://greasyfork.org/users/881956",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 881956,
+        "name": "冥飞",
+        "created_at": "2022-03-02T00:46:28.000Z",
+        "url": "https://greasyfork.org/users/881956-%E5%86%A5%E9%A3%9E"
+      }
+    ],
+    "name": "解析辅助脚本",
+    "description": "脚本功能目前有：给“解析脚本”添加自定义接口（需要配合jxb解析脚本 822以上版本 才有效果）。",
+    "url": "https://greasyfork.org/scripts/441186-%E8%A7%A3%E6%9E%90%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/441186/%E8%A7%A3%E6%9E%90%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 7725,
+    "license": null,
+    "version": "963540817.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 440800,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-02T04:06:58.000Z",
+    "code_updated_at": "2022-04-06T02:57:50.000Z",
+    "namespace": "https://greasyfork.org/users/881956",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 881956,
+        "name": "冥飞",
+        "created_at": "2022-03-02T00:46:28.000Z",
+        "url": "https://greasyfork.org/users/881956-%E5%86%A5%E9%A3%9E"
+      }
+    ],
+    "name": "猫源辅助",
+    "description": "把( 猫影视源 && 残影源 && 搜视源 && Free源 && 猴子脚本源 && 解析网站源 && js接口源 && 解析接口源)改造成 解析辅助脚本（爬虫功能只支持安装有（猴子插件）的浏览器 && 不支持订阅经过转换的 短链接 地址源）。",
+    "url": "https://greasyfork.org/scripts/440800-%E7%8C%AB%E6%BA%90%E8%BE%85%E5%8A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/440800/%E7%8C%AB%E6%BA%90%E8%BE%85%E5%8A%A9.user.js",
+    "code_size": 33149,
+    "license": null,
+    "version": "虎年养老版本",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 440799,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-02T04:04:20.000Z",
+    "code_updated_at": "2022-11-16T08:28:03.000Z",
+    "namespace": "https://greasyfork.org/users/881956",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 881956,
+        "name": "冥飞",
+        "created_at": "2022-03-02T00:46:28.000Z",
+        "url": "https://greasyfork.org/users/881956-%E5%86%A5%E9%A3%9E"
+      }
+    ],
+    "name": "公益脚本，请勿上当受骗购买",
+    "description": "脚本功能目前有：1--（建议电脑使用，手机请用其他APP更舒服）（请自行安装 “辅助脚本” 自己自定义接口使用）（视频解析失败的话请自己 （电脑：左上角按钮 && 手机：右下角按钮） 切换接口，不用乱反馈，手机 哔哩哔哩 视频解析的话，需要切换电脑UA）A站、B站、优酷、土豆、腾讯、芒果、爱奇艺、搜狐、西瓜、乐视、PPTV、1905...等各大视频网站 （普通视频--自动跳过视频广告 && 自动暂停视频，会员视频--自动会员解析,解放双手），2--A站,B站,优酷,腾讯,爱奇艺,芒果TV,PPTV,搜狐,乐视视频关闭弹幕，3--豆瓣资源 可以搜索观看视频，4--支持 网易云音乐、QQ音乐、酷狗、酷我、虾米、咪咕、5SING、喜马拉雅、懒人听书、全民K歌、一听音乐、九酷音乐网、echo回声、四季电台、快手视频、抖音视频、好看视频...等（非付费 和 非会员）音乐 和 MV 嗅探下载（先播放，然后再点击网页右上角--猫咪按钮）。（请不要相信“解析”出现的一切任何形式的广告，江小白无聊作品，单纯写好玩的）",
+    "url": "https://greasyfork.org/scripts/440799-%E5%85%AC%E7%9B%8A%E8%84%9A%E6%9C%AC-%E8%AF%B7%E5%8B%BF%E4%B8%8A%E5%BD%93%E5%8F%97%E9%AA%97%E8%B4%AD%E4%B9%B0",
+    "code_url": "https://update.greasyfork.org/scripts/440799/%E5%85%AC%E7%9B%8A%E8%84%9A%E6%9C%AC%EF%BC%8C%E8%AF%B7%E5%8B%BF%E4%B8%8A%E5%BD%93%E5%8F%97%E9%AA%97%E8%B4%AD%E4%B9%B0.user.js",
+    "code_size": 731230,
+    "license": null,
+    "version": "虎年养老版本",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

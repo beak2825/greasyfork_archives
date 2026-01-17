@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495196,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-16T18:45:34.000Z",
+    "code_updated_at": "2024-05-16T18:45:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1302728,
+        "name": "arkochan",
+        "created_at": "2024-05-16T18:45:08.000Z",
+        "url": "https://greasyfork.org/users/1302728-arkochan"
+      }
+    ],
+    "name": "Richup.io - Palestine 🇵🇸",
+    "description": "changes the tiles of the fictional place srael into the country and rightful owner of the soil, Palestine!",
+    "url": "https://greasyfork.org/scripts/495196-richup-io-palestine",
+    "code_url": "https://update.greasyfork.org/scripts/495196/Richupio%20-%20Palestine%20%F0%9F%87%B5%F0%9F%87%B8.user.js",
+    "code_size": 4196,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

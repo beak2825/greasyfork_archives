@@ -1,0 +1,33 @@
+{
+  "id": 428791,
+  "daily_installs": 0,
+  "total_installs": 289,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-02T06:03:04.000Z",
+  "code_updated_at": "2023-04-22T14:27:50.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 24050,
+      "name": "heckles",
+      "created_at": "2015-12-20T15:50:22.000Z",
+      "url": "https://greasyfork.org/users/24050-heckles"
+    }
+  ],
+  "name": "【自用】浏览器看图 for FireFox",
+  "description": "针对火狐浏览器：去除火狐自带缩放（改为默认100%大小自动居中） | 可拖拽 | 以鼠标中心缩放 | 限定最小缩放（图片大小和屏幕大小较小值的50%） | 左上角显示缩放比例，点击还原 | 可旋转、水平翻转 | 图片加载完毕后闪烁一次",
+  "url": "https://greasyfork.org/scripts/428791-%E8%87%AA%E7%94%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9C%8B%E5%9B%BE-for-firefox",
+  "code_url": "https://update.greasyfork.org/scripts/428791/%E3%80%90%E8%87%AA%E7%94%A8%E3%80%91%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9C%8B%E5%9B%BE%20for%20FireFox.user.js",
+  "code_size": 10913,
+  "license": null,
+  "version": "2023.04.22",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

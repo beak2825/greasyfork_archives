@@ -1,0 +1,34 @@
+{
+  "id": 455477,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-27T04:46:15.000Z",
+  "code_updated_at": "2022-11-27T04:48:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 943809,
+      "name": "v-wei",
+      "created_at": "2022-08-07T01:47:20.000Z",
+      "url": "https://greasyfork.org/users/943809-v-wei",
+      "scripts": []
+    }
+  ],
+  "name": "xss攻击",
+  "description": "xssAttack",
+  "url": "https://greasyfork.org/scripts/455477-xss%E6%94%BB%E5%87%BB",
+  "code_url": "https://update.greasyfork.org/scripts/455477/xss%E6%94%BB%E5%87%BB.user.js",
+  "code_size": 856,
+  "license": "AGPL License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

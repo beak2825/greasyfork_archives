@@ -1,0 +1,35 @@
+[
+  {
+    "id": 449940,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-21T19:28:08.000Z",
+    "code_updated_at": "2022-08-21T19:28:08.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 943401,
+        "name": "Yaroslav Raskalov",
+        "created_at": "2022-08-05T16:57:24.000Z",
+        "url": "https://greasyfork.org/users/943401-yaroslav-raskalov"
+      }
+    ],
+    "name": "SAMARA ADMINS | Форумный скрипт для ГА/ЗГА/Кураторов",
+    "description": "Для настоящих флудеров форума, кстати Патрик Джексон 0",
+    "url": "https://greasyfork.org/scripts/449940-samara-admins-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%BD%D1%8B%D0%B9-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B3%D0%B0-%D0%B7%D0%B3%D0%B0-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2",
+    "code_url": "https://update.greasyfork.org/scripts/449940/SAMARA%20ADMINS%20%7C%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%BD%D1%8B%D0%B9%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%93%D0%90%D0%97%D0%93%D0%90%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2.user.js",
+    "code_size": 24956,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

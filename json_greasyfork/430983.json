@@ -1,0 +1,33 @@
+{
+  "id": 430983,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-18T01:32:46.000Z",
+  "code_updated_at": "2021-08-21T01:07:33.000Z",
+  "namespace": "https://github.com/syhyz1990/baiduyun",
+  "support_url": "https://github.com/syhyz1990/baiduyun",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 771135,
+      "name": "蛙来蛙去",
+      "created_at": "2021-05-12T03:42:16.000Z",
+      "url": "https://greasyfork.org/users/771135-%E8%9B%99%E6%9D%A5%E8%9B%99%E5%8E%BB"
+    }
+  ],
+  "name": "网盘直链下载助手(改版）",
+  "description": "【网盘直链下载助手】是一款免费开源获取网盘文件真实下载地址的油猴插件，基于开放API，支持 Windows，Mac，Linux 等多平台，即可使用系统自带的终端 cURL 命令，也可以使用 IDM，Xdown 等多线程工具加速下载，支持 Aria RPC 协议远程下载。支持自定义更换皮肤和新版网盘界面。",
+  "url": "https://greasyfork.org/scripts/430983-%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-%E6%94%B9%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/430983/%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%28%E6%94%B9%E7%89%88%EF%BC%89.user.js",
+  "code_size": 46596,
+  "license": "AGPL",
+  "version": "5.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

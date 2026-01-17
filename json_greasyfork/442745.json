@@ -1,0 +1,34 @@
+{
+  "id": 442745,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-04T15:50:34.000Z",
+  "code_updated_at": "2022-04-04T15:50:34.000Z",
+  "namespace": "mscststs",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 897731,
+      "name": "pulperi",
+      "created_at": "2022-04-04T15:41:35.000Z",
+      "url": "https://greasyfork.org/users/897731-pulperi",
+      "scripts": []
+    }
+  ],
+  "name": "Twitter timestamp convert",
+  "description": "convert the time to exact time",
+  "url": "https://greasyfork.org/scripts/442745-twitter-timestamp-convert",
+  "code_url": "https://update.greasyfork.org/scripts/442745/Twitter%20timestamp%20convert.user.js",
+  "code_size": 4274,
+  "license": null,
+  "version": "0.2-rw",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

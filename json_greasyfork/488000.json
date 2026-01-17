@@ -1,0 +1,33 @@
+{
+  "id": 488000,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-22T09:45:54.000Z",
+  "code_updated_at": "2024-02-22T21:50:44.000Z",
+  "namespace": "https://crm.globaldrive.ru/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265318,
+      "name": "Сергей Инденбом",
+      "created_at": "2024-02-22T09:44:34.000Z",
+      "url": "https://greasyfork.org/users/1265318-%D1%81%D0%B5%D1%80%D0%B3%D0%B5%D0%B9-%D0%B8%D0%BD%D0%B4%D0%B5%D0%BD%D0%B1%D0%BE%D0%BC"
+    }
+  ],
+  "name": "Bitrix24 Stage Selector",
+  "description": "Better Tasks Stage Selector",
+  "url": "https://greasyfork.org/scripts/488000-bitrix24-stage-selector",
+  "code_url": "https://update.greasyfork.org/scripts/488000/Bitrix24%20Stage%20Selector.user.js",
+  "code_size": 898,
+  "license": null,
+  "version": "2024-02-22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

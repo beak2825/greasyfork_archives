@@ -1,0 +1,33 @@
+{
+  "id": 481285,
+  "daily_installs": 0,
+  "total_installs": 15047,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-03T06:09:13.000Z",
+  "code_updated_at": "2023-12-03T13:05:49.000Z",
+  "namespace": "https://domooc.top/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 473285,
+      "name": "ExTedic",
+      "created_at": "2020-04-02T01:05:41.000Z",
+      "url": "https://greasyfork.org/users/473285-extedic"
+    }
+  ],
+  "name": "中国大学慕课mooc答题/自动播放脚本(domooc)",
+  "description": "自动完成你的mooc考试测验客观题，开始刷课后自动看视频、看课件、自动讨论。使用过程中会上传您的mooc账户信息（包括昵称、ID、邮箱等）以识别用户。免费用户有20初始积分，可以回答20题，使用完后需要付费充值获取积分。",
+  "url": "https://greasyfork.org/scripts/481285-%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6%E6%85%95%E8%AF%BEmooc%E7%AD%94%E9%A2%98-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC-domooc",
+  "code_url": "https://update.greasyfork.org/scripts/481285/%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6%E6%85%95%E8%AF%BEmooc%E7%AD%94%E9%A2%98%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC%28domooc%29.user.js",
+  "code_size": 485284,
+  "license": null,
+  "version": "2.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

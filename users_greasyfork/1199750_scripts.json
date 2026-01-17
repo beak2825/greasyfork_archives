@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477789,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-19T15:46:38.000Z",
+    "code_updated_at": "2023-10-19T16:54:24.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199750,
+        "name": "hangedmandesign",
+        "created_at": "2023-10-19T15:39:10.000Z",
+        "url": "https://greasyfork.org/users/1199750-hangedmandesign"
+      }
+    ],
+    "name": "Bulbapedia Cleanup",
+    "description": "Removes content from Bulbapedia Pokemon pages that doesn't pertain to the games (shows, manga, etc)",
+    "url": "https://greasyfork.org/scripts/477789-bulbapedia-cleanup",
+    "code_url": "https://update.greasyfork.org/scripts/477789/Bulbapedia%20Cleanup.user.js",
+    "code_size": 1366,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

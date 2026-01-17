@@ -1,0 +1,34 @@
+{
+  "id": 417569,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-02T16:02:31.000Z",
+  "code_updated_at": "2020-12-02T16:02:30.000Z",
+  "namespace": "亚马逊",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 711554,
+      "name": "Akimoto",
+      "created_at": "2020-12-02T15:52:03.000Z",
+      "url": "https://greasyfork.org/users/711554-akimoto",
+      "scripts": []
+    }
+  ],
+  "name": "亚马逊",
+  "description": "Play a sound if Ring Fit Adventure is in stock",
+  "url": "https://greasyfork.org/scripts/417569-%E4%BA%9A%E9%A9%AC%E9%80%8A",
+  "code_url": "https://update.greasyfork.org/scripts/417569/%E4%BA%9A%E9%A9%AC%E9%80%8A.user.js",
+  "code_size": 854,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

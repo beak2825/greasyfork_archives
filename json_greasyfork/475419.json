@@ -1,0 +1,33 @@
+{
+  "id": 475419,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-16T10:46:30.000Z",
+  "code_updated_at": "2023-09-16T12:02:30.000Z",
+  "namespace": "https://www.shemale6.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 359306,
+      "name": "hao_jiu",
+      "created_at": "2019-09-02T03:21:41.000Z",
+      "url": "https://greasyfork.org/users/359306-hao-jiu"
+    }
+  ],
+  "name": "suki get",
+  "description": "测试",
+  "url": "https://greasyfork.org/scripts/475419-suki-get",
+  "code_url": "https://update.greasyfork.org/scripts/475419/suki%20get.user.js",
+  "code_size": 2220,
+  "license": null,
+  "version": "2",
+  "locale": "hu",
+  "deleted": false,
+  "visibility": "public"
+}

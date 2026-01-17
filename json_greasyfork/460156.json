@@ -1,0 +1,34 @@
+{
+  "id": 460156,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-17T02:50:32.000Z",
+  "code_updated_at": "2023-02-17T15:35:51.000Z",
+  "namespace": "lanhaha",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1025613,
+      "name": "hai han",
+      "created_at": "2023-02-11T16:07:30.000Z",
+      "url": "https://greasyfork.org/users/1025613-hai-han",
+      "scripts": []
+    }
+  ],
+  "name": "虾米解析  v6",
+  "description": "自用多功能脚本工具箱，完全免费、无广告、无需关注公众号，集合了优酷、爱奇艺、腾讯、B站(bilibili)、芒果等全网VIP视频(PC+移动端)免费破解去广告，网易云音乐、QQ音乐、酷狗、酷我、虾米、蜻蜓FM、荔枝FM、喜马拉雅等网站音乐和有声书音频免客户端下载，知乎增强(知乎视频下载、去广告、关键词屏蔽、去除侧边栏等)，视频无水印下载(bilibili、抖音、快手、西瓜、youtube)，百度网盘直接下载，优惠券自动查询等几个自己常用的功能，且功能可独立开关。",
+  "url": "https://greasyfork.org/scripts/460156-%E8%99%BE%E7%B1%B3%E8%A7%A3%E6%9E%90-v6",
+  "code_url": "https://update.greasyfork.org/scripts/460156/%E8%99%BE%E7%B1%B3%E8%A7%A3%E6%9E%90%20%20v6.user.js",
+  "code_size": 283159,
+  "license": "AGPL License",
+  "version": "6.7.13",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

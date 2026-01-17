@@ -31,5 +31,71 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 469478,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-26T08:41:41.000Z",
+    "code_updated_at": "2024-05-28T08:00:23.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3989,
+        "name": "TNB",
+        "created_at": "2014-07-28T19:39:14.000Z",
+        "url": "https://greasyfork.org/users/3989-tnb"
+      }
+    ],
+    "name": "Display summary in Amazon video",
+    "description": "Amazonプライムビデオのあらすじを常に表示する",
+    "url": "https://greasyfork.org/scripts/469478-display-summary-in-amazon-video",
+    "code_url": "https://update.greasyfork.org/scripts/469478/Display%20summary%20in%20Amazon%20video.user.css",
+    "code_size": 862,
+    "license": "MIT License",
+    "version": "1.0.6",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 457870,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-08T21:17:24.000Z",
+    "code_updated_at": "2023-08-05T01:47:44.000Z",
+    "namespace": "https://greasyfork.org/users/3989",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3989,
+        "name": "TNB",
+        "created_at": "2014-07-28T19:39:14.000Z",
+        "url": "https://greasyfork.org/users/3989-tnb"
+      }
+    ],
+    "name": "yahoo news filter",
+    "description": "yahooニュースで任意の記事を非表示にする",
+    "url": "https://greasyfork.org/scripts/457870-yahoo-news-filter",
+    "code_url": "https://update.greasyfork.org/scripts/457870/yahoo%20news%20filter.user.js",
+    "code_size": 1871,
+    "license": null,
+    "version": "1.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

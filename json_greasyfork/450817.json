@@ -1,0 +1,34 @@
+{
+  "id": 450817,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-06T05:40:37.000Z",
+  "code_updated_at": "2022-09-06T05:43:15.000Z",
+  "namespace": "https://image.baidu.la/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 953485,
+      "name": "xi kaka",
+      "created_at": "2022-09-02T00:14:12.000Z",
+      "url": "https://greasyfork.org/users/953485-xi-kaka",
+      "scripts": []
+    }
+  ],
+  "name": "BIMG上传脚本",
+  "description": "BIMG快捷上传工具",
+  "url": "https://greasyfork.org/scripts/450817-bimg%E4%B8%8A%E4%BC%A0%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/450817/BIMG%E4%B8%8A%E4%BC%A0%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 3517,
+  "license": "GPL",
+  "version": "0.25",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 433986,
+    "daily_installs": 1,
+    "total_installs": 1792,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-10-16T13:01:01.000Z",
+    "code_updated_at": "2021-10-16T13:01:01.000Z",
+    "namespace": "https://greasyfork.org/users/237565",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 237565,
+        "name": "Jakub Daszkiewicz",
+        "created_at": "2019-01-05T22:43:03.000Z",
+        "url": "https://greasyfork.org/users/237565-jakub-daszkiewicz"
+      }
+    ],
+    "name": "Disable YouTube Shorts",
+    "description": "Disables YouTube Shorts player on the website by redirecting to the standard player.",
+    "url": "https://greasyfork.org/scripts/433986-disable-youtube-shorts",
+    "code_url": "https://update.greasyfork.org/scripts/433986/Disable%20YouTube%20Shorts.user.js",
+    "code_size": 349,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

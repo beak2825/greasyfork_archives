@@ -1,0 +1,35 @@
+[
+  {
+    "id": 424657,
+    "daily_installs": 0,
+    "total_installs": 1351,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-07T20:57:13.000Z",
+    "code_updated_at": "2021-04-08T04:25:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 756108,
+        "name": "ZenDojo",
+        "created_at": "2021-04-07T20:52:25.000Z",
+        "url": "https://greasyfork.org/users/756108-zendojo"
+      }
+    ],
+    "name": "Video Speedy 视频倍速",
+    "description": "Add video speed 加速视频支持1-4倍速",
+    "url": "https://greasyfork.org/scripts/424657-video-speedy-%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/424657/Video%20Speedy%20%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F.user.js",
+    "code_size": 1673,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

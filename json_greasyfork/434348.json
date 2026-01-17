@@ -1,0 +1,34 @@
+{
+  "id": 434348,
+  "daily_installs": 0,
+  "total_installs": 70,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-23T14:10:08.000Z",
+  "code_updated_at": "2022-08-13T17:59:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 206502,
+      "name": "TomaszFromasz",
+      "created_at": "2018-08-21T06:06:43.000Z",
+      "url": "https://greasyfork.org/users/206502-tomaszfromasz",
+      "scripts": []
+    }
+  ],
+  "name": "TaskMaster 3000",
+  "description": "Tasko-przypominacz",
+  "url": "https://greasyfork.org/scripts/434348-taskmaster-3000",
+  "code_url": "https://update.greasyfork.org/scripts/434348/TaskMaster%203000.user.js",
+  "code_size": 87989,
+  "license": null,
+  "version": "6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

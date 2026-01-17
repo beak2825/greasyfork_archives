@@ -1,0 +1,34 @@
+{
+  "id": 452807,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-10T10:25:03.000Z",
+  "code_updated_at": "2022-10-10T10:25:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 968749,
+      "name": "Thomas Carter",
+      "created_at": "2022-10-10T10:12:47.000Z",
+      "url": "https://greasyfork.org/users/968749-thomas-carter",
+      "scripts": []
+    }
+  ],
+  "name": "Zmiany na Ziemi (baBlock Plus)",
+  "description": "Ukrywa komentarze nielubianych przez ciebie osób. Będą niewidoczne jedynie u ciebie. Kliknij na ciemny pasek spoiler, by wyświetlić ukryty komentarz.",
+  "url": "https://greasyfork.org/scripts/452807-zmiany-na-ziemi-bablock-plus",
+  "code_url": "https://update.greasyfork.org/scripts/452807/Zmiany%20na%20Ziemi%20%28baBlock%20Plus%29.user.js",
+  "code_size": 5474,
+  "license": "MIT License",
+  "version": "7.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

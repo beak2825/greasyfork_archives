@@ -1,0 +1,33 @@
+{
+  "id": 462300,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-22T03:13:37.000Z",
+  "code_updated_at": "2023-03-23T02:25:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 804215,
+      "name": "Nex01",
+      "created_at": "2021-08-13T11:19:12.000Z",
+      "url": "https://greasyfork.org/users/804215-nex01"
+    }
+  ],
+  "name": "0323网页内容质量考试脚本通用最新1.6",
+  "description": "对网页内容质量项目进行辅助标注",
+  "url": "https://greasyfork.org/scripts/462300-0323%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9%E8%B4%A8%E9%87%8F%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC%E9%80%9A%E7%94%A8%E6%9C%80%E6%96%B01-6",
+  "code_url": "https://update.greasyfork.org/scripts/462300/0323%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9%E8%B4%A8%E9%87%8F%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC%E9%80%9A%E7%94%A8%E6%9C%80%E6%96%B016.user.js",
+  "code_size": 19064,
+  "license": "Nex",
+  "version": "1.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

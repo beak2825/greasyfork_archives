@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464149,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-16T10:48:54.000Z",
+    "code_updated_at": "2023-04-16T10:48:54.000Z",
+    "namespace": "https://davidblue.wtf",
+    "support_url": "https://davidblue.wtf/contact",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 931469,
+        "name": "extratone",
+        "created_at": "2022-07-02T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/931469-extratone"
+      }
+    ],
+    "name": "Honk Button",
+    "description": "Adds a small, unstyled button labeled \"Honk!\" to the upper right of any webpage which causes loud honking sounds to play.",
+    "url": "https://greasyfork.org/scripts/464149-honk-button",
+    "code_url": "https://update.greasyfork.org/scripts/464149/Honk%20Button.user.js",
+    "code_size": 817,
+    "license": "Unlicensed",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

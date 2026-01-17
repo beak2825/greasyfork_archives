@@ -1,0 +1,35 @@
+[
+  {
+    "id": 464041,
+    "daily_installs": 1,
+    "total_installs": 312,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-15T01:39:21.000Z",
+    "code_updated_at": "2023-04-18T04:18:28.000Z",
+    "namespace": "ChatFormatting",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060350,
+        "name": "Ruby Y.",
+        "created_at": "2023-04-15T01:02:15.000Z",
+        "url": "https://greasyfork.org/users/1060350-ruby-y"
+      }
+    ],
+    "name": "Emphasize Quotes",
+    "description": "Makes surrounding text lighter while making text within quotations stand out. Supports Safari and works with FixSpacing.",
+    "url": "https://greasyfork.org/scripts/464041-emphasize-quotes",
+    "code_url": "https://update.greasyfork.org/scripts/464041/Emphasize%20Quotes.user.js",
+    "code_size": 2422,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

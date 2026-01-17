@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444348,
+    "daily_installs": 0,
+    "total_installs": 1271,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-05-02T06:13:04.000Z",
+    "code_updated_at": "2022-10-07T10:03:37.000Z",
+    "namespace": "Mordern",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 909460,
+        "name": "HackerLord Mordern",
+        "created_at": "2022-05-02T06:11:51.000Z",
+        "url": "https://greasyfork.org/users/909460-hackerlord-mordern"
+      }
+    ],
+    "name": "All in One Injector.V1",
+    "description": "Youtube Downloader, Discord Delete Message Injector, Discord BackGround Injector, Discord Emotes Injector (Use all emotes), AntiVertify Injector",
+    "url": "https://greasyfork.org/scripts/444348-all-in-one-injector-v1",
+    "code_url": "https://update.greasyfork.org/scripts/444348/All%20in%20One%20InjectorV1.user.js",
+    "code_size": 63843,
+    "license": "GNU Public License V3",
+    "version": "Mordern.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

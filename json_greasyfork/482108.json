@@ -1,0 +1,34 @@
+{
+  "id": 482108,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-13T12:55:44.000Z",
+  "code_updated_at": "2023-12-13T12:55:44.000Z",
+  "namespace": "https://greasyfork.org/users/1197712",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1197712,
+      "name": "初夏的雨",
+      "created_at": "2023-10-17T03:21:36.000Z",
+      "url": "https://greasyfork.org/users/1197712-%E5%88%9D%E5%A4%8F%E7%9A%84%E9%9B%A8",
+      "scripts": []
+    }
+  ],
+  "name": "收藏文章",
+  "description": "收藏CSDN的文章到自己的collectwebsite上",
+  "url": "https://greasyfork.org/scripts/482108-%E6%94%B6%E8%97%8F%E6%96%87%E7%AB%A0",
+  "code_url": "https://update.greasyfork.org/scripts/482108/%E6%94%B6%E8%97%8F%E6%96%87%E7%AB%A0.user.js",
+  "code_size": 17551,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

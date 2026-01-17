@@ -1,0 +1,101 @@
+[
+  {
+    "id": 441951,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-23T09:15:48.000Z",
+    "code_updated_at": "2024-10-02T10:28:36.000Z",
+    "namespace": "Sly_North",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 759669,
+        "name": "Sly_North",
+        "created_at": "2021-04-15T14:08:16.000Z",
+        "url": "https://greasyfork.org/users/759669-sly-north"
+      }
+    ],
+    "name": "Keyboard navigation and Cookie Wall skipper",
+    "description": "Keyboard based navigation",
+    "url": "https://greasyfork.org/scripts/441951-keyboard-navigation-and-cookie-wall-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/441951/Keyboard%20navigation%20and%20Cookie%20Wall%20skipper.user.js",
+    "code_size": 12646,
+    "license": "MIT License",
+    "version": "1.12.16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437858,
+    "daily_installs": 0,
+    "total_installs": 1130,
+    "fan_score": "35.4",
+    "good_ratings": 5,
+    "ok_ratings": 2,
+    "bad_ratings": 2,
+    "created_at": "2021-12-31T15:24:15.000Z",
+    "code_updated_at": "2024-12-23T09:38:21.000Z",
+    "namespace": "https://greasyfork.org/en/users/759669-sly-north",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 759669,
+        "name": "Sly_North",
+        "created_at": "2021-04-15T14:08:16.000Z",
+        "url": "https://greasyfork.org/users/759669-sly-north"
+      }
+    ],
+    "name": "Facebook remove suggested sponsored ads blocks",
+    "description": "Remove suggested/sponsored blocks from Facebook",
+    "url": "https://greasyfork.org/scripts/437858-facebook-remove-suggested-sponsored-ads-blocks",
+    "code_url": "https://update.greasyfork.org/scripts/437858/Facebook%20remove%20suggested%20sponsored%20ads%20blocks.user.js",
+    "code_size": 9115,
+    "license": "MIT License",
+    "version": "1.20.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 425089,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-04-15T14:13:45.000Z",
+    "code_updated_at": "2022-08-06T08:56:43.000Z",
+    "namespace": "https://forum-auto.caradisiac.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 759669,
+        "name": "Sly_North",
+        "created_at": "2021-04-15T14:08:16.000Z",
+        "url": "https://greasyfork.org/users/759669-sly-north"
+      }
+    ],
+    "name": "Resize Forum-Auto",
+    "description": "Restyle forum-auto.caradisiac.com",
+    "url": "https://greasyfork.org/scripts/425089-resize-forum-auto",
+    "code_url": "https://update.greasyfork.org/scripts/425089/Resize%20Forum-Auto.user.js",
+    "code_size": 2145,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 475596,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-18T15:03:52.000Z",
+  "code_updated_at": "2023-09-28T08:01:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 689660,
+      "name": "xielingwang",
+      "created_at": "2020-09-22T10:36:38.000Z",
+      "url": "https://greasyfork.org/users/689660-xielingwang"
+    }
+  ],
+  "name": "可可英语听写 flash 播放器替换（Armin）",
+  "description": "可可英语听写 flash 播放器替换，还原了原有的快捷键方式。",
+  "url": "https://greasyfork.org/scripts/475596-%E5%8F%AF%E5%8F%AF%E8%8B%B1%E8%AF%AD%E5%90%AC%E5%86%99-flash-%E6%92%AD%E6%94%BE%E5%99%A8%E6%9B%BF%E6%8D%A2-armin",
+  "code_url": "https://update.greasyfork.org/scripts/475596/%E5%8F%AF%E5%8F%AF%E8%8B%B1%E8%AF%AD%E5%90%AC%E5%86%99%20flash%20%E6%92%AD%E6%94%BE%E5%99%A8%E6%9B%BF%E6%8D%A2%EF%BC%88Armin%EF%BC%89.user.js",
+  "code_size": 10609,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

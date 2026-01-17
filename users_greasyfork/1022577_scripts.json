@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 459517,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-06T10:17:33.000Z",
+    "code_updated_at": "2023-02-06T10:28:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1022577,
+        "name": "Plugin",
+        "created_at": "2023-02-06T10:06:35.000Z",
+        "url": "https://greasyfork.org/users/1022577-plugin"
+      }
+    ],
+    "name": "强力跳题器 Super Problem Jumper",
+    "description": "支持在所有网页跳转到题目，支持洛谷、CodeForces、AtCoder、LOJ、UOJ、UVA 等多种题库的题目",
+    "url": "https://greasyfork.org/scripts/459517-%E5%BC%BA%E5%8A%9B%E8%B7%B3%E9%A2%98%E5%99%A8-super-problem-jumper",
+    "code_url": "https://update.greasyfork.org/scripts/459517/%E5%BC%BA%E5%8A%9B%E8%B7%B3%E9%A2%98%E5%99%A8%20Super%20Problem%20Jumper.user.js",
+    "code_size": 688,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 459516,
+    "daily_installs": 0,
+    "total_installs": 737,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-06T10:17:08.000Z",
+    "code_updated_at": "2024-06-17T14:10:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1022577,
+        "name": "Plugin",
+        "created_at": "2023-02-06T10:06:35.000Z",
+        "url": "https://greasyfork.org/users/1022577-plugin"
+      }
+    ],
+    "name": "强力 OI/ACM 跳题器 Super Problem Jumper",
+    "description": "支持在所有网页跳转到题目，支持洛谷、CodeForces、AtCoder、LOJ、UOJ、UVA 等多种题库的题目",
+    "url": "https://greasyfork.org/scripts/459516-%E5%BC%BA%E5%8A%9B-oi-acm-%E8%B7%B3%E9%A2%98%E5%99%A8-super-problem-jumper",
+    "code_url": "https://update.greasyfork.org/scripts/459516/%E5%BC%BA%E5%8A%9B%20OIACM%20%E8%B7%B3%E9%A2%98%E5%99%A8%20Super%20Problem%20Jumper.user.js",
+    "code_size": 21475,
+    "license": "MIT License",
+    "version": "0.29",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 459859,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-11T18:37:15.000Z",
+  "code_updated_at": "2023-02-11T18:41:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 896390,
+      "name": "Hader Anício de Araújo",
+      "created_at": "2022-04-01T21:36:09.000Z",
+      "url": "https://greasyfork.org/users/896390-hader-an%C3%ADcio-de-ara%C3%BAjo",
+      "scripts": []
+    }
+  ],
+  "name": "Subber click giveway",
+  "description": "code: Subber click giveway",
+  "url": "https://greasyfork.org/scripts/459859-subber-click-giveway",
+  "code_url": "https://update.greasyfork.org/scripts/459859/Subber%20click%20giveway.user.js",
+  "code_size": 751,
+  "license": "MIT License",
+  "version": "0.03",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 445421,
+  "daily_installs": 0,
+  "total_installs": 853,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-05-23T10:23:25.000Z",
+  "code_updated_at": "2022-07-10T19:53:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 917597,
+      "name": "Verwüster",
+      "created_at": "2022-05-23T10:00:10.000Z",
+      "url": "https://greasyfork.org/users/917597-verw%C3%BCster",
+      "scripts": [
+        {
+          "id": 445421,
+          "daily_installs": 0,
+          "total_installs": 853,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-23T10:23:25.000Z",
+          "code_updated_at": "2022-07-10T19:53:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "script to open Tanki Online shop",
+          "description": "script to open Tanki Online shop by Verwuester",
+          "url": "https://greasyfork.org/scripts/445421-script-to-open-tanki-online-shop",
+          "code_url": "https://update.greasyfork.org/scripts/445421/script%20to%20open%20Tanki%20Online%20shop.user.js",
+          "code_size": 718,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "script to open Tanki Online shop",
+  "description": "script to open Tanki Online shop by Verwuester",
+  "url": "https://greasyfork.org/scripts/445421-script-to-open-tanki-online-shop",
+  "code_url": "https://update.greasyfork.org/scripts/445421/script%20to%20open%20Tanki%20Online%20shop.user.js",
+  "code_size": 718,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

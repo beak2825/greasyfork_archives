@@ -1,0 +1,59 @@
+{
+  "id": 462967,
+  "daily_installs": 0,
+  "total_installs": 12883,
+  "fan_score": "52.9",
+  "good_ratings": 7,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2023-03-31T02:57:03.000Z",
+  "code_updated_at": "2023-04-24T02:49:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1049461,
+      "name": "Concept3798",
+      "created_at": "2023-03-28T12:03:41.000Z",
+      "url": "https://greasyfork.org/users/1049461-concept3798",
+      "scripts": [
+        {
+          "id": 462967,
+          "daily_installs": 0,
+          "total_installs": 12883,
+          "fan_score": "52.9",
+          "good_ratings": 7,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2023-03-31T02:57:03.000Z",
+          "code_updated_at": "2023-04-24T02:49:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT HeartBeat",
+          "description": "USE AT YOUR OWN RISK!",
+          "url": "https://greasyfork.org/scripts/462967-chatgpt-heartbeat",
+          "code_url": "https://update.greasyfork.org/scripts/462967/ChatGPT%20HeartBeat.user.js",
+          "code_size": 3901,
+          "license": "GPLv3",
+          "version": "0.2.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT HeartBeat",
+  "description": "USE AT YOUR OWN RISK!",
+  "url": "https://greasyfork.org/scripts/462967-chatgpt-heartbeat",
+  "code_url": "https://update.greasyfork.org/scripts/462967/ChatGPT%20HeartBeat.user.js",
+  "code_size": 3901,
+  "license": "GPLv3",
+  "version": "0.2.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

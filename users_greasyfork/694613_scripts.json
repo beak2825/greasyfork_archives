@@ -1,0 +1,68 @@
+[
+  {
+    "id": 422593,
+    "daily_installs": 0,
+    "total_installs": 720,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2021-03-03T14:51:49.000Z",
+    "code_updated_at": "2021-03-03T14:51:49.000Z",
+    "namespace": "Forbidden Siren",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694613,
+        "name": "Forbidden Siren",
+        "created_at": "2020-10-13T07:43:10.000Z",
+        "url": "https://greasyfork.org/users/694613-forbidden-siren"
+      }
+    ],
+    "name": "中文转换",
+    "description": "支持繁简转换、简繁转换、异体字转换和地区习惯用词转换（中国大陆、台湾、香港、日本新字体）",
+    "url": "https://greasyfork.org/scripts/422593-%E4%B8%AD%E6%96%87%E8%BD%AC%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/422593/%E4%B8%AD%E6%96%87%E8%BD%AC%E6%8D%A2.user.js",
+    "code_size": 6406,
+    "license": null,
+    "version": "0.9.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 413703,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-18T07:33:34.000Z",
+    "code_updated_at": "2021-03-03T14:44:39.000Z",
+    "namespace": "Forbidden Siren",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694613,
+        "name": "Forbidden Siren",
+        "created_at": "2020-10-13T07:43:10.000Z",
+        "url": "https://greasyfork.org/users/694613-forbidden-siren"
+      }
+    ],
+    "name": "opencc-rust",
+    "description": "调用 opencc-rust-wasm 转换中文",
+    "url": "https://greasyfork.org/scripts/413703-opencc-rust",
+    "code_url": "https://update.greasyfork.org/scripts/413703/opencc-rust.user.js",
+    "code_size": 6154,
+    "license": null,
+    "version": "0.9.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

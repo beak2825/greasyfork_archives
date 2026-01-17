@@ -1,0 +1,35 @@
+[
+  {
+    "id": 429832,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-07-25T07:21:46.000Z",
+    "code_updated_at": "2022-08-03T13:07:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 796960,
+        "name": "Ghostfreak803",
+        "created_at": "2021-07-25T07:03:33.000Z",
+        "url": "https://greasyfork.org/users/796960-ghostfreak803"
+      }
+    ],
+    "name": "libreddit_redirect",
+    "description": "redirects from reddit.com/* to libreddit's r.nf/*",
+    "url": "https://greasyfork.org/scripts/429832-libreddit-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/429832/libreddit_redirect.user.js",
+    "code_size": 597,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

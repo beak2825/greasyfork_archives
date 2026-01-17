@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428076,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-17T07:13:02.000Z",
+    "code_updated_at": "2021-06-17T07:13:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 783965,
+        "name": "peixin pei",
+        "created_at": "2021-06-16T07:34:39.000Z",
+        "url": "https://greasyfork.org/users/783965-peixin-pei"
+      }
+    ],
+    "name": "test removAd to CSDN",
+    "description": "csdn 去广告!",
+    "url": "https://greasyfork.org/scripts/428076-test-removad-to-csdn",
+    "code_url": "https://update.greasyfork.org/scripts/428076/test%20removAd%20to%20CSDN.user.js",
+    "code_size": 749,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

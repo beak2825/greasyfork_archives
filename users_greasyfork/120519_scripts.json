@@ -1,0 +1,200 @@
+[
+  {
+    "id": 486188,
+    "daily_installs": 0,
+    "total_installs": 135,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-01T02:47:30.000Z",
+    "code_updated_at": "2025-02-04T11:17:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 120519,
+        "name": "BenZinaDaze",
+        "created_at": "2017-04-30T19:14:27.000Z",
+        "url": "https://greasyfork.org/users/120519-benzinadaze"
+      }
+    ],
+    "name": "moviepilotNameTest",
+    "description": "moviepilots名称测试",
+    "url": "https://greasyfork.org/scripts/486188-moviepilotnametest",
+    "code_url": "https://update.greasyfork.org/scripts/486188/moviepilotNameTest.user.js",
+    "code_size": 20615,
+    "license": "MIT License",
+    "version": "2.3.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 477401,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-14T08:21:56.000Z",
+    "code_updated_at": "2023-10-23T11:17:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 120519,
+        "name": "BenZinaDaze",
+        "created_at": "2017-04-30T19:14:27.000Z",
+        "url": "https://greasyfork.org/users/120519-benzinadaze"
+      }
+    ],
+    "name": "Copy Release description",
+    "description": "Copy Release description from qobuz",
+    "url": "https://greasyfork.org/scripts/477401-copy-release-description",
+    "code_url": "https://update.greasyfork.org/scripts/477401/Copy%20Release%20description.user.js",
+    "code_size": 1827,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 475786,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-21T03:09:38.000Z",
+    "code_updated_at": "2023-09-21T03:09:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 120519,
+        "name": "BenZinaDaze",
+        "created_at": "2017-04-30T19:14:27.000Z",
+        "url": "https://greasyfork.org/users/120519-benzinadaze"
+      }
+    ],
+    "name": "猫站一键认领",
+    "description": "做种页面快速认领种子",
+    "url": "https://greasyfork.org/scripts/475786-%E7%8C%AB%E7%AB%99%E4%B8%80%E9%94%AE%E8%AE%A4%E9%A2%86",
+    "code_url": "https://update.greasyfork.org/scripts/475786/%E7%8C%AB%E7%AB%99%E4%B8%80%E9%94%AE%E8%AE%A4%E9%A2%86.user.js",
+    "code_size": 962,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474914,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-09T17:47:01.000Z",
+    "code_updated_at": "2023-09-11T15:43:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 120519,
+        "name": "BenZinaDaze",
+        "created_at": "2017-04-30T19:14:27.000Z",
+        "url": "https://greasyfork.org/users/120519-benzinadaze"
+      }
+    ],
+    "name": "一键生成猫站简介",
+    "description": "皇后转载到猫站，一键生成简介",
+    "url": "https://greasyfork.org/scripts/474914-%E4%B8%80%E9%94%AE%E7%94%9F%E6%88%90%E7%8C%AB%E7%AB%99%E7%AE%80%E4%BB%8B",
+    "code_url": "https://update.greasyfork.org/scripts/474914/%E4%B8%80%E9%94%AE%E7%94%9F%E6%88%90%E7%8C%AB%E7%AB%99%E7%AE%80%E4%BB%8B.user.js",
+    "code_size": 5271,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 474391,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-02T04:35:46.000Z",
+    "code_updated_at": "2023-09-02T09:01:48.000Z",
+    "namespace": "https://www.tampermonkey.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 120519,
+        "name": "BenZinaDaze",
+        "created_at": "2017-04-30T19:14:27.000Z",
+        "url": "https://greasyfork.org/users/120519-benzinadaze"
+      }
+    ],
+    "name": "隐藏认领已满",
+    "description": "隐藏认领已满的种子",
+    "url": "https://greasyfork.org/scripts/474391-%E9%9A%90%E8%97%8F%E8%AE%A4%E9%A2%86%E5%B7%B2%E6%BB%A1",
+    "code_url": "https://update.greasyfork.org/scripts/474391/%E9%9A%90%E8%97%8F%E8%AE%A4%E9%A2%86%E5%B7%B2%E6%BB%A1.user.js",
+    "code_size": 1233,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 461274,
+    "daily_installs": 0,
+    "total_installs": 124,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-06T06:35:00.000Z",
+    "code_updated_at": "2023-03-06T06:35:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 120519,
+        "name": "BenZinaDaze",
+        "created_at": "2017-04-30T19:14:27.000Z",
+        "url": "https://greasyfork.org/users/120519-benzinadaze"
+      }
+    ],
+    "name": "网易云游戏挂机",
+    "description": "解除网易云游戏挂机10分钟自动关闭",
+    "url": "https://greasyfork.org/scripts/461274-%E7%BD%91%E6%98%93%E4%BA%91%E6%B8%B8%E6%88%8F%E6%8C%82%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/461274/%E7%BD%91%E6%98%93%E4%BA%91%E6%B8%B8%E6%88%8F%E6%8C%82%E6%9C%BA.user.js",
+    "code_size": 527,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

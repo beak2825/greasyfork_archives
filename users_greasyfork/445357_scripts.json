@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421948,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-18T15:01:16.000Z",
+    "code_updated_at": "2021-02-18T15:01:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 445357,
+        "name": "pagani00",
+        "created_at": "2020-02-15T08:31:34.000Z",
+        "url": "https://greasyfork.org/users/445357-pagani00"
+      }
+    ],
+    "name": "UPLT",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/421948-uplt",
+    "code_url": "https://update.greasyfork.org/scripts/421948/UPLT.user.js",
+    "code_size": 5612,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

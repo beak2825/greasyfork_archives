@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480077,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-16T22:28:04.000Z",
+    "code_updated_at": "2023-11-16T22:28:04.000Z",
+    "namespace": "https://streamelements.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218817,
+        "name": "Renzo Aliaga",
+        "created_at": "2023-11-16T22:25:53.000Z",
+        "url": "https://greasyfork.org/users/1218817-renzo-aliaga"
+      }
+    ],
+    "name": "ElementAvatar",
+    "description": "Script for hide Elementals messages and mark them",
+    "url": "https://greasyfork.org/scripts/480077-elementavatar",
+    "code_url": "https://update.greasyfork.org/scripts/480077/ElementAvatar.user.js",
+    "code_size": 1964,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

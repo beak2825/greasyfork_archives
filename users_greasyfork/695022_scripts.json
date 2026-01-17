@@ -1,0 +1,35 @@
+[
+  {
+    "id": 413227,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-14T15:52:59.000Z",
+    "code_updated_at": "2020-10-14T15:52:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695022,
+        "name": "Ramon Thomas",
+        "created_at": "2020-10-14T15:51:28.000Z",
+        "url": "https://greasyfork.org/users/695022-ramon-thomas"
+      }
+    ],
+    "name": "Torn Revive Button Test",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/413227-torn-revive-button-test",
+    "code_url": "https://update.greasyfork.org/scripts/413227/Torn%20Revive%20Button%20Test.user.js",
+    "code_size": 51342,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

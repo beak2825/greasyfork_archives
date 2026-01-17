@@ -1,0 +1,33 @@
+{
+  "id": 435327,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-10T17:06:26.000Z",
+  "code_updated_at": "2021-11-10T17:06:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 836836,
+      "name": "☬Δrͥrcͣuͫh✓☬",
+      "created_at": "2021-11-10T16:43:52.000Z",
+      "url": "https://greasyfork.org/users/836836-%CE%B4r-rc-u-h"
+    }
+  ],
+  "name": "Better and more bars.",
+  "description": "This script changes a lot about bars in your game, Adds percentage, color changing, smooth transitions, new bars Etc.",
+  "url": "https://greasyfork.org/scripts/435327-better-and-more-bars",
+  "code_url": "https://update.greasyfork.org/scripts/435327/Better%20and%20more%20bars.user.js",
+  "code_size": 28670,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

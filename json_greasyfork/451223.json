@@ -1,0 +1,34 @@
+{
+  "id": 451223,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-12T04:36:12.000Z",
+  "code_updated_at": "2022-09-12T04:36:11.000Z",
+  "namespace": "ucdrs.superlib.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 957810,
+      "name": "lanshang",
+      "created_at": "2022-09-12T04:24:45.000Z",
+      "url": "https://greasyfork.org/users/957810-lanshang",
+      "scripts": []
+    }
+  ],
+  "name": "图书文献互助小帮手",
+  "description": "、图书文献互助小帮手",
+  "url": "https://greasyfork.org/scripts/451223-%E5%9B%BE%E4%B9%A6%E6%96%87%E7%8C%AE%E4%BA%92%E5%8A%A9%E5%B0%8F%E5%B8%AE%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/451223/%E5%9B%BE%E4%B9%A6%E6%96%87%E7%8C%AE%E4%BA%92%E5%8A%A9%E5%B0%8F%E5%B8%AE%E6%89%8B.user.js",
+  "code_size": 53324,
+  "license": "Copyright Theron",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

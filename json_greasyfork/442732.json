@@ -1,0 +1,34 @@
+{
+  "id": 442732,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-04-04T12:23:41.000Z",
+  "code_updated_at": "2022-04-04T12:23:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 897593,
+      "name": "IDKHugh",
+      "created_at": "2022-04-04T11:27:34.000Z",
+      "url": "https://greasyfork.org/users/897593-idkhugh",
+      "scripts": []
+    }
+  ],
+  "name": "重庆工商大学图书馆占座",
+  "description": "CTBU图书馆抢座",
+  "url": "https://greasyfork.org/scripts/442732-%E9%87%8D%E5%BA%86%E5%B7%A5%E5%95%86%E5%A4%A7%E5%AD%A6%E5%9B%BE%E4%B9%A6%E9%A6%86%E5%8D%A0%E5%BA%A7",
+  "code_url": "https://update.greasyfork.org/scripts/442732/%E9%87%8D%E5%BA%86%E5%B7%A5%E5%95%86%E5%A4%A7%E5%AD%A6%E5%9B%BE%E4%B9%A6%E9%A6%86%E5%8D%A0%E5%BA%A7.user.js",
+  "code_size": 11352,
+  "license": "GPL-3.0 License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

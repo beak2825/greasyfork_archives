@@ -1,0 +1,33 @@
+{
+  "id": 469393,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-24T23:49:33.000Z",
+  "code_updated_at": "2023-06-24T23:49:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1111282,
+      "name": "nicht verraten",
+      "created_at": "2023-06-24T23:43:24.000Z",
+      "url": "https://greasyfork.org/users/1111282-nicht-verraten"
+    }
+  ],
+  "name": "Adobe kaufen Shop-Hilfe",
+  "description": "Adobe Kaufhilfe",
+  "url": "https://greasyfork.org/scripts/469393-adobe-kaufen-shop-hilfe",
+  "code_url": "https://update.greasyfork.org/scripts/469393/Adobe%20kaufen%20Shop-Hilfe.user.js",
+  "code_size": 1645,
+  "license": null,
+  "version": "1",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

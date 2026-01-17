@@ -1,0 +1,59 @@
+{
+  "id": 440702,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-02-28T07:24:32.000Z",
+  "code_updated_at": "2022-02-28T07:24:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 881367,
+      "name": "rikkimax",
+      "created_at": "2022-02-28T07:21:32.000Z",
+      "url": "https://greasyfork.org/users/881367-rikkimax",
+      "scripts": [
+        {
+          "id": 440702,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-28T07:24:32.000Z",
+          "code_updated_at": "2022-02-28T07:24:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Code Golf text area resize",
+          "description": "Code golf text area increase",
+          "url": "https://greasyfork.org/scripts/440702-code-golf-text-area-resize",
+          "code_url": "https://update.greasyfork.org/scripts/440702/Code%20Golf%20text%20area%20resize.user.js",
+          "code_size": 503,
+          "license": "Boost",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Code Golf text area resize",
+  "description": "Code golf text area increase",
+  "url": "https://greasyfork.org/scripts/440702-code-golf-text-area-resize",
+  "code_url": "https://update.greasyfork.org/scripts/440702/Code%20Golf%20text%20area%20resize.user.js",
+  "code_size": 503,
+  "license": "Boost",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

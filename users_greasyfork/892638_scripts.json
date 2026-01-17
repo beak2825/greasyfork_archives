@@ -1,0 +1,68 @@
+[
+  {
+    "id": 453597,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-23T17:30:06.000Z",
+    "code_updated_at": "2022-10-23T17:30:05.000Z",
+    "namespace": "https://greasyfork.org/users/892638",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892638,
+        "name": "Popick",
+        "created_at": "2022-03-25T14:30:44.000Z",
+        "url": "https://greasyfork.org/users/892638-popick"
+      }
+    ],
+    "name": "Calendar Data",
+    "description": "Extract the data from the school calendar website add sends it to my server",
+    "url": "https://greasyfork.org/scripts/453597-calendar-data",
+    "code_url": "https://update.greasyfork.org/scripts/453597/Calendar%20Data.user.js",
+    "code_size": 7692,
+    "license": "Etay S.",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 442084,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-25T14:35:21.000Z",
+    "code_updated_at": "2022-05-11T12:17:35.000Z",
+    "namespace": "https://greasyfork.org/users/892638",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892638,
+        "name": "Popick",
+        "created_at": "2022-03-25T14:30:44.000Z",
+        "url": "https://greasyfork.org/users/892638-popick"
+      }
+    ],
+    "name": "Next OnePiece Episode",
+    "description": "The script adds next and previous episodes buttons to the anime israel website.",
+    "url": "https://greasyfork.org/scripts/442084-next-onepiece-episode",
+    "code_url": "https://update.greasyfork.org/scripts/442084/Next%20OnePiece%20Episode.user.js",
+    "code_size": 4813,
+    "license": "Etay S.",
+    "version": "3.0",
+    "locale": "he",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

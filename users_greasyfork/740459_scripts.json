@@ -1,0 +1,35 @@
+[
+  {
+    "id": 422436,
+    "daily_installs": 0,
+    "total_installs": 142,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-28T19:54:06.000Z",
+    "code_updated_at": "2021-02-28T19:54:05.000Z",
+    "namespace": "Factral",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 740459,
+        "name": "Factral",
+        "created_at": "2021-02-23T19:38:19.000Z",
+        "url": "https://greasyfork.org/users/740459-factral"
+      }
+    ],
+    "name": "Yandex Translate Dark",
+    "description": "Yandex Dark Theme",
+    "url": "https://greasyfork.org/scripts/422436-yandex-translate-dark",
+    "code_url": "https://update.greasyfork.org/scripts/422436/Yandex%20Translate%20Dark.user.css",
+    "code_size": 63483,
+    "license": "Creative Commons Attribution Share Alike 4.0 International",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

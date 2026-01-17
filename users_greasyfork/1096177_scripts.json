@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 468422,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-11T07:28:40.000Z",
+    "code_updated_at": "2023-06-13T09:56:43.000Z",
+    "namespace": "https://greasyfork.org/en/users/1096177-lightblue-geog",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1096177,
+        "name": "lightblue_geog",
+        "created_at": "2023-06-11T06:45:57.000Z",
+        "url": "https://greasyfork.org/users/1096177-lightblue-geog"
+      }
+    ],
+    "name": "GeoRisk Insta Guess",
+    "description": "Insta guesses Antarctica in team duels for GeoRisk sessions",
+    "url": "https://greasyfork.org/scripts/468422-georisk-insta-guess",
+    "code_url": "https://update.greasyfork.org/scripts/468422/GeoRisk%20Insta%20Guess.user.js",
+    "code_size": 3183,
+    "license": "MIT License",
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

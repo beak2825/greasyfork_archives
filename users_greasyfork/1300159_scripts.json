@@ -1,0 +1,35 @@
+[
+  {
+    "id": 494694,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-11T19:00:50.000Z",
+    "code_updated_at": "2024-05-11T19:20:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1300159,
+        "name": "BastianGanze",
+        "created_at": "2024-05-11T18:52:46.000Z",
+        "url": "https://greasyfork.org/users/1300159-bastianganze"
+      }
+    ],
+    "name": "Copy Plex token",
+    "description": "Adds a button with which you can copy your plex access token to your clipboard",
+    "url": "https://greasyfork.org/scripts/494694-copy-plex-token",
+    "code_url": "https://update.greasyfork.org/scripts/494694/Copy%20Plex%20token.user.js",
+    "code_size": 2468,
+    "license": "MIT License",
+    "version": "2024-05-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

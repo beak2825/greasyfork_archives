@@ -1,0 +1,33 @@
+{
+  "id": 446279,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-09T19:05:07.000Z",
+  "code_updated_at": "2022-06-09T20:44:55.000Z",
+  "namespace": "https://greasyfork.org/en/users/923902-mike-schuchardt",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 923902,
+      "name": "Mike Schuchardt",
+      "created_at": "2022-06-09T18:48:42.000Z",
+      "url": "https://greasyfork.org/users/923902-mike-schuchardt"
+    }
+  ],
+  "name": "Google Chat Remove Previews",
+  "description": "Removes existing preview cards and tries to prevent new ones",
+  "url": "https://greasyfork.org/scripts/446279-google-chat-remove-previews",
+  "code_url": "https://update.greasyfork.org/scripts/446279/Google%20Chat%20Remove%20Previews.user.js",
+  "code_size": 1730,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

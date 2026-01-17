@@ -1,0 +1,59 @@
+{
+  "id": 454766,
+  "daily_installs": 0,
+  "total_installs": 1267,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-11-14T01:35:42.000Z",
+  "code_updated_at": "2023-06-02T09:23:50.000Z",
+  "namespace": "https://www2.alibaba.com/campaign_list.htm",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 982825,
+      "name": "Renlu Zhu",
+      "created_at": "2022-11-13T13:01:11.000Z",
+      "url": "https://greasyfork.org/users/982825-renlu-zhu",
+      "scripts": [
+        {
+          "id": 454766,
+          "daily_installs": 0,
+          "total_installs": 1267,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-14T01:35:42.000Z",
+          "code_updated_at": "2023-06-02T09:23:50.000Z",
+          "namespace": "https://www2.alibaba.com/campaign_list.htm",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "玄奘百宝箱-朱仁路(玄奘)",
+          "description": "导出数据管家数据;显产品订单买家交易;popular 订单询盘数;显示三个关键词,更多功能看描述，有问题及时反馈：有更多的需求及时留言",
+          "url": "https://greasyfork.org/scripts/454766-%E7%8E%84%E5%A5%98%E7%99%BE%E5%AE%9D%E7%AE%B1-%E6%9C%B1%E4%BB%81%E8%B7%AF-%E7%8E%84%E5%A5%98",
+          "code_url": "https://update.greasyfork.org/scripts/454766/%E7%8E%84%E5%A5%98%E7%99%BE%E5%AE%9D%E7%AE%B1-%E6%9C%B1%E4%BB%81%E8%B7%AF%28%E7%8E%84%E5%A5%98%29.user.js",
+          "code_size": 1306,
+          "license": "Apache",
+          "version": "0.2.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "玄奘百宝箱-朱仁路(玄奘)",
+  "description": "导出数据管家数据;显产品订单买家交易;popular 订单询盘数;显示三个关键词,更多功能看描述，有问题及时反馈：有更多的需求及时留言",
+  "url": "https://greasyfork.org/scripts/454766-%E7%8E%84%E5%A5%98%E7%99%BE%E5%AE%9D%E7%AE%B1-%E6%9C%B1%E4%BB%81%E8%B7%AF-%E7%8E%84%E5%A5%98",
+  "code_url": "https://update.greasyfork.org/scripts/454766/%E7%8E%84%E5%A5%98%E7%99%BE%E5%AE%9D%E7%AE%B1-%E6%9C%B1%E4%BB%81%E8%B7%AF%28%E7%8E%84%E5%A5%98%29.user.js",
+  "code_size": 1306,
+  "license": "Apache",
+  "version": "0.2.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

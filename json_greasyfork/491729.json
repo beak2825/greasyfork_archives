@@ -1,0 +1,33 @@
+{
+  "id": 491729,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-05T16:28:37.000Z",
+  "code_updated_at": "2024-04-05T16:28:37.000Z",
+  "namespace": "github.com/forceofcalm",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1281850,
+      "name": "forceofcalm",
+      "created_at": "2024-03-31T03:38:50.000Z",
+      "url": "https://greasyfork.org/users/1281850-forceofcalm"
+    }
+  ],
+  "name": "John/Noah Name Switcher for AO3 (site-wide; JOHN PREFERRED)",
+  "description": "Switches the name Noah to John on AO3 on works tagged as Teen Wolf.",
+  "url": "https://greasyfork.org/scripts/491729-john-noah-name-switcher-for-ao3-site-wide-john-preferred",
+  "code_url": "https://update.greasyfork.org/scripts/491729/JohnNoah%20Name%20Switcher%20for%20AO3%20%28site-wide%3B%20JOHN%20PREFERRED%29.user.js",
+  "code_size": 2329,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

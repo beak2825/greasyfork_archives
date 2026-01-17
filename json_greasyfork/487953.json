@@ -1,0 +1,33 @@
+{
+  "id": 487953,
+  "daily_installs": 0,
+  "total_installs": 86,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-21T15:52:51.000Z",
+  "code_updated_at": "2024-03-18T07:37:06.000Z",
+  "namespace": "https://greasyfork.org/users/1218336",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1218336,
+      "name": "Young Jimmy",
+      "created_at": "2023-11-16T05:10:32.000Z",
+      "url": "https://greasyfork.org/users/1218336-young-jimmy"
+    }
+  ],
+  "name": "GitHub Auto Signup",
+  "description": "Automate github signup",
+  "url": "https://greasyfork.org/scripts/487953-github-auto-signup",
+  "code_url": "https://update.greasyfork.org/scripts/487953/GitHub%20Auto%20Signup.user.js",
+  "code_size": 12744,
+  "license": "MIT License",
+  "version": "0.6.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

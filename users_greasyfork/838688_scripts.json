@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435513,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-11-14T23:57:13.000Z",
+    "code_updated_at": "2021-11-14T23:57:13.000Z",
+    "namespace": "randomtdev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 838688,
+        "name": "Gabriel Araujo",
+        "created_at": "2021-11-14T23:55:39.000Z",
+        "url": "https://greasyfork.org/users/838688-gabriel-araujo"
+      }
+    ],
+    "name": "Nexus Download Fix",
+    "description": "Fixing the dumb new download system for nexusmods",
+    "url": "https://greasyfork.org/scripts/435513-nexus-download-fix",
+    "code_url": "https://update.greasyfork.org/scripts/435513/Nexus%20Download%20Fix.user.js",
+    "code_size": 11096,
+    "license": null,
+    "version": "1.5.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

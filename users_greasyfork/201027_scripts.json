@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 484497,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-11T02:08:38.000Z",
+    "code_updated_at": "2024-01-11T02:08:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201027,
+        "name": "solstice23",
+        "created_at": "2018-08-04T10:14:39.000Z",
+        "url": "https://greasyfork.org/users/201027-solstice23"
+      }
+    ],
+    "name": "UW Marmoset Scores Display",
+    "description": "Show project scores on the course page so you don't need to click in to view",
+    "url": "https://greasyfork.org/scripts/484497-uw-marmoset-scores-display",
+    "code_url": "https://update.greasyfork.org/scripts/484497/UW%20Marmoset%20Scores%20Display.user.js",
+    "code_size": 4275,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 476985,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-08T17:01:31.000Z",
+    "code_updated_at": "2023-10-18T01:58:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201027,
+        "name": "solstice23",
+        "created_at": "2018-08-04T10:14:39.000Z",
+        "url": "https://greasyfork.org/users/201027-solstice23"
+      }
+    ],
+    "name": "Take Twitter Link Preview Back",
+    "description": "Take the link preview of Twitter back",
+    "url": "https://greasyfork.org/scripts/476985-take-twitter-link-preview-back",
+    "code_url": "https://update.greasyfork.org/scripts/476985/Take%20Twitter%20Link%20Preview%20Back.user.js",
+    "code_size": 1606,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469896,
+    "daily_installs": 0,
+    "total_installs": 239,
+    "fan_score": "12.5",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2023-07-01T08:39:10.000Z",
+    "code_updated_at": "2023-10-18T02:00:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201027,
+        "name": "solstice23",
+        "created_at": "2018-08-04T10:14:39.000Z",
+        "url": "https://greasyfork.org/users/201027-solstice23"
+      }
+    ],
+    "name": "Fix Twitter Share Link",
+    "description": "Replace `twitter` to `vxtwitter` when sharing links",
+    "url": "https://greasyfork.org/scripts/469896-fix-twitter-share-link",
+    "code_url": "https://update.greasyfork.org/scripts/469896/Fix%20Twitter%20Share%20Link.user.js",
+    "code_size": 1867,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

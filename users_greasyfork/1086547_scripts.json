@@ -1,0 +1,35 @@
+[
+  {
+    "id": 467384,
+    "daily_installs": 1,
+    "total_installs": 2766,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-29T09:35:01.000Z",
+    "code_updated_at": "2023-06-01T07:18:59.000Z",
+    "namespace": "https://greasyfork.org/scripts/467384",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1086547,
+        "name": "sghavcsf321",
+        "created_at": "2023-05-29T05:13:07.000Z",
+        "url": "https://greasyfork.org/users/1086547-sghavcsf321"
+      }
+    ],
+    "name": "🛠️屏蔽B站营销视频",
+    "description": "屏蔽部分B站（bilibili）主页推荐的视频卡片，屏蔽up主粉丝少于一定数量的，屏蔽直播与右侧推广，屏蔽带广告标签的",
+    "url": "https://greasyfork.org/scripts/467384-%E5%B1%8F%E8%94%BDb%E7%AB%99%E8%90%A5%E9%94%80%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/467384/%F0%9F%9B%A0%EF%B8%8F%E5%B1%8F%E8%94%BDB%E7%AB%99%E8%90%A5%E9%94%80%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 4908,
+    "license": "GNU General Public License v3.0",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -31,5 +31,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 489737,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-13T17:24:57.000Z",
+    "code_updated_at": "2024-07-11T11:28:34.000Z",
+    "namespace": "xing.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 88886,
+        "name": "RichDad",
+        "created_at": "2016-12-22T14:38:21.000Z",
+        "url": "https://greasyfork.org/users/88886-richdad"
+      }
+    ],
+    "name": "Xing job search helper",
+    "description": "Xing Helper for Anton",
+    "url": "https://greasyfork.org/scripts/489737-xing-job-search-helper",
+    "code_url": "https://update.greasyfork.org/scripts/489737/Xing%20job%20search%20helper.user.js",
+    "code_size": 20999,
+    "license": "MIT License",
+    "version": "2024-07-11_8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 488787,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-02T09:46:06.000Z",
+    "code_updated_at": "2024-03-02T10:55:19.000Z",
+    "namespace": "iconicimages.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 88886,
+        "name": "RichDad",
+        "created_at": "2016-12-22T14:38:21.000Z",
+        "url": "https://greasyfork.org/users/88886-richdad"
+      }
+    ],
+    "name": "iconicimages.net",
+    "description": "iconicimages.net download",
+    "url": "https://greasyfork.org/scripts/488787-iconicimages-net",
+    "code_url": "https://update.greasyfork.org/scripts/488787/iconicimagesnet.user.js",
+    "code_size": 6476,
+    "license": "MIT License",
+    "version": "2024-03-02.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 445169,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-18T11:56:12.000Z",
+    "code_updated_at": "2022-05-18T12:00:27.000Z",
+    "namespace": "gidonline",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 88886,
+        "name": "RichDad",
+        "created_at": "2016-12-22T14:38:21.000Z",
+        "url": "https://greasyfork.org/users/88886-richdad"
+      }
+    ],
+    "name": "gidonline CSS",
+    "description": "Hides some ADs and unused elements",
+    "url": "https://greasyfork.org/scripts/445169-gidonline-css",
+    "code_url": "https://update.greasyfork.org/scripts/445169/gidonline%20CSS.user.js",
+    "code_size": 520,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 423792,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-03-22T19:00:16.000Z",
+    "code_updated_at": "2021-05-04T07:23:35.000Z",
+    "namespace": "http://atlantis-pbem.com/data",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 88886,
+        "name": "RichDad",
+        "created_at": "2016-12-22T14:38:21.000Z",
+        "url": "https://greasyfork.org/users/88886-richdad"
+      }
+    ],
+    "name": "Atlantis GameData hyperlinks",
+    "description": "Add hyperlinks to GameData",
+    "url": "https://greasyfork.org/scripts/423792-atlantis-gamedata-hyperlinks",
+    "code_url": "https://update.greasyfork.org/scripts/423792/Atlantis%20GameData%20hyperlinks.user.js",
+    "code_size": 15328,
+    "license": null,
+    "version": "0.010",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412604,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-06T21:55:11.000Z",
+    "code_updated_at": "2020-10-17T14:05:45.000Z",
+    "namespace": "simple-mmo.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 88886,
+        "name": "RichDad",
+        "created_at": "2016-12-22T14:38:21.000Z",
+        "url": "https://greasyfork.org/users/88886-richdad"
+      }
+    ],
+    "name": "SimpleMMO Market",
+    "description": "SimpleMMO Clicker",
+    "url": "https://greasyfork.org/scripts/412604-simplemmo-market",
+    "code_url": "https://update.greasyfork.org/scripts/412604/SimpleMMO%20Market.user.js",
+    "code_size": 32493,
+    "license": null,
+    "version": "1.003",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412523,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-05T22:48:38.000Z",
+    "code_updated_at": "2020-10-17T14:06:53.000Z",
+    "namespace": "simple-mmo.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 88886,
+        "name": "RichDad",
+        "created_at": "2016-12-22T14:38:21.000Z",
+        "url": "https://greasyfork.org/users/88886-richdad"
+      }
+    ],
+    "name": "SimpleMMO Travel",
+    "description": "SimpleMMO Clicker",
+    "url": "https://greasyfork.org/scripts/412523-simplemmo-travel",
+    "code_url": "https://update.greasyfork.org/scripts/412523/SimpleMMO%20Travel.user.js",
+    "code_size": 29711,
+    "license": null,
+    "version": "1.005",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

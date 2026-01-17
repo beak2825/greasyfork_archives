@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463570,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-09T03:02:06.000Z",
+    "code_updated_at": "2023-07-04T07:26:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1045117,
+        "name": "chen nathan",
+        "created_at": "2023-03-20T12:23:31.000Z",
+        "url": "https://greasyfork.org/users/1045117-chen-nathan"
+      }
+    ],
+    "name": "Yahoo新聞留言自動檢舉腳本",
+    "description": "檢舉特定使用者大量垃圾留言!",
+    "url": "https://greasyfork.org/scripts/463570-yahoo%E6%96%B0%E8%81%9E%E7%95%99%E8%A8%80%E8%87%AA%E5%8B%95%E6%AA%A2%E8%88%89%E8%85%B3%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/463570/Yahoo%E6%96%B0%E8%81%9E%E7%95%99%E8%A8%80%E8%87%AA%E5%8B%95%E6%AA%A2%E8%88%89%E8%85%B3%E6%9C%AC.user.js",
+    "code_size": 12513,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

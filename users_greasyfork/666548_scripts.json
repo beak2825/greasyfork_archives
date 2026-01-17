@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412179,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-28T18:09:24.000Z",
+    "code_updated_at": "2020-09-28T18:09:24.000Z",
+    "namespace": "https://greasyfork.org/users/666548",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666548,
+        "name": "Khanz Yuri",
+        "created_at": "2020-07-13T23:09:12.000Z",
+        "url": "https://greasyfork.org/users/666548-khanz-yuri"
+      }
+    ],
+    "name": "MXM Lyrics Copier",
+    "description": "Shift + C to copy the text lyrics on MXM website by frontend (Only the original version, translation not supported)",
+    "url": "https://greasyfork.org/scripts/412179-mxm-lyrics-copier",
+    "code_url": "https://update.greasyfork.org/scripts/412179/MXM%20Lyrics%20Copier.user.js",
+    "code_size": 2427,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

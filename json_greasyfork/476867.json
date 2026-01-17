@@ -1,0 +1,33 @@
+{
+  "id": 476867,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-07T07:34:39.000Z",
+  "code_updated_at": "2024-12-29T22:07:29.000Z",
+  "namespace": "https://greasyfork.org/users/1190083",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1190083,
+      "name": "VS-W",
+      "created_at": "2023-10-07T07:14:25.000Z",
+      "url": "https://greasyfork.org/users/1190083-vs-w"
+    }
+  ],
+  "name": "Dark Mode - OSRS Portal Shooting Stars Tracker",
+  "description": "Dark mode for the shooting stars tracker page on OSRS Portal.",
+  "url": "https://greasyfork.org/scripts/476867-dark-mode-osrs-portal-shooting-stars-tracker",
+  "code_url": "https://update.greasyfork.org/scripts/476867/Dark%20Mode%20-%20OSRS%20Portal%20Shooting%20Stars%20Tracker.user.js",
+  "code_size": 2011,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

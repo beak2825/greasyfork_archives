@@ -1,0 +1,59 @@
+{
+  "id": 476401,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-09-30T13:34:21.000Z",
+  "code_updated_at": "2023-09-30T13:34:21.000Z",
+  "namespace": "www.papercomment.tech",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 76112,
+      "name": "Evans Kenneth",
+      "created_at": "2016-10-27T04:40:06.000Z",
+      "url": "https://greasyfork.org/users/76112-evans-kenneth",
+      "scripts": [
+        {
+          "id": 476401,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-30T13:34:21.000Z",
+          "code_updated_at": "2023-09-30T13:34:21.000Z",
+          "namespace": "www.papercomment.tech",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili 洗脑循环自动播放修复",
+          "description": "修复bilibili列表视频洗脑循环开启后跳转开头不会自动开始播放，代码完全由Chatgpt4生成，代码样例参考(https://greasyfork.org/zh-CN/scripts/386069-bilibili-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE)",
+          "url": "https://greasyfork.org/scripts/476401-bilibili-%E6%B4%97%E8%84%91%E5%BE%AA%E7%8E%AF%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%BF%AE%E5%A4%8D",
+          "code_url": "https://update.greasyfork.org/scripts/476401/bilibili%20%E6%B4%97%E8%84%91%E5%BE%AA%E7%8E%AF%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%BF%AE%E5%A4%8D.user.js",
+          "code_size": 2013,
+          "license": "Mozilla Public License 2.0",
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili 洗脑循环自动播放修复",
+  "description": "修复bilibili列表视频洗脑循环开启后跳转开头不会自动开始播放，代码完全由Chatgpt4生成，代码样例参考(https://greasyfork.org/zh-CN/scripts/386069-bilibili-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE)",
+  "url": "https://greasyfork.org/scripts/476401-bilibili-%E6%B4%97%E8%84%91%E5%BE%AA%E7%8E%AF%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%BF%AE%E5%A4%8D",
+  "code_url": "https://update.greasyfork.org/scripts/476401/bilibili%20%E6%B4%97%E8%84%91%E5%BE%AA%E7%8E%AF%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%BF%AE%E5%A4%8D.user.js",
+  "code_size": 2013,
+  "license": "Mozilla Public License 2.0",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 427366,
+  "daily_installs": 0,
+  "total_installs": 67,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-01T16:32:08.000Z",
+  "code_updated_at": "2021-06-09T16:52:08.000Z",
+  "namespace": "https://greasyfork.org/users/778651",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 778651,
+      "name": "Dejawn Pooler",
+      "created_at": "2021-06-01T16:00:27.000Z",
+      "url": "https://greasyfork.org/users/778651-dejawn-pooler",
+      "scripts": [
+        {
+          "id": 427366,
+          "daily_installs": 0,
+          "total_installs": 67,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-01T16:32:08.000Z",
+          "code_updated_at": "2021-06-09T16:52:08.000Z",
+          "namespace": "https://greasyfork.org/users/778651",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BlackListChecker",
+          "description": "ayo whats good",
+          "url": "https://greasyfork.org/scripts/427366-blacklistchecker",
+          "code_url": "https://update.greasyfork.org/scripts/427366/BlackListChecker.user.js",
+          "code_size": 825,
+          "license": null,
+          "version": "0.0.1.20210602180221",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BlackListChecker",
+  "description": "ayo whats good",
+  "url": "https://greasyfork.org/scripts/427366-blacklistchecker",
+  "code_url": "https://update.greasyfork.org/scripts/427366/BlackListChecker.user.js",
+  "code_size": 825,
+  "license": null,
+  "version": "0.0.1.20210602180221",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

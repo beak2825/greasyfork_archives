@@ -1,0 +1,35 @@
+[
+  {
+    "id": 482361,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-16T06:37:05.000Z",
+    "code_updated_at": "2023-12-16T06:37:05.000Z",
+    "namespace": "https://ko-fi.com/mugenrei",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1234644,
+        "name": "mugenrei",
+        "created_at": "2023-12-16T06:34:49.000Z",
+        "url": "https://greasyfork.org/users/1234644-mugenrei"
+      }
+    ],
+    "name": "MyAnimeList's Customizable Anime Page Cleaner",
+    "description": "A barely functional script to get rid of useless stuff from my anime list anime page, like the holy opinion of some zoomer weebs.",
+    "url": "https://greasyfork.org/scripts/482361-myanimelist-s-customizable-anime-page-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/482361/MyAnimeList%27s%20Customizable%20Anime%20Page%20Cleaner.user.js",
+    "code_size": 9361,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463282,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-04T20:53:52.000Z",
+    "code_updated_at": "2023-04-04T20:53:52.000Z",
+    "namespace": "https://github.com/LucasHenriqueDiniz",
+    "support_url": "https://github.com/LucasHenriqueDiniz/Mannco.Store-Item_Page_Enhancer/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1053174,
+        "name": "LucasHenriqueDiniz",
+        "created_at": "2023-04-04T20:52:23.000Z",
+        "url": "https://greasyfork.org/users/1053174-lucashenriquediniz"
+      }
+    ],
+    "name": "Mannco.Store - Item Page Enhancer",
+    "description": "Mannco Store Enhancer is a browser extension that enhances the Mannco Store website with a range of features to make your shopping experience more efficient and streamlined.",
+    "url": "https://greasyfork.org/scripts/463282-mannco-store-item-page-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/463282/ManncoStore%20-%20Item%20Page%20Enhancer.user.js",
+    "code_size": 91313,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

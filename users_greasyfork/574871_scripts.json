@@ -1,0 +1,167 @@
+[
+  {
+    "id": 467997,
+    "daily_installs": 0,
+    "total_installs": 70,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-05T17:44:34.000Z",
+    "code_updated_at": "2023-06-07T10:32:17.000Z",
+    "namespace": "http://www.tampermonkey.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 574871,
+        "name": "Tinyblack_QvQ",
+        "created_at": "2020-05-30T03:50:45.000Z",
+        "url": "https://greasyfork.org/users/574871-tinyblack-qvq"
+      }
+    ],
+    "name": "[ADM]更丰富的B站弹幕管理功能（去除B站彩色弹幕样式）",
+    "description": "(Advanced_Bilibili_Danmaku_Manager)目前支持的功能：去除B站彩色弹幕样式",
+    "url": "https://greasyfork.org/scripts/467997-adm-%E6%9B%B4%E4%B8%B0%E5%AF%8C%E7%9A%84b%E7%AB%99%E5%BC%B9%E5%B9%95%E7%AE%A1%E7%90%86%E5%8A%9F%E8%83%BD-%E5%8E%BB%E9%99%A4b%E7%AB%99%E5%BD%A9%E8%89%B2%E5%BC%B9%E5%B9%95%E6%A0%B7%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/467997/%5BADM%5D%E6%9B%B4%E4%B8%B0%E5%AF%8C%E7%9A%84B%E7%AB%99%E5%BC%B9%E5%B9%95%E7%AE%A1%E7%90%86%E5%8A%9F%E8%83%BD%EF%BC%88%E5%8E%BB%E9%99%A4B%E7%AB%99%E5%BD%A9%E8%89%B2%E5%BC%B9%E5%B9%95%E6%A0%B7%E5%BC%8F%EF%BC%89.user.js",
+    "code_size": 19211,
+    "license": "GNU General Public License v3.0 only",
+    "version": "Alpha1.03",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445070,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-16T15:34:56.000Z",
+    "code_updated_at": "2022-05-16T15:34:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 574871,
+        "name": "Tinyblack_QvQ",
+        "created_at": "2020-05-30T03:50:45.000Z",
+        "url": "https://greasyfork.org/users/574871-tinyblack-qvq"
+      }
+    ],
+    "name": "湖北高中生网登录时自动删除Cookie",
+    "description": "能够让你在登录时不用再管之前的账号是否退出",
+    "url": "https://greasyfork.org/scripts/445070-%E6%B9%96%E5%8C%97%E9%AB%98%E4%B8%AD%E7%94%9F%E7%BD%91%E7%99%BB%E5%BD%95%E6%97%B6%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4cookie",
+    "code_url": "https://update.greasyfork.org/scripts/445070/%E6%B9%96%E5%8C%97%E9%AB%98%E4%B8%AD%E7%94%9F%E7%BD%91%E7%99%BB%E5%BD%95%E6%97%B6%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4Cookie.user.js",
+    "code_size": 1039,
+    "license": "GNU",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445069,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-16T15:33:40.000Z",
+    "code_updated_at": "2022-05-17T11:58:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 574871,
+        "name": "Tinyblack_QvQ",
+        "created_at": "2020-05-30T03:50:45.000Z",
+        "url": "https://greasyfork.org/users/574871-tinyblack-qvq"
+      }
+    ],
+    "name": "湖北综合素质评价学生端自我评述一键保存",
+    "description": "在毕业汇总表->自我评述中设立一键保存，点击【修改】直接跳转到【学生自我陈述】的文本框",
+    "url": "https://greasyfork.org/scripts/445069-%E6%B9%96%E5%8C%97%E7%BB%BC%E5%90%88%E7%B4%A0%E8%B4%A8%E8%AF%84%E4%BB%B7%E5%AD%A6%E7%94%9F%E7%AB%AF%E8%87%AA%E6%88%91%E8%AF%84%E8%BF%B0%E4%B8%80%E9%94%AE%E4%BF%9D%E5%AD%98",
+    "code_url": "https://update.greasyfork.org/scripts/445069/%E6%B9%96%E5%8C%97%E7%BB%BC%E5%90%88%E7%B4%A0%E8%B4%A8%E8%AF%84%E4%BB%B7%E5%AD%A6%E7%94%9F%E7%AB%AF%E8%87%AA%E6%88%91%E8%AF%84%E8%BF%B0%E4%B8%80%E9%94%AE%E4%BF%9D%E5%AD%98.user.js",
+    "code_size": 7273,
+    "license": "MIT License",
+    "version": "1.3.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 433076,
+    "daily_installs": 0,
+    "total_installs": 139,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-28T03:59:27.000Z",
+    "code_updated_at": "2021-09-29T09:29:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 574871,
+        "name": "Tinyblack_QvQ",
+        "created_at": "2020-05-30T03:50:45.000Z",
+        "url": "https://greasyfork.org/users/574871-tinyblack-qvq"
+      }
+    ],
+    "name": "综合XX管理平台小助手",
+    "description": "Escape your hands from these shit website",
+    "url": "https://greasyfork.org/scripts/433076-%E7%BB%BC%E5%90%88xx%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%B0%8F%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/433076/%E7%BB%BC%E5%90%88XX%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 19308,
+    "license": null,
+    "version": "1.3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 421951,
+    "daily_installs": 0,
+    "total_installs": 297,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-18T16:35:42.000Z",
+    "code_updated_at": "2021-02-18T16:35:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 574871,
+        "name": "Tinyblack_QvQ",
+        "created_at": "2020-05-30T03:50:45.000Z",
+        "url": "https://greasyfork.org/users/574871-tinyblack-qvq"
+      }
+    ],
+    "name": "Nico manga download",
+    "description": "Just do it",
+    "url": "https://greasyfork.org/scripts/421951-nico-manga-download",
+    "code_url": "https://update.greasyfork.org/scripts/421951/Nico%20manga%20download.user.js",
+    "code_size": 2534,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

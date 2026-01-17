@@ -1,0 +1,33 @@
+{
+  "id": 418789,
+  "daily_installs": 0,
+  "total_installs": 68,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-18T06:59:00.000Z",
+  "code_updated_at": "2021-08-10T02:01:03.000Z",
+  "namespace": "https://github.com/kiccer/tapd-search-wiki",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 437412,
+      "name": "kiccer",
+      "created_at": "2020-01-22T01:40:54.000Z",
+      "url": "https://greasyfork.org/users/437412-kiccer"
+    }
+  ],
+  "name": "【tapd】一键查询所有项目中的wiki",
+  "description": "为了方便在tapd的wiki中查找接口而开发",
+  "url": "https://greasyfork.org/scripts/418789-tapd-%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84wiki",
+  "code_url": "https://update.greasyfork.org/scripts/418789/%E3%80%90tapd%E3%80%91%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84wiki.user.js",
+  "code_size": 42803,
+  "license": "MIT License",
+  "version": "3.7.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 463416,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-06T16:01:14.000Z",
+  "code_updated_at": "2023-09-15T14:00:06.000Z",
+  "namespace": "https://openuserjs.org/users/SkyedBlue",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1054664,
+      "name": "SkyedBlue",
+      "created_at": "2023-04-06T15:17:32.000Z",
+      "url": "https://greasyfork.org/users/1054664-skyedblue",
+      "scripts": [
+        {
+          "id": 463416,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-04-06T16:01:14.000Z",
+          "code_updated_at": "2023-09-15T14:00:06.000Z",
+          "namespace": "https://openuserjs.org/users/SkyedBlue",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "JSON Selector",
+          "description": "Select a JSON string and display it in a formatted way.",
+          "url": "https://greasyfork.org/scripts/463416-json-selector",
+          "code_url": "https://update.greasyfork.org/scripts/463416/JSON%20Selector.user.js",
+          "code_size": 6733,
+          "license": "OSI-SPDX-Short-Identifier",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JSON Selector",
+  "description": "Select a JSON string and display it in a formatted way.",
+  "url": "https://greasyfork.org/scripts/463416-json-selector",
+  "code_url": "https://update.greasyfork.org/scripts/463416/JSON%20Selector.user.js",
+  "code_size": 6733,
+  "license": "OSI-SPDX-Short-Identifier",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 491551,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-03T12:51:11.000Z",
+    "code_updated_at": "2024-04-03T12:51:11.000Z",
+    "namespace": "https://crm.globaldrive.ru/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265318,
+        "name": "Сергей Инденбом",
+        "created_at": "2024-02-22T09:44:34.000Z",
+        "url": "https://greasyfork.org/users/1265318-%D1%81%D0%B5%D1%80%D0%B3%D0%B5%D0%B9-%D0%B8%D0%BD%D0%B4%D0%B5%D0%BD%D0%B1%D0%BE%D0%BC"
+      }
+    ],
+    "name": "Bitrix24 Better <code>",
+    "description": "Native Bitrix24 CODE tag is broken and doesnt have hightlighting at all, so it is very hard to share sources in tasks. This script is fixing this issue.",
+    "url": "https://greasyfork.org/scripts/491551-bitrix24-better-code",
+    "code_url": "https://update.greasyfork.org/scripts/491551/Bitrix24%20Better%20%3Ccode%3E.user.js",
+    "code_size": 2147,
+    "license": null,
+    "version": "2024-02-22-2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 491549,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-03T12:50:06.000Z",
+    "code_updated_at": "2024-04-22T13:01:07.000Z",
+    "namespace": "https://crm.globaldrive.ru/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265318,
+        "name": "Сергей Инденбом",
+        "created_at": "2024-02-22T09:44:34.000Z",
+        "url": "https://greasyfork.org/users/1265318-%D1%81%D0%B5%D1%80%D0%B3%D0%B5%D0%B9-%D0%B8%D0%BD%D0%B4%D0%B5%D0%BD%D0%B1%D0%BE%D0%BC"
+      }
+    ],
+    "name": "Bitrix24 Make Title With Prefix",
+    "description": "Make and change prefix for tasks from selects. Must be combined with script that make selects for tasks custom fields.",
+    "url": "https://greasyfork.org/scripts/491549-bitrix24-make-title-with-prefix",
+    "code_url": "https://update.greasyfork.org/scripts/491549/Bitrix24%20Make%20Title%20With%20Prefix.user.js",
+    "code_size": 3243,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

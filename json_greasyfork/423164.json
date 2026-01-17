@@ -1,0 +1,59 @@
+{
+  "id": 423164,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-13T12:30:56.000Z",
+  "code_updated_at": "2021-03-13T12:30:56.000Z",
+  "namespace": "https://greasyfork.org/users/746813",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 746813,
+      "name": "majdan",
+      "created_at": "2021-03-13T12:27:10.000Z",
+      "url": "https://greasyfork.org/users/746813-majdan",
+      "scripts": [
+        {
+          "id": 423164,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-13T12:30:56.000Z",
+          "code_updated_at": "2021-03-13T12:30:56.000Z",
+          "namespace": "https://greasyfork.org/users/746813",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "STOS Price Converter",
+          "description": "STOS Price Converter -> Converts the price to Yuan",
+          "url": "https://greasyfork.org/scripts/423164-stos-price-converter",
+          "code_url": "https://update.greasyfork.org/scripts/423164/STOS%20Price%20Converter.user.js",
+          "code_size": 1058,
+          "license": null,
+          "version": "21.36",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "STOS Price Converter",
+  "description": "STOS Price Converter -> Converts the price to Yuan",
+  "url": "https://greasyfork.org/scripts/423164-stos-price-converter",
+  "code_url": "https://update.greasyfork.org/scripts/423164/STOS%20Price%20Converter.user.js",
+  "code_size": 1058,
+  "license": null,
+  "version": "21.36",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

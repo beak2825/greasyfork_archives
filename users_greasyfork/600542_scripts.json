@@ -1,0 +1,68 @@
+[
+  {
+    "id": 451316,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-13T15:42:48.000Z",
+    "code_updated_at": "2022-09-13T15:54:04.000Z",
+    "namespace": "TwitchSmoothScrollScript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600542,
+        "name": "b d",
+        "created_at": "2020-06-18T05:15:59.000Z",
+        "url": "https://greasyfork.org/users/600542-b-d"
+      }
+    ],
+    "name": "Twitch Smooth Scroll",
+    "description": "TwitchのチャットをNCVのようにスクロールさせます。",
+    "url": "https://greasyfork.org/scripts/451316-twitch-smooth-scroll",
+    "code_url": "https://update.greasyfork.org/scripts/451316/Twitch%20Smooth%20Scroll.user.js",
+    "code_size": 3981,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 445512,
+    "daily_installs": 0,
+    "total_installs": 198,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-25T08:00:23.000Z",
+    "code_updated_at": "2025-03-29T16:23:29.000Z",
+    "namespace": "TwitchChatFilterScript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 600542,
+        "name": "b d",
+        "created_at": "2020-06-18T05:15:59.000Z",
+        "url": "https://greasyfork.org/users/600542-b-d"
+      }
+    ],
+    "name": "Twitch Chat Filter",
+    "description": "Twitchのチャット欄にNG機能を追加します。Chat Filter for Twitch chat",
+    "url": "https://greasyfork.org/scripts/445512-twitch-chat-filter",
+    "code_url": "https://update.greasyfork.org/scripts/445512/Twitch%20Chat%20Filter.user.js",
+    "code_size": 36045,
+    "license": "MIT License",
+    "version": "0.9.5",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

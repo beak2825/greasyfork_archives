@@ -1,0 +1,35 @@
+[
+  {
+    "id": 476537,
+    "daily_installs": 0,
+    "total_installs": 74,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-02T06:27:36.000Z",
+    "code_updated_at": "2024-06-17T13:35:04.000Z",
+    "namespace": "ProgramRipper",
+    "support_url": "https://github.com/ProgramRipper/BLiveWeb/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1024443,
+        "name": "ProgramRipper",
+        "created_at": "2023-02-09T15:26:54.000Z",
+        "url": "https://greasyfork.org/users/1024443-programripper"
+      }
+    ],
+    "name": "B 站网页端直播",
+    "description": "在 B 站网页端开播",
+    "url": "https://greasyfork.org/scripts/476537-b-%E7%AB%99%E7%BD%91%E9%A1%B5%E7%AB%AF%E7%9B%B4%E6%92%AD",
+    "code_url": "https://update.greasyfork.org/scripts/476537/B%20%E7%AB%99%E7%BD%91%E9%A1%B5%E7%AB%AF%E7%9B%B4%E6%92%AD.user.js",
+    "code_size": 2566,
+    "license": "MIT License",
+    "version": "0.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

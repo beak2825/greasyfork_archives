@@ -1,0 +1,59 @@
+{
+  "id": 464095,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-15T19:39:09.000Z",
+  "code_updated_at": "2023-04-23T18:13:34.000Z",
+  "namespace": "websight.blue",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 4696,
+      "name": "richardsoft",
+      "created_at": "2014-08-24T10:04:00.000Z",
+      "url": "https://greasyfork.org/users/4696-richardsoft",
+      "scripts": [
+        {
+          "id": 25206,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2016-11-28T19:57:53.000Z",
+          "code_updated_at": "2018-08-08T20:33:44.000Z",
+          "namespace": "SoItGoes",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SiG Poster View",
+          "description": "Create movie posters view on Movies & TV page",
+          "url": "https://greasyfork.org/scripts/25206-sig-poster-view",
+          "code_url": "https://update.greasyfork.org/scripts/25206/SiG%20Poster%20View.user.js",
+          "code_size": 6097,
+          "license": null,
+          "version": "0.25",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Topic Imagemap",
+  "description": "thread image map",
+  "url": "https://greasyfork.org/scripts/464095-topic-imagemap",
+  "code_url": "https://update.greasyfork.org/scripts/464095/Topic%20Imagemap.user.js",
+  "code_size": 3481,
+  "license": null,
+  "version": "0.1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

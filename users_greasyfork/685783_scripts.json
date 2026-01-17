@@ -1,0 +1,35 @@
+[
+  {
+    "id": 465101,
+    "daily_installs": 0,
+    "total_installs": 151,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-04-29T07:00:05.000Z",
+    "code_updated_at": "2023-08-25T04:33:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 685783,
+        "name": "Psyda",
+        "created_at": "2020-09-07T22:04:33.000Z",
+        "url": "https://greasyfork.org/users/685783-psyda"
+      }
+    ],
+    "name": "Youtube Shorts Garbage Remover",
+    "description": "Hides elements based on like count conditions. Removes the trash tier garbage youtube shorts shovelled down your throat.",
+    "url": "https://greasyfork.org/scripts/465101-youtube-shorts-garbage-remover",
+    "code_url": "https://update.greasyfork.org/scripts/465101/Youtube%20Shorts%20Garbage%20Remover.user.js",
+    "code_size": 1491,
+    "license": "MIT License",
+    "version": "1.66",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

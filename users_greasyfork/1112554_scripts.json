@@ -1,0 +1,68 @@
+[
+  {
+    "id": 469491,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-26T11:41:02.000Z",
+    "code_updated_at": "2024-11-06T08:36:22.000Z",
+    "namespace": "http://your-namespace.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1112554,
+        "name": "YuKuL",
+        "created_at": "2023-06-26T11:09:28.000Z",
+        "url": "https://greasyfork.org/users/1112554-yukul"
+      }
+    ],
+    "name": "CUG研究生系统自动评价",
+    "description": "在教务系统的教师评价界面，自动填写全部下拉菜单为很好",
+    "url": "https://greasyfork.org/scripts/469491-cug%E7%A0%94%E7%A9%B6%E7%94%9F%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E4%BB%B7",
+    "code_url": "https://update.greasyfork.org/scripts/469491/CUG%E7%A0%94%E7%A9%B6%E7%94%9F%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E4%BB%B7.user.js",
+    "code_size": 1103,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 469488,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-26T11:10:28.000Z",
+    "code_updated_at": "2023-06-26T11:10:28.000Z",
+    "namespace": "https://greasyfork.org/users/1112554",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1112554,
+        "name": "YuKuL",
+        "created_at": "2023-06-26T11:09:28.000Z",
+        "url": "https://greasyfork.org/users/1112554-yukul"
+      }
+    ],
+    "name": "拦截CUG网页VPN弹窗",
+    "description": "拦截具有特定类名的<div>元素",
+    "url": "https://greasyfork.org/scripts/469488-%E6%8B%A6%E6%88%AAcug%E7%BD%91%E9%A1%B5vpn%E5%BC%B9%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/469488/%E6%8B%A6%E6%88%AACUG%E7%BD%91%E9%A1%B5VPN%E5%BC%B9%E7%AA%97.user.js",
+    "code_size": 893,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

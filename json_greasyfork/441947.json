@@ -1,0 +1,59 @@
+{
+  "id": 441947,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-23T07:04:30.000Z",
+  "code_updated_at": "2023-11-08T05:07:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 843632,
+      "name": "xujunbocat",
+      "created_at": "2021-11-24T11:41:04.000Z",
+      "url": "https://greasyfork.org/users/843632-xujunbocat",
+      "scripts": [
+        {
+          "id": 532054,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-07T06:12:39.000Z",
+          "code_updated_at": "2025-04-07T06:12:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Myshopage: 禁止消息弹窗",
+          "description": "Myshopage Tool For Saker!",
+          "url": "https://greasyfork.org/scripts/532054-myshopage-%E7%A6%81%E6%AD%A2%E6%B6%88%E6%81%AF%E5%BC%B9%E7%AA%97",
+          "code_url": "https://update.greasyfork.org/scripts/532054/Myshopage%3A%20%E7%A6%81%E6%AD%A2%E6%B6%88%E6%81%AF%E5%BC%B9%E7%AA%97.user.js",
+          "code_size": 5163,
+          "license": "AGPL License",
+          "version": "1.0.0",
+          "locale": "sv",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Funnelish Order Automations",
+  "description": "Funnelish Tool For Saker!",
+  "url": "https://greasyfork.org/scripts/441947-funnelish-order-automations",
+  "code_url": "https://update.greasyfork.org/scripts/441947/Funnelish%20Order%20Automations.user.js",
+  "code_size": 5427,
+  "license": "AGPL License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

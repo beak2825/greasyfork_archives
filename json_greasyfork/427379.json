@@ -1,0 +1,34 @@
+{
+  "id": 427379,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-02T02:04:06.000Z",
+  "code_updated_at": "2021-06-02T02:04:05.000Z",
+  "namespace": "gjwse90gj98we",
+  "support_url": "https://openuserjs.org/scripts/7kt_swe/Plain_old_youtube_(2020)_7KT_EDITION/issues",
+  "contribution_url": "https://www.paypal.com/donate/?hosted_button_id=2EJR4DLTR4Y7Q",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 766674,
+      "name": "Nicholas Paul",
+      "created_at": "2021-04-30T01:11:38.000Z",
+      "url": "https://greasyfork.org/users/766674-nicholas-paul",
+      "scripts": []
+    }
+  ],
+  "name": "Plain old youtube (2020) | 7KT EDITION",
+  "description": "7ktTube: Reverts YouTube to the 2016 Layout! (Polymer Engine FIX) | Customisation interface(API) included | Customizable thumbnail size | Customizable video player size | Download video button(no redirect) | Grey-out thumbnails on watched videos | Hide suggestions blocks | Hide  all the filter bars | And much more!",
+  "url": "https://greasyfork.org/scripts/427379-plain-old-youtube-2020-7kt-edition",
+  "code_url": "https://update.greasyfork.org/scripts/427379/Plain%20old%20youtube%20%282020%29%20%7C%207KT%20EDITION.user.js",
+  "code_size": 132241,
+  "license": "MIT License",
+  "version": "2.6.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

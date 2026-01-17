@@ -96,6 +96,39 @@
     "version": "2.1",
     "locale": "zh-TW",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462576,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-25T19:45:59.000Z",
+    "code_updated_at": "2023-03-26T01:02:06.000Z",
+    "namespace": "Lalala",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984250,
+        "name": "Tsuyumi25",
+        "created_at": "2022-11-17T02:01:25.000Z",
+        "url": "https://greasyfork.org/users/984250-tsuyumi25"
+      }
+    ],
+    "name": "SimilarWeb Add Open Page Button",
+    "description": "Adds a button to SimilarWeb competitor list items to open the competitor's url in a new tab/window when clicked.",
+    "url": "https://greasyfork.org/scripts/462576-similarweb-add-open-page-button",
+    "code_url": "https://update.greasyfork.org/scripts/462576/SimilarWeb%20Add%20Open%20Page%20Button.user.js",
+    "code_size": 1858,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

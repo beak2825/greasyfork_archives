@@ -1,0 +1,101 @@
+[
+  {
+    "id": 475028,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-11T12:46:51.000Z",
+    "code_updated_at": "2023-09-11T13:10:18.000Z",
+    "namespace": "Hypnos",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1167654,
+        "name": "Hypnos Diov",
+        "created_at": "2023-09-06T20:58:45.000Z",
+        "url": "https://greasyfork.org/users/1167654-hypnos-diov"
+      }
+    ],
+    "name": "MOOCAuto",
+    "description": "自动互评脚本",
+    "url": "https://greasyfork.org/scripts/475028-moocauto",
+    "code_url": "https://update.greasyfork.org/scripts/475028/MOOCAuto.user.js",
+    "code_size": 1468,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474893,
+    "daily_installs": 0,
+    "total_installs": 158,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-09T12:51:23.000Z",
+    "code_updated_at": "2023-09-09T13:01:34.000Z",
+    "namespace": "Hypnos",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1167654,
+        "name": "Hypnos Diov",
+        "created_at": "2023-09-06T20:58:45.000Z",
+        "url": "https://greasyfork.org/users/1167654-hypnos-diov"
+      }
+    ],
+    "name": "Open Links in New Tab",
+    "description": "Open links in new tab when clicked",
+    "url": "https://greasyfork.org/scripts/474893-open-links-in-new-tab",
+    "code_url": "https://update.greasyfork.org/scripts/474893/Open%20Links%20in%20New%20Tab.user.js",
+    "code_size": 632,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "1.011",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 474712,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-09-06T22:44:38.000Z",
+    "code_updated_at": "2023-09-07T10:34:29.000Z",
+    "namespace": "Hypnos",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1167654,
+        "name": "Hypnos Diov",
+        "created_at": "2023-09-06T20:58:45.000Z",
+        "url": "https://greasyfork.org/users/1167654-hypnos-diov"
+      }
+    ],
+    "name": "Remove Rounded Corners",
+    "description": "Remove all rounded corners from web page elements",
+    "url": "https://greasyfork.org/scripts/474712-remove-rounded-corners",
+    "code_url": "https://update.greasyfork.org/scripts/474712/Remove%20Rounded%20Corners.user.js",
+    "code_size": 2606,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

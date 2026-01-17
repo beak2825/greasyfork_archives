@@ -295,5 +295,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 487795,
+    "daily_installs": 0,
+    "total_installs": 263,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-20T04:34:04.000Z",
+    "code_updated_at": "2024-02-20T04:34:04.000Z",
+    "namespace": "https://axutongxue.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 507063,
+        "name": "Kyon945",
+        "created_at": "2020-04-14T08:28:01.000Z",
+        "url": "https://greasyfork.org/users/507063-kyon945"
+      }
+    ],
+    "name": "自动展开知识星球帖子+替换图片为原图显示",
+    "description": "知识星球：阿虚的问答社区",
+    "url": "https://greasyfork.org/scripts/487795-%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E5%B8%96%E5%AD%90-%E6%9B%BF%E6%8D%A2%E5%9B%BE%E7%89%87%E4%B8%BA%E5%8E%9F%E5%9B%BE%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/487795/%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E5%B8%96%E5%AD%90%2B%E6%9B%BF%E6%8D%A2%E5%9B%BE%E7%89%87%E4%B8%BA%E5%8E%9F%E5%9B%BE%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 2137,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 461735,
+    "daily_installs": 0,
+    "total_installs": 417,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-13T02:29:56.000Z",
+    "code_updated_at": "2023-03-13T02:29:56.000Z",
+    "namespace": "https://axutongxue.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 507063,
+        "name": "Kyon945",
+        "created_at": "2020-04-14T08:28:01.000Z",
+        "url": "https://greasyfork.org/users/507063-kyon945"
+      }
+    ],
+    "name": "斗鱼直播精简自用(兼容DouyuEx)",
+    "description": "提供简洁的界面，再兼容DouyuEx获得更强大的功能",
+    "url": "https://greasyfork.org/scripts/461735-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E7%B2%BE%E7%AE%80%E8%87%AA%E7%94%A8-%E5%85%BC%E5%AE%B9douyuex",
+    "code_url": "https://update.greasyfork.org/scripts/461735/%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E7%B2%BE%E7%AE%80%E8%87%AA%E7%94%A8%28%E5%85%BC%E5%AE%B9DouyuEx%29.user.js",
+    "code_size": 12984,
+    "license": "MPL License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460756,
+    "daily_installs": 0,
+    "total_installs": 322,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-26T06:42:30.000Z",
+    "code_updated_at": "2024-09-21T06:38:38.000Z",
+    "namespace": "https://axutongxue.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 507063,
+        "name": "Kyon945",
+        "created_at": "2020-04-14T08:28:01.000Z",
+        "url": "https://greasyfork.org/users/507063-kyon945"
+      }
+    ],
+    "name": "一键生成uBlock本地黑名单屏蔽代码",
+    "description": "复制用户主页链接后通过左下角「拉黑」按钮或者按下Ctrl+F1即可一键转换为uBlock等扩展可用的屏蔽代码",
+    "url": "https://greasyfork.org/scripts/460756-%E4%B8%80%E9%94%AE%E7%94%9F%E6%88%90ublock%E6%9C%AC%E5%9C%B0%E9%BB%91%E5%90%8D%E5%8D%95%E5%B1%8F%E8%94%BD%E4%BB%A3%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/460756/%E4%B8%80%E9%94%AE%E7%94%9F%E6%88%90uBlock%E6%9C%AC%E5%9C%B0%E9%BB%91%E5%90%8D%E5%8D%95%E5%B1%8F%E8%94%BD%E4%BB%A3%E7%A0%81.user.js",
+    "code_size": 7418,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

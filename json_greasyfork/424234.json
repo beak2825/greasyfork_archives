@@ -1,0 +1,59 @@
+{
+  "id": 424234,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-03-31T00:35:34.000Z",
+  "code_updated_at": "2021-03-31T00:35:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 753153,
+      "name": "deadlypliers",
+      "created_at": "2021-03-31T00:33:35.000Z",
+      "url": "https://greasyfork.org/users/753153-deadlypliers",
+      "scripts": [
+        {
+          "id": 424234,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-03-31T00:35:34.000Z",
+          "code_updated_at": "2021-03-31T00:35:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mixlr AutoHeart",
+          "description": "Make the hearts go",
+          "url": "https://greasyfork.org/scripts/424234-mixlr-autoheart",
+          "code_url": "https://update.greasyfork.org/scripts/424234/Mixlr%20AutoHeart.user.js",
+          "code_size": 2398,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mixlr AutoHeart",
+  "description": "Make the hearts go",
+  "url": "https://greasyfork.org/scripts/424234-mixlr-autoheart",
+  "code_url": "https://update.greasyfork.org/scripts/424234/Mixlr%20AutoHeart.user.js",
+  "code_size": 2398,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

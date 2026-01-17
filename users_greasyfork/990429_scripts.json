@@ -1,0 +1,35 @@
+[
+  {
+    "id": 469986,
+    "daily_installs": 0,
+    "total_installs": 117,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2023-07-02T16:02:47.000Z",
+    "code_updated_at": "2025-02-14T19:04:40.000Z",
+    "namespace": "JTRKON",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 990429,
+        "name": "JTRKON",
+        "created_at": "2022-12-01T02:01:19.000Z",
+        "url": "https://greasyfork.org/users/990429-jtrkon"
+      }
+    ],
+    "name": "Video Volume Control with Mouse Wheel in ani.gamer.com.tw",
+    "description": "Control the volume of video elements using mouse wheel",
+    "url": "https://greasyfork.org/scripts/469986-video-volume-control-with-mouse-wheel-in-ani-gamer-com-tw",
+    "code_url": "https://update.greasyfork.org/scripts/469986/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E5%8B%95%E7%95%AB%E7%98%8B%E6%BB%BE%E8%BC%AA%E6%8E%A7%E5%88%B6%E9%9F%B3%E9%87%8F%E5%A4%A7%E5%B0%8F.user.js",
+    "code_size": 2713,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 412444,
+    "daily_installs": 0,
+    "total_installs": 243,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-10-04T15:44:44.000Z",
+    "code_updated_at": "2021-05-18T09:22:39.000Z",
+    "namespace": "idmresettrial",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 7553,
+        "name": "idmresettrial",
+        "created_at": "2014-12-12T11:52:20.000Z",
+        "url": "https://greasyfork.org/users/7553-idmresettrial"
+      }
+    ],
+    "name": "Hiện Join date",
+    "description": "như tên",
+    "url": "https://greasyfork.org/scripts/412444-hi%E1%BB%87n-join-date",
+    "code_url": "https://update.greasyfork.org/scripts/412444/Hi%E1%BB%87n%20Join%20date.user.js",
+    "code_size": 3756,
+    "license": null,
+    "version": "2021.05.18.03",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

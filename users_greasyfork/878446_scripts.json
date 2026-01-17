@@ -1,0 +1,101 @@
+[
+  {
+    "id": 450428,
+    "daily_installs": 0,
+    "total_installs": 153,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-29T20:23:55.000Z",
+    "code_updated_at": "2022-08-30T08:49:48.000Z",
+    "namespace": "https://greasyfork.org/en/users/878446-missingno123",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 878446,
+        "name": "MissingNO123",
+        "created_at": "2022-02-20T01:02:12.000Z",
+        "url": "https://greasyfork.org/users/878446-missingno123"
+      }
+    ],
+    "name": "Booth Automatic Language Changer",
+    "description": "Change from ja/ko/zh to your preferred language",
+    "url": "https://greasyfork.org/scripts/450428-booth-automatic-language-changer",
+    "code_url": "https://update.greasyfork.org/scripts/450428/Booth%20Automatic%20Language%20Changer.user.js",
+    "code_size": 1154,
+    "license": "GNU GPLv3",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440319,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-02-20T01:09:35.000Z",
+    "code_updated_at": "2022-02-20T13:14:41.000Z",
+    "namespace": "https://alteregobot.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 878446,
+        "name": "MissingNO123",
+        "created_at": "2022-02-20T01:02:12.000Z",
+        "url": "https://greasyfork.org/users/878446-missingno123"
+      }
+    ],
+    "name": "EveryNoise Scan Continue",
+    "description": "press N to continue scanning on everynoise.com, instead of having to scroll up every time",
+    "url": "https://greasyfork.org/scripts/440319-everynoise-scan-continue",
+    "code_url": "https://update.greasyfork.org/scripts/440319/EveryNoise%20Scan%20Continue.user.js",
+    "code_size": 868,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 440318,
+    "daily_installs": 0,
+    "total_installs": 406,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-02-20T01:05:06.000Z",
+    "code_updated_at": "2022-08-29T19:59:45.000Z",
+    "namespace": "https://greasyfork.org/en/users/878446-missingno123",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 878446,
+        "name": "MissingNO123",
+        "created_at": "2022-02-20T01:02:12.000Z",
+        "url": "https://greasyfork.org/users/878446-missingno123"
+      }
+    ],
+    "name": "Youtube Un-Shortify",
+    "description": "Redirect YouTube #Shorts to regular video pages",
+    "url": "https://greasyfork.org/scripts/440318-youtube-un-shortify",
+    "code_url": "https://update.greasyfork.org/scripts/440318/Youtube%20Un-Shortify.user.js",
+    "code_size": 485,
+    "license": null,
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

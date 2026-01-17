@@ -1,0 +1,35 @@
+[
+  {
+    "id": 452896,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-12T02:39:54.000Z",
+    "code_updated_at": "2022-10-12T02:39:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 969448,
+        "name": "Yangff",
+        "created_at": "2022-10-12T02:38:58.000Z",
+        "url": "https://greasyfork.org/users/969448-yangff"
+      }
+    ],
+    "name": "Hotcrp Auto Authors Copy",
+    "description": "This script copies the list of authors from one submission on hotcrp and imports it directly to another submission.",
+    "url": "https://greasyfork.org/scripts/452896-hotcrp-auto-authors-copy",
+    "code_url": "https://update.greasyfork.org/scripts/452896/Hotcrp%20Auto%20Authors%20Copy.user.js",
+    "code_size": 4147,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

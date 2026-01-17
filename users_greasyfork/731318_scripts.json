@@ -1,0 +1,35 @@
+[
+  {
+    "id": 420668,
+    "daily_installs": 0,
+    "total_installs": 86,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-26T02:12:03.000Z",
+    "code_updated_at": "2021-01-26T02:12:03.000Z",
+    "namespace": "https://greasyfork.org/users/731318",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731318,
+        "name": "Julian Park",
+        "created_at": "2021-01-26T02:10:35.000Z",
+        "url": "https://greasyfork.org/users/731318-julian-park"
+      }
+    ],
+    "name": "USACO Language Selector",
+    "description": "Automatically selects language to submit based on file extension",
+    "url": "https://greasyfork.org/scripts/420668-usaco-language-selector",
+    "code_url": "https://update.greasyfork.org/scripts/420668/USACO%20Language%20Selector.user.js",
+    "code_size": 908,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

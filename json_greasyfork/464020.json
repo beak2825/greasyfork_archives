@@ -1,0 +1,33 @@
+{
+  "id": 464020,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-14T16:16:57.000Z",
+  "code_updated_at": "2023-04-18T16:19:47.000Z",
+  "namespace": "https://brokenstones.is/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 824102,
+      "name": "anymacuser",
+      "created_at": "2021-10-11T13:12:59.000Z",
+      "url": "https://greasyfork.org/users/824102-anymacuser"
+    }
+  ],
+  "name": "BrokenStones - Upload App Helper",
+  "description": "Set of tools to ease app upload on BrokenStones",
+  "url": "https://greasyfork.org/scripts/464020-brokenstones-upload-app-helper",
+  "code_url": "https://update.greasyfork.org/scripts/464020/BrokenStones%20-%20Upload%20App%20Helper.user.js",
+  "code_size": 42385,
+  "license": null,
+  "version": "0.8.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

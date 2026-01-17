@@ -1,0 +1,33 @@
+{
+  "id": 435872,
+  "daily_installs": 4,
+  "total_installs": 3788,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-22T01:58:14.000Z",
+  "code_updated_at": "2024-12-09T15:21:55.000Z",
+  "namespace": "Pokeclicker Scripts",
+  "support_url": "https://github.com/Ephenia/Pokeclicker-Scripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 826213,
+      "name": "Ephenia",
+      "created_at": "2021-10-17T20:02:27.000Z",
+      "url": "https://greasyfork.org/users/826213-ephenia"
+    }
+  ],
+  "name": "[Pokeclicker] Catch Speed Adjuster",
+  "description": "Adjusts catch speed of all Pokeballs. Currently only makes Pokeballs catch as fast as possible.",
+  "url": "https://greasyfork.org/scripts/435872-pokeclicker-catch-speed-adjuster",
+  "code_url": "https://update.greasyfork.org/scripts/435872/%5BPokeclicker%5D%20Catch%20Speed%20Adjuster.user.js",
+  "code_size": 5366,
+  "license": "GPL-3.0 License",
+  "version": "1.4.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

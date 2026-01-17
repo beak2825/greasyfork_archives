@@ -1,0 +1,33 @@
+{
+  "id": 429327,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-13T22:12:43.000Z",
+  "code_updated_at": "2021-07-18T11:18:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 672654,
+      "name": "Samir Duran",
+      "created_at": "2020-08-02T14:36:33.000Z",
+      "url": "https://greasyfork.org/users/672654-samir-duran"
+    }
+  ],
+  "name": "cppreference-language-switch",
+  "description": "A simple JS for sticking language options on top for cppreference.com",
+  "url": "https://greasyfork.org/scripts/429327-cppreference-language-switch",
+  "code_url": "https://update.greasyfork.org/scripts/429327/cppreference-language-switch.user.js",
+  "code_size": 1093,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

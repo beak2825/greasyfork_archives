@@ -1,0 +1,35 @@
+[
+  {
+    "id": 413246,
+    "daily_installs": 0,
+    "total_installs": 1757,
+    "fan_score": "64.6",
+    "good_ratings": 7,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-14T16:47:20.000Z",
+    "code_updated_at": "2020-10-14T16:54:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695043,
+        "name": "blvd20",
+        "created_at": "2020-10-14T16:43:50.000Z",
+        "url": "https://greasyfork.org/users/695043-blvd20"
+      }
+    ],
+    "name": "DouyinDownloader",
+    "description": "Download douyin video without watermark",
+    "url": "https://greasyfork.org/scripts/413246-douyindownloader",
+    "code_url": "https://update.greasyfork.org/scripts/413246/DouyinDownloader.user.js",
+    "code_size": 1498,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 430847,
+  "daily_installs": 0,
+  "total_installs": 109,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-08-15T17:13:30.000Z",
+  "code_updated_at": "2021-08-15T17:13:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 804978,
+      "name": "Lovely Animations AUTTP",
+      "created_at": "2021-08-15T17:09:24.000Z",
+      "url": "https://greasyfork.org/users/804978-lovely-animations-auttp"
+    }
+  ],
+  "name": "Spam comment hider for Roblox",
+  "description": "Hides dumb spam comments on items and groups like \"The person below me\" or \"/e free\" to find more comment relevant to the item's topic NOTE: DOES NOT HIDE ADVERTISEMENT! Credit to Brosy518241",
+  "url": "https://greasyfork.org/scripts/430847-spam-comment-hider-for-roblox",
+  "code_url": "https://update.greasyfork.org/scripts/430847/Spam%20comment%20hider%20for%20Roblox.user.js",
+  "code_size": 6551,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

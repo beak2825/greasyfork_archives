@@ -1,0 +1,59 @@
+{
+  "id": 484494,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-11T01:55:15.000Z",
+  "code_updated_at": "2024-01-11T01:55:15.000Z",
+  "namespace": "https://github.com/03c2/RRCommentRemover",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1246234,
+      "name": "elbas",
+      "created_at": "2024-01-11T01:46:26.000Z",
+      "url": "https://greasyfork.org/users/1246234-elbas",
+      "scripts": [
+        {
+          "id": 484494,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-11T01:55:15.000Z",
+          "code_updated_at": "2024-01-11T01:55:15.000Z",
+          "namespace": "https://github.com/03c2/RRCommentRemover",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RoyalRoad Comments Remover",
+          "description": "Automatically hides comments on RoyalRoad",
+          "url": "https://greasyfork.org/scripts/484494-royalroad-comments-remover",
+          "code_url": "https://update.greasyfork.org/scripts/484494/RoyalRoad%20Comments%20Remover.user.js",
+          "code_size": 651,
+          "license": "GNU GPLv3",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RoyalRoad Comments Remover",
+  "description": "Automatically hides comments on RoyalRoad",
+  "url": "https://greasyfork.org/scripts/484494-royalroad-comments-remover",
+  "code_url": "https://update.greasyfork.org/scripts/484494/RoyalRoad%20Comments%20Remover.user.js",
+  "code_size": 651,
+  "license": "GNU GPLv3",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

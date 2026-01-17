@@ -1,0 +1,34 @@
+{
+  "id": 479184,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-06T14:20:08.000Z",
+  "code_updated_at": "2023-11-06T14:20:08.000Z",
+  "namespace": "https://greasyfork.org/users/1212119",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1212119,
+      "name": "SafwanKazi",
+      "created_at": "2023-11-06T14:17:26.000Z",
+      "url": "https://greasyfork.org/users/1212119-safwankazi",
+      "scripts": []
+    }
+  ],
+  "name": "QuillBot x",
+  "description": "Unlock Quillbot Premium",
+  "url": "https://greasyfork.org/scripts/479184-quillbot-x",
+  "code_url": "https://update.greasyfork.org/scripts/479184/QuillBot%20x.user.js",
+  "code_size": 10898,
+  "license": null,
+  "version": "4.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 458049,
+    "daily_installs": 0,
+    "total_installs": 412,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-01-11T18:24:44.000Z",
+    "code_updated_at": "2023-01-11T18:24:44.000Z",
+    "namespace": "This script automatically censors cursing by changing it to something else.",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 929582,
+        "name": "Urban Dubov",
+        "created_at": "2022-06-26T19:24:06.000Z",
+        "url": "https://greasyfork.org/users/929582-urban-dubov"
+      }
+    ],
+    "name": "Anti-swear",
+    "description": "11/01/2023, 11:40:55",
+    "url": "https://greasyfork.org/scripts/458049-anti-swear",
+    "code_url": "https://update.greasyfork.org/scripts/458049/Anti-swear.user.js",
+    "code_size": 1275,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 456112,
+    "daily_installs": 0,
+    "total_installs": 896,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-06T10:07:32.000Z",
+    "code_updated_at": "2022-12-17T14:53:08.000Z",
+    "namespace": "Trash key bind changing",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 929582,
+        "name": "Urban Dubov",
+        "created_at": "2022-06-26T19:24:06.000Z",
+        "url": "https://greasyfork.org/users/929582-urban-dubov"
+      }
+    ],
+    "name": "Sploop.io update script",
+    "description": "12/6/2022, 11:57:43 AM",
+    "url": "https://greasyfork.org/scripts/456112-sploop-io-update-script",
+    "code_url": "https://update.greasyfork.org/scripts/456112/Sploopio%20update%20script.user.js",
+    "code_size": 2971,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

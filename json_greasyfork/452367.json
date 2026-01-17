@@ -1,0 +1,34 @@
+{
+  "id": 452367,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-02T09:51:50.000Z",
+  "code_updated_at": "2022-10-02T09:51:49.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 965677,
+      "name": "karol83",
+      "created_at": "2022-10-02T08:32:41.000Z",
+      "url": "https://greasyfork.org/users/965677-karol83",
+      "scripts": []
+    }
+  ],
+  "name": "ga-unpaywall-dictionary",
+  "description": "dictionary for unscambling words",
+  "url": "https://greasyfork.org/scripts/452367-ga-unpaywall-dictionary",
+  "code_url": "https://update.greasyfork.org/scripts/452367/1100188/ga-unpaywall-dictionary.js",
+  "code_size": 1767661,
+  "license": null,
+  "version": "0.0.1.20221002095149",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

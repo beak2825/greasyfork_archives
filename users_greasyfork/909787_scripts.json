@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444383,
+    "daily_installs": 0,
+    "total_installs": 237,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-05-03T05:11:03.000Z",
+    "code_updated_at": "2022-05-03T05:13:26.000Z",
+    "namespace": "bilibilicctt",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 909787,
+        "name": "Joe Linkman",
+        "created_at": "2022-05-03T05:09:13.000Z",
+        "url": "https://greasyfork.org/users/909787-joe-linkman"
+      }
+    ],
+    "name": "解除购物网站限制功能",
+    "description": "最简洁好用的购物小助手啦~ 很好用啊自动显示京东(jd.com)、淘宝(taobao.com)、天猫(tmall.com)、聚划算、天猫超市、天猫国际(tmall.hk)、京东国际(jd.hk)、京东图书、京东电子书、京东工业品、京东大药房(yiyaojd.com)隐藏优惠券与历史价格。不止让您省钱开心购物，更可以告别虚假降价，以最优惠的价格，把宝贝抱回家。",
+    "url": "https://greasyfork.org/scripts/444383-%E8%A7%A3%E9%99%A4%E8%B4%AD%E7%89%A9%E7%BD%91%E7%AB%99%E9%99%90%E5%88%B6%E5%8A%9F%E8%83%BD",
+    "code_url": "https://update.greasyfork.org/scripts/444383/%E8%A7%A3%E9%99%A4%E8%B4%AD%E7%89%A9%E7%BD%91%E7%AB%99%E9%99%90%E5%88%B6%E5%8A%9F%E8%83%BD.user.js",
+    "code_size": 2650,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

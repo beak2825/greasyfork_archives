@@ -1,0 +1,101 @@
+[
+  {
+    "id": 449551,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-08-14T19:49:01.000Z",
+    "code_updated_at": "2022-08-22T23:19:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3930,
+        "name": "Mikhoul",
+        "created_at": "2014-07-26T20:09:54.000Z",
+        "url": "https://greasyfork.org/users/3930-mikhoul"
+      }
+    ],
+    "name": "Redirect Amazon to English version",
+    "description": "Redirect websites to their English version",
+    "url": "https://greasyfork.org/scripts/449551-redirect-amazon-to-english-version",
+    "code_url": "https://update.greasyfork.org/scripts/449551/Redirect%20Amazon%20to%20English%20version.user.js",
+    "code_size": 635,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416901,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-11-27T05:18:43.000Z",
+    "code_updated_at": "2020-11-27T05:18:43.000Z",
+    "namespace": "Github Time Formatter Forked",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3930,
+        "name": "Mikhoul",
+        "created_at": "2014-07-26T20:09:54.000Z",
+        "url": "https://greasyfork.org/users/3930-mikhoul"
+      }
+    ],
+    "name": "Github Time Formatter Forked",
+    "description": "Give Real Time on Github instead of approximate time",
+    "url": "https://greasyfork.org/scripts/416901-github-time-formatter-forked",
+    "code_url": "https://update.greasyfork.org/scripts/416901/Github%20Time%20Formatter%20Forked.user.js",
+    "code_size": 891,
+    "license": null,
+    "version": "1.0.",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 416053,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-13T18:22:45.000Z",
+    "code_updated_at": "2020-11-13T18:22:44.000Z",
+    "namespace": "Mikhoul",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3930,
+        "name": "Mikhoul",
+        "created_at": "2014-07-26T20:09:54.000Z",
+        "url": "https://greasyfork.org/users/3930-mikhoul"
+      }
+    ],
+    "name": "PC PartPicker Redirector to Canada website",
+    "description": "Auto redirect pcpartpicker.com domains to ca.pcpartpicker.com",
+    "url": "https://greasyfork.org/scripts/416053-pc-partpicker-redirector-to-canada-website",
+    "code_url": "https://update.greasyfork.org/scripts/416053/PC%20PartPicker%20Redirector%20to%20Canada%20website.user.js",
+    "code_size": 410,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

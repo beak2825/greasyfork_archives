@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466299,
+    "daily_installs": 0,
+    "total_installs": 154,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-14T21:29:46.000Z",
+    "code_updated_at": "2023-05-14T21:29:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1078665,
+        "name": "Film HD RU",
+        "created_at": "2023-05-13T20:18:07.000Z",
+        "url": "https://greasyfork.org/users/1078665-film-hd-ru"
+      }
+    ],
+    "name": "Free Crypto Auto Clicker",
+    "description": "Auto clicker for free crypto websites",
+    "url": "https://greasyfork.org/scripts/466299-free-crypto-auto-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/466299/Free%20Crypto%20Auto%20Clicker.user.js",
+    "code_size": 2841,
+    "license": null,
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

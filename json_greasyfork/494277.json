@@ -1,0 +1,59 @@
+{
+  "id": 494277,
+  "daily_installs": 0,
+  "total_installs": 166,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-07T03:41:20.000Z",
+  "code_updated_at": "2024-06-24T04:49:48.000Z",
+  "namespace": "https://github.com/tjxwork",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 831578,
+      "name": "NoBB",
+      "created_at": "2021-11-03T06:18:47.000Z",
+      "url": "https://greasyfork.org/users/831578-nobb",
+      "scripts": [
+        {
+          "id": 494277,
+          "daily_installs": 0,
+          "total_installs": 166,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-07T03:41:20.000Z",
+          "code_updated_at": "2024-06-24T04:49:48.000Z",
+          "namespace": "https://github.com/tjxwork",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili 按标签、标题、时长、UP主屏蔽视频 Plus",
+          "description": "对Bilibili.com的视频卡片元素，以 标签、标题、时长、UP主名称、UP主UID 来判断匹配，添加一个屏蔽叠加层或者隐藏视频。",
+          "url": "https://greasyfork.org/scripts/494277-bilibili-%E6%8C%89%E6%A0%87%E7%AD%BE-%E6%A0%87%E9%A2%98-%E6%97%B6%E9%95%BF-up%E4%B8%BB%E5%B1%8F%E8%94%BD%E8%A7%86%E9%A2%91-plus",
+          "code_url": "https://update.greasyfork.org/scripts/494277/Bilibili%20%E6%8C%89%E6%A0%87%E7%AD%BE%E3%80%81%E6%A0%87%E9%A2%98%E3%80%81%E6%97%B6%E9%95%BF%E3%80%81UP%E4%B8%BB%E5%B1%8F%E8%94%BD%E8%A7%86%E9%A2%91%20Plus.user.js",
+          "code_size": 58448,
+          "license": "CC-BY-NC-SA",
+          "version": "0.5.8-Plus",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili 按标签、标题、时长、UP主屏蔽视频 Plus",
+  "description": "对Bilibili.com的视频卡片元素，以 标签、标题、时长、UP主名称、UP主UID 来判断匹配，添加一个屏蔽叠加层或者隐藏视频。",
+  "url": "https://greasyfork.org/scripts/494277-bilibili-%E6%8C%89%E6%A0%87%E7%AD%BE-%E6%A0%87%E9%A2%98-%E6%97%B6%E9%95%BF-up%E4%B8%BB%E5%B1%8F%E8%94%BD%E8%A7%86%E9%A2%91-plus",
+  "code_url": "https://update.greasyfork.org/scripts/494277/Bilibili%20%E6%8C%89%E6%A0%87%E7%AD%BE%E3%80%81%E6%A0%87%E9%A2%98%E3%80%81%E6%97%B6%E9%95%BF%E3%80%81UP%E4%B8%BB%E5%B1%8F%E8%94%BD%E8%A7%86%E9%A2%91%20Plus.user.js",
+  "code_size": 58448,
+  "license": "CC-BY-NC-SA",
+  "version": "0.5.8-Plus",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

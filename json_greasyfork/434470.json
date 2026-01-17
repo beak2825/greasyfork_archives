@@ -1,0 +1,34 @@
+{
+  "id": 434470,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-25T15:41:21.000Z",
+  "code_updated_at": "2021-10-26T16:54:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 828670,
+      "name": "聖小熊",
+      "created_at": "2021-10-25T15:36:45.000Z",
+      "url": "https://greasyfork.org/users/828670-%E8%81%96%E5%B0%8F%E7%86%8A",
+      "scripts": []
+    }
+  ],
+  "name": "巴哈姆特首頁萬聖節佈景主題",
+  "description": "巴哈姆特首頁2021年萬聖節的佈景主題!",
+  "url": "https://greasyfork.org/scripts/434470-%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E9%A6%96%E9%A0%81%E8%90%AC%E8%81%96%E7%AF%80%E4%BD%88%E6%99%AF%E4%B8%BB%E9%A1%8C",
+  "code_url": "https://update.greasyfork.org/scripts/434470/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E9%A6%96%E9%A0%81%E8%90%AC%E8%81%96%E7%AF%80%E4%BD%88%E6%99%AF%E4%B8%BB%E9%A1%8C.user.js",
+  "code_size": 685,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

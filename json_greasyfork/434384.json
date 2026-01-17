@@ -1,0 +1,59 @@
+{
+  "id": 434384,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-10-24T08:30:52.000Z",
+  "code_updated_at": "2022-10-02T18:36:27.000Z",
+  "namespace": "https://akakanch.com/hmmc/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 825607,
+      "name": "huangb",
+      "created_at": "2021-10-16T02:34:18.000Z",
+      "url": "https://greasyfork.org/users/825607-huangb",
+      "scripts": [
+        {
+          "id": 434384,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-10-24T08:30:52.000Z",
+          "code_updated_at": "2022-10-02T18:36:27.000Z",
+          "namespace": "https://akakanch.com/hmmc/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "香港出生证明样本,代办香港出世纸公证",
+          "description": "香港出生证明样本✅𝟴𝟯𝟰ˎ筘ˎ𝟱𝟴𝟲ˎ筘ˎ𝟵𝟲𝟬✅代办香港出世纸公证，这要专门的人才能做好，多年和这些文件打交道也很快速，该地方的证明的语法和内地不同，其他地方是看不懂意思的，一般都需要公证来作为依据。至于样式特点简单介绍一下，里面有对光看的暗记，而厚度比我们常见的普通纸稍厚一点，这种也是起到防伪作用吧，需要标准的设备才能做到这种样式。如果是传统二张粘合也会有暗记样子，但是厚度就要比真的厚不少，要不然也起不到防伪作用。以前国内人接触不多也无从知晓，很多情况都是利用这点来解决自身问题，但随着时间的推移，越来越多的港人在内地生活，这些文件自然就熟悉了，也知道如何是怎么回事，以前的解决方式大都行不通了。现在网络上出现不少的代做公司，这种情况只是解决本人符合条件，但不方便来回奔走的麻烦，对于不符合条件的这类型也起不到任何作用。是以如何能让公证认证起到相关的作用，还有更多的玄机。",
+          "url": "https://greasyfork.org/scripts/434384-%E9%A6%99%E6%B8%AF%E5%87%BA%E7%94%9F%E8%AF%81%E6%98%8E%E6%A0%B7%E6%9C%AC-%E4%BB%A3%E5%8A%9E%E9%A6%99%E6%B8%AF%E5%87%BA%E4%B8%96%E7%BA%B8%E5%85%AC%E8%AF%81",
+          "code_url": "https://update.greasyfork.org/scripts/434384/%E9%A6%99%E6%B8%AF%E5%87%BA%E7%94%9F%E8%AF%81%E6%98%8E%E6%A0%B7%E6%9C%AC%2C%E4%BB%A3%E5%8A%9E%E9%A6%99%E6%B8%AF%E5%87%BA%E4%B8%96%E7%BA%B8%E5%85%AC%E8%AF%81.user.js",
+          "code_size": 4428,
+          "license": null,
+          "version": "0.2",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "香港出生证明样本,代办香港出世纸公证",
+  "description": "香港出生证明样本✅𝟴𝟯𝟰ˎ筘ˎ𝟱𝟴𝟲ˎ筘ˎ𝟵𝟲𝟬✅代办香港出世纸公证，这要专门的人才能做好，多年和这些文件打交道也很快速，该地方的证明的语法和内地不同，其他地方是看不懂意思的，一般都需要公证来作为依据。至于样式特点简单介绍一下，里面有对光看的暗记，而厚度比我们常见的普通纸稍厚一点，这种也是起到防伪作用吧，需要标准的设备才能做到这种样式。如果是传统二张粘合也会有暗记样子，但是厚度就要比真的厚不少，要不然也起不到防伪作用。以前国内人接触不多也无从知晓，很多情况都是利用这点来解决自身问题，但随着时间的推移，越来越多的港人在内地生活，这些文件自然就熟悉了，也知道如何是怎么回事，以前的解决方式大都行不通了。现在网络上出现不少的代做公司，这种情况只是解决本人符合条件，但不方便来回奔走的麻烦，对于不符合条件的这类型也起不到任何作用。是以如何能让公证认证起到相关的作用，还有更多的玄机。",
+  "url": "https://greasyfork.org/scripts/434384-%E9%A6%99%E6%B8%AF%E5%87%BA%E7%94%9F%E8%AF%81%E6%98%8E%E6%A0%B7%E6%9C%AC-%E4%BB%A3%E5%8A%9E%E9%A6%99%E6%B8%AF%E5%87%BA%E4%B8%96%E7%BA%B8%E5%85%AC%E8%AF%81",
+  "code_url": "https://update.greasyfork.org/scripts/434384/%E9%A6%99%E6%B8%AF%E5%87%BA%E7%94%9F%E8%AF%81%E6%98%8E%E6%A0%B7%E6%9C%AC%2C%E4%BB%A3%E5%8A%9E%E9%A6%99%E6%B8%AF%E5%87%BA%E4%B8%96%E7%BA%B8%E5%85%AC%E8%AF%81.user.js",
+  "code_size": 4428,
+  "license": null,
+  "version": "0.2",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

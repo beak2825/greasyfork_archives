@@ -1,0 +1,35 @@
+[
+  {
+    "id": 462259,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-21T12:53:23.000Z",
+    "code_updated_at": "2023-03-21T13:11:00.000Z",
+    "namespace": "https://hepi2023.com",
+    "support_url": "https://hepi2023.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1045662,
+        "name": "hepi 2023",
+        "created_at": "2023-03-21T12:32:19.000Z",
+        "url": "https://greasyfork.org/users/1045662-hepi-2023"
+      }
+    ],
+    "name": "Hepi2023 Script",
+    "description": "Hepi2023 script",
+    "url": "https://greasyfork.org/scripts/462259-hepi2023-script",
+    "code_url": "https://update.greasyfork.org/scripts/462259/Hepi2023%20Script.user.js",
+    "code_size": 407,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

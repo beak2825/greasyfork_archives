@@ -1,0 +1,34 @@
+{
+  "id": 487020,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-10T13:35:23.000Z",
+  "code_updated_at": "2024-07-17T06:06:08.000Z",
+  "namespace": "10fastfingers",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1201992,
+      "name": "CodeGuru",
+      "created_at": "2023-10-22T11:28:58.000Z",
+      "url": "https://greasyfork.org/users/1201992-codeguru",
+      "scripts": []
+    }
+  ],
+  "name": "10FF_Plus",
+  "description": "Makes some changes",
+  "url": "https://greasyfork.org/scripts/487020-10ff-plus",
+  "code_url": "https://update.greasyfork.org/scripts/487020/10FF_Plus.user.js",
+  "code_size": 8102,
+  "license": "MIT License",
+  "version": "0.1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

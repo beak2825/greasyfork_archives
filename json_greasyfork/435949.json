@@ -1,0 +1,33 @@
+{
+  "id": 435949,
+  "daily_installs": 1,
+  "total_installs": 153,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-23T13:50:31.000Z",
+  "code_updated_at": "2022-02-27T09:55:48.000Z",
+  "namespace": "https://github.com/the-eric-kwok/my_userscripts",
+  "support_url": "https://github.com/the-eric-kwok/my_userscripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 220259,
+      "name": "Eric Kwok",
+      "created_at": "2018-10-19T04:01:00.000Z",
+      "url": "https://greasyfork.org/users/220259-eric-kwok"
+    }
+  ],
+  "name": "国际版 B 站回家",
+  "description": "外国搜索引擎（如Google）上抓取到的B站视频链接为国际版，不展示评论区等内容，使用此脚本将为你自动跳转回国内版本的B站",
+  "url": "https://greasyfork.org/scripts/435949-%E5%9B%BD%E9%99%85%E7%89%88-b-%E7%AB%99%E5%9B%9E%E5%AE%B6",
+  "code_url": "https://update.greasyfork.org/scripts/435949/%E5%9B%BD%E9%99%85%E7%89%88%20B%20%E7%AB%99%E5%9B%9E%E5%AE%B6.user.js",
+  "code_size": 743,
+  "license": "GPLv3",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

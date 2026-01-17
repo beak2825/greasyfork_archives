@@ -1,0 +1,59 @@
+{
+  "id": 478574,
+  "daily_installs": 0,
+  "total_installs": 1216,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-30T01:11:37.000Z",
+  "code_updated_at": "2023-10-30T01:11:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1205149,
+      "name": "zdtiio",
+      "created_at": "2023-10-27T12:59:28.000Z",
+      "url": "https://greasyfork.org/users/1205149-zdtiio",
+      "scripts": [
+        {
+          "id": 478574,
+          "daily_installs": 0,
+          "total_installs": 1216,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-30T01:11:37.000Z",
+          "code_updated_at": "2023-10-30T01:11:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "打印插件-保存PDF-配合调试模式打印网页任意区块-打印指定区块插件",
+          "description": "理论可以适配所有网页。只要对应区块已经加载完毕，该区块即可被打印或另存为PDF。使用说明，初始代码只添加了百度系列网页的支持可在“// @match        https://www.baidu.com/*”行后添加自己想用的网站。感谢用户zhihu的“文库下载器|百度网盘直链解析下载|全网VIP视频解析无广告播放，全网独创自由选择自动解析接口|短视频无水印下载|更多功能持续更新中”以及github用户lemoncool。",
+          "url": "https://greasyfork.org/scripts/478574-%E6%89%93%E5%8D%B0%E6%8F%92%E4%BB%B6-%E4%BF%9D%E5%AD%98pdf-%E9%85%8D%E5%90%88%E8%B0%83%E8%AF%95%E6%A8%A1%E5%BC%8F%E6%89%93%E5%8D%B0%E7%BD%91%E9%A1%B5%E4%BB%BB%E6%84%8F%E5%8C%BA%E5%9D%97-%E6%89%93%E5%8D%B0%E6%8C%87%E5%AE%9A%E5%8C%BA%E5%9D%97%E6%8F%92%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/478574/%E6%89%93%E5%8D%B0%E6%8F%92%E4%BB%B6-%E4%BF%9D%E5%AD%98PDF-%E9%85%8D%E5%90%88%E8%B0%83%E8%AF%95%E6%A8%A1%E5%BC%8F%E6%89%93%E5%8D%B0%E7%BD%91%E9%A1%B5%E4%BB%BB%E6%84%8F%E5%8C%BA%E5%9D%97-%E6%89%93%E5%8D%B0%E6%8C%87%E5%AE%9A%E5%8C%BA%E5%9D%97%E6%8F%92%E4%BB%B6.user.js",
+          "code_size": 6748,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "打印插件-保存PDF-配合调试模式打印网页任意区块-打印指定区块插件",
+  "description": "理论可以适配所有网页。只要对应区块已经加载完毕，该区块即可被打印或另存为PDF。使用说明，初始代码只添加了百度系列网页的支持可在“// @match        https://www.baidu.com/*”行后添加自己想用的网站。感谢用户zhihu的“文库下载器|百度网盘直链解析下载|全网VIP视频解析无广告播放，全网独创自由选择自动解析接口|短视频无水印下载|更多功能持续更新中”以及github用户lemoncool。",
+  "url": "https://greasyfork.org/scripts/478574-%E6%89%93%E5%8D%B0%E6%8F%92%E4%BB%B6-%E4%BF%9D%E5%AD%98pdf-%E9%85%8D%E5%90%88%E8%B0%83%E8%AF%95%E6%A8%A1%E5%BC%8F%E6%89%93%E5%8D%B0%E7%BD%91%E9%A1%B5%E4%BB%BB%E6%84%8F%E5%8C%BA%E5%9D%97-%E6%89%93%E5%8D%B0%E6%8C%87%E5%AE%9A%E5%8C%BA%E5%9D%97%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/478574/%E6%89%93%E5%8D%B0%E6%8F%92%E4%BB%B6-%E4%BF%9D%E5%AD%98PDF-%E9%85%8D%E5%90%88%E8%B0%83%E8%AF%95%E6%A8%A1%E5%BC%8F%E6%89%93%E5%8D%B0%E7%BD%91%E9%A1%B5%E4%BB%BB%E6%84%8F%E5%8C%BA%E5%9D%97-%E6%89%93%E5%8D%B0%E6%8C%87%E5%AE%9A%E5%8C%BA%E5%9D%97%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 6748,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

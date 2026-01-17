@@ -1,0 +1,35 @@
+[
+  {
+    "id": 428149,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-18T19:19:28.000Z",
+    "code_updated_at": "2021-06-18T19:19:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 321388,
+        "name": "Sinofine",
+        "created_at": "2019-07-28T01:20:10.000Z",
+        "url": "https://greasyfork.org/users/321388-sinofine"
+      }
+    ],
+    "name": "爱钱的陈睿叔叔",
+    "description": "喜欢的话就坚持吧",
+    "url": "https://greasyfork.org/scripts/428149-%E7%88%B1%E9%92%B1%E7%9A%84%E9%99%88%E7%9D%BF%E5%8F%94%E5%8F%94",
+    "code_url": "https://update.greasyfork.org/scripts/428149/%E7%88%B1%E9%92%B1%E7%9A%84%E9%99%88%E7%9D%BF%E5%8F%94%E5%8F%94.user.js",
+    "code_size": 6323,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

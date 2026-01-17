@@ -1,0 +1,33 @@
+{
+  "id": 418555,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-12T12:57:13.000Z",
+  "code_updated_at": "2020-12-12T12:57:13.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 716048,
+      "name": "thongntit",
+      "created_at": "2020-12-12T12:56:50.000Z",
+      "url": "https://greasyfork.org/users/716048-thongntit"
+    }
+  ],
+  "name": "Hiện scrollbar 90p",
+  "description": "19:39:55, 12/12/2020",
+  "url": "https://greasyfork.org/scripts/418555-hi%E1%BB%87n-scrollbar-90p",
+  "code_url": "https://update.greasyfork.org/scripts/418555/Hi%E1%BB%87n%20scrollbar%2090p.user.js",
+  "code_size": 380,
+  "license": null,
+  "version": "1.0",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

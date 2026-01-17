@@ -1,0 +1,33 @@
+{
+  "id": 464798,
+  "daily_installs": 0,
+  "total_installs": 73,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-25T07:00:17.000Z",
+  "code_updated_at": "2025-02-25T11:51:53.000Z",
+  "namespace": "Role_Play",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1048540,
+      "name": "Role_Play",
+      "created_at": "2023-03-26T14:33:23.000Z",
+      "url": "https://greasyfork.org/users/1048540-role-play"
+    }
+  ],
+  "name": "SteamDB Auto Activate",
+  "description": "Автоматически активировать пакеты на сайте https://steamdb.info/freepackages/ и выводить отчет времени в консоли браузера.",
+  "url": "https://greasyfork.org/scripts/464798-steamdb-auto-activate",
+  "code_url": "https://update.greasyfork.org/scripts/464798/SteamDB%20Auto%20Activate.user.js",
+  "code_size": 3100,
+  "license": "MIT License",
+  "version": "2.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

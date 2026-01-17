@@ -1,0 +1,33 @@
+{
+  "id": 486221,
+  "daily_installs": 0,
+  "total_installs": 244,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-02-01T11:03:07.000Z",
+  "code_updated_at": "2024-02-01T11:03:07.000Z",
+  "namespace": "https://greasyfork.org/users/748951",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 748951,
+      "name": "sonervousgirl",
+      "created_at": "2021-03-18T19:56:20.000Z",
+      "url": "https://greasyfork.org/users/748951-sonervousgirl"
+    }
+  ],
+  "name": "GC - Nerd Link",
+  "description": "Adds a button link to ~Nerd on current neoschool course page",
+  "url": "https://greasyfork.org/scripts/486221-gc-nerd-link",
+  "code_url": "https://update.greasyfork.org/scripts/486221/GC%20-%20Nerd%20Link.user.js",
+  "code_size": 605,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 482860,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-12-22T04:52:06.000Z",
+  "code_updated_at": "2023-12-23T21:48:26.000Z",
+  "namespace": "https://greasyfork.org/users/922438",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 922438,
+      "name": "belkka",
+      "created_at": "2022-06-05T19:28:51.000Z",
+      "url": "https://greasyfork.org/users/922438-belkka",
+      "scripts": [
+        {
+          "id": 482860,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-12-22T04:52:06.000Z",
+          "code_updated_at": "2023-12-23T21:48:26.000Z",
+          "namespace": "https://greasyfork.org/users/922438",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Default CSS",
+          "description": "enable custom CSS if and only if page does not define any styles in <head>",
+          "url": "https://greasyfork.org/scripts/482860-default-css",
+          "code_url": "https://update.greasyfork.org/scripts/482860/Default%20CSS.user.js",
+          "code_size": 869,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "2023-12-23",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Default CSS",
+  "description": "enable custom CSS if and only if page does not define any styles in <head>",
+  "url": "https://greasyfork.org/scripts/482860-default-css",
+  "code_url": "https://update.greasyfork.org/scripts/482860/Default%20CSS.user.js",
+  "code_size": 869,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "2023-12-23",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 457192,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-27T07:16:20.000Z",
+  "code_updated_at": "2024-12-19T23:44:33.000Z",
+  "namespace": "https://greasyfork.org/users/1003364",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1003364,
+      "name": "Wilzzu",
+      "created_at": "2022-12-27T06:22:43.000Z",
+      "url": "https://greasyfork.org/users/1003364-wilzzu",
+      "scripts": [
+        {
+          "id": 457192,
+          "daily_installs": 0,
+          "total_installs": 35,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-27T07:16:20.000Z",
+          "code_updated_at": "2024-12-19T23:44:33.000Z",
+          "namespace": "https://greasyfork.org/users/1003364",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Steam Replay total hours",
+          "description": "Displays total playing hours in Steam Replay",
+          "url": "https://greasyfork.org/scripts/457192-steam-replay-total-hours",
+          "code_url": "https://update.greasyfork.org/scripts/457192/Steam%20Replay%20total%20hours.user.js",
+          "code_size": 4122,
+          "license": "MIT License",
+          "version": "0.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Steam Replay total hours",
+  "description": "Displays total playing hours in Steam Replay",
+  "url": "https://greasyfork.org/scripts/457192-steam-replay-total-hours",
+  "code_url": "https://update.greasyfork.org/scripts/457192/Steam%20Replay%20total%20hours.user.js",
+  "code_size": 4122,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

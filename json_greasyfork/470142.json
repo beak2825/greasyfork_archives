@@ -1,0 +1,34 @@
+{
+  "id": 470142,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-04T14:07:47.000Z",
+  "code_updated_at": "2023-07-05T14:46:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 793382,
+      "name": "t871088249",
+      "created_at": "2021-07-14T05:51:07.000Z",
+      "url": "https://greasyfork.org/users/793382-t871088249",
+      "scripts": []
+    }
+  ],
+  "name": "彩虹岛商城自动购买",
+  "description": "自动购买",
+  "url": "https://greasyfork.org/scripts/470142-%E5%BD%A9%E8%99%B9%E5%B2%9B%E5%95%86%E5%9F%8E%E8%87%AA%E5%8A%A8%E8%B4%AD%E4%B9%B0",
+  "code_url": "https://update.greasyfork.org/scripts/470142/%E5%BD%A9%E8%99%B9%E5%B2%9B%E5%95%86%E5%9F%8E%E8%87%AA%E5%8A%A8%E8%B4%AD%E4%B9%B0.user.js",
+  "code_size": 4377,
+  "license": "MIT License",
+  "version": "0.6.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

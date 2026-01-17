@@ -1,0 +1,59 @@
+{
+  "id": 476782,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-10-05T20:28:33.000Z",
+  "code_updated_at": "2025-07-30T03:19:47.000Z",
+  "namespace": "https://greasyfork.org/users/1186291",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1186291,
+      "name": "Kason-wu",
+      "created_at": "2023-10-02T17:20:58.000Z",
+      "url": "https://greasyfork.org/users/1186291-kason-wu",
+      "scripts": [
+        {
+          "id": 476782,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-10-05T20:28:33.000Z",
+          "code_updated_at": "2025-07-30T03:19:47.000Z",
+          "namespace": "https://greasyfork.org/users/1186291",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GiteePlus",
+          "description": "企业版Gitee增强 - 优化版本",
+          "url": "https://greasyfork.org/scripts/476782-giteeplus",
+          "code_url": "https://update.greasyfork.org/scripts/476782/GiteePlus.user.js",
+          "code_size": 113033,
+          "license": "MIT License",
+          "version": "1.7.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GiteePlus",
+  "description": "企业版Gitee增强 - 优化版本",
+  "url": "https://greasyfork.org/scripts/476782-giteeplus",
+  "code_url": "https://update.greasyfork.org/scripts/476782/GiteePlus.user.js",
+  "code_size": 113033,
+  "license": "MIT License",
+  "version": "1.7.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

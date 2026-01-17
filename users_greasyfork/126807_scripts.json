@@ -1,0 +1,35 @@
+[
+  {
+    "id": 463014,
+    "daily_installs": 0,
+    "total_installs": 106,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-31T20:42:59.000Z",
+    "code_updated_at": "2023-03-31T20:42:59.000Z",
+    "namespace": "Virmagnus GOR HOF",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 126807,
+        "name": "christopher peter",
+        "created_at": "2017-05-24T22:00:51.000Z",
+        "url": "https://greasyfork.org/users/126807-christopher-peter"
+      }
+    ],
+    "name": "MiracleGOR",
+    "description": "GoR BoTTols (Bot+Tools) for Glory Of Rome",
+    "url": "https://greasyfork.org/scripts/463014-miraclegor",
+    "code_url": "https://update.greasyfork.org/scripts/463014/MiracleGOR.user.js",
+    "code_size": 597659,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

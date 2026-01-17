@@ -1,0 +1,33 @@
+{
+  "id": 435874,
+  "daily_installs": 0,
+  "total_installs": 99,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-22T03:58:03.000Z",
+  "code_updated_at": "2024-01-03T03:23:54.000Z",
+  "namespace": "https://github.com/symant233/PublicTools",
+  "support_url": "https://github.com/symant233/PublicTools/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 374908,
+      "name": "symant",
+      "created_at": "2019-09-23T08:26:28.000Z",
+      "url": "https://greasyfork.org/users/374908-symant"
+    }
+  ],
+  "name": "dblp.org CCF等级标注",
+  "description": "学术会议、学术期刊 CCF等级标注",
+  "url": "https://greasyfork.org/scripts/435874-dblp-org-ccf%E7%AD%89%E7%BA%A7%E6%A0%87%E6%B3%A8",
+  "code_url": "https://update.greasyfork.org/scripts/435874/dblporg%20CCF%E7%AD%89%E7%BA%A7%E6%A0%87%E6%B3%A8.user.js",
+  "code_size": 19666,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.1.6",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

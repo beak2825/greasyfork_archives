@@ -1,0 +1,59 @@
+{
+  "id": 455877,
+  "daily_installs": 1,
+  "total_installs": 17735,
+  "fan_score": "46.3",
+  "good_ratings": 4,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2022-12-02T16:52:50.000Z",
+  "code_updated_at": "2022-12-05T16:16:51.000Z",
+  "namespace": "aliyunpanzhushou",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 988772,
+      "name": "aishangdongfang",
+      "created_at": "2022-11-27T15:29:20.000Z",
+      "url": "https://greasyfork.org/users/988772-aishangdongfang",
+      "scripts": [
+        {
+          "id": 455877,
+          "daily_installs": 1,
+          "total_installs": 17735,
+          "fan_score": "46.3",
+          "good_ratings": 4,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-12-02T16:52:50.000Z",
+          "code_updated_at": "2022-12-05T16:16:51.000Z",
+          "namespace": "aliyunpanzhushou",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "阿里云盘资源直下助手",
+          "description": "【最新解析方便快捷】阿里云盘网页版，登录后直接下载资源，免开启客户端。支持直接下载和极速下载",
+          "url": "https://greasyfork.org/scripts/455877-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E8%B5%84%E6%BA%90%E7%9B%B4%E4%B8%8B%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/455877/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E8%B5%84%E6%BA%90%E7%9B%B4%E4%B8%8B%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 48985,
+          "license": "AGPL",
+          "version": "2.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "阿里云盘资源直下助手",
+  "description": "【最新解析方便快捷】阿里云盘网页版，登录后直接下载资源，免开启客户端。支持直接下载和极速下载",
+  "url": "https://greasyfork.org/scripts/455877-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E8%B5%84%E6%BA%90%E7%9B%B4%E4%B8%8B%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/455877/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E8%B5%84%E6%BA%90%E7%9B%B4%E4%B8%8B%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 48985,
+  "license": "AGPL",
+  "version": "2.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 462664,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-27T00:54:03.000Z",
+  "code_updated_at": "2023-03-28T15:17:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1048664,
+      "name": "Charles Hill",
+      "created_at": "2023-03-27T00:43:52.000Z",
+      "url": "https://greasyfork.org/users/1048664-charles-hill",
+      "scripts": []
+    }
+  ],
+  "name": "AutoGoombler",
+  "description": "An automatic blackjack bot for rDrama.net. You will still lose money, but it's kind of cool and maybe you just want to have a bunch of bets on your screen or something.",
+  "url": "https://greasyfork.org/scripts/462664-autogoombler",
+  "code_url": "https://update.greasyfork.org/scripts/462664/AutoGoombler.user.js",
+  "code_size": 5013,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

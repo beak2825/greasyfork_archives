@@ -1,0 +1,35 @@
+[
+  {
+    "id": 414205,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-22T09:07:48.000Z",
+    "code_updated_at": "2020-10-22T09:07:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 697292,
+        "name": "geppa dee",
+        "created_at": "2020-10-22T08:04:36.000Z",
+        "url": "https://greasyfork.org/users/697292-geppa-dee"
+      }
+    ],
+    "name": "Unofficial Skunk Works for SG (USW-SG)",
+    "description": "Adds links to posts where links to posts are missing",
+    "url": "https://greasyfork.org/scripts/414205-unofficial-skunk-works-for-sg-usw-sg",
+    "code_url": "https://update.greasyfork.org/scripts/414205/Unofficial%20Skunk%20Works%20for%20SG%20%28USW-SG%29.user.js",
+    "code_size": 3783,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

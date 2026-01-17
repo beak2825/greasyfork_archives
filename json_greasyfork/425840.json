@@ -1,0 +1,34 @@
+{
+  "id": 425840,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-05-02T21:57:10.000Z",
+  "code_updated_at": "2021-05-02T21:57:09.000Z",
+  "namespace": "https://greasyfork.org/es/users/385465-nagasis",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 671129,
+      "name": "Juanjo Romero",
+      "created_at": "2020-07-28T23:12:33.000Z",
+      "url": "https://greasyfork.org/users/671129-juanjo-romero",
+      "scripts": []
+    }
+  ],
+  "name": "OGame Fun: Utilidades B.O.R.G STAR",
+  "description": "Busca en la base de datos de la galaxia jugadores",
+  "url": "https://greasyfork.org/scripts/425840-ogame-fun-utilidades-b-o-r-g-star",
+  "code_url": "https://update.greasyfork.org/scripts/425840/OGame%20Fun%3A%20Utilidades%20BORG%20STAR.user.js",
+  "code_size": 43769,
+  "license": null,
+  "version": "1.8.1",
+  "locale": "gl",
+  "deleted": false,
+  "visibility": "public"
+}

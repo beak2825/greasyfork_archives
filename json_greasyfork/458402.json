@@ -1,0 +1,33 @@
+{
+  "id": 458402,
+  "daily_installs": 0,
+  "total_installs": 78,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-17T05:58:57.000Z",
+  "code_updated_at": "2023-01-17T06:29:11.000Z",
+  "namespace": "https://pmnet.gq/gh-proxy-mirrors-pw-user-script",
+  "support_url": "mailto:admin@pmnet.gq",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1013240,
+      "name": "jinzhijie",
+      "created_at": "2023-01-17T05:48:28.000Z",
+      "url": "https://greasyfork.org/users/1013240-jinzhijie"
+    }
+  ],
+  "name": "GitHub 代理（Mirrors.pw）",
+  "description": "一个 GitHub 代理，让您的开发和部署如虎添翼！此脚本会在仓库的首页添加一个克隆按钮，点击即可复制命令。目前仅支持储存库首页，其他页面会陆续开放。由 Mirrors.pw 提供服务。",
+  "url": "https://greasyfork.org/scripts/458402-github-%E4%BB%A3%E7%90%86-mirrors-pw",
+  "code_url": "https://update.greasyfork.org/scripts/458402/GitHub%20%E4%BB%A3%E7%90%86%EF%BC%88Mirrorspw%EF%BC%89.user.js",
+  "code_size": 3442,
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "version": "0.2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

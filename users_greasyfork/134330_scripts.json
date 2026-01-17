@@ -1,0 +1,35 @@
+[
+  {
+    "id": 419869,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-08T09:46:07.000Z",
+    "code_updated_at": "2021-01-08T09:55:39.000Z",
+    "namespace": "http://bybutter.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 134330,
+        "name": "Piestar",
+        "created_at": "2017-06-20T08:55:07.000Z",
+        "url": "https://greasyfork.org/users/134330-piestar"
+      }
+    ],
+    "name": "butter_test",
+    "description": "往windows上注入某些变量以模拟app环境、解析自定义uri",
+    "url": "https://greasyfork.org/scripts/419869-butter-test",
+    "code_url": "https://update.greasyfork.org/scripts/419869/butter_test.user.js",
+    "code_size": 4465,
+    "license": null,
+    "version": "0.0.1.20210108095539",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

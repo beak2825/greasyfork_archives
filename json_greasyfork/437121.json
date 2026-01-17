@@ -1,0 +1,34 @@
+{
+  "id": 437121,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-12-16T02:41:49.000Z",
+  "code_updated_at": "2021-12-16T02:41:49.000Z",
+  "namespace": "http://www.guahao.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 284311,
+      "name": "王金膘",
+      "created_at": "2019-03-20T17:09:19.000Z",
+      "url": "https://greasyfork.org/users/284311-%E7%8E%8B%E9%87%91%E8%86%98",
+      "scripts": []
+    }
+  ],
+  "name": "线上docker插件",
+  "description": "线上docker助手",
+  "url": "https://greasyfork.org/scripts/437121-%E7%BA%BF%E4%B8%8Adocker%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/437121/%E7%BA%BF%E4%B8%8Adocker%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 99422,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

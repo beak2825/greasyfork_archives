@@ -1,0 +1,33 @@
+{
+  "id": 421780,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-16T14:42:19.000Z",
+  "code_updated_at": "2021-02-18T03:38:27.000Z",
+  "namespace": "https://book.interlib.cn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 306271,
+      "name": "yk1316",
+      "created_at": "2019-06-01T02:44:55.000Z",
+      "url": "https://greasyfork.org/users/306271-yk1316"
+    }
+  ],
+  "name": "书易借 - 库存检查",
+  "description": "深圳龙岗图书馆开通了图书直借服务，但图书列表不能直观显示库存情况，此脚本仅为解决这个问题。",
+  "url": "https://greasyfork.org/scripts/421780-%E4%B9%A6%E6%98%93%E5%80%9F-%E5%BA%93%E5%AD%98%E6%A3%80%E6%9F%A5",
+  "code_url": "https://update.greasyfork.org/scripts/421780/%E4%B9%A6%E6%98%93%E5%80%9F%20-%20%E5%BA%93%E5%AD%98%E6%A3%80%E6%9F%A5.user.js",
+  "code_size": 1619,
+  "license": null,
+  "version": "2021.02.18",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

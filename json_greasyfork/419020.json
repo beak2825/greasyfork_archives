@@ -1,0 +1,59 @@
+{
+  "id": 419020,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-22T17:27:03.000Z",
+  "code_updated_at": "2020-12-25T04:37:12.000Z",
+  "namespace": "https://github.com/polyester-CTRL",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 718695,
+      "name": "polyester-CTRL",
+      "created_at": "2020-12-19T16:16:47.000Z",
+      "url": "https://greasyfork.org/users/718695-polyester-ctrl",
+      "scripts": [
+        {
+          "id": 419020,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-12-22T17:27:03.000Z",
+          "code_updated_at": "2020-12-25T04:37:12.000Z",
+          "namespace": "https://github.com/polyester-CTRL",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ac-diff-reversal-notifier",
+          "description": "AtCoderのコンテストにおいて前の問題より後ろの問題の正解者が多い時に通知します",
+          "url": "https://greasyfork.org/scripts/419020-ac-diff-reversal-notifier",
+          "code_url": "https://update.greasyfork.org/scripts/419020/ac-diff-reversal-notifier.user.js",
+          "code_size": 1877,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ac-diff-reversal-notifier",
+  "description": "AtCoderのコンテストにおいて前の問題より後ろの問題の正解者が多い時に通知します",
+  "url": "https://greasyfork.org/scripts/419020-ac-diff-reversal-notifier",
+  "code_url": "https://update.greasyfork.org/scripts/419020/ac-diff-reversal-notifier.user.js",
+  "code_size": 1877,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

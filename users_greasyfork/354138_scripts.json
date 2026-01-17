@@ -30,6 +30,171 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 489467,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-03-10T09:08:20.000Z",
+    "code_updated_at": "2024-03-10T09:08:20.000Z",
+    "namespace": "petracoding",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 354138,
+        "name": "petracoding",
+        "created_at": "2019-08-29T16:59:49.000Z",
+        "url": "https://greasyfork.org/users/354138-petracoding"
+      }
+    ],
+    "name": "RateYourMusic - No Negative Reviews",
+    "description": "Hides reviews with under a certain amount of stars.",
+    "url": "https://greasyfork.org/scripts/489467-rateyourmusic-no-negative-reviews",
+    "code_url": "https://update.greasyfork.org/scripts/489467/RateYourMusic%20-%20No%20Negative%20Reviews.user.js",
+    "code_size": 3126,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 485508,
+    "daily_installs": 0,
+    "total_installs": 77,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-23T15:20:01.000Z",
+    "code_updated_at": "2024-01-23T15:20:01.000Z",
+    "namespace": "petracoding",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 354138,
+        "name": "petracoding",
+        "created_at": "2019-08-29T16:59:49.000Z",
+        "url": "https://greasyfork.org/users/354138-petracoding"
+      }
+    ],
+    "name": "Pinterest No Videos",
+    "description": "Removes videos from Pinterest.",
+    "url": "https://greasyfork.org/scripts/485508-pinterest-no-videos",
+    "code_url": "https://update.greasyfork.org/scripts/485508/Pinterest%20No%20Videos.user.js",
+    "code_size": 776,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470733,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-13T09:09:38.000Z",
+    "code_updated_at": "2023-07-23T11:14:21.000Z",
+    "namespace": "petracoding",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 354138,
+        "name": "petracoding",
+        "created_at": "2019-08-29T16:59:49.000Z",
+        "url": "https://greasyfork.org/users/354138-petracoding"
+      }
+    ],
+    "name": "Goodreads - Sort bookshelves on profiles alphabetically",
+    "description": "Sort the bookshelves on users' profiles alphabetically.",
+    "url": "https://greasyfork.org/scripts/470733-goodreads-sort-bookshelves-on-profiles-alphabetically",
+    "code_url": "https://update.greasyfork.org/scripts/470733/Goodreads%20-%20Sort%20bookshelves%20on%20profiles%20alphabetically.user.js",
+    "code_size": 1500,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 470590,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-07-11T07:25:11.000Z",
+    "code_updated_at": "2024-02-28T11:34:27.000Z",
+    "namespace": "petracoding",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 354138,
+        "name": "petracoding",
+        "created_at": "2019-08-29T16:59:49.000Z",
+        "url": "https://greasyfork.org/users/354138-petracoding"
+      }
+    ],
+    "name": "Quizlet.com Export",
+    "description": "Adds functionality for copying quizlet lists to the clipboard",
+    "url": "https://greasyfork.org/scripts/470590-quizlet-com-export",
+    "code_url": "https://update.greasyfork.org/scripts/470590/Quizletcom%20Export.user.js",
+    "code_size": 2184,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 451891,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-23T12:01:14.000Z",
+    "code_updated_at": "2022-09-23T12:01:14.000Z",
+    "namespace": "petracoding",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 354138,
+        "name": "petracoding",
+        "created_at": "2019-08-29T16:59:49.000Z",
+        "url": "https://greasyfork.org/users/354138-petracoding"
+      }
+    ],
+    "name": "Letterboxd - No Negative Reviews",
+    "description": "Hides reviews with under a certain amount of stars.",
+    "url": "https://greasyfork.org/scripts/451891-letterboxd-no-negative-reviews",
+    "code_url": "https://update.greasyfork.org/scripts/451891/Letterboxd%20-%20No%20Negative%20Reviews.user.js",
+    "code_size": 2748,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

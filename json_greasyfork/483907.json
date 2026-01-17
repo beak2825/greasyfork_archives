@@ -1,0 +1,59 @@
+{
+  "id": 483907,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-04T22:24:27.000Z",
+  "code_updated_at": "2024-01-04T22:24:27.000Z",
+  "namespace": "https://aleksuuu.github.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1243355,
+      "name": "aleksuuu",
+      "created_at": "2024-01-04T22:03:53.000Z",
+      "url": "https://greasyfork.org/users/1243355-aleksuuu",
+      "scripts": [
+        {
+          "id": 483907,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-04T22:24:27.000Z",
+          "code_updated_at": "2024-01-04T22:24:27.000Z",
+          "namespace": "https://aleksuuu.github.io/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ad Enabler",
+          "description": "Skip the boring videos on YouTube and enjoy all the ads!",
+          "url": "https://greasyfork.org/scripts/483907-ad-enabler",
+          "code_url": "https://update.greasyfork.org/scripts/483907/Ad%20Enabler.user.js",
+          "code_size": 551,
+          "license": "MIT License",
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ad Enabler",
+  "description": "Skip the boring videos on YouTube and enjoy all the ads!",
+  "url": "https://greasyfork.org/scripts/483907-ad-enabler",
+  "code_url": "https://update.greasyfork.org/scripts/483907/Ad%20Enabler.user.js",
+  "code_size": 551,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

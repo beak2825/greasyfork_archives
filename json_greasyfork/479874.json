@@ -1,0 +1,33 @@
+{
+  "id": 479874,
+  "daily_installs": 0,
+  "total_installs": 89,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-11-14T15:27:47.000Z",
+  "code_updated_at": "2025-02-06T03:12:17.000Z",
+  "namespace": "Toggle Fullscreen Button For Mobile Browsers Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 18560,
+      "name": "codename_69",
+      "created_at": "2015-10-22T12:21:44.000Z",
+      "url": "https://greasyfork.org/users/18560-codename-69"
+    }
+  ],
+  "name": "Toggle Fullscreen Button For Mobile Browsers",
+  "description": "11/14/2023, 10:20:53 PM",
+  "url": "https://greasyfork.org/scripts/479874-toggle-fullscreen-button-for-mobile-browsers",
+  "code_url": "https://update.greasyfork.org/scripts/479874/Toggle%20Fullscreen%20Button%20For%20Mobile%20Browsers.user.js",
+  "code_size": 1990,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

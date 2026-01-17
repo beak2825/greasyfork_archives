@@ -1,0 +1,59 @@
+{
+  "id": 453960,
+  "daily_installs": 0,
+  "total_installs": 12979,
+  "fan_score": "3.6",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 4,
+  "created_at": "2022-10-30T02:37:40.000Z",
+  "code_updated_at": "2024-02-22T21:05:06.000Z",
+  "namespace": "D_Alpha",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 976957,
+      "name": "D_Alpha",
+      "created_at": "2022-10-30T02:31:38.000Z",
+      "url": "https://greasyfork.org/users/976957-d-alpha",
+      "scripts": [
+        {
+          "id": 453960,
+          "daily_installs": 0,
+          "total_installs": 12979,
+          "fan_score": "3.6",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 4,
+          "created_at": "2022-10-30T02:37:40.000Z",
+          "code_updated_at": "2024-02-22T21:05:06.000Z",
+          "namespace": "D_Alpha",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Alpha-Ware 40 bot mod! (Patched)",
+          "description": "Up to 40 bots hack (more with VPN), autoheal, macros, and command keys!",
+          "url": "https://greasyfork.org/scripts/453960-alpha-ware-40-bot-mod-patched",
+          "code_url": "https://update.greasyfork.org/scripts/453960/Alpha-Ware%2040%20bot%20mod%21%20%28Patched%29.user.js",
+          "code_size": 608949,
+          "license": null,
+          "version": "0.0.1.20240222210506",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Alpha-Ware 40 bot mod! (Patched)",
+  "description": "Up to 40 bots hack (more with VPN), autoheal, macros, and command keys!",
+  "url": "https://greasyfork.org/scripts/453960-alpha-ware-40-bot-mod-patched",
+  "code_url": "https://update.greasyfork.org/scripts/453960/Alpha-Ware%2040%20bot%20mod%21%20%28Patched%29.user.js",
+  "code_size": 608949,
+  "license": null,
+  "version": "0.0.1.20240222210506",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

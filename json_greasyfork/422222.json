@@ -1,0 +1,34 @@
+{
+  "id": 422222,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-02-24T02:43:20.000Z",
+  "code_updated_at": "2021-02-24T02:44:43.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 740518,
+      "name": "higeon",
+      "created_at": "2021-02-24T02:34:44.000Z",
+      "url": "https://greasyfork.org/users/740518-higeon",
+      "scripts": []
+    }
+  ],
+  "name": "Abema 区域限制",
+  "description": "Abema TV 地区限制解除+",
+  "url": "https://greasyfork.org/scripts/422222-abema-%E5%8C%BA%E5%9F%9F%E9%99%90%E5%88%B6",
+  "code_url": "https://update.greasyfork.org/scripts/422222/Abema%20%E5%8C%BA%E5%9F%9F%E9%99%90%E5%88%B6.user.js",
+  "code_size": 393,
+  "license": null,
+  "version": "1.0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

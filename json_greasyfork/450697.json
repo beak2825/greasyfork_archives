@@ -1,0 +1,33 @@
+{
+  "id": 450697,
+  "daily_installs": 0,
+  "total_installs": 50,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-04T03:18:18.000Z",
+  "code_updated_at": "2022-12-04T05:45:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 13187,
+      "name": "Rplus",
+      "created_at": "2015-07-10T17:48:40.000Z",
+      "url": "https://greasyfork.org/users/13187-rplus"
+    }
+  ],
+  "name": "Item quality checker for Orna.RPG",
+  "description": "Let you easily calculate item quality in official Orna Codex page.",
+  "url": "https://greasyfork.org/scripts/450697-item-quality-checker-for-orna-rpg",
+  "code_url": "https://update.greasyfork.org/scripts/450697/Item%20quality%20checker%20for%20OrnaRPG.user.js",
+  "code_size": 6627,
+  "license": "MIT License",
+  "version": "1.2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

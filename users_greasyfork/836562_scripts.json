@@ -1,0 +1,35 @@
+[
+  {
+    "id": 435309,
+    "daily_installs": 0,
+    "total_installs": 149,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2021-11-10T08:20:37.000Z",
+    "code_updated_at": "2021-11-10T08:30:39.000Z",
+    "namespace": "coolan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 836562,
+        "name": "coolan",
+        "created_at": "2021-11-10T08:07:09.000Z",
+        "url": "https://greasyfork.org/users/836562-coolan"
+      }
+    ],
+    "name": "ISO Formatted Time/Date for Github & StackOverflow",
+    "description": "Change time/date to ISO format for Github and stackoverflow websites.",
+    "url": "https://greasyfork.org/scripts/435309-iso-formatted-time-date-for-github-stackoverflow",
+    "code_url": "https://update.greasyfork.org/scripts/435309/ISO%20Formatted%20TimeDate%20for%20Github%20%20StackOverflow.user.js",
+    "code_size": 1527,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

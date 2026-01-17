@@ -1,0 +1,200 @@
+[
+  {
+    "id": 491636,
+    "daily_installs": 0,
+    "total_installs": 87,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-04-04T13:30:46.000Z",
+    "code_updated_at": "2024-04-04T13:30:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "去除b站播放时关注、三连、投票弹窗",
+    "description": "去除b站播放中的关注、三连、投票弹窗，包含折叠在左下角的弹窗。",
+    "url": "https://greasyfork.org/scripts/491636-%E5%8E%BB%E9%99%A4b%E7%AB%99%E6%92%AD%E6%94%BE%E6%97%B6%E5%85%B3%E6%B3%A8-%E4%B8%89%E8%BF%9E-%E6%8A%95%E7%A5%A8%E5%BC%B9%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/491636/%E5%8E%BB%E9%99%A4b%E7%AB%99%E6%92%AD%E6%94%BE%E6%97%B6%E5%85%B3%E6%B3%A8%E3%80%81%E4%B8%89%E8%BF%9E%E3%80%81%E6%8A%95%E7%A5%A8%E5%BC%B9%E7%AA%97.user.js",
+    "code_size": 802,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 418444,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-10T10:18:49.000Z",
+    "code_updated_at": "2020-12-10T10:18:49.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/76579-%E4%BB%99%E5%9C%A3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "没有问题！",
+    "description": "自动刷新页面，SB逼乎最近总是搞“出了一点问题”，于是就有了这个脚本。",
+    "url": "https://greasyfork.org/scripts/418444-%E6%B2%A1%E6%9C%89%E9%97%AE%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/418444/%E6%B2%A1%E6%9C%89%E9%97%AE%E9%A2%98%EF%BC%81.user.js",
+    "code_size": 579,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 415342,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-03T03:42:51.000Z",
+    "code_updated_at": "2020-11-03T03:42:51.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/76579-%E4%BB%99%E5%9C%A3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "Greasy Fork广告狗屏蔽",
+    "description": "Greasy Fork官方不封广告狗，那么我们只能自己屏蔽",
+    "url": "https://greasyfork.org/scripts/415342-greasy-fork%E5%B9%BF%E5%91%8A%E7%8B%97%E5%B1%8F%E8%94%BD",
+    "code_url": "https://update.greasyfork.org/scripts/415342/Greasy%20Fork%E5%B9%BF%E5%91%8A%E7%8B%97%E5%B1%8F%E8%94%BD.user.js",
+    "code_size": 1130,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 413610,
+    "daily_installs": 0,
+    "total_installs": 915,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-17T09:37:42.000Z",
+    "code_updated_at": "2021-04-06T17:51:54.000Z",
+    "namespace": "http://www.lkong.net/home.php?mod=space&uid=516696",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "优书网搜索页屏蔽来自飞卢的小说",
+    "description": "根据小说的标签来屏蔽飞卢小说，比如飞卢的同人，其标签一般是\"同人小说\"，那么添加这个标签到黑名单里就可以屏蔽飞卢的同人小说了。",
+    "url": "https://greasyfork.org/scripts/413610-%E4%BC%98%E4%B9%A6%E7%BD%91%E6%90%9C%E7%B4%A2%E9%A1%B5%E5%B1%8F%E8%94%BD%E6%9D%A5%E8%87%AA%E9%A3%9E%E5%8D%A2%E7%9A%84%E5%B0%8F%E8%AF%B4",
+    "code_url": "https://update.greasyfork.org/scripts/413610/%E4%BC%98%E4%B9%A6%E7%BD%91%E6%90%9C%E7%B4%A2%E9%A1%B5%E5%B1%8F%E8%94%BD%E6%9D%A5%E8%87%AA%E9%A3%9E%E5%8D%A2%E7%9A%84%E5%B0%8F%E8%AF%B4.user.js",
+    "code_size": 1302,
+    "license": null,
+    "version": "0.2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412490,
+    "daily_installs": 0,
+    "total_installs": 343,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-05T14:10:22.000Z",
+    "code_updated_at": "2021-03-29T07:56:38.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/76579-%E4%BB%99%E5%9C%A3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "文字内容替换",
+    "description": "替换一些文字，比如谷歌明明有中文名，为什么偏偏不写谷歌要写Google呢？",
+    "url": "https://greasyfork.org/scripts/412490-%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%9B%BF%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/412490/%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%9B%BF%E6%8D%A2.user.js",
+    "code_size": 1226,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 412411,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-04T03:47:32.000Z",
+    "code_updated_at": "2023-11-30T05:52:23.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/76579-%E4%BB%99%E5%9C%A3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "知乎自动反对",
+    "description": "自动反对你讨厌的人的回答，在用户主页的回答页面上起作用。",
+    "url": "https://greasyfork.org/scripts/412411-%E7%9F%A5%E4%B9%8E%E8%87%AA%E5%8A%A8%E5%8F%8D%E5%AF%B9",
+    "code_url": "https://update.greasyfork.org/scripts/412411/%E7%9F%A5%E4%B9%8E%E8%87%AA%E5%8A%A8%E5%8F%8D%E5%AF%B9.user.js",
+    "code_size": 1089,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

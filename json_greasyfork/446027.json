@@ -1,0 +1,34 @@
+{
+  "id": 446027,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-06-05T09:56:00.000Z",
+  "code_updated_at": "2022-06-05T09:55:59.000Z",
+  "namespace": "2c7e63c68903f0a8b7",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 922288,
+      "name": "kaceddyum",
+      "created_at": "2022-06-05T09:54:11.000Z",
+      "url": "https://greasyfork.org/users/922288-kaceddyum",
+      "scripts": []
+    }
+  ],
+  "name": "Fix-Celestus-Names",
+  "description": "Corriger problemes interface Celestus",
+  "url": "https://greasyfork.org/scripts/446027-fix-celestus-names",
+  "code_url": "https://update.greasyfork.org/scripts/446027/Fix-Celestus-Names.user.js",
+  "code_size": 9031,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 459932,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-12T22:32:02.000Z",
+    "code_updated_at": "2023-02-12T22:33:02.000Z",
+    "namespace": "https://greasyfork.org/users/1026187",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1026187,
+        "name": "Yassine3isi",
+        "created_at": "2023-02-12T22:30:56.000Z",
+        "url": "https://greasyfork.org/users/1026187-yassine3isi"
+      }
+    ],
+    "name": "Ez spam Skinny",
+    "description": "Lets have fun with skouaayni haway la9tot",
+    "url": "https://greasyfork.org/scripts/459932-ez-spam-skinny",
+    "code_url": "https://update.greasyfork.org/scripts/459932/Ez%20spam%20Skinny.user.js",
+    "code_size": 5004,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 493590,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-27T09:44:43.000Z",
+  "code_updated_at": "2024-04-27T10:02:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 807598,
+      "name": "Ahmed Esslaoui",
+      "created_at": "2021-08-23T04:35:33.000Z",
+      "url": "https://greasyfork.org/users/807598-ahmed-esslaoui",
+      "scripts": []
+    }
+  ],
+  "name": "Copy ID Button",
+  "description": "copy button",
+  "url": "https://greasyfork.org/scripts/493590-copy-id-button",
+  "code_url": "https://update.greasyfork.org/scripts/493590/Copy%20ID%20Button.user.js",
+  "code_size": 4098,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

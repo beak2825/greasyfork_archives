@@ -1,0 +1,33 @@
+{
+  "id": 468807,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-16T11:28:54.000Z",
+  "code_updated_at": "2023-06-16T11:28:54.000Z",
+  "namespace": "带刷V：shuake345",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1072479,
+      "name": "Vxx:shuake345",
+      "created_at": "2023-05-03T17:57:24.000Z",
+      "url": "https://greasyfork.org/users/1072479-vxx-shuake345"
+    }
+  ],
+  "name": "乌兰察布专业技术人员-wlcbswdx",
+  "description": "自动看课程|自动切换课程|无时间代挂可找Vx:shuake345",
+  "url": "https://greasyfork.org/scripts/468807-%E4%B9%8C%E5%85%B0%E5%AF%9F%E5%B8%83%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98-wlcbswdx",
+  "code_url": "https://update.greasyfork.org/scripts/468807/%E4%B9%8C%E5%85%B0%E5%AF%9F%E5%B8%83%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98-wlcbswdx.user.js",
+  "code_size": 2276,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

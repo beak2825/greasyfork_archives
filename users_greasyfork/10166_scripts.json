@@ -30,6 +30,39 @@
     "version": "1.03",
     "locale": "vi",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 412350,
+    "daily_installs": 0,
+    "total_installs": 431,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-02T18:17:05.000Z",
+    "code_updated_at": "2020-10-02T18:17:05.000Z",
+    "namespace": "https://nntoan.com/",
+    "support_url": "https://github.com/nntoan/UserScripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10166,
+        "name": "nntoan",
+        "created_at": "2015-04-03T09:10:13.000Z",
+        "url": "https://greasyfork.org/users/10166-nntoan"
+      }
+    ],
+    "name": "MeTruyenChu downloader",
+    "description": "Tải truyện từ metruyenchu.com định dạng epub.",
+    "url": "https://greasyfork.org/scripts/412350-metruyenchu-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/412350/MeTruyenChu%20downloader.user.js",
+    "code_size": 11552,
+    "license": "MIT; https://nntoan.mit-license.org/",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

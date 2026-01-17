@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 441780,
+    "daily_installs": 0,
+    "total_installs": 147,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-19T23:05:13.000Z",
+    "code_updated_at": "2024-05-07T19:15:03.000Z",
+    "namespace": "moe.jixun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44,
+        "name": "Jixun.Moe",
+        "created_at": "2014-03-04T21:30:20.000Z",
+        "url": "https://greasyfork.org/users/44-jixun-moe"
+      }
+    ],
+    "name": "HumbleBundle download all ebook as zip",
+    "description": "Download all books with supplement as a single zip file.",
+    "url": "https://greasyfork.org/scripts/441780-humblebundle-download-all-ebook-as-zip",
+    "code_url": "https://update.greasyfork.org/scripts/441780/HumbleBundle%20download%20all%20ebook%20as%20zip.user.js",
+    "code_size": 4466,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 419718,
+    "daily_installs": 0,
+    "total_installs": 359,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-01-05T20:33:47.000Z",
+    "code_updated_at": "2021-05-17T20:18:30.000Z",
+    "namespace": "uk.jixun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44,
+        "name": "Jixun.Moe",
+        "created_at": "2014-03-04T21:30:20.000Z",
+        "url": "https://greasyfork.org/users/44-jixun-moe"
+      }
+    ],
+    "name": "Price History - Amazon UK",
+    "description": "A non-intrusive way to display Amazon UK item's history price, featuring third-party price history.",
+    "url": "https://greasyfork.org/scripts/419718-price-history-amazon-uk",
+    "code_url": "https://update.greasyfork.org/scripts/419718/Price%20History%20-%20Amazon%20UK.user.js",
+    "code_size": 4322,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

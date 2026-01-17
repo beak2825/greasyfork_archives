@@ -1,0 +1,167 @@
+[
+  {
+    "id": 467976,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-05T12:52:11.000Z",
+    "code_updated_at": "2023-06-05T12:52:11.000Z",
+    "namespace": "http://www.tomputtemans.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "WME Dashboard Companion",
+    "description": "Show Waze Belgium Dashboard map data in the WME",
+    "url": "https://greasyfork.org/scripts/467976-wme-dashboard-companion",
+    "code_url": "https://update.greasyfork.org/scripts/467976/WME%20Dashboard%20Companion.user.js",
+    "code_size": 8221,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 467559,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-31T07:58:03.000Z",
+    "code_updated_at": "2023-06-03T11:28:20.000Z",
+    "namespace": "http://www.tomputtemans.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "Showcase: selectable features in WME map",
+    "description": "Shows how to add a vector feature layer where the features can receive events, just like Waze's features",
+    "url": "https://greasyfork.org/scripts/467559-showcase-selectable-features-in-wme-map",
+    "code_url": "https://update.greasyfork.org/scripts/467559/Showcase%3A%20selectable%20features%20in%20WME%20map.user.js",
+    "code_size": 4560,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 460332,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-19T23:28:13.000Z",
+    "code_updated_at": "2023-11-23T09:14:02.000Z",
+    "namespace": "http://www.tomputtemans.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "WME Charge Station PUR Improvements (Belgium/Luxembourg)",
+    "description": "Change some data when accepting charging station PURs",
+    "url": "https://greasyfork.org/scripts/460332-wme-charge-station-pur-improvements-belgium-luxembourg",
+    "code_url": "https://update.greasyfork.org/scripts/460332/WME%20Charge%20Station%20PUR%20Improvements%20%28BelgiumLuxembourg%29.user.js",
+    "code_size": 6181,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 428150,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-18T20:00:52.000Z",
+    "code_updated_at": "2021-06-18T20:07:32.000Z",
+    "namespace": "http://www.tomputtemans.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "WME Sandbox Fallback",
+    "description": "Whenever the Waze features can't be loaded due to a server error, attempt to load the same data from the sandbox.",
+    "url": "https://greasyfork.org/scripts/428150-wme-sandbox-fallback",
+    "code_url": "https://update.greasyfork.org/scripts/428150/WME%20Sandbox%20Fallback.user.js",
+    "code_size": 1985,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 427401,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-06-02T12:35:20.000Z",
+    "code_updated_at": "2021-06-02T12:35:55.000Z",
+    "namespace": "http://www.tomputtemans.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "WME Layers Link Remover",
+    "description": "Removes layers from links clicked/opened in Waze",
+    "url": "https://greasyfork.org/scripts/427401-wme-layers-link-remover",
+    "code_url": "https://update.greasyfork.org/scripts/427401/WME%20Layers%20Link%20Remover.user.js",
+    "code_size": 1070,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 494688,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-11T16:09:09.000Z",
+    "code_updated_at": "2024-05-11T16:09:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 855417,
+        "name": "edr1412",
+        "created_at": "2021-12-19T18:48:49.000Z",
+        "url": "https://greasyfork.org/users/855417-edr1412"
+      }
+    ],
+    "name": "黄金右键2",
+    "description": "Press and hold the right arrow key (→) to alter the video playback speed or simulate the original key function based on the length of the press.",
+    "url": "https://greasyfork.org/scripts/494688-%E9%BB%84%E9%87%91%E5%8F%B3%E9%94%AE2",
+    "code_url": "https://update.greasyfork.org/scripts/494688/%E9%BB%84%E9%87%91%E5%8F%B3%E9%94%AE2.user.js",
+    "code_size": 7189,
+    "license": null,
+    "version": "1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 451626,
+    "daily_installs": 0,
+    "total_installs": 142,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-09-19T08:15:01.000Z",
+    "code_updated_at": "2022-09-19T08:15:01.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 855417,
+        "name": "edr1412",
+        "created_at": "2021-12-19T18:48:49.000Z",
+        "url": "https://greasyfork.org/users/855417-edr1412"
+      }
+    ],
+    "name": "make youtube caption selectable",
+    "description": "Use this script if you want be able to select youtube captions/subtitles! source: https://stackoverflow.com/questions/40165879/how-make-youtube-subtitles-selectable",
+    "url": "https://greasyfork.org/scripts/451626-make-youtube-caption-selectable",
+    "code_url": "https://update.greasyfork.org/scripts/451626/make%20youtube%20caption%20selectable.user.js",
+    "code_size": 1592,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 437303,
+    "daily_installs": 0,
+    "total_installs": 156,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-12-19T19:26:54.000Z",
+    "code_updated_at": "2023-01-25T16:42:18.000Z",
+    "namespace": "https://greasyfork.org/zh-TW/scripts/437303",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 855417,
+        "name": "edr1412",
+        "created_at": "2021-12-19T18:48:49.000Z",
+        "url": "https://greasyfork.org/users/855417-edr1412"
+      }
+    ],
+    "name": "维基百科自动切到偏好中文",
+    "description": "force redirect https://zh.wikipedia.org/zh-??/* to https://zh.wikipedia.org/wiki/* ; force using desktop view instead of mobile; work for zh.moegirl.org.cn too",
+    "url": "https://greasyfork.org/scripts/437303-%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E8%87%AA%E5%8A%A8%E5%88%87%E5%88%B0%E5%81%8F%E5%A5%BD%E4%B8%AD%E6%96%87",
+    "code_url": "https://update.greasyfork.org/scripts/437303/%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E8%87%AA%E5%8A%A8%E5%88%87%E5%88%B0%E5%81%8F%E5%A5%BD%E4%B8%AD%E6%96%87.user.js",
+    "code_size": 4164,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

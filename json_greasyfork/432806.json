@@ -1,0 +1,33 @@
+{
+  "id": 432806,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-09-22T14:04:57.000Z",
+  "code_updated_at": "2021-09-24T09:00:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 814001,
+      "name": "hanghang hang",
+      "created_at": "2021-09-10T07:02:49.000Z",
+      "url": "https://greasyfork.org/users/814001-hanghang-hang"
+    }
+  ],
+  "name": "ready-player-cat-nft",
+  "description": "Help you choose Loot Bag",
+  "url": "https://greasyfork.org/scripts/432806-ready-player-cat-nft",
+  "code_url": "https://update.greasyfork.org/scripts/432806/ready-player-cat-nft.user.js",
+  "code_size": 4165,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

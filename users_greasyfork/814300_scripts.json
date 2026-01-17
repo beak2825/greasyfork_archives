@@ -1,0 +1,68 @@
+[
+  {
+    "id": 462196,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-20T13:18:53.000Z",
+    "code_updated_at": "2023-03-20T13:18:53.000Z",
+    "namespace": "https://hrry.xyz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814300,
+        "name": "Harry Kruger",
+        "created_at": "2021-09-11T07:02:58.000Z",
+        "url": "https://greasyfork.org/users/814300-harry-kruger"
+      }
+    ],
+    "name": "Auto Focus",
+    "description": "focus the youtube player if you press any of the player keys",
+    "url": "https://greasyfork.org/scripts/462196-auto-focus",
+    "code_url": "https://update.greasyfork.org/scripts/462196/Auto%20Focus.user.js",
+    "code_size": 973,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 432234,
+    "daily_installs": 0,
+    "total_installs": 83,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-09-11T07:04:52.000Z",
+    "code_updated_at": "2021-09-11T07:04:51.000Z",
+    "namespace": "https:/hrry.xyz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814300,
+        "name": "Harry Kruger",
+        "created_at": "2021-09-11T07:02:58.000Z",
+        "url": "https://greasyfork.org/users/814300-harry-kruger"
+      }
+    ],
+    "name": "Common Sense Media Free",
+    "description": "Removes limits set by commonsensemedia and allows you to view as much reviews as you like.",
+    "url": "https://greasyfork.org/scripts/432234-common-sense-media-free",
+    "code_url": "https://update.greasyfork.org/scripts/432234/Common%20Sense%20Media%20Free.user.js",
+    "code_size": 712,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

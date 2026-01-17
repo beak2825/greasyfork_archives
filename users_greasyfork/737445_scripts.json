@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421708,
+    "daily_installs": 0,
+    "total_installs": 527,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-14T19:55:54.000Z",
+    "code_updated_at": "2021-02-14T19:55:53.000Z",
+    "namespace": "http://gongju.dadiyouhui03.cn/app/tool/youhou/index.html",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 737445,
+        "name": "海洋沉浮",
+        "created_at": "2021-02-14T19:54:31.000Z",
+        "url": "https://greasyfork.org/users/737445-%E6%B5%B7%E6%B4%8B%E6%B2%89%E6%B5%AE"
+      }
+    ],
+    "name": "【鼠标美化】可自定义鼠标指针特效、点击特效、动态文字特效等显示效果，兼容大部分网站。自带40多个效果还可自行添加，超多种组合。定义属于你自己的专属鼠标效果网页美化效果",
+    "description": "可自定义鼠标特效等显示效果，兼容大部分网站。自带40多个效果，几百种组合。定义属于你自己的专属鼠标效果。更多功能有时间再更新，",
+    "url": "https://greasyfork.org/scripts/421708-%E9%BC%A0%E6%A0%87%E7%BE%8E%E5%8C%96-%E5%8F%AF%E8%87%AA%E5%AE%9A%E4%B9%89%E9%BC%A0%E6%A0%87%E6%8C%87%E9%92%88%E7%89%B9%E6%95%88-%E7%82%B9%E5%87%BB%E7%89%B9%E6%95%88-%E5%8A%A8%E6%80%81%E6%96%87%E5%AD%97%E7%89%B9%E6%95%88%E7%AD%89%E6%98%BE%E7%A4%BA%E6%95%88%E6%9E%9C-%E5%85%BC%E5%AE%B9%E5%A4%A7%E9%83%A8%E5%88%86%E7%BD%91%E7%AB%99-%E8%87%AA%E5%B8%A640%E5%A4%9A%E4%B8%AA%E6%95%88%E6%9E%9C%E8%BF%98%E5%8F%AF%E8%87%AA%E8%A1%8C%E6%B7%BB%E5%8A%A0-%E8%B6%85%E5%A4%9A%E7%A7%8D%E7%BB%84%E5%90%88-%E5%AE%9A%E4%B9%89%E5%B1%9E%E4%BA%8E%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E4%B8%93%E5%B1%9E%E9%BC%A0%E6%A0%87%E6%95%88%E6%9E%9C%E7%BD%91%E9%A1%B5%E7%BE%8E%E5%8C%96%E6%95%88%E6%9E%9C",
+    "code_url": "https://update.greasyfork.org/scripts/421708/%E3%80%90%E9%BC%A0%E6%A0%87%E7%BE%8E%E5%8C%96%E3%80%91%E5%8F%AF%E8%87%AA%E5%AE%9A%E4%B9%89%E9%BC%A0%E6%A0%87%E6%8C%87%E9%92%88%E7%89%B9%E6%95%88%E3%80%81%E7%82%B9%E5%87%BB%E7%89%B9%E6%95%88%E3%80%81%E5%8A%A8%E6%80%81%E6%96%87%E5%AD%97%E7%89%B9%E6%95%88%E7%AD%89%E6%98%BE%E7%A4%BA%E6%95%88%E6%9E%9C%EF%BC%8C%E5%85%BC%E5%AE%B9%E5%A4%A7%E9%83%A8%E5%88%86%E7%BD%91%E7%AB%99%E3%80%82%E8%87%AA%E5%B8%A640%E5%A4%9A%E4%B8%AA%E6%95%88%E6%9E%9C%E8%BF%98%E5%8F%AF%E8%87%AA%E8%A1%8C%E6%B7%BB%E5%8A%A0%EF%BC%8C%E8%B6%85%E5%A4%9A%E7%A7%8D%E7%BB%84%E5%90%88%E3%80%82%E5%AE%9A%E4%B9%89%E5%B1%9E%E4%BA%8E%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E4%B8%93%E5%B1%9E%E9%BC%A0%E6%A0%87%E6%95%88%E6%9E%9C%E7%BD%91%E9%A1%B5%E7%BE%8E%E5%8C%96%E6%95%88%E6%9E%9C.user.js",
+    "code_size": 6052,
+    "license": null,
+    "version": "1.2020020115",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

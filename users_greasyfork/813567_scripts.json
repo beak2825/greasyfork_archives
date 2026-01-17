@@ -1,0 +1,35 @@
+[
+  {
+    "id": 444122,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-28T03:55:15.000Z",
+    "code_updated_at": "2025-04-05T17:11:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 813567,
+        "name": "tonyma68",
+        "created_at": "2021-09-09T02:59:02.000Z",
+        "url": "https://greasyfork.org/users/813567-tonyma68"
+      }
+    ],
+    "name": "上财教学网自动登录",
+    "description": "可以自动登录上财教学网，需要在运行前在下面代码里的“学号”“密码”里手动填写学号与密码，新版主页不能用",
+    "url": "https://greasyfork.org/scripts/444122-%E4%B8%8A%E8%B4%A2%E6%95%99%E5%AD%A6%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/444122/%E4%B8%8A%E8%B4%A2%E6%95%99%E5%AD%A6%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 1394,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

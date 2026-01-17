@@ -1,0 +1,34 @@
+{
+  "id": 462669,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-27T05:59:14.000Z",
+  "code_updated_at": "2023-03-27T05:59:14.000Z",
+  "namespace": "YourNeed",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1048759,
+      "name": "X302 12黃冠穎",
+      "created_at": "2023-03-27T05:41:48.000Z",
+      "url": "https://greasyfork.org/users/1048759-x302-12%E9%BB%83%E5%86%A0%E7%A9%8E",
+      "scripts": []
+    }
+  ],
+  "name": "簡體字剋星自動簡體轉繁體腳本",
+  "description": "檢測到簡體網頁自動轉為繁體腳本",
+  "url": "https://greasyfork.org/scripts/462669-%E7%B0%A1%E9%AB%94%E5%AD%97%E5%89%8B%E6%98%9F%E8%87%AA%E5%8B%95%E7%B0%A1%E9%AB%94%E8%BD%89%E7%B9%81%E9%AB%94%E8%85%B3%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/462669/%E7%B0%A1%E9%AB%94%E5%AD%97%E5%89%8B%E6%98%9F%E8%87%AA%E5%8B%95%E7%B0%A1%E9%AB%94%E8%BD%89%E7%B9%81%E9%AB%94%E8%85%B3%E6%9C%AC.user.js",
+  "code_size": 37597,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

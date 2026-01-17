@@ -1,0 +1,33 @@
+{
+  "id": 429092,
+  "daily_installs": 0,
+  "total_installs": 261,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-07-09T00:11:26.000Z",
+  "code_updated_at": "2021-07-09T00:11:26.000Z",
+  "namespace": "https://greasyfork.org/en/users/791693-danielajones86ny",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 791693,
+      "name": "danielajones86ny",
+      "created_at": "2021-07-08T23:51:17.000Z",
+      "url": "https://greasyfork.org/users/791693-danielajones86ny"
+    }
+  ],
+  "name": "Twitter video loop",
+  "description": "Make twitter videos autoplay looped with sound, at highest video quality",
+  "url": "https://greasyfork.org/scripts/429092-twitter-video-loop",
+  "code_url": "https://update.greasyfork.org/scripts/429092/Twitter%20video%20loop.user.js",
+  "code_size": 3127,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

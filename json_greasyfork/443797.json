@@ -1,0 +1,59 @@
+{
+  "id": 443797,
+  "daily_installs": 7,
+  "total_installs": 47239,
+  "fan_score": "68.6",
+  "good_ratings": 16,
+  "ok_ratings": 2,
+  "bad_ratings": 1,
+  "created_at": "2022-04-22T08:32:06.000Z",
+  "code_updated_at": "2022-04-22T08:32:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 129428,
+      "name": "bytheludy",
+      "created_at": "2017-06-04T08:45:59.000Z",
+      "url": "https://greasyfork.org/users/129428-bytheludy",
+      "scripts": [
+        {
+          "id": 443797,
+          "daily_installs": 7,
+          "total_installs": 47239,
+          "fan_score": "68.6",
+          "good_ratings": 16,
+          "ok_ratings": 2,
+          "bad_ratings": 1,
+          "created_at": "2022-04-22T08:32:06.000Z",
+          "code_updated_at": "2022-04-22T08:32:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "抖音视频下载器",
+          "description": "下载抖音APP端禁止下载的视频、下载抖音无水印视频、提取抖音直播推流地址、免登录使用大部分功能、屏蔽不必要的弹窗,适用于拥有或可安装脚本管理器的电脑或移动端浏览器,如:PC端Chrome、Edge、华为浏览器等,移动端Kiwi、Yandex、Nightly、Iceraven等",
+          "url": "https://greasyfork.org/scripts/443797-%E6%8A%96%E9%9F%B3%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/443797/%E6%8A%96%E9%9F%B3%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+          "code_size": 53782,
+          "license": "MIT License",
+          "version": "1.38.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "抖音视频下载器",
+  "description": "下载抖音APP端禁止下载的视频、下载抖音无水印视频、提取抖音直播推流地址、免登录使用大部分功能、屏蔽不必要的弹窗,适用于拥有或可安装脚本管理器的电脑或移动端浏览器,如:PC端Chrome、Edge、华为浏览器等,移动端Kiwi、Yandex、Nightly、Iceraven等",
+  "url": "https://greasyfork.org/scripts/443797-%E6%8A%96%E9%9F%B3%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/443797/%E6%8A%96%E9%9F%B3%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+  "code_size": 53782,
+  "license": "MIT License",
+  "version": "1.38.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

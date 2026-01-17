@@ -30,6 +30,39 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 415256,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-11-01T18:21:51.000Z",
+    "code_updated_at": "2020-11-01T18:21:51.000Z",
+    "namespace": "https://greasyfork.org/users/700340",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 700340,
+        "name": "Blast Master",
+        "created_at": "2020-11-01T18:17:50.000Z",
+        "url": "https://greasyfork.org/users/700340-blast-master"
+      }
+    ],
+    "name": "YouTube: Add Download button",
+    "description": "Adds Download button to YouTube using y2mate",
+    "url": "https://greasyfork.org/scripts/415256-youtube-add-download-button",
+    "code_url": "https://update.greasyfork.org/scripts/415256/YouTube%3A%20Add%20Download%20button.user.js",
+    "code_size": 4145,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 485944,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-29T06:04:36.000Z",
+  "code_updated_at": "2024-01-29T09:12:49.000Z",
+  "namespace": "https://www.hookbin.top",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1253408,
+      "name": "hookbin",
+      "created_at": "2024-01-26T07:46:34.000Z",
+      "url": "https://greasyfork.org/users/1253408-hookbin",
+      "scripts": []
+    }
+  ],
+  "name": "JIRA内容变化监测器",
+  "description": "监测JIRA内容是否发生变化，并发送浏览器通知",
+  "url": "https://greasyfork.org/scripts/485944-jira%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96%E7%9B%91%E6%B5%8B%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/485944/JIRA%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96%E7%9B%91%E6%B5%8B%E5%99%A8.user.js",
+  "code_size": 3749,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

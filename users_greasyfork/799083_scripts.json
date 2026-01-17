@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455633,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-30T00:26:06.000Z",
+    "code_updated_at": "2022-11-30T00:26:06.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799083,
+        "name": "Wolfy Denimore",
+        "created_at": "2021-07-31T22:34:40.000Z",
+        "url": "https://greasyfork.org/users/799083-wolfy-denimore"
+      }
+    ],
+    "name": "janets decrapifier",
+    "description": "11/29/2022, 12:24:47 AM",
+    "url": "https://greasyfork.org/scripts/455633-janets-decrapifier",
+    "code_url": "https://update.greasyfork.org/scripts/455633/janets%20decrapifier.user.js",
+    "code_size": 5280,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 469902,
+  "daily_installs": 0,
+  "total_installs": 123,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-01T11:00:44.000Z",
+  "code_updated_at": "2023-07-01T11:00:44.000Z",
+  "namespace": "https://greasyfork.org/en/users/85671-jcunews",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 85671,
+      "name": "jcunews",
+      "created_at": "2016-12-08T17:46:49.000Z",
+      "url": "https://greasyfork.org/users/85671-jcunews"
+    }
+  ],
+  "name": "HTML Animation Frame Request Limiter",
+  "description": "Limits HTML animation frame request. Practically limits FPS of JavaScript controlled animation such as in canvas. Designed to lower CPU usage.",
+  "url": "https://greasyfork.org/scripts/469902-html-animation-frame-request-limiter",
+  "code_url": "https://update.greasyfork.org/scripts/469902/HTML%20Animation%20Frame%20Request%20Limiter.user.js",
+  "code_size": 1571,
+  "license": "AGPL v3",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

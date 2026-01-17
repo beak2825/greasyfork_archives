@@ -1,0 +1,101 @@
+[
+  {
+    "id": 483943,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-01-05T08:21:24.000Z",
+    "code_updated_at": "2024-01-05T08:22:42.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/483943",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 29558,
+        "name": "lqzhgood",
+        "created_at": "2016-02-06T14:28:55.000Z",
+        "url": "https://greasyfork.org/users/29558-lqzhgood"
+      }
+    ],
+    "name": "语雀目录等宽字体",
+    "description": "强制语雀左侧目录使用等宽字体, 便于对齐",
+    "url": "https://greasyfork.org/scripts/483943-%E8%AF%AD%E9%9B%80%E7%9B%AE%E5%BD%95%E7%AD%89%E5%AE%BD%E5%AD%97%E4%BD%93",
+    "code_url": "https://update.greasyfork.org/scripts/483943/%E8%AF%AD%E9%9B%80%E7%9B%AE%E5%BD%95%E7%AD%89%E5%AE%BD%E5%AD%97%E4%BD%93.user.css",
+    "code_size": 686,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 453447,
+    "daily_installs": 0,
+    "total_installs": 868,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2022-10-21T01:35:50.000Z",
+    "code_updated_at": "2022-11-02T11:31:35.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/453447",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 29558,
+        "name": "lqzhgood",
+        "created_at": "2016-02-06T14:28:55.000Z",
+        "url": "https://greasyfork.org/users/29558-lqzhgood"
+      }
+    ],
+    "name": "京东评价助手",
+    "description": "京东订单自动评价 fork自@krapnik",
+    "url": "https://greasyfork.org/scripts/453447-%E4%BA%AC%E4%B8%9C%E8%AF%84%E4%BB%B7%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/453447/%E4%BA%AC%E4%B8%9C%E8%AF%84%E4%BB%B7%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 2744,
+    "license": "GPLv3",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 441396,
+    "daily_installs": 0,
+    "total_installs": 992,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-12T11:43:02.000Z",
+    "code_updated_at": "2022-04-18T03:12:50.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/441396",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 29558,
+        "name": "lqzhgood",
+        "created_at": "2016-02-06T14:28:55.000Z",
+        "url": "https://greasyfork.org/users/29558-lqzhgood"
+      }
+    ],
+    "name": "Chiphell论坛入口",
+    "description": "添加Chiphell论坛入口",
+    "url": "https://greasyfork.org/scripts/441396-chiphell%E8%AE%BA%E5%9D%9B%E5%85%A5%E5%8F%A3",
+    "code_url": "https://update.greasyfork.org/scripts/441396/Chiphell%E8%AE%BA%E5%9D%9B%E5%85%A5%E5%8F%A3.user.js",
+    "code_size": 569,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

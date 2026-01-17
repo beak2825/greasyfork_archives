@@ -1,0 +1,35 @@
+[
+  {
+    "id": 466385,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-05-16T03:43:44.000Z",
+    "code_updated_at": "2023-05-16T03:43:43.000Z",
+    "namespace": "http://www.allter.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1079804,
+        "name": "chenzoho",
+        "created_at": "2023-05-16T03:40:22.000Z",
+        "url": "https://greasyfork.org/users/1079804-chenzoho"
+      }
+    ],
+    "name": "奥特永盛北京市采",
+    "description": "自动加入购物车",
+    "url": "https://greasyfork.org/scripts/466385-%E5%A5%A5%E7%89%B9%E6%B0%B8%E7%9B%9B%E5%8C%97%E4%BA%AC%E5%B8%82%E9%87%87",
+    "code_url": "https://update.greasyfork.org/scripts/466385/%E5%A5%A5%E7%89%B9%E6%B0%B8%E7%9B%9B%E5%8C%97%E4%BA%AC%E5%B8%82%E9%87%87.user.js",
+    "code_size": 701795,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

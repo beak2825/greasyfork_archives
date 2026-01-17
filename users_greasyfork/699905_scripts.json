@@ -1,0 +1,35 @@
+[
+  {
+    "id": 415145,
+    "daily_installs": 0,
+    "total_installs": 60,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-10-31T05:57:42.000Z",
+    "code_updated_at": "2020-10-31T05:57:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 699905,
+        "name": "RockyKwok",
+        "created_at": "2020-10-31T05:52:48.000Z",
+        "url": "https://greasyfork.org/users/699905-rockykwok"
+      }
+    ],
+    "name": "语雀小屏幕适配，笔记详情页添加返回笔记目录按钮",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/415145-%E8%AF%AD%E9%9B%80%E5%B0%8F%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D-%E7%AC%94%E8%AE%B0%E8%AF%A6%E6%83%85%E9%A1%B5%E6%B7%BB%E5%8A%A0%E8%BF%94%E5%9B%9E%E7%AC%94%E8%AE%B0%E7%9B%AE%E5%BD%95%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/415145/%E8%AF%AD%E9%9B%80%E5%B0%8F%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D%EF%BC%8C%E7%AC%94%E8%AE%B0%E8%AF%A6%E6%83%85%E9%A1%B5%E6%B7%BB%E5%8A%A0%E8%BF%94%E5%9B%9E%E7%AC%94%E8%AE%B0%E7%9B%AE%E5%BD%95%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 853,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

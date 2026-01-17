@@ -1,0 +1,59 @@
+{
+  "id": 435712,
+  "daily_installs": 0,
+  "total_installs": 1560,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-19T02:18:52.000Z",
+  "code_updated_at": "2023-03-28T12:18:33.000Z",
+  "namespace": "http://tmpermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 840807,
+      "name": "Alepixx",
+      "created_at": "2021-11-19T02:16:35.000Z",
+      "url": "https://greasyfork.org/users/840807-alepixx",
+      "scripts": [
+        {
+          "id": 435712,
+          "daily_installs": 0,
+          "total_installs": 1560,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-19T02:18:52.000Z",
+          "code_updated_at": "2023-03-28T12:18:33.000Z",
+          "namespace": "http://tmpermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "福大长江雨课堂自用",
+          "description": "福大长江雨课堂自用,无答题",
+          "url": "https://greasyfork.org/scripts/435712-%E7%A6%8F%E5%A4%A7%E9%95%BF%E6%B1%9F%E9%9B%A8%E8%AF%BE%E5%A0%82%E8%87%AA%E7%94%A8",
+          "code_url": "https://update.greasyfork.org/scripts/435712/%E7%A6%8F%E5%A4%A7%E9%95%BF%E6%B1%9F%E9%9B%A8%E8%AF%BE%E5%A0%82%E8%87%AA%E7%94%A8.user.js",
+          "code_size": 2787,
+          "license": "MIT License",
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "福大长江雨课堂自用",
+  "description": "福大长江雨课堂自用,无答题",
+  "url": "https://greasyfork.org/scripts/435712-%E7%A6%8F%E5%A4%A7%E9%95%BF%E6%B1%9F%E9%9B%A8%E8%AF%BE%E5%A0%82%E8%87%AA%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/435712/%E7%A6%8F%E5%A4%A7%E9%95%BF%E6%B1%9F%E9%9B%A8%E8%AF%BE%E5%A0%82%E8%87%AA%E7%94%A8.user.js",
+  "code_size": 2787,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

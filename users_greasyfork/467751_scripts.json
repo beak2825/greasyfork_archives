@@ -1,0 +1,35 @@
+[
+  {
+    "id": 447376,
+    "daily_installs": 2,
+    "total_installs": 3982,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-07-03T07:01:30.000Z",
+    "code_updated_at": "2024-03-19T11:08:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 467751,
+        "name": "凡云",
+        "created_at": "2020-03-23T14:46:43.000Z",
+        "url": "https://greasyfork.org/users/467751-%E5%87%A1%E4%BA%91"
+      }
+    ],
+    "name": "B站、油管、推特屏蔽原神内鬼爆料相关视频",
+    "description": "屏蔽B站、油管、推特三大平台的原神、星穹铁道内鬼爆料视频和消息",
+    "url": "https://greasyfork.org/scripts/447376-b%E7%AB%99-%E6%B2%B9%E7%AE%A1-%E6%8E%A8%E7%89%B9%E5%B1%8F%E8%94%BD%E5%8E%9F%E7%A5%9E%E5%86%85%E9%AC%BC%E7%88%86%E6%96%99%E7%9B%B8%E5%85%B3%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/447376/B%E7%AB%99%E3%80%81%E6%B2%B9%E7%AE%A1%E3%80%81%E6%8E%A8%E7%89%B9%E5%B1%8F%E8%94%BD%E5%8E%9F%E7%A5%9E%E5%86%85%E9%AC%BC%E7%88%86%E6%96%99%E7%9B%B8%E5%85%B3%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 41599,
+    "license": "MIT License",
+    "version": "3.0.0-alpha.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

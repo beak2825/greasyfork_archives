@@ -1,0 +1,35 @@
+[
+  {
+    "id": 480305,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-19T20:48:58.000Z",
+    "code_updated_at": "2023-11-19T20:48:58.000Z",
+    "namespace": "https://greasyfork.org/users/1220355",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220355,
+        "name": "v2ex1",
+        "created_at": "2023-11-19T20:45:41.000Z",
+        "url": "https://greasyfork.org/users/1220355-v2ex1"
+      }
+    ],
+    "name": "V2EX check user",
+    "description": "检查封禁用户",
+    "url": "https://greasyfork.org/scripts/480305-v2ex-check-user",
+    "code_url": "https://update.greasyfork.org/scripts/480305/V2EX%20check%20user.user.js",
+    "code_size": 3136,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 473933,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-08-26T10:00:43.000Z",
+    "code_updated_at": "2023-08-26T10:00:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385871,
+        "name": "hasakiRRRR",
+        "created_at": "2019-10-11T06:57:41.000Z",
+        "url": "https://greasyfork.org/users/385871-hasakirrrr"
+      }
+    ],
+    "name": "Remove HowtoGeek ads",
+    "description": "remove howtogeek ads",
+    "url": "https://greasyfork.org/scripts/473933-remove-howtogeek-ads",
+    "code_url": "https://update.greasyfork.org/scripts/473933/Remove%20HowtoGeek%20ads.user.js",
+    "code_size": 600,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

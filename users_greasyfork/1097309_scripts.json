@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 468584,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-13T14:04:09.000Z",
+    "code_updated_at": "2023-06-13T14:05:15.000Z",
+    "namespace": "https://space.bilibili.com/1208812226",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097309,
+        "name": "Paper Fly",
+        "created_at": "2023-06-12T15:53:26.000Z",
+        "url": "https://greasyfork.org/users/1097309-paper-fly"
+      }
+    ],
+    "name": "B站笔记快捷键←↓→",
+    "description": "备份的一个脚本库，不是本人编写！！！！原来简介都在里面--》在B站笔记中：打开笔记快捷键：Ctrl+Shift+↑，关闭笔记快捷键：Ctrl+Shift+↓，笔记窗口切换到视频窗口：Ctrl+Shift+←，视频窗口切换到笔记窗口：Ctrl+Shift+→，截图+时间戳快捷键：Ctrl+↓，时间戳+截图快捷键：Ctrl+↑，时间戳快捷键：Ctrl+←，截图快捷键：Ctrl+→，下载视频笔记Ctrl+Shift+S，将字幕装载进笔记Ctrl+Shift+V",
+    "url": "https://greasyfork.org/scripts/468584-b%E7%AB%99%E7%AC%94%E8%AE%B0%E5%BF%AB%E6%8D%B7%E9%94%AE",
+    "code_url": "https://update.greasyfork.org/scripts/468584/B%E7%AB%99%E7%AC%94%E8%AE%B0%E5%BF%AB%E6%8D%B7%E9%94%AE%E2%86%90%E2%86%93%E2%86%92.user.js",
+    "code_size": 92973,
+    "license": "AGPL License",
+    "version": "2.10.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 468515,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-12T15:58:10.000Z",
+    "code_updated_at": "2023-08-21T15:27:56.000Z",
+    "namespace": "https://space.bilibili.com/391912695  https://github.com/PaperFly-web/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1097309,
+        "name": "Paper Fly",
+        "created_at": "2023-06-12T15:53:26.000Z",
+        "url": "https://greasyfork.org/users/1097309-paper-fly"
+      }
+    ],
+    "name": "B站笔记快捷键：alt + ?",
+    "description": "alt + 1 2 3 4 5放大加粗，alt+f:选择文字变灰，alt+d:选择文字变黑，alt+g:选择文字变绿，alt+b:选择文字变蓝，alt+r:选择文字变红，alt+y:选择文字变黄，alt+双击f:选择文字高亮变灰，alt+双击d:选择文字高亮变黑，alt+双击g:选择文字高亮变绿，alt+双击b:选择文字高亮变蓝，alt+双击r:选择文字高亮变红，alt+双击y:选择文字高亮变黄，alt+双击z:取消高亮，alt+w:选中文字变白，alt+L:光标所在文字无序列表，alt+shit+L:光标所在文字有序列表",
+    "url": "https://greasyfork.org/scripts/468515-b%E7%AB%99%E7%AC%94%E8%AE%B0%E5%BF%AB%E6%8D%B7%E9%94%AE-alt",
+    "code_url": "https://update.greasyfork.org/scripts/468515/B%E7%AB%99%E7%AC%94%E8%AE%B0%E5%BF%AB%E6%8D%B7%E9%94%AE%EF%BC%9Aalt%20%2B%20.user.js",
+    "code_size": 13865,
+    "license": null,
+    "version": "1.2.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

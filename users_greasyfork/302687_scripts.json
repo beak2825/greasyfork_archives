@@ -1,0 +1,167 @@
+[
+  {
+    "id": 469466,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-26T07:03:32.000Z",
+    "code_updated_at": "2023-06-26T07:07:39.000Z",
+    "namespace": "敲掉我不想看到的部分",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 302687,
+        "name": "Bar Food",
+        "created_at": "2019-05-17T15:30:22.000Z",
+        "url": "https://greasyfork.org/users/302687-bar-food"
+      }
+    ],
+    "name": "Poop",
+    "description": "Bonk!",
+    "url": "https://greasyfork.org/scripts/469466-poop",
+    "code_url": "https://update.greasyfork.org/scripts/469466/Poop.user.js",
+    "code_size": 876,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462885,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-30T02:02:16.000Z",
+    "code_updated_at": "2023-04-04T21:50:25.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/462885/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 302687,
+        "name": "Bar Food",
+        "created_at": "2019-05-17T15:30:22.000Z",
+        "url": "https://greasyfork.org/users/302687-bar-food"
+      }
+    ],
+    "name": "虎扑 - 自定义样式",
+    "description": "**需要**配合另一个脚本使用的css文件",
+    "url": "https://greasyfork.org/scripts/462885-%E8%99%8E%E6%89%91-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%B7%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/462885/%E8%99%8E%E6%89%91%20-%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%B7%E5%BC%8F.user.css",
+    "code_size": 60057,
+    "license": null,
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462550,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-25T10:45:52.000Z",
+    "code_updated_at": "2023-03-25T11:14:08.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/462550",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 302687,
+        "name": "Bar Food",
+        "created_at": "2019-05-17T15:30:22.000Z",
+        "url": "https://greasyfork.org/users/302687-bar-food"
+      }
+    ],
+    "name": "虎扑 - 瑶瑶主题",
+    "description": "我在，不用担心。 —— 瑶瑶·加入队伍·其三",
+    "url": "https://greasyfork.org/scripts/462550-%E8%99%8E%E6%89%91-%E7%91%B6%E7%91%B6%E4%B8%BB%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/462550/%E8%99%8E%E6%89%91%20-%20%E7%91%B6%E7%91%B6%E4%B8%BB%E9%A2%98.user.css",
+    "code_size": 22597,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 462542,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-25T09:20:33.000Z",
+    "code_updated_at": "2023-04-04T21:51:03.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/462542",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 302687,
+        "name": "Bar Food",
+        "created_at": "2019-05-17T15:30:22.000Z",
+        "url": "https://greasyfork.org/users/302687-bar-food"
+      }
+    ],
+    "name": "虎扑 - 需要和指定css文件配合使用的虎扑网页元素修改",
+    "description": "在失智许久之后我选择把css文件直接一个地扔",
+    "url": "https://greasyfork.org/scripts/462542-%E8%99%8E%E6%89%91-%E9%9C%80%E8%A6%81%E5%92%8C%E6%8C%87%E5%AE%9Acss%E6%96%87%E4%BB%B6%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8%E7%9A%84%E8%99%8E%E6%89%91%E7%BD%91%E9%A1%B5%E5%85%83%E7%B4%A0%E4%BF%AE%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/462542/%E8%99%8E%E6%89%91%20-%20%E9%9C%80%E8%A6%81%E5%92%8C%E6%8C%87%E5%AE%9Acss%E6%96%87%E4%BB%B6%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8%E7%9A%84%E8%99%8E%E6%89%91%E7%BD%91%E9%A1%B5%E5%85%83%E7%B4%A0%E4%BF%AE%E6%94%B9.user.js",
+    "code_size": 4154,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 461596,
+    "daily_installs": 0,
+    "total_installs": 53,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-03-10T18:28:08.000Z",
+    "code_updated_at": "2023-03-10T23:06:22.000Z",
+    "namespace": "敲掉我不想看到的部分",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 302687,
+        "name": "Bar Food",
+        "created_at": "2019-05-17T15:30:22.000Z",
+        "url": "https://greasyfork.org/users/302687-bar-food"
+      }
+    ],
+    "name": "虎扑屏蔽用",
+    "description": "Bonk!",
+    "url": "https://greasyfork.org/scripts/461596-%E8%99%8E%E6%89%91%E5%B1%8F%E8%94%BD%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/461596/%E8%99%8E%E6%89%91%E5%B1%8F%E8%94%BD%E7%94%A8.user.js",
+    "code_size": 2197,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

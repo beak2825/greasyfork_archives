@@ -1,0 +1,33 @@
+{
+  "id": 430123,
+  "daily_installs": 0,
+  "total_installs": 961,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-07-30T16:41:42.000Z",
+  "code_updated_at": "2022-08-30T18:20:13.000Z",
+  "namespace": "http://bzzzzdzzzz.blogspot.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 735674,
+      "name": "BZZZZ",
+      "created_at": "2021-02-08T09:49:02.000Z",
+      "url": "https://greasyfork.org/users/735674-bzzzz"
+    }
+  ],
+  "name": "moomoo.io typing text animation",
+  "description": "just join game and press enter",
+  "url": "https://greasyfork.org/scripts/430123-moomoo-io-typing-text-animation",
+  "code_url": "https://update.greasyfork.org/scripts/430123/moomooio%20typing%20text%20animation.user.js",
+  "code_size": 1953,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

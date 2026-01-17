@@ -1,0 +1,35 @@
+[
+  {
+    "id": 493506,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-26T01:58:16.000Z",
+    "code_updated_at": "2024-04-26T04:54:58.000Z",
+    "namespace": "Made for fun, thought people would like it, so here ya go :D",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293177,
+        "name": "Lexi the elf",
+        "created_at": "2024-04-26T01:21:59.000Z",
+        "url": "https://greasyfork.org/users/1293177-lexi-the-elf"
+      }
+    ],
+    "name": "[Recommended] Roblox's cleanest designed game filter",
+    "description": "Automatically filters and removes roblox games containing certain phrases or words. (By default is set to RNG game's)",
+    "url": "https://greasyfork.org/scripts/493506-recommended-roblox-s-cleanest-designed-game-filter",
+    "code_url": "https://update.greasyfork.org/scripts/493506/%5BRecommended%5D%20Roblox%27s%20cleanest%20designed%20game%20filter.user.js",
+    "code_size": 2557,
+    "license": "GNU GPLv3",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

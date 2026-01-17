@@ -1,0 +1,59 @@
+{
+  "id": 457094,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-12-24T13:33:25.000Z",
+  "code_updated_at": "2022-12-24T15:05:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1002086,
+      "name": "lvti",
+      "created_at": "2022-12-24T06:11:41.000Z",
+      "url": "https://greasyfork.org/users/1002086-lvti",
+      "scripts": [
+        {
+          "id": 457094,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-12-24T13:33:25.000Z",
+          "code_updated_at": "2022-12-24T15:05:01.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove_Live_Room",
+          "description": "模仿b站Chr_老师做的",
+          "url": "https://greasyfork.org/scripts/457094-remove-live-room",
+          "code_url": "https://update.greasyfork.org/scripts/457094/Remove_Live_Room.user.js",
+          "code_size": 1251,
+          "license": "GNU Affero General Public License v3.0",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove_Live_Room",
+  "description": "模仿b站Chr_老师做的",
+  "url": "https://greasyfork.org/scripts/457094-remove-live-room",
+  "code_url": "https://update.greasyfork.org/scripts/457094/Remove_Live_Room.user.js",
+  "code_size": 1251,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

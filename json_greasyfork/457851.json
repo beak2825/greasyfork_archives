@@ -1,0 +1,33 @@
+{
+  "id": 457851,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-01-08T12:45:46.000Z",
+  "code_updated_at": "2023-01-08T12:47:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 934903,
+      "name": "Java_Script",
+      "created_at": "2022-07-12T08:00:06.000Z",
+      "url": "https://greasyfork.org/users/934903-java-script"
+    }
+  ],
+  "name": "extend-luogu",
+  "description": "Make luogu more powerful.",
+  "url": "https://greasyfork.org/scripts/457851-extend-luogu",
+  "code_url": "https://update.greasyfork.org/scripts/457851/extend-luogu.user.js",
+  "code_size": 199570,
+  "license": "MIT License",
+  "version": "6.7.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

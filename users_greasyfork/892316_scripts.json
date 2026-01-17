@@ -1,0 +1,35 @@
+[
+  {
+    "id": 442066,
+    "daily_installs": 0,
+    "total_installs": 400,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-03-25T07:39:56.000Z",
+    "code_updated_at": "2022-06-28T03:18:59.000Z",
+    "namespace": "https://blog.52ipc.top",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 892316,
+        "name": "52ipc.top",
+        "created_at": "2022-03-25T06:55:26.000Z",
+        "url": "https://greasyfork.org/users/892316-52ipc-top"
+      }
+    ],
+    "name": "书签地球-免登录链接自动跳转",
+    "description": "书签地球免登录链接跳转,点击链接直接跳转无需登录",
+    "url": "https://greasyfork.org/scripts/442066-%E4%B9%A6%E7%AD%BE%E5%9C%B0%E7%90%83-%E5%85%8D%E7%99%BB%E5%BD%95%E9%93%BE%E6%8E%A5%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/442066/%E4%B9%A6%E7%AD%BE%E5%9C%B0%E7%90%83-%E5%85%8D%E7%99%BB%E5%BD%95%E9%93%BE%E6%8E%A5%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 663,
+    "license": "Mozilla",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

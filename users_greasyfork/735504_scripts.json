@@ -1,0 +1,35 @@
+[
+  {
+    "id": 421396,
+    "daily_installs": 0,
+    "total_installs": 338,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2021-02-07T20:24:14.000Z",
+    "code_updated_at": "2025-05-31T23:54:41.000Z",
+    "namespace": "namespace_runio",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735504,
+        "name": "John Burt",
+        "created_at": "2021-02-07T20:14:35.000Z",
+        "url": "https://greasyfork.org/users/735504-john-burt"
+      }
+    ],
+    "name": "YouTube Sizer",
+    "description": "Resizes the YouTube player to different sizes",
+    "url": "https://greasyfork.org/scripts/421396-youtube-sizer",
+    "code_url": "https://update.greasyfork.org/scripts/421396/YouTube%20Sizer.user.js",
+    "code_size": 19415,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "2.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 460651,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-02-24T10:53:06.000Z",
+    "code_updated_at": "2023-02-27T10:59:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1032258,
+        "name": "KiWeng",
+        "created_at": "2023-02-24T10:51:31.000Z",
+        "url": "https://greasyfork.org/users/1032258-kiweng"
+      }
+    ],
+    "name": "电子科技大学研究生课表考表导出",
+    "description": "以ICS格式导出电子科技大学研究生课表考表",
+    "url": "https://greasyfork.org/scripts/460651-%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E8%A1%A8%E8%80%83%E8%A1%A8%E5%AF%BC%E5%87%BA",
+    "code_url": "https://update.greasyfork.org/scripts/460651/%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E8%A1%A8%E8%80%83%E8%A1%A8%E5%AF%BC%E5%87%BA.user.js",
+    "code_size": 9702,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

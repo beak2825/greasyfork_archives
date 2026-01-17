@@ -1,0 +1,33 @@
+{
+  "id": 418116,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-05T16:27:11.000Z",
+  "code_updated_at": "2020-12-21T02:12:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 713333,
+      "name": "chrvip",
+      "created_at": "2020-12-05T16:22:56.000Z",
+      "url": "https://greasyfork.org/users/713333-chrvip"
+    }
+  ],
+  "name": "hulunoteLinkAreaSwitch",
+  "description": "切换 葫芦笔记下面的链接区的显示与否",
+  "url": "https://greasyfork.org/scripts/418116-hulunotelinkareaswitch",
+  "code_url": "https://update.greasyfork.org/scripts/418116/hulunoteLinkAreaSwitch.user.js",
+  "code_size": 3913,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

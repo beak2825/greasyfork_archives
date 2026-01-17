@@ -1,0 +1,33 @@
+{
+  "id": 437703,
+  "daily_installs": 0,
+  "total_installs": 629,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2021-12-28T17:55:28.000Z",
+  "code_updated_at": "2021-12-29T14:03:59.000Z",
+  "namespace": "https://greasyfork.org/users/805959",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 805959,
+      "name": "Nate Dogg NT",
+      "created_at": "2021-08-18T15:31:23.000Z",
+      "url": "https://greasyfork.org/users/805959-nate-dogg-nt"
+    }
+  ],
+  "name": "Race Result Points Nitro Type",
+  "description": "Shows Points earned from the race.",
+  "url": "https://greasyfork.org/scripts/437703-race-result-points-nitro-type",
+  "code_url": "https://update.greasyfork.org/scripts/437703/Race%20Result%20Points%20Nitro%20Type.user.js",
+  "code_size": 7092,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

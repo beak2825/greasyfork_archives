@@ -1,0 +1,59 @@
+{
+  "id": 492135,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-04-10T07:46:37.000Z",
+  "code_updated_at": "2024-04-10T07:46:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286328,
+      "name": "radek3911",
+      "created_at": "2024-04-10T07:42:57.000Z",
+      "url": "https://greasyfork.org/users/1286328-radek3911",
+      "scripts": [
+        {
+          "id": 492135,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-10T07:46:37.000Z",
+          "code_updated_at": "2024-04-10T07:46:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Upload To Gitlab Button for Claude.ai Chat",
+          "description": "Adds an \"Upload To Gitlab\" button before the chat controls on Claude.ai chat pages",
+          "url": "https://greasyfork.org/scripts/492135-upload-to-gitlab-button-for-claude-ai-chat",
+          "code_url": "https://update.greasyfork.org/scripts/492135/Upload%20To%20Gitlab%20Button%20for%20Claudeai%20Chat.user.js",
+          "code_size": 12448,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Upload To Gitlab Button for Claude.ai Chat",
+  "description": "Adds an \"Upload To Gitlab\" button before the chat controls on Claude.ai chat pages",
+  "url": "https://greasyfork.org/scripts/492135-upload-to-gitlab-button-for-claude-ai-chat",
+  "code_url": "https://update.greasyfork.org/scripts/492135/Upload%20To%20Gitlab%20Button%20for%20Claudeai%20Chat.user.js",
+  "code_size": 12448,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

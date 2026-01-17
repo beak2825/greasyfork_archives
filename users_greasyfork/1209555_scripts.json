@@ -96,6 +96,72 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 493243,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-04-23T08:06:36.000Z",
+    "code_updated_at": "2025-03-26T06:52:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209555,
+        "name": "RalphC",
+        "created_at": "2023-11-03T01:09:09.000Z",
+        "url": "https://greasyfork.org/users/1209555-ralphc"
+      }
+    ],
+    "name": "华信永道",
+    "description": "hx相关脚本",
+    "url": "https://greasyfork.org/scripts/493243-%E5%8D%8E%E4%BF%A1%E6%B0%B8%E9%81%93",
+    "code_url": "https://update.greasyfork.org/scripts/493243/%E5%8D%8E%E4%BF%A1%E6%B0%B8%E9%81%93.user.js",
+    "code_size": 11708,
+    "license": "MIT License",
+    "version": "2.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 478908,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-11-03T01:28:16.000Z",
+    "code_updated_at": "2025-02-04T10:44:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209555,
+        "name": "RalphC",
+        "created_at": "2023-11-03T01:09:09.000Z",
+        "url": "https://greasyfork.org/users/1209555-ralphc"
+      }
+    ],
+    "name": "RalphScript",
+    "description": "Ralph 私人自用脚本",
+    "url": "https://greasyfork.org/scripts/478908-ralphscript",
+    "code_url": "https://update.greasyfork.org/scripts/478908/RalphScript.user.js",
+    "code_size": 16869,
+    "license": null,
+    "version": "1.4.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

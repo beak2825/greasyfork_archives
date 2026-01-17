@@ -1,0 +1,35 @@
+[
+  {
+    "id": 443984,
+    "daily_installs": 0,
+    "total_installs": 60,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-04-25T15:19:08.000Z",
+    "code_updated_at": "2022-04-25T16:05:17.000Z",
+    "namespace": "thechainsmoker82@gmail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906832,
+        "name": "ChainSmoker82",
+        "created_at": "2022-04-25T15:14:20.000Z",
+        "url": "https://greasyfork.org/users/906832-chainsmoker82"
+      }
+    ],
+    "name": "YouTube Shorts -> Watch",
+    "description": "This will redirect pages for YouTube Shorts to the traditional video page.",
+    "url": "https://greasyfork.org/scripts/443984-youtube-shorts-watch",
+    "code_url": "https://update.greasyfork.org/scripts/443984/YouTube%20Shorts%20-%3E%20Watch.user.js",
+    "code_size": 612,
+    "license": "CC0",
+    "version": "1.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 461931,
+  "daily_installs": 0,
+  "total_installs": 703,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-03-16T06:16:58.000Z",
+  "code_updated_at": "2023-03-31T09:03:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1042904,
+      "name": "qh wu",
+      "created_at": "2023-03-16T06:15:15.000Z",
+      "url": "https://greasyfork.org/users/1042904-qh-wu",
+      "scripts": [
+        {
+          "id": 461931,
+          "daily_installs": 0,
+          "total_installs": 703,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-16T06:16:58.000Z",
+          "code_updated_at": "2023-03-31T09:03:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Itab优化",
+          "description": "提供一些itab的小优化，目前包括字体、图标悬浮动画~",
+          "url": "https://greasyfork.org/scripts/461931-itab%E4%BC%98%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/461931/Itab%E4%BC%98%E5%8C%96.user.js",
+          "code_size": 1589,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Itab优化",
+  "description": "提供一些itab的小优化，目前包括字体、图标悬浮动画~",
+  "url": "https://greasyfork.org/scripts/461931-itab%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/461931/Itab%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 1589,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 486706,
+    "daily_installs": 0,
+    "total_installs": 67,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-05T19:43:00.000Z",
+    "code_updated_at": "2025-07-30T15:07:35.000Z",
+    "namespace": "https://greasyfork.org/users/1257939",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257939,
+        "name": "Accus1958",
+        "created_at": "2024-02-05T19:34:30.000Z",
+        "url": "https://greasyfork.org/users/1257939-accus1958"
+      }
+    ],
+    "name": "trakt.tv Streaming Services Integration",
+    "description": "Adds P-Stream, Hexa, XPrime, Rive, Cineby, Moviemaze, Wovie, and BrocoFlix buttons to the overview page of shows and movies",
+    "url": "https://greasyfork.org/scripts/486706-trakt-tv-streaming-services-integration",
+    "code_url": "https://update.greasyfork.org/scripts/486706/trakttv%20Streaming%20Services%20Integration.user.js",
+    "code_size": 5539,
+    "license": "GPLv3",
+    "version": "1.8.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

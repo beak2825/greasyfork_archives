@@ -1,0 +1,34 @@
+{
+  "id": 427451,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-06-03T09:19:10.000Z",
+  "code_updated_at": "2021-06-03T09:33:16.000Z",
+  "namespace": "magicbox-enhance",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 748794,
+      "name": "lza",
+      "created_at": "2021-03-18T09:56:52.000Z",
+      "url": "https://greasyfork.org/users/748794-lza",
+      "scripts": []
+    }
+  ],
+  "name": "Mock平台请求增强插件",
+  "description": "Mock平台接口请求模拟测试工具增强插件",
+  "url": "https://greasyfork.org/scripts/427451-mock%E5%B9%B3%E5%8F%B0%E8%AF%B7%E6%B1%82%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/427451/Mock%E5%B9%B3%E5%8F%B0%E8%AF%B7%E6%B1%82%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 3202,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

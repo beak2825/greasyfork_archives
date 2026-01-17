@@ -1,0 +1,33 @@
+{
+  "id": 473001,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-13T17:20:12.000Z",
+  "code_updated_at": "2023-08-13T17:20:12.000Z",
+  "namespace": "GLB//",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1069774,
+      "name": "RyanCane26",
+      "created_at": "2023-04-29T03:07:54.000Z",
+      "url": "https://greasyfork.org/users/1069774-ryancane26"
+    }
+  ],
+  "name": "GLB Player Scout",
+  "description": "GLB Speed Script",
+  "url": "https://greasyfork.org/scripts/473001-glb-player-scout",
+  "code_url": "https://update.greasyfork.org/scripts/473001/GLB%20Player%20Scout.user.js",
+  "code_size": 16173,
+  "license": null,
+  "version": "0.0.1.20230813172012",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 469693,
+  "daily_installs": 0,
+  "total_installs": 96,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-29T03:52:09.000Z",
+  "code_updated_at": "2023-06-29T03:54:13.000Z",
+  "namespace": "https://greasyfork.org/users/1114452",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1114452,
+      "name": "Seb3thehacker",
+      "created_at": "2023-06-28T17:16:33.000Z",
+      "url": "https://greasyfork.org/users/1114452-seb3thehacker",
+      "scripts": [
+        {
+          "id": 469693,
+          "daily_installs": 0,
+          "total_installs": 96,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-29T03:52:09.000Z",
+          "code_updated_at": "2023-06-29T03:54:13.000Z",
+          "namespace": "https://greasyfork.org/users/1114452",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Destiny Kick Embed",
+          "description": "Embeds Kick stream on Destiny.gg and switches between streams automatically.",
+          "url": "https://greasyfork.org/scripts/469693-destiny-kick-embed",
+          "code_url": "https://update.greasyfork.org/scripts/469693/Destiny%20Kick%20Embed.user.js",
+          "code_size": 1243,
+          "license": "GPL3",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Destiny Kick Embed",
+  "description": "Embeds Kick stream on Destiny.gg and switches between streams automatically.",
+  "url": "https://greasyfork.org/scripts/469693-destiny-kick-embed",
+  "code_url": "https://update.greasyfork.org/scripts/469693/Destiny%20Kick%20Embed.user.js",
+  "code_size": 1243,
+  "license": "GPL3",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 459706,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-02-09T10:47:39.000Z",
+  "code_updated_at": "2023-02-09T10:50:36.000Z",
+  "namespace": "http://none.not/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1024263,
+      "name": "NanoStrike",
+      "created_at": "2023-02-09T10:41:56.000Z",
+      "url": "https://greasyfork.org/users/1024263-nanostrike",
+      "scripts": []
+    }
+  ],
+  "name": "SPH Nachrichten HTML copy to c",
+  "description": "copy source",
+  "url": "https://greasyfork.org/scripts/459706-sph-nachrichten-html-copy-to-c",
+  "code_url": "https://update.greasyfork.org/scripts/459706/SPH%20Nachrichten%20HTML%20copy%20to%20c.user.js",
+  "code_size": 746,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

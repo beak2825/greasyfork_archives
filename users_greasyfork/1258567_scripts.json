@@ -1,0 +1,35 @@
+[
+  {
+    "id": 486827,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-02-07T09:19:56.000Z",
+    "code_updated_at": "2024-02-07T09:19:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1258567,
+        "name": "James Conway",
+        "created_at": "2024-02-07T09:19:10.000Z",
+        "url": "https://greasyfork.org/users/1258567-james-conway"
+      }
+    ],
+    "name": "Update south west airline purchase from",
+    "description": "Do the job",
+    "url": "https://greasyfork.org/scripts/486827-update-south-west-airline-purchase-from",
+    "code_url": "https://update.greasyfork.org/scripts/486827/Update%20south%20west%20airline%20purchase%20from.user.js",
+    "code_size": 1529,
+    "license": "none",
+    "version": "2024-02-07",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

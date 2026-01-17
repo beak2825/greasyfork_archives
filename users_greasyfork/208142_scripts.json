@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495159,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-16T11:39:30.000Z",
+    "code_updated_at": "2024-05-17T01:42:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 208142,
+        "name": "iSwfe",
+        "created_at": "2018-08-26T20:06:06.000Z",
+        "url": "https://greasyfork.org/users/208142-iswfe"
+      }
+    ],
+    "name": "RRP屏蔽通知声音",
+    "description": "及时禁止系统的通知声音",
+    "url": "https://greasyfork.org/scripts/495159-rrp%E5%B1%8F%E8%94%BD%E9%80%9A%E7%9F%A5%E5%A3%B0%E9%9F%B3",
+    "code_url": "https://update.greasyfork.org/scripts/495159/RRP%E5%B1%8F%E8%94%BD%E9%80%9A%E7%9F%A5%E5%A3%B0%E9%9F%B3.user.js",
+    "code_size": 2713,
+    "license": "GNU GPLv3",
+    "version": "1.1_20240517",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

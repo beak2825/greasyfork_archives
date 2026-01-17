@@ -1,0 +1,35 @@
+[
+  {
+    "id": 477077,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-10-10T03:10:54.000Z",
+    "code_updated_at": "2023-10-12T09:14:26.000Z",
+    "namespace": "xui",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1192419,
+        "name": "ntxinh",
+        "created_at": "2023-10-10T03:01:26.000Z",
+        "url": "https://greasyfork.org/users/1192419-ntxinh"
+      }
+    ],
+    "name": "x-ui English translation",
+    "description": "Translation x-ui from Chinese to English",
+    "url": "https://greasyfork.org/scripts/477077-x-ui-english-translation",
+    "code_url": "https://update.greasyfork.org/scripts/477077/x-ui%20English%20translation.user.js",
+    "code_size": 10330,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

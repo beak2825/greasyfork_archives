@@ -1,0 +1,35 @@
+[
+  {
+    "id": 418427,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-12-10T03:13:56.000Z",
+    "code_updated_at": "2020-12-10T03:15:30.000Z",
+    "namespace": "ojlaw",
+    "support_url": null,
+    "contribution_url": "https://github.com/WazeDev/Thank-The-Authors",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 142632,
+        "name": "ojlaw",
+        "created_at": "2017-07-21T21:07:56.000Z",
+        "url": "https://greasyfork.org/users/142632-ojlaw"
+      }
+    ],
+    "name": "WME OOM OJ",
+    "description": "Links for opening external resources at the WME location and WME from external resources",
+    "url": "https://greasyfork.org/scripts/418427-wme-oom-oj",
+    "code_url": "https://update.greasyfork.org/scripts/418427/WME%20OOM%20OJ.user.js",
+    "code_size": 347467,
+    "license": null,
+    "version": "2020.11.09.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

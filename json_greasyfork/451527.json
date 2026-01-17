@@ -1,0 +1,59 @@
+{
+  "id": 451527,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-09-17T12:56:55.000Z",
+  "code_updated_at": "2022-09-17T13:10:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 959964,
+      "name": "asdlkjcsol",
+      "created_at": "2022-09-16T10:01:37.000Z",
+      "url": "https://greasyfork.org/users/959964-asdlkjcsol",
+      "scripts": [
+        {
+          "id": 451527,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-09-17T12:56:55.000Z",
+          "code_updated_at": "2022-09-17T13:10:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "郑州经贸学院校园网自动登录",
+          "description": "郑州经贸学院校园网保存密码及自动登陆!",
+          "url": "https://greasyfork.org/scripts/451527-%E9%83%91%E5%B7%9E%E7%BB%8F%E8%B4%B8%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+          "code_url": "https://update.greasyfork.org/scripts/451527/%E9%83%91%E5%B7%9E%E7%BB%8F%E8%B4%B8%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+          "code_size": 956,
+          "license": null,
+          "version": "0.12",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "郑州经贸学院校园网自动登录",
+  "description": "郑州经贸学院校园网保存密码及自动登陆!",
+  "url": "https://greasyfork.org/scripts/451527-%E9%83%91%E5%B7%9E%E7%BB%8F%E8%B4%B8%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/451527/%E9%83%91%E5%B7%9E%E7%BB%8F%E8%B4%B8%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 956,
+  "license": null,
+  "version": "0.12",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

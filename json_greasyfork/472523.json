@@ -1,0 +1,34 @@
+{
+  "id": 472523,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-08-06T02:56:43.000Z",
+  "code_updated_at": "2025-11-25T02:46:21.000Z",
+  "namespace": "http://hndx.fcsys.eu.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1145021,
+      "name": "dfc643",
+      "created_at": "2023-08-06T02:51:00.000Z",
+      "url": "https://greasyfork.org/users/1145021-dfc643",
+      "scripts": []
+    }
+  ],
+  "name": "【zPortal】扩展CRM功能",
+  "description": "为 ZTE zPortal 启用 CRM 隐藏的扩展功能",
+  "url": "https://greasyfork.org/scripts/472523-zportal-%E6%89%A9%E5%B1%95crm%E5%8A%9F%E8%83%BD",
+  "code_url": "https://update.greasyfork.org/scripts/472523/%E3%80%90zPortal%E3%80%91%E6%89%A9%E5%B1%95CRM%E5%8A%9F%E8%83%BD.user.js",
+  "code_size": 8234,
+  "license": "MIT License",
+  "version": "2025.1125",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

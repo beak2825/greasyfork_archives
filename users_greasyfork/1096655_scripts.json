@@ -1,0 +1,35 @@
+[
+  {
+    "id": 468453,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-06-11T18:25:58.000Z",
+    "code_updated_at": "2023-06-11T18:25:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1096655,
+        "name": "lunatic",
+        "created_at": "2023-06-11T18:16:09.000Z",
+        "url": "https://greasyfork.org/users/1096655-lunatic"
+      }
+    ],
+    "name": "Duofarmer redirector fixed by lunatic",
+    "description": "Used in union with DuoHacker to automatically farm XP without interaction (credits to JoRo-Code for the original code)",
+    "url": "https://greasyfork.org/scripts/468453-duofarmer-redirector-fixed-by-lunatic",
+    "code_url": "https://update.greasyfork.org/scripts/468453/Duofarmer%20redirector%20fixed%20by%20lunatic.user.js",
+    "code_size": 1287,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

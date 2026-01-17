@@ -1,0 +1,59 @@
+{
+  "id": 469240,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-06-22T14:51:35.000Z",
+  "code_updated_at": "2023-06-22T14:51:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1108842,
+      "name": "Adam Tate",
+      "created_at": "2023-06-22T11:04:30.000Z",
+      "url": "https://greasyfork.org/users/1108842-adam-tate",
+      "scripts": [
+        {
+          "id": 469240,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-06-22T14:51:35.000Z",
+          "code_updated_at": "2023-06-22T14:51:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pop-Up",
+          "description": "Adds a user input form to a webpage",
+          "url": "https://greasyfork.org/scripts/469240-pop-up",
+          "code_url": "https://update.greasyfork.org/scripts/469240/Pop-Up.user.js",
+          "code_size": 2455,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pop-Up",
+  "description": "Adds a user input form to a webpage",
+  "url": "https://greasyfork.org/scripts/469240-pop-up",
+  "code_url": "https://update.greasyfork.org/scripts/469240/Pop-Up.user.js",
+  "code_size": 2455,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

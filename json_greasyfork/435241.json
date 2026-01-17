@@ -1,0 +1,59 @@
+{
+  "id": 435241,
+  "daily_installs": 0,
+  "total_installs": 81,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2021-11-09T04:43:38.000Z",
+  "code_updated_at": "2021-12-14T00:44:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 833793,
+      "name": "zegfarce",
+      "created_at": "2021-11-09T03:12:07.000Z",
+      "url": "https://greasyfork.org/users/833793-zegfarce",
+      "scripts": [
+        {
+          "id": 435241,
+          "daily_installs": 0,
+          "total_installs": 81,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-11-09T04:43:38.000Z",
+          "code_updated_at": "2021-12-14T00:44:25.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YTVTSview",
+          "description": "See View to Sentiment, View to Like, and other statistics.",
+          "url": "https://greasyfork.org/scripts/435241-ytvtsview",
+          "code_url": "https://update.greasyfork.org/scripts/435241/YTVTSview.user.js",
+          "code_size": 6742,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YTVTSview",
+  "description": "See View to Sentiment, View to Like, and other statistics.",
+  "url": "https://greasyfork.org/scripts/435241-ytvtsview",
+  "code_url": "https://update.greasyfork.org/scripts/435241/YTVTSview.user.js",
+  "code_size": 6742,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

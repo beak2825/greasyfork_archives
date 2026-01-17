@@ -1,0 +1,59 @@
+{
+  "id": 454815,
+  "daily_installs": 0,
+  "total_installs": 616,
+  "fan_score": "4.6",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 3,
+  "created_at": "2022-11-14T15:58:35.000Z",
+  "code_updated_at": "2022-11-16T13:29:06.000Z",
+  "namespace": "https://greasyfork.org/en/users/980761-frog3400",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 980761,
+      "name": "frog3400",
+      "created_at": "2022-11-08T12:50:26.000Z",
+      "url": "https://greasyfork.org/users/980761-frog3400",
+      "scripts": [
+        {
+          "id": 454815,
+          "daily_installs": 0,
+          "total_installs": 616,
+          "fan_score": "4.6",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 3,
+          "created_at": "2022-11-14T15:58:35.000Z",
+          "code_updated_at": "2022-11-16T13:29:06.000Z",
+          "namespace": "https://greasyfork.org/en/users/980761-frog3400",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Actual Triflank Script",
+          "description": "Triflank - Q | Bomber - R",
+          "url": "https://greasyfork.org/scripts/454815-actual-triflank-script",
+          "code_url": "https://update.greasyfork.org/scripts/454815/Actual%20Triflank%20Script.user.js",
+          "code_size": 1415,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Actual Triflank Script",
+  "description": "Triflank - Q | Bomber - R",
+  "url": "https://greasyfork.org/scripts/454815-actual-triflank-script",
+  "code_url": "https://update.greasyfork.org/scripts/454815/Actual%20Triflank%20Script.user.js",
+  "code_size": 1415,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

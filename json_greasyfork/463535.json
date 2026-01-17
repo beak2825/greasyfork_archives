@@ -1,0 +1,59 @@
+{
+  "id": 463535,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-08T11:28:54.000Z",
+  "code_updated_at": "2023-04-08T11:28:54.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 743902,
+      "name": "Nice Wood",
+      "created_at": "2021-03-05T11:50:13.000Z",
+      "url": "https://greasyfork.org/users/743902-nice-wood",
+      "scripts": [
+        {
+          "id": 461792,
+          "daily_installs": 0,
+          "total_installs": 1702,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-03-14T04:48:43.000Z",
+          "code_updated_at": "2023-03-14T04:54:09.000Z",
+          "namespace": "-",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MooMoo.io js Autoheal",
+          "description": "MooMoo.io js autoheal from Nuro but edited",
+          "url": "https://greasyfork.org/scripts/461792-moomoo-io-js-autoheal",
+          "code_url": "https://update.greasyfork.org/scripts/461792/MooMooio%20js%20Autoheal.user.js",
+          "code_size": 1335,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MooMoo.io Item counter by Nuro",
+  "description": "Made by Nuro",
+  "url": "https://greasyfork.org/scripts/463535-moomoo-io-item-counter-by-nuro",
+  "code_url": "https://update.greasyfork.org/scripts/463535/1172675/MooMooio%20Item%20counter%20by%20Nuro.js",
+  "code_size": 2259,
+  "license": null,
+  "version": "0.0.1.20230408112854",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

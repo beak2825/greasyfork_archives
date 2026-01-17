@@ -1,0 +1,35 @@
+[
+  {
+    "id": 456103,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-06T05:55:59.000Z",
+    "code_updated_at": "2022-12-26T13:30:56.000Z",
+    "namespace": "http://lmzyzylkh.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 993237,
+        "name": "Mingzhe Li",
+        "created_at": "2022-12-06T04:23:19.000Z",
+        "url": "https://greasyfork.org/users/993237-mingzhe-li"
+      }
+    ],
+    "name": "PlayerSpeeder",
+    "description": "PlayerSpeeder for Tampermonkey",
+    "url": "https://greasyfork.org/scripts/456103-playerspeeder",
+    "code_url": "https://update.greasyfork.org/scripts/456103/PlayerSpeeder.user.js",
+    "code_size": 2253,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

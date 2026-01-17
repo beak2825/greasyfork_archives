@@ -1,0 +1,68 @@
+[
+  {
+    "id": 453459,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-21T06:54:57.000Z",
+    "code_updated_at": "2022-10-21T06:54:57.000Z",
+    "namespace": "http://a.56shop.top/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 968661,
+        "name": "FRFR",
+        "created_at": "2022-10-10T06:51:47.000Z",
+        "url": "https://greasyfork.org/users/968661-frfr"
+      }
+    ],
+    "name": "allsku",
+    "description": "Fr",
+    "url": "https://greasyfork.org/scripts/453459-allsku",
+    "code_url": "https://update.greasyfork.org/scripts/453459/allsku.user.js",
+    "code_size": 6982,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 452801,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-10-10T08:28:14.000Z",
+    "code_updated_at": "2023-11-21T03:12:40.000Z",
+    "namespace": "http://FR1.FR/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 968661,
+        "name": "FRFR",
+        "created_at": "2022-10-10T06:51:47.000Z",
+        "url": "https://greasyfork.org/users/968661-frfr"
+      }
+    ],
+    "name": "jdff按钮版",
+    "description": "Fr",
+    "url": "https://greasyfork.org/scripts/452801-jdff%E6%8C%89%E9%92%AE%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/452801/jdff%E6%8C%89%E9%92%AE%E7%89%88.user.js",
+    "code_size": 9798,
+    "license": "MIT License",
+    "version": "0.37",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

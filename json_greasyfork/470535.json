@@ -1,0 +1,33 @@
+{
+  "id": 470535,
+  "daily_installs": 0,
+  "total_installs": 175,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-07-10T12:24:37.000Z",
+  "code_updated_at": "2023-07-10T13:23:54.000Z",
+  "namespace": "AutoTranslateMessagesForJanitorAI",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 913219,
+      "name": "CriDos",
+      "created_at": "2022-05-11T20:30:00.000Z",
+      "url": "https://greasyfork.org/users/913219-cridos"
+    }
+  ],
+  "name": "Auto-Translate Messages JanitorAI",
+  "description": "Adds a auto-translate messages for character messages in the chat for www.janitorai.com",
+  "url": "https://greasyfork.org/scripts/470535-auto-translate-messages-janitorai",
+  "code_url": "https://update.greasyfork.org/scripts/470535/Auto-Translate%20Messages%20JanitorAI.user.js",
+  "code_size": 5378,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

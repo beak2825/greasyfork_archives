@@ -1,0 +1,101 @@
+[
+  {
+    "id": 457081,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-24T05:27:46.000Z",
+    "code_updated_at": "2022-12-24T05:51:58.000Z",
+    "namespace": "https://docs.hcaptcha.com/languages/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951815,
+        "name": "iniimi2170",
+        "created_at": "2022-08-28T17:30:41.000Z",
+        "url": "https://greasyfork.org/users/951815-iniimi2170"
+      }
+    ],
+    "name": "hCapcha Locale Setter (English)",
+    "description": "hCapchaの言語を強制的に英語に変更します",
+    "url": "https://greasyfork.org/scripts/457081-hcapcha-locale-setter-english",
+    "code_url": "https://update.greasyfork.org/scripts/457081/hCapcha%20Locale%20Setter%20%28English%29.user.js",
+    "code_size": 866,
+    "license": "MIT License",
+    "version": "0.0.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 457058,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-23T16:24:32.000Z",
+    "code_updated_at": "2022-12-23T16:24:32.000Z",
+    "namespace": "https://slink.bid/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951815,
+        "name": "iniimi2170",
+        "created_at": "2022-08-28T17:30:41.000Z",
+        "url": "https://greasyfork.org/users/951815-iniimi2170"
+      }
+    ],
+    "name": "Fuck slink",
+    "description": "slink.bid をバイパス",
+    "url": "https://greasyfork.org/scripts/457058-slink",
+    "code_url": "https://update.greasyfork.org/scripts/457058/Fuck%20slink.user.js",
+    "code_size": 1123,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 455084,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-11-19T08:32:43.000Z",
+    "code_updated_at": "2022-11-19T11:17:23.000Z",
+    "namespace": "https://newscon.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951815,
+        "name": "iniimi2170",
+        "created_at": "2022-08-28T17:30:41.000Z",
+        "url": "https://greasyfork.org/users/951815-iniimi2170"
+      }
+    ],
+    "name": "Newscon Refine",
+    "description": "Newscon の最適化",
+    "url": "https://greasyfork.org/scripts/455084-newscon-refine",
+    "code_url": "https://update.greasyfork.org/scripts/455084/Newscon%20Refine.user.js",
+    "code_size": 5524,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

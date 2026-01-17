@@ -1,0 +1,33 @@
+{
+  "id": 450035,
+  "daily_installs": 0,
+  "total_installs": 386,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-08-23T10:05:54.000Z",
+  "code_updated_at": "2023-10-02T13:16:29.000Z",
+  "namespace": "https://greasyfork.org/users/949830",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 949830,
+      "name": "虫子%1000",
+      "created_at": "2022-08-23T09:44:10.000Z",
+      "url": "https://greasyfork.org/users/949830-%E8%99%AB%E5%AD%90-1000"
+    }
+  ],
+  "name": "抖音直播弹幕大字显示",
+  "description": "抖音直播弹幕大字显示、直播优化，网页全屏，全黑，自动按浏览器窗口调整大小，弹幕独立显示，弹幕大屏显示",
+  "url": "https://greasyfork.org/scripts/450035-%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E5%A4%A7%E5%AD%97%E6%98%BE%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/450035/%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E5%A4%A7%E5%AD%97%E6%98%BE%E7%A4%BA.user.js",
+  "code_size": 4292,
+  "license": "虫子%1000",
+  "version": "1.08",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

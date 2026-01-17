@@ -1,0 +1,34 @@
+{
+  "id": 419335,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-12-29T08:50:06.000Z",
+  "code_updated_at": "2021-06-09T11:38:02.000Z",
+  "namespace": "bikekoala_js",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 53724,
+      "name": "bikekoala",
+      "created_at": "2016-07-08T03:23:05.000Z",
+      "url": "https://greasyfork.org/users/53724-bikekoala",
+      "scripts": []
+    }
+  ],
+  "name": "DCF 资源助手",
+  "description": "有资源的网站显示绿色，没资源的网站显示黄色",
+  "url": "https://greasyfork.org/scripts/419335-dcf-%E8%B5%84%E6%BA%90%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/419335/DCF%20%E8%B5%84%E6%BA%90%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 44924,
+  "license": null,
+  "version": "0.2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

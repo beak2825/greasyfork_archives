@@ -1,0 +1,34 @@
+{
+  "id": 485587,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-01-24T14:08:32.000Z",
+  "code_updated_at": "2024-01-24T14:08:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1075476,
+      "name": "lorent",
+      "created_at": "2023-05-08T10:24:39.000Z",
+      "url": "https://greasyfork.org/users/1075476-lorent",
+      "scripts": []
+    }
+  ],
+  "name": "Add third-party emotions to invites.fun",
+  "description": "add third-party emotions to invites.fun",
+  "url": "https://greasyfork.org/scripts/485587-add-third-party-emotions-to-invites-fun",
+  "code_url": "https://update.greasyfork.org/scripts/485587/Add%20third-party%20emotions%20to%20invitesfun.user.js",
+  "code_size": 1714146,
+  "license": "GPL-3.0 License",
+  "version": "1.6.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

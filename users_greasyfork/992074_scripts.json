@@ -1,0 +1,35 @@
+[
+  {
+    "id": 455966,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2022-12-04T02:34:33.000Z",
+    "code_updated_at": "2022-12-04T03:27:22.000Z",
+    "namespace": "https://github.com/victornpb/deleteDiscordMessages",
+    "support_url": "https://github.com/victornpb/undiscord/issues",
+    "contribution_url": "https://www.buymeacoffee.com/vitim",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 992074,
+        "name": "DevAX1T",
+        "created_at": "2022-12-04T02:32:21.000Z",
+        "url": "https://greasyfork.org/users/992074-devax1t"
+      }
+    ],
+    "name": "Undiscord",
+    "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
+    "url": "https://greasyfork.org/scripts/455966-undiscord",
+    "code_url": "https://update.greasyfork.org/scripts/455966/Undiscord.user.js",
+    "code_size": 53159,
+    "license": "MIT License",
+    "version": "5.0.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

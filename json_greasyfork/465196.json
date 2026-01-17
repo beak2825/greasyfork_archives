@@ -1,0 +1,33 @@
+{
+  "id": 465196,
+  "daily_installs": 0,
+  "total_installs": 234,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2023-04-30T14:40:17.000Z",
+  "code_updated_at": "2023-04-30T14:40:17.000Z",
+  "namespace": "http://yournamespacehere/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1070740,
+      "name": "BurAndBY",
+      "created_at": "2023-04-30T14:37:12.000Z",
+      "url": "https://greasyfork.org/users/1070740-burandby"
+    }
+  ],
+  "name": "CurseForge Legacy Redirect",
+  "description": "Redirects from www.curseforge.com to legacy.curseforge.com",
+  "url": "https://greasyfork.org/scripts/465196-curseforge-legacy-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/465196/CurseForge%20Legacy%20Redirect.user.js",
+  "code_size": 450,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 428278,
+  "daily_installs": 0,
+  "total_installs": 220,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2021-06-21T12:48:06.000Z",
+  "code_updated_at": "2022-11-05T03:08:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 785794,
+      "name": "Larry Trotter",
+      "created_at": "2021-06-21T12:37:25.000Z",
+      "url": "https://greasyfork.org/users/785794-larry-trotter",
+      "scripts": [
+        {
+          "id": 428278,
+          "daily_installs": 0,
+          "total_installs": 220,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2021-06-21T12:48:06.000Z",
+          "code_updated_at": "2022-11-05T03:08:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Keymap Overlay for Custom Layouts on monkeytype.com (Updated)",
+          "description": "Swap keys repeatedly on a base keymap layout till you get your modified version of the layout",
+          "url": "https://greasyfork.org/scripts/428278-keymap-overlay-for-custom-layouts-on-monkeytype-com-updated",
+          "code_url": "https://update.greasyfork.org/scripts/428278/Keymap%20Overlay%20for%20Custom%20Layouts%20on%20monkeytypecom%20%28Updated%29.user.js",
+          "code_size": 1873,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Keymap Overlay for Custom Layouts on monkeytype.com (Updated)",
+  "description": "Swap keys repeatedly on a base keymap layout till you get your modified version of the layout",
+  "url": "https://greasyfork.org/scripts/428278-keymap-overlay-for-custom-layouts-on-monkeytype-com-updated",
+  "code_url": "https://update.greasyfork.org/scripts/428278/Keymap%20Overlay%20for%20Custom%20Layouts%20on%20monkeytypecom%20%28Updated%29.user.js",
+  "code_size": 1873,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

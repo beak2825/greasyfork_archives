@@ -1,0 +1,33 @@
+{
+  "id": 442394,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-03-31T05:06:26.000Z",
+  "code_updated_at": "2024-12-04T08:13:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 114117,
+      "name": "Pavel Sapehin",
+      "created_at": "2017-04-01T08:18:08.000Z",
+      "url": "https://greasyfork.org/users/114117-pavel-sapehin"
+    }
+  ],
+  "name": "Copy Wiki URL on Wikiwand",
+  "description": "Allows to quickly copy wiki url on wikiwand page.",
+  "url": "https://greasyfork.org/scripts/442394-copy-wiki-url-on-wikiwand",
+  "code_url": "https://update.greasyfork.org/scripts/442394/Copy%20Wiki%20URL%20on%20Wikiwand.user.js",
+  "code_size": 905,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

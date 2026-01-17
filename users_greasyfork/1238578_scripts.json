@@ -196,5 +196,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 482987,
+    "daily_installs": 0,
+    "total_installs": 195,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2023-12-24T08:39:00.000Z",
+    "code_updated_at": "2024-10-16T21:24:36.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/482987-copy-real-link",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1238578,
+        "name": "almahmud",
+        "created_at": "2023-12-24T08:17:18.000Z",
+        "url": "https://greasyfork.org/users/1238578-almahmud"
+      }
+    ],
+    "name": "Copy Real Link",
+    "description": "Extract and copy real URLs from redirect URLs on Google, Fb, etc., with a copy button.",
+    "url": "https://greasyfork.org/scripts/482987-copy-real-link",
+    "code_url": "https://update.greasyfork.org/scripts/482987/Copy%20Real%20Link.user.js",
+    "code_size": 3949,
+    "license": "CC BY",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

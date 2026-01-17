@@ -1,0 +1,34 @@
+{
+  "id": 453473,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2022-10-21T09:28:40.000Z",
+  "code_updated_at": "2022-10-21T09:28:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972828,
+      "name": "Perlito",
+      "created_at": "2022-10-19T19:23:37.000Z",
+      "url": "https://greasyfork.org/users/972828-perlito",
+      "scripts": []
+    }
+  ],
+  "name": "Podgląd zbieraka",
+  "description": "Czek mi",
+  "url": "https://greasyfork.org/scripts/453473-podgl%C4%85d-zbieraka",
+  "code_url": "https://update.greasyfork.org/scripts/453473/Podgl%C4%85d%20zbieraka.user.js",
+  "code_size": 953,
+  "license": null,
+  "version": "0.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}
