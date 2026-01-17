@@ -1,0 +1,59 @@
+{
+  "id": 496609,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-31T04:53:15.000Z",
+  "code_updated_at": "2026-01-16T08:43:22.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1299634-weidingyi",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1299634,
+      "name": "weidingyi",
+      "created_at": "2024-05-10T18:07:15.000Z",
+      "url": "https://greasyfork.org/users/1299634-weidingyi",
+      "scripts": [
+        {
+          "id": 496609,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-31T04:53:15.000Z",
+          "code_updated_at": "2026-01-16T08:43:22.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/1299634-weidingyi",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "✨微信公众号后台快捷工具✨",
+          "description": "在草稿箱文章列表标题后边追加醒目提示,快捷生成草稿文章~",
+          "url": "https://greasyfork.org/scripts/496609-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%90%8E%E5%8F%B0%E5%BF%AB%E6%8D%B7%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/496609/%E2%9C%A8%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%90%8E%E5%8F%B0%E5%BF%AB%E6%8D%B7%E5%B7%A5%E5%85%B7%E2%9C%A8.user.js",
+          "code_size": 18828,
+          "license": "MIT License",
+          "version": "1.3.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "✨微信公众号后台快捷工具✨",
+  "description": "在草稿箱文章列表标题后边追加醒目提示,快捷生成草稿文章~",
+  "url": "https://greasyfork.org/scripts/496609-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%90%8E%E5%8F%B0%E5%BF%AB%E6%8D%B7%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/496609/%E2%9C%A8%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%90%8E%E5%8F%B0%E5%BF%AB%E6%8D%B7%E5%B7%A5%E5%85%B7%E2%9C%A8.user.js",
+  "code_size": 18828,
+  "license": "MIT License",
+  "version": "1.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

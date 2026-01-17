@@ -7555,5 +7555,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 496562,
+    "daily_installs": 0,
+    "total_installs": 143,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-30T14:43:35.000Z",
+    "code_updated_at": "2024-05-30T14:43:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1088100,
+        "name": "YouTubeDrawaria",
+        "created_at": "2023-05-31T23:20:20.000Z",
+        "url": "https://greasyfork.org/users/1088100-youtubedrawaria"
+      }
+    ],
+    "name": "Random Avatar Changer by YoutubeDrawaria!",
+    "description": "Change your avatar to a random player's avatar and download your current avatar.",
+    "url": "https://greasyfork.org/scripts/496562-random-avatar-changer-by-youtubedrawaria",
+    "code_url": "https://update.greasyfork.org/scripts/496562/Random%20Avatar%20Changer%20by%20YoutubeDrawaria%21.user.js",
+    "code_size": 11047,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 496467,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-29T13:03:26.000Z",
+    "code_updated_at": "2024-05-29T13:03:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1088100,
+        "name": "YouTubeDrawaria",
+        "created_at": "2023-05-31T23:20:20.000Z",
+        "url": "https://greasyfork.org/users/1088100-youtubedrawaria"
+      }
+    ],
+    "name": "Discord Button Removed by YoutubeDrawaria",
+    "description": "Instantly hides and removes the Discord button from Drawaria Online",
+    "url": "https://greasyfork.org/scripts/496467-discord-button-removed-by-youtubedrawaria",
+    "code_url": "https://update.greasyfork.org/scripts/496467/Discord%20Button%20Removed%20by%20YoutubeDrawaria.user.js",
+    "code_size": 1154,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

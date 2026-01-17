@@ -1,0 +1,134 @@
+[
+  {
+    "id": 496271,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T23:08:54.000Z",
+    "code_updated_at": "2024-05-30T22:46:04.000Z",
+    "namespace": "xyzabcd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2707,
+        "name": "pepe100",
+        "created_at": "2014-06-10T08:27:40.000Z",
+        "url": "https://greasyfork.org/users/2707-pepe100"
+      }
+    ],
+    "name": "Duellstat",
+    "description": "create a duell statistik",
+    "url": "https://greasyfork.org/scripts/496271-duellstat",
+    "code_url": "https://update.greasyfork.org/scripts/496271/Duellstat.user.js",
+    "code_size": 1084366,
+    "license": null,
+    "version": "v0.73-2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 496262,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T20:00:29.000Z",
+    "code_updated_at": "2024-06-02T15:19:38.000Z",
+    "namespace": "xyzabcd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2707,
+        "name": "pepe100",
+        "created_at": "2014-06-10T08:27:40.000Z",
+        "url": "https://greasyfork.org/users/2707-pepe100"
+      }
+    ],
+    "name": "Duellstat",
+    "description": "create a duell statistik",
+    "url": "https://greasyfork.org/scripts/496262-duellstat",
+    "code_url": "https://update.greasyfork.org/scripts/496262/Duellstat.user.js",
+    "code_size": 1085143,
+    "license": "MIT License",
+    "version": "v0.75",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 496222,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T08:15:25.000Z",
+    "code_updated_at": "2024-06-17T23:46:34.000Z",
+    "namespace": "xyzabcd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2707,
+        "name": "pepe100",
+        "created_at": "2014-06-10T08:27:40.000Z",
+        "url": "https://greasyfork.org/users/2707-pepe100"
+      }
+    ],
+    "name": "Clothcache",
+    "description": "create a duell statistik",
+    "url": "https://greasyfork.org/scripts/496222-clothcache",
+    "code_url": "https://update.greasyfork.org/scripts/496222/Clothcache.user.js",
+    "code_size": 1088651,
+    "license": null,
+    "version": "v0.77-(es)",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 496178,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-26T21:46:03.000Z",
+    "code_updated_at": "2024-05-26T21:46:03.000Z",
+    "namespace": "xyzabcd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2707,
+        "name": "pepe100",
+        "created_at": "2014-06-10T08:27:40.000Z",
+        "url": "https://greasyfork.org/users/2707-pepe100"
+      }
+    ],
+    "name": "Duellstat",
+    "description": "create a duell statistik",
+    "url": "https://greasyfork.org/scripts/496178-duellstat",
+    "code_url": "https://update.greasyfork.org/scripts/496178/Duellstat.user.js",
+    "code_size": 1079785,
+    "license": null,
+    "version": "v0.73-0-ga1f4088-dirty",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

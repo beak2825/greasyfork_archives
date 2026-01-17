@@ -1,0 +1,59 @@
+{
+  "id": 496350,
+  "daily_installs": 1,
+  "total_installs": 214,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-05-28T15:27:49.000Z",
+  "code_updated_at": "2024-06-01T18:14:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1308577,
+      "name": "Michał Ruchała",
+      "created_at": "2024-05-28T15:21:23.000Z",
+      "url": "https://greasyfork.org/users/1308577-micha%C5%82-rucha%C5%82a",
+      "scripts": [
+        {
+          "id": 496350,
+          "daily_installs": 1,
+          "total_installs": 214,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2024-05-28T15:27:49.000Z",
+          "code_updated_at": "2024-06-01T18:14:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fucker Menu fly rapid fire trigger bot and more!",
+          "description": "Will you manage to take over the world?",
+          "url": "https://greasyfork.org/scripts/496350-menu-fly-rapid-fire-trigger-bot-and-more",
+          "code_url": "https://update.greasyfork.org/scripts/496350/Fucker%20Menu%20fly%20rapid%20fire%20trigger%20bot%20and%20more%21.user.js",
+          "code_size": 26542,
+          "license": "by-nd 4.0",
+          "version": "20230909.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fucker Menu fly rapid fire trigger bot and more!",
+  "description": "Will you manage to take over the world?",
+  "url": "https://greasyfork.org/scripts/496350-menu-fly-rapid-fire-trigger-bot-and-more",
+  "code_url": "https://update.greasyfork.org/scripts/496350/Fucker%20Menu%20fly%20rapid%20fire%20trigger%20bot%20and%20more%21.user.js",
+  "code_size": 26542,
+  "license": "by-nd 4.0",
+  "version": "20230909.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

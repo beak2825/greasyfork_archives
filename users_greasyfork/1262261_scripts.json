@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496489,
+    "daily_installs": 2,
+    "total_installs": 874,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-05-29T18:24:44.000Z",
+    "code_updated_at": "2024-05-29T21:02:27.000Z",
+    "namespace": "https://whydoilike.neocities.org/cookie%20clicker/cookieclicker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1262261,
+        "name": "WJAMC",
+        "created_at": "2024-02-17T01:51:39.000Z",
+        "url": "https://greasyfork.org/users/1262261-wjamc"
+      }
+    ],
+    "name": "Infinite Craft 5 Button Cheat",
+    "description": "ads a menu button for quick cheats and access to everything",
+    "url": "https://greasyfork.org/scripts/496489-infinite-craft-5-button-cheat",
+    "code_url": "https://update.greasyfork.org/scripts/496489/Infinite%20Craft%205%20Button%20Cheat.user.js",
+    "code_size": 9889,
+    "license": null,
+    "version": "2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -196,5 +196,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 496579,
+    "daily_installs": 0,
+    "total_installs": 180,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-30T18:18:52.000Z",
+    "code_updated_at": "2024-07-31T03:16:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 689441,
+        "name": "Gaston_",
+        "created_at": "2020-09-21T16:24:34.000Z",
+        "url": "https://greasyfork.org/users/689441-gaston"
+      }
+    ],
+    "name": "Gaston's Diep stuff mod",
+    "description": "This is a internal script for bigger project but it has its own custome theme auto upgrades/auto respawn as well as custom stats upgrades that can be request to be add to the builds list",
+    "url": "https://greasyfork.org/scripts/496579-gaston-s-diep-stuff-mod",
+    "code_url": "https://update.greasyfork.org/scripts/496579/Gaston%27s%20Diep%20stuff%20mod.user.js",
+    "code_size": 68274,
+    "license": "MIT License",
+    "version": "2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 496170,
+    "daily_installs": 0,
+    "total_installs": 134,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-26T19:22:53.000Z",
+    "code_updated_at": "2024-05-26T19:22:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 689441,
+        "name": "Gaston_",
+        "created_at": "2020-09-21T16:24:34.000Z",
+        "url": "https://greasyfork.org/users/689441-gaston"
+      }
+    ],
+    "name": "New music player (Fixed)",
+    "description": "Music player for io flash games",
+    "url": "https://greasyfork.org/scripts/496170-new-music-player-fixed",
+    "code_url": "https://update.greasyfork.org/scripts/496170/New%20music%20player%20%28Fixed%29.user.js",
+    "code_size": 36650,
+    "license": "MIT License",
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

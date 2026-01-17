@@ -1,0 +1,59 @@
+{
+  "id": 496455,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-29T10:24:38.000Z",
+  "code_updated_at": "2024-08-09T22:51:10.000Z",
+  "namespace": "https://startpage.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1308918,
+      "name": "LukasThyWalls",
+      "created_at": "2024-05-29T10:20:38.000Z",
+      "url": "https://greasyfork.org/users/1308918-lukasthywalls",
+      "scripts": [
+        {
+          "id": 496455,
+          "daily_installs": 0,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-29T10:24:38.000Z",
+          "code_updated_at": "2024-08-09T22:51:10.000Z",
+          "namespace": "https://startpage.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "StartPage - Move ads to the sidebar bottom",
+          "description": "It moves ads to the sidebar, avoiding unwanted clicks on them, including the AdBlock banner. Also removes those annoying Startpage promo banner.",
+          "url": "https://greasyfork.org/scripts/496455-startpage-move-ads-to-the-sidebar-bottom",
+          "code_url": "https://update.greasyfork.org/scripts/496455/StartPage%20-%20Move%20ads%20to%20the%20sidebar%20bottom.user.js",
+          "code_size": 2197,
+          "license": "CC0",
+          "version": "202408100",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "StartPage - Move ads to the sidebar bottom",
+  "description": "It moves ads to the sidebar, avoiding unwanted clicks on them, including the AdBlock banner. Also removes those annoying Startpage promo banner.",
+  "url": "https://greasyfork.org/scripts/496455-startpage-move-ads-to-the-sidebar-bottom",
+  "code_url": "https://update.greasyfork.org/scripts/496455/StartPage%20-%20Move%20ads%20to%20the%20sidebar%20bottom.user.js",
+  "code_size": 2197,
+  "license": "CC0",
+  "version": "202408100",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

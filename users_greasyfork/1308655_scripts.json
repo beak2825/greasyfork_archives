@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496388,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-28T19:44:04.000Z",
+    "code_updated_at": "2024-05-28T21:02:33.000Z",
+    "namespace": "https://greasyfork.org/users/1308655",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1308655,
+        "name": "Vilim Lendvay",
+        "created_at": "2024-05-28T19:38:07.000Z",
+        "url": "https://greasyfork.org/users/1308655-vilim-lendvay"
+      }
+    ],
+    "name": "4chan umineko colored truths",
+    "description": "enable umineko colored truths on 4chan",
+    "url": "https://greasyfork.org/scripts/496388-4chan-umineko-colored-truths",
+    "code_url": "https://update.greasyfork.org/scripts/496388/4chan%20umineko%20colored%20truths.user.js",
+    "code_size": 4102,
+    "license": "MIT License",
+    "version": "6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

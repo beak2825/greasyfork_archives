@@ -1,0 +1,34 @@
+{
+  "id": 496331,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-28T11:29:24.000Z",
+  "code_updated_at": "2024-05-28T11:29:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1308449,
+      "name": "佐藤いぬ",
+      "created_at": "2024-05-28T11:13:07.000Z",
+      "url": "https://greasyfork.org/users/1308449-%E4%BD%90%E8%97%A4%E3%81%84%E3%81%AC",
+      "scripts": []
+    }
+  ],
+  "name": "ReplayWatchSorter",
+  "description": "BeatLeaderのユーザーページでリプレイを見られた回数順に譜面をソートするボタンを追加します",
+  "url": "https://greasyfork.org/scripts/496331-replaywatchsorter",
+  "code_url": "https://update.greasyfork.org/scripts/496331/ReplayWatchSorter.user.js",
+  "code_size": 20642,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

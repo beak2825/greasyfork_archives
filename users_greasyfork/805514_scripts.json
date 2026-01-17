@@ -492,6 +492,39 @@
     "version": "1.4",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 496570,
+    "daily_installs": 0,
+    "total_installs": 83,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-30T15:12:31.000Z",
+    "code_updated_at": "2024-06-03T14:56:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805514,
+        "name": "Zyenth",
+        "created_at": "2021-08-17T08:06:40.000Z",
+        "url": "https://greasyfork.org/users/805514-zyenth"
+      }
+    ],
+    "name": "Auto Walk[NumPad 1], Walk+Jump[NumPad 2], and Walk Left+Right[NumPad 3] Mod For Shell Shockers",
+    "description": "Auto Walk, Walk+Jump, and Walk Left+Right script triggered by numpad keys (1, 2, and 3), initially disabled.",
+    "url": "https://greasyfork.org/scripts/496570-auto-walk-numpad-1-walk-jump-numpad-2-and-walk-left-right-numpad-3-mod-for-shell-shockers",
+    "code_url": "https://update.greasyfork.org/scripts/496570/Auto%20Walk%5BNumPad%201%5D%2C%20Walk%2BJump%5BNumPad%202%5D%2C%20and%20Walk%20Left%2BRight%5BNumPad%203%5D%20Mod%20For%20Shell%20Shockers.user.js",
+    "code_size": 4900,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

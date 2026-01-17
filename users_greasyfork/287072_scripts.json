@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 496468,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-29T13:15:10.000Z",
+    "code_updated_at": "2024-06-13T08:47:00.000Z",
+    "namespace": "https://stojanow.com/",
+    "support_url": "https://github.com/psto/userscript-clean-copy-url",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 287072,
+        "name": "psto",
+        "created_at": "2019-03-28T08:55:34.000Z",
+        "url": "https://greasyfork.org/users/287072-psto"
+      }
+    ],
+    "name": "Filter Gmail shortcut",
+    "description": "Filter Gmail messages by pressing \\\"alt+g\\\"",
+    "url": "https://greasyfork.org/scripts/496468-filter-gmail-shortcut",
+    "code_url": "https://update.greasyfork.org/scripts/496468/Filter%20Gmail%20shortcut.user.js",
+    "code_size": 2215,
+    "license": "MIT License",
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

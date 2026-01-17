@@ -1021,5 +1021,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 496360,
+    "daily_installs": 0,
+    "total_installs": 845,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-28T16:17:49.000Z",
+    "code_updated_at": "2024-05-28T16:17:49.000Z",
+    "namespace": "慢速脚本",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1072479,
+        "name": "Vxx:shuake345",
+        "created_at": "2023-05-03T17:57:24.000Z",
+        "url": "https://greasyfork.org/users/1072479-vxx-shuake345"
+      }
+    ],
+    "name": "yanxiu教师研修网-2024_请自行配合大漠插件-全自动代刷VX：shuake345",
+    "description": "慢速脚本|自动看课程|全自动代刷VX：shuake345",
+    "url": "https://greasyfork.org/scripts/496360-yanxiu%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E7%BD%91-2024-%E8%AF%B7%E8%87%AA%E8%A1%8C%E9%85%8D%E5%90%88%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6-%E5%85%A8%E8%87%AA%E5%8A%A8%E4%BB%A3%E5%88%B7vx-shuake345",
+    "code_url": "https://update.greasyfork.org/scripts/496360/yanxiu%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E7%BD%91-2024_%E8%AF%B7%E8%87%AA%E8%A1%8C%E9%85%8D%E5%90%88%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6-%E5%85%A8%E8%87%AA%E5%8A%A8%E4%BB%A3%E5%88%B7VX%EF%BC%9Ashuake345.user.js",
+    "code_size": 2743,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

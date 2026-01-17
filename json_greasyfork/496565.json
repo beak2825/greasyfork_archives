@@ -1,0 +1,34 @@
+{
+  "id": 496565,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-30T14:53:00.000Z",
+  "code_updated_at": "2024-05-30T15:25:10.000Z",
+  "namespace": "https://forum.blackrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1309587,
+      "name": "Администрация Сервера",
+      "created_at": "2024-05-30T14:51:25.000Z",
+      "url": "https://greasyfork.org/users/1309587-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0",
+      "scripts": []
+    }
+  ],
+  "name": "маратик сотка",
+  "description": "Скрипт для Руководства сервера | Black Russia по всем вопросам на счет скрипта VK - https://vk.com/Extazzy300",
+  "url": "https://greasyfork.org/scripts/496565-%D0%BC%D0%B0%D1%80%D0%B0%D1%82%D0%B8%D0%BA-%D1%81%D0%BE%D1%82%D0%BA%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/496565/%D0%BC%D0%B0%D1%80%D0%B0%D1%82%D0%B8%D0%BA%20%D1%81%D0%BE%D1%82%D0%BA%D0%B0.user.js",
+  "code_size": 37377,
+  "license": "MIT License",
+  "version": "2.32",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

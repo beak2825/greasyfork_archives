@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496466,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-29T12:52:21.000Z",
+    "code_updated_at": "2024-05-29T12:52:21.000Z",
+    "namespace": "https://dreamlove.top",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1184238,
+        "name": "superBiuBiuMan",
+        "created_at": "2023-09-30T06:54:00.000Z",
+        "url": "https://greasyfork.org/users/1184238-superbiubiuman"
+      }
+    ],
+    "name": "uniapp插件无广告下载导入(Dclound插件下载)",
+    "description": "旨在帮助用户在无法看广告的情况下跳过广告直接下载",
+    "url": "https://greasyfork.org/scripts/496466-uniapp%E6%8F%92%E4%BB%B6%E6%97%A0%E5%B9%BF%E5%91%8A%E4%B8%8B%E8%BD%BD%E5%AF%BC%E5%85%A5-dclound%E6%8F%92%E4%BB%B6%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/496466/uniapp%E6%8F%92%E4%BB%B6%E6%97%A0%E5%B9%BF%E5%91%8A%E4%B8%8B%E8%BD%BD%E5%AF%BC%E5%85%A5%28Dclound%E6%8F%92%E4%BB%B6%E4%B8%8B%E8%BD%BD%29.user.js",
+    "code_size": 11335,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

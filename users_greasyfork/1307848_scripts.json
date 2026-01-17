@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496221,
+    "daily_installs": 0,
+    "total_installs": 296,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T08:02:34.000Z",
+    "code_updated_at": "2024-07-05T11:45:36.000Z",
+    "namespace": "https://greasyfork.org/users/1307848",
+    "support_url": "https://gitlab.com/linying23333/green-service-center-temu-or-pinduoduokuajing-2024",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1307848,
+        "name": "linying23333",
+        "created_at": "2024-05-27T07:25:30.000Z",
+        "url": "https://greasyfork.org/users/1307848-linying23333"
+      }
+    ],
+    "name": "拼多多跨境(Temu)弹窗屏蔽",
+    "description": "用于屏蔽拼多多跨境卖家平台的弹窗-jquery重构",
+    "url": "https://greasyfork.org/scripts/496221-%E6%8B%BC%E5%A4%9A%E5%A4%9A%E8%B7%A8%E5%A2%83-temu-%E5%BC%B9%E7%AA%97%E5%B1%8F%E8%94%BD",
+    "code_url": "https://update.greasyfork.org/scripts/496221/%E6%8B%BC%E5%A4%9A%E5%A4%9A%E8%B7%A8%E5%A2%83%28Temu%29%E5%BC%B9%E7%AA%97%E5%B1%8F%E8%94%BD.user.js",
+    "code_size": 28367,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

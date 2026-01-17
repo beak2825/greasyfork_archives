@@ -895,5 +895,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 496410,
+    "daily_installs": 1,
+    "total_installs": 99,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-29T01:43:42.000Z",
+    "code_updated_at": "2024-11-23T19:19:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1132291,
+        "name": "Weav3r",
+        "created_at": "2023-07-21T11:02:54.000Z",
+        "url": "https://greasyfork.org/users/1132291-weav3r"
+      }
+    ],
+    "name": "Highlight RW Effects",
+    "description": "Highlight RW effects in the attack loader",
+    "url": "https://greasyfork.org/scripts/496410-highlight-rw-effects",
+    "code_url": "https://update.greasyfork.org/scripts/496410/Highlight%20RW%20Effects.user.js",
+    "code_size": 1899,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 496284,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-28T02:42:31.000Z",
+    "code_updated_at": "2024-07-31T01:59:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1132291,
+        "name": "Weav3r",
+        "created_at": "2023-07-21T11:02:54.000Z",
+        "url": "https://greasyfork.org/users/1132291-weav3r"
+      }
+    ],
+    "name": "Trade Chat Timer on Button",
+    "description": "Show a timer that shows the time left to post next message, synchronized across tabs.",
+    "url": "https://greasyfork.org/scripts/496284-trade-chat-timer-on-button",
+    "code_url": "https://update.greasyfork.org/scripts/496284/Trade%20Chat%20Timer%20on%20Button.user.js",
+    "code_size": 6620,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 496279,
+    "daily_installs": 1,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-28T02:18:00.000Z",
+    "code_updated_at": "2024-05-28T02:18:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1132291,
+        "name": "Weav3r",
+        "created_at": "2023-07-21T11:02:54.000Z",
+        "url": "https://greasyfork.org/users/1132291-weav3r"
+      }
+    ],
+    "name": "NoConfirm Torn Trades",
+    "description": "Remove the confirmation dialog from the trade screen",
+    "url": "https://greasyfork.org/scripts/496279-noconfirm-torn-trades",
+    "code_url": "https://update.greasyfork.org/scripts/496279/NoConfirm%20Torn%20Trades.user.js",
+    "code_size": 955,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

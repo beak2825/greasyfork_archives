@@ -1,0 +1,33 @@
+{
+  "id": 496647,
+  "daily_installs": 0,
+  "total_installs": 423,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-31T13:07:16.000Z",
+  "code_updated_at": "2024-05-31T13:07:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1310253,
+      "name": "TheOne9196",
+      "created_at": "2024-05-31T13:04:37.000Z",
+      "url": "https://greasyfork.org/users/1310253-theone9196"
+    }
+  ],
+  "name": "Photopea Ad Sidebar Remove",
+  "description": "Removes the ad sidebar in photopea, which appears even if you have an adblocker.",
+  "url": "https://greasyfork.org/scripts/496647-photopea-ad-sidebar-remove",
+  "code_url": "https://update.greasyfork.org/scripts/496647/Photopea%20Ad%20Sidebar%20Remove.user.js",
+  "code_size": 584,
+  "license": "MIT License",
+  "version": "2024-05-29",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

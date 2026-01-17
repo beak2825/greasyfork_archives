@@ -1,0 +1,59 @@
+{
+  "id": 496523,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-30T03:44:56.000Z",
+  "code_updated_at": "2024-05-30T03:44:56.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1309041,
+      "name": "shao-xy",
+      "created_at": "2024-05-29T14:26:51.000Z",
+      "url": "https://greasyfork.org/users/1309041-shao-xy",
+      "scripts": [
+        {
+          "id": 496523,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-30T03:44:56.000Z",
+          "code_updated_at": "2024-05-30T03:44:56.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ustc_email_automatic_insert_totp_code",
+          "description": "邮箱本身有“同设备登录免二次验证功能”，所以自动填写TOTP功能可能没有用。",
+          "url": "https://greasyfork.org/scripts/496523-ustc-email-automatic-insert-totp-code",
+          "code_url": "https://update.greasyfork.org/scripts/496523/ustc_email_automatic_insert_totp_code.user.js",
+          "code_size": 4216,
+          "license": "MIT License",
+          "version": "0.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ustc_email_automatic_insert_totp_code",
+  "description": "邮箱本身有“同设备登录免二次验证功能”，所以自动填写TOTP功能可能没有用。",
+  "url": "https://greasyfork.org/scripts/496523-ustc-email-automatic-insert-totp-code",
+  "code_url": "https://update.greasyfork.org/scripts/496523/ustc_email_automatic_insert_totp_code.user.js",
+  "code_size": 4216,
+  "license": "MIT License",
+  "version": "0.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

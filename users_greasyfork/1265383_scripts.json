@@ -130,5 +130,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 496425,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-29T04:48:19.000Z",
+    "code_updated_at": "2025-04-30T11:37:01.000Z",
+    "namespace": "http://oj.bashu.com.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265383,
+        "name": "123asdf123",
+        "created_at": "2024-02-22T12:03:04.000Z",
+        "url": "https://greasyfork.org/users/1265383-123asdf123"
+      }
+    ],
+    "name": "404 Game",
+    "description": "game",
+    "url": "https://greasyfork.org/scripts/496425-404-game",
+    "code_url": "https://update.greasyfork.org/scripts/496425/404%20Game.user.js",
+    "code_size": 11496,
+    "license": "SATA",
+    "version": "1.0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496593,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-31T01:03:48.000Z",
+    "code_updated_at": "2024-05-31T01:03:48.000Z",
+    "namespace": "rfindley",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5859,
+        "name": "Robin Findley",
+        "created_at": "2014-10-06T18:44:24.000Z",
+        "url": "https://greasyfork.org/users/5859-robin-findley"
+      }
+    ],
+    "name": "Gateway Pundit AdBlock Popup Blocker",
+    "description": "Closes request to remove ad blocker",
+    "url": "https://greasyfork.org/scripts/496593-gateway-pundit-adblock-popup-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/496593/Gateway%20Pundit%20AdBlock%20Popup%20Blocker.user.js",
+    "code_size": 667,
+    "license": "MIT; http://opensource.org/licenses/MIT",
+    "version": "2024-05-23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

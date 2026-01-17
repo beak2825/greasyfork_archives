@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496555,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-30T12:29:42.000Z",
+    "code_updated_at": "2024-05-30T12:29:42.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 895361,
+        "name": "turtlebasket",
+        "created_at": "2022-03-30T09:45:37.000Z",
+        "url": "https://greasyfork.org/users/895361-turtlebasket"
+      }
+    ],
+    "name": "Hide Twitter Crap",
+    "description": "Hide noise on Twitter (\"Who to follow\", etc)",
+    "url": "https://greasyfork.org/scripts/496555-hide-twitter-crap",
+    "code_url": "https://update.greasyfork.org/scripts/496555/Hide%20Twitter%20Crap.user.js",
+    "code_size": 1565,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

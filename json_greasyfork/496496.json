@@ -1,0 +1,33 @@
+{
+  "id": 496496,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-29T20:45:55.000Z",
+  "code_updated_at": "2025-01-21T21:23:48.000Z",
+  "namespace": "https://openuserjs.org/users/DeadLyBro/scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 916831,
+      "name": "DeadLyBro",
+      "created_at": "2022-05-21T10:03:44.000Z",
+      "url": "https://greasyfork.org/users/916831-deadlybro"
+    }
+  ],
+  "name": "Kick Kufur Tespiti",
+  "description": "Kick platformunda sohbete atılan küfürü tespit ederek kırmızı renkle boyar. Eklenen küfürlerin az olduğunu düşünüyorsanız Discord: DeadLyBro            Not: Birleşik yazılanları da tespit ediyor, araya küfür sıkıştıranları muck.",
+  "url": "https://greasyfork.org/scripts/496496-kick-kufur-tespiti",
+  "code_url": "https://update.greasyfork.org/scripts/496496/Kick%20Kufur%20Tespiti.user.js",
+  "code_size": 2575,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

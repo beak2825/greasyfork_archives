@@ -1,0 +1,68 @@
+[
+  {
+    "id": 496230,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T08:54:20.000Z",
+    "code_updated_at": "2024-05-27T09:09:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 563160,
+        "name": "interim",
+        "created_at": "2020-05-15T08:24:11.000Z",
+        "url": "https://greasyfork.org/users/563160-interim"
+      }
+    ],
+    "name": "河北省2023培训那个,自动批阅作业",
+    "description": "自动批阅",
+    "url": "https://greasyfork.org/scripts/496230-%E6%B2%B3%E5%8C%97%E7%9C%812023%E5%9F%B9%E8%AE%AD%E9%82%A3%E4%B8%AA-%E8%87%AA%E5%8A%A8%E6%89%B9%E9%98%85%E4%BD%9C%E4%B8%9A",
+    "code_url": "https://update.greasyfork.org/scripts/496230/%E6%B2%B3%E5%8C%97%E7%9C%812023%E5%9F%B9%E8%AE%AD%E9%82%A3%E4%B8%AA%2C%E8%87%AA%E5%8A%A8%E6%89%B9%E9%98%85%E4%BD%9C%E4%B8%9A.user.js",
+    "code_size": 2935,
+    "license": null,
+    "version": "2024-04-09",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 496229,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T08:52:27.000Z",
+    "code_updated_at": "2024-05-27T08:52:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 563160,
+        "name": "interim",
+        "created_at": "2020-05-15T08:24:11.000Z",
+        "url": "https://greasyfork.org/users/563160-interim"
+      }
+    ],
+    "name": "2024-6-1 学完的那种. 河北省2023年中小学幼儿园教师全员远程培训项目",
+    "description": "河北省2023年中小学幼儿园教师全员远程培训项目,自动学习,打开科目3秒学完.",
+    "url": "https://greasyfork.org/scripts/496229-2024-6-1-%E5%AD%A6%E5%AE%8C%E7%9A%84%E9%82%A3%E7%A7%8D-%E6%B2%B3%E5%8C%97%E7%9C%812023%E5%B9%B4%E4%B8%AD%E5%B0%8F%E5%AD%A6%E5%B9%BC%E5%84%BF%E5%9B%AD%E6%95%99%E5%B8%88%E5%85%A8%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E9%A1%B9%E7%9B%AE",
+    "code_url": "https://update.greasyfork.org/scripts/496229/2024-6-1%20%E5%AD%A6%E5%AE%8C%E7%9A%84%E9%82%A3%E7%A7%8D%20%E6%B2%B3%E5%8C%97%E7%9C%812023%E5%B9%B4%E4%B8%AD%E5%B0%8F%E5%AD%A6%E5%B9%BC%E5%84%BF%E5%9B%AD%E6%95%99%E5%B8%88%E5%85%A8%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E9%A1%B9%E7%9B%AE.user.js",
+    "code_size": 1308,
+    "license": null,
+    "version": "2024-03-17",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]
