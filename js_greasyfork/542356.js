@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - nl/be
-// @version         4.2.8.1
+// @version         4.2.8.2
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1240,6 +1240,7 @@ else if (matchDomain(['lc.nl', 'dvhn.nl']) || document.querySelector('head > lin
                   if (child.relation.title.length <= 2)
                     child.relation.title = findNuxtText(child.relation.title);
                   if (matchDomain('frieschdagblad.nl'))
+                    child.relation.title = child.relation.link;
                   addLink(elem, child.relation.title, child.relation.link);
                 } else if (child.children) {
                   if (child.children.length) {
@@ -1249,7 +1250,7 @@ else if (matchDomain(['lc.nl', 'dvhn.nl']) || document.querySelector('head > lin
                           if (item.text.length > 2)
                             addLink(elem, item.text, child.href || child.relation.follow.url, add_br);
                         } else
-                          addParText(elem, item.text, false, child.attributes && child.attributes.length);
+                          addParText(elem, item.text, add_br, child.attributes && child.attributes.length);
                       } else if (findNuxtText(item.type) === 'br') {
                         elem.appendChild(document.createElement('br'));
                       } else
@@ -1263,9 +1264,17 @@ else if (matchDomain(['lc.nl', 'dvhn.nl']) || document.querySelector('head > lin
             for (let par of pars) {
               let elem = document.createElement('p');
               if (par.code) {
-                let parser = new DOMParser();
-                let doc = parser.parseFromString('<div>' + par.code + '</div>', 'text/html');
-                elem = doc.querySelector('div');
+                if (par.code.includes('flourish-embed') && par.code.includes(' data-src=\"')) {
+                  elem = document.createElement('div');
+                  let sub_elem = document.createElement('iframe');
+                  sub_elem.src = 'https://public.flourish.studio/' + par.code.split(' data-src=\"')[1].split('"')[0];
+                  sub_elem.style = 'width: 100%; height: 600px;';
+                  elem.appendChild(sub_elem);
+                } else {
+                  let parser = new DOMParser();
+                  let doc = parser.parseFromString('<div>' + par.code + '</div>', 'text/html');
+                  elem = doc.querySelector('div');
+                }
               } else if (par.insertbox_head || par.insertbox_text) {
                 if (par.insertbox_head && par.insertbox_head.length > 2)
                   addParText(elem, par.insertbox_head, true);

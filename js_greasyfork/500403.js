@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://my.wealthsimple.com/*
 // @grant       GM.xmlHttpRequest
-// @version     1.4
+// @version     1.5
 // @license     MIT
 // @author      eaglesemanation
 // @description Adds export buttons to Activity feed and to Account specific activity. They will export transactions within certain timeframe into CSV, options are "This Month", "Last 3 Month", "All". This should provide better transaction description than what is provided by preexisting CSV export feature.
@@ -43,28 +43,21 @@ function getPageInfo() {
 
   let pathParts = window.location.pathname.split("/");
   if (pathParts.length === 4 && pathParts[2] === "account-details") {
-    // All classes within HTML have been obfuscated/minified, using icons as a starting point, in hope that they don't change that much.
-    const threeDotsSvgPath =
-      "M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM19 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z";
-    const threeDotsButtonContainerQuery = `div:has(> div > button svg > path[d="${threeDotsSvgPath}"])`;
-
+    const accountSelectorQuery = `div:has(> div > button svg > path[d="m6 12 4-4-4-4"])`;
     info.pageType = "account-details";
-    let anchor = document.querySelectorAll(threeDotsButtonContainerQuery);
+    let anchor = document.querySelectorAll(accountSelectorQuery);
     if (anchor.length !== 1) {
       return emptyInfo;
     }
     info.anchor = anchor[0];
     info.readyPredicate = () => info.anchor.parentNode.children.length >= 1;
   } else if (pathParts.length === 3 && pathParts[2] === "activity") {
-    const threeLinesSvgPath = "M2 4h12M4.667 8h6.666m-4.666 4h2.666";
-    const threeLinesButtonContainerQuery = `div:has(> button svg > path[d="${threeLinesSvgPath}"])`;
-
     info.pageType = "activity";
-    let anchor = document.querySelectorAll(threeLinesButtonContainerQuery);
-    if (anchor.length !== 1) {
+    let anchor = Array.from(document.querySelectorAll(`h1`)).find(el => el.textContent === "Activity");
+    if (anchor === undefined) {
       return emptyInfo;
     }
-    info.anchor = anchor[0];
+    info.anchor = anchor;
     info.readyPredicate = () => info.anchor.parentNode.children.length >= 1;
   } else {
     // Didn't match any expected page
@@ -80,9 +73,9 @@ const exportCsvId = "export-transactions-csv";
 /**
  * Keeps button shown after rerenders and href changes
  *
- * @returns {Promise<void>}
+ * @returns {void}
  */
-async function keepButtonShown() {
+function keepButtonShown() {
   // Early exit, to avoid unnecessary requests if already injected
   if (document.querySelector(`div#${exportCsvId}`)) {
     return;
@@ -103,7 +96,7 @@ async function keepButtonShown() {
 (async function () {
   const observer = new MutationObserver(async (mutations) => {
     for (const _ of mutations) {
-      await keepButtonShown();
+      keepButtonShown();
     }
   });
   observer.observe(document.documentElement, {
@@ -111,43 +104,27 @@ async function keepButtonShown() {
     subtree: true,
   });
 
+  window.matchMedia("(prefers-color-scheme: dark)").addListener(async e => {
+    // Give react / whatever weird frontend framework time to update classes before copying them
+    await new Promise(res => setTimeout(res, 100));
+    themeButtons();
+  });
   // Try running on load if there are no mutations for some reason
   window.addEventListener("load", async () => {
-    await keepButtonShown();
+    keepButtonShown();
   });
 })();
 
 /**
- * Stub, just forcing neovim to corectly highlight CSS syntax in literal
+ * Matches light/dark theme by stealing styling from profile settings dropdown button
  */
-function css(str) {
-  return str;
+function themeButtons() {
+  let buttons = document.querySelectorAll(`button.export-csv-button`);
+  let profileButton = document.querySelector(`button:has(svg > path[d="m6 9 6 6 6-6"])`);
+  for (const button of buttons) {
+    button.className = ["export-csv-button", profileButton.className].join(" ");
+  }
 }
-
-const stylesheet = new CSSStyleSheet();
-stylesheet.insertRule(css`
-  .export-csv-button:hover {
-    color: rgb(50, 48, 47);
-    background-image: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.04) 0%,
-      rgba(0, 0, 0, 0.04) 100%
-    );
-  }
-`);
-stylesheet.insertRule(css`
-  .export-csv-button {
-    display: inline-flex;
-    background: rgb(255, 255, 255);
-    border: 1px solid rgb(228, 226, 225);
-    border-radius: 4.5em;
-    font-size: 16px;
-    padding-left: 1em;
-    padding-right: 1em;
-    font-family: "FuturaPT-Demi";
-    font-weight: unset;
-  }
-`);
 
 /**
  * Attaches button row to anchor element. Should be syncronous to avoid attaching row twice, because Mutex is not cool enough for JS?
@@ -156,8 +133,6 @@ stylesheet.insertRule(css`
  * @returns {void}
  */
 function addButtons(pageInfo) {
-  document.adoptedStyleSheets = [stylesheet];
-
   let buttonRow = document.createElement("div");
   buttonRow.id = exportCsvId;
   buttonRow.style.display = "flex";
@@ -222,29 +197,11 @@ function addButtons(pageInfo) {
     buttonRow.appendChild(exportButton);
   }
 
-  let anchorParent = pageInfo.anchor.parentNode;
-  anchorParent.insertBefore(buttonRow, pageInfo.anchor);
-  anchorParent.style.gap = "1em";
+  pageInfo.anchor.after(buttonRow);
+  pageInfo.anchor.parentNode.style.gap = "1em";
   pageInfo.anchor.style.marginLeft = "0";
 
-  let currencyToggle = anchorParent.querySelector(
-    `div:has(> ul > li > button)`,
-  );
-  if (currencyToggle) {
-    // NOTE: Patch to currency toggle, for some reason it sets width="100%", and it's ugly
-    for (const s of document.styleSheets) {
-      for (const r of s.rules) {
-        if (
-          currencyToggle.matches(r.selectorText) &&
-          r.style.width === "100%"
-        ) {
-          currencyToggle.classList.remove(r.selectorText.substring(1));
-        }
-      }
-    }
-    // NOTE: Swap with currency toggle, just looks nicer
-    buttonRow.parentNode.insertBefore(buttonRow, currencyToggle);
-  }
+  themeButtons();
 }
 
 /**
@@ -564,6 +521,8 @@ async function accountFinancials() {
     if (!nickname) {
       if (e.node.unifiedAccountType === "CASH") {
         nickname = "Cash";
+      } else if (e.node.unifiedAccountType === "CREDIT_CARD") {
+        nickname = "Credit Card";
       } else if (self_directed_re.test(e.node.unifiedAccountType)) {
         let found = e.node.unifiedAccountType.match(self_directed_re);
         nickname = found.groups.name;
@@ -692,6 +651,7 @@ async function transactionsToCsvBlobs(transactions, accountNicknames) {
  */
 async function accountTransactionsToCsvBlob(transactions, accountNicknames) {
   let csv = `"Date","Payee","Notes","Category","Amount"\n`;
+  let foundUncategorized = false;
   for (const transaction of transactions) {
     let date = new Date(transaction.occurredAt);
     // JS Date type is absolutly horible, I hope Temporal API will be better
@@ -741,6 +701,40 @@ async function accountTransactionsToCsvBlob(transactions, accountNicknames) {
       case "DIVIDEND/DIY_DIVIDEND": {
         payee = transaction.assetSymbol;
         notes = `Received dividend from ${transaction.assetSymbol}`;
+        break;
+      }
+      case "DIVIDEND/CASH_DIVIDEND": {
+        payee = transaction.assetSymbol;
+        notes = `Received dividend from ${transaction.assetSymbol}`;
+        break;
+      }
+
+      /*
+       * Credit card Transactions
+       */
+      case "CREDIT_CARD/PURCHASE": {
+        payee = transaction.spendMerchant;
+        notes = `Credit card purchase at ${payee}`;
+        break;
+      }
+      case "CREDIT_CARD/REFUND": {
+        payee = transaction.spendMerchant; /*"Wealthsimple";*/
+        notes = "Credit card refund";
+        break;
+      }
+      case "CREDIT_CARD/PAYMENT": {
+        payee = "Wealthsimple";
+        notes = "Credit card payment";
+        break;
+      }
+      case "CREDIT_CARD_PAYMENT": { // This one is in cash account
+        payee = "Wealthsimple";
+        notes = "Credit card payment";
+        break;
+      }
+      case "REIMBURSEMENT/CASHBACK": {
+        payee = "Wealthsimple";
+        notes = "Credit card cashback";
         break;
       }
 
@@ -889,6 +883,7 @@ async function accountTransactionsToCsvBlob(transactions, accountNicknames) {
         break;
       }
       default: {
+        foundUncategorized = true;
         console.error(
           `[csv-export] ${dateStr} transaction [${type}] has unexpected type, skipping it. Please report on greasyfork.org for assistanse.`,
         );
@@ -906,6 +901,9 @@ async function accountTransactionsToCsvBlob(transactions, accountNicknames) {
     csv += `${entry}\n`;
   }
 
+  if (foundUncategorized) {
+    alert("During CSV export some transactions were not properly categorized and skipped. Please take a look at developer console output for more details.");
+  }
   // Signals to some apps that file encoded with UTF-8
   const BOM = "\uFEFF";
   return new Blob([BOM, csv], { type: "text/csv;charset=utf-8" });

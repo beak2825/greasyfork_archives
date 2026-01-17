@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          AO3: Advanced Blocker
-// @version       4.0.3
+// @version       4.0.4
 // @description   Block works by tags, authors, titles, word counts, and more. Filter by language, completion status, and primary pairings with customizable highlighting.
 // @author        BlackBatCat
 // @match         *://archiveofourown.org/tags/*
@@ -98,7 +98,7 @@
     enableStrictTagBlocking: false,
     strictTagBlacklist: "",
     conditionalTagBlacklist: [],
-    _version: "4.0.3",
+    _version: "4.0.4",
   };
 
   const STORAGE_KEY = "ao3_advanced_blocker_config";
@@ -227,7 +227,7 @@
             };
           })
       : [];
-    sanitized._version = "4.0.3";
+    sanitized._version = "4.0.4";
     return sanitized;
   }
 
@@ -402,7 +402,7 @@
 
   function checkConditional(entry, conditionTags) {
     if (!entry.condition || !entry.operator) return true;
-    const hasCondition = conditionTags.includes(entry.condition);
+    const hasCondition = conditionTags.has(entry.condition);
     return (
       (entry.operator === "with" && hasCondition) ||
       (entry.operator === "unless" && !hasCondition)
@@ -1872,7 +1872,7 @@
             });
           return rules;
         })(),
-        _version: "4.0.3",
+        _version: "4.0.4",
       };
       if (saveConfig(updatedConfig)) {
         location.href =

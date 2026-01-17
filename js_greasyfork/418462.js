@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Letterboxd Titles
+// @name         Display Titles Above Posters
 // @namespace    https://letterboxd.com/
 // @version      3.25
 // @description  Force titles to be displayed above movie posters (on some pages only)
@@ -9,8 +9,8 @@
 // @match        https://letterboxd.com/director/*
 // @match        https://letterboxd.com/actor/*
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/418462/Letterboxd%20Titles.user.js
-// @updateURL https://update.greasyfork.org/scripts/418462/Letterboxd%20Titles.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/418462/Display%20Titles%20Above%20Posters.user.js
+// @updateURL https://update.greasyfork.org/scripts/418462/Display%20Titles%20Above%20Posters.meta.js
 // ==/UserScript==
 
 GM_addStyle(`

@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Criticker - Add Letterboxd Search Button
+// @name         Add Letterboxd Search Button
 // @namespace    https://www.criticker.com/
 // @version      2.0
 // @description  Adds a button to search the movie on Letterboxd
 // @author       n00bCod3r
 // @match        https://www.criticker.com/films*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/427372/Criticker%20-%20Add%20Letterboxd%20Search%20Button.user.js
-// @updateURL https://update.greasyfork.org/scripts/427372/Criticker%20-%20Add%20Letterboxd%20Search%20Button.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/427372/Add%20Letterboxd%20Search%20Button.user.js
+// @updateURL https://update.greasyfork.org/scripts/427372/Add%20Letterboxd%20Search%20Button.meta.js
 // ==/UserScript==
 
 (function() {

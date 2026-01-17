@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autodarts - Change throw with numpad
 // @namespace    http://tampermonkey.net/
-// @version      1.96
+// @version      1.97
 // @description  Adds a number pad when editing the score. Recommended for touchscreens.
 // @include      https://play.autodarts.io/*
 // @noframes
@@ -163,12 +163,12 @@ if ( window === window.parent) {    //--- Code to run when page is the main site
         for (let i = 0; i < 9; i++) {
 
            if(i > 2 && i<6)  {
-               var fontcolor = ' color: black;';
+              var fontcolor = ' color: black;';
               var btn_class = 'numpadbtn';
            }
            else {
                var fontcolor = ' color: white;';
-                var btn_class = 'numpadbtn_double_triple';
+               var btn_class = 'numpadbtn_double_triple';
            }
 buttons += '<button class="'+btn_class+'" style="background-color: '+colors[zahl][i]+';'+fontcolor+'" value="'+fields[zahl][i]+'" >'+fields[zahl][i]+'</button>';
         }
@@ -235,7 +235,7 @@ GM_addStyle(".halfbull, .bull, .miss { margin-top: 10px;} ");
 
 
 
-            fetch('https://api.autodarts.io/gs/v0/matches/'+location.pathname.split("/")[2]+'/throws', {
+/*             fetch('https://api.autodarts.io/gs/v0/matches/'+location.pathname.split("/")[2]+'/throws', {
                 credentials: 'include',
                 method: 'PATCH',
                 body: throw_patch
@@ -245,6 +245,30 @@ GM_addStyle(".halfbull, .bull, .miss { margin-top: 10px;} ");
                 credentials: 'include',
                 method: 'POST',
                 body: '{"activated":-1}'
+            }); */
+
+
+             fetch('https://api.autodarts.io/gs/v0/matches/'+location.pathname.split("/")[2]+'/throws', {
+                credentials: 'include',
+                method: 'PATCH',
+                body: throw_patch
+            }).then((response) => {
+                console.log('status code', response.status)
+                if(response.status == 200) {
+                    // if Authorization-token has expired
+                      // alte Methode als backup
+                    $('button:contains("Reset")').click();
+                    setTimeout(function(){
+                               // Button deaktvieren
+                                    fetch('https://api.autodarts.io/gs/v0/matches/'+location.pathname.split("/")[2]+'/corrections', {
+                                        credentials: 'include',
+                                        method: 'POST',
+                                        body: '{"activated":-1}'
+                                    })
+
+                    }, 1000);
+                    // end fetch again
+                }
             });
 
             ////////////
@@ -267,10 +291,10 @@ GM_addStyle(".halfbull, .bull, .miss { margin-top: 10px;} ");
             var elem_from_top = $(this).offset().top;
 
             if ( (winheight - elem_from_top) < 300) {
-              var  offsettop = -20;
+                var  offsettop = -20;
             }
             else {
-            var offsettop =  330;
+                var offsettop =  330;
             }
 
 

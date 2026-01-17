@@ -3,7 +3,7 @@
 // @description   Add Rotten Tomatoes ratings to IMDb movie and TV show pages
 // @author        chocolateboy
 // @copyright     chocolateboy
-// @version       7.6.1
+// @version       7.7.1
 // @namespace     https://github.com/chocolateboy/userscripts
 // @license       GPL
 // @include       /^https://www\.imdb\.com(/[^/]+)?/title/tt[0-9]+(/?([#?].*)?)?$/
@@ -261,9 +261,9 @@ const BaseMatcher = {
      * @return {DayJs | undefined}
      */
     lastModified ($rt) {
-        return $rt.find('.critics-reviews rt-text[slot="createDate"] span')
+        return $rt.find('.critics-reviews span[slot="timestamp"]')
             .get()
-            .map(el => dayjs($(el).text().trim()))
+            .map(el => parseRTDate($(el).text().trim()))
             .sort((a, b) => b.unix() - a.unix())
             .shift()
     },
@@ -1059,7 +1059,7 @@ function checkOverrides (match, imdbId) {
  * @param {string} imdbId
  * @param {string} rtType
  */
-async function getIMDbMetadata (imdbId, rtType) {
+async function getIMDbMetadata (imdbId, rtType, ld) {
     trace('waiting for props')
     const json = await waitFor('props', () => {
         return document.getElementById('__NEXT_DATA__')?.textContent?.trim()
@@ -1108,9 +1108,9 @@ async function getIMDbMetadata (imdbId, rtType) {
         meta.startYear = year
         meta.endYear = get(extra, 'releaseYear.endYear') || 0
         meta.seasons = get(main, 'episodes.seasons.length') || 0
-        meta.creators = get(extra, 'creatorsPageTitle.*.credits.*.name.nameText.text', [])
+        meta.creators = get(ld, 'creator.*.name', [])
     } else if (rtType === 'movie') {
-        meta.directors = get(extra, 'directorsPageTitle.*.credits.*.name.nameText.text', [])
+        meta.directors = get(ld, 'director.*.name', [])
         meta.year = year
     }
 
@@ -1126,8 +1126,9 @@ async function getIMDbMetadata (imdbId, rtType) {
  * @param {string} imdbId
  * @param {string} title
  * @param {keyof Matcher} rtType
+ * @param {any} ld
  */
-async function getRTData (imdbId, title, rtType) {
+async function getRTData (imdbId, title, rtType, ld) {
     const matcher = Matcher[rtType]
 
     // we preload the anticipated RT page URL at the same time as the API request.
@@ -1249,7 +1250,7 @@ async function getRTData (imdbId, title, rtType) {
 
     debug('results:', results)
 
-    const imdb = await getIMDbMetadata(imdbId, rtType)
+    const imdb = await getIMDbMetadata(imdbId, rtType, ld)
 
     // do a basic sanity check to make sure it's valid
     if (!imdb?.type) {
@@ -1307,6 +1308,31 @@ function normalize (name) {
         .replace(/[^a-z0-9]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim()
+}
+
+/**
+ * parse an RT date into a DayJS date object
+ *
+ *   Jan 17     // The previous Jan 17 (a year ago if today is Jan 17)
+ *   3h         // 3 hours ago
+ *   2d         // 2 days ago
+ *   01/17/2023 // MM/DD/YYYY
+ *
+ * @param {string} name
+ * @return {DayJS}
+ */
+function parseRTDate (rtDate) {
+    const match = rtDate.match(/^(\d+)(\w+)$/)
+
+    if (match) { // e.g. "2d"
+        return dayjs().subtract(Number(match[1]), match[2])
+    } else if (rtDate.match(/^\w+\s+\d+$/)) { // e.g. "Jan 17"
+        const today = dayjs(dayjs().format('YYYY-MM-DD'))
+        const date = dayjs(`${rtDate} ${today.year()}`, 'MMM D YYYY')
+        return date.isBefore(today) ? date : date.subtract(1, 'year')
+    } else { // e.g. "01/17/2026"
+        return dayjs(rtDate, 'MM/DD/YYYY')
+    }
 }
 
 /**
@@ -1757,7 +1783,7 @@ async function run (imdbId, options = {}) {
     }
 
     try {
-        const { data, preloaded, updated } = await getRTData(imdbId, title, rtType)
+        const { data, preloaded, updated } = await getRTData(imdbId, title, rtType, ld)
 
         log('RT data:', data)
         bump('hit')

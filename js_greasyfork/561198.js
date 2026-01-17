@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rem4rk's Torn Auction House Filters
 // @namespace    https://www.torn.com/
-// @version      1.1
+// @version      1.2
 // @description  A script that filters Auction House Items for you based on user-defined filters, includes a min/max price slider, a days remaining slider, buttons to hide items that the user has already bid on, or items they have been outbid on. Any auction listings that end within 1 hour will be highlighted with a gold outline to make auction sniping easier. The script also shows how many items are visible/hidden on the page, e.g. Visible: 10/12.
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/amarket.php*
@@ -9,7 +9,6 @@
 // @downloadURL https://update.greasyfork.org/scripts/561198/Rem4rk%27s%20Torn%20Auction%20House%20Filters.user.js
 // @updateURL https://update.greasyfork.org/scripts/561198/Rem4rk%27s%20Torn%20Auction%20House%20Filters.meta.js
 // ==/UserScript==
-
 
 (function () {
     'use strict';
@@ -33,17 +32,53 @@
         maxIdx: PRICE_STEPS.length - 1,
         daysIdx: DAY_STEPS.length - 1,
         hideBid: false,
-        hideOutbid: false
+        hideOutbid: false,
+        collapsed: false
     }, JSON.parse(localStorage.getItem(LS_KEY) || '{}'));
+
     const save = () => localStorage.setItem(LS_KEY, JSON.stringify(state));
 
+    // ==================== CSS ====================
     const css = document.createElement('style');
     css.textContent = `
-        .taf-box { position: fixed; bottom: 18px; left: 18px; width: 360px;
+        .taf-box {
+            position: fixed;
+            bottom: 18px; left: 18px;
+            width: min(90vw,360px);
             background: linear-gradient(180deg,#24262e,#1b1d23);
-            color: #f1f2f6; border-radius: 16px; padding: 22px; font-family: system-ui,sans-serif;
-            box-shadow: 0 20px 45px rgba(0,0,0,.7); z-index: 9999; }
-        .taf-title { text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.12); }
+            color: #f1f2f6;
+            border-radius: 16px;
+            padding: 22px;
+            font-family: system-ui,sans-serif;
+            box-shadow: 0 20px 45px rgba(0,0,0,.7);
+            z-index: 9999;
+            transition: width 0.25s ease;
+        }
+        .taf-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,.12);
+            position: relative;
+        }
+        .taf-collapse {
+            position: absolute;
+            top: -26px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 22px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.25s ease;
+        }
+        .taf-collapse.collapsed {
+            transform: translateX(-50%) rotate(180deg);
+        }
+        .taf-body.collapsed {
+            display: none;
+        }
         .taf-section { margin-bottom: 24px; }
         .taf-label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px; color: #cfd2dc; }
         .taf-value { font-weight: 600; color: #fff; }
@@ -61,34 +96,42 @@
     `;
     document.head.appendChild(css);
 
+    // ==================== UI ====================
     const box = document.createElement('div');
     box.className = 'taf-box';
     box.innerHTML = `
-        <div class="taf-title">Auction Filters</div>
-        <div class="taf-section">
-            <div class="taf-label"><span>Price Range</span><span class="taf-value" id="priceText"></span></div>
-            <div class="taf-slider">
-                <div class="taf-track"></div>
-                <div class="taf-range" id="priceFill"></div>
-                <input type="range" id="minRange" min="0" max="${PRICE_STEPS.length-1}">
-                <input type="range" id="maxRange" min="0" max="${PRICE_STEPS.length-1}">
-            </div>
+        <div class="taf-title">
+            Auction Filters
+            <span class="taf-collapse ${state.collapsed ? 'collapsed' : ''}">▾</span>
         </div>
-        <div class="taf-section">
-            <div class="taf-label"><span>Ends Within</span><span class="taf-value" id="timeText"></span></div>
-            <div class="taf-slider">
-                <div class="taf-track"></div>
-                <div class="taf-range" id="timeFill"></div>
-                <input type="range" id="timeRange" min="0" max="${DAY_STEPS.length-1}">
+        <div class="taf-body ${state.collapsed ? 'collapsed' : ''}">
+            <div class="taf-section">
+                <div class="taf-label"><span>Price Range</span><span class="taf-value" id="priceText"></span></div>
+                <div class="taf-slider">
+                    <div class="taf-track"></div>
+                    <div class="taf-range" id="priceFill"></div>
+                    <input type="range" id="minRange" min="0" max="${PRICE_STEPS.length-1}">
+                    <input type="range" id="maxRange" min="0" max="${PRICE_STEPS.length-1}">
+                </div>
             </div>
+            <div class="taf-section">
+                <div class="taf-label"><span>Ends Within</span><span class="taf-value" id="timeText"></span></div>
+                <div class="taf-slider">
+                    <div class="taf-track"></div>
+                    <div class="taf-range" id="timeFill"></div>
+                    <input type="range" id="timeRange" min="0" max="${DAY_STEPS.length-1}">
+                </div>
+            </div>
+            <button id="bidBtn" class="taf-btn green">Hide Already Bid</button>
+            <button id="outbidBtn" class="taf-btn red">Hide Outbid</button>
+            <div class="taf-stats" id="stats"></div>
         </div>
-        <button id="bidBtn" class="taf-btn green">Hide Already Bid</button>
-        <button id="outbidBtn" class="taf-btn red">Hide Outbid</button>
-        <div class="taf-stats" id="stats"></div>
     `;
     document.body.appendChild(box);
 
     const container = document.querySelector('.auction-market-main-cont');
+    const bodyDiv = box.querySelector('.taf-body');
+    const collapseToggle = box.querySelector('.taf-collapse');
     const minR = box.querySelector('#minRange');
     const maxR = box.querySelector('#maxRange');
     const timeR = box.querySelector('#timeRange');
@@ -100,6 +143,7 @@
     const bidBtn = box.querySelector('#bidBtn');
     const outbidBtn = box.querySelector('#outbidBtn');
 
+    // ==================== UI update ====================
     function updateUI(){
         const minVal = PRICE_STEPS[state.minIdx];
         const maxVal = PRICE_STEPS[state.maxIdx];
@@ -129,6 +173,7 @@
         outbidBtn.classList.toggle('active', state.hideOutbid);
     }
 
+    // ==================== Filters ====================
     function applyFilters(){
         let total=0, visible=0;
         const min = PRICE_STEPS[state.minIdx];
@@ -156,6 +201,7 @@
         stats.textContent=`Visible: ${visible}/${total}`;
     }
 
+    // ==================== Slider handlers ====================
     function handleSlider(slider,type){
         slider.addEventListener('input',()=>{
             const val = +slider.value;
@@ -164,7 +210,6 @@
             save(); updateUI(); applyFilters();
         });
     }
-
     handleSlider(minR,'min');
     handleSlider(maxR,'max');
 
@@ -175,7 +220,15 @@
     bidBtn.onclick=()=>{ state.hideBid=!state.hideBid; save(); updateUI(); applyFilters(); };
     outbidBtn.onclick=()=>{ state.hideOutbid=!state.hideOutbid; save(); updateUI(); applyFilters(); };
 
-    // Hide items for 4 seconds initially
+    // ==================== Collapse toggle ====================
+    collapseToggle.onclick = ()=>{
+        state.collapsed = !state.collapsed;
+        bodyDiv.classList.toggle('collapsed', state.collapsed);
+        collapseToggle.classList.toggle('collapsed', state.collapsed);
+        save();
+    };
+
+    // ==================== Initial load ====================
     container.querySelectorAll('li[id]').forEach(li=> li.style.display='none');
     setTimeout(()=>{
         updateUI();

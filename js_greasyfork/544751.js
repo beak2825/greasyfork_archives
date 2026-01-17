@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Harmony: Enhancements
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      1.22.0
+// @version      1.22.2
 // @tag          ai-created
 // @description  Adds some convenience features, various UI and behavior settings, as well as an improved language detection to Harmony.
 // @author       chaban
@@ -362,7 +362,9 @@
         'labels': {
             cleanupPrefix: 'labels.',
             generator: (value, set) => {
-                value?.forEach((label, index) => {
+                const uniqueLabels = getUniqueLabels(value);
+
+                uniqueLabels.forEach((label, index) => {
                     const prefix = `labels.${index}`;
                     set(`${prefix}.name`, label.name);
                     if (label.mbid) {
@@ -489,6 +491,30 @@
             }
             return str;
         }, '');
+    }
+
+    /**
+     * Filters a list of labels to ensure uniqueness based on MBID/Name and Catalog Number.
+     * @param {Array<object>} labels - The array of label objects.
+     * @returns {Array<object>} The filtered array of unique label objects.
+     */
+    function getUniqueLabels(labels) {
+        if (!Array.isArray(labels)) return [];
+        const seen = new Set();
+        return labels.filter(label => {
+            const mbid = (label.mbid || '').trim().toLowerCase();
+            const name = (label.name || '').trim().toLowerCase();
+            const catNo = (label.catalogNumber || '').trim().toLowerCase();
+
+            // MusicBrainz identifies a row by (Label MBID || Label Name) + Catalog Number.
+            // If either the MBID or the Name matches for the same Catalog Number, it's a dupe.
+            const identity = mbid || name;
+            const key = `${identity}|${catNo}`;
+
+            if (!identity || seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
     }
 
     async function getSettings() {
@@ -781,6 +807,30 @@
             }
 
             cell.setAttribute(DATA_ATTRIBUTE_APPLIED, 'true');
+        },
+
+        /**
+         * Replaces the entire content of the release labels list with a single new label.
+         * @param {string} newLabelName - The name of the new label.
+         * @param {string} newMbid - The MBID of the new label.
+         * @param {string} originalNames - The original label names to display in the tooltip.
+         */
+        replaceReleaseLabels: (newLabelName, newMbid, originalNames) => {
+            const labelsUl = document.querySelector('ul.release-labels');
+            if (!labelsUl) return;
+
+            labelsUl.innerHTML = '';
+            const li = document.createElement('li');
+            const span = document.createElement('span');
+            span.className = 'entity-links';
+            li.appendChild(span);
+            labelsUl.appendChild(li);
+
+            UI_UTILS.updateLabelLink(span, newLabelName, newMbid);
+            const indicator = UI_UTILS.createIndicatorSpan('overwritten', originalNames, {
+                tooltipPrefix: 'Original labels:',
+            });
+            li.appendChild(indicator);
         },
     };
 
@@ -1768,7 +1818,7 @@
 
             const providers = releaseData.info?.providers || [];
             const providerCount = providers.length;
-            const regexp = /(?<title>.+?)(?:\s+?[\u2010\u2012\u2013\u2014~/-])(?![^(]*\)) (?<eti>.*)/;
+            const regexp = /(?<title>.+?)(?:\s+?[~/-])(?![^(]*\)) (?<eti>.*)/;
             let modifications = [];
 
             const getCorrectedTitle = (originalTitle) => {
@@ -1883,11 +1933,6 @@
                 return;
             }
 
-            const originalLabel = { ...releaseData.labels[0] };
-            const labelName = originalLabel.name.trim();
-
-            if (!labelName || originalLabel.mbid) return;
-
             // 1. Gather all artist names (Release Artists + Track Artists)
             const allArtists = [
                 ...releaseData.artists,
@@ -1907,35 +1952,57 @@
             const sortedArtists = Array.from(uniqueArtistNames)
                 .sort((a, b) => b.length - a.length);
 
-            let remainingLabel = labelName;
+            const SEPARATORS_REGEX = /^(?:x|&|,|\/|-|\+|feat\.|ft\.|pres\.|presents|vs\.|vs|[\s\u200B\uFEFF])+$/i;
 
-            // 3. Iteratively remove artist names
-            for (const artistName of sortedArtists) {
-                // Escape regex special characters in artist name
-                const escapedName = artistName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                // Case-insensitive replacement
-                const regex = new RegExp(escapedName, 'i');
-                remainingLabel = remainingLabel.replace(regex, '');
-            }
+            // 2. Identify self-release labels
+            const labelStatuses = releaseData.labels.map((originalLabel, index) => {
+                const labelName = originalLabel.name.trim();
+                if (!labelName || originalLabel.mbid) return { isSelf: false, originalLabel, index };
 
-            // 3. Check if what's left is only separators/whitespace
-            const SEPARATORS_REGEX = /^(?:x|&|,|\/|-|\+|feat\.|ft\.|pres\.|presents|vs\.|vs|\s)+$/i;
-            const isSelfRelease = remainingLabel.length === 0 || SEPARATORS_REGEX.test(remainingLabel);
-
-            if (isSelfRelease && !originalLabel.mbid) {
-                AppState.data.release.labels[0] = { ...originalLabel, ...NO_LABEL };
-
-                const { mainLabelList } = AppState.dom;
-                if (mainLabelList) {
-                    UI_UTILS.updateLabelLink(mainLabelList, NO_LABEL.name, NO_LABEL.mbid);
-
-                    const overwrittenSpan = UI_UTILS.createIndicatorSpan('overwritten', originalLabel.name, {
-                        tooltipPrefix: 'Original label:',
-                    });
-                    if (!mainLabelList.nextElementSibling || !mainLabelList.nextElementSibling.classList.contains('he-overwritten-label')) {
-                        mainLabelList.parentNode.insertBefore(overwrittenSpan, mainLabelList.nextSibling);
-                    }
+                let remainingLabel = labelName;
+                for (const artistName of sortedArtists) {
+                    const escapedName = artistName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const regex = new RegExp(escapedName, 'i');
+                    remainingLabel = remainingLabel.replace(regex, '');
                 }
+                const isSelf = remainingLabel.length === 0 || SEPARATORS_REGEX.test(remainingLabel);
+                return { isSelf, originalLabel, index };
+            });
+
+            const selfReleaseItems = labelStatuses.filter(s => s.isSelf);
+            if (selfReleaseItems.length === 0) return;
+
+            const allLabelsAreSelf = selfReleaseItems.length === releaseData.labels.length;
+            const { labelListElements } = AppState.dom;
+
+            // 3. Update state and UI
+            if (allLabelsAreSelf && releaseData.labels.length > 1) {
+                // Consolidate all to a single [no label] entry
+                const originalNames = selfReleaseItems.map(s => s.originalLabel.name).join(', ');
+
+                // Update State
+                AppState.data.release.labels = [{ ...selfReleaseItems[0].originalLabel, ...NO_LABEL }];
+
+                // Update UI
+                UI_UTILS.replaceReleaseLabels(NO_LABEL.name, NO_LABEL.mbid, originalNames);
+            } else {
+                // Individual replacements for partial matches or single label
+                selfReleaseItems.forEach(item => {
+                    const { originalLabel, index } = item;
+                    AppState.data.release.labels[index] = { ...originalLabel, ...NO_LABEL };
+
+                    const labelListElement = labelListElements[index];
+                    if (labelListElement) {
+                        UI_UTILS.updateLabelLink(labelListElement, NO_LABEL.name, NO_LABEL.mbid);
+
+                        const overwrittenSpan = UI_UTILS.createIndicatorSpan('overwritten', originalLabel.name, {
+                            tooltipPrefix: 'Original label:',
+                        });
+                        if (!labelListElement.nextElementSibling || !labelListElement.nextElementSibling.classList.contains('he-overwritten-label')) {
+                            labelListElement.parentNode.insertBefore(overwrittenSpan, labelListElement.nextSibling);
+                        }
+                    }
+                });
             }
         },
 
@@ -2087,7 +2154,7 @@
 
         mapLabelMbids: () => {
             const releaseData = getReleaseDataFromJSON();
-            if (!releaseData?.labels?.length || releaseData.labels[0].mbid) {
+            if (!releaseData?.labels?.length) {
                 return;
             }
 
@@ -2096,27 +2163,33 @@
 
             if (labelMap.size === 0) return;
 
-            const currentLabelName = releaseData.labels[0].name.trim();
-            const matchedUrl = labelMap.get(currentLabelName);
+            const { labelListElements } = AppState.dom;
 
-            if (matchedUrl) {
-                const mbid = matchedUrl.split('/').pop();
-                AppState.data.release.labels[0].mbid = mbid;
+            releaseData.labels.forEach((originalLabel, index) => {
+                if (originalLabel.mbid) return;
 
-                const { mainLabelList } = AppState.dom;
-                if (mainLabelList) {
-                    UI_UTILS.updateLabelLink(mainLabelList, currentLabelName, mbid);
-                    const addedSpan = UI_UTILS.createIndicatorSpan('added', mbid, {
-                        type: 'added',
-                        tooltip: `MBID ${mbid} added via user mapping.`,
-                    });
-                    if (!mainLabelList.nextElementSibling?.classList.contains('he-added-label')) {
-                        mainLabelList.parentNode.insertBefore(addedSpan, mainLabelList.nextSibling);
+                const currentLabelName = originalLabel.name.trim();
+                const matchedUrl = labelMap.get(currentLabelName);
+
+                if (matchedUrl) {
+                    const mbid = matchedUrl.split('/').pop();
+                    AppState.data.release.labels[index].mbid = mbid;
+
+                    const labelListElement = labelListElements[index];
+                    if (labelListElement) {
+                        UI_UTILS.updateLabelLink(labelListElement, currentLabelName, mbid);
+                        const addedSpan = UI_UTILS.createIndicatorSpan('added', mbid, {
+                            type: 'added',
+                            tooltip: `MBID ${mbid} added via user mapping.`,
+                        });
+                        if (!labelListElement.nextElementSibling?.classList.contains('he-added-label')) {
+                            labelListElement.parentNode.insertBefore(addedSpan, labelListElement.nextSibling);
+                        }
                     }
+                    const messageContent = `Mapped label "${currentLabelName}" to MBID: ${mbid}`;
+                    createAndInsertMessage('he-label-map-success', messageContent, 'debug');
                 }
-                const messageContent = `Mapped label "${currentLabelName}" to MBID: ${mbid}`;
-                createAndInsertMessage('he-label-map-success', messageContent, 'debug');
-            }
+            });
         },
 
         syncTrackArtist: () => {
@@ -2378,6 +2451,7 @@
         }
 
         AppState.dom.mainLabelList = document.querySelector('ul.release-labels li span.entity-links');
+        AppState.dom.labelListElements = document.querySelectorAll('ul.release-labels li span.entity-links');
         AppState.dom.scrapedArtistLinks = Array.from(document.querySelectorAll('.entity-links')).map(span => ({
             name: span.textContent.trim(),
             count: span.querySelectorAll('a').length,

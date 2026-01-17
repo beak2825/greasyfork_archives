@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GeoGuessr 5K Streak
 // @description  Adds a 5K streak counter that automatically updates while you play
-// @version      1.2
+// @version      1.3
 // @author       zxn
 // @match        *://*.geoguessr.com/*
 // @icon         https://www.google.com/s2/favicons?domain=geoguessr.com
@@ -66,7 +66,7 @@ const new5kFormat = (streak, positive) => `
 
 const new5kFormatSummary = (streak, positive) => `
       <div class="${cn("round-result_distanceUnitIndicator__")}">
-        <div class="${cn("shadow-text_root__")} shadow-text_${(!positive || streak == 0) ? "negative" : "positive"}TextShadow_CUSTOM_1_ ${cn("shadow-text_sizeSmallMedium__")}">${(!positive) ? "5K Streak Lost at" : "5K streak"}&nbsp;</div>
+        <div class="${cn("shadow-text_root__")} shadow-text_${(!positive || streak == 0) ? "negative" : "positive"}TextShadow_CUSTOM_1_ ${cn("shadow-text_sizeSmallMedium__")}">${(!positive) ? "5K Streak Lost at" : "5K Streak"}&nbsp;</div>
       </div>
       <div class="${cn("shadow-text_root__")} shadow-text_${(!positive || streak == 0) ? "negative" : "positive"}TextShadow_CUSTOM_1_ ${cn("shadow-text_sizeSmallMedium__")}">
         <div><div>${streak}</div></div>
@@ -101,23 +101,28 @@ function update5kStreak(newStreak) {
         }
         return;
     }
+    let prevStreak = sessionStorage.getItem("5kStreak");
     sessionStorage.setItem("5kStreak", newStreak);
-    if (!(streak > 0 && newStreak == 0)) {
+    if (!(prevStreak > 0 && newStreak == 0)) {
         sessionStorage.setItem("5kStreakBackup", newStreak);
     };
     if (document.getElementById("5k-streak") != null) {
         document.getElementById("5k-streak").innerHTML = newStreak;
     };
     if (document.getElementById("5k-streak2") != null) {
-        document.getElementById("5k-streak2").innerHTML = new5kFormat(newStreak, true);
-        if (newStreak == 0 && streak > 0) {
-            document.getElementById("5k-streak2").innerHTML = new5kFormat(streak, false);
+        if (newStreak == 0 && prevStreak > 0) {
+            document.getElementById("5k-streak2").innerHTML = new5kFormat(prevStreak, false);
+        }
+        else {
+            document.getElementById("5k-streak2").innerHTML = new5kFormat(newStreak, true);
         };
     };
     if (document.getElementById("5k-streak3") != null) {
-        document.getElementById("5k-streak3").innerHTML = new5kFormatSummary(newStreak, true);
-        if (newStreak == 0 && streak > 0) {
-            document.getElementById("5k-streak3").innerHTML = new5kFormatSummary(streak, false);
+        if (newStreak == 0 && prevStreak > 0) {
+            document.getElementById("5k-streak3").innerHTML = new5kFormatSummary(prevStreak, false);
+        }
+        else {
+            document.getElementById("5k-streak3").innerHTML = new5kFormatSummary(newStreak, true);
         };
     };
     streak = newStreak;
@@ -158,8 +163,8 @@ new MutationObserver(async (mutations) => {
     if (!checkGameMode() || lastDoCheckCall >= (Date.now() - 50)) return;
     lastDoCheckCall = Date.now();
     await scanStyles()
-    if (AUTOMATIC) await do5kCheck();
     add5kStreakStatusBar();
     add5kStreakRoundResult();
     add5kStreakGameSummary();
+    if (AUTOMATIC) await do5kCheck();
 }).observe(document.body, { subtree: true, childList: true });

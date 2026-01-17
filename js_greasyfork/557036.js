@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Filter Titles by Regex. Block Users by list or regex (Hides videos)
 // @namespace    jjenkx
-// @version      1.0
+// @version      1.1
 // @license      MIT
 // @description  Blocks channels, title regex, channel regex. Hides videos that match list or regex
 // @match        https://www.youtube.com/*
@@ -16,93 +16,93 @@
 (async function() {
     'use strict';
 
-    // -------------------------------------------------------------------------
-    // STORAGE KEYS
-    // Persistent user settings are saved under these keys. They store:
-    //  - Whether filtering is on or off
-    //  - A set of blocked channel names
-    //  - Regex lists for channel names
-    //  - Regex lists for video titles
-    // -------------------------------------------------------------------------
+    // PAUSE LOGIC ADDED
+    let tabActive = !document.hidden;
+    document.addEventListener("visibilitychange", () => {
+        tabActive = !document.hidden;
+    });
+
     const KEY_ENABLED = "yt_filters_enabled";
     const KEY_BLOCKED_CHANNELS = "yt_blocked_channels";
     const KEY_CHANNEL_REGEXES = "yt_channel_regexes";
     const KEY_TITLE_REGEXES = "yt_title_regexes";
+    const KEY_MIN_VIEWS = "yt_min_views";
 
-    // -------------------------------------------------------------------------
-    // LOAD USER SETTINGS
-    // These are pulled from Greasemonkey storage asynchronously.
-    // blockedChannels is stored as a Set for fast exact-match lookups.
-    // Regex lists are stored as plain arrays and turned into RegExp later.
-    // -------------------------------------------------------------------------
+    const KEY_EN_BLOCKED = "yt_en_blocked";
+    const KEY_EN_CHAN_REGEX = "yt_en_chan_regex";
+    const KEY_EN_TITLE_REGEX = "yt_en_title_regex";
+    const KEY_EN_MIN_VIEWS = "yt_en_min_views";
+
     let filtersEnabled = await GM.getValue(KEY_ENABLED, true);
     let blockedChannels = new Set(await GM.getValue(KEY_BLOCKED_CHANNELS, []));
     let channelRegexes = await GM.getValue(KEY_CHANNEL_REGEXES, []);
     let titleRegexes = await GM.getValue(KEY_TITLE_REGEXES, []);
+    let minViews = await GM.getValue(KEY_MIN_VIEWS, 0);
 
-    // -------------------------------------------------------------------------
-    // compile(list)
-    // Safely builds an array of RegExp objects. Invalid patterns are ignored.
-    // All regexes use the "i" flag to make matching case-insensitive.
-    // -------------------------------------------------------------------------
+    let enBlocked = await GM.getValue(KEY_EN_BLOCKED, true);
+    let enChanRegex = await GM.getValue(KEY_EN_CHAN_REGEX, true);
+    let enTitleRegex = await GM.getValue(KEY_EN_TITLE_REGEX, true);
+    let enMinViews = await GM.getValue(KEY_EN_MIN_VIEWS, true);
+
+    const counts = {
+        blocked: 0,
+        chanRegex: 0,
+        titleRegex: 0,
+        minViews: 0,
+        total: 0
+    };
+
+    function resetCounts() {
+        counts.blocked = 0;
+        counts.chanRegex = 0;
+        counts.titleRegex = 0;
+        counts.minViews = 0;
+        counts.total = 0;
+    }
+
     function compile(list) {
         const out = [];
         for (const s of list) {
-            try {
-                out.push(new RegExp(s, "i"));
-            } catch {}
+            try { out.push(new RegExp(s, "i")); } catch {}
         }
         return out;
     }
 
-    // Precompiled regex lists used for filtering
     let rChan = compile(channelRegexes);
     let rTitle = compile(titleRegexes);
 
-    // -------------------------------------------------------------------------
-    // SAVE FUNCTIONS
-    // These update both GM storage and the compiled regex arrays.
-    // -------------------------------------------------------------------------
-    async function saveBlocked() {
+    async function saveAll() {
         await GM.setValue(KEY_BLOCKED_CHANNELS, [...blockedChannels]);
-    }
-
-    async function saveChannelRegex() {
         await GM.setValue(KEY_CHANNEL_REGEXES, channelRegexes);
-        rChan = compile(channelRegexes);
-    }
-
-    async function saveTitleRegex() {
         await GM.setValue(KEY_TITLE_REGEXES, titleRegexes);
+        await GM.setValue(KEY_MIN_VIEWS, minViews);
+
+        await GM.setValue(KEY_EN_BLOCKED, enBlocked);
+        await GM.setValue(KEY_EN_CHAN_REGEX, enChanRegex);
+        await GM.setValue(KEY_EN_TITLE_REGEX, enTitleRegex);
+        await GM.setValue(KEY_EN_MIN_VIEWS, enMinViews);
+
+        rChan = compile(channelRegexes);
         rTitle = compile(titleRegexes);
+
+        textByKey.clear();
+        viewsByKey.clear();
     }
 
-    // -------------------------------------------------------------------------
-    // DISABLE NATIVE SCROLL ANCHORING
-    // YouTube dynamically inserts rows into the main grid. Overflow anchoring
-    // tries to auto-preserve the scroll position but behaves unpredictably
-    // when nodes are aggressively hidden. We disable it and take full control.
-    // -------------------------------------------------------------------------
     (function disableScrollAnchor() {
         const st = document.createElement("style");
         st.textContent = "html,body,ytd-app,#content,#page-manager{overflow-anchor:none !important;}";
         document.head.appendChild(st);
     })();
 
-    // -------------------------------------------------------------------------
-    // HARD PIXEL SCROLL LOCK
-    // lockedY always holds the last known good scroll position. When jumps
-    // occur due to YouTube reflowing content, restoreY() forcibly resets the
-    // viewport over several animation frames to eliminate jitter.
-    // -------------------------------------------------------------------------
     let lockedY = window.scrollY;
     let restoring = false;
 
     window.addEventListener("scroll", () => {
+        if (!tabActive) return;  // ADDED
         if (!restoring) lockedY = window.scrollY;
     }, { passive: true });
 
-    // restoreY() repeatedly locks the scroll position for a few frames
     function restoreY() {
         const target = lockedY;
         let frames = 6;
@@ -110,56 +110,39 @@
             restoring = true;
             window.scrollTo(0, target);
             frames--;
-            if (frames > 0) {
-                requestAnimationFrame(step);
-            } else {
-                restoring = false;
-            }
+            if (frames > 0) requestAnimationFrame(step);
+            else restoring = false;
         }
         requestAnimationFrame(step);
     }
 
-    // -------------------------------------------------------------------------
-    // ANTI-JUMP DELTA STABILIZER
-    // YouTube sometimes loads many new tiles above the current viewport when
-    // scrolling quickly downward, causing a massive sudden jump upward.
-    //
-    // The logic here:
-    //  - Track scroll direction
-    //  - Detect large negative delta while direction is downward
-    //  - Trigger multi-frame stabilization restoring lockedY repeatedly
-    // -------------------------------------------------------------------------
     let lastScrollY = window.scrollY;
-    let lastDirection = 0;       // 1 = down, -1 = up
+    let lastDirection = 0;
     let antiJumpActive = false;
 
     window.addEventListener("scroll", () => {
+        if (!tabActive) return;  // ADDED
+
         const y = window.scrollY;
         const diff = y - lastScrollY;
-
         if (diff > 0) lastDirection = 1;
         else if (diff < 0) lastDirection = -1;
-
-        // Large upward spike while scrolling down = YouTube grid jump
         if (lastDirection === 1 && diff < -250) {
             antiJumpActive = true;
             lockedY = lastScrollY;
             hardRestoreScrollStabilized();
         }
-
         lastScrollY = y;
     }, { passive: true });
 
-    // Hard stabilization over many frames
     function hardRestoreScrollStabilized() {
         let frames = 10;
         function loop() {
             restoring = true;
             window.scrollTo(0, lockedY);
             frames--;
-            if (frames > 0 && antiJumpActive) {
-                requestAnimationFrame(loop);
-            } else {
+            if (frames > 0 && antiJumpActive) requestAnimationFrame(loop);
+            else {
                 antiJumpActive = false;
                 restoring = false;
             }
@@ -167,62 +150,6 @@
         requestAnimationFrame(loop);
     }
 
-    // -------------------------------------------------------------------------
-    // extract(node)
-    // Recursively extracts all visible text from a DOM subtree, including
-    // shadow DOM. This is necessary because many YouTube components
-    // use shadow roots and nested spans.
-    // -------------------------------------------------------------------------
-    function extract(node) {
-        let out = "";
-
-        function walk(n) {
-            if (!n) return;
-
-            // Text node
-            if (n.nodeType === 3) {
-                const t = n.textContent.trim();
-                if (t) out += " " + t;
-                return;
-            }
-
-            // Shadow root support
-            if (n.shadowRoot) {
-                for (const c of n.shadowRoot.childNodes) walk(c);
-            }
-
-            // Regular children
-            for (const c of n.childNodes) walk(c);
-        }
-
-        walk(node);
-        return out.trim();
-    }
-
-    // -------------------------------------------------------------------------
-    // MATCH LOGIC
-    // matchChannel(name): true if channel is blocked by exact name or regex.
-    // matchTitle(text):   true if any title regex matches.
-    // -------------------------------------------------------------------------
-    function matchChannel(name) {
-        if (!name) return false;
-        if (blockedChannels.has(name)) return true;
-        for (const r of rChan) if (r.test(name)) return true;
-        return false;
-    }
-
-    function matchTitle(txt) {
-        if (!txt) return false;
-        for (const r of rTitle) if (r.test(txt)) return true;
-        return false;
-    }
-
-    // -------------------------------------------------------------------------
-    // strongHide(node)
-    // Correct node to hide is the full ytd-rich-item-renderer element.
-    // We collapse height, margins, borders, and overflow so the grid layout
-    // shows no gaps whatsoever.
-    // -------------------------------------------------------------------------
     function strongHide(node) {
         node.style.display = "none";
         node.style.visibility = "hidden";
@@ -233,7 +160,6 @@
         node.style.overflow = "hidden";
     }
 
-    // Remove forced styles to make node visible again
     function strongUnhide(node) {
         node.style.display = "";
         node.style.visibility = "";
@@ -247,7 +173,6 @@
         node.style.background = "";
     }
 
-    // Visual highlight for debug when filters are disabled
     function highlight(node) {
         strongUnhide(node);
         node.style.outline = "3px solid yellow";
@@ -255,65 +180,174 @@
         node.style.background = "rgba(255,255,0,0.2)";
     }
 
-    // -------------------------------------------------------------------------
-    // INLINE BLOCK BUTTON
-    // Inserts a tiny "[Block]" or "[Unblock]" button next to channel names.
-    // Clicking toggles their presence in blockedChannels and reruns filters.
-    // -------------------------------------------------------------------------
-    function addBlockButton(anchor, name) {
-        if (!anchor) return;
-        if (anchor.nextSibling && anchor.nextSibling.className === "yt-block-inline-btn") return;
-
-        const b = document.createElement("button");
-        b.className = "yt-block-inline-btn";
-        b.textContent = blockedChannels.has(name) ? "[Unblock]" : "[Block]";
-
-        Object.assign(b.style, {
-            marginLeft: "6px",
-            fontSize: "12px",
-            cursor: "pointer",
-            padding: "0 4px",
-            border: "1px solid #666",
-            background: blockedChannels.has(name) ? "#444" : "#c00",
-            color: "#fff",
-            borderRadius: "2px"
-        });
-
-        b.onclick = async e => {
-            e.stopPropagation();
-            e.preventDefault();
-
-            if (blockedChannels.has(name)) {
-                blockedChannels.delete(name);
-            } else {
-                blockedChannels.add(name);
+    function extractDeep(node) {
+        let out = "";
+        function walk(n) {
+            if (!n) return;
+            if (n.nodeType === 3) {
+                const t = n.textContent.trim();
+                if (t) out += " " + t;
+                return;
             }
-
-            await saveBlocked();
-            rerunAll();
-        };
-
-        anchor.insertAdjacentElement("afterend", b);
+            if (n.shadowRoot) for (const c of n.shadowRoot.childNodes) walk(c);
+            for (const c of n.childNodes) walk(c);
+        }
+        walk(node);
+        return out.trim();
     }
 
-    // -------------------------------------------------------------------------
-    // MAIN SELECTOR
-    // ytd-rich-item-renderer is the official grid cell on homepage/explore/etc.
-    // This is the only reliable and stable node for actual video items.
-    // -------------------------------------------------------------------------
+    function getVideoKey(node) {
+        const a = node.querySelector('a#thumbnail, a[href*="watch?v="], a[href^="/shorts/"]');
+        let href = "";
+        if (a) {
+            href = a.getAttribute("href") || "";
+            if (!href && a.href) href = a.href;
+        }
+        if (!href) {
+            const t = node.querySelector("#video-title");
+            const title = t ? (t.textContent || "").trim() : "";
+            const c = node.querySelector('a.yt-core-attributed-string__link[href^="/@"]');
+            const ch = c ? (c.textContent || "").trim() : "";
+            return "fallback:" + ch + "|" + title;
+        }
+        if (href.startsWith("/")) href = location.origin + href;
+        const m1 = href.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
+        if (m1) return "v:" + m1[1];
+        const m2 = href.match(/\/shorts\/([a-zA-Z0-9_-]{6,})/);
+        if (m2) return "s:" + m2[1];
+        return "u:" + href;
+    }
+
+    function getTitleText(node) {
+        const t = node.querySelector("#video-title");
+        if (t && t.textContent) return t.textContent.trim();
+        const a = node.querySelector('a#video-title-link, a[href*="watch?v="][title]');
+        if (a) {
+            const tt = a.getAttribute("title");
+            if (tt) return tt.trim();
+            if (a.textContent) return a.textContent.trim();
+        }
+        return "";
+    }
+
+    function getChannelName(node) {
+        const a = node.querySelector('a.yt-core-attributed-string__link[href^="/@"]');
+        return a ? (a.textContent || "").trim() : "";
+    }
+
+    function parseViewsFast(node) {
+        const meta = node.querySelector("#metadata-line");
+        if (meta) {
+            const spans = meta.querySelectorAll("span");
+            for (const s of spans) {
+                const t = (s.textContent || "");
+                if (!t.includes("view")) continue;
+                const m = t.replace(/,/g, "").match(/([\d.]+)\s*(K|M)?\s*view/i);
+                if (!m) continue;
+                let v = parseFloat(m[1]);
+                if (m[2] === "K") v *= 1000;
+                if (m[2] === "M") v *= 1000000;
+                return Math.floor(v);
+            }
+        }
+        const spans2 = node.querySelectorAll("span");
+        for (const s of spans2) {
+            const t = (s.textContent || "");
+            if (!t.includes("view")) continue;
+            const m = t.replace(/,/g, "").match(/([\d.]+)\s*(K|M)?\s*view/i);
+            if (!m) continue;
+            let v = parseFloat(m[1]);
+            if (m[2] === "K") v *= 1000;
+            if (m[2] === "M") v *= 1000000;
+            return Math.floor(v);
+        }
+        return null;
+    }
+
+    const textByKey = new Map();
+    const viewsByKey = new Map();
+
+    function pruneMap(m) {
+        if (m.size <= 6000) return;
+        let n = 0;
+        for (const k of m.keys()) {
+            m.delete(k);
+            n++;
+            if (n >= 1200) break;
+        }
+    }
+
+    function getTitleMatchText(node, key) {
+        let v = textByKey.get(key);
+        if (v !== undefined) return v;
+
+        const title = getTitleText(node);
+        const ch = getChannelName(node);
+        const meta = node.querySelector("#metadata-line");
+        const metaTxt = meta ? (meta.textContent || "").trim() : "";
+
+        v = (title + " " + ch + " " + metaTxt).trim();
+
+        if (!v) v = extractDeep(node);
+
+        textByKey.set(key, v);
+        pruneMap(textByKey);
+        return v;
+    }
+
+    function getViewsCached(node, key) {
+        let v = viewsByKey.get(key);
+        if (v !== undefined) return v;
+        v = parseViewsFast(node);
+        viewsByKey.set(key, v);
+        pruneMap(viewsByKey);
+        return v;
+    }
+
     const SELECT = "ytd-rich-item-renderer";
 
-    // -------------------------------------------------------------------------
-    // process(node)
-    // Extracts text, finds channel anchor, tests filters, hides or highlights,
-    // attaches block button. Called for both existing and newly inserted nodes.
-    // -------------------------------------------------------------------------
-    function process(node) {
-        const txt = extract(node);
-        const anchor = node.querySelector('a.yt-core-attributed-string__link[href^="/@"]');
-        const name = anchor ? anchor.textContent.trim() : "";
+    let toggleBtn = null;
+    let cntBlockedSpan = null;
+    let cntChanSpan = null;
+    let cntTitleSpan = null;
+    let cntViewsSpan = null;
 
-        const hit = matchChannel(name) || matchTitle(txt);
+    function updateCountUI() {
+        if (toggleBtn) {
+            toggleBtn.textContent = filtersEnabled ? "Filter: ON (" + counts.total + ")" : "Filter: OFF (" + counts.total + ")";
+        }
+        if (cntBlockedSpan) cntBlockedSpan.textContent = String(counts.blocked);
+        if (cntChanSpan) cntChanSpan.textContent = String(counts.chanRegex);
+        if (cntTitleSpan) cntTitleSpan.textContent = String(counts.titleRegex);
+        if (cntViewsSpan) cntViewsSpan.textContent = String(counts.minViews);
+    }
+
+    function evalHitReason(node, key, name) {
+        if (enBlocked && name && blockedChannels.has(name)) return "blocked";
+        if (enChanRegex && name) {
+            for (const r of rChan) {
+                if (r.test(name)) return "chanRegex";
+            }
+        }
+        if (enTitleRegex && rTitle.length) {
+            const txt = getTitleMatchText(node, key);
+            for (const r of rTitle) {
+                if (r.test(txt)) return "titleRegex";
+            }
+        }
+        if (enMinViews && minViews > 0) {
+            const views = getViewsCached(node, key);
+            if (views !== null && views < minViews) return "minViews";
+        }
+        return null;
+    }
+
+    function process(node) {
+        const key = getVideoKey(node);
+        const name = getChannelName(node);
+
+        const reason = evalHitReason(node, key, name);
+        const hit = !!reason;
 
         if (hit) {
             if (filtersEnabled) strongHide(node);
@@ -321,95 +355,76 @@
         } else {
             strongUnhide(node);
         }
-
-        if (anchor && name) addBlockButton(anchor, name);
     }
 
-    // -------------------------------------------------------------------------
-    // rerunAll()
-    // Re-applies filtering to every video tile on the page and then restores
-    // the scroll position to prevent layout shift.
-    // -------------------------------------------------------------------------
+    function recountAll() {
+        resetCounts();
+        for (const n of document.querySelectorAll(SELECT)) {
+            const key = getVideoKey(n);
+            const name = getChannelName(n);
+            const reason = evalHitReason(n, key, name);
+            if (!reason) continue;
+            counts.total++;
+            if (reason === "blocked") counts.blocked++;
+            else if (reason === "chanRegex") counts.chanRegex++;
+            else if (reason === "titleRegex") counts.titleRegex++;
+            else if (reason === "minViews") counts.minViews++;
+        }
+        updateCountUI();
+    }
+
     function rerunAll() {
         const prev = lockedY;
-        const list = document.querySelectorAll(SELECT);
-
-        for (const n of list) process(n);
-
+        for (const n of document.querySelectorAll(SELECT)) process(n);
         lockedY = prev;
         restoreY();
+        recountAll();
     }
 
-    // -------------------------------------------------------------------------
-    // MUTATION OBSERVER
-    // YouTube loads grid items dynamically (infinite scroll). This observer
-    // listens for any new DOM insertions anywhere inside <body>. When
-    // ytd-rich-item-renderer nodes appear, they are immediately processed.
-    // -------------------------------------------------------------------------
+    let recountTimer = null;
+    function scheduleRecount() {
+        if (recountTimer) clearTimeout(recountTimer);
+        recountTimer = setTimeout(() => {
+            recountTimer = null;
+            recountAll();
+        }, 80);
+    }
+
+    // MUTATION OBSERVER WRAPPED WITH TAB PAUSE
+
     new MutationObserver(muts => {
+        if (!tabActive) return;  // ADDED
+
         let added = false;
-
         for (const m of muts) {
-            if (!m.addedNodes) continue;
-
-            for (const n of m.addedNodes) {
+            for (const n of m.addedNodes || []) {
                 if (!(n instanceof HTMLElement)) continue;
-
-                // Direct match
                 if (n.matches && n.matches(SELECT)) {
                     process(n);
                     added = true;
                 }
-
-                // Deep match
                 if (n.querySelectorAll) {
                     const found = n.querySelectorAll(SELECT);
-                    if (found.length > 0) {
+                    if (found.length) {
                         for (const f of found) process(f);
                         added = true;
                     }
                 }
             }
         }
-
         if (added) {
-            const prev = lockedY;
-            lockedY = prev;
             restoreY();
+            scheduleRecount();
         }
     }).observe(document.body, { childList: true, subtree: true });
 
-    // -------------------------------------------------------------------------
-    // UI CREATION
-    // Adds two buttons in the top-right:
-    //  - Filter: ON/OFF   (toggles filtering)
-    //  - Rules            (opens settings panel)
-    //
-    // The panel contains:
-    //  - Blocked channels list
-    //  - Channel regex list
-    //  - Title regex list
-    //  - Save button
-    //
-    // The UI auto-heals by respawning if YouTube re-renders the masthead.
-    // -------------------------------------------------------------------------
-
     function findEnd() {
-        return (
-            document.querySelector("ytd-masthead #end") ||
-            document.querySelector("#masthead #end") ||
-            document.querySelector("#end")
-        );
+        return document.querySelector("ytd-masthead #end") || document.querySelector("#end");
     }
 
     function makeUI() {
         const mount = findEnd();
-        if (!mount) {
-            requestAnimationFrame(makeUI);
-            return;
-        }
-
-        if (document.querySelector(".yt-filter-button-wrap")) return;
+        if (!mount || document.querySelector(".yt-filter-button-wrap")) return;
 
         const wrap = document.createElement("div");
         wrap.className = "yt-filter-button-wrap";
@@ -418,118 +433,127 @@
         wrap.style.alignItems = "center";
         wrap.style.marginLeft = "12px";
 
-        // Filter toggle button
         const toggle = document.createElement("button");
-        toggle.textContent = filtersEnabled ? "Filter: ON" : "Filter: OFF";
+        toggleBtn = toggle;
+        toggle.textContent = filtersEnabled ? "Filter: ON (0)" : "Filter: OFF (0)";
         toggle.style.padding = "6px 10px";
         toggle.style.fontSize = "12px";
-        toggle.style.background = filtersEnabled ? "#c00" : "#0a0";
         toggle.style.color = "#fff";
-        toggle.style.border = "1px solid rgba(255,255,255,0.3)";
         toggle.style.borderRadius = "6px";
         toggle.style.cursor = "pointer";
+        toggle.style.background = filtersEnabled ? "#c00" : "#0a0";
 
         toggle.onclick = async () => {
             filtersEnabled = !filtersEnabled;
             await GM.setValue(KEY_ENABLED, filtersEnabled);
-            toggle.textContent = filtersEnabled ? "Filter: ON" : "Filter: OFF";
+            toggle.textContent = filtersEnabled ? "Filter: ON (" + counts.total + ")" : "Filter: OFF (" + counts.total + ")";
             toggle.style.background = filtersEnabled ? "#c00" : "#0a0";
             rerunAll();
         };
 
-        // Rules button (opens panel)
-        const rules = document.createElement("button");
-        rules.textContent = "Rules";
-        rules.style.padding = "6px 10px";
-        rules.style.fontSize = "12px";
-        rules.style.background = "#333";
-        rules.style.color = "#fff";
-        rules.style.border = "1px solid rgba(255,255,255,0.3)";
-        rules.style.borderRadius = "6px";
-        rules.style.cursor = "pointer";
+        const filtersBtn = document.createElement("button");
+        filtersBtn.textContent = "Filters";
+        filtersBtn.style.padding = "6px 10px";
+        filtersBtn.style.fontSize = "12px";
+        filtersBtn.style.background = "#333";
+        filtersBtn.style.color = "#fff";
+        filtersBtn.style.borderRadius = "6px";
+        filtersBtn.style.cursor = "pointer";
 
-        // Settings panel
         const box = document.createElement("div");
-        box.style.position = "fixed";
-        box.style.top = "60px";
-        box.style.right = "20px";
-        box.style.background = "#222";
-        box.style.color = "#fff";
-        box.style.padding = "12px";
-        box.style.border = "1px solid #444";
-        box.style.borderRadius = "8px";
-        box.style.zIndex = 999999;
-        box.style.minWidth = "300px";
-        box.style.display = "none";
+        Object.assign(box.style, {
+            position: "fixed",
+            top: "60px",
+            right: "20px",
+            background: "#222",
+            color: "#fff",
+            padding: "12px",
+            border: "1px solid #444",
+            borderRadius: "8px",
+            zIndex: 999999,
+            minWidth: "320px",
+            display: "none"
+        });
 
-        rules.onclick = () => {
+        filtersBtn.onclick = () => {
             box.style.display = box.style.display === "none" ? "block" : "none";
         };
 
-        const l1 = document.createElement("div");
-        l1.textContent = "Blocked Channels:";
-        const a1 = document.createElement("textarea");
-        a1.style.width = "100%";
-        a1.style.height = "80px";
-        a1.value = [...blockedChannels].join("\n");
+        function makeCountLabel(base, spanRefSetter) {
+            const span = document.createElement("span");
+            span.textContent = "0";
+            spanRefSetter(span);
+            const label = document.createElement("span");
+            label.append(base, " (", span, ")");
+            return label;
+        }
 
-        const l2 = document.createElement("div");
-        l2.textContent = "Channel Regex:";
-        const a2 = document.createElement("textarea");
-        a2.style.width = "100%";
-        a2.style.height = "80px";
-        a2.value = channelRegexes.join("\n");
+        function section(label, enabled, onToggle, body) {
+            const wrap = document.createElement("div");
+            const head = document.createElement("label");
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.checked = enabled;
+            cb.onchange = () => {
+                onToggle(cb.checked);
+                body.style.display = cb.checked ? "" : "none";
+                rerunAll();
+            };
+            head.append(cb, " ", label);
+            body.style.display = enabled ? "" : "none";
+            wrap.append(head, body);
+            return wrap;
+        }
 
-        const l3 = document.createElement("div");
-        l3.textContent = "Title Regex:";
-        const a3 = document.createElement("textarea");
-        a3.style.width = "100%";
-        a3.style.height = "80px";
-        a3.value = titleRegexes.join("\n");
+        function ta(value) {
+            const t = document.createElement("textarea");
+            t.style.width = "100%";
+            t.style.height = "70px";
+            t.value = value;
+            return t;
+        }
+
+        const a1 = ta([...blockedChannels].join("\n"));
+        const a2 = ta(channelRegexes.join("\n"));
+        const a3 = ta(titleRegexes.join("\n"));
+
+        const mv = document.createElement("input");
+        mv.type = "number";
+        mv.style.width = "100%";
+        mv.value = minViews;
 
         const save = document.createElement("button");
         save.textContent = "Save";
-        save.style.marginTop = "10px";
-        save.style.padding = "6px 10px";
-        save.style.background = "#0066cc";
-        save.style.color = "#fff";
-        save.style.border = "1px solid #444";
-        save.style.borderRadius = "6px";
-        save.style.cursor = "pointer";
-
+        save.style.marginTop = "8px";
         save.onclick = async () => {
             blockedChannels = new Set(a1.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean));
             channelRegexes = a2.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
             titleRegexes = a3.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-
-            await saveBlocked();
-            await saveChannelRegex();
-            await saveTitleRegex();
-
-            rChan = compile(channelRegexes);
-            rTitle = compile(titleRegexes);
-
+            minViews = parseInt(mv.value) || 0;
+            await saveAll();
             box.style.display = "none";
             rerunAll();
         };
 
-        box.append(l1, a1, l2, a2, l3, a3, save);
+        const lblBlocked = makeCountLabel("Blocked Channels", s => { cntBlockedSpan = s; });
+        const lblChan = makeCountLabel("Channel Regex", s => { cntChanSpan = s; });
+        const lblTitle = makeCountLabel("Title Regex", s => { cntTitleSpan = s; });
+        const lblViews = makeCountLabel("Min Views", s => { cntViewsSpan = s; });
 
-        wrap.append(toggle, rules);
+        box.append(
+            section(lblBlocked, enBlocked, v => enBlocked = v, a1),
+            section(lblChan, enChanRegex, v => enChanRegex = v, a2),
+            section(lblTitle, enTitleRegex, v => enTitleRegex = v, a3),
+            section(lblViews, enMinViews, v => enMinViews = v, mv),
+            save
+        );
+
+        wrap.append(toggle, filtersBtn);
         mount.append(wrap);
         document.body.append(box);
+
+        recountAll();
     }
 
-    // Build UI once
     makeUI();
-
-    // Auto-heal loop: if YouTube destroys the masthead and rebuilds,
-    // reinitialize the UI. Runs once per animation frame.
-    (function uiLoop() {
-        if (findEnd() && !document.querySelector(".yt-filter-button-wrap")) {
-            makeUI();
-        }
-        requestAnimationFrame(uiLoop);
-    })();
-
 })();

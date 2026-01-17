@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Model Selector
 // @namespace    http://tampermonkey.net/
-// @version      7.1
+// @version      8.0
 // @description  After entering the prompt and pressing Enter, you select the model.
 // @author       81standard
 // @match        https://gemini.google.com/*
@@ -33,26 +33,30 @@
                 { name: "Gemini Thinking (思考)", keyword: "思考" }
             ]
         },
-        en: { // 英語環境 (あなたの環境に合わせて修正)
+        en: { // 英語環境
             dialogTitle: "Select Model & Send",
             models: [
-                // Flash ではなく "Fast" と表示されている場合に対応
                 { name: "Gemini 2.0 Flash (Fast)", keyword: "Fast" },
-
-                // Advanced ではなく "Pro" と表示されている場合に対応
                 { name: "Gemini Pro",              keyword: "Pro" },
-
                 { name: "Gemini Thinking",         keyword: "Thinking" }
             ]
         }
     };
 
-    // 設定ロード
     const CURRENT_UI = isJapanese ? CONFIG.ja : CONFIG.en;
     const MODELS = CURRENT_UI.models;
 
     // ==========================================
-    // セレクタ定義 (共通)
+    // 3. 設定の記憶 (Memory機能)
+    // ==========================================
+    const STORAGE_KEY = 'gemini_selector_last_index';
+
+    // 保存された前回の位置を読み込む。なければ0(一番上)
+    let savedIndex = parseInt(localStorage.getItem(STORAGE_KEY));
+    let selectedIndex = (isNaN(savedIndex) || savedIndex >= MODELS.length) ? 0 : savedIndex;
+
+    // ==========================================
+    // セレクタ定義
     // ==========================================
     const MODE_MENU_TRIGGER = '[data-test-id="bard-mode-menu-button"]';
     const SEND_BUTTON_SELECTOR = 'button[aria-label*="送信"], button[aria-label*="Send"], button[aria-label*="Submit"]';
@@ -81,6 +85,8 @@
             padding: 8px 16px;
             background: #303134;
             border-bottom: 1px solid #5f6368;
+            display: flex;
+            justify-content: space-between;
         }
         .gms-option {
             padding: 12px 16px;
@@ -96,7 +102,6 @@
     `);
 
     let isDialogVisible = false;
-    let selectedIndex = 0;
 
     // キーボード操作
     document.addEventListener('keydown', function(e) {
@@ -140,12 +145,15 @@
 
         const title = document.createElement('div');
         title.className = 'gms-title';
-        title.innerText = CURRENT_UI.dialogTitle;
+        title.innerHTML = `<span>${CURRENT_UI.dialogTitle}</span>`;
         dialog.appendChild(title);
         document.body.appendChild(dialog);
 
         isDialogVisible = true;
-        selectedIndex = 0;
+
+        // ★ここ修正: 開くたびに0にリセットせず、現在の selectedIndex を維持する
+        // selectedIndex = 0; <--- この行を削除しました
+
         renderDialog();
     }
 
@@ -170,9 +178,12 @@
     }
 
     // ==========================================
-    // 探索ロジック
+    // 実行ロジック
     // ==========================================
     async function executeModelSwitchAndSend() {
+        // ★ここで選択した位置を記憶する
+        localStorage.setItem(STORAGE_KEY, selectedIndex);
+
         const targetModel = MODELS[selectedIndex];
         closeDialog();
 
@@ -187,7 +198,6 @@
             for (let i = 0; i < 20; i++) {
                 await sleep(100);
 
-                // XPathでキーワードを含む要素を探す
                 const xpath = `//*[contains(text(), '${targetModel.keyword}')]`;
                 const result = document.evaluate(xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 

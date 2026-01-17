@@ -4,7 +4,7 @@
 // @match         https://beta.waze.com/*editor*
 // @match         https://www.waze.com/*editor*
 // @exclude       https://www.waze.com/*user/*editor/*
-// @version       2026.01.16.14
+// @version       2026.01.17.07
 // @author        Abdullah Abbas
 // @grant         GM_addElement
 // @namespace     https://greasyfork.org/scripts/35547-wme-junction-angle-info/
@@ -17,7 +17,7 @@
 function run_ja() {
     "use strict";
 
-    var junctionangle_version = "2026.01.16.14";
+    var junctionangle_version = "2026.01.17.07";
     var ja_options = {};
     var ja_mapLayer;
 
@@ -62,7 +62,7 @@ function run_ja() {
             name: "abdullah abbas Junction Angle",
             settingsTitle: "Junction Angle Settings",
             uiLanguage: "Interface Language",
-            enableScript: "Enable", // New Toggle Label
+            enableScript: "Enable",
             resetToDefault: "Reset to default",
             defaultOn: "Show layer by default",
             override: "Check \"override instruction\"",
@@ -70,16 +70,16 @@ function run_ja() {
             guess: "Estimate routing instructions",
             roundaboutnav: "WIKI: Roundabouts",
             ghissues: "Report an Issue",
-            noInstructionColor: "Color: Best Continuation",
-            continueInstructionColor: "Color: Continue",
-            keepInstructionColor: "Color: Keep",
-            exitInstructionColor: "Color: Exit",
-            turnInstructionColor: "Color: Turn",
-            uTurnInstructionColor: "Color: U-Turn",
-            noTurnColor: "Color: Disallowed",
-            problemColor: "Color: Avoid",
-            roundaboutColor: "Color: Roundabout",
-            roundaboutOverlayColor: "Color: Overlay",
+            noInstructionColor: "Best Continuation",
+            continueInstructionColor: "Continue",
+            keepInstructionColor: "Keep",
+            exitInstructionColor: "Exit",
+            turnInstructionColor: "Turn",
+            uTurnInstructionColor: "U-Turn",
+            noTurnColor: "Disallowed",
+            problemColor: "Avoid",
+            roundaboutColor: "Roundabout",
+            roundaboutOverlayColor: "Overlay",
             roundaboutOverlayDisplay: "Show Roundabout Overlay",
             rOverNever: "Never",
             rOverSelected: "Selected",
@@ -91,7 +91,7 @@ function run_ja() {
             name: "abdullah abbas Junction Angle",
             settingsTitle: "إعدادات زوايا التقاطع",
             uiLanguage: "لغة الواجهة",
-            enableScript: "تفعيل", // New Toggle Label
+            enableScript: "تفعيل",
             resetToDefault: "استعادة الافتراضي",
             defaultOn: "إظهار الطبقة افتراضياً",
             override: "تحقق من تجاوز التعليمات",
@@ -99,16 +99,16 @@ function run_ja() {
             guess: "تقدير التوجيه",
             roundaboutnav: "ويكي: الدوارات",
             ghissues: "الإبلاغ عن مشكلة",
-            noInstructionColor: "لون: أفضل استمرار",
-            continueInstructionColor: "لون: تابع (Continue)",
-            keepInstructionColor: "لون: التزم (Keep)",
-            exitInstructionColor: "لون: مخرج (Exit)",
-            turnInstructionColor: "لون: انعطاف (Turn)",
-            uTurnInstructionColor: "لون: استدارة (U-Turn)",
-            noTurnColor: "لون: ممنوع",
-            problemColor: "لون: تجنب",
-            roundaboutColor: "لون: الدوار",
-            roundaboutOverlayColor: "لون: تظليل",
+            noInstructionColor: "أفضل استمرار",
+            continueInstructionColor: "تابع",
+            keepInstructionColor: "التزم",
+            exitInstructionColor: "مخرج",
+            turnInstructionColor: "انعطاف",
+            uTurnInstructionColor: "استدارة",
+            noTurnColor: "ممنوع",
+            problemColor: "تجنب",
+            roundaboutColor: "الدوار",
+            roundaboutOverlayColor: "تظليل",
             roundaboutOverlayDisplay: "إظهار تظليل الدوار",
             rOverNever: "أبداً",
             rOverSelected: "عند التحديد",
@@ -118,32 +118,32 @@ function run_ja() {
         },
         "ckb-IQ": {
             name: "abdullah abbas Junction Angle",
-            settingsTitle: "Rêkxerakanî Goşey Rêyan",
-            uiLanguage: "Zimanî Rûkar",
-            enableScript: "Çalak", // New Toggle Label
-            resetToDefault: "Gêranewe bo seretayî",
-            defaultOn: "Nîşandanî layer le sereta",
-            override: "Pşkinînî override",
-            overrideAngles: "Nîşandanî goşeyekani override",
-            guess: "Xemlandinî rêkarekanî rêga",
-            roundaboutnav: "WIKI: Fellke",
-            ghissues: "Tomarkrdinî kêşe",
-            noInstructionColor: "Reng: Baştirîn",
-            continueInstructionColor: "Reng: Berdewam",
-            keepInstructionColor: "Reng: Manewe",
-            exitInstructionColor: "Reng: Derçûn",
-            turnInstructionColor: "Reng: Badan",
-            uTurnInstructionColor: "Reng: Badanewe",
-            noTurnColor: "Reng: Qedexe",
-            problemColor: "Reng: Xirap",
-            roundaboutColor: "Reng: Fellke",
-            roundaboutOverlayColor: "Reng: Sêber",
-            roundaboutOverlayDisplay: "Nîşandanî Sêber",
-            rOverNever: "Hergîz",
-            rOverSelected: "Diyarîkraw",
-            rOverAlways: "Hemîşe",
-            decimals: "Desîmal",
-            pointSize: "Qebare"
+            settingsTitle: "ڕێکخستنەکانی گۆشەی یەکتربڕ",
+            uiLanguage: "زمانی ڕووکار",
+            enableScript: "چالاککردن",
+            resetToDefault: "گەڕاندنەوە بۆ بنەڕەت",
+            defaultOn: "نیشاندانی لایەر لە سەرەتا",
+            override: "پشکنینی تێپەڕاندن (Override)",
+            overrideAngles: "نیشاندانی گۆشەکانی تێپەڕاندن",
+            guess: "خەمڵاندنی ڕێنماییەکانی ڕێگا",
+            roundaboutnav: "ویکی: بازنە (Fellke)",
+            ghissues: "تۆمارکردنی کێشە",
+            noInstructionColor: "باشترین بەردەوامی",
+            continueInstructionColor: "بەردەوام",
+            keepInstructionColor: "مانەوە",
+            exitInstructionColor: "دەرچوون",
+            turnInstructionColor: "پێچ",
+            uTurnInstructionColor: "پێچکردنەوە",
+            noTurnColor: "قەدەغە",
+            problemColor: "خراپ/تێكچوو",
+            roundaboutColor: "بازنە (Fellke)",
+            roundaboutOverlayColor: "سێبەر",
+            roundaboutOverlayDisplay: "نیشاندانی سێبەر",
+            rOverNever: "هەرگیز",
+            rOverSelected: "دیاریکراو",
+            rOverAlways: "هەمیشە",
+            decimals: "دەیی (Decimals)",
+            pointSize: "قەبارەی هێڵ"
         }
     };
 
@@ -156,25 +156,23 @@ function run_ja() {
     // --- Settings Structure ---
     var ja_settings = {
         uiLanguage: { elementType: "select", elementId: "_jaSelUiLanguage", defaultValue: "en-US", options: ["en-US", "ar-IQ", "ckb-IQ"]},
-        enableScript: { elementType: "checkbox", elementId: "_jaCbEnableScript", defaultValue: true }, // New Enable Button
-        defaultOn: { elementType: "checkbox", elementId: "_jaCbShowLayer", defaultValue: true }, // Keep for legacy, but enableScript overrides visually
-        // Fixed settings removed from UI, handled in ja_getOption
+        enableScript: { elementType: "checkbox", elementId: "_jaCbEnableScript", defaultValue: true },
+        defaultOn: { elementType: "checkbox", elementId: "_jaCbShowLayer", defaultValue: true },
         override: { elementType: "checkbox", elementId: "_jaCbOverride", defaultValue: true, group: "guess" },
         overrideAngles: { elementType: "checkbox", elementId: "_jaCboverrideAngles", defaultValue: false, group: "override" },
         guess: { elementType: "checkbox", elementId: "_jaCbGuessRouting", defaultValue: true },
         // Colors
         noInstructionColor: { elementType: "color", elementId: "_jaTbNoInstructionColor", defaultValue: "#aaaaaa", group: "guess"},
         continueInstructionColor: { elementType: "color", elementId: "_jaTbContinueInstructionColor", defaultValue: "#ffffff", group: "guess"},
-        keepInstructionColor: { elementType: "color", elementId: "_jaTbKeepInstructionColor", defaultValue: "#ffff00", group: "guess"}, // Yellow
+        keepInstructionColor: { elementType: "color", elementId: "_jaTbKeepInstructionColor", defaultValue: "#ffff00", group: "guess"},
         exitInstructionColor: { elementType: "color", elementId: "_jaTbExitInstructionColor", defaultValue: "#00ffff", group: "guess"},
         turnInstructionColor: { elementType: "color", elementId: "_jaTbTurnInstructionColor", defaultValue: "#00ff00", group: "guess"},
         uTurnInstructionColor: { elementType: "color", elementId: "_jaTbUTurnInstructionColor", defaultValue: "#0055ff", group: "guess"},
         noTurnColor: { elementType: "color", elementId: "_jaTbNoTurnColor", defaultValue: "#ff0000", group: "guess"},
-        problemColor: { elementType: "color", elementId: "_jaTbProblemColor", defaultValue: "#ff0099", group: "guess"}, // Reddish Purple
-        // Roundabout settings updated (NEW DISTINCT COLORS)
+        problemColor: { elementType: "color", elementId: "_jaTbProblemColor", defaultValue: "#ff0099", group: "guess"},
         roundaboutOverlayDisplay: { elementType: "select", elementId: "_jaSelRoundaboutOverlayDisplay", defaultValue: "rOverAlways", options: ["rOverNever","rOverSelected","rOverAlways"]},
-        roundaboutOverlayColor: { elementType: "color", elementId: "_jaTbRoundaboutOverlayColor", defaultValue: "#2F4F4F", group: "roundaboutOverlayDisplay"}, // DarkSlateGray (Distinct from #ff0000 and #ff0099)
-        roundaboutColor: { elementType: "color", elementId: "_jaTbRoundaboutColor", defaultValue: "#4B0082", group: "roundaboutOverlayDisplay"}, // Indigo (Distinct from #ff0099)
+        roundaboutOverlayColor: { elementType: "color", elementId: "_jaTbRoundaboutOverlayColor", defaultValue: "#2F4F4F", group: "roundaboutOverlayDisplay"},
+        roundaboutColor: { elementType: "color", elementId: "_jaTbRoundaboutColor", defaultValue: "#4B0082", group: "roundaboutOverlayDisplay"},
         decimals: { elementType: "number", elementId: "_jaTbDecimals", defaultValue: 2, min: 0, max: 2},
         pointSize: { elementType: "number", elementId: "_jaTbPointSize", defaultValue: 12, min: 6, max: 20}
     };
@@ -192,7 +190,10 @@ function run_ja() {
     };
 
     function getselfeat () {
-        return window.W.selectionManager.getSelectedWMEFeatures ? window.W.selectionManager.getSelectedWMEFeatures() : window.W.selectionManager.getSelectedFeatures();
+        if (window.W.selectionManager.getSelectedWMEFeatures) {
+            return window.W.selectionManager.getSelectedWMEFeatures();
+        }
+        return window.W.selectionManager.getSelectedFeatures();
     }
 
     function junctionangle_init() {
@@ -205,7 +206,7 @@ function run_ja() {
         ja_load();
         setupHtml();
 
-        // Create Layer
+        // Create Layer with pointer-events protection through CSS
         if (window.W.map.getLayersBy("uniqueName","junction_angles").length === 0) {
             ja_mapLayer = new window.OpenLayers.Layer.Vector(ja_t("name"), {
                 displayInLayerSwitcher: true,
@@ -220,7 +221,6 @@ function run_ja() {
             ja_mapLayer = window.W.map.getLayersBy("uniqueName","junction_angles")[0];
         }
 
-        // WazeWrap integration
         try {
             if(typeof WazeWrap !== 'undefined' && WazeWrap.Interface) {
                 WazeWrap.Interface.AddLayerCheckbox("display", ja_t("name"), ja_getOption("enableScript"), layerToggled);
@@ -266,6 +266,7 @@ function run_ja() {
         ja_settings_header.appendChild(document.createTextNode(ja_t("settingsTitle")));
         ja_settings_dom_content.appendChild(ja_settings_header);
 
+        // CSS FIX: pointer-events: none ensures clicks pass through the layer to the map
         style.textContent = `
             #jaOptions > *:first-child { margin-top: 1em; }
             #jaOptions * { vertical-align: middle; }
@@ -274,6 +275,8 @@ function run_ja() {
             #jaOptions input, select { display: inline; margin-right: 7px; box-sizing: border-box; border: 1px solid #cccccc; border-radius: 5px; padding: 3px; }
             #jaOptions input[type="number"] { width: 4em; padding: 6px; }
             #jaOptions input[type="color"] { width: 30px; height: 30px; padding: 2px; border: none; cursor: pointer; }
+            /* Critical fix for selection issues */
+            .junction-angles, .junction-angles svg, .junction-angles div { pointer-events: none !important; }
         `;
 
         section.className = "form-group";
@@ -286,7 +289,6 @@ function run_ja() {
             var ja_input = document.createElement('input');
             var ja_label = document.createElement('label');
 
-            // Do not show defaultOn checkbox in UI as we have the Enable toggle
             if (a === "defaultOn") return;
 
             ja_controls_container.className = "controls-container";
@@ -302,7 +304,7 @@ function run_ja() {
                     if (a === "uiLanguage") {
                         if(labelText === "en-US") labelText = "English (US)";
                         if(labelText === "ar-IQ") labelText = "العربية (العراق)";
-                        if(labelText === "ckb-IQ") labelText = "Kurdî (Soranî)";
+                        if(labelText === "ckb-IQ") labelText = "کوردی (سۆرانی)";
                     } else {
                         labelText = ja_t(setting.options[i]);
                     }
@@ -317,7 +319,6 @@ function run_ja() {
                 }
             }
 
-            // Layout logic: if it's the enable button, put it inline or distinct
             ja_controls_container.appendChild(ja_input);
             ja_input.onchange = function() { ja_onchange(this); };
             ja_label.setAttribute("for", setting.elementId);
@@ -365,121 +366,133 @@ function run_ja() {
     function ja_calculate_real() {
         if (typeof ja_mapLayer === 'undefined' || !ja_mapLayer.visibility) return;
 
-        var selection = getselfeat();
-        if (selection.length === 0) {
-            ja_mapLayer.destroyFeatures();
-            return;
-        }
-
+        // SAFEGUARD: Always clean first
         ja_mapLayer.destroyFeatures();
-        ja_mapLayer.setZIndex(1005);
+        // Removed setZIndex(9999) to prevent blocking WME layers
 
-        var ja_nodes = [];
-        selection.forEach(function(element) {
-            var obj = element._wmeObject ? element._wmeObject : element;
-            if (obj.type === "node") ja_nodes.push(obj.attributes.id);
-            else if (obj.type === "segment") {
-                if (obj.attributes.fromNodeID) ja_nodes.push(obj.attributes.fromNodeID);
-                if (obj.attributes.toNodeID) ja_nodes.push(obj.attributes.toNodeID);
+        // SAFEGUARD: Try-catch block to prevent breaking WME selection
+        try {
+            var selection = getselfeat();
+
+            // If nothing selected, exit cleanly
+            if (!selection || selection.length === 0) {
+                return;
             }
-        });
-        ja_nodes = [...new Set(ja_nodes)];
 
-        ja_nodes.forEach(function(nodeId) {
-            var node = getByID(window.W.model.nodes, nodeId);
-            if(!node || !node.attributes) return;
+            var effective_selection = selection;
 
-            var angles = [];
-            var ja_selected_segments_count = 0;
-            var ja_selected_angles = [];
+            var ja_nodes = [];
+            effective_selection.forEach(function(element) {
+                var obj = element._wmeObject ? element._wmeObject : (element.model ? element.model : element);
+                if (obj && obj.type === "node") ja_nodes.push(obj.attributes.id);
+                else if (obj && obj.type === "segment") {
+                    if (obj.attributes.fromNodeID) ja_nodes.push(obj.attributes.fromNodeID);
+                    if (obj.attributes.toNodeID) ja_nodes.push(obj.attributes.toNodeID);
+                }
+            });
+            ja_nodes = [...new Set(ja_nodes)];
 
-            if (node.attributes.segIDs.length <= 1) return;
+            ja_nodes.forEach(function(nodeId) {
+                var node = getByID(window.W.model.nodes, nodeId);
+                if(!node || !node.attributes) return;
 
-            node.attributes.segIDs.forEach(function (nodeSegment, j) {
-                var s = window.W.model.segments.objects[nodeSegment];
-                if(!s) return;
+                var angles = [];
+                var ja_selected_segments_count = 0;
+                var ja_selected_angles = [];
 
-                var a = ja_getAngle(nodeId, s);
-                // Allow angles even if not exact match (robustness)
-                if(a === null) a = 0;
+                if (node.attributes.segIDs.length <= 1) return;
 
-                var isSelected = false;
-                selection.forEach(function(f){
-                    var f_id = f._wmeObject ? f._wmeObject.attributes.id : f.attributes.id;
-                    if(f_id === nodeSegment) isSelected = true;
+                node.attributes.segIDs.forEach(function (nodeSegment, j) {
+                    var s = window.W.model.segments.objects[nodeSegment];
+                    if(!s) return;
+
+                    var a = ja_getAngle(nodeId, s);
+                    if(a === null) a = 0;
+
+                    var isSelected = false;
+                    effective_selection.forEach(function(f){
+                        var f_obj = f._wmeObject ? f._wmeObject : (f.model ? f.model : f);
+                        if(f_obj && f_obj.attributes && f_obj.attributes.id === nodeSegment) isSelected = true;
+                    });
+
+                    angles[j] = [a, nodeSegment, isSelected];
+                    if (isSelected) ja_selected_segments_count++;
                 });
 
-                angles[j] = [a, nodeSegment, isSelected];
-                if (isSelected) ja_selected_segments_count++;
-            });
+                effective_selection.forEach(function (selectedSegment) {
+                    var s_obj = selectedSegment._wmeObject ? selectedSegment._wmeObject : (selectedSegment.model ? selectedSegment.model : selectedSegment);
+                    if (!s_obj || !s_obj.attributes) return;
 
-            // Collect selected angles
-            selection.forEach(function (selectedSegment) {
-                var selectedSegmentId = selectedSegment._wmeObject ? selectedSegment._wmeObject.attributes.id : selectedSegment.attributes.id;
-                if(node.attributes.segIDs.indexOf(selectedSegmentId) >= 0) {
-                    for(var j=0; j < angles.length; j++) {
-                        if(angles[j][1] === selectedSegmentId) {
-                            ja_selected_angles.push(angles[j]);
-                            break;
+                    var selectedSegmentId = s_obj.attributes.id;
+                    if(node.attributes.segIDs.indexOf(selectedSegmentId) >= 0) {
+                        for(var j=0; j < angles.length; j++) {
+                            if(angles[j][1] === selectedSegmentId) {
+                                ja_selected_angles.push(angles[j]);
+                                break;
+                            }
                         }
                     }
+                });
+                ja_selected_angles = [...new Set(ja_selected_angles.map(JSON.stringify))].map(JSON.parse);
+
+                var point;
+                var ja_label_distance = 25 * (1 + (0.2 * parseInt(ja_getOption("decimals"))));
+
+                if(!node.getOLGeometry()) return;
+
+                if (ja_selected_segments_count === 2 && ja_selected_angles.length === 2) {
+                    var a = ja_angle_diff(ja_selected_angles[0][0], ja_selected_angles[1][0], false);
+                    var ha = (parseFloat(ja_selected_angles[0][0]) + parseFloat(ja_selected_angles[1][0]))/2;
+                    if((Math.abs(ja_selected_angles[0][0]) + Math.abs(ja_selected_angles[1][0])) > 180 &&
+                    ((ja_selected_angles[0][0] < 0 && ja_selected_angles[1][0] > 0) ||
+                        (ja_selected_angles[0][0] > 0 && ja_selected_angles[1][0] < 0))) {
+                        ha += 180;
+                    }
+
+                    var ja_junction_type = ja_routing_type.TURN;
+                    if(ja_getOption("guess")) {
+                        ja_junction_type = ja_guess_routing_instruction(node, ja_selected_angles[0][1], ja_selected_angles[1][1], angles);
+                    }
+                    point = new window.OpenLayers.Geometry.Point(
+                        node.getOLGeometry().x + (ja_label_distance * Math.cos((ha * Math.PI) / 180)),
+                        node.getOLGeometry().y + (ja_label_distance * Math.sin((ha * Math.PI) / 180))
+                    );
+                    ja_draw_marker(point, node, ja_label_distance, a, ha, true, ja_junction_type);
+                }
+                else {
+                    angles.sort(function (a, b) { return a[0] - b[0]; });
+                    angles.forEach(function(angle, j) {
+                        var a = (360 + (angles[(j + 1) % angles.length][0] - angle[0])) % 360;
+                        var ha = (360 + ((a / 2) + angle[0])) % 360;
+                        var a_in = angles.filter(function(a) { return !!a[2]; })[0];
+
+                        if(ja_getOption("angleMode") === "aDeparture" && ja_selected_segments_count > 0 && a_in) {
+                            if(a_in[1] === angle[1]) return;
+                            ha = angle[0];
+                            a = ja_angle_diff(a_in[0], angles[j][0], false);
+                            point = new window.OpenLayers.Geometry.Point(
+                                node.getOLGeometry().x + (ja_label_distance * 2 * Math.cos((ha * Math.PI) / 180)),
+                                node.getOLGeometry().y + (ja_label_distance * 2 * Math.sin((ha * Math.PI) / 180))
+                            );
+                            ja_draw_marker(point, node, ja_label_distance, a, ha, true,
+                                        ja_getOption("guess") ?
+                                        ja_guess_routing_instruction(node, a_in[1], angle[1], angles) : ja_routing_type.TURN);
+
+                        } else {
+                            point = new window.OpenLayers.Geometry.Point(
+                                node.getOLGeometry().x + (ja_label_distance * 1.25 * Math.cos((ha * Math.PI) / 180)),
+                                node.getOLGeometry().y + (ja_label_distance * 1.25 * Math.sin((ha * Math.PI) / 180))
+                            );
+                            ja_draw_marker(point, node, ja_label_distance, a, ha);
+                        }
+                    });
                 }
             });
-
-            var point;
-            var ja_label_distance = 25 * (1 + (0.2 * parseInt(ja_getOption("decimals"))));
-
-             if (ja_selected_segments_count === 2 && ja_selected_angles.length === 2) {
-                var a = ja_angle_diff(ja_selected_angles[0][0], ja_selected_angles[1][0], false);
-                var ha = (parseFloat(ja_selected_angles[0][0]) + parseFloat(ja_selected_angles[1][0]))/2;
-                if((Math.abs(ja_selected_angles[0][0]) + Math.abs(ja_selected_angles[1][0])) > 180 &&
-                   ((ja_selected_angles[0][0] < 0 && ja_selected_angles[1][0] > 0) ||
-                    (ja_selected_angles[0][0] > 0 && ja_selected_angles[1][0] < 0))) {
-                    ha += 180;
-                }
-
-                var ja_junction_type = ja_routing_type.TURN;
-                if(ja_getOption("guess")) {
-                    ja_junction_type = ja_guess_routing_instruction(node, ja_selected_angles[0][1], ja_selected_angles[1][1], angles);
-                }
-                point = new window.OpenLayers.Geometry.Point(
-                    node.getOLGeometry().x + (ja_label_distance * Math.cos((ha * Math.PI) / 180)),
-                    node.getOLGeometry().y + (ja_label_distance * Math.sin((ha * Math.PI) / 180))
-                );
-                ja_draw_marker(point, node, ja_label_distance, a, ha, true, ja_junction_type);
-            }
-            else {
-                angles.sort(function (a, b) { return a[0] - b[0]; });
-                angles.forEach(function(angle, j) {
-                    var a = (360 + (angles[(j + 1) % angles.length][0] - angle[0])) % 360;
-                    var ha = (360 + ((a / 2) + angle[0])) % 360;
-                    var a_in = angles.filter(function(a) { return !!a[2]; })[0];
-
-                    if(ja_getOption("angleMode") === "aDeparture" && ja_selected_segments_count > 0 && a_in) {
-                        if(a_in[1] === angle[1]) return;
-                        ha = angle[0];
-                        a = ja_angle_diff(a_in[0], angles[j][0], false);
-                        point = new window.OpenLayers.Geometry.Point(
-                            node.getOLGeometry().x + (ja_label_distance * 2 * Math.cos((ha * Math.PI) / 180)),
-                            node.getOLGeometry().y + (ja_label_distance * 2 * Math.sin((ha * Math.PI) / 180))
-                        );
-                        ja_draw_marker(point, node, ja_label_distance, a, ha, true,
-                                       ja_getOption("guess") ?
-                                       ja_guess_routing_instruction(node, a_in[1], angle[1], angles) : ja_routing_type.TURN);
-
-                    } else {
-                        point = new window.OpenLayers.Geometry.Point(
-                            node.getOLGeometry().x + (ja_label_distance * 1.25 * Math.cos((ha * Math.PI) / 180)),
-                            node.getOLGeometry().y + (ja_label_distance * 1.25 * Math.sin((ha * Math.PI) / 180))
-                        );
-                        ja_draw_marker(point, node, ja_label_distance, a, ha);
-                    }
-                });
-            }
-        });
+        } catch(e) {
+            console.error("JA Error:", e);
+        }
     }
 
-    // --- Core Routing Logic ---
     function ja_guess_routing_instruction(node, s_in_a, s_out_a, angles) {
         var s_in_id = s_in_a, s_out_id = s_out_a, s_in = null, s_out = {}, angle;
 
@@ -559,19 +572,19 @@ function run_ja() {
         ja_mapLayer.addFeatures([anglePoint]);
     }
 
-    // Animation frame for smooth updates
     var pendingCalculation = false;
     function ja_calculate() {
         if(!pendingCalculation) {
             pendingCalculation = true;
-            window.requestAnimationFrame(function() {
-                ja_calculate_real();
-                pendingCalculation = false;
-            });
+            window.setTimeout(function(){
+                window.requestAnimationFrame(function() {
+                    ja_calculate_real();
+                    pendingCalculation = false;
+                });
+            }, 50);
         }
     }
 
-    // --- Helpers ---
     function ja_angle_diff(aIn, aOut, absolute) {
         var a = parseFloat(aOut) - parseFloat(aIn);
         if(a > 180) a -= 360;
@@ -579,15 +592,12 @@ function run_ja() {
         return absolute ? a : (a > 0 ? a - 180 : a + 180);
     }
 
-    // --- GEOMETRY HELPERS ---
-
     function getOLFeatureGeometryFromSegment(segment) {
-        // Safe check for segmentLayer features
         if(W.map.segmentLayer && W.map.segmentLayer.features) {
              const feature = W.map.segmentLayer.features.find((feat) => feat.attributes.wazeFeature && feat.attributes.wazeFeature.id === segment.attributes.id);
              if (feature) return feature.geometry;
         }
-        // Fallback to internal geometry if available
+        if (segment.getGeometry) return segment.getGeometry();
         if (segment.geometry) return segment.geometry;
         if (segment.getOLGeometry) return segment.getOLGeometry();
         return null;
@@ -617,7 +627,6 @@ function run_ja() {
         if (ja_node == null || ja_segment == null) return null;
         var ja_dx, ja_dy;
 
-        // Use the helpers to get points safely
         var pt1, pt2;
 
         if (ja_segment.attributes.fromNodeID === ja_node) {
@@ -630,13 +639,8 @@ function run_ja() {
 
         if (!pt1 || !pt2) return null;
 
-        if (ja_segment.attributes.fromNodeID === ja_node) {
-            ja_dx = pt2.x - pt1.x;
-            ja_dy = pt2.y - pt1.y;
-        } else {
-            ja_dx = pt2.x - pt1.x;
-            ja_dy = pt2.y - pt1.y;
-        }
+        ja_dx = pt2.x - pt1.x;
+        ja_dy = pt2.y - pt1.y;
 
         var ja_angle = Math.atan2(ja_dy, ja_dx);
         return ((ja_angle * 180 / Math.PI)) % 360;
@@ -658,7 +662,6 @@ function run_ja() {
     }
 
     function ja_getOption(name) {
-        // FIXED VALUES AS REQUESTED (HARDCODED)
         if (name === "angleMode") return "aDeparture";
         if (name === "angleDisplay") return "displayFancy";
         if (name === "angleDisplayArrows") return "⇐⇒⇖⇗⇑";
@@ -672,7 +675,7 @@ function run_ja() {
     function ja_setOption(name, val) {
         ja_options[name] = val;
         if(localStorage) {
-            localStorage.setItem("wme_ja_abdullah_options_v14", JSON.stringify(ja_options)); // Updated Version Key
+            localStorage.setItem("wme_ja_abdullah_options_v14", JSON.stringify(ja_options));
         }
     }
 
@@ -697,31 +700,26 @@ function run_ja() {
     var ja_load = function() {
         if(localStorage != null) {
             try {
-                // Try loading v14 settings
                 var stored = JSON.parse(localStorage.getItem("wme_ja_abdullah_options_v14"));
                 if(stored) {
                     ja_options = stored;
                 } else {
-                    // Fallback to v13/12
                     var old_stored = JSON.parse(localStorage.getItem("wme_ja_abdullah_options_v13")) || JSON.parse(localStorage.getItem("wme_ja_abdullah_options_v12"));
                     if(old_stored) {
                         ja_options = old_stored;
-                        // Force update NEW colors if migrating
                         ja_options.roundaboutColor = "#4B0082";
                         ja_options.roundaboutOverlayColor = "#2F4F4F";
                     } else {
-                        // Defaults
                         ja_options.turnInstructionColor = "#00ff00";
                         ja_options.uTurnInstructionColor = "#0055ff";
                         ja_options.exitInstructionColor = "#00ffff";
-                        ja_options.keepInstructionColor = "#ffff00"; // Yellow
+                        ja_options.keepInstructionColor = "#ffff00";
                         ja_options.noTurnColor = "#ff0000";
-                        ja_options.problemColor = "#ff0099"; // Reddish Purple
+                        ja_options.problemColor = "#ff0099";
                         ja_options.continueInstructionColor = "#ffffff";
                         ja_options.noInstructionColor = "#aaaaaa";
-                        // NEW DISTINCT COLORS
-                        ja_options.roundaboutOverlayColor = "#2F4F4F"; // DarkSlateGray
-                        ja_options.roundaboutColor = "#4B0082"; // Indigo
+                        ja_options.roundaboutOverlayColor = "#2F4F4F";
+                        ja_options.roundaboutColor = "#4B0082";
                     }
                 }
             } catch (e){}
@@ -818,15 +816,14 @@ function run_ja() {
         else if (typeof(obj.getObjectById) == "undefined") return obj.get(id);
     }
 
-    // --- Bootstrapping optimized ---
     function ja_bootstrap(retries) {
         retries = retries || 0;
-        if (retries >= 20) return; // Reduced retries
+        if (retries >= 20) return;
         try {
             if (ja_is_model_ready() && window.W.loginManager.isLoggedIn()) {
-                setTimeout(junctionangle_init, 100); // Reduced delay
+                setTimeout(junctionangle_init, 100);
             } else {
-                setTimeout(function () { ja_bootstrap(++retries); }, 250); // Faster check
+                setTimeout(function () { ja_bootstrap(++retries); }, 250);
             }
         } catch (err) {
             setTimeout(function () { ja_bootstrap(++retries); }, 250);

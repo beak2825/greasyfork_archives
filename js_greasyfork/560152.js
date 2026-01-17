@@ -2,9 +2,10 @@
 // @name        Redirect to wiki.nixos.org
 // @namespace   Violentmonkey Scripts
 // @match       https://nixos.wiki/*
-// @version     1.0.0
+// @version     1.0.1
 // @author      Henrique Kirch Heck
 // @description the nixos.org people have a new wiki
+// @supportURL  https://codeberg.org/henriquekh/nixos-wiki-redirect/issues
 // @icon        https://brand.nixos.org/logos/nixos-logomark-default-gradient-recommended.svg
 // @license     GPL-3.0-or-later
 // @grant       none

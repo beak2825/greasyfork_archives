@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Robux Display Controller
+// @name         Robux Display Controller (Improved)
 // @namespace    khanh_dev
-// @version      1.2
-// @description  Fake Robux display with controls, persistent value, and Enter support
+// @version      1.3
+// @description  Fake Robux display with controls, persistent value, and abbreviated formatting
 // @match        https://www.roblox.com/*
 // @match        https://web.roblox.com/*
 // @grant        none
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/551132/Robux%20Display%20Controller.user.js
-// @updateURL https://update.greasyfork.org/scripts/551132/Robux%20Display%20Controller.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/551132/Robux%20Display%20Controller%20%28Improved%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/551132/Robux%20Display%20Controller%20%28Improved%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -16,13 +16,27 @@
 
     let mockValue = parseInt(localStorage.getItem('mockRobux')) || 999999;
 
+    function formatRobux(val) {
+        if (val >= 1_000_000_000_000) {
+            return Math.floor(val / 1_000_000_000_000) + "T+";
+        } else if (val >= 1_000_000_000) {
+            return Math.floor(val / 1_000_000_000) + "B+";
+        } else if (val >= 1_000_000) {
+            return Math.floor(val / 1_000_000) + "M+";
+        } else if (val >= 1_000) {
+            return Math.floor(val / 1_000) + "K+";
+        } else {
+            return val.toLocaleString();
+        }
+    }
+
     function updateRobuxDisplay() {
         const robuxEl = document.getElementById("nav-robux-amount");
         if (robuxEl) {
-            robuxEl.textContent = mockValue.toLocaleString();
+            robuxEl.textContent = formatRobux(mockValue);
             robuxEl.setAttribute("data-robux-amount", mockValue);
         }
-        localStorage.setItem('mockRobux', mockValue); 
+        localStorage.setItem('mockRobux', mockValue);
     }
 
     function injectControlsAtTop() {
@@ -36,29 +50,25 @@
         controlBox.style.background = '#fff';
         controlBox.style.borderBottom = '1px solid #e5e5e5';
 
-        const btnAdd = document.createElement('button');
-        btnAdd.textContent = '+10';
-        btnAdd.onclick = (e) => {
-            e.stopPropagation();
-            mockValue += 10;
-            updateRobuxDisplay();
-        };
+        function createButton(label, onClick) {
+            const btn = document.createElement('button');
+            btn.textContent = label;
+            btn.onclick = e => { e.stopPropagation(); onClick(); };
+            Object.assign(btn.style, {
+                margin: '4px',
+                padding: '4px 8px',
+                fontSize: '12px',
+                cursor: 'pointer',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                background: '#eee'
+            });
+            return btn;
+        }
 
-        const btnSub = document.createElement('button');
-        btnSub.textContent = '-10';
-        btnSub.onclick = (e) => {
-            e.stopPropagation();
-            mockValue = Math.max(0, mockValue - 10);
-            updateRobuxDisplay();
-        };
-
-        const btnReset = document.createElement('button');
-        btnReset.textContent = 'Reset';
-        btnReset.onclick = (e) => {
-            e.stopPropagation();
-            mockValue = 0;
-            updateRobuxDisplay();
-        };
+        const btnAdd = createButton('+10', () => { mockValue += 10; updateRobuxDisplay(); });
+        const btnSub = createButton('-10', () => { mockValue = Math.max(0, mockValue - 10); updateRobuxDisplay(); });
+        const btnReset = createButton('Reset', () => { mockValue = 0; updateRobuxDisplay(); });
 
         const input = document.createElement('input');
         input.type = 'number';
@@ -79,25 +89,12 @@
             }
         });
 
-        const btnSet = document.createElement('button');
-        btnSet.textContent = 'Set';
-        btnSet.onclick = (e) => {
-            e.stopPropagation();
+        const btnSet = createButton('Set', () => {
             const val = parseInt(input.value);
             if (!isNaN(val) && val >= 0) {
                 mockValue = val;
                 updateRobuxDisplay();
             }
-        };
-
-        [btnAdd, btnSub, btnReset, btnSet].forEach(btn => {
-            btn.style.margin = '4px';
-            btn.style.padding = '4px 8px';
-            btn.style.fontSize = '12px';
-            btn.style.cursor = 'pointer';
-            btn.style.border = '1px solid #ccc';
-            btn.style.borderRadius = '4px';
-            btn.style.background = '#eee';
         });
 
         controlBox.appendChild(btnAdd);

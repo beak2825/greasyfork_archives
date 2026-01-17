@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SatoshiFaucet Detect Captcha & Click Reward
 // @namespace    http://violentmonkey.net/
-// @version      1.2
+// @version      1
 // @author       pcayb96
 // @description  Deteksi captcha sukses lalu klik Get Reward untuk cloudflare
 // @match        https://satoshifaucet.io/faucet/currency/*

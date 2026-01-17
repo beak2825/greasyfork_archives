@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stats, Shards, XP, Dust, Quest, Res, Loot and Level tracker
 // @namespace    http://tampermonkey.net/
-// @version      4.4.3
+// @version      4.5.1
 // @description  Tracks XP, Dust, leveling speed, quest time, as well as shards, stats, and overhauls items entirely
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=manarion.com
 // @match        *://manarion.com/*
@@ -14,6 +14,10 @@
 
 /*
  ======= Changelog =======
+ v4.5.1
+ Gems/Jewelcrafting added to the game! ... broke the loot tracker.
+ Added uncut gems to loot tracker.
+
  v4.4.3
  Show resources in the new order that the game shows them.
 
@@ -214,6 +218,22 @@ const ItemTypes = Object.freeze({
   PET_EGG: { id: 49, name: "Pet Egg", rarity: "rare" },
 
   ORB_OF_PERFECTION: { id: 50, name: "Orb of Perfection", rarity: "mythic" },
+
+  UNCUT_RUBY: { id: 52, name: "Uncut Ruby", rarity: "uncommon" },
+  UNCUT_SAPPHIRE: { id: 53, name: "Uncut Sapphire", rarity: "uncommon" },
+  UNCUT_EMERALD: { id: 54, name: "Uncut Emerald", rarity: "uncommon" },
+  UNCUT_DIAMOND: { id: 55, name: "Uncut Diamond", rarity: "uncommon" },
+  UNCUT_GARNET: { id: 56, name: "Uncut Garnet", rarity: "uncommon" },
+  UNCUT_AQUAMARINE: { id: 57, name: "Uncut Aquamarine", rarity: "uncommon" },
+  UNCUT_JADE: { id: 58, name: "Uncut Jade", rarity: "uncommon" },
+  UNCUT_CITRINE: { id: 59, name: "Uncut Citrine", rarity: "uncommon" },
+  UNCUT_TOPAZ: { id: 60, name: "Uncut Topaz", rarity: "uncommon" },
+  UNCUT_AMETHYST: { id: 61, name: "Uncut Amethyst", rarity: "uncommon" },
+  UNCUT_ONYX: { id: 62, name: "Uncut Onyx", rarity: "uncommon" },
+  UNCUT_TURQUOISE: { id: 63, name: "Uncut Turquoise", rarity: "uncommon" },
+  UNCUT_PERIDOT: { id: 64, name: "Uncut Peridot", rarity: "uncommon" },
+  UNCUT_TANZANITE: { id: 65, name: "Uncut Tanzanite", rarity: "uncommon" },
+  UNCUT_TOURMALINE: { id: 66, name: "Uncut Tourmaline", rarity: "uncommon" },
 
   // kept out of here on purpose since they are not really tracked loot drops
   // BOUND_CODEX = 38
@@ -1546,7 +1566,7 @@ const ui = {
     }
 
     // find the native game UI loot tracker
-    const lootTrackerElement = document.querySelector("div.scrollbar-none.scrollbar-track-transparent.h-60.grow-1.overflow-x-hidden.overflow-y-auto");
+    const lootTrackerElement = document.querySelector("div.scrollbar-thin.scrollbar-track-transparent.h-60.grow-1.overflow-x-hidden.overflow-y-auto");
     if (!lootTrackerElement) return;
 
     // add the main tracker container on the left menu

@@ -1,19 +1,19 @@
 // ==UserScript==
-// @name        Search roomnames with tags
+// @name        Search rooms with tags | Bonk.io
 // @license     MIT
 // @match       https://*.bonk.io/gameframe-release.html
 // @grant       none
-// @version     1.2
+// @version     1.3
 // @author      ancient_player
 // @description Search for multiple rooms by seperating each roomname with commas ",". A room will match if it includes at least one of the listed terms.
 // @namespace https://greasyfork.org/users/1558569
-// @downloadURL https://update.greasyfork.org/scripts/562169/Search%20roomnames%20with%20tags.user.js
-// @updateURL https://update.greasyfork.org/scripts/562169/Search%20roomnames%20with%20tags.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562169/Search%20rooms%20with%20tags%20%7C%20Bonkio.user.js
+// @updateURL https://update.greasyfork.org/scripts/562169/Search%20rooms%20with%20tags%20%7C%20Bonkio.meta.js
 // ==/UserScript==
 
 (function () {
     // Visuals -----
-
+    // Search input box
     let searchInput = document.createElement("input")
     searchInput.placeholder = "Filter roomnames by tags"
     searchInput.classList.add("roomlistbottombutton_dynamic", "roomlistbottombutton", "buttonShadow", "roomlistcreatewindowinput")
@@ -23,13 +23,28 @@
     document.getElementById("roomlist").prepend(searchInput)
     document.getElementById("roomlistfilterbutton").style.width = "120px"
 
+    // Hide rooms by lvl checkbox
+    let lvlCheckbox = document.createElement("input")
+    let lvlCheckboxContainer = document.createElement("div")
+    lvlCheckboxContainer.style = "position: absolute;left: 180px;font-family: futurept_b1;color: #e8e8e8;font-size: 17px;"
+    lvlCheckboxContainer.title = "Only show rooms joinable with your level"
+    lvlCheckboxContainer.textContent = "Hide rooms outside of lvl"
+    lvlCheckboxContainer.id = "lvlCheckboxFilterContainer"
+    lvlCheckbox.type = "checkbox"
+    lvlCheckbox.style = "margin-right: 7px;"
+    lvlCheckbox.id = "lvlCheckboxFilter"
+
+    lvlCheckboxContainer.prepend(lvlCheckbox)
+    document.getElementById("roomlist").append(lvlCheckboxContainer)
+
+
     // Logic -----
 
     function filterRooms(calledBy, mutations) {
         if (calledBy == "observer") { // prevent updating when other changes to roomlist happen
-            if (mutations.length == 1) {
-                const node = mutations[0].addedNodes[0]
-                if (node.nodeType === Node.ELEMENT_NODE && (node.id == "friendsToolTip" || node.classList.contains("roomlisttablejoined"))) { // friend tooltip show OR joined room inicator
+            if (mutations.length == 1 || mutations.length == 4) {
+                const node = mutations[mutations.length - 1].addedNodes[0]
+                if (node.nodeType === Node.ELEMENT_NODE && (node.id == "friendsToolTip" || node.id == "friendsToolTip_list" || node.classList.contains("roomlisttablejoined"))) { // friend tooltip show OR joined room inicator
                     return;
                 }
             }
@@ -44,7 +59,33 @@
         let matchedRooms = [];
         let miscRooms = [];
 
+        const playerLvl = document.getElementById("pretty_top_level").textContent == "Guest" ? -1 : parseInt(document.getElementById("pretty_top_level").textContent.split("Lv ")[1])
+        const filterLVL = document.getElementById("lvlCheckboxFilter").checked
+
         for (const room of roomsContainer.querySelectorAll("tr[data-myid]")) {
+
+
+            if(filterLVL){
+              const roomLVL = room.children[4].textContent.trim()
+              let maxLVL = 999;
+              let minLVL = 0;
+              if(roomLVL != "Any level"){
+                if(roomLVL.includes("-")){
+                  maxLVL = parseInt(roomLVL.split("-")[1])
+                  minLVL = parseInt(roomLVL.split("-")[0])
+                } else if (roomLVL.includes("<")){
+                  maxLVL = parseInt(roomLVL.split("<")[1])
+                } else if (roomLVL.includes(">")){
+                  maxLVL = parseInt(roomLVL.split(">")[1])
+                }
+
+                if(playerLvl > maxLVL || playerLvl < minLVL){
+                  continue;
+                }
+              }
+            }
+
+
             const roomName = room.children[0].textContent.trim().toLowerCase()
 
             if (tags.some(tag => roomName.includes(tag))) {
@@ -103,7 +144,11 @@
     // Input & Events -----
 
     searchInput.addEventListener("input", () => { filterRooms("input") });
+    lvlCheckbox.addEventListener("input", () => {
+      document.getElementById("roomlistrefreshbutton").click()
+      filterRooms("input")
+    });
 
     const roomListObserver = new MutationObserver((mutations) => { filterRooms("observer", mutations) });
-    roomListObserver.observe(document.querySelector("#roomlisttable"), { childList: true, subtree: true });
+    roomListObserver.observe(document.querySelector("#roomlisttable "), { childList: true, subtree: true });
 })();

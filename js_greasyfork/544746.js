@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         M-Pesa CSV Extractor
-// @namespace    https://openai.com
-// @version      1.7
+// @version      1.9
 // @description  Extracts M-Pesa messages into a CSV of transactions
 // @match        https://messages.google.com/web/*
 // @grant        none
 // @run-at       document-idle
+// @namespace https://openai.com
 // @downloadURL https://update.greasyfork.org/scripts/544746/M-Pesa%20CSV%20Extractor.user.js
 // @updateURL https://update.greasyfork.org/scripts/544746/M-Pesa%20CSV%20Extractor.meta.js
 // ==/UserScript==
@@ -165,6 +165,9 @@
 
         const rows = [];
 
+        console.log("captured the following messages:")
+        console.log(rawMessages)
+
         for (const message of rawMessages) {
             const dateMatch = message.match(/Received on (.+?) at/);
             if (!dateMatch) continue;
@@ -237,22 +240,26 @@
                 continue;
             }
 
+            // *** UPDATED WITHDRAW (LEVANTAR) LOGIC ***
             const withdraw = message.match(
-                /Confirmado\s+([A-Z0-9]{11,12})[\s\S]*?Aos\s+(\d{1,2})\/(\d{1,2})\/(\d{2})[\s\S]*?levantaste\s+([\d,]+\.\d{2})MT[\s\S]*?taxa\s+foi\s+de\s+([\d,]+\.\d{2})MT/i
+                /Confirmado\s+([A-Z0-9]{11,12})[\s\S]*?Aos\s+(\d{1,2})\/(\d{1,2})\/(\d{2})[\s\S]*?levantaste\s+([\d,]+\.\d{2})MT[\s\S]*?saldo M-Pesa e de\s+([\d,]+\.\d{2})MT[\s\S]*?taxa\s+foi\s+de\s+([\d,]+\.\d{2})MT/i
             );
 
             if (withdraw) {
-                const [_, code, day, month, year, value, fee] = withdraw;
+                const [_, code, day, month, year, value, balance, fee] = withdraw;
                 const formattedDate = `${day.padStart(2, '0')}/${month.padStart(2, '0')}/20${year}`;
                 rows.push([
                     rows.length + 1,
                     code,
                     normalizeAmount(value),
                     formattedDate,
-                    normalizeAmount(fee)
+                    normalizeAmount(fee),
+                    'N/A', // Phone number set to N/A for withdrawals
+                    normalizeAmount(balance)
                 ]);
                 continue;
             }
+            // *****************************************
 
             const compra = message.match(
                 /Confirmado\s+([A-Z0-9]{11,12})[\s\S]*?operacao de compra[\s\S]*?([\d,]+\.\d{2})MT[\s\S]*?aos\s+(\d{1,2})\/(\d{1,2})\/(\d{2})[\s\S]*?saldo M-Pesa e de\s+([\d,]+\.\d{2})MT/i
@@ -328,6 +335,27 @@
                 ]);
                 continue;
             }
+
+            // --- NEW LOGIC: CREDIT (AIRTIME) PURCHASE ---
+            const creditBuy = message.match(
+                /Confirmado\s+([A-Z0-9]{11,12})[\s\S]*?Compraste\s+([\d,]+\.\d{2})MT\s+de\s+credito\s+para\s+o\s+numero\s+(\d+)[\s\S]*?aos\s+(\d{1,2})\/(\d{1,2})\/(\d{2})[\s\S]*?saldo M-Pesa e\s+(?:de\s+)?([\d,]+\.\d{2})MT/i
+            );
+
+            if (creditBuy) {
+                const [_, code, value, phone, day, month, year, balance] = creditBuy;
+                const formattedDate = `${day.padStart(2, '0')}/${month.padStart(2, '0')}/20${year}`;
+                rows.push([
+                    rows.length + 1,
+                    code,
+                    normalizeAmount(value),
+                    formattedDate,
+                    '0.00', // Fees are usually 0 for airtime
+                    normalizePhoneNumber(phone),
+                    normalizeAmount(balance)
+                ]);
+                continue;
+            }
+            // ---------------------------------------------
 
         }
 

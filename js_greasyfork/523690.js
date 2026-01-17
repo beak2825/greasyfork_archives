@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Dark Mode Auto Toggle
-// @version      0.2.6
+// @version      0.2.7
 // @description  Enable eye-friendly dark mode with a toggle button and automatically based on location
 // @namespace    https://greasyfork.org/en/users/28298
 // @author       https://greasyfork.org/en/users/28298
@@ -8,6 +8,9 @@
 // @match        *://*/*
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM.xmlHttpRequest
+// @connect      api.zippopotam.us
+// @connect      api.sunrise-sunset.org
 // @homepage     https://greasyfork.org/en/scripts/523690
 // @downloadURL https://update.greasyfork.org/scripts/523690/Dark%20Mode%20Auto%20Toggle.user.js
 // @updateURL https://update.greasyfork.org/scripts/523690/Dark%20Mode%20Auto%20Toggle.meta.js
@@ -19,6 +22,8 @@
 
 (function() {
     'use strict';
+
+    const CURRENT_ZIPCODE = '61920'; // empty or a US zipcode?
 
     //////////////////////////////////////////////////////////////////////////
     // manually tell domain's original mode, because auto detection would fail
@@ -125,14 +130,78 @@
     button.style.cursor = 'pointer';
     button.style.color = 'inherit';
 
-    // Function to get sunrise/sunset times
-    async function getSunTimes() {
-        // approximate times
+    // // Function to get sunrise/sunset times
+    // async function getSunTimes() {
+    //     // approximate times
+    //     const now = new Date();
+    //     return {
+    //         sunrise: new Date(now.setHours(8, 0, 0, 0)),
+    //         sunset: new Date(now.setHours(18, 0, 0, 0))
+    //     };
+    // }
+
+    // Function to get sunrise/sunset times based on ZIP code
+    async function getSunTimes(zipCode) {
+        // Try to get real sun times if ZIP code is provided
+        if (zipCode) {
+            try {
+                // Convert ZIP code to coordinates using Zippopotam.us API
+                const geoData = await new Promise((resolve, reject) => {
+                    GM.xmlHttpRequest({
+                        method: 'GET',
+                        url: `https://api.zippopotam.us/us/${zipCode}`,
+                        onload: (response) => {
+                            if (response.status === 200) {
+                                resolve(JSON.parse(response.responseText));
+                            } else {
+                                reject(new Error('Invalid ZIP code'));
+                            }
+                        },
+                        onerror: reject
+                    });
+                });
+
+                const latitude = geoData.places[0].latitude;
+                const longitude = geoData.places[0].longitude;
+
+                // Fetch sun times from API
+                const sunData = await new Promise((resolve, reject) => {
+                    GM.xmlHttpRequest({
+                        method: 'GET',
+                        url: `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&formatted=0`,
+                        onload: (response) => {
+                            if (response.status === 200) {
+                                resolve(JSON.parse(response.responseText));
+                            } else {
+                                reject(new Error('Sun API failed'));
+                            }
+                        },
+                        onerror: reject
+                    });
+                });
+
+                if (sunData.status === 'OK') {
+                    return {
+                        sunrise: new Date(sunData.results.sunrise),
+                        sunset: new Date(sunData.results.sunset)
+                    };
+                }
+            } catch (error) {
+                console.log('Could not get sun times for ZIP code, using defaults:', error.message);
+            }
+        } else {
+            console.log('No ZIP code provided, using default times');
+        }
+
+        // Fallback: Use defaults (8 AM, 6 PM)
         const now = new Date();
-        return {
-            sunrise: new Date(now.setHours(8, 0, 0, 0)),
-            sunset: new Date(now.setHours(18, 0, 0, 0))
-        };
+        const sunrise = new Date(now);
+        sunrise.setHours(8, 0, 0, 0);
+
+        const sunset = new Date(now);
+        sunset.setHours(18, 0, 0, 0);
+
+        return { sunrise, sunset };
     }
 
     // Function to toggle dark mode
@@ -169,7 +238,7 @@
 
     // Function to check and update dark mode based on time
     async function updateDarkMode() {
-        const sunTimes = await getSunTimes();
+        const sunTimes = await getSunTimes(CURRENT_ZIPCODE);
         const now = new Date();
         const isDark = now < sunTimes.sunrise || now > sunTimes.sunset;
         toggleDarkMode(isDark);

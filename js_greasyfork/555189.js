@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TorrentBD Shoutbox Manager
 // @namespace    TBD-Shoutbox-Manager
-// @version      1.2.1
+// @version      1.2.3
 // @description  Complete shoutbox overhaul
 // @author       CornHub
 // @license      MIT
@@ -9,6 +9,9 @@
 // @match        https://www.torrentbd.net/
 // @match        https://www.torrentbd.org/
 // @match        https://www.torrentbd.me/
+// @match        https://www.torrentbd.net/?spotlight
+// @match        https://www.torrentbd.com/?spotlight
+// @match        https://www.torrentbd.org/?spotlight
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
@@ -65,6 +68,8 @@
         gif_picker_enabled: GM_getValue('tbdm_gif_picker_enabled', true),
         gif_picker_tenor_key: GM_getValue('tbdm_gif_picker_tenor_key', 'AIzaSyCGj4Qj1j0MBns1v2rWhlvJWRBkCNgIFyo'),
         gif_picker_giphy_key: GM_getValue('tbdm_gif_picker_giphy_key', ''),
+
+        meme_creator_enabled: GM_getValue('tbdm_meme_creator_enabled', false),
 
         // Unicode Emoji Module
         unicode_emoji_enabled: GM_getValue('tbdm_unicode_emoji_enabled', false),
@@ -2777,6 +2782,691 @@ function toggleSmilemoji(one, alt) {
 
 
 
+// ============================================================================
+// MODULE 13: MEME CREATOR
+// ============================================================================
+
+const MemeCreatorModule = {
+    IMGFLIP_CONFIG: {
+        username: 'puls3',
+        password: 'cornhub69',
+        apiUrl: 'https://api.imgflip.com'
+    },
+
+    modal: null,
+    templatesArea: null,
+    editorArea: null,
+    memeButton: null,
+    allTemplates: [],
+    currentTemplate: null,
+    activeInput: null,
+    isDragging: false,
+    hasMoved: false,
+
+    debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    },
+
+    addStyles() {
+        const css = `
+            #meme-tool-modal {
+                position: fixed;
+                width: 520px;
+                max-width: 90vw;
+                max-height: 90vh;
+                background: #2f3136;
+                border: 1px solid #444;
+                border-radius: 8px;
+                z-index: 2147483647;
+                display: none;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+                overflow: hidden;
+                flex-direction: column;
+                top: auto;
+            }
+            #meme-tool-header {
+                height: 24px;
+                background: #202225;
+                cursor: grab;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 8px;
+                border-bottom: 1px solid #36393f;
+                flex-shrink: 0;
+            }
+            #meme-tool-header:active { cursor: grabbing; background: #18191c; }
+            #meme-tool-title { font-size: 11px; color: #aaa; font-weight: bold; user-select: none; text-transform: uppercase; letter-spacing: 0.5px; }
+            #meme-tool-content { padding: 10px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1; }
+            #meme-tool-templates {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(100px,1fr));
+                gap: 8px;
+                max-height: 400px;
+                min-height: 200px;
+                overflow-y: auto;
+                scrollbar-width: thin;
+                scrollbar-color: #202225 #2f3136;
+            }
+            #meme-tool-templates::-webkit-scrollbar { width: 8px; }
+            #meme-tool-templates::-webkit-scrollbar-track { background: #2f3136; }
+            #meme-tool-templates::-webkit-scrollbar-thumb { background-color: #202225; border-radius: 4px; }
+            .meme-template {
+                cursor: pointer;
+                border: 2px solid transparent;
+                border-radius: 6px;
+                overflow: hidden;
+                transition: all 0.15s;
+                position: relative;
+                background: #202225;
+            }
+            .meme-template:hover { border-color: #00bfff; transform: scale(1.03); }
+            .meme-template.selected { border-color: #00ff00; box-shadow: 0 0 0 2px #00ff00; }
+            .meme-template img { width: 100%; height: 100px; object-fit: contain; display: block; background: #18191c; }
+            .meme-template-name {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0,0,0,0.85);
+                color: white;
+                padding: 4px 3px;
+                font-size: 10px;
+                text-align: center;
+                line-height: 1.1;
+            }
+            #meme-tool-editor { display: none; }
+            #meme-tool-editor.active { display: flex; flex-direction: column; overflow-y: auto; flex: 1; }
+            .meme-preview {
+                text-align: center;
+                margin-bottom: 10px;
+                background: #202225;
+                padding: 12px;
+                border-radius: 6px;
+                flex-shrink: 0;
+            }
+            .meme-preview img {
+                max-width: 100%;
+                max-height: 200px;
+                border-radius: 6px;
+                object-fit: contain;
+            }
+            .meme-template-info {
+                text-align: center;
+                color: #aaa;
+                font-size: 11px;
+                margin-top: 6px;
+            }
+            .meme-input {
+                margin-bottom: 8px;
+            }
+            .meme-input label {
+                display: block;
+                margin-bottom: 3px;
+                font-weight: 600;
+                color: #ccc;
+                font-size: 12px;
+            }
+            .meme-input input {
+                width: 100%;
+                padding: 8px;
+                background: #40444b;
+                border: 1px solid #555;
+                border-radius: 4px;
+                font-size: 13px;
+                box-sizing: border-box;
+                color: #fff;
+            }
+            .meme-input input:focus {
+                outline: none;
+                border-color: #00bfff;
+            }
+            #meme-generation-controls {
+                flex-shrink: 0;
+            }
+            .meme-btn {
+                width: 100%;
+                padding: 10px;
+                background: #5865f2;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.15s;
+                margin-bottom: 6px;
+            }
+            .meme-btn:hover { background: #4752c4; }
+            .meme-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            .meme-btn-secondary {
+                background: #4f545c;
+            }
+            .meme-btn-secondary:hover {
+                background: #686d73;
+            }
+            .meme-status {
+                text-align: center;
+                padding: 8px;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                font-size: 12px;
+                display: none;
+            }
+            .meme-status.info {
+                background: #2c3e50;
+                color: #3498db;
+            }
+            .meme-status.success {
+                background: #1e4620;
+                color: #4caf50;
+            }
+            .meme-status.error {
+                background: #4a1c1c;
+                color: #f44336;
+            }
+            .meme-result {
+                margin-top: 10px;
+                text-align: center;
+                flex-shrink: 0;
+            }
+            .meme-result img {
+                max-width: 100%;
+                max-height: 50vh;
+                border-radius: 6px;
+                margin-bottom: 8px;
+                object-fit: contain;
+            }
+            .meme-loading {
+                text-align: center;
+                padding: 15px;
+                color: #aaa;
+                font-size: 12px;
+            }
+            #meme-tool-close { background:none; border:none; color:#aaa; font-size: 18px; cursor:pointer; line-height: 1; padding: 0; }
+            #meme-tool-close:hover { color:#fff; }
+        `;
+        GM_addStyle(css);
+    },
+
+    createModal() {
+        const html = `
+            <div id="meme-tool-modal" role="dialog">
+                <div id="meme-tool-header">
+                    <span id="meme-tool-title">Meme Generator</span>
+                    <button id="meme-tool-close" aria-label="Close">&times;</button>
+                </div>
+                <div id="meme-tool-content">
+                    <div id="meme-tool-templates"></div>
+                    <div id="meme-tool-editor">
+                        <div class="meme-preview" id="meme-preview"></div>
+                        <div id="meme-inputs-container"></div>
+                        <div class="meme-status info" id="meme-status"></div>
+                        <div id="meme-generation-controls">
+                            <button class="meme-btn" id="meme-generate">Create Meme</button>
+                            <button class="meme-btn meme-btn-secondary" id="meme-back">← Back to Templates</button>
+                        </div>
+                        <div class="meme-result" id="meme-result"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', html);
+
+        this.modal = document.getElementById('meme-tool-modal');
+        const headerBar = document.getElementById('meme-tool-header');
+        this.templatesArea = document.getElementById('meme-tool-templates');
+        this.editorArea = document.getElementById('meme-tool-editor');
+
+        document.getElementById('meme-tool-close').addEventListener('click', () => this.closeModal());
+        document.getElementById('meme-back').addEventListener('click', () => {
+            this.editorArea.classList.remove('active');
+            this.templatesArea.style.display = 'grid';
+            document.getElementById('meme-preview').style.display = 'block';
+            document.getElementById('meme-inputs-container').style.display = 'block';
+            document.getElementById('meme-generation-controls').style.display = 'block';
+            document.getElementById('meme-status').style.display = 'none';
+            document.getElementById('meme-result').innerHTML = '';
+        });
+
+        this.setupDraggable(headerBar);
+    },
+
+    setupDraggable(handle) {
+        let startX, startY, startLeft, startBottom;
+
+        handle.addEventListener('mousedown', (e) => {
+            if (e.target.id === 'meme-tool-close') return;
+            e.preventDefault();
+            this.isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            const rect = this.modal.getBoundingClientRect();
+            startLeft = rect.left;
+
+            const computedStyle = window.getComputedStyle(this.modal);
+            const cssBottom = parseInt(computedStyle.bottom);
+            if (isNaN(cssBottom)) {
+                startBottom = window.innerHeight - rect.bottom;
+            } else {
+                startBottom = cssBottom;
+            }
+
+            const onMouseMove = (e) => {
+                if (!this.isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                this.modal.style.left = `${startLeft + dx}px`;
+                this.modal.style.bottom = `${startBottom - dy}px`;
+                this.modal.style.top = 'auto';
+            };
+
+            const onMouseUp = () => {
+                this.isDragging = false;
+                this.hasMoved = true;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                this.constrainToViewport();
+                this.savePosition();
+            };
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+    },
+
+    savePosition() {
+        if (!this.modal) return;
+        const rect = this.modal.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const pos = {
+            rightDist: viewportWidth - rect.right,
+            bottomDist: viewportHeight - rect.bottom,
+            width: viewportWidth,
+            height: viewportHeight
+        };
+        localStorage.setItem('tbd_meme_pos_v1', JSON.stringify(pos));
+    },
+
+    constrainToViewport() {
+        if (!this.modal || this.modal.style.display !== 'flex') return;
+
+        const rect = this.modal.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const margin = 10;
+
+        let left = parseInt(this.modal.style.left) || rect.left;
+        let bottom = parseInt(this.modal.style.bottom);
+
+        if (isNaN(bottom)) {
+            bottom = viewportHeight - rect.bottom;
+        }
+
+        const modalHeight = rect.height;
+        const top = viewportHeight - bottom - modalHeight;
+
+        const maxLeft = viewportWidth - rect.width - margin;
+        if (left < margin) left = margin;
+        if (left > maxLeft) left = maxLeft;
+
+        if (top < margin) {
+            bottom = viewportHeight - modalHeight - margin;
+        }
+        if (bottom < margin) {
+            bottom = margin;
+        }
+
+        this.modal.style.left = `${left}px`;
+        this.modal.style.bottom = `${bottom}px`;
+        this.modal.style.top = 'auto';
+    },
+
+    restorePosition(anchor) {
+        const saved = localStorage.getItem('tbd_meme_pos_v1');
+        if (saved) {
+            try {
+                const pos = JSON.parse(saved);
+                if (pos.rightDist !== undefined && pos.bottomDist !== undefined) {
+                    const viewportWidth = window.innerWidth;
+                    const rect = this.modal.getBoundingClientRect();
+
+                    const left = viewportWidth - pos.rightDist - rect.width;
+                    const bottom = pos.bottomDist;
+
+                    this.modal.style.left = `${left}px`;
+                    this.modal.style.bottom = `${bottom}px`;
+                    this.modal.style.top = 'auto';
+                    this.hasMoved = true;
+                    setTimeout(() => this.constrainToViewport(), 0);
+                    return;
+                }
+            } catch(e) { console.error('Invalid saved pos'); }
+        }
+
+        if (anchor && !this.hasMoved) {
+            const rect = anchor.getBoundingClientRect();
+            let left = rect.right - 520;
+            if (left < 10) left = 10;
+            const bottom = window.innerHeight - rect.top + 10;
+            this.modal.style.left = `${left}px`;
+            this.modal.style.bottom = `${bottom}px`;
+            this.modal.style.top = 'auto';
+            setTimeout(() => this.constrainToViewport(), 0);
+        }
+    },
+
+    addMemeButton() {
+        const tray = document.querySelector('#shout-ibb-container');
+        if (!tray || document.getElementById('meme-tool-btn')) return;
+
+        this.memeButton = document.createElement('span');
+        this.memeButton.id = 'meme-tool-btn';
+        this.memeButton.className = 'inline-submit-btn';
+        this.memeButton.title = 'Create Meme';
+        this.memeButton.innerHTML = '<i class="material-icons">theater_comedy</i>';
+
+        const isSpotlight = document.body.classList.contains('spotlight-mode') ||
+                window.location.search.includes('spotlight');
+        const topValue = isSpotlight ? '17px' : '6px';
+        this.memeButton.style.cssText = `display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#ccc;position:relative;top:${topValue};height:24px;width:28px;margin-left:4px;margin-right:2px;`;
+
+        this.memeButton.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            ev.preventDefault();
+            const input = document.querySelector('#shout_text');
+            if (input) {
+                if(this.modal.style.display === 'flex') this.closeModal();
+                else this.openModal(input, this.memeButton);
+            }
+        });
+
+        const targetBtn = tray.querySelector('#tbd-uploader-button')
+                       || tray.querySelector('#imgbd-uploader-btn')
+                       || tray.querySelector('#urlBtn')
+                       || tray.querySelector('#tbdm-image-upload-btn')
+                       || tray.querySelector('#tbdm-gif-tool-btn');
+
+        if (targetBtn) {
+            tray.insertBefore(this.memeButton, targetBtn);
+        } else {
+            tray.appendChild(this.memeButton);
+        }
+    },
+
+    loadTemplates() {
+        const CUSTOM_TEMPLATES_URL = 'https://imgflip.mushi53566.workers.dev/';
+
+        // Fetch Imgflip templates
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: this.IMGFLIP_CONFIG.apiUrl + '/get_memes',
+            onload: (res) => {
+                try {
+                    const data = JSON.parse(res.responseText);
+                    if (data.success) {
+                        const apiTemplates = data.data.memes;
+
+                        // Fetch custom templates
+                        GM_xmlhttpRequest({
+                            method: 'GET',
+                            url: CUSTOM_TEMPLATES_URL,
+                            onload: (customRes) => {
+                                try {
+                                    const customData = JSON.parse(customRes.responseText);
+                                    if (customData.success) {
+                                        const customTemplates = customData.data.memes;
+                                        const merged = [];
+                                        const interval = Math.floor(apiTemplates.length / customTemplates.length);
+
+                                        let customIndex = 0;
+                                        for (let i = 0; i < apiTemplates.length; i++) {
+                                            merged.push(apiTemplates[i]);
+                                            if ((i + 1) % interval === 0 && customIndex < customTemplates.length) {
+                                                merged.push(customTemplates[customIndex]);
+                                                customIndex++;
+                                            }
+                                        }
+
+                                        while (customIndex < customTemplates.length) {
+                                            merged.push(customTemplates[customIndex]);
+                                            customIndex++;
+                                        }
+
+                                        this.allTemplates = merged;
+                                        this.renderTemplates();
+                                    }
+                                } catch (e) {
+                                    // If custom templates fail, just use API templates
+                                    this.allTemplates = apiTemplates;
+                                    this.renderTemplates();
+                                }
+                            },
+                            onerror: () => {
+                                // Fallback to API templates only
+                                this.allTemplates = apiTemplates;
+                                this.renderTemplates();
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error loading templates');
+                }
+            },
+            onerror: () => console.error('Network error')
+        });
+    },
+
+    renderTemplates() {
+        this.templatesArea.innerHTML = this.allTemplates.map(t => `
+            <div class="meme-template" data-id="${t.id}" data-url="${t.url}" data-boxes="${t.box_count}" data-name="${t.name}">
+                <img src="${t.url}" alt="${t.name}" loading="lazy">
+                <div class="meme-template-name">${t.name}</div>
+            </div>
+        `).join('');
+
+        this.templatesArea.querySelectorAll('.meme-template').forEach(el => {
+            el.onclick = () => this.selectTemplate(el);
+        });
+    },
+
+    selectTemplate(el) {
+        document.querySelectorAll('.meme-template').forEach(t => t.classList.remove('selected'));
+        el.classList.add('selected');
+
+        const id = el.dataset.id;
+        const url = el.dataset.url;
+        const boxes = parseInt(el.dataset.boxes) || 2;
+        const name = el.dataset.name;
+
+        this.currentTemplate = { id, url, boxes, name };
+
+        document.getElementById('meme-preview').innerHTML = `
+            <img src="${url}">
+            <div class="meme-template-info">
+                ${name} - ${boxes} text ${boxes === 1 ? 'box' : 'boxes'}
+            </div>
+        `;
+
+        this.createTextInputs(boxes);
+
+        this.templatesArea.style.display = 'none';
+        this.editorArea.classList.add('active');
+        document.getElementById('meme-result').innerHTML = '';
+
+        document.getElementById('meme-generate').onclick = () => this.generateMeme();
+    },
+
+    createTextInputs(count) {
+        const container = document.getElementById('meme-inputs-container');
+        container.innerHTML = '';
+
+        for (let i = 0; i < count; i++) {
+            container.innerHTML += `
+                <div class="meme-input">
+                    <label>Text Box ${i + 1}</label>
+                    <input type="text" id="meme-text${i}" placeholder="Enter text for box ${i + 1}">
+                </div>
+            `;
+        }
+    },
+
+    generateMeme() {
+        if (!this.currentTemplate) return;
+
+        const boxes = [];
+        for (let i = 0; i < this.currentTemplate.boxes; i++) {
+            const text = document.getElementById(`meme-text${i}`)?.value || '';
+            boxes.push({ text });
+        }
+
+        const hasText = boxes.some(box => box.text.trim() !== '');
+        if (!hasText) {
+            this.showStatus('Enter at least one text', 'error');
+            return;
+        }
+
+        const btn = document.getElementById('meme-generate');
+        btn.disabled = true;
+        btn.textContent = 'Generating...';
+        this.showStatus('Creating meme...', 'info');
+
+        let formData = `template_id=${this.currentTemplate.id}&username=${this.IMGFLIP_CONFIG.username}&password=${this.IMGFLIP_CONFIG.password}`;
+
+        boxes.forEach((box, index) => {
+            formData += `&boxes[${index}][text]=${encodeURIComponent(box.text)}`;
+        });
+
+        GM_xmlhttpRequest({
+            method: 'POST',
+            url: this.IMGFLIP_CONFIG.apiUrl + '/caption_image',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: formData,
+            onload: (res) => {
+                btn.disabled = false;
+                btn.textContent = 'Create Meme';
+                try {
+                    const result = JSON.parse(res.responseText);
+                    if (result.success) {
+                        this.showStatus('Meme created! Click to insert.', 'success');
+                        const memeUrl = result.data.url;
+
+                        document.getElementById('meme-preview').style.display = 'none';
+                        document.getElementById('meme-inputs-container').style.display = 'none';
+                        document.getElementById('meme-generation-controls').style.display = 'none';
+                        document.getElementById('meme-status').style.display = 'none';
+
+                        document.getElementById('meme-result').innerHTML = `
+                            <img src="${memeUrl}">
+                            <button class="meme-btn" id="meme-insert-action">Insert Meme</button>
+                        `;
+                        document.getElementById('meme-insert-action').onclick = () => {
+                            this.insertMeme(memeUrl);
+                        };
+                    } else {
+                        this.showStatus('Error: ' + result.error_message, 'error');
+                    }
+                } catch (e) {
+                    this.showStatus('Failed to create meme', 'error');
+                }
+            },
+            onerror: () => {
+                btn.disabled = false;
+                btn.textContent = 'Create Meme';
+                this.showStatus('Network error', 'error');
+            }
+        });
+    },
+
+    insertMeme(url) {
+        if (!this.activeInput) return;
+
+        const cur = this.activeInput.value;
+        const cursorPos = this.activeInput.selectionStart || cur.length;
+        const before = cur.substring(0, cursorPos);
+        const after = cur.substring(cursorPos);
+        const toInsert = url + ' ';
+
+        this.activeInput.value = before + toInsert + after;
+        const newCursorPos = before.length + toInsert.length;
+
+        this.closeModal();
+        setTimeout(() => {
+            this.activeInput.focus();
+            this.activeInput.setSelectionRange(newCursorPos, newCursorPos);
+        }, 50);
+    },
+
+    showStatus(msg, type) {
+        const status = document.getElementById('meme-status');
+        if (status) {
+            status.textContent = msg;
+            status.className = 'meme-status ' + type;
+            status.style.display = 'block';
+        }
+    },
+
+    openModal(inputEl, anchorEl) {
+        this.activeInput = inputEl;
+        this.restorePosition(anchorEl);
+        this.modal.style.display = 'flex';
+
+        if (this.allTemplates.length === 0) {
+            this.loadTemplates();
+        }
+    },
+
+    closeModal() {
+        this.modal.style.display = 'none';
+        this.editorArea.classList.remove('active');
+        this.templatesArea.style.display = 'grid';
+
+        document.getElementById('meme-preview').style.display = 'block';
+        document.getElementById('meme-inputs-container').style.display = 'block';
+        document.getElementById('meme-generation-controls').style.display = 'block';
+        document.getElementById('meme-status').style.display = 'none';
+        document.getElementById('meme-result').innerHTML = '';
+    },
+
+    init() {
+        if (!CONFIG.meme_creator_enabled) return;
+        this.addStyles();
+        this.createModal();
+        this.addMemeButton();
+
+        const resizeHandler = this.debounce(() => {
+            if (this.modal && this.modal.style.display === 'flex') {
+                this.constrainToViewport();
+                this.savePosition();
+            }
+        }, 150);
+        window.addEventListener('resize', resizeHandler);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.modal.style.display === 'flex') {
+                e.preventDefault();
+                this.closeModal();
+                if (this.activeInput) this.activeInput.focus();
+            }
+        });
+    },
+
+    stop() {
+        const btn = document.getElementById('meme-tool-btn');
+        if (btn) btn.remove();
+        if (this.modal) this.closeModal();
+    }
+};
+
 
     // ============================================================================
     // SETTINGS UI
@@ -2892,6 +3582,19 @@ function toggleSmilemoji(one, alt) {
                                 </div>
                                 <label class="tbdm-switch">
                                     <input type="checkbox" id="tbdm-unicode-emoji">
+                                    <span class="tbdm-slider"></span>
+                                </label>
+                            </div>
+                            <div class="tbdm-feature-card">
+                                <div class="tbdm-feature-header">
+                                    <div class="tbdm-feature-icon">🎭</div>
+                                    <div class="tbdm-feature-info">
+                                        <div class="tbdm-feature-title">Meme Creator</div>
+                                        <div class="tbdm-feature-desc">Create and insert memes</div>
+                                    </div>
+                                </div>
+                                <label class="tbdm-switch">
+                                    <input type="checkbox" id="tbdm-meme-creator">
                                     <span class="tbdm-slider"></span>
                                 </label>
                             </div>
@@ -3231,6 +3934,22 @@ function toggleSmilemoji(one, alt) {
                 UnicodeEmojiModule.init();
             } else {
                 UnicodeEmojiModule.stop();
+            }
+        });
+
+        //
+        const memeCreator = document.getElementById('tbdm-meme-creator');
+
+        // Load settings
+        memeCreator.checked = CONFIG.meme_creator_enabled;
+
+        // Event listener
+        memeCreator.addEventListener('change', (e) => {
+            saveConfig('meme_creator_enabled', e.target.checked);
+            if (e.target.checked) {
+                MemeCreatorModule.init();
+            } else {
+                MemeCreatorModule.stop();
             }
         });
 
@@ -4376,6 +5095,8 @@ function toggleSmilemoji(one, alt) {
         if (CONFIG.idle_prevention_enabled) IdlePreventionModule.init();
         if (CONFIG.gif_picker_enabled) GifPickerModule.init();
         if (CONFIG.image_viewer_enabled) ImageViewerModule.init();
+        if (CONFIG.meme_creator_enabled) MemeCreatorModule.init();
+
 
         UIImprovementsModule.init();
         if (CONFIG.unicode_emoji_enabled) UnicodeEmojiModule.init();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Strava Global Heatmap TMS server link generator for JOSM
 // @namespace    http://ursus.id.lv
-// @version      0.4
+// @version      0.5
 // @description  Generates Strava Global Heatmap TMS server link for OpenStreetMap JOSM editor
 // @author       UrSuS
 // @match        *.strava.com/maps/global-heatmap*
@@ -83,8 +83,10 @@
 
     let sCookieString = "";
     const aCookies = await getCookies();
+    const aForbiddenChars = [",", ":"];
+
     aCookies.forEach((mCookie) => {
-      if (!mCookie.value.includes(",")){
+      if (!aForbiddenChars.some(sChar => mCookie.value.includes(sChar))) {
         sCookieString += `${mCookie.name}=${mCookie.value};`;
       }
     });
@@ -95,8 +97,8 @@
       const urlText = `tms[3,15]:https://content-a.strava.com/identified/globalheat/${oUrlParams
         .get("sport")
         .toLowerCase()}/${oUrlParams
-        .get("gColor")
-        .toLowerCase()}/{zoom}/{x}/{y}.png{header(cookie,${sCookieString})}`;
+          .get("gColor")
+          .toLowerCase()}/{zoom}/{x}/{y}.png{header(cookie,${sCookieString})}`;
 
       navigator.clipboard.writeText(urlText).then(
         () => {

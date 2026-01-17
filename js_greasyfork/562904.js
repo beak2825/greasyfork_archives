@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name         Workshop Mod Marker
+// @name:zh-CN   Steam创意工坊备注标记工具
 // @namespace    mod-workshop-marker
 // @version      1.1
 // @description  Steam创意工坊小备注 Visual marker & annotation tool for Steam Workshop mods (snapshot-based)
+// @description:zh-CN  给Steam创意工坊的模组添加自定义备注和视觉标记，快照式记录模组信息，方便筛选查找
 // @author       Teshuwenzi
 // @license      MIT
 // @include      https://steamcommunity.com/workshop/*

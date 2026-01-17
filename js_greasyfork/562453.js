@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Torn OC 2.0 Missing Item Roles
 // @namespace    torn.oc2.items.floating
-// @version      2.0.2
-// @description  Floating box listing only OC 2.0 Planning crimes with roles missing items 
+// @version      2.3.2
+// @description  Floating box listing only OC 2.0 Planning crimes with roles missing items
 // @match        https://www.torn.com/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
@@ -17,15 +17,14 @@
 
     const API_BASE    = 'https://api.torn.com/v2';
     const STORAGE_KEY = 'oc2_items_api_key_v2';
-    const POS_KEY     = 'oc2_items_panel_pos';
+    const POS_KEY     = 'oc2_items_panel_pos'; // stores {left, top}
     const color       = '#8abeef';
 
     let crimeData = null;
     let itemNames = {};
     let memberNames = {};
-    let panelClosed = false; // Track if user closed the panel
+    let panelClosed = false;
 
-    
     const style = document.createElement('style');
     style.textContent = `
 .oc2-items-panel {
@@ -52,6 +51,9 @@
   padding: 4px 6px;
   cursor: move;
   border-bottom: 1px solid ${color};
+  position: relative;
+  z-index: 1000000;
+  pointer-events: auto;
 }
 .oc2-title-text {
   flex: 1;
@@ -266,8 +268,8 @@
         try {
             const saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
             if (saved && typeof saved.top === 'number' && typeof saved.left === 'number') {
-                panel.style.top = saved.top + 'px';
                 panel.style.left = saved.left + 'px';
+                panel.style.top  = saved.top + 'px';
             } else {
                 panel.style.top = '90px';
                 panel.style.right = '20px';
@@ -292,41 +294,93 @@
         `;
 
         document.body.appendChild(panel);
-        makeDraggable(panel, panel.querySelector('.oc2-title'));
+        makeDraggableOC(panel, panel.querySelector('.oc2-title'));
         wirePanel(panel);
     }
 
-    function makeDraggable(panel, handle) {
-        let offsetX = 0, offsetY = 0, dragging = false;
+    // -------- draggable --------
+    function makeDraggableOC(element, handle) {
+        let isDown = false;
+        let startX = 0, startY = 0;
+        let startLeft = 0, startTop = 0;
 
-        handle.addEventListener('mousedown', e => {
-            if (e.target.classList.contains('oc2-btn')) return;
-            dragging = true;
-            const rect = panel.getBoundingClientRect();
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('mouseup', onUp);
+        function startDrag(clientX, clientY) {
+            isDown = true;
+
+            const rect = element.getBoundingClientRect();
+            element.style.left   = rect.left + 'px';
+            element.style.top    = rect.top + 'px';
+            element.style.right  = 'auto';
+            element.style.bottom = 'auto';
+
+            startX = clientX;
+            startY = clientY;
+            startLeft = rect.left;
+            startTop  = rect.top;
+
+            document.body.style.userSelect = 'none';
+            document.body.style.overflow  = 'hidden';
+        }
+
+        function moveDrag(clientX, clientY) {
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+
+            element.style.left = (startLeft + dx) + 'px';
+            element.style.top  = (startTop  + dy) + 'px';
+        }
+
+        function endDrag() {
+            isDown = false;
+            document.body.style.userSelect = '';
+            document.body.style.overflow  = '';
+
+            try {
+                const rect = element.getBoundingClientRect();
+                const pos = { left: rect.left, top: rect.top };
+                localStorage.setItem(POS_KEY, JSON.stringify(pos));
+            } catch (e) {
+                console.error('Error saving OC panel position', e);
+            }
+        }
+
+        handle.addEventListener('mousedown', (e) => {
+            if (e.target && e.target.classList.contains('oc2-btn')) return;
             e.preventDefault();
+            startDrag(e.clientX, e.clientY);
         });
 
-        function onMove(e) {
-            if (!dragging) return;
-            const newLeft = e.clientX - offsetX;
-            const newTop  = e.clientY - offsetY;
-            panel.style.left = newLeft + 'px';
-            panel.style.top  = newTop + 'px';
-            panel.style.right = 'auto';
-        }
+        document.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            moveDrag(e.clientX, e.clientY);
+        }, { passive: false });
 
-        function onUp() {
-            if (!dragging) return;
-            dragging = false;
-            document.removeEventListener('mousemove', onMove);
-            document.removeEventListener('mouseup', onUp);
-            const rect = panel.getBoundingClientRect();
-            localStorage.setItem(POS_KEY, JSON.stringify({ top: rect.top, left: rect.left }));
-        }
+        document.addEventListener('mouseup', () => {
+            if (!isDown) return;
+            endDrag();
+        });
+
+        handle.addEventListener('touchstart', (e) => {
+            if (e.target && e.target.classList.contains('oc2-btn')) return;
+            const t = e.touches[0];
+            if (!t) return;
+            e.preventDefault();
+            startDrag(t.clientX, t.clientY);
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDown) return;
+            const t = e.touches[0];
+            if (!t) return;
+            e.preventDefault();
+            moveDrag(t.clientX, t.clientY);
+        }, { passive: false });
+
+        document.addEventListener('touchend', () => {
+            if (!isDown) return;
+            endDrag();
+        });
     }
 
     function wirePanel(panel) {
@@ -462,21 +516,54 @@
         } else {
             const existing = document.getElementById('oc2-items-panel');
             if (existing) existing.remove();
-            panelClosed = false; // Reset when leaving crimes tab
+            panelClosed = false;
         }
     }
 
-    // -------- Initialize --------
-    function init() {
-        // Check on page load
-        checkAndCreatePanel();
+    // ---- Panic reset button for panel position (only on crimes tab, top-right) ----
+    function addOc2PanelResetButton() {
+        if (!onCrimesTab()) return; // only on faction crimes page
 
-        // Watch for URL hash changes (clicking between tabs)
+        if (document.getElementById('oc2-reset-btn')) return;
+
+        function resetOcPanelPosition() {
+            try { localStorage.removeItem(POS_KEY); } catch (e) {}
+            location.reload();
+        }
+
+        const btn = document.createElement('button');
+        btn.id = 'oc2-reset-btn';
+        btn.textContent = 'Reset OC Box';
+        btn.style.position = 'fixed';
+        btn.style.top = '5px';      // moved to top
+        btn.style.right = '5px';
+        btn.style.zIndex = '9999';
+        btn.style.fontSize = '10px';
+        btn.style.padding = '3px 6px';
+        btn.style.background = '#c0392b';
+        btn.style.color = '#fff';
+        btn.style.border = 'none';
+        btn.style.borderRadius = '4px';
+        btn.style.cursor = 'pointer';
+        btn.style.opacity = '0.7';
+        btn.onmouseenter = () => btn.style.opacity = '1';
+        btn.onmouseleave = () => btn.style.opacity = '0.7';
+
+        btn.addEventListener('click', resetOcPanelPosition);
+        document.body.appendChild(btn);
+    }
+
+    function init() {
+        checkAndCreatePanel();
+        addOc2PanelResetButton();
+
         window.addEventListener('hashchange', () => {
-            setTimeout(checkAndCreatePanel, 100);
+            setTimeout(() => {
+                checkAndCreatePanel();
+                addOc2PanelResetButton();
+            }, 150);
         });
 
-        // Also watch for mutations in case Torn uses other methods to update UI
         const observer = new MutationObserver(() => {
             if (onCrimesTab() && !panelClosed && !document.getElementById('oc2-items-panel')) {
                 createPanel();

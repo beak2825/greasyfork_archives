@@ -1,36 +1,40 @@
 // ==UserScript==
-// @name         YouTube Ad-Master
-// @namespace    https://github.com/tientq64/userscripts
-// @version      9.5.2
-// @description  综合历史所有有效逻辑：API劫持、深度影子DOM探测、动态倍速调节、UI穿透屏蔽
-// @author       tientq64 + Gemini
-// @match        https://www.youtube.com/*
-// @match        https://m.youtube.com/*
-// @match        https://music.youtube.com/*
-// @exclude      https://studio.youtube.com/*
-// @grant        none
-// @run-at       document-start
-// @license      MIT
+// @name        YouTube Ad-Master
+// @namespace   https://github.com/tientq64/userscripts
+// @version     9.9.7
+// @description 广告时透明度置0+16倍速，广告结束自动恢复，规避数据伪造禁令
+// @author      tientq64 + Gemini
+// @match       https://www.youtube.com/*
+// @match       https://m.youtube.com/*
+// @match       https://music.youtube.com/*
+// @exclude     https://studio.youtube.com/*
+// @grant       none
+// @run-at      document-start
+// @license     MIT
 // @downloadURL https://update.greasyfork.org/scripts/547035/YouTube%20Ad-Master.user.js
 // @updateURL https://update.greasyfork.org/scripts/547035/YouTube%20Ad-Master.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
-
-    // --- 全局状态控制 ---
+    const originalFetch = window.fetch;
+    window.fetch = function(url, ...rest) {
+            if (typeof url === "string" && url.includes("oad=")) {
+                return new Response(new Uint8Array(), { status: 200 });
+            }
+            return originalFetch.apply(this, arguments);
+        };
     let state = {
         savedVolume: 1,
         savedMuted: false,
         isAdActive: false,
-        adDetectedAt: 0,
-        volumeLocked: false // 新增音量锁，防止广告期间误读
+        volumeLocked: false
     };
 
-    // --- 逻辑模块 1：深度影子 DOM 探测器 ---
+    // --- 逻辑模块 1：深度影子 DOM 探测器 (原版点击函数) ---
     const findButtonsRecursive = (root) => {
         const selectors = [
-            '.ytp-ad-skip-button', '.ytp-ad-skip-button-modern', 
+            '.ytp-ad-skip-button', '.ytp-ad-skip-button-modern',
             '.ytp-skip-ad-button', '.ytp-ad-skip-button-container button',
             '[class*="skip-button"]', '[aria-label*="跳过"]', '[aria-label*="Skip"]',
             '.ytp-ad-overlay-close-button'
@@ -50,105 +54,145 @@
         });
     };
 
-    // --- 逻辑模块 2：核心引擎 ---
+    // --- 逻辑模块 2：动态透明度控制 ---
+    const toggleAdVisibility = (isAd) => {
+        const player = document.querySelector('#movie_player');
+        if (!player) return;
+
+        // 关键：修改透明度而非 display:none，以防被检测容器存在性
+        if (isAd) {
+            player.style.setProperty('opacity', '0', 'important');
+            // 保持交互，但视觉消失
+            player.style.setProperty('pointer-events', 'none', 'important');
+        } else {
+            player.style.removeProperty('opacity');
+            player.style.removeProperty('pointer-events');
+        }
+    };
+
+    // --- 逻辑模块 3：核心引擎 ---
     const runSkipEngine = () => {
         const video = document.querySelector('video.html5-main-video');
         const moviePlayer = document.querySelector('#movie_player');
-        const adShowing = document.querySelector('.ad-showing, .ytp-ad-player-overlay, .ytp-ad-player-overlay-layout');
+        // 关键：检测多个可能的广告标志
+        const adShowing = moviePlayer && (
+            moviePlayer.classList.contains('ad-showing') ||
+            moviePlayer.classList.contains('ad-interrupting') ||
+            document.querySelector('.ytp-ad-player-overlay')
+        );
+
+        
 
         if (adShowing && video) {
-            // A. 进入广告：精确备份音量并锁定
+            // --- PIP 跳广告（可选） ---
+            if (!document.pictureInPictureElement) {
+                video.requestPictureInPicture().then(() => {
+                    setTimeout(() => {
+                        if (document.pictureInPictureElement) {
+                            document.exitPictureInPicture();
+                        }
+                    }, 200);
+                }).catch(() => {});
+            }
             if (!state.isAdActive) {
-                // 只有在确定不是广告时抓取的值才可靠
                 if (!video.muted && video.volume > 0) {
                     state.savedVolume = video.volume;
                     state.savedMuted = video.muted;
                     state.volumeLocked = true;
                 }
-                state.adDetectedAt = Date.now();
                 state.isAdActive = true;
-                console.log('[Master] 拦截开始，已保护音量配置');
+                toggleAdVisibility(true);
             }
 
-            // B. 静音并尝试极速播放
+            // 1. 物理层处理：静音 + 稳健倍速
             video.muted = true;
-            try {
-                // 仅在前 2 秒使用 16 倍速，减少播放器报错导致的生硬感
-                const timeInAd = Date.now() - state.adDetectedAt;
-                video.playbackRate = (timeInAd < 2000) ? 16 : 4;
-            } catch (e) {}
+            video.playbackRate = 8.0;
 
-            // C. 进度微调
-            if (!isNaN(video.duration) && video.currentTime < video.duration - 0.2) {
-                video.currentTime = video.duration - 0.1;
+            // 2. 状态层处理：如果卡在 00:00，模拟一次微小的播放触发
+            if (video.currentTime <= 0.1) {
+                video.play().catch(() => {});
             }
 
-            // D. 交互触发
+            // 3. 逻辑层处理：尝试多种方式关闭广告
+            // 方式 A: 模拟点击所有可能的跳过按钮
             findButtonsRecursive(document).forEach(btn => fastClick(btn));
+
+            // 方式 B: 调用底层 API (这是解决“跳不过去”最有效的办法)
             if (moviePlayer && typeof moviePlayer.skipAd === 'function') {
                 try { moviePlayer.skipAd(); } catch(e) {}
             }
-            if (video.paused) video.play().catch(() => {});
+
+            // 方式 C: 如果卡死了，强行移除 ad 类名（死马当活马医，强制刷新状态机）
+            if (video.paused || video.ended) {
+                moviePlayer.classList.remove('ad-showing', 'ad-interrupting');
+            }
 
         } else if (video && state.isAdActive) {
-            // E. 广告结束：平滑恢复逻辑
+            // D. 退出广告
             state.isAdActive = false;
-            video.playbackRate = 1;
+            video.playbackRate = 1.0;
+            toggleAdVisibility(false);
 
-            // 延迟 100ms 恢复音量，避开 YouTube 视频切换时的自动静音指令
             setTimeout(() => {
-                if (state.volumeLocked) {
+                if (state.volumeLocked && video) {
                     video.volume = state.savedVolume;
                     video.muted = state.savedMuted;
-                    // 强制纠正可能的残留静音
-                    if (video.muted) video.muted = false;
                 }
-                console.log('[Master] 恢复播放，音量已同步');
-            }, 100);
-            
+            }, 200);
             state.volumeLocked = false;
-        }
-
-        // F. 正常播放期间：持续更新备份数据（仅限非静音状态）
-        if (video && !adShowing && !video.muted && video.volume > 0) {
-            state.savedVolume = video.volume;
-            state.savedMuted = video.muted;
         }
     };
 
-    // --- 逻辑模块 3：UI 穿透 ---
+    // --- 逻辑模块 4：通用屏蔽 ---
     const applyUIPenetration = () => {
-        const styleId = 'yt-master-integrated-css';
+        const styleId = 'yt-master-transparent-css';
         if (!document.getElementById(styleId)) {
             const style = document.createElement('style');
             style.id = styleId;
             style.textContent = `
-                .ytp-ad-player-overlay-layout, .ytp-ad-player-overlay, .ytp-ad-module,
-                #player-ads, ytd-ad-slot-renderer { 
-                    visibility: hidden !important; 
-                    opacity: 0 !important; 
-                    pointer-events: none !important; 
+                /* 仅针对广告浮层使用透明隐藏 */
+                .ytp-ad-player-overlay, .ytp-ad-module, ytd-ad-slot-renderer {
+                    opacity: 0 !important;
+                    pointer-events: none !important;
                 }
+                .ytp-ad-skip-button,
+                .ytp-ad-skip-button-modern {
+                    opacity: 1 !important;
+                    pointer-events: auto !important;
+                    display: block !important;
+                }
+
                 yt-upsell-dialog-renderer, #pigeon-messaging-container { display: none !important; }
             `;
             document.documentElement.appendChild(style);
         }
-
-        const dismiss = document.querySelectorAll('#dismiss-button, [aria-label="No thanks"], [aria-label="不用了，谢谢"]');
+        const dismiss = document.querySelectorAll('#dismiss-button, [aria-label*="thanks"], [aria-label*="不用了"]');
         dismiss.forEach(btn => btn.click());
     };
 
-    // --- 驱动启动 ---
     const tick = () => {
         runSkipEngine();
         requestAnimationFrame(tick);
     };
 
-    setInterval(applyUIPenetration, 500);
+    setInterval(applyUIPenetration, 800);
+    // --- 逻辑模块：阻断广告 DOM 注入 ---
+    new MutationObserver(mutations => {
+        mutations.forEach(m => {
+            m.addedNodes.forEach(n => {
+                if (n.nodeType === 1) {
+                    if (n.classList?.contains("ytp-ad-player-overlay")) n.remove();
+                    if (n.tagName === "YTD-AD-SLOT-RENDERER") n.remove();
+                }
+            });
+        });
+    }).observe(document, { childList: true, subtree: true });
+
     requestAnimationFrame(tick);
 
     window.addEventListener('yt-navigate-finish', () => {
         state.isAdActive = false;
         state.volumeLocked = false;
+        toggleAdVisibility(false);
     });
 })();

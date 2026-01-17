@@ -1,20 +1,16 @@
 // ==UserScript==
-// @name         Midnight Cyan Greasyfork 1.36 (NO FOUC - NO DELAY !!!! )
+// @name         Midnight Cyan Greasyfork 1.3.26 (NO FOUC - NO DELAY !!!! )
 // @namespace    http://tampermonkey.net/
-// @version      1.36
+// @version      1.3.26
 // @description  changes the color theme of the page to cool dark colors.
 // @author       Gullampis810
 // @license      MIT
 // @match        https://greasyfork.org/*
-// @icon         https://banner2.cleanpng.com/20180702/xb/kisspng-circle-royalty-free-clip-art-5b39bbb7639994.770051931530510263408.jpg
-// @grant        GM_addStyle
+// @icon         https://greasyfork.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjA0MDk1LCJwdXIiOiJibG9iX2lkIn19--e79d532e0eaf011bd04e021c156db81073781d5c/09jtfkuggukgr6-7890n5r5r-ntfftntfn5ryr55ryyr.png?locale=en// @grant        GM_addStyle
 // @run-at       document-start
-// @downloadURL
-// @updateURL
-// @downloadURL https://update.greasyfork.org/scripts/530939/Midnight%20Cyan%20Greasyfork%20136%20%28NO%20FOUC%20-%20NO%20DELAY%20%21%21%21%21%20%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/530939/Midnight%20Cyan%20Greasyfork%20136%20%28NO%20FOUC%20-%20NO%20DELAY%20%21%21%21%21%20%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/530939/Midnight%20Cyan%20Greasyfork%201326%20%28NO%20FOUC%20-%20NO%20DELAY%20%21%21%21%21%20%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/530939/Midnight%20Cyan%20Greasyfork%201326%20%28NO%20FOUC%20-%20NO%20DELAY%20%21%21%21%21%20%29.meta.js
 // ==/UserScript==
-
 
 
 (function() {
@@ -1156,10 +1152,21 @@ nav {
 nav:hover {
     background-color: #203047 !important;
 }
- .user-content {
-      background: linear-gradient(to right, #2A3545, #1A2535 1em);
-      border-left: 2px solid #4AC2E5;
- }
+.user-content {
+     background: linear-gradient(150deg, #101725 10%,#2a1f2c 40%, #1d3739 80%);
+     border-top: 1px solid #4ac2e5 !important;
+     border-radius: 15px !important;
+}
+a.toggle-content {
+    color: rgb(155, 220, 173) !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: rgba(155, 220, 173, 0.5) !important;
+    border-image: initial !important;
+    border-radius: 35px !important;
+    background: rgb(21, 43, 44) !important;
+     padding: 3px !important;
+}
 
  .user-content > p:first-child {
     background: linear-gradient(15deg, #43344c 0%, #6e451280 100%);
@@ -1368,12 +1375,7 @@ html::-webkit-scrollbar-corner {
         }, 0);
     });
 
-})();
-
-
-
-
-
+})(); 
 
 
  //   PrettyPrint Syntax Highlighting Fix (Dark VS Code Style) //
@@ -1476,12 +1478,7 @@ color: rgb(156, 220, 254) !important;
     });
     observer.observe(document.body, {
 childList: true, subtree: true });
-})();
-
-
-
-
-
+})(); 
 
 
 //============ copy bttn script =======//
@@ -1564,4 +1561,81 @@ childList: true, subtree: true });
   const observer = new MutationObserver(init);
   observer.observe(document.body, {
 childList: true, subtree: true });
+})();
+
+
+
+
+//============ hide-user-content-quote.js =======//
+
+(function () {
+    'use strict';
+
+    function init() {
+        document.querySelectorAll('.comment-meta').forEach(meta => {
+            // Предотвращаем добавление кнопки несколько раз (на случай динамической загрузки)
+            if (meta.querySelector('a.toggle-content')) return;
+
+            const commentDiv = meta.closest('div[id^="comment-"]');
+            if (!commentDiv) return;
+
+            const commentId = commentDiv.id;
+            const userContent = commentDiv.querySelector('.user-content');
+            if (!userContent) return;
+
+            const quoteLink = meta.querySelector('a.quote-comment');
+            if (!quoteLink) return;
+
+            const quoteItem = quoteLink.parentElement;
+
+            // Создаём новую кнопку
+            const toggleItem = document.createElement('div');
+            toggleItem.className = 'comment-meta-item';
+
+            const toggleLink = document.createElement('a');
+            toggleLink.href = '#';
+            toggleLink.className = 'toggle-content';
+            toggleLink.style.cursor = 'pointer';
+            toggleItem.appendChild(toggleLink);
+
+            // Вставляем кнопку сразу после элемента Quote
+            quoteItem.parentNode.insertBefore(toggleItem, quoteItem.nextSibling);
+
+            // Настраиваем стили для анимации и обрезки
+             userContent.style.transition = 'height 0.3s ease';
+
+            // Ключ для localStorage (уникальный для каждого комментария)
+            const storageKey = 'usercontent-collapse-' + commentId;
+
+            // По умолчанию свёрнуто. Состояние сохраняется только для развёрнутого.
+            let isCollapsed = localStorage.getItem(storageKey) !== 'expanded';
+
+            // Устанавливаем начальное состояние
+            userContent.style.height = isCollapsed ? '30px' : '860px';
+            toggleLink.textContent = isCollapsed ? ' Show response' : ' Hide response';
+
+            // Обработчик клика
+            toggleLink.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                isCollapsed = !isCollapsed;
+
+                userContent.style.height = isCollapsed ? '30px' : '860px';
+                toggleLink.textContent = isCollapsed ? ' Show response' : ' Hide response';
+
+                if (isCollapsed) {
+                    localStorage.removeItem(storageKey);
+                } else {
+                    localStorage.setItem(storageKey, 'expanded');
+                }
+            });
+        });
+    }
+
+    // Запускаем после загрузки DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Vinted Country & City Filter (client-side)
 // @namespace    https://greasyfork.org/en/users/1550823-nigel1992
-// @version      1.4.1.1
+// @version      1.4.2
 // @description  Adds a country and city indicator to Vinted items and allows client-side visual filtering by including/excluding selected countries. The script uses Vinted’s public item API to retrieve country and city information. It does not perform purchases, send messages, or modify anything on Vinted servers.
 // @author       Nigel1992
 // @license      MIT
@@ -72,6 +72,8 @@
     let countrySectionCollapsed = sessionStorage.getItem('vinted_country_collapsed') === 'true';
     let isPaused = false;
     let flaggedSellers = new Set(JSON.parse(localStorage.getItem('vinted_flagged_sellers') || '[]'));
+    let hasShownCaptchaAlert = false;
+    let activeTab = sessionStorage.getItem('vinted_active_tab') || 'main';
 
     const processedItems = new Map();
     const queue = [];
@@ -112,10 +114,18 @@
             'width=500,height=600,scrollbars=yes,resizable=yes'
         );
         
-        updateStatusMessage('🔓 Solving captcha... complete it in the popup');
+        // Check if popup was blocked
+        if (!captchaPopup || captchaPopup.closed || typeof captchaPopup.closed === 'undefined') {
+            console.warn('[Vinted Filter] Popup was blocked by browser. Please allow popups.');
+            updateStatusMessage('⚠️ Popup blocked! Please allow popups and refresh the page');
+            return false;
+        }
+        
+        updateStatusMessage('🔓 Auto-solving captcha... please complete it in the popup');
         
         // Start checking if captcha is solved
         startCaptchaCheck();
+        return true;
     }
 
     function startCaptchaCheck() {
@@ -131,6 +141,12 @@
                     `https://${location.hostname}/api/v2/items/1/details`,
                     { credentials: 'include' }
                 );
+
+                // If we get a 200 immediately, captcha is solved; close popup right away
+                if (response.ok && response.status === 200) {
+                    onCaptchaSolved();
+                    return;
+                }
                 
                 // If we no longer get 403, captcha is solved
                 if (response.status !== 403) {
@@ -175,10 +191,31 @@
             clearInterval(captchaCheckInterval);
             captchaCheckInterval = null;
         }
+
+        hasShownCaptchaAlert = false;
         
-        // Close popup
+        // Close popup - try multiple times to ensure it closes
         if (captchaPopup && !captchaPopup.closed) {
-            captchaPopup.close();
+            console.log('[Vinted Filter] Attempting to close captcha popup...');
+            try {
+                captchaPopup.close();
+            } catch (e) {
+                console.warn('[Vinted Filter] Error closing popup:', e);
+            }
+            
+            // Retry closing after a short delay in case it didn't work immediately
+            setTimeout(() => {
+                if (captchaPopup && !captchaPopup.closed) {
+                    console.log('[Vinted Filter] Retrying popup close...');
+                    try {
+                        captchaPopup.close();
+                    } catch (e) {
+                        console.warn('[Vinted Filter] Error on retry:', e);
+                    }
+                }
+                captchaPopup = null;
+            }, 500);
+        } else {
             captchaPopup = null;
         }
         
@@ -232,7 +269,7 @@
         const hiddenCount = Array.from(processedItems.values()).filter(item => item.country && !includedCountries.includes(item.country) && includedCountries.length > 0).length;
 
         menu.innerHTML = `
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid ${darkMode ? '#444' : '#e0e0e0'};">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid ${darkMode ? '#444' : '#e0e0e0'};">
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <span style="font-size: 24px;">🌍</span>
                     <strong style="color: #007782; font-size: 18px; font-weight: 600;">Location Filter</strong>
@@ -244,441 +281,420 @@
                 </div>
             </div>
 
+            <div id="vinted-tab-bar" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <button class="vinted-tab-btn" data-tab="main">Main</button>
+                <button class="vinted-tab-btn" data-tab="settings">Settings</button>
+            </div>
+
             <div id="vinted-menu-content">
-                <div style="
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 12px;
-                    background: ${darkMode ? '#333' : '#f0f9f9'};
-                    border-radius: 10px;
-                    margin-bottom: 16px;
-                    border: 2px solid #007782;
-                ">
-                    <span style="color: ${darkMode ? '#ddd' : '#333'}; font-weight: 500; font-size: 14px;">Filter Active</span>
-                    <label style="
-                        position: relative;
-                        display: inline-block;
-                        width: 50px;
-                        height: 26px;
-                        cursor: pointer;
-                    ">
-                        <input type="checkbox" id="vinted-filter-toggle" ${isFilterEnabled ? 'checked' : ''} style="
-                            opacity: 0;
-                            width: 0;
-                            height: 0;
-                        ">
-                        <span id="vinted-toggle-slider" style="
-                            position: absolute;
-                            cursor: pointer;
-                            top: 0;
-                            left: 0;
-                            right: 0;
-                            bottom: 0;
-                            background-color: ${isFilterEnabled ? '#007782' : '#ccc'};
-                            transition: 0.3s;
-                            border-radius: 26px;
-                        ">
-                            <span style="
-                                position: absolute;
-                                content: '';
-                                height: 20px;
-                                width: 20px;
-                                left: ${isFilterEnabled ? '27px' : '3px'};
-                                bottom: 3px;
-                                background-color: white;
-                                transition: 0.3s;
-                                border-radius: 50%;
-                                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                            "></span>
-                        </span>
-                    </label>
-                </div>
-
-                <div id="vinted-presets-section" style="margin-bottom: 16px; padding: 12px; background: ${darkMode ? '#333' : '#f5f5f5'}; border-radius: 10px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                        <label style="color: ${darkMode ? '#ddd' : '#333'}; font-weight: 500; font-size: 14px;">Presets:</label>
-                        <button id="vinted-quick-save-preset" style="
-                            padding: 4px 8px;
-                            background: #007782;
-                            color: white;
-                            border: none;
-                            border-radius: 6px;
-                            font-weight: 500;
-                            cursor: pointer;
-                            font-size: 11px;
-                            transition: background 0.2s;
-                        " onmouseover="this.style.background='#005f6b'" onmouseout="this.style.background='#007782'" title="Save current filter as preset">💾 Save</button>
-                    </div>
-                    <select id="vinted-preset-select" style="
-                        width: 100%;
-                        padding: 6px;
-                        background: ${darkMode ? '#444' : 'white'};
-                        color: ${darkMode ? '#fff' : '#000'};
-                        border: 1px solid #007782;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-size: 12px;
-                        margin-bottom: 6px;
-                    ">
-                        <option value="">-- Select preset --</option>
-                    </select>
-                    <div style="display: flex; gap: 6px;">
-                        <button id="vinted-load-preset" style="
-                            flex: 1;
-                            padding: 6px;
-                            background: #4caf50;
-                            color: white;
-                            border: none;
-                            border-radius: 6px;
-                            font-weight: 500;
-                            cursor: pointer;
-                            font-size: 11px;
-                            transition: background 0.2s;
-                        " onmouseover="this.style.background='#388e3c'" onmouseout="this.style.background='#4caf50'" title="Load selected preset">Load</button>
-                        <button id="vinted-delete-preset" style="
-                            flex: 1;
-                            padding: 6px;
-                            background: #f44336;
-                            color: white;
-                            border: none;
-                            border-radius: 6px;
-                            font-weight: 500;
-                            cursor: pointer;
-                            font-size: 11px;
-                            transition: background 0.2s;
-                        " onmouseover="this.style.background='#d32f2f'" onmouseout="this.style.background='#f44336'" title="Delete selected preset">Delete</button>
-                    </div>
-                    <div style="display: flex; gap: 6px; margin-top: 6px;">
-                        <button id="vinted-export-presets" style="
-                            flex: 1;
-                            padding: 6px;
-                            background: #2196f3;
-                            color: white;
-                            border: none;
-                            border-radius: 6px;
-                            font-weight: 500;
-                            cursor: pointer;
-                            font-size: 11px;
-                            transition: background 0.2s;
-                        " onmouseover="this.style.background='#1976d2'" onmouseout="this.style.background='#2196f3'" title="Export all presets as JSON">📥 Export</button>
-                        <button id="vinted-import-presets" style="
-                            flex: 1;
-                            padding: 6px;
-                            background: #ff9800;
-                            color: white;
-                            border: none;
-                            border-radius: 6px;
-                            font-weight: 500;
-                            cursor: pointer;
-                            font-size: 11px;
-                            transition: background 0.2s;
-                        " onmouseover="this.style.background='#f57c00'" onmouseout="this.style.background='#ff9800'" title="Import presets from JSON">📤 Import</button>
-                    </div>
-                </div>
-
-                <div id="vinted-filter-options" style="${isFilterEnabled ? '' : 'opacity: 0.5; pointer-events: none;'}">
-                <div style="margin-bottom: 16px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                        <label style="display: block; color: ${darkMode ? '#ddd' : '#333'}; font-weight: 500; font-size: 14px;">
-                            Include Countries:
-                        </label>
-                        <button id="vinted-toggle-countries" style="
-                            background: #007782;
-                            color: white;
-                            border: none;
-                            border-radius: 4px;
-                            padding: 2px 8px;
-                            font-size: 11px;
-                            cursor: pointer;
-                            transition: background 0.2s;
-                        " onmouseover="this.style.background='#005f6b'" onmouseout="this.style.background='#007782'" title="${countrySectionCollapsed ? 'Expand' : 'Collapse'}">${countrySectionCollapsed ? '▶' : '▼'}</button>
-                    </div>
-                    <div id="vinted-country-checkboxes" style="
-                        display: ${countrySectionCollapsed ? 'none' : 'grid'};
-                        grid-template-columns: 1fr 1fr;
-                        gap: 8px;
-                        max-height: 200px;
-                        overflow-y: auto;
-                    ">
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-netherlands" style="margin: 0;">
-                            <span>🇳🇱 Netherlands</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-belgium" style="margin: 0;">
-                            <span>🇧🇪 Belgium</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-france" style="margin: 0;">
-                            <span>🇫🇷 France</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-germany" style="margin: 0;">
-                            <span>🇩🇪 Germany</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-spain" style="margin: 0;">
-                            <span>🇪🇸 Spain</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-italy" style="margin: 0;">
-                            <span>🇮🇹 Italy</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-portugal" style="margin: 0;">
-                            <span>🇵🇹 Portugal</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-poland" style="margin: 0;">
-                            <span>🇵🇱 Poland</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-sweden" style="margin: 0;">
-                            <span>🇸🇪 Sweden</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-denmark" style="margin: 0;">
-                            <span>🇩🇰 Denmark</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-finland" style="margin: 0;">
-                            <span>🇫🇮 Finland</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
-                            <input type="checkbox" id="include-uk" style="margin: 0;">
-                            <span>🇬🇧 United Kingdom</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div style="background: ${darkMode ? '#333' : '#f5f5f5'}; border-radius: 10px; padding: 12px; margin-bottom: 12px;">
-                    <div id="vinted-match-count" style="
+                <div id="vinted-tab-main" class="vinted-tab-panel" style="display: ${activeTab === 'main' ? 'block' : 'none'};">
+                    <div style="
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        margin-bottom: 8px;
-                    " title="Items not excluded by your country filter (shown at full opacity)">
-                        <span style="color: ${darkMode ? '#aaa' : '#666'}; font-size: 13px; font-weight: 500;">✅ Shown Items:</span>
-                        <span id="vinted-match-number" style="
-                            background: #4caf50;
-                            color: white;
-                            padding: 4px 12px;
-                            border-radius: 12px;
-                            font-weight: 600;
-                            font-size: 14px;
-                            min-width: 40px;
-                            text-align: center;
-                        ">0</span>
-                    </div>
-                    <div id="vinted-total-count" style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        margin-bottom: 8px;
-                    " title="Total number of items on the current page that have been scanned for location data">
-                        <span style="color: ${darkMode ? '#aaa' : '#666'}; font-size: 13px; font-weight: 500;">📦 Total on Page:</span>
-                        <span id="vinted-total-number" style="
-                            background: #2196f3;
-                            color: white;
-                            padding: 4px 12px;
-                            border-radius: 12px;
-                            font-weight: 600;
-                            font-size: 14px;
-                            min-width: 40px;
-                            text-align: center;
-                        ">0</span>
-                    </div>
-                    <!-- Duplicates stat removed in 1.4.1.1 hotfix -->
-                    <div id="vinted-queue-count" style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                    " title="Items currently waiting to be scanned for location data via the API">
-                        <span style="color: ${darkMode ? '#aaa' : '#666'}; font-size: 13px; font-weight: 500;">⏳ In Queue:</span>
-                        <span id="vinted-queue-number" style="
-                            background: #ff9800;
-                            color: white;
-                            padding: 4px 12px;
-                            border-radius: 12px;
-                            font-weight: 600;
-                            font-size: 14px;
-                            min-width: 40px;
-                            text-align: center;
-                        ">0</span>
-                    </div>
-                </div>
-
-                <div id="vinted-progress-bar-container" style="
-                    background: #e0e0e0;
-                    border-radius: 10px;
-                    height: 8px;
-                    margin-bottom: 12px;
-                    overflow: hidden;
-                    display: none;
-                ">
-                    <div id="vinted-progress-bar" style="
-                        background: linear-gradient(90deg, #007782, #00a8b5);
-                        height: 100%;
-                        width: 0%;
-                        transition: width 0.3s ease;
+                        padding: 12px;
+                        background: ${darkMode ? '#333' : '#f0f9f9'};
                         border-radius: 10px;
-                    "></div>
-                </div>
-
-                <div id="vinted-language-warning" style="
-                    display: none;
-                    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-                    border: 2px solid #ffc107;
-                    padding: 14px;
-                    border-radius: 10px;
-                    font-size: 13px;
-                    margin-bottom: 12px;
-                ">
-                    <div style="
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                        margin-bottom: 10px;
-                        font-weight: 600;
-                        color: #856404;
+                        margin-bottom: 12px;
+                        border: 2px solid #007782;
                     ">
-                        <span style="font-size: 20px;">⚠️</span>
-                        <span>Language Warning</span>
+                        <span style="color: ${darkMode ? '#ddd' : '#333'}; font-weight: 500; font-size: 14px;">Filter Active</span>
+                        <label style="
+                            position: relative;
+                            display: inline-block;
+                            width: 50px;
+                            height: 26px;
+                            cursor: pointer;
+                        ">
+                            <input type="checkbox" id="vinted-filter-toggle" ${isFilterEnabled ? 'checked' : ''} style="
+                                opacity: 0;
+                                width: 0;
+                                height: 0;
+                            ">
+                            <span id="vinted-toggle-slider" style="
+                                position: absolute;
+                                cursor: pointer;
+                                top: 0;
+                                left: 0;
+                                right: 0;
+                                bottom: 0;
+                                background-color: ${isFilterEnabled ? '#007782' : '#ccc'};
+                                transition: 0.3s;
+                                border-radius: 26px;
+                            ">
+                                <span style="
+                                    position: absolute;
+                                    content: '';
+                                    height: 20px;
+                                    width: 20px;
+                                    left: ${isFilterEnabled ? '27px' : '3px'};
+                                    bottom: 3px;
+                                    background-color: white;
+                                    transition: 0.3s;
+                                    border-radius: 50%;
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                                "></span>
+                            </span>
+                        </label>
                     </div>
-                    <p style="margin: 0; color: #856404; line-height: 1.5;">
-                        This script only works when Vinted is set to <strong>English</strong>. Please change your language to English in your Vinted settings to use this filter.
-                    </p>
-                </div>
 
-                <div id="vinted-status-message" style="
-                    font-size: 12px;
-                    color: ${darkMode ? '#aaa' : '#666'};
-                    text-align: center;
-                    padding: 8px;
-                    background: ${darkMode ? '#333' : '#f9f9f9'};
-                    border-radius: 8px;
-                    margin-bottom: 12px;
-                    min-height: 20px;
-                ">Ready to filter items...</div>
+                    <div style="background: ${darkMode ? '#333' : '#f5f5f5'}; border-radius: 10px; padding: 12px; margin-bottom: 12px;">
+                        <div id="vinted-match-count" style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 8px;
+                        " title="Items not excluded by your country filter (shown at full opacity)">
+                            <span style="color: ${darkMode ? '#aaa' : '#666'}; font-size: 13px; font-weight: 500;">✅ Shown Items:</span>
+                            <span id="vinted-match-number" style="
+                                background: #4caf50;
+                                color: white;
+                                padding: 4px 12px;
+                                border-radius: 12px;
+                                font-weight: 600;
+                                font-size: 14px;
+                                min-width: 40px;
+                                text-align: center;
+                            ">0</span>
+                        </div>
+                        <div id="vinted-total-count" style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 8px;
+                        " title="Total number of items on the current page that have been scanned for location data">
+                            <span style="color: ${darkMode ? '#aaa' : '#666'}; font-size: 13px; font-weight: 500;">📦 Total on Page:</span>
+                            <span id="vinted-total-number" style="
+                                background: #2196f3;
+                                color: white;
+                                padding: 4px 12px;
+                                border-radius: 12px;
+                                font-weight: 600;
+                                font-size: 14px;
+                                min-width: 40px;
+                                text-align: center;
+                            ">0</span>
+                        </div>
+                        <div id="vinted-queue-count" style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                        " title="Items currently waiting to be scanned for location data via the API">
+                            <span style="color: ${darkMode ? '#aaa' : '#666'}; font-size: 13px; font-weight: 500;">⏳ In Queue:</span>
+                            <span id="vinted-queue-number" style="
+                                background: #ff9800;
+                                color: white;
+                                padding: 4px 12px;
+                                border-radius: 12px;
+                                font-weight: 600;
+                                font-size: 14px;
+                                min-width: 40px;
+                                text-align: center;
+                            ">0</span>
+                        </div>
+                    </div>
 
-                <div id="vinted-captcha-warning" style="
-                    display: none;
-                    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-                    border: 2px solid #f44336;
-                    padding: 14px;
-                    border-radius: 10px;
-                    font-size: 13px;
-                    margin-top: 12px;
-                ">
-                    <div style="
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                        margin-bottom: 10px;
-                        font-weight: 600;
-                        color: #c62828;
+                    <div id="vinted-progress-bar-container" style="
+                        background: #e0e0e0;
+                        border-radius: 10px;
+                        height: 8px;
+                        margin-bottom: 12px;
+                        overflow: hidden;
+                        display: none;
                     ">
-                        <span style="font-size: 20px;">⚠️</span>
-                        <span>API Blocked</span>
+                        <div id="vinted-progress-bar" style="
+                            background: linear-gradient(90deg, #007782, #00a8b5);
+                            height: 100%;
+                            width: 0%;
+                            transition: width 0.3s ease;
+                            border-radius: 10px;
+                        "></div>
                     </div>
-                    <p style="margin: 0 0 12px 0; color: #555; line-height: 1.5;">
-                        Solving captcha automatically. Complete it in the popup window.
-                    </p>
-                    <button id="vinted-open-captcha" style="
-                        width: 100%;
-                        padding: 10px;
-                        background: #f44336;
-                        color: white;
-                        border: none;
-                        border-radius: 8px;
-                        font-weight: 600;
-                        cursor: pointer;
+
+                    <div id="vinted-language-warning" style="
+                        display: none;
+                        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+                        border: 2px solid #ffc107;
+                        padding: 14px;
+                        border-radius: 10px;
                         font-size: 13px;
-                        margin-bottom: 8px;
-                        transition: background 0.2s;
-                    " onmouseover="this.style.background='#d32f2f'" onmouseout="this.style.background='#f44336'">
-                        🔓 Reopen Captcha Popup
-                    </button>
-                    <button id="vinted-resume" style="
-                        width: 100%;
-                        padding: 10px;
-                        background: #4caf50;
-                        color: white;
-                        border: none;
+                        margin-bottom: 12px;
+                    ">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            margin-bottom: 10px;
+                            font-weight: 600;
+                            color: #856404;
+                        ">
+                            <span style="font-size: 20px;">⚠️</span>
+                            <span>Language Warning</span>
+                        </div>
+                        <p style="margin: 0; color: #856404; line-height: 1.5;">
+                            This script only works when Vinted is set to <strong>English</strong>. Please change your language to English in your Vinted settings to use this filter.
+                        </p>
+                    </div>
+
+                    <div id="vinted-status-message" style="
+                        font-size: 12px;
+                        color: ${darkMode ? '#aaa' : '#666'};
+                        text-align: center;
+                        padding: 8px;
+                        background: ${darkMode ? '#333' : '#f9f9f9'};
                         border-radius: 8px;
-                        font-weight: 600;
-                        cursor: pointer;
+                        margin-bottom: 12px;
+                        min-height: 20px;
+                    ">Ready to filter items...</div>
+
+                    <div id="vinted-captcha-warning" style="
+                        display: none;
+                        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+                        border: 2px solid #f44336;
+                        padding: 14px;
+                        border-radius: 10px;
                         font-size: 13px;
-                        transition: background 0.2s;
-                    " onmouseover="this.style.background='#388e3c'" onmouseout="this.style.background='#4caf50'">
-                        ✅ Resume Manually
-                    </button>
-                </div>
+                        margin-top: 12px;
+                    ">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            margin-bottom: 10px;
+                            font-weight: 600;
+                            color: #c62828;
+                        ">
+                            <span style="font-size: 20px;">🔓</span>
+                            <span>Auto-Solving Captcha</span>
+                        </div>
+                        <p style="margin: 0; color: #555; line-height: 1.5;">
+                            A popup window has been opened to automatically solve the captcha. Please complete the captcha in the popup window. The script will automatically detect when it's solved and continue processing.
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <button id="vinted-reset-stats" style="
+                            flex: 1;
+                            padding: 10px;
+                            background: #9c27b0;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            font-size: 12px;
+                            transition: background 0.2s;
+                        " onmouseover="this.style.background='#7b1fa2'" onmouseout="this.style.background='#9c27b0'" title="Reset stats counters">📊 Reset Stats</button>
+                        <button id="vinted-clear-cache" style="
+                            flex: 1;
+                            padding: 10px;
+                            background: #757575;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            font-size: 12px;
+                            transition: background 0.2s;
+                        " onmouseover="this.style.background='#616161'" onmouseout="this.style.background='#757575'" title="Clear cached item data">
+                            🗑️ Clear Cache
+                        </button>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <a href="https://greasyfork.org/en/scripts/559753-vinted-country-city-filter-client-side/feedback" target="_blank" style="
+                            flex: 1;
+                            padding: 8px;
+                            background: #007782;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            font-size: 11px;
+                            text-align: center;
+                            text-decoration: none;
+                            transition: background 0.2s;
+                        " onmouseover="this.style.background='#005f6b'" onmouseout="this.style.background='#007782'">
+                            💬 Feedback
+                        </a>
+                        <a href="https://greasyfork.org/en/scripts/559753-vinted-country-city-filter-client-side/feedback" target="_blank" style="
+                            flex: 1;
+                            padding: 8px;
+                            background: #dc3545;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            font-size: 11px;
+                            text-align: center;
+                            text-decoration: none;
+                            transition: background 0.2s;
+                        " onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                            🐛 Report Issue
+                        </a>
+                    </div>
                 </div>
 
-                <div style="display: flex; gap: 8px; margin-top: 12px;">
-                    <button id="vinted-reset-stats" style="
-                        flex: 1;
-                        padding: 10px;
-                        background: #9c27b0;
-                        color: white;
-                        border: none;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        cursor: pointer;
-                        font-size: 12px;
-                        transition: background 0.2s;
-                    " onmouseover="this.style.background='#7b1fa2'" onmouseout="this.style.background='#9c27b0'" title="Reset stats counters">📊 Reset Stats</button>
-                    <button id="vinted-clear-cache" style="
-                        flex: 1;
-                        padding: 10px;
-                        background: #757575;
-                        color: white;
-                        border: none;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        cursor: pointer;
-                        font-size: 12px;
-                        transition: background 0.2s;
-                    " onmouseover="this.style.background='#616161'" onmouseout="this.style.background='#757575'" title="Clear cached item data">
-                        🗑️ Clear Cache
-                    </button>
-                </div>
+                <div id="vinted-tab-settings" class="vinted-tab-panel" style="display: ${activeTab === 'settings' ? 'block' : 'none'};">
+                    <div id="vinted-presets-section" style="margin-bottom: 16px; padding: 12px; background: ${darkMode ? '#333' : '#f5f5f5'}; border-radius: 10px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <label style="color: ${darkMode ? '#ddd' : '#333'}; font-weight: 500; font-size: 14px;">Presets:</label>
+                            <button id="vinted-quick-save-preset" style="
+                                padding: 4px 8px;
+                                background: #007782;
+                                color: white;
+                                border: none;
+                                border-radius: 6px;
+                                font-weight: 500;
+                                cursor: pointer;
+                                font-size: 11px;
+                                transition: background 0.2s;
+                            " onmouseover="this.style.background='#005f6b'" onmouseout="this.style.background='#007782'" title="Save current filter as preset">💾 Save</button>
+                        </div>
+                        <select id="vinted-preset-select" style="
+                            width: 100%;
+                            padding: 6px;
+                            background: ${darkMode ? '#444' : 'white'};
+                            color: ${darkMode ? '#fff' : '#000'};
+                            border: 1px solid #007782;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 12px;
+                            margin-bottom: 6px;
+                        ">
+                            <option value="">-- Select preset --</option>
+                        </select>
+                        <div style="display: flex; gap: 6px;">
+                            <button id="vinted-load-preset" style="
+                                flex: 1;
+                                padding: 6px;
+                                background: #4caf50;
+                                color: white;
+                                border: none;
+                                border-radius: 6px;
+                                font-weight: 500;
+                                cursor: pointer;
+                                font-size: 11px;
+                                transition: background 0.2s;
+                            " onmouseover="this.style.background='#388e3c'" onmouseout="this.style.background='#4caf50'" title="Load selected preset">Load</button>
+                            <button id="vinted-delete-preset" style="
+                                flex: 1;
+                                padding: 6px;
+                                background: #f44336;
+                                color: white;
+                                border: none;
+                                border-radius: 6px;
+                                font-weight: 500;
+                                cursor: pointer;
+                                font-size: 11px;
+                                transition: background 0.2s;
+                            " onmouseover="this.style.background='#d32f2f'" onmouseout="this.style.background='#f44336'" title="Delete selected preset">Delete</button>
+                        </div>
+                        <div style="display: flex; gap: 6px; margin-top: 6px;">
+                            <button id="vinted-export-presets" style="
+                                flex: 1;
+                                padding: 6px;
+                                background: #2196f3;
+                                color: white;
+                                border: none;
+                                border-radius: 6px;
+                                font-weight: 500;
+                                cursor: pointer;
+                                font-size: 11px;
+                                transition: background 0.2s;
+                            " onmouseover="this.style.background='#1976d2'" onmouseout="this.style.background='#2196f3'" title="Export all presets as JSON">📥 Export</button>
+                            <button id="vinted-import-presets" style="
+                                flex: 1;
+                                padding: 6px;
+                                background: #ff9800;
+                                color: white;
+                                border: none;
+                                border-radius: 6px;
+                                font-weight: 500;
+                                cursor: pointer;
+                                font-size: 11px;
+                                transition: background 0.2s;
+                            " onmouseover="this.style.background='#f57c00'" onmouseout="this.style.background='#ff9800'" title="Import presets from JSON">📤 Import</button>
+                        </div>
+                    </div>
 
-                <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <a href="https://greasyfork.org/en/scripts/559753-vinted-country-city-filter-client-side/feedback" target="_blank" style="
-                        flex: 1;
-                        padding: 8px;
-                        background: #007782;
-                        color: white;
-                        border: none;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        cursor: pointer;
-                        font-size: 11px;
-                        text-align: center;
-                        text-decoration: none;
-                        transition: background 0.2s;
-                    " onmouseover="this.style.background='#005f6b'" onmouseout="this.style.background='#007782'">
-                        💬 Feedback
-                    </a>
-                    <a href="https://greasyfork.org/en/scripts/559753-vinted-country-city-filter-client-side/feedback" target="_blank" style="
-                        flex: 1;
-                        padding: 8px;
-                        background: #dc3545;
-                        color: white;
-                        border: none;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        cursor: pointer;
-                        font-size: 11px;
-                        text-align: center;
-                        text-decoration: none;
-                        transition: background 0.2s;
-                    " onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
-                        🐛 Report Issue
-                    </a>
+                    <div id="vinted-filter-options" style="${isFilterEnabled ? '' : 'opacity: 0.5; pointer-events: none;'}">
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                <label style="display: block; color: ${darkMode ? '#ddd' : '#333'}; font-weight: 500; font-size: 14px;">
+                                    Include Countries:
+                                </label>
+                                <button id="vinted-toggle-countries" style="
+                                    background: #007782;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 4px;
+                                    padding: 2px 8px;
+                                    font-size: 11px;
+                                    cursor: pointer;
+                                    transition: background 0.2s;
+                                " onmouseover="this.style.background='#005f6b'" onmouseout="this.style.background='#007782'" title="${countrySectionCollapsed ? 'Expand' : 'Collapse'}">${countrySectionCollapsed ? '▶' : '▼'}</button>
+                            </div>
+                            <div id="vinted-country-checkboxes" style="
+                                display: ${countrySectionCollapsed ? 'none' : 'grid'};
+                                grid-template-columns: 1fr 1fr;
+                                gap: 8px;
+                                max-height: 200px;
+                                overflow-y: auto;
+                            ">
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-netherlands" style="margin: 0;">
+                                    <span>🇳🇱 Netherlands</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-belgium" style="margin: 0;">
+                                    <span>🇧🇪 Belgium</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-france" style="margin: 0;">
+                                    <span>🇫🇷 France</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-germany" style="margin: 0;">
+                                    <span>🇩🇪 Germany</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-spain" style="margin: 0;">
+                                    <span>🇪🇸 Spain</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-italy" style="margin: 0;">
+                                    <span>🇮🇹 Italy</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-portugal" style="margin: 0;">
+                                    <span>🇵🇹 Portugal</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-poland" style="margin: 0;">
+                                    <span>🇵🇱 Poland</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-sweden" style="margin: 0;">
+                                    <span>🇸🇪 Sweden</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-denmark" style="margin: 0;">
+                                    <span>🇩🇰 Denmark</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-finland" style="margin: 0;">
+                                    <span>🇫🇮 Finland</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; color: ${darkMode ? '#ddd' : '#333'};" onmouseover="this.style.background='${darkMode ? '#444' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" id="include-uk" style="margin: 0;">
+                                    <span>🇬🇧 United Kingdom</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div style="
@@ -689,12 +705,48 @@
                     padding-top: 8px;
                     border-top: 1px solid ${darkMode ? '#444' : '#eee'};
                 ">
-                    v1.4.1.1 • Jan 10, 2026
+                    v1.4.2 • Jan 17, 2026
                 </div>
             </div>
         `;
 
         document.body.appendChild(menu);
+
+        // Tab handling
+        const tabButtons = Array.from(menu.querySelectorAll('.vinted-tab-btn'));
+        const tabPanels = {
+            main: menu.querySelector('#vinted-tab-main'),
+            settings: menu.querySelector('#vinted-tab-settings')
+        };
+
+        function setActiveTab(tab) {
+            activeTab = tab;
+            sessionStorage.setItem('vinted_active_tab', tab);
+            tabButtons.forEach(btn => {
+                const isActive = btn.dataset.tab === tab;
+                btn.classList.toggle('vinted-tab-active', isActive);
+                btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+            Object.entries(tabPanels).forEach(([key, panel]) => {
+                if (!panel) return;
+                const isActive = key === tab;
+                panel.style.display = isActive ? 'block' : 'none';
+                panel.classList.toggle('vinted-tab-panel-active', isActive);
+                if (isActive) {
+                    // restart animation for repeat visits
+                    panel.classList.remove('vinted-tab-panel-animate');
+                    void panel.offsetWidth;
+                    panel.classList.add('vinted-tab-panel-animate');
+                } else {
+                    panel.classList.remove('vinted-tab-panel-animate');
+                }
+            });
+        }
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
+        });
+        setActiveTab(activeTab);
 
         // Dark mode toggle
         document.getElementById('vinted-dark-toggle').addEventListener('click', () => {
@@ -933,26 +985,6 @@
                 if (toggleBtn) toggleBtn.click();
             }
         });
-
-        document.getElementById('vinted-open-captcha').onclick = () => {
-            openCaptchaPopup();
-        };
-
-        document.getElementById('vinted-resume').onclick = () => {
-            // Stop captcha checking
-            if (captchaCheckInterval) {
-                clearInterval(captchaCheckInterval);
-                captchaCheckInterval = null;
-            }
-            // Close popup if open
-            if (captchaPopup && !captchaPopup.closed) {
-                captchaPopup.close();
-                captchaPopup = null;
-            }
-            isPausedForCaptcha = false;
-            document.getElementById('vinted-captcha-warning').style.display = 'none';
-            updateStatusMessage('Resuming processing...');
-        };
 
         // Clear cache button
         document.getElementById('vinted-clear-cache').onclick = () => {
@@ -1240,8 +1272,11 @@
                 if (warningEl) {
                     warningEl.style.display = 'block';
                 }
-                // Auto-open captcha popup
+                
+                // Automatically open captcha popup
+                console.log('[Vinted Filter] Captcha detected (403). Opening popup automatically...');
                 openCaptchaPopup();
+                
                 isProcessing = false;
                 return;
             }
@@ -1561,6 +1596,39 @@
             }
             #vinted-country-select:active {
                 transform: translateY(0);
+            }
+            .vinted-tab-btn {
+                flex: 1;
+                padding: 10px;
+                border-radius: 10px;
+                border: 2px solid #007782;
+                background: rgba(0,120,130,0.08);
+                color: #007782;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s, color 0.2s, transform 0.1s;
+            }
+            .vinted-tab-btn:hover { background: rgba(0,120,130,0.14); }
+            .vinted-tab-btn:active { transform: translateY(1px); }
+            .vinted-tab-active {
+                background: linear-gradient(135deg, #007782, #00a8b5);
+                color: white;
+                box-shadow: 0 4px 12px rgba(0,119,130,0.35);
+            }
+            .vinted-tab-panel {
+                opacity: 1;
+            }
+            .vinted-tab-panel-active { animation: vintedTabFade 0.28s ease; }
+            .vinted-tab-panel-animate { animation: vintedTabFade 0.28s ease; }
+            @keyframes vintedTabFade {
+                from {
+                    opacity: 0;
+                    transform: translateY(6px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
         `;
         document.head.appendChild(style);

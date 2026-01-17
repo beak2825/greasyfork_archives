@@ -1,451 +1,461 @@
 // ==UserScript==
-// @name         GitHub Advanced Search Builder
+// @name         GitHub Advanced Search 
 // @namespace    https://github.com/quantavil/userscript
-// @version      3.0
-// @description  Advanced filter modal for GitHub search with OR/AND/NOT logic, release detection, and two-column layout.
-// @author       quantavil
+// @version      4.2
+// @description  Advanced filter modal for GitHub search 
 // @match        https://github.com/*
 // @license      MIT
 // @icon         https://github.githubassets.com/favicons/favicon.svg
 // @grant        GM_registerMenuCommand
-// @downloadURL https://update.greasyfork.org/scripts/560276/GitHub%20Advanced%20Search%20Builder.user.js
-// @updateURL https://update.greasyfork.org/scripts/560276/GitHub%20Advanced%20Search%20Builder.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560276/GitHub%20Advanced%20Search.user.js
+// @updateURL https://update.greasyfork.org/scripts/560276/GitHub%20Advanced%20Search.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    const MODAL_ID = 'gh-adv-search-panel';
-    const RELEASE_BADGE_CLASS = 'gh-release-badge';
+    /* =========================================================================
+       CONSTANTS & CONFIG
+       ========================================================================= */
+    const CONFIG = {
+        ids: {
+            modal: 'gh-adv-search-modal',
+            style: 'gh-adv-search-style',
+            toggleBtn: 'gh-adv-toggle-btn'
+        },
+        selectors: {
+            results: '[data-testid="results-list"]',
+            resultItem: '[data-testid="results-list"] > div, .repo-list-item, .Box-row',
+            resultLink: '.search-title a, a[href^="/"]'
+        }
+    };
 
-    // Configuration for all search fields
-    const CONFIG = [
+    const FIELDS = [
         {
-            section: 'Main', fields: [
+            section: 'CORE',
+            items: [
                 {
-                    id: 'type', label: 'Type', type: 'select', options: [
-                        { v: 'repositories', l: 'Repositories' }, { v: 'code', l: 'Code' }, { v: 'issues', l: 'Issues' },
-                        { v: 'pullrequests', l: 'Pull Requests' }, { v: 'discussions', l: 'Discussions' }, { v: 'users', l: 'Users' }
+                    id: 'type', label: 'TYPE', type: 'select', options: [
+                        { v: 'repositories', l: 'Repositories' },
+                        { v: 'code', l: 'Code' },
+                        { v: 'issues', l: 'Issues' },
+                        { v: 'pullrequests', l: 'Pull Requests' },
+                        { v: 'discussions', l: 'Discussions' },
+                        { v: 'users', l: 'Users' }
                     ]
                 },
                 {
-                    id: 'sort', label: 'Sort', type: 'select', options: [
-                        { v: '', l: 'Best Match' }, { v: 'stars', l: 'Most Stars' }, { v: 'forks', l: 'Most Forks' }, { v: 'updated', l: 'Recently Updated' }
+                    id: 'sort', label: 'SORT', type: 'select', options: [
+                        { v: '', l: 'Best Match' },
+                        { v: 'stars', l: 'Most Stars' },
+                        { v: 'forks', l: 'Most Forks' },
+                        { v: 'updated', l: 'Recently Updated' }
                     ]
                 }
             ]
         },
         {
-            section: 'Query', fields: [
-                { id: 'and', label: 'Includes (AND)', type: 'text', placeholder: 'rust async' },
-                { id: 'or', label: 'One of (OR)', type: 'text', placeholder: 'api, library', map: 'OR' },
-                { id: 'not', label: 'Exclude (NOT)', type: 'text', placeholder: 'deprecated', map: 'NOT', labelColor: 'var(--fgColor-danger, #cf222e)' },
+            section: 'LOGIC',
+            items: [
+                { id: 'and', label: 'AND', placeholder: 'rust async', type: 'text' },
+                { id: 'or', label: 'OR', placeholder: 'react, vue', type: 'text' },
             ]
         },
         {
-            section: 'Metadata', fields: [
-                { id: 'user', label: 'User/Org', type: 'text', placeholder: 'facebook', meta: 'user' },
-                { id: 'repo', label: 'Repository', type: 'text', placeholder: 'react', meta: 'repo' },
-                { id: 'lang', label: 'Language', type: 'text', placeholder: 'python', meta: 'language' },
-                { id: 'ext', label: 'Extension', type: 'text', placeholder: 'md', meta: 'extension' },
-                { id: 'path', label: 'Path', type: 'text', placeholder: 'src/', meta: 'path' },
-            ]
-        },
-        {
-            section: 'Stats', fields: [
-                { id: 'stars', label: 'Stars >=', type: 'number', meta: 'stars' },
-                { id: 'forks', label: 'Forks >=', type: 'number', meta: 'forks' },
-                { id: 'size', label: 'Size (KB)', type: 'text', placeholder: '>1000', meta: 'size' },
-                { id: 'created', label: 'Created', type: 'text', placeholder: '>2023-01', meta: 'created' },
-                { id: 'pushed', label: 'Pushed', type: 'text', placeholder: '>2024-01', meta: 'pushed' },
+            section: 'META',
+            items: [
+                { id: 'user', label: 'Owner', placeholder: 'facebook', meta: 'user' },
+                { id: 'repo', label: 'Repository', placeholder: 'react', meta: 'repo' },
+                { id: 'lang', label: 'Language', placeholder: 'python', meta: 'language' },
+                { id: 'ext', label: 'Extension', placeholder: 'md', meta: 'extension' },
+                { id: 'path', label: 'Path', placeholder: 'src/', meta: 'path' },
+                { id: 'stars', label: 'Stars', placeholder: '>500', meta: 'stars' },
+                { id: 'forks', label: 'Forks', placeholder: '>100', meta: 'forks' },
+                { id: 'size', label: 'Size (KB)', placeholder: '>1000', meta: 'size' },
+                { id: 'created', label: 'Created', placeholder: '>2023-01', meta: 'created' },
+                { id: 'pushed', label: 'Pushed', placeholder: '>2024-01-01', meta: 'pushed' }
             ]
         }
     ];
 
-    function injectGlobalStyles() {
-        const styleId = 'gh-adv-global-styles';
-        if (document.getElementById(styleId)) return;
+    /* =========================================================================
+       THEME & STYLES — MIMIMAL BRUTAL
+       ========================================================================= */
+    function injectStyles() {
+        if (document.getElementById(CONFIG.ids.style)) return;
 
         const css = `
-            /* Release badge styles - minimal, no layout changes */
-            .${RELEASE_BADGE_CLASS} {
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                padding: 4px 10px;
-                border-radius: 20px;
-                font-size: 11px;
-                font-weight: 600;
-                margin-top: 8px;
-                text-decoration: none !important;
-                transition: all 0.15s ease;
+            /* Light theme by default */
+            :root {
+                --brutal-bg: #ffffff;
+                --brutal-fg: #1a1a1a;
+                --brutal-accent: #e11d48;
+                --brutal-border: #1a1a1a;
+                --brutal-muted: #6b7280;
+                --brutal-shadow: 4px 4px 0 #1a1a1a;
+                --brutal-font: system-ui, -apple-system, sans-serif;
             }
-            
-            .${RELEASE_BADGE_CLASS}.has-release {
-                background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
-                color: #fff !important;
-            }
-            
-            .${RELEASE_BADGE_CLASS}.has-release:hover {
-                background: linear-gradient(135deg, #2ea043 0%, #3fb950 100%);
-                transform: translateY(-1px);
-            }
-            
-            .${RELEASE_BADGE_CLASS}.no-release {
-                background: var(--bgColor-danger-muted, #ffebe9);
-                color: var(--fgColor-danger, #cf222e) !important;
-                border: 1px solid var(--borderColor-danger-muted, #ffcecb);
-            }
-            
-            .${RELEASE_BADGE_CLASS}.checking {
-                background: var(--bgColor-muted, #f6f8fa);
-                color: var(--fgColor-muted, #656d76) !important;
-                border: 1px solid var(--borderColor-muted, #d8dee4);
-            }
-            
-            .${RELEASE_BADGE_CLASS} svg {
-                width: 14px;
-                height: 14px;
-                flex-shrink: 0;
-            }
-            
-            /* Spinner animation */
-            @keyframes gh-release-spin {
-                to { transform: rotate(360deg); }
-            }
-            
-            .${RELEASE_BADGE_CLASS}.checking svg {
-                animation: gh-release-spin 1s linear infinite;
-            }
-        `;
 
-        const style = document.createElement('style');
-        style.id = styleId;
-        style.textContent = css;
-        document.head.appendChild(style);
-    }
-
-    function createPanel() {
-        if (document.getElementById(MODAL_ID)) return;
-
-        const panel = document.createElement('div');
-        panel.id = MODAL_ID;
-
-        const css = `
-            #${MODAL_ID} {
+            /* --- Floating Toggle Button --- */
+            #${CONFIG.ids.toggleBtn} {
                 position: fixed;
-                top: 70px;
-                right: 20px;
-                width: 320px;
-                max-height: calc(100vh - 100px);
-                background-color: var(--bgColor-default, #fff);
-                border: 1px solid var(--borderColor-default, #d0d7de);
-                border-radius: 12px;
-                box-shadow: var(--shadow-large, 0 8px 24px rgba(140,149,159,0.2));
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                width: 28px;
+                height: 44px;
+                background: var(--brutal-fg);
+                border: none;
+                border-radius: 6px 0 0 6px;
+                cursor: pointer;
+                z-index: 9997;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0.25;
+                transition: opacity 0.15s, width 0.15s;
+            }
+            #${CONFIG.ids.toggleBtn}:hover,
+            #${CONFIG.ids.toggleBtn}:focus {
+                opacity: 1;
+                width: 36px;
+            }
+            #${CONFIG.ids.toggleBtn} svg {
+                width: 16px;
+                height: 16px;
+                fill: var(--brutal-bg);
+            }
+            @media (hover: none) {
+                #${CONFIG.ids.toggleBtn} {
+                    opacity: 0.5;
+                }
+            }
+
+            /* --- Modal Panel (Right Side) --- */
+            #${CONFIG.ids.modal} {
+                position: fixed;
+                top: 60px;
+                right: 16px;
+                bottom: auto;
+                left: auto;
+                transform: none;
+                width: 420px;
+                max-width: calc(100vw - 32px);
+                max-height: calc(100vh - 80px);
+                background: var(--brutal-bg);
+                border: 2px solid var(--brutal-border);
+                box-shadow: var(--brutal-shadow);
                 z-index: 9999;
                 display: none;
                 flex-direction: column;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-                overflow: hidden;
-                backdrop-filter: blur(8px);
-                animation: slideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                font-family: var(--brutal-font);
+                font-size: 13px;
             }
-            @keyframes slideIn {
-                from { opacity: 0; transform: translateY(-10px) scale(0.98); }
-                to { opacity: 1; transform: translateY(0) scale(1); }
+
+            #${CONFIG.ids.modal}[data-visible="true"] {
+                display: flex;
+                animation: brutal-slide 0.12s ease-out;
             }
-            #${MODAL_ID} .panel-header {
-                padding: 12px 16px;
-                background: var(--bgColor-muted, #f6f8fa);
-                border-bottom: 1px solid var(--borderColor-muted, #d8dee4);
+
+            @keyframes brutal-slide {
+                from { opacity: 0; transform: translateX(8px); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+
+            .brutal-header {
+                background: var(--brutal-border);
+                color: var(--brutal-bg);
+                padding: 8px 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                font-weight: 600;
-                font-size: 14px;
-            }
-            #${MODAL_ID} .panel-body {
-                padding: 16px;
-                overflow-y: auto;
-                flex: 1;
-                scrollbar-width: thin;
-            }
-            #${MODAL_ID} .form-section {
-                margin-bottom: 16px;
-                padding-bottom: 12px;
-                border-bottom: 1px solid var(--borderColor-muted, #d8dee4);
-            }
-            #${MODAL_ID} .form-section:last-child {
-                border-bottom: none;
-                margin-bottom: 0;
-            }
-            #${MODAL_ID} .section-title {
                 font-size: 11px;
-                text-transform: uppercase;
-                color: var(--fgColor-muted, #656d76);
-                margin-bottom: 8px;
-                font-weight: 600;
-                letter-spacing: 0.5px;
             }
-            #${MODAL_ID} .form-grid {
+
+            .brutal-close {
+                cursor: pointer;
+                font-size: 18px;
+                line-height: 1;
+                opacity: 0.7;
+                font-weight: 400;
+            }
+            .brutal-close:hover { opacity: 1; }
+
+            .brutal-body {
+                padding: 12px;
+                overflow-y: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            .brutal-body::-webkit-scrollbar { display: none; }
+
+            .brutal-section {
+                margin-bottom: 12px;
+            }
+            .brutal-section:last-child { margin-bottom: 0; }
+
+            .brutal-section-title {
+                font-weight: 700;
+                font-size: 9px;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                color: var(--brutal-muted);
+                margin-bottom: 8px;
+                padding-bottom: 4px;
+                border-bottom: 1px solid var(--brutal-border);
+            }
+
+            .brutal-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
             }
-            #${MODAL_ID} .form-grid.single {
-                grid-template-columns: 1fr;
-            }
-            #${MODAL_ID} .input-group {
-                margin-bottom: 8px;
-            }
-            #${MODAL_ID} label {
+            .brutal-grid.full { grid-template-columns: 1fr; }
+
+            .brutal-field label {
                 display: block;
-                font-size: 12px;
-                margin-bottom: 4px;
-                color: var(--fgColor-default, #24292f);
-                font-weight: 500;
+                font-size: 9px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 3px;
+                color: var(--brutal-fg);
             }
-            #${MODAL_ID} input, #${MODAL_ID} select {
+
+            .brutal-input {
                 width: 100%;
-                padding: 6px 10px;
-                font-size: 13px;
-                border: 1px solid var(--borderColor-default, #d0d7de);
-                border-radius: 6px;
-                background: var(--bgColor-default, #fff);
-                color: var(--fgColor-default, #24292f);
-                transition: all 0.2s ease;
+                background: var(--brutal-bg);
+                border: 2px solid var(--brutal-border);
+                padding: 6px 8px;
+                color: var(--brutal-fg);
+                font-family: inherit;
+                font-size: 12px;
                 box-sizing: border-box;
             }
-            #${MODAL_ID} input:focus, #${MODAL_ID} select:focus {
-                border-color: var(--color-accent-fg, #0969da);
-                box-shadow: 0 0 0 3px var(--color-accent-subtle, rgba(9,105,218,0.3));
+            .brutal-input:focus {
                 outline: none;
+                border-color: var(--brutal-accent);
             }
-            #${MODAL_ID} .panel-footer {
-                padding: 12px 16px;
-                border-top: 1px solid var(--borderColor-muted, #d8dee4);
-                background: var(--bgColor-muted, #f6f8fa);
+            .brutal-input::placeholder {
+                color: var(--brutal-muted);
+            }
+
+            .brutal-footer {
+                padding: 10px 12px;
+                border-top: 2px solid var(--brutal-border);
                 display: flex;
                 gap: 8px;
             }
-            #${MODAL_ID} .btn {
+
+            .brutal-btn {
                 flex: 1;
-                padding: 6px 12px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
+                padding: 8px;
+                border: 2px solid var(--brutal-border);
+                background: var(--brutal-bg);
+                font-family: inherit;
+                font-weight: 700;
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
                 cursor: pointer;
-                border: 1px solid;
-                text-align: center;
+                color: var(--brutal-fg);
+                transition: transform 0.05s, box-shadow 0.05s;
             }
-            #${MODAL_ID} .btn-primary {
-                background: var(--color-success-emphasis, #2da44e);
-                color: white;
-                border-color: var(--color-success-emphasis, #2da44e);
+            .brutal-btn:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 4px 4px 0 var(--brutal-border);
             }
-            #${MODAL_ID} .btn-secondary {
-                background: var(--bgColor-default, #fff);
-                color: var(--fgColor-default, #24292f);
-                border-color: var(--borderColor-default, #d0d7de);
+            .brutal-btn:active {
+                transform: translate(0, 0);
+                box-shadow: none;
             }
-            #${MODAL_ID} .close-icon {
-                cursor: pointer;
-                color: var(--fgColor-muted);
-                padding: 4px;
-                border-radius: 4px;
+            .brutal-btn.primary {
+                background: var(--brutal-border);
+                color: var(--brutal-bg);
             }
-            #${MODAL_ID} .close-icon:hover {
-                background: var(--bgColor-muted);
+
+            /* --- Release Badge (Brutal Enhanced) --- */
+            .gh-release-tag {
+                display: inline-flex;
+                align-items: center;
+                padding: 4px 8px;
+                margin-top: 6px;
+                font-size: 11px;
+                font-family: var(--brutal-font);
+                font-weight: 700;
+                border: 2px solid var(--brutal-border);
+                background: var(--brutal-bg);
+                color: var(--brutal-fg) !important;
+                text-decoration: none !important;
+                box-shadow: 2px 2px 0 var(--brutal-border);
+                transition: transform 0.1s;
             }
-            #${MODAL_ID} .checkbox-group {
+            .gh-release-tag:hover {
+                transform: translate(-1px, -1px);
+                box-shadow: 3px 3px 0 var(--brutal-border);
+                text-decoration: none !important;
+            }
+            .gh-release-tag.loading { opacity: 0.5; cursor: wait; border-style: dashed; }
+            
+            /* Success (Has Release) - GREEN */
+            .gh-release-tag.has-release {
+                color: #15803d !important;
+                border-color: #15803d;
+                box-shadow: 2px 2px 0 #15803d;
+            }
+            .gh-release-tag.has-release:hover {
+                background: #f0fdf4;
+                box-shadow: 3px 3px 0 #15803d;
+            }
+
+            /* Failure (No Release) - RED */
+            .gh-release-tag.no-release {
+                color: #b91c1c !important;
+                border-color: #b91c1c;
+                box-shadow: 2px 2px 0 #b91c1c;
+            }
+            .gh-release-tag.no-release:hover {
+                background: #fef2f2;
+                box-shadow: 3px 3px 0 #b91c1c;
+            }
+
+            /* --- Checkbox --- */
+            .brutal-check-row {
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                margin-top: 8px;
             }
-            #${MODAL_ID} input[type="checkbox"] {
-                width: auto;
+            .brutal-check {
+                width: 16px;
+                height: 16px;
+                accent-color: var(--brutal-accent);
+                cursor: pointer;
+                border: 2px solid var(--brutal-border);
+            }
+            .brutal-check-label {
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                cursor: pointer;
+            }
+
+            /* --- Overlay --- */
+            .brutal-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(2px);
+                z-index: 9998;
+                display: none;
+            }
+            .brutal-overlay[data-visible="true"] { display: block; }
+
+            /* Mobile responsive */
+            @media (max-width: 480px) {
+                #${CONFIG.ids.modal} {
+                    right: 0;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    max-width: none;
+                    top: auto;
+                    max-height: 85vh;
+                    border-left: none;
+                    border-right: none;
+                    border-bottom: none;
+                }
             }
         `;
 
         const style = document.createElement('style');
+        style.id = CONFIG.ids.style;
         style.textContent = css;
         document.head.appendChild(style);
+    }
 
-        // Generate Form HTML with two-column grids
-        let formInfo = '';
-        CONFIG.forEach(section => {
-            const isSingleColumn = section.section === 'Query';
-            formInfo += `<div class="form-section"><div class="section-title">${section.section}</div><div class="form-grid ${isSingleColumn ? 'single' : ''}">`;
-            section.fields.forEach(f => {
-                const labelStyle = f.labelColor ? `style="color:${f.labelColor}"` : '';
-                formInfo += `
-                    <div class="input-group">
-                        <label for="gh-adv-${f.id}" ${labelStyle}>${f.label}</label>
-                        ${f.type === 'select' ?
-                        `<select id="gh-adv-${f.id}">${f.options.map(o => `<option value="${o.v}">${o.l}</option>`).join('')}</select>` :
-                        `<input type="${f.type}" id="gh-adv-${f.id}" placeholder="${f.placeholder || ''}" />`
-                    }
-                    </div>
-                `;
+    /* =========================================================================
+       LOGIC: QUERY BUILDER 
+       ========================================================================= */
+    class QueryBuilder {
+        static clean(str) {
+            if (!str) return [];
+            // Parse tokens respecting quotes: matches quoted strings OR non-space/comma sequences
+            const matches = str.match(/("[^"]*"|[^, ]+)/g);
+            return matches ? matches : [];
+        }
+
+        static buildUrl(data) {
+            const parts = [];
+
+            const andTerms = this.clean(data.and);
+            if (andTerms.length) parts.push(...andTerms);
+
+            const orTerms = this.clean(data.or);
+            if (orTerms.length) {
+                parts.push(orTerms.length === 1 ? orTerms[0] : `(${orTerms.join(' OR ')})`);
+            }
+
+            data.meta.forEach(m => {
+                let val = m.value.trim();
+                if (!val) return;
+                // Auto-add >= for specific numeric fields if missing operator
+                if (['stars', 'forks', 'size'].includes(m.key)) {
+                    if (!val.match(/^[<>=]/) && !val.includes('..')) val = `>=${val}`;
+                }
+                parts.push(`${m.key}:${val}`);
             });
-            formInfo += `</div></div>`;
-        });
 
-        panel.innerHTML = `
-            <div class="panel-header">
-                <span>Search Builder</span>
-                <div class="close-icon" id="${MODAL_ID}-close">✕</div>
-            </div>
-            <div class="panel-body">
-                ${formInfo}
-                <div class="form-section">
-                     <div class="checkbox-group">
-                        <input type="checkbox" id="gh-adv-release">
-                        <label for="gh-adv-release" style="margin:0; cursor:pointer">Only show with releases</label>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-footer">
-                <button class="btn btn-secondary" id="${MODAL_ID}-clear">Clear</button>
-                <button class="btn btn-primary" id="${MODAL_ID}-search">Search</button>
-            </div>
-        `;
+            const query = encodeURIComponent(parts.join(' '));
+            let url = `https://github.com/search?q=${query}&type=${data.type}`;
+            if (data.sort) url += `&s=${data.sort}&o=desc`;
+            if (data.releasesOnly) url += '&userscript_has_release=1';
 
-        document.body.appendChild(panel);
-
-        // Event Listeners
-        document.getElementById(`${MODAL_ID}-close`).onclick = togglePanel;
-        document.getElementById(`${MODAL_ID}-clear`).onclick = clearFields;
-        document.getElementById(`${MODAL_ID}-search`).onclick = executeSearch;
-
-        panel.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') executeSearch();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && panel.style.display === 'flex') togglePanel();
-            if (e.ctrlKey && e.shiftKey && e.code === 'KeyF') togglePanel();
-        });
-    }
-
-    function togglePanel() {
-        let panel = document.getElementById(MODAL_ID);
-        if (!panel) {
-            createPanel();
-            panel = document.getElementById(MODAL_ID);
-        }
-        const isOpen = panel.style.display === 'flex';
-        panel.style.display = isOpen ? 'none' : 'flex';
-
-        if (!isOpen) {
-            populateFields();
-            const firstInput = panel.querySelector('input');
-            if (firstInput) firstInput.focus();
-        }
-    }
-
-    function clearFields() {
-        CONFIG.forEach(s => s.fields.forEach(f => {
-            const el = document.getElementById(`gh-adv-${f.id}`);
-            if (el) el.value = '';
-        }));
-        document.getElementById('gh-adv-release').checked = false;
-    }
-
-    function populateFields() {
-        const params = new URLSearchParams(window.location.search);
-        let q = params.get('q') || '';
-        const type = params.get('type');
-        const sort = params.get('s');
-
-        clearFields();
-
-        if (type) document.getElementById('gh-adv-type').value = type;
-        if (sort) document.getElementById('gh-adv-sort').value = sort;
-        if (params.get('userscript_has_release') === '1') {
-            document.getElementById('gh-adv-release').checked = true;
+            return url;
         }
 
-        CONFIG.forEach(s => s.fields.forEach(f => {
-            if (f.meta) {
-                const regex = new RegExp(`${f.meta}:(\\S+)`, 'i');
-                const match = q.match(regex);
-                if (match) {
-                    let val = match[1];
-                    if (f.meta === 'stars' || f.meta === 'forks') val = val.replace('>=', '');
-                    document.getElementById(`gh-adv-${f.id}`).value = val;
-                    q = q.replace(match[0], '');
-                }
+        static parseCurrent() {
+            const params = new URLSearchParams(window.location.search);
+            const rawQ = params.get('q') || '';
+            const type = params.get('type') || '';
+            const sort = params.get('s') || '';
+            const releasesOnly = params.get('userscript_has_release') === '1';
+
+            const state = { type, sort, releasesOnly, and: '', or: '', meta: {} };
+            let q = rawQ;
+
+            // 1. Extract Meta fields (key:value) - supports quoted values
+            FIELDS.find(s => s.section === 'META').items.forEach(item => {
+                const regex = new RegExp(`\\b${item.meta}:("[^"]*"|\\S+)`, 'gi');
+                q = q.replace(regex, (match, val) => {
+                    // Strip auto >= for display
+                    if (['stars', 'forks', 'size'].includes(item.meta) && val.startsWith('>=')) {
+                        val = val.substring(2);
+                    }
+                    state.meta[item.id] = val;
+                    return ''; // Remove from q
+                });
+            });
+
+            // 2. Extract OR groups: (a OR b)
+            const orMatch = q.match(/\(([^)]+)\)/);
+            if (orMatch && orMatch[1].includes(' OR ')) {
+                state.or = orMatch[1].split(' OR ').join(', ');
+                q = q.replace(orMatch[0], '');
             }
-        }));
 
-        const orMatch = q.match(/\(([^)]+ OR [^)]+)\)/i);
-        if (orMatch) {
-            document.getElementById('gh-adv-or').value = orMatch[1].replace(/\s+OR\s+/gi, ', ');
-            q = q.replace(orMatch[0], '');
+            // 3. Remaining is AND
+            state.and = q.replace(/\s+/g, ' ').trim();
+
+            return state;
         }
-
-        const nots = [];
-        q = q.replace(/-(\S+)/g, (_, term) => {
-            nots.push(term);
-            return '';
-        });
-        if (nots.length) document.getElementById('gh-adv-not').value = nots.join(', ');
-
-        const andVal = q.trim().replace(/\s+/g, ' ');
-        if (andVal) document.getElementById('gh-adv-and').value = andVal;
     }
 
-    function executeSearch() {
-        const parts = [];
-        const getValue = (id) => document.getElementById(`gh-adv-${id}`).value.trim();
-
-        const valAnd = getValue('and');
-        if (valAnd) parts.push(valAnd);
-
-        const valOr = getValue('or');
-        if (valOr) {
-            const terms = valOr.split(/[\s,]+/).filter(Boolean);
-            if (terms.length > 1) parts.push(`(${terms.join(' OR ')})`);
-            else if (terms.length === 1) parts.push(terms[0]);
-        }
-
-        const valNot = getValue('not');
-        if (valNot) {
-            valNot.split(/[\s,]+/).filter(Boolean).forEach(t => parts.push(`-${t}`));
-        }
-
-        CONFIG.forEach(s => s.fields.forEach(f => {
-            if (f.meta) {
-                let val = getValue(f.id);
-                if (val) {
-                    if ((f.meta === 'stars' || f.meta === 'forks') && !val.match(/[<>=]/)) val = `>=${val}`;
-                    parts.push(`${f.meta}:${val}`);
-                }
-            }
-        }));
-
-        const type = getValue('type');
-        const sort = getValue('sort');
-        const hasRelease = document.getElementById('gh-adv-release').checked;
-
-        let url = `https://github.com/search?q=${encodeURIComponent(parts.join(' '))}&type=${type}`;
-        if (sort) url += `&s=${sort}&o=desc`;
-        if (hasRelease) url += '&userscript_has_release=1';
-
-        window.location.href = url;
-    }
-
-    // --- Release Detection & Badge System ---
-
-    const SVG_ICONS = {
-        tag: `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path></svg>`,
-        x: `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg>`,
-        spinner: `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 7 7A7.008 7.008 0 0 0 8 1Zm0 12.5A5.5 5.5 0 1 1 13.5 8 5.506 5.506 0 0 1 8 13.5Z" opacity="0.3"></path><path d="M8 1v1.5A5.506 5.506 0 0 1 13.5 8H15a7.008 7.008 0 0 0-7-7Z"></path></svg>`
-    };
-
-    // --- Caching System ---
+    /* =========================================================================
+       LOGIC: RELEASE DETECTION
+       ========================================================================= */
     const CACHE_PREFIX = 'gh-release-cache-';
     const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -474,12 +484,8 @@
                 info: info
             };
             localStorage.setItem(key, JSON.stringify(data));
-        } catch (e) {
-            // Storage full or other error, ignore
-        }
+        } catch (e) { }
     }
-
-
 
     function formatRelativeDate(dateStr) {
         const date = new Date(dateStr);
@@ -497,20 +503,23 @@
 
     function createReleaseBadge(status, data = null) {
         const badge = document.createElement('a');
-        badge.className = `${RELEASE_BADGE_CLASS} ${status}`;
+        badge.className = `gh-release-tag`;
 
         if (status === 'checking') {
-            badge.innerHTML = `${SVG_ICONS.spinner} <span>Checking...</span>`;
+            badge.textContent = 'Checking...';
+            badge.classList.add('loading');
             badge.href = '#';
             badge.onclick = (e) => e.preventDefault();
         } else if (status === 'has-release' && data) {
-            const dateText = data.date ? ` • ${formatRelativeDate(data.date)}` : '';
-            badge.innerHTML = `${SVG_ICONS.tag} <span>${data.tag}${dateText}</span>`;
+            const dateText = data.date ? ` (${formatRelativeDate(data.date)})` : '';
+            badge.textContent = `${data.tag}${dateText}`;
             badge.href = data.url;
             badge.target = '_blank';
             badge.title = data.date ? `Released: ${new Date(data.date).toLocaleDateString()}` : data.tag;
+            badge.classList.add('has-release');
         } else {
-            badge.innerHTML = `${SVG_ICONS.x} <span>No releases</span>`;
+            badge.textContent = 'NO RELEASE';
+            badge.classList.add('no-release');
             badge.href = '#';
             badge.onclick = (e) => e.preventDefault();
         }
@@ -519,13 +528,12 @@
     }
 
     async function fetchReleaseInfo(owner, repo) {
-        // Check cache first
         const cached = getReleaseCache(owner, repo);
         if (cached) return cached;
 
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
 
             const res = await fetch(`https://github.com/${owner}/${repo}/releases/latest`, {
                 method: 'GET',
@@ -535,7 +543,7 @@
             clearTimeout(timeoutId);
 
             if (res.status === 404 || !res.ok) {
-                setReleaseCache(owner, repo, null); // Cache absence of release
+                setReleaseCache(owner, repo, null);
                 return null;
             }
 
@@ -543,8 +551,6 @@
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlText, 'text/html');
 
-            // 1. Try to find the tag
-            // URL might be .../releases/tag/v1.0.0
             let tag = null;
             const finalUrl = res.url;
             const tagMatch = finalUrl.match(/\/releases\/tag\/([^/?#]+)/);
@@ -552,32 +558,23 @@
             if (tagMatch) {
                 tag = decodeURIComponent(tagMatch[1]);
             } else {
-                // Try finding it in the DOM: title or breadcrumb
-                // Often the title is "Release v1.0.0 · owner/repo"
                 const title = doc.title;
                 const titleMatch = title.match(/Release (.+?) ·/);
                 if (titleMatch) tag = titleMatch[1];
             }
 
             if (!tag) {
-                // Fallback: look for generic release header
                 const header = doc.querySelector('h1.d-inline');
                 if (header) tag = header.textContent.trim();
             }
 
             if (!tag) return null;
 
-            // 2. Find the date
-            // Usually in a relative-time element inside the release header or sub-header
             let date = null;
-
-            // Selector strategy:
-            // The latest release page usually has a <relative-time> near the top
             const timeEl = doc.querySelector('relative-time');
             if (timeEl) {
                 date = timeEl.getAttribute('datetime');
             } else {
-                // Fallback to searching for a datetime attribute in a time element
                 const anyTime = doc.querySelector('time[datetime]');
                 if (anyTime) date = anyTime.getAttribute('datetime');
             }
@@ -592,12 +589,10 @@
             return info;
 
         } catch (e) {
-            console.error(`Release check failed for ${owner}/${repo}:`, e);
             return null;
         }
     }
 
-    // Concurrency queue helper
     async function processQueue(items, concurrency, task) {
         const queue = [...items];
         const workers = [];
@@ -607,9 +602,7 @@
                 const item = queue.shift();
                 try {
                     await task(item);
-                } catch (e) {
-                    console.error('Queue task failed', e);
-                }
+                } catch (e) { }
             }
         };
 
@@ -620,95 +613,230 @@
         await Promise.all(workers);
     }
 
+    async function processItem(item, filterOnly) {
+        const link = item.querySelector(CONFIG.selectors.resultLink);
+        if (!link) return;
+
+        const path = link.getAttribute('href');
+        const parts = path.split('/').filter(Boolean);
+        if (parts.length < 2) return;
+        const [owner, repo] = parts;
+
+        const metaList = item.querySelector('ul');
+        const insertTarget = metaList || item;
+
+        // Container is still used to keep structure clean, but no specific asset classes needed
+        const badgeContainer = document.createElement('div');
+        badgeContainer.style.marginTop = '6px';
+
+        const checkingBadge = createReleaseBadge('checking');
+        badgeContainer.appendChild(checkingBadge);
+
+        insertTarget.parentNode.insertBefore(badgeContainer, insertTarget.nextSibling);
+
+        const releaseInfo = await fetchReleaseInfo(owner, repo);
+
+        badgeContainer.innerHTML = '';
+        if (releaseInfo) {
+            const releaseBadge = createReleaseBadge('has-release', releaseInfo);
+            badgeContainer.appendChild(releaseBadge);
+        } else {
+            if (filterOnly) {
+                item.style.display = 'none';
+                badgeContainer.style.display = 'none';
+            } else {
+                const noReleaseBadge = createReleaseBadge('no-release');
+                badgeContainer.appendChild(noReleaseBadge);
+            }
+        }
+    }
+
     async function processSearchResults() {
+        if (!window.location.pathname.startsWith('/search')) return;
+
         const params = new URLSearchParams(window.location.search);
         const filterOnly = params.get('userscript_has_release') === '1';
 
-        // Only run on search pages
-        if (!window.location.pathname.startsWith('/search')) return;
+        const allItems = Array.from(document.querySelectorAll(CONFIG.selectors.resultItem));
+        const itemsToProcess = allItems.filter(item => !item.dataset.releaseProcessed);
 
-        const resultContainer = document.querySelector('[data-testid="results-list"]');
-        if (!resultContainer) return;
-
-        const allItems = Array.from(resultContainer.children);
-
-        // Filter items that need processing
-        const itemsToProcess = allItems.filter(item => {
-            if (item.dataset.releaseProcessed) return false;
-
-            const link = item.querySelector('a[href^="/"]');
-            if (!link) return false;
-
-            const path = link.getAttribute('href');
-            const parts = path.split('/').filter(Boolean);
-            return parts.length >= 2;
-        });
-
-        // Mark them as processed immediately to avoid double queueing
         itemsToProcess.forEach(item => item.dataset.releaseProcessed = 'true');
 
-        // Process function for each item
-        const processItem = async (item) => {
-            const link = item.querySelector('a[href^="/"]');
-            const path = link.getAttribute('href');
-            const parts = path.split('/').filter(Boolean);
-            const owner = parts[0];
-            const repo = parts[1];
-
-            // Find where to insert the badge
-            const metaList = item.querySelector('ul');
-            const insertTarget = metaList || item;
-
-            // Create container
-            const badgeContainer = document.createElement('div');
-            badgeContainer.style.marginTop = '8px';
-            const checkingBadge = createReleaseBadge('checking');
-
-            // If cached, we can skip the "checking" state ui if we want, but sticking to pattern:
-            badgeContainer.appendChild(checkingBadge);
-            insertTarget.parentNode.insertBefore(badgeContainer, insertTarget.nextSibling);
-
-            const releaseInfo = await fetchReleaseInfo(owner, repo);
-
-            badgeContainer.innerHTML = '';
-            if (releaseInfo) {
-                const releaseBadge = createReleaseBadge('has-release', releaseInfo);
-                badgeContainer.appendChild(releaseBadge);
-            } else {
-                if (filterOnly) {
-                    item.style.display = 'none';
-                    // Also hide the container if we hid the item
-                    badgeContainer.style.display = 'none';
-                } else {
-                    const noReleaseBadge = createReleaseBadge('no-release');
-                    badgeContainer.appendChild(noReleaseBadge);
-                }
-            }
-        };
-
-        // Run with concurrency of 3 to be polite but faster
-        await processQueue(itemsToProcess, 3, processItem);
+        await processQueue(itemsToProcess, 3, item => processItem(item, filterOnly));
     }
 
-    // --- Initialization ---
-    GM_registerMenuCommand("Search Filter", togglePanel);
+    /* =========================================================================
+       UI: MODAL 
+       ========================================================================= */
+    let modalEl = null;
+    let overlayEl = null;
 
-    // Inject styles
-    injectGlobalStyles();
+    function toggleModal(show) {
+        if (!modalEl) createUI();
+        // If show is undefined, toggle. If defined, set.
+        const visible = (show === undefined) ? (modalEl.dataset.visible !== 'true') : show;
 
-    // Observer for dynamic content
-    let debounceTimer;
-    const observer = new MutationObserver(() => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
+        modalEl.dataset.visible = visible;
+        overlayEl.dataset.visible = visible;
+
+        if (visible) {
+            loadStateToUI();
+            const firstInput = modalEl.querySelector('input, select');
+            if (firstInput) firstInput.focus();
+        }
+    }
+
+    function createUI() {
+        if (document.getElementById(CONFIG.ids.modal)) return;
+
+        // Overlay
+        overlayEl = document.createElement('div');
+        overlayEl.className = 'brutal-overlay';
+        overlayEl.onclick = () => toggleModal(false);
+        document.body.appendChild(overlayEl);
+
+        // Modal
+        modalEl = document.createElement('div');
+        modalEl.id = CONFIG.ids.modal;
+
+        let html = `
+            <div class="brutal-header">
+                <span>FILTER</span>
+                <span class="brutal-close" data-close>×</span>
+            </div>
+            <div class="brutal-body">
+        `;
+
+        FIELDS.forEach(section => {
+            html += `<div class="brutal-section">
+                <div class="brutal-section-title">${section.section}</div>
+                <div class="brutal-grid ${section.items.length === 1 ? 'full' : ''}">`;
+
+            section.items.forEach(field => {
+                const dangerStyle = field.danger ? 'style="color:var(--brutal-accent)"' : '';
+                html += `<div class="brutal-field">
+                    <label ${dangerStyle}>${field.label}</label>
+                    ${field.type === 'select'
+                        ? `<select id="gh-field-${field.id}" class="brutal-input">${field.options.map(o => `<option value="${o.v}">${o.l}</option>`).join('')}</select>`
+                        : `<input id="gh-field-${field.id}" type="text" class="brutal-input" placeholder="${field.placeholder || ''}">`}
+                </div>`;
+            });
+            html += `</div></div>`;
+        });
+
+        html += `
+            <div class="brutal-section">
+                <div class="brutal-check-row">
+                    <input type="checkbox" id="gh-field-releases" class="brutal-check">
+                    <label for="gh-field-releases" class="brutal-check-label">Only with releases</label>
+                </div>
+            </div>
+        </div>
+        <div class="brutal-footer">
+            <button data-clear class="brutal-btn">Clear</button>
+            <button data-search class="brutal-btn primary">Search</button>
+        </div>`;
+
+        modalEl.innerHTML = html;
+        document.body.appendChild(modalEl);
+
+        // Floating toggle button
+        if (!document.getElementById(CONFIG.ids.toggleBtn)) {
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = CONFIG.ids.toggleBtn;
+            toggleBtn.type = 'button';
+            toggleBtn.title = 'Search Filter';
+            toggleBtn.innerHTML = `<svg viewBox="0 0 16 16"><path d="M10.68 11.74a6 6 0 1 1 1.06-1.06l3.04 3.04a.75.75 0 1 1-1.06 1.06l-3.04-3.04ZM11 6.5a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/></svg>`;
+            toggleBtn.onclick = () => toggleModal();
+            document.body.appendChild(toggleBtn);
+        }
+
+        // Events
+        modalEl.querySelector('[data-close]').onclick = () => toggleModal(false);
+        modalEl.querySelector('[data-clear]').onclick = () => {
+            modalEl.querySelectorAll('input, select').forEach(el => {
+                el.type === 'checkbox' ? el.checked = false : el.value = '';
+            });
+        };
+        modalEl.querySelector('[data-search]').onclick = executeSearch;
+
+        // Keydown
+        modalEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') executeSearch();
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && modalEl.dataset.visible === 'true') toggleModal(false);
+        });
+    }
+
+    function loadStateToUI() {
+        const state = QueryBuilder.parseCurrent();
+        const setVal = (id, val) => {
+            const el = document.getElementById(`gh-field-${id}`);
+            if (el) el.value = val || '';
+        };
+
+        setVal('type', state.type);
+        setVal('sort', state.sort);
+        setVal('and', state.and);
+        setVal('or', state.or);
+        Object.entries(state.meta).forEach(([id, val]) => setVal(id, val));
+
+        const relCheck = document.getElementById('gh-field-releases');
+        if (relCheck) relCheck.checked = state.releasesOnly;
+    }
+
+    function executeSearch() {
+        const getVal = id => document.getElementById(`gh-field-${id}`).value;
+        const data = {
+            type: getVal('type'),
+            sort: getVal('sort'),
+            and: getVal('and'),
+            or: getVal('or'),
+            meta: [],
+            releasesOnly: document.getElementById('gh-field-releases').checked
+        };
+
+        FIELDS.find(s => s.section === 'META').items.forEach(item => {
+            const val = getVal(item.id);
+            if (val) data.meta.push({ key: item.meta, value: val });
+        });
+
+        window.location.href = QueryBuilder.buildUrl(data);
+    }
+
+    /* =========================================================================
+       INIT
+       ========================================================================= */
+    function init() {
+        injectStyles();
+        createUI();
+
+        // Register Menu
+        if (typeof GM_registerMenuCommand === 'function') {
+            GM_registerMenuCommand("Search Filter", () => toggleModal());
+        }
+
+        // Process existing results
+        processSearchResults();
+
+        // Observers
+        let debounceTimer;
+        // Watch for page changes (GitHub uses Turbo/PJAX)
+        const observer = new MutationObserver(() => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                processSearchResults();
+            }, 200);
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Turbo event listener for cleaner navigation handling
+        document.addEventListener('turbo:render', () => {
             processSearchResults();
-        }, 200);
-    });
+        });
+    }
 
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // Initial run
-    createPanel();
-    processSearchResults();
+    init();
 
 })();

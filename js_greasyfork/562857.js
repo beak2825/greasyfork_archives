@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         abdullah abbas advanced inspector
+// @name         Abdullah Abbas WME Map Inspector
 // @namespace    https://github.com/abdullah-abbas/wme-scripts
-// @version      2026.01.16.28
-// @description  المفتش المتقدم - إصلاح شامل للاكتشاف ومسح الكاش
+// @version      2026.01.17.14
+// @description  مفتش الخريطة - كشف شامل لطلبات التحديث والأماكن الجديدة والصور
 // @author       Abdullah Abbas
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562857/abdullah%20abbas%20advanced%20inspector.user.js
-// @updateURL https://update.greasyfork.org/scripts/562857/abdullah%20abbas%20advanced%20inspector.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562857/Abdullah%20Abbas%20WME%20Map%20Inspector.user.js
+// @updateURL https://update.greasyfork.org/scripts/562857/Abdullah%20Abbas%20WME%20Map%20Inspector.meta.js
 // ==/UserScript==
 
 /* global W, OpenLayers */
@@ -15,23 +15,35 @@
 (function() {
     'use strict';
 
-    // --- إعدادات اللغة ---
+    const SCRIPT_VERSION = "2026.01.17.14";
     let currentLang = localStorage.getItem('aa-inspector-lang') || 'en-US';
 
     const translations = {
         'en-US': {
-            inspector: "Inspector",
+            inspector: "Map Inspector",
             settings: "Settings",
             results: "Results",
             scan_header: "Scan Options",
+            start_scan: "Start Scanning",
+            // --- Options Titles & Descriptions ---
             opt_places: "🏢 Venues",
+            desc_places: "Stores & Public places.",
             opt_res: "🏠 Residential",
+            desc_res: "Private home addresses.",
             opt_img: "🖼️ Images",
+            desc_img: "New & updated photos.",
             opt_streets: "🛣️ Segments",
-            opt_urs: "📩 URs (User)",
-            opt_mps: "🤖 MPs (System)",
-            opt_mcs: "💬 Comments",
-            start_scan: "Scan Area",
+            desc_streets: "New unverified roads.",
+            opt_mps: "🤖 Map Problems",
+            desc_mps: "System reported errors.",
+            opt_mcs: "💬 Map Comments",
+            desc_mcs: "Editor notes on map.",
+            opt_urs_group: "📩 Update Requests",
+            desc_urs_group: "User reported issues.",
+            opt_urs_all: "Enable URs",
+            opt_urs_chat: "With Chat",
+            opt_urs_no_chat: "No Chat",
+            // --- Results & UI ---
             clean_msg: "✅ Clean Area",
             clean_desc: "No pending issues found.",
             count: "Count:",
@@ -40,36 +52,52 @@
             col_reason: "Issue",
             col_action: "Go",
             details_new: "New Place",
+            details_new_img: "New + Img",
             details_edit: "Has Edits",
             details_img: "New Image",
-            details_ur: "Update Req",
+            details_ur: "UR Open",
+            details_ur_chat: "UR+Chat",
+            details_ur_silent: "UR Silent",
             details_mp: "Map Problem",
             details_mc: "Map Comment",
+            details_place_req: "Place Update",
+            details_req_img: "Update+Img",
             details_unverified: "Unverified",
-            details_open: "Open",
             lang_label: "Lang:",
             btn_text: "Inspector",
-            req_zoom: "Req Zoom: 15",
-            curr_zoom: "Cur Zoom:",
+            req_zoom: "Zoom: 15+",
+            curr_zoom: "Zoom Lvl:",
             rescan: "Re-scan 🔄",
             clear_btn: "Clear 🧹",
             zoom_err_msg: "Zoom too low (Min 15)",
-            status_ready: "Ready",
-            status_low: "Zoom In"
+            orientation_toggle: "Rotate",
+            version: "Ver"
         },
         'ar-IQ': {
-            inspector: "المفتش",
+            inspector: "مفتش الخريطة",
             settings: "الإعدادات",
             results: "النتائج",
             scan_header: "خيارات الفحص",
-            opt_places: "🏢 الأماكن",
-            opt_res: "🏠 المنازل",
-            opt_img: "🖼️ الصور",
-            opt_streets: "🛣️ الشوارع",
-            opt_urs: "📩 البلاغات",
-            opt_mps: "🤖 مشاكل النظام",
-            opt_mcs: "💬 التعليقات",
             start_scan: "بدء الفحص",
+            // --- العناوين والوصف ---
+            opt_places: "🏢 الأماكن العامة",
+            desc_places: "المتاجر والمعالم.",
+            opt_res: "🏠 المنازل",
+            desc_res: "العناوين السكنية.",
+            opt_img: "🖼️ الصور",
+            desc_img: "الصور الجديدة.",
+            opt_streets: "🛣️ الشوارع",
+            desc_streets: "طرق غير مؤكدة.",
+            opt_mps: "🤖 مشاكل الخريطة",
+            desc_mps: "أخطاء النظام.",
+            opt_mcs: "💬 التعليقات",
+            desc_mcs: "ملاحظات المحررين.",
+            opt_urs_group: "📩 طلبات التحديث",
+            desc_urs_group: "بلاغات المستخدمين.",
+            opt_urs_all: "تفعيل البحث",
+            opt_urs_chat: "مع محادثة",
+            opt_urs_no_chat: "بدون محادثة",
+            // --- النتائج والواجهة ---
             clean_msg: "✅ المنطقة نظيفة",
             clean_desc: "لا توجد مشاكل ظاهرة.",
             count: "العدد:",
@@ -78,60 +106,80 @@
             col_reason: "السبب",
             col_action: "ذهاب",
             details_new: "مكان جديد",
+            details_new_img: "جديد+صورة",
             details_edit: "تعديل معلق",
             details_img: "صورة جديدة",
-            details_ur: "تحديث مستخدم",
+            details_ur: "بلاغ مفتوح",
+            details_ur_chat: "بلاغ ونقاش",
+            details_ur_silent: "بلاغ صامت",
             details_mp: "مشكلة نظام",
             details_mc: "تعليق خريطة",
+            details_place_req: "طلب تحديث",
+            details_req_img: "تحديث+صورة",
             details_unverified: "غير مؤكد",
-            details_open: "مفتوح",
             lang_label: "اللغة:",
             btn_text: "المفتش",
-            req_zoom: "التكبير المطلوب: 15",
-            curr_zoom: "التكبير الحالي:",
+            req_zoom: "التقريب: 15+",
+            curr_zoom: "التقريب:",
             rescan: "إعادة الفحص 🔄",
             clear_btn: "مسح 🧹",
-            zoom_err_msg: "الزوم منخفض (أقل شيء 15)",
-            status_ready: "جاهز",
-            status_low: "قرب أكثر"
+            zoom_err_msg: "التقريب منخفض (أقل شيء 15)",
+            orientation_toggle: "تدوير",
+            version: "إصدار"
         },
         'ku-IQ': {
             inspector: "پشکنەر",
             settings: "ڕێکخستن",
             results: "ئەنجام",
-            scan_header: "Hەڵبژاردن",
-            opt_places: "🏢 شوێن",
-            opt_res: "🏠 ماڵ",
-            opt_img: "🖼️ وێنە",
-            opt_streets: "🛣️ شەقام",
-            opt_urs: "📩 URs",
-            opt_mps: "🤖 MPs",
-            opt_mcs: "💬 Comments",
-            start_scan: "پشکنین",
-            clean_msg: "✅ پاکە",
-            clean_desc: "کێشە نییە.",
+            scan_header: "هەڵبژاردنەکان",
+            start_scan: "دەستپێکردن",
+            // --- Titles & Desc ---
+            opt_places: "🏢 شوێنە گشتییەکان",
+            desc_places: "شوێنە بازرگانییەکان.",
+            opt_res: "🏠 ماڵەکان",
+            desc_res: "ناونیشانی ماڵان.",
+            opt_img: "🖼️ وێنەکان",
+            desc_img: "وێنە نوێکان.",
+            opt_streets: "🛣️ شەقامەکان",
+            desc_streets: "شەقامە نوێیەکان.",
+            opt_mps: "🤖 کێشەی نەخشە",
+            desc_mps: "هەڵەکانی سیستەم.",
+            opt_mcs: "💬 لێدوانەکان",
+            desc_mcs: "تێبینی دەستکاریکەر.",
+            opt_urs_group: "📩 سکاڵاکان",
+            desc_urs_group: "داواکاری نوێکردنەوە.",
+            opt_urs_all: "چالاککردن",
+            opt_urs_chat: "لەگەڵ چات",
+            opt_urs_no_chat: "بێ چات",
+            // --- UI ---
+            clean_msg: "✅ ناوچەکە پاکە",
+            clean_desc: "هیچ کێشەیەکی دیار نییە.",
             count: "ژمارە:",
             col_type: "جۆر",
             col_name: "ناو",
             col_reason: "هۆکار",
-            col_action: "برۆ",
+            col_action: "بڕۆ",
             details_new: "شوێنی نوێ",
+            details_new_img: "نوێ+وێنە",
             details_edit: "دەستکاری",
             details_img: "وێنەی نوێ",
-            details_ur: "نوێکردنەوە",
+            details_ur: "سکاڵای کراوە",
+            details_ur_chat: "سکاڵا+چات",
+            details_ur_silent: "سکاڵای بێدەنگ",
             details_mp: "کێشەی سیستەم",
-            details_mc: "Lêdwan",
+            details_mc: "لێدوانی نەخشە",
+            details_place_req: "داواکاری نوێ",
+            details_req_img: "نوێ+وێنە",
             details_unverified: "پەسەند نەکراو",
-            details_open: "کراوە",
             lang_label: "زمان:",
             btn_text: "پشکنەر",
-            req_zoom: "Zoomî Dawakiraw: 15",
-            curr_zoom: "Zoomî Êsta:",
-            rescan: "Dubare 🔄",
-            clear_btn: "Paqij 🧹",
-            zoom_err_msg: "Asta zoom nizm e (Min 15)",
-            status_ready: "Amade ye",
-            status_low: "Nêzîk bike"
+            req_zoom: "زووم: 15+",
+            curr_zoom: "زووم:",
+            rescan: "دووبارە 🔄",
+            clear_btn: "پاککردنەوە 🧹",
+            zoom_err_msg: "زووم نزمە (لانی کەم 15)",
+            orientation_toggle: "سوڕاندن",
+            version: "وەشان"
         }
     };
 
@@ -139,11 +187,22 @@
         return translations[currentLang][key] || key;
     }
 
-    const savedOptions = JSON.parse(localStorage.getItem('aa-inspector-options'));
-    let searchOptions = savedOptions || {
-        places: true, residential: true, streets: true, urs: true, mps: true, mcs: true, images: true
+    const defaultOptions = {
+        places: true, residential: true, images: true,
+        streets: true, mps: true, mcs: true,
+        urs: true, urs_chat: true, urs_no_chat: true
     };
 
+    const savedOptions = JSON.parse(localStorage.getItem('aa-inspector-options'));
+    let searchOptions = savedOptions || defaultOptions;
+
+    if (!savedOptions || typeof searchOptions.urs_chat === 'undefined') {
+        searchOptions = { ...defaultOptions, ...searchOptions };
+        searchOptions.urs_chat = true;
+        searchOptions.urs_no_chat = true;
+    }
+
+    let isLandscape = localStorage.getItem('aa-inspector-orientation') !== 'false';
     let currentResults = [];
 
     function bootstrap() {
@@ -158,7 +217,6 @@
         createCompactToolbar();
     }
 
-    // --- 1. الزر العائم المصغر ---
     function createCompactToolbar() {
         const toolbarId = 'aa-main-toolbar';
         const existing = document.getElementById(toolbarId);
@@ -191,7 +249,6 @@
             cursor: move; color: #bdc3c7; font-size: 16px; margin-right: 4px;
             user-select: none; line-height: 26px; padding: 0 4px; font-weight: bold;
         `;
-        dragHandle.title = "Drag";
 
         const btn = document.createElement('button');
         btn.innerHTML = `<span style="margin-right:4px; font-size:12px;">🕵️</span>${t('btn_text')}`;
@@ -210,9 +267,22 @@
         makeDraggable(container, dragHandle);
     }
 
-    // --- 2. النافذة الموحدة ---
+    function createOptionItem(id, title, desc, checked) {
+        return `
+            <div style="background:white; border-radius:5px; padding:6px; box-shadow:0 1px 2px rgba(0,0,0,0.05); border:1px solid #eee; display:flex; align-items:flex-start;">
+                <input type="checkbox" id="${id}" ${checked ? 'checked' : ''} style="margin-top:4px; margin-inline-end: 8px; cursor:pointer;">
+                <div style="flex:1;">
+                    <label for="${id}" style="font-weight:bold; font-size:12px; color:#2c3e50; cursor:pointer; display:block;">${title}</label>
+                    <div style="font-size:10px; color:#95a5a6; margin-top:2px; line-height:1.2;">${desc}</div>
+                </div>
+            </div>
+        `;
+    }
+
     function openUnifiedDashboard() {
-        if (document.getElementById('aa-dashboard-panel')) return;
+        if (document.getElementById('aa-dashboard-panel-v2')) return;
+        const oldVer = document.getElementById('aa-dashboard-panel');
+        if(oldVer) oldVer.remove();
 
         const dir = (currentLang === 'en-US') ? 'ltr' : 'rtl';
         const align = (currentLang === 'en-US') ? 'left' : 'right';
@@ -220,15 +290,19 @@
         const currentZoom = W.map.getZoom();
         const isZoomOk = currentZoom >= 15;
         const zoomColor = isZoomOk ? '#27ae60' : '#c0392b';
-        const commonStyle = "font-size:12px; line-height:1.6;";
+        const commonStyle = "font-size:11px; line-height:1.6;";
+
+        const gridStyle = isLandscape
+            ? "display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;"
+            : "display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;";
 
         const htmlContent = `
-            <div style="background:#f9f9f9; padding:6px 10px; border-bottom:1px solid #ddd; display:flex; align-items:center; justify-content:space-between;">
+            <div style="background:#f9f9f9; padding:8px 10px; border-bottom:1px solid #ddd; display:flex; align-items:center; justify-content:space-between;">
                 <span style="font-size:11px; font-weight:bold; color:#7f8c8d;">${t('lang_label')}</span>
-                <select id="aa-lang-select" style="padding:2px; font-size:11px; border-radius:3px; border:1px solid #ccc;">
+                <select id="aa-lang-select" style="padding:2px 5px; font-size:11px; border-radius:3px; border:1px solid #ccc; background:white; font-family:tahoma, sans-serif;">
                     <option value="ar-IQ" ${currentLang === 'ar-IQ' ? 'selected' : ''}>العربية</option>
-                    <option value="ku-IQ" ${currentLang === 'ku-IQ' ? 'selected' : ''}>Kurdî</option>
                     <option value="en-US" ${currentLang === 'en-US' ? 'selected' : ''}>English</option>
+                    <option value="ku-IQ" ${currentLang === 'ku-IQ' ? 'selected' : ''}>کوردی (سۆرانی)</option>
                 </select>
             </div>
 
@@ -237,24 +311,41 @@
                 <button id="tab-btn-results" class="aa-tab-btn" style="flex:1; padding:8px; background:none; border:none; border-bottom:3px solid transparent; font-weight:bold; cursor:pointer; color:#7f8c8d; font-size:12px;">📊 ${t('results')}</button>
             </div>
 
-            <div id="tab-content-settings" style="display:block; direction:${dir}; text-align:${align}; padding: 10px;">
+            <div id="tab-content-settings" style="display:block; direction:${dir}; text-align:${align}; padding: 10px; flex:1; overflow-y:auto; background:#f4f6f7;">
 
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:5px;">
+                <button id="aa-start-scan" style="width:100%; padding:12px; background:#27ae60; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:13px; margin-bottom:15px; box-shadow:0 2px 4px rgba(0,0,0,0.1); transition: background 0.3s;">${t('start_scan')} 🚀</button>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:white; padding:8px; border-radius:4px; border:1px solid #eee;">
                     <span style="${commonStyle} font-weight:bold; color:#2c3e50;">${t('scan_header')}</span>
-                    <span style="${commonStyle} color:${zoomColor}; font-weight:bold;">${t('req_zoom')}</span>
+                    <span style="${commonStyle} color:${zoomColor}; font-weight:bold; background:#ecf0f1; padding:2px 6px; border-radius:4px;">${t('req_zoom')}</span>
                 </div>
 
-                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; ${commonStyle}">
-                    <label style="cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-places" ${searchOptions.places ? 'checked' : ''} style="margin:0 5px;"> ${t('opt_places')}</label>
-                    <label style="cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-res" ${searchOptions.residential ? 'checked' : ''} style="margin:0 5px;"> ${t('opt_res')}</label>
-                    <label style="cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-img" ${searchOptions.images ? 'checked' : ''} style="margin:0 5px;"> ${t('opt_img')}</label>
-                    <label style="cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-streets" ${searchOptions.streets ? 'checked' : ''} style="margin:0 5px;"> ${t('opt_streets')}</label>
-                    <label style="cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-urs" ${searchOptions.urs ? 'checked' : ''} style="margin:0 5px;"> ${t('opt_urs')}</label>
-                    <label style="cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-mps" ${searchOptions.mps ? 'checked' : ''} style="margin:0 5px;"> ${t('opt_mps')}</label>
-                    <label style="cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-mcs" ${searchOptions.mcs ? 'checked' : ''} style="margin:0 5px;"> ${t('opt_mcs')}</label>
+                <div style="${gridStyle} margin-bottom:15px; ${commonStyle}">
+                    ${createOptionItem('opt-places', t('opt_places'), t('desc_places'), searchOptions.places)}
+                    ${createOptionItem('opt-res', t('opt_res'), t('desc_res'), searchOptions.residential)}
+                    ${createOptionItem('opt-img', t('opt_img'), t('desc_img'), searchOptions.images)}
+                    ${createOptionItem('opt-streets', t('opt_streets'), t('desc_streets'), searchOptions.streets)}
+                    ${createOptionItem('opt-mps', t('opt_mps'), t('desc_mps'), searchOptions.mps)}
+                    ${createOptionItem('opt-mcs', t('opt_mcs'), t('desc_mcs'), searchOptions.mcs)}
                 </div>
 
-                <button id="aa-start-scan" style="width:100%; padding:8px; background:#27ae60; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold; ${commonStyle}">${t('start_scan')} 🎯</button>
+                <div style="background:white; border-radius:5px; padding:8px; border:1px solid #eee; margin-top:5px;">
+                    <div style="display:flex; align-items:center; border-bottom:1px solid #eee; padding-bottom:5px; margin-bottom:5px;">
+                         <input type="checkbox" id="opt-urs" ${searchOptions.urs ? 'checked' : ''} style="margin-inline-end: 8px;">
+                         <div>
+                            <div style="font-weight:bold; color:#e67e22;">${t('opt_urs_group')}</div>
+                            <div style="font-size:10px; color:#95a5a6;">${t('desc_urs_group')}</div>
+                         </div>
+                    </div>
+                    <div style="display:flex; gap:15px; padding-inline-start: 22px;">
+                        <label style="font-size:11px; cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-urs-chat" ${searchOptions.urs_chat ? 'checked' : ''} style="margin:0 4px;"> ${t('opt_urs_chat')}</label>
+                        <label style="font-size:11px; cursor:pointer; display:flex; align-items:center;"><input type="checkbox" id="opt-urs-no-chat" ${searchOptions.urs_no_chat ? 'checked' : ''} style="margin:0 4px;"> ${t('opt_urs_no_chat')}</label>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:20px; color:#bdc3c7; font-size:10px;">
+                    ${t('version')}: ${SCRIPT_VERSION}
+                </div>
             </div>
 
             <div id="tab-content-results" style="display:none; height:calc(100% - 85px); direction:${dir};">
@@ -266,15 +357,12 @@
             </div>
         `;
 
-        const body = createFloatingWindow('aa-dashboard-panel', t('inspector'), htmlContent);
+        const body = createFloatingWindow('aa-dashboard-panel-v2', t('inspector'), htmlContent);
 
-        const langSelect = body.querySelector('#aa-lang-select');
-        langSelect.addEventListener('change', (e) => {
+        body.querySelector('#aa-lang-select').addEventListener('change', (e) => {
             currentLang = e.target.value;
             localStorage.setItem('aa-inspector-lang', currentLang);
-            document.getElementById('aa-dashboard-panel').remove();
-            createCompactToolbar();
-            openUnifiedDashboard();
+            refreshDashboard();
         });
 
         const btnSettings = body.querySelector('#tab-btn-settings');
@@ -311,9 +399,11 @@
                 searchOptions.residential = document.getElementById('opt-res').checked;
                 searchOptions.images = document.getElementById('opt-img').checked;
                 searchOptions.streets = document.getElementById('opt-streets').checked;
-                searchOptions.urs = document.getElementById('opt-urs').checked;
                 searchOptions.mps = document.getElementById('opt-mps').checked;
                 searchOptions.mcs = document.getElementById('opt-mcs').checked;
+                searchOptions.urs = document.getElementById('opt-urs').checked;
+                searchOptions.urs_chat = document.getElementById('opt-urs-chat').checked;
+                searchOptions.urs_no_chat = document.getElementById('opt-urs-no-chat').checked;
                 localStorage.setItem('aa-inspector-options', JSON.stringify(searchOptions));
             });
         });
@@ -325,7 +415,24 @@
         if(currentResults.length > 0) renderResultsTable(resultsContainer);
     }
 
-    // --- 3. منطق الفحص (تحديث شامل ودقيق) ---
+    function refreshDashboard() {
+        const p = document.getElementById('aa-dashboard-panel-v2');
+        if(p) p.remove();
+        openUnifiedDashboard();
+    }
+
+    function hasImageInRequests(reqs) {
+        if (!reqs || !Array.isArray(reqs) || reqs.length === 0) return false;
+        return reqs.some(r => {
+            if (r.imageURL || r.thumbnailURL) return true;
+            if (r.attributes) {
+                if (r.attributes.imageURL || r.attributes.thumbnailURL) return true;
+                if (r.attributes.type === 'IMAGE' || r.attributes.subType === 'IMAGE') return true;
+            }
+            return false;
+        });
+    }
+
     function runScanLogic(containerElement) {
         window.aaSwitchTab('results');
         const commonStyle = "font-size:12px; line-height:1.5;";
@@ -347,54 +454,72 @@
 
         const results = [];
 
-        // 1. الأماكن (Places/Venues)
+        // 1. Places
         if (W.model.venues) {
             for (let id in W.model.venues.objects) {
                 let v = W.model.venues.objects[id];
                 let attr = v.attributes;
                 let isRes = attr.residential;
 
-                if (isRes && !searchOptions.residential) continue;
-                if (!isRes && !searchOptions.places && !searchOptions.images) continue;
+                let isNew = !attr.approved;
+                let hasUnapprovedEdits = (attr.unapprovedEdits === true) || (v.getFlagAttributes && v.getFlagAttributes().unapprovedEdits);
+                let requests = attr.requests || [];
+                let hasUpdateReq = (requests.length > 0) || (attr.hasOpenUpdateRequests === true);
+                let rawImages = attr.images || [];
+                let hasNewImgInList = rawImages.some(i => i.approved === false);
+                let hasImgInReq = hasImageInRequests(requests);
+                let isNewWithImg = isNew && (rawImages.length > 0);
+                let hasAnyImage = hasNewImgInList || hasImgInReq || isNewWithImg;
 
                 let reasons = [];
                 let color = "#2980b9";
+                let showThis = false;
 
-                let isNew = !attr.approved;
-                // فحص دقيق للتعديلات المعلقة
-                let hasUnapprovedEdits = attr.unapprovedEdits || (v.getFlagAttributes && v.getFlagAttributes().unapprovedEdits);
-                let hasUnapprovedImg = (attr.images || []).some(i => i.approved === false);
-                // فحص طلبات التحديث (Requests)
-                let hasReqs = (attr.requests && attr.requests.length > 0) || attr.hasOpenUpdateRequests;
+                if (searchOptions.images && hasAnyImage) {
+                    showThis = true;
+                    color = "#d35400";
+                    if (isNewWithImg) reasons.push(t('details_new_img'));
+                    else if (hasImgInReq) reasons.push(t('details_req_img'));
+                    else reasons.push(t('details_img'));
+                }
 
-                let checkAsPlace = (!isRes && searchOptions.places) || (isRes && searchOptions.residential);
+                let wantThisType = (isRes && searchOptions.residential) || (!isRes && searchOptions.places);
 
-                if (checkAsPlace) {
+                if (wantThisType) {
                     if (isNew) {
-                        reasons.push(t('details_new'));
+                         if (!reasons.includes(t('details_new_img'))) {
+                             reasons.push(t('details_new'));
+                             if(!showThis) color = "#2980b9";
+                             showThis = true;
+                         }
                     } else if (hasUnapprovedEdits) {
                         reasons.push(t('details_edit'));
-                        color = "#8e44ad";
+                        if(!showThis) color = "#8e44ad";
+                        showThis = true;
+                    }
+                    if (hasUpdateReq) {
+                         if (!reasons.includes(t('details_req_img')) && !reasons.includes(t('details_new_img'))) {
+                             reasons.push(t('details_place_req'));
+                             if(!showThis) color = "#e67e22";
+                             showThis = true;
+                         }
                     }
                 }
 
-                if (hasUnapprovedImg && searchOptions.images) {
-                    reasons.push(t('details_img'));
-                    color = "#d35400";
-                }
-
-                if (hasReqs && searchOptions.places) {
-                    reasons.push(t('details_ur'));
-                    color = "#e67e22";
-                }
-
-                if (reasons.length > 0) {
-                    results.push({ obj: v, type: isRes ? "🏠" : "🏢", name: attr.name || (isRes ? "Home" : "---"), details: reasons.join("+"), color: color });
+                if (showThis && reasons.length > 0) {
+                    let uniqueReasons = [...new Set(reasons)];
+                    results.push({
+                        obj: v,
+                        type: isRes ? "🏠" : "🏢",
+                        name: attr.name || (isRes ? "Home" : "---"),
+                        details: uniqueReasons.join(" + "),
+                        color: color
+                    });
                 }
             }
         }
 
-        // 2. الشوارع (Segments)
+        // 2. Streets
         if (searchOptions.streets && W.model.segments) {
             for (let id in W.model.segments.objects) {
                 let s = W.model.segments.objects[id];
@@ -406,17 +531,28 @@
             }
         }
 
-        // 3. البلاغات (URs)
+        // 3. URs
         if (searchOptions.urs && W.model.mapUpdateRequests) {
             for (let id in W.model.mapUpdateRequests.objects) {
                 let ur = W.model.mapUpdateRequests.objects[id];
                 if (ur.attributes.status === 0) {
-                    results.push({ obj: ur, type: "📩", name: "UR #" + id, details: t('details_open'), color: "#e67e22" });
+                    let conv = ur.attributes.conversation;
+                    let hasComments = conv && Array.isArray(conv) && conv.length > 0;
+
+                    let shouldShow = false;
+                    if (hasComments && searchOptions.urs_chat) shouldShow = true;
+                    if (!hasComments && searchOptions.urs_no_chat) shouldShow = true;
+
+                    if (shouldShow) {
+                        let desc = hasComments ? t('details_ur_chat') : t('details_ur_silent');
+                        let color = hasComments ? "#e67e22" : "#f39c12";
+                        results.push({ obj: ur, type: "📩", name: "UR #" + id, details: desc, color: color });
+                    }
                 }
             }
         }
 
-        // 4. مشاكل النظام (MPs)
+        // 4. MPs
         if (searchOptions.mps && W.model.mapProblems) {
             for (let id in W.model.mapProblems.objects) {
                 let mp = W.model.mapProblems.objects[id];
@@ -426,11 +562,10 @@
             }
         }
 
-        // 5. تعليقات الخارطة (Map Comments) - جديد
+        // 5. Map Comments
         if (searchOptions.mcs && W.model.mapComments) {
             for (let id in W.model.mapComments.objects) {
                 let mc = W.model.mapComments.objects[id];
-                // التعليقات عادة لا تملك status مثل URs، نظهرها جميعاً أو نتحقق من lock
                 results.push({ obj: mc, type: "💬", name: mc.attributes.subject || "Comment", details: t('details_mc'), color: "#16a085" });
             }
         }
@@ -446,18 +581,17 @@
         const zoomColor = currentZoom >= minZoom ? '#27ae60' : '#c0392b';
         const commonStyle = "font-size:12px; line-height:1.4;";
 
-        // Buttons
         const actionsHTML = `
-        <div style="padding:15px 0; text-align:center; display:flex; gap:10px; justify-content:center;">
-            <button id="aa-rescan-btn" style="background:#2980b9; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer; font-weight:bold; ${commonStyle} box-shadow:0 2px 5px rgba(0,0,0,0.2); flex:1; max-width:120px;">${t('rescan')}</button>
-            <button id="aa-clear-btn" style="background:#e74c3c; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer; font-weight:bold; ${commonStyle} box-shadow:0 2px 5px rgba(0,0,0,0.2); flex:1; max-width:120px;">${t('clear_btn')}</button>
+        <div style="padding:10px 5px; text-align:center; display:flex; gap:10px; justify-content:center; background:#fff; border-bottom:1px solid #eee; position:sticky; top:0; z-index:10;">
+            <button id="aa-rescan-btn" style="background:#2980b9; color:white; border:none; padding:6px 15px; border-radius:4px; cursor:pointer; font-weight:bold; ${commonStyle} box-shadow:0 2px 3px rgba(0,0,0,0.1); flex:1;">${t('rescan')}</button>
+            <button id="aa-clear-btn" style="background:#e74c3c; color:white; border:none; padding:6px 15px; border-radius:4px; cursor:pointer; font-weight:bold; ${commonStyle} box-shadow:0 2px 3px rgba(0,0,0,0.1); flex:1;">${t('clear_btn')}</button>
         </div>`;
 
         if (currentResults.length === 0) {
-            container.innerHTML = `<div style="text-align:center; padding:30px 10px; color:#27ae60;">
+            container.innerHTML = actionsHTML + `<div style="text-align:center; padding:30px 10px; color:#27ae60;">
                 <h3 style="margin:0 0 10px 0; font-size:16px;">${t('clean_msg')}</h3>
                 <p style="${commonStyle} color:#7f8c8d;">${t('clean_desc')}</p>
-            </div>${actionsHTML}`;
+            </div>`;
 
             const rsBtn = container.querySelector('#aa-rescan-btn');
             if(rsBtn) rsBtn.onclick = () => runScanLogic(container);
@@ -467,9 +601,9 @@
         }
 
         const statsHeader = `
-            <div style="background: #ecf0f1; padding: 10px; border-radius: 4px; margin: 10px 0; display:flex; justify-content:space-between; align-items:center; border: 1px solid #bdc3c7;">
+            <div style="background: #ecf0f1; padding: 8px; border-radius: 4px; margin: 5px 10px; display:flex; justify-content:space-between; align-items:center; border: 1px solid #bdc3c7;">
                 <div style="font-weight:bold; color:#2c3e50; ${commonStyle}">
-                    ${t('count')} <span style="background:#3498db; color:white; padding:2px 8px; border-radius:10px;">${currentResults.length}</span>
+                    ${t('count')} <span style="background:#3498db; color:white; padding:1px 6px; border-radius:10px;">${currentResults.length}</span>
                 </div>
                 <div style="${commonStyle} color:#7f8c8d;">
                     ${t('curr_zoom')} <span style="font-weight:bold; color:${zoomColor};">${currentZoom}</span>
@@ -477,9 +611,9 @@
             </div>
         `;
 
-        let html = `<div style="padding:0 10px;">` + statsHeader + `</div>
-            <table style="width:100%; border-collapse: collapse; background:white; ${commonStyle}">
-                <thead style="background:#f1f2f6; position:sticky; top:0; z-index:1;"><tr>
+        let html = actionsHTML + statsHeader +
+            `<table style="width:100%; border-collapse: collapse; background:white; ${commonStyle}">
+                <thead style="background:#f1f2f6; position:sticky; top:45px; z-index:5;"><tr>
                     <th style="padding:8px; text-align:${align}; border-bottom:2px solid #ddd;">${t('col_type')}</th>
                     <th style="padding:8px; text-align:${align}; border-bottom:2px solid #ddd;">${t('col_name')}</th>
                     <th style="padding:8px; text-align:${align}; border-bottom:2px solid #ddd;">${t('col_reason')}</th>
@@ -493,7 +627,7 @@
                 <td style="padding:8px; text-align:center;"><button class="aa-go-btn" data-idx="${i}" style="background:#27ae60; color:white; border:none; padding:4px 10px; border-radius:3px; cursor:pointer; font-size:11px;">🎯</button></td>
             </tr>`;
         });
-        html += `</tbody></table>` + actionsHTML;
+        html += `</tbody></table>`;
 
         container.innerHTML = html;
 
@@ -516,19 +650,28 @@
 
     function handleClear(container) {
         currentResults = [];
-        if(W.selectionManager) W.selectionManager.unselectAll();
+        try {
+            if (W.selectionManager && typeof W.selectionManager.unselectAll === 'function') {
+                W.selectionManager.unselectAll();
+            }
+        } catch (e) {
+            console.error("AA Inspector: Clear error ignored", e);
+        }
         renderResultsTable(container);
     }
 
-    // --- الوظائف المساعدة ---
     function createFloatingWindow(id, title, contentHTML) {
         const existing = document.getElementById(id);
         if (existing) existing.remove();
         const dir = (currentLang === 'en-US') ? 'ltr' : 'rtl';
 
+        const landscapeDims = { w: "750px", h: "500px" };
+        const portraitDims = { w: "400px", h: "580px" };
+        const currentDims = isLandscape ? landscapeDims : portraitDims;
+
         const savedState = JSON.parse(localStorage.getItem('aa-dashboard-state')) || {};
-        const width = savedState.width || "320px";
-        const height = savedState.height || "400px";
+        const width = savedState.width || currentDims.w;
+        const height = savedState.height || currentDims.h;
         const top = savedState.top || "80px";
         const left = savedState.left || "100px";
         const isMin = savedState.minimized || false;
@@ -542,7 +685,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             display: flex; flex-direction: column;
             z-index: 10000; font-family: 'Rubik', sans-serif; direction: ${dir};
-            resize: ${isMin ? 'none' : 'both'}; overflow: hidden; min-width: 50px; min-height: 20px;
+            resize: ${isMin ? 'none' : 'both'}; overflow: hidden; min-width: 250px; min-height: 20px;
             border: 1px solid #bdc3c7;
         `;
 
@@ -555,6 +698,7 @@
 
         const controls = `
             <div style="display:flex; gap:0;">
+                <button class="aa-rotate-btn" title="${t('orientation_toggle')}" style="background:none; border:none; color:#ecf0f1; cursor:pointer; padding:0 8px; font-weight:bold; font-size:14px;">⟲</button>
                 <button class="aa-min-btn" title="Minimize" style="background:none; border:none; color:#ecf0f1; cursor:pointer; padding:0 8px; font-weight:bold; font-size:14px;">${isMin ? '□' : '_'}</button>
                 <button class="aa-close-btn" title="Close" style="background:none; border:none; color:#ecf0f1; cursor:pointer; padding:0 8px; font-size:14px; font-weight:bold;">✕</button>
             </div>`;
@@ -565,13 +709,14 @@
         styleTag.innerHTML = `
             .aa-close-btn:hover { background-color: #c0392b !important; border-radius: 3px; }
             .aa-min-btn:hover { background-color: #34495e !important; border-radius: 3px; }
+            .aa-rotate-btn:hover { background-color: #27ae60 !important; border-radius: 3px; }
             .aa-tab-btn:hover { background-color: #ecf0f1; }
         `;
         win.appendChild(styleTag);
 
         const body = document.createElement('div');
         body.className = 'aa-win-body';
-        body.style.cssText = `padding: 0; overflow-y: auto; flex: 1; display: ${isMin ? 'none' : 'block'};`;
+        body.style.cssText = `padding: 0; overflow-y: hidden; flex: 1; display: ${isMin ? 'none' : 'flex'}; flex-direction:column;`;
         body.innerHTML = contentHTML;
 
         win.appendChild(header);
@@ -597,6 +742,16 @@
 
         header.querySelector('.aa-close-btn').onclick = () => win.remove();
 
+        header.querySelector('.aa-rotate-btn').onclick = () => {
+            isLandscape = !isLandscape;
+            localStorage.setItem('aa-inspector-orientation', isLandscape);
+            const newDims = isLandscape ? landscapeDims : portraitDims;
+            win.style.width = newDims.w;
+            win.style.height = newDims.h;
+            saveState();
+            refreshDashboard();
+        };
+
         const minBtn = header.querySelector('.aa-min-btn');
         let oldH = height, oldW = width;
 
@@ -609,7 +764,7 @@
                 minBtn.innerHTML='□';
                 isMin = true;
             } else {
-                body.style.display='block';
+                body.style.display='flex';
                 win.style.height=oldH; win.style.width=oldW;
                 win.style.resize='both';
                 minBtn.innerHTML='_';
@@ -645,7 +800,7 @@
             document.onmouseup = null; document.onmousemove = null;
             if (elmnt.id === 'aa-main-toolbar') {
                 localStorage.setItem('aa-toolbar-pos', JSON.stringify({ top: elmnt.style.top, left: elmnt.style.left }));
-            } else if (elmnt.id === 'aa-dashboard-panel') {
+            } else if (elmnt.id === 'aa-dashboard-panel-v2') {
                  const currentState = JSON.parse(localStorage.getItem('aa-dashboard-state')) || {};
                  currentState.top = elmnt.style.top;
                  currentState.left = elmnt.style.left;

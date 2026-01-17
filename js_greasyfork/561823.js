@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Nyaa Visual Enhanced (Glass Edition Pro)
 // @namespace    http://tampermonkey.net/
-// @version      4.1
-// @description  Universal Nyaa previews with unified search, AniList fallback, metadata tooltips, and improved title parsing.
-// @author       de.bobo0
+// @version      4.6
+// @description  Universal Nyaa previews with unified search, AniList fallback, metadata tooltips, synopsis panel, and improved title parsing.
+// @author       dr.bobo0
 // @match        https://nyaa.si/*
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -27,7 +27,9 @@
         zoom: true,
         transparent: true,
         cacheExpiry: 14,
-        showMetadata: true
+        showMetadata: true,
+        showSynopsisPanel: true,
+        synopsisVisible: true
     };
 
     let CONFIG = { ...DEFAULT_CONFIG, ...GM_getValue('nyaa_cfg_v10', {}) };
@@ -40,7 +42,10 @@
     let sliderRaf = null;
     let currentContextTarget = null;
 
-    const COVER_ASPECT_RATIO = 0.7; // width/height ratio for anime covers (roughly 2:3)
+    // Synopsis panel state (persistent toggle with Shift)
+    let isSynopsisVisible = CONFIG.synopsisVisible !== false;
+
+    const COVER_ASPECT_RATIO = 0.7;
 
     const saveConfig = () => GM_setValue('nyaa_cfg_v10', CONFIG);
     const saveCache = () => GM_setValue('nyaa_universal_cache_v4', cache);
@@ -188,11 +193,17 @@
             #nv-tooltip {
                 position: fixed; display: none; z-index: 99999; pointer-events: none;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-                border-radius: 8px; overflow: hidden;
+                border-radius: 8px; overflow: visible;
                 background: #121212; border: 1px solid #444;
                 width: 220px; line-height: 0;
             }
-            #nv-tooltip img { width: 100%; height: auto; display: block; }
+            #nv-tooltip .nv-tooltip-main {
+                position: relative;
+                border-radius: 8px;
+                overflow: hidden;
+                background: #121212;
+            }
+            #nv-tooltip img.nv-tooltip-img { width: 100%; height: auto; display: block; }
             #nv-tooltip .nv-tooltip-content {
                 padding: 10px;
                 font-size: 12px;
@@ -227,6 +238,91 @@
                 background: rgba(255,255,255,0.1);
                 padding: 2px 6px;
                 border-radius: 4px;
+            }
+            #nv-tooltip .nv-shift-hint {
+                font-size: 10px;
+                color: #666;
+                margin-top: 8px;
+                text-align: center;
+            }
+
+            /* --- Synopsis Side Panel --- */
+            .nv-description-panel {
+                position: absolute;
+                top: 0;
+                left: 230px;
+                width: 280px;
+                max-height: 400px;
+                background: rgba(20, 20, 20, 0.85);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255,255,255,0.15);
+                border-radius: 8px;
+                padding: 15px;
+                color: #eee;
+                opacity: 0;
+                transform: translateX(-15px);
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                pointer-events: none;
+                z-index: -1;
+                line-height: 1.5;
+                overflow-y: auto;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            }
+            .nv-description-panel.nv-visible {
+                opacity: 1;
+                transform: translateX(0);
+                pointer-events: auto;
+                z-index: 1;
+            }
+            .nv-description-panel h4 {
+                margin: 0 0 10px 0;
+                font-size: 14px;
+                font-weight: bold;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                padding-bottom: 8px;
+            }
+            .nv-description-panel .nv-synopsis-text {
+                font-size: 12px;
+                color: #ccc;
+                line-height: 1.6;
+            }
+            .nv-description-panel .nv-synopsis-text p {
+                margin: 0 0 10px 0;
+            }
+            .nv-description-panel .nv-no-synopsis {
+                font-style: italic;
+                color: #999;
+            }
+            .nv-description-panel .nv-synopsis-tip {
+                margin-top: 12px;
+                padding-top: 10px;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                font-size: 11px;
+                color: #888;
+            }
+            .nv-description-panel .nv-synopsis-tip strong {
+                color: #ffa726;
+            }
+
+            /* Custom scrollbar for synopsis */
+            .nv-description-panel::-webkit-scrollbar {
+                width: 6px;
+            }
+            .nv-description-panel::-webkit-scrollbar-track {
+                background: rgba(255,255,255,0.05);
+                border-radius: 3px;
+            }
+            .nv-description-panel::-webkit-scrollbar-thumb {
+                background: rgba(255,255,255,0.2);
+                border-radius: 3px;
+            }
+            .nv-description-panel::-webkit-scrollbar-thumb:hover {
+                background: rgba(255,255,255,0.3);
             }
 
             /* --- Context Menu --- */
@@ -453,6 +549,7 @@
             }
             .nv-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
             .nv-row label { font-size: 14px; font-weight: 600; cursor: pointer; }
+            .nv-row .nv-hint { font-size: 11px; opacity: 0.6; margin-left: 4px; font-weight: normal; }
             .nv-stats { background: rgba(0,0,0,0.1); padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; text-align: center; opacity: 0.8; }
             .nv-actions { display: flex; gap: 10px; margin-top: 20px; }
             .nv-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
@@ -499,6 +596,29 @@ function extractAnimeTitle(rawText) {
 
     // Remove file extension
     title = title.replace(/\.(mkv|mp4|avi|webm|ass|srt|rar|zip|7z)$/i, '');
+
+    // === NEW Pattern 0: Underscore-based format [Group]Title_-_Episodes ===
+    // Handles Spanish/multi-language releases with underscore separators
+    // e.g., [WZF]Ichiban_Ushiro_no_Daimaou_-_01~12[HD][X264-AAC]
+    // e.g., [WZF]Gangsta_-_01~12[HD][X264-AAC]
+    // e.g., [FS]_To_LOVE-Ru_Darkness_2nd_OVA_-_01~02_[BD_1280x720]
+    const underscoreFormatMatch = title.match(/^\[[^\]]+\]_?([^[\]]+?)_-_(?:\d+(?:[~-]\d+)?(?:v\d+)?|S\d+E\d+|EP?\d+)/i);
+    if (underscoreFormatMatch && underscoreFormatMatch[1]) {
+        let extracted = underscoreFormatMatch[1].replace(/_/g, ' ').trim();
+        if (extracted.length > 2) {
+            return extracted;
+        }
+    }
+
+    // === Pattern 0.5: Underscore format without group tag ===
+    // e.g., Anime_Name_-_01~12[HD]
+    const underscoreNoGroupMatch = title.match(/^([A-Za-z][A-Za-z0-9_\-!'.]+?)_-_(?:\d+(?:[~-]\d+)?(?:v\d+)?|S\d+E\d+|EP?\d+)/i);
+    if (underscoreNoGroupMatch && underscoreNoGroupMatch[1]) {
+        let extracted = underscoreNoGroupMatch[1].replace(/_/g, ' ').trim();
+        if (extracted.length > 2 && !/^\d+$/.test(extracted)) {
+            return extracted;
+        }
+    }
 
     // === Pattern 1: Fansub format with title in second bracket ===
     // [Group][Japanese Title/Romaji Title][Quality][Episode][Subs]
@@ -577,6 +697,16 @@ function extractAnimeTitle(rawText) {
     // Remove trailing parenthetical content (language tags etc)
     title = title.replace(/\s*\([^)]*\)\s*$/g, '');
 
+    // === NEW: Handle underscore-separated format in cleaned title ===
+    // After removing group tags, check for _-_ pattern
+    const underscoreSepMatch = title.match(/^(.+?)_-_(?:\d+(?:[~-]\d+)?(?:v\d+)?|S\d+E\d+|EP?\d+)/i);
+    if (underscoreSepMatch && underscoreSepMatch[1]) {
+        let extracted = underscoreSepMatch[1].replace(/_/g, ' ').trim();
+        if (extracted.length > 2) {
+            return extracted;
+        }
+    }
+
     // Handle dot-separated filename format (common in scene releases)
     const dotPatterns = [
         /^(.+?)\.S\d+E\d+/i,
@@ -596,8 +726,8 @@ function extractAnimeTitle(rawText) {
         }
     }
 
-    // Convert dots to spaces
-    title = title.replace(/\./g, ' ');
+    // Convert dots and underscores to spaces
+    title = title.replace(/[._]/g, ' ');
 
     // Standard separator patterns for episode numbers etc
     const separators = [
@@ -652,7 +782,6 @@ function extractAnimeTitle(rawText) {
 
     return title.length > 2 ? title : null;
 }
-
     // =============== 5. CATEGORY DETECTION ===============
     function detectCategory(row) {
         const categoryCell = row.querySelector('td:first-child a');
@@ -684,6 +813,7 @@ function extractAnimeTitle(rawText) {
             episodes: item.episodes || item.chapters,
             type: item.type,
             status: item.status,
+            synopsis: item.synopsis || null,
             source: 'jikan'
         }));
     }
@@ -703,6 +833,7 @@ function extractAnimeTitle(rawText) {
                         chapters
                         format
                         status
+                        description(asHtml: false)
                     }
                 }
             }
@@ -728,33 +859,68 @@ function extractAnimeTitle(rawText) {
             episodes: item.episodes || item.chapters,
             type: item.format,
             status: item.status,
+            synopsis: item.description || null,
             source: 'anilist'
         }));
     }
 
-    async function searchWithFallback(title, type = 'anime') {
+async function searchWithFallback(title, type = 'anime') {
+        // Try AniList first (Better synonym support)
         try {
-            const jikanResult = await fetchFromJikan(title, type);
-            if (jikanResult && jikanResult.length > 0) return jikanResult;
+            const aniResult = await fetchFromAniList(title, type);
+            if (aniResult && aniResult.length > 0) return aniResult;
         } catch (e) {
-            if (e.message === 'RATE_LIMITED') throw e;
-            console.warn('[Nyaa Preview] Jikan failed, trying AniList...', e);
+            console.warn('[Nyaa Preview] AniList failed, trying Jikan...', e);
         }
 
+        // Fallback to Jikan
         try {
-            return await fetchFromAniList(title, type);
+            return await fetchFromJikan(title, type);
         } catch (e) {
-            console.error('[Nyaa Preview] AniList also failed:', e);
+            if (e.message === 'RATE_LIMITED') throw e;
+            console.error('[Nyaa Preview] All APIs failed:', e);
             return null;
         }
     }
 
-    // =============== 7. MAIN LOGIC ===============
+    // =============== 7. SYNOPSIS TOGGLE ===============
+    function setupSynopsisToggle() {
+        document.addEventListener('keydown', (e) => {
+            // Only work if synopsis panel feature is enabled in settings
+            if (!CONFIG.showSynopsisPanel) return;
+
+            // Don't toggle when typing in inputs or when settings panel is open
+            const settingsOpen = document.getElementById('nv-settings') !== null;
+            if (settingsOpen) return;
+
+            if (e.key === 'Shift' && !e.repeat &&
+                document.activeElement.tagName !== 'INPUT' &&
+                document.activeElement.tagName !== 'TEXTAREA') {
+                isSynopsisVisible = !isSynopsisVisible;
+
+                // Save the state persistently
+                CONFIG.synopsisVisible = isSynopsisVisible;
+                saveConfig();
+
+                const panel = document.querySelector('.nv-description-panel');
+                if (panel) {
+                    if (isSynopsisVisible) {
+                        panel.classList.add('nv-visible');
+                    } else {
+                        panel.classList.remove('nv-visible');
+                    }
+                }
+            }
+        });
+    }
+
+    // =============== 8. MAIN LOGIC ===============
     function init() {
         injectGlobalStyles();
         createTooltip();
         createContextMenu();
         createSearchModal();
+        setupSynopsisToggle();
         applyBodyClasses();
         cleanCache();
 
@@ -772,7 +938,6 @@ function extractAnimeTitle(rawText) {
             link.dataset.category = category;
             link.dataset.cleanTitle = clean || '';
 
-            // Handle non-searchable categories
             if (['audio', 'live', 'software', 'pictures'].includes(category)) {
                 injectCategoryIcon(link, category);
                 link.classList.add('nv-no-search');
@@ -797,7 +962,6 @@ function extractAnimeTitle(rawText) {
             }
         });
 
-        // Queue uncached titles
         linkMap.forEach((data, title) => {
             if (!cache.hasOwnProperty(title)) {
                 requestQueue.push({ title, elements: data.elements, category: data.category });
@@ -806,7 +970,6 @@ function extractAnimeTitle(rawText) {
 
         if (!isProcessing && CONFIG.enabled) processQueue();
 
-        // Close context menu on click elsewhere
         document.addEventListener('click', () => hideContextMenu());
         document.addEventListener('contextmenu', handleContextMenu);
 
@@ -904,6 +1067,7 @@ function extractAnimeTitle(rawText) {
         link.dataset.episodes = result.episodes || '';
         link.dataset.type = result.type || '';
         link.dataset.status = result.status || '';
+        link.dataset.synopsis = result.synopsis || '';
         link.dataset.hasAlternatives = (cacheEntry?.results?.length > 1) ? 'true' : 'false';
 
         let img = link.querySelector('.nv-img');
@@ -927,11 +1091,27 @@ function extractAnimeTitle(rawText) {
         link.addEventListener('mouseleave', onLeave);
     }
 
-    // =============== 8. TOOLTIP ===============
+    // =============== 9. TOOLTIP ===============
     function createTooltip() {
         tooltip = document.createElement('div');
         tooltip.id = 'nv-tooltip';
         document.body.appendChild(tooltip);
+    }
+
+    function sanitizeSynopsis(text) {
+        if (!text) return null;
+        let cleaned = text.replace(/<br\s*\/?>/gi, '\n')
+                         .replace(/<[^>]+>/g, '')
+                         .replace(/&nbsp;/g, ' ')
+                         .replace(/&amp;/g, '&')
+                         .replace(/&lt;/g, '<')
+                         .replace(/&gt;/g, '>')
+                         .replace(/&quot;/g, '"')
+                         .replace(/&#39;/g, "'");
+        if (cleaned.length > 500) {
+            cleaned = cleaned.substring(0, 500) + '...';
+        }
+        return cleaned;
     }
 
     function onEnter(e) {
@@ -943,7 +1123,11 @@ function extractAnimeTitle(rawText) {
         const malTitle = target.dataset.malTitle;
         if (!url) return;
 
-        let html = `<img src="${url}" referrerpolicy="no-referrer">`;
+        const synopsis = sanitizeSynopsis(target.dataset.synopsis);
+        const hasSynopsis = synopsis && synopsis.trim().length > 0;
+
+        let html = `<div class="nv-tooltip-main">`;
+        html += `<img class="nv-tooltip-img" src="${url}" referrerpolicy="no-referrer">`;
         html += `<div class="nv-tooltip-content">`;
         html += `<div class="nv-tooltip-title">${malTitle || 'Unknown'}</div>`;
 
@@ -966,7 +1150,32 @@ function extractAnimeTitle(rawText) {
             html += `</div>`;
         }
 
-        html += `</div>`;
+        // Show shift hint only if synopsis panel feature is enabled
+        if (CONFIG.showSynopsisPanel) {
+            html += `<div class="nv-shift-hint">⇧ Shift to toggle synopsis</div>`;
+        }
+
+        html += `</div>`; // Close nv-tooltip-content
+        html += `</div>`; // Close nv-tooltip-main
+
+        // Synopsis Side Panel (only if feature is enabled in settings)
+        if (CONFIG.showSynopsisPanel) {
+            html += `<div class="nv-description-panel ${isSynopsisVisible ? 'nv-visible' : ''}">`;
+            html += `<h4>📖 Synopsis</h4>`;
+
+            if (hasSynopsis) {
+                html += `<div class="nv-synopsis-text">${synopsis.replace(/\n/g, '<br>')}</div>`;
+            } else {
+                html += `<div class="nv-synopsis-text nv-no-synopsis">`;
+                html += `No synopsis available for this cached entry.`;
+                html += `</div>`;
+                html += `<div class="nv-synopsis-tip">`;
+                html += `<strong>Tip:</strong> Right-click on the image and select "Re-fetch from API" to load the synopsis.`;
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+        }
 
         tooltip.innerHTML = html;
         tooltip.style.display = 'block';
@@ -988,17 +1197,21 @@ function extractAnimeTitle(rawText) {
         const offset = 20;
         let left = x + offset;
         let top = y + offset;
-        const w = 280;
+        const tooltipWidth = 220;
+        const panelWidth = (CONFIG.showSynopsisPanel && isSynopsisVisible) ? 290 : 0;
+        const totalWidth = tooltipWidth + panelWidth;
         const h = tooltip.offsetHeight || 400;
 
-        if (left + w > window.innerWidth) left = x - w - offset;
+        if (left + totalWidth > window.innerWidth) {
+            left = x - totalWidth - offset;
+        }
         if (top + h > window.innerHeight) top = y - h - offset;
 
         tooltip.style.left = Math.max(10, left) + 'px';
         tooltip.style.top = Math.max(10, top) + 'px';
     }
 
-    // =============== 9. CONTEXT MENU ===============
+    // =============== 10. CONTEXT MENU ===============
     function createContextMenu() {
         contextMenu = document.createElement('div');
         contextMenu.id = 'nv-context-menu';
@@ -1030,7 +1243,6 @@ function extractAnimeTitle(rawText) {
         e.preventDefault();
         currentContextTarget = link;
 
-        // Position menu
         let left = e.clientX;
         let top = e.clientY;
 
@@ -1111,7 +1323,7 @@ function extractAnimeTitle(rawText) {
         }
     }
 
-    // =============== 10. UNIFIED SEARCH MODAL ===============
+    // =============== 11. UNIFIED SEARCH MODAL ===============
     let searchModal = null;
     let currentSearchTitle = null;
     let currentSearchResults = [];
@@ -1163,7 +1375,6 @@ function extractAnimeTitle(rawText) {
         searchInput.value = originalTitle;
         infoBar.innerHTML = `<strong>Detected:</strong> ${originalTitle}`;
 
-        // If we have cached results, show them
         if (cache[originalTitle]?.results?.length > 0) {
             currentSearchResults = cache[originalTitle].results;
             const selectedIdx = cache[originalTitle].selectedIndex || 0;
@@ -1207,7 +1418,6 @@ function extractAnimeTitle(rawText) {
         `;
 
         try {
-            // Get the category from the first matching link
             const firstLink = document.querySelector(`.nv-link[data-clean-title="${CSS.escape(currentSearchTitle)}"]`);
             const category = firstLink?.dataset.category || 'anime';
             const type = category === 'manga' ? 'manga' : 'anime';
@@ -1216,7 +1426,7 @@ function extractAnimeTitle(rawText) {
 
             if (results && results.length > 0) {
                 currentSearchResults = results;
-                renderResults(results, -1); // No selection yet
+                renderResults(results, -1);
             } else {
                 currentSearchResults = [];
                 grid.innerHTML = `
@@ -1257,7 +1467,6 @@ function extractAnimeTitle(rawText) {
             </div>
         `).join('');
 
-        // Add click handlers
         grid.querySelectorAll('.nv-result-item').forEach(item => {
             item.addEventListener('click', () => {
                 const idx = parseInt(item.dataset.index);
@@ -1271,7 +1480,6 @@ function extractAnimeTitle(rawText) {
 
         const result = currentSearchResults[idx];
 
-        // Update cache
         cache[currentSearchTitle] = {
             results: currentSearchResults,
             selectedIndex: idx,
@@ -1280,7 +1488,6 @@ function extractAnimeTitle(rawText) {
         };
         saveCache();
 
-        // Update all matching links
         document.querySelectorAll('.nv-link').forEach(link => {
             if (link.dataset.cleanTitle === currentSearchTitle) {
                 injectToLink(link, result, cache[currentSearchTitle]);
@@ -1290,7 +1497,7 @@ function extractAnimeTitle(rawText) {
         hideSearchModal();
     }
 
-    // =============== 11. UI HELPERS ===============
+    // =============== 12. UI HELPERS ===============
     function applyBodyClasses() {
         const body = document.body;
         body.classList.remove('nv-disabled', 'nv-mode-inline', 'nv-mode-hover', 'nv-mode-hybrid', 'nv-square', 'nv-zoom');
@@ -1319,7 +1526,7 @@ function extractAnimeTitle(rawText) {
         if (dirty) saveCache();
     }
 
-    // =============== 12. SETTINGS UI ===============
+    // =============== 13. SETTINGS UI ===============
     function createSettingsUI() {
         if (document.getElementById('nv-settings')) return;
 
@@ -1329,7 +1536,7 @@ function extractAnimeTitle(rawText) {
         panel.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(128,128,128,0.3); padding-bottom:12px; margin-bottom:15px;">
                 <h2 style="margin:0; font-size:18px;">🖼️ Visual Enhanced Pro</h2>
-                <span style="font-size:10px; opacity:0.6;">v4.1</span>
+                <span style="font-size:10px; opacity:0.6;">v4.6</span>
             </div>
 
             <div class="nv-row"><label for="nv-enable">Enable Script</label><input type="checkbox" id="nv-enable"></div>
@@ -1358,6 +1565,13 @@ function extractAnimeTitle(rawText) {
             <div class="nv-row"><label for="nv-square">Square Ratio</label><input type="checkbox" id="nv-square"></div>
             <div class="nv-row"><label for="nv-zoom">Hover Zoom</label><input type="checkbox" id="nv-zoom"></div>
             <div class="nv-row"><label for="nv-metadata">Show Metadata</label><input type="checkbox" id="nv-metadata"></div>
+            <div class="nv-row">
+                <label for="nv-synopsis">
+                    Synopsis Panel
+                    <span class="nv-hint">(⇧ toggle)</span>
+                </label>
+                <input type="checkbox" id="nv-synopsis">
+            </div>
             <div class="nv-row"><label for="nv-trans">Transparent UI</label><input type="checkbox" id="nv-trans"></div>
 
             <div class="nv-actions">
@@ -1366,7 +1580,7 @@ function extractAnimeTitle(rawText) {
             </div>
 
             <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(128,128,128,0.2); font-size:11px; opacity:0.6; text-align:center;">
-                💡 Right-click on images to search & select alternatives
+                💡 Right-click on images for more options
             </div>
         `;
         document.body.appendChild(panel);
@@ -1379,6 +1593,7 @@ function extractAnimeTitle(rawText) {
             square: document.getElementById('nv-square'),
             zoom: document.getElementById('nv-zoom'),
             metadata: document.getElementById('nv-metadata'),
+            synopsis: document.getElementById('nv-synopsis'),
             trans: document.getElementById('nv-trans'),
             cacheExpiry: document.getElementById('nv-cache-expiry'),
             stats: document.getElementById('nv-stats')
@@ -1390,6 +1605,7 @@ function extractAnimeTitle(rawText) {
         els.square.checked = CONFIG.square;
         els.zoom.checked = CONFIG.zoom;
         els.metadata.checked = CONFIG.showMetadata;
+        els.synopsis.checked = CONFIG.showSynopsisPanel;
         els.trans.checked = CONFIG.transparent;
         els.cacheExpiry.value = CONFIG.cacheExpiry;
 
@@ -1411,12 +1627,17 @@ function extractAnimeTitle(rawText) {
         const updateStats = () => {
             const count = Object.keys(cache).length;
             const withImages = Object.values(cache).filter(e => e.results?.length > 0).length;
+            const withSynopsis = Object.values(cache).filter(e => {
+                if (!e.results?.length) return false;
+                const idx = e.selectedIndex || 0;
+                return e.results[idx]?.synopsis?.trim().length > 0;
+            }).length;
             const notFound = Object.values(cache).filter(e => e.notFound).length;
             const hidden = Object.values(cache).filter(e => e.hidden).length;
             const kb = (JSON.stringify(cache).length / 1024).toFixed(1);
             els.stats.innerHTML = `
                 <strong>Cache:</strong> ${count} items (~${kb} KB)<br>
-                <span style="font-size:11px;">✅ ${withImages} found | ❌ ${notFound} not found | 👁️ ${hidden} hidden</span>
+                <span style="font-size:11px;">✅ ${withImages} found (📖 ${withSynopsis} with synopsis) | ❌ ${notFound} not found | 👁️ ${hidden} hidden</span>
             `;
         };
         updateStats();
@@ -1427,6 +1648,7 @@ function extractAnimeTitle(rawText) {
         els.square.addEventListener('change', e => { CONFIG.square = e.target.checked; saveConfig(); applyBodyClasses(); });
         els.zoom.addEventListener('change', e => { CONFIG.zoom = e.target.checked; saveConfig(); applyBodyClasses(); });
         els.metadata.addEventListener('change', e => { CONFIG.showMetadata = e.target.checked; saveConfig(); });
+        els.synopsis.addEventListener('change', e => { CONFIG.showSynopsisPanel = e.target.checked; saveConfig(); });
         els.cacheExpiry.addEventListener('change', e => { CONFIG.cacheExpiry = parseInt(e.target.value) || 14; saveConfig(); });
 
         els.trans.addEventListener('change', e => {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      8.1
+// @version      8.3
 // @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Quillbot, Canva, Genspark, Character, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
@@ -58,6 +58,8 @@
     let lastPromptsContent = "";
     let cachedPrompts = [];
     let urlCheckInterval = null;
+    let injectedStyleId = 'nav-shift-styles';
+    let loadingTimeout = null;
 
     function getAIStudioData() {
         const prompts = [];
@@ -82,7 +84,7 @@
             domain: 'chatgpt.com',
             includePath: ['chatgpt.com/c/', 'chatgpt.com/g/'],
             userMessage: 'div[data-message-author-role="user"]',
-            shiftTarget: 'div[data-scroll-root="true"]',
+            shiftTarget: 'main',
             shiftHeader: '.flex.items-center.justify-end.gap-2.overflow-x-hidden',
             collapsedTop: '0'
         },
@@ -100,7 +102,6 @@
             customFinder: getAIStudioData,
             useClick: true,
             shiftTarget: '.layout-wrapper',
-            alwaysShow: true,
             fastUpdate: true,
             debounceTime: AISTUDIO_DEBOUNCE_TIME,
             shiftHeader: '.toolbar-container',
@@ -110,7 +111,7 @@
             domain: 'notebooklm.google.com',
             includePath: 'notebooklm.google.com/notebook/',
             userMessage: 'chat-message .from-user-container',
-            shiftTarget: 'mat-tab-group, .panel-container, .notebook-header-container, .boqOnegoogleliteOgbOneGoogleBa',
+            shiftTarget: 'mat-tab-group, .panel-container',
             shiftHeader: '.notebook-header-container, .boqOnegoogleliteOgbOneGoogleBar',
             collapsedTop: '11px'
         },
@@ -176,7 +177,7 @@
             domain: 'www.kimi.com',
             includePath: 'www.kimi.com/chat/',
             userMessage: '.user-content',
-            shiftTarget:'.has-sidebar'
+            shiftTarget: '.has-sidebar'
         },
         glm: {
             domain: 'chat.z.ai',
@@ -326,6 +327,14 @@
     const CURRENT_SITE = getCurrentConfig();
     if (!CURRENT_SITE) return;
 
+    function checkURL(url) {
+        if (!CURRENT_SITE.includePath) return false;
+        if (Array.isArray(CURRENT_SITE.includePath)) {
+            return CURRENT_SITE.includePath.some(path => url.includes(path));
+        }
+        return url.includes(CURRENT_SITE.includePath);
+    }
+
     const BASE_CONTAINER_CSS = `
         right: 0px; width: ${NAV_WIDTH}px; bottom: 0px; overflow-y: auto;
         z-index: 9999;
@@ -350,44 +359,41 @@
         `;
     };
 
+    function updateShiftStyles(shouldInject) {
+        let existingStyle = document.getElementById(injectedStyleId);
+        if (shouldInject && !existingStyle) {
+            const currentWidth = CURRENT_SITE.width || NAV_WIDTH;
+            let cssContent = '';
+            if (CURRENT_SITE.shiftTarget) cssContent += getShiftStyle(currentWidth, CURRENT_SITE.shiftTarget);
+            if (CURRENT_SITE.shiftHeader) {
+                cssContent += getShiftStyle(currentWidth, CURRENT_SITE.shiftHeader);
+                cssContent += `body.navigator-collapsed ${CURRENT_SITE.shiftHeader} { margin-right: ${NAV_COLLAPSED_WIDTH}px !important; transition: margin-right 0.3s ease; }`;
+            }
+            if (cssContent) {
+                const styleElement = document.createElement('style');
+                styleElement.id = injectedStyleId;
+                styleElement.textContent = cssContent;
+                document.head.appendChild(styleElement);
+            }
+        } else if (!shouldInject && existingStyle) {
+            existingStyle.remove();
+        }
+    }
+
     GM_addStyle(`
         .nav-list-item { font-weight: normal; transition: font-weight 0.1s ease; }
         .nav-list-item.active { font-weight: bold !important; background-color: rgba(0, 0, 0, 0.05); }
-        @keyframes nav-blink-animation {
-            0% { opacity: 1; }
-            50% { opacity: 0.1; }
-            100% { opacity: 1; }
-        }
-        .nav-blink-active {
-            animation: nav-blink-animation 0.5s ease-in-out 4;
-        }
+        @keyframes nav-blink-animation { 0% { opacity: 1; } 50% { opacity: 0.1; } 100% { opacity: 1; } }
+        .nav-blink-active { animation: nav-blink-animation 0.5s ease-in-out 4; }
     `);
+
     const allUserSelectors = Object.values(SITE_CONFIGS)
             .map(config => config.userMessage)
             .filter(selector => typeof selector === 'string' && selector.length > 0)
             .join(', ');
 
     if (allUserSelectors) {
-        GM_addStyle(`
-            ${allUserSelectors} {
-                scroll-margin-top: 50px !important;
-            }
-        `);
-    }
-
-    const currentWidth = CURRENT_SITE.width || NAV_WIDTH;
-    if (CURRENT_SITE.shiftTarget) {
-        GM_addStyle(getShiftStyle(currentWidth, CURRENT_SITE.shiftTarget));
-    }
-
-    if (CURRENT_SITE.shiftHeader) {
-        GM_addStyle(getShiftStyle(currentWidth, CURRENT_SITE.shiftHeader));
-        GM_addStyle(`
-            body.navigator-collapsed ${CURRENT_SITE.shiftHeader} {
-                margin-right: ${NAV_COLLAPSED_WIDTH}px !important;
-                transition: margin-right 0.3s ease;
-            }
-        `);
+        GM_addStyle(`${allUserSelectors} { scroll-margin-top: 10px !important; }`);
     }
 
     let conversationObserver = null;
@@ -397,7 +403,11 @@
     function updateBodyClassForLayout() {
         const container = document.getElementById('message-nav');
         const content = document.getElementById('message-nav-content');
-        if (container && content && content.style.display !== 'none') {
+        if (!container || container.style.display === 'none') {
+            document.body.classList.remove('navigator-expanded', 'navigator-collapsed');
+            return;
+        }
+        if (content && content.style.display !== 'none') {
             document.body.classList.add('navigator-expanded');
             document.body.classList.remove('navigator-collapsed');
         } else {
@@ -411,32 +421,26 @@
         if (!container) {
             container = document.createElement('div');
             container.id = 'message-nav';
-            const topValue = '0';
-            container.style.cssText = `top: ${topValue}; ${BASE_CONTAINER_CSS}`;
+            container.style.cssText = `top: 0; ${BASE_CONTAINER_CSS}`;
             const header = document.createElement('div');
             Object.assign(header.style, {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', fontWeight: 'bold',
-                position: 'sticky', top: '0', zIndex: '10', padding: '15px 0', backgroundColor: 'Canvas',
+                cursor: 'pointer', fontWeight: 'bold', position: 'sticky', top: '0', zIndex: '10',
+                padding: '15px 0', backgroundColor: 'Canvas',
                 borderBottom : '1px solid color-mix(in srgb, CanvasText 15%, transparent)'
             });
-
             const toggleBtn = document.createElement('button');
-            Object.assign(toggleBtn.style, {
-                background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: '20px', color: 'inherit'
-            });
+            Object.assign(toggleBtn.style, { background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: 'inherit' });
             toggleBtn.textContent = 'Close';
             header.appendChild(toggleBtn);
-
             const content = document.createElement('div');
             content.id = 'message-nav-content';
             content.style.padding = '5px';
-
             container.appendChild(header);
             container.appendChild(content);
             document.body.appendChild(container);
 
+            const currentWidth = CURRENT_SITE.width || NAV_WIDTH;
             const toggleHandler = (e) => {
                 e.stopPropagation();
                 isCollapsed = !isCollapsed;
@@ -450,7 +454,7 @@
                     header.style.borderBottom = '1px solid color-mix(in srgb, CanvasText 15%, transparent)';
                     container.style.borderLeft = '1px solid color-mix(in srgb, CanvasText 15%, transparent)';
                     container.style.top = '0px';
-                    container.style.right = '0px'
+                    container.style.right = '0px';
                     header.style.padding = '15px 0';
                 } else {
                     content.style.display = 'none';
@@ -460,15 +464,13 @@
                     container.style.bottom = 'auto';
                     container.style.height = 'min-content';
                     header.style.backgroundColor = 'transparent';
-                    container.style.right = '10px'
+                    container.style.right = '10px';
                     header.style.borderBottom = 'none';
                     header.style.padding = '10px 0';
                     container.style.top = CURRENT_SITE.collapsedTop || '55px';
                 }
-
                 updateBodyClassForLayout();
             };
-
             toggleBtn.addEventListener('click', toggleHandler);
             updateBodyClassForLayout();
         }
@@ -476,23 +478,15 @@
     }
 
     function findUserPrompts() {
-        if (CURRENT_SITE.customFinder) {
-            return CURRENT_SITE.customFinder();
-        }
-
+        if (CURRENT_SITE.customFinder) return CURRENT_SITE.customFinder();
         let prompts = [];
         if (!CURRENT_SITE.userMessage) return prompts;
-
         const elements = document.querySelectorAll(CURRENT_SITE.userMessage);
         elements.forEach((element) => {
             const text = element.textContent.trim();
             if (text) prompts.push({ element, text });
         });
-
-        if (CURRENT_SITE.reverse) {
-            prompts.reverse();
-        }
-
+        if (CURRENT_SITE.reverse) prompts.reverse();
         return prompts;
     }
 
@@ -501,14 +495,9 @@
             const prompts = CURRENT_SITE.customFinder();
             return prompts[targetIndex] ? prompts[targetIndex].element : null;
         }
-
         if (!CURRENT_SITE.userMessage) return null;
         const elements = Array.from(document.querySelectorAll(CURRENT_SITE.userMessage));
-
-        if (CURRENT_SITE.reverse) {
-            elements.reverse();
-        }
-
+        if (CURRENT_SITE.reverse) elements.reverse();
         return elements[targetIndex] || null;
     }
 
@@ -516,46 +505,23 @@
         const listItem = document.createElement('li');
         const preview = prompt.text.length > 80 ? prompt.text.slice(0, 80) + '...' : prompt.text;
         listItem.textContent = `${index}. ${preview}`;
-
-        Object.assign(listItem.style, {
-            cursor: 'pointer', padding: '5px 0px 5px 5px'
-        });
+        Object.assign(listItem.style, { cursor: 'pointer', padding: '5px 0px 5px 5px' });
         listItem.classList.add('nav-list-item');
-        if (index === activeMessageIndex) {
-            listItem.classList.add('active');
-        }
+        if (index === activeMessageIndex) listItem.classList.add('active');
 
         listItem.addEventListener('click', () => {
             const parentList = listItem.parentElement;
-            if (parentList) {
-                parentList.querySelectorAll('.nav-list-item').forEach(li => li.classList.remove('active'));
-            }
+            if (parentList) parentList.querySelectorAll('.nav-list-item').forEach(li => li.classList.remove('active'));
             listItem.classList.add('active');
             activeMessageIndex = index;
-
             const targetElement = findPromptElementByIndex(index - 1);
-
             if (targetElement) {
                 targetElement.classList.add('nav-blink-active');
-                setTimeout(() => {
-                    targetElement.classList.remove('nav-blink-active');
-                }, 2000);
-
-                if (CURRENT_SITE.useClick) {
-                    targetElement.click();
-                } else {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            } else {
-                if (cachedPrompts[index - 1] && cachedPrompts[index - 1].element) {
-                    const el = cachedPrompts[index - 1].element;
-                    el.classList.add('nav-blink-active');
-                    setTimeout(() => el.classList.remove('nav-blink-active'), 2000);
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                setTimeout(() => targetElement.classList.remove('nav-blink-active'), 2000);
+                if (CURRENT_SITE.useClick) targetElement.click();
+                else targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
-
         return listItem;
     }
 
@@ -569,17 +535,19 @@
             activeMessageIndex = -1;
             cachedPrompts = [];
             forceUpdate = true;
+            if (loadingTimeout) {
+                clearTimeout(loadingTimeout);
+                loadingTimeout = null;
+            }
         }
 
-        const shouldShow = CURRENT_SITE.alwaysShow || !CURRENT_SITE.includePath ||
-              (Array.isArray(CURRENT_SITE.includePath)
-                  ? CURRENT_SITE.includePath.some(path => currentUrl.includes(path))
-                  : currentUrl.includes(CURRENT_SITE.includePath));
+        const shouldShow = checkURL(currentUrl);
+        updateShiftStyles(shouldShow);
+
         if (!shouldShow) {
-            if (container) {
-                container.style.display = 'none';
-                document.body.classList.remove('navigator-expanded');
-            }
+            if (container) container.style.display = 'none';
+            document.body.classList.remove('navigator-expanded', 'navigator-collapsed');
+            updateBodyClassForLayout();
             return;
         }
 
@@ -598,27 +566,36 @@
         }
 
         const prompts = findUserPrompts();
-
         const currentPromptsContent = prompts.map(p => p.text).join('|');
 
-        if (!forceUpdate && currentPromptsContent === lastPromptsContent) {
-            return;
-        }
+        if (!forceUpdate && currentPromptsContent === lastPromptsContent) return;
 
         lastPromptsContent = currentPromptsContent;
         cachedPrompts = prompts;
 
-        while (list.firstChild) {
-            list.removeChild(list.firstChild);
-        }
+        while (list.firstChild) list.removeChild(list.firstChild);
 
         if (prompts.length === 0) {
             activeMessageIndex = -1;
             const noContent = document.createElement('div');
+            noContent.id = 'nav-status-display';
             noContent.textContent = 'Loading...';
             noContent.style.cssText = 'color: #999; font-style: italic; text-align: center; padding: 15px 0;';
             list.appendChild(noContent);
+
+            if (!loadingTimeout) {
+                loadingTimeout = setTimeout(() => {
+                    const statusDiv = document.getElementById('nav-status-display');
+                    if (statusDiv && cachedPrompts.length === 0) {
+                        statusDiv.textContent = 'No message found';
+                    }
+                }, 5000);
+            }
         } else {
+            if (loadingTimeout) {
+                clearTimeout(loadingTimeout);
+                loadingTimeout = null;
+            }
             prompts.forEach((prompt, index) => {
                 const listItem = createListItem(prompt, index + 1);
                 list.appendChild(listItem);
@@ -628,65 +605,34 @@
 
     function startUrlWatcher() {
         if (!CURRENT_SITE.fastUpdate) return;
-
-        if (urlCheckInterval) {
-            clearInterval(urlCheckInterval);
-        }
-
+        if (urlCheckInterval) clearInterval(urlCheckInterval);
         urlCheckInterval = setInterval(() => {
             const currentUrl = window.location.href;
-            if (currentUrl !== lastUrl) {
-                updateMessageList(true);
-            }
+            if (currentUrl !== lastUrl) updateMessageList(true);
         }, 300);
     }
 
     function observeConversation() {
         if (conversationObserver) conversationObserver.disconnect();
-
         const debounceTime = CURRENT_SITE.debounceTime || DEBOUNCE_TIME;
-
         conversationObserver = new MutationObserver(() => {
             clearTimeout(window.navigatorUpdateTimeout);
-            window.navigatorUpdateTimeout = setTimeout(() => {
-                updateMessageList();
-            }, debounceTime);
+            window.navigatorUpdateTimeout = setTimeout(() => updateMessageList(), debounceTime);
         });
-
-        conversationObserver.observe(document.body, {
-            childList: true,
-            subtree: true,
-            characterData: false,
-            attributes: false
-        });
+        conversationObserver.observe(document.body, { childList: true, subtree: true });
 
         window.addEventListener('popstate', () => {
-            lastPromptsContent = "";
-            cachedPrompts = [];
-            updateMessageList(true);
+            lastPromptsContent = ""; cachedPrompts = []; updateMessageList(true);
         });
 
         const originalPushState = history.pushState;
         history.pushState = function() {
             originalPushState.apply(this, arguments);
-            lastPromptsContent = "";
-            cachedPrompts = [];
-            setTimeout(() => updateMessageList(true), 100);
-        };
-
-        const originalReplaceState = history.replaceState;
-        history.replaceState = function() {
-            originalReplaceState.apply(this, arguments);
-            lastPromptsContent = "";
-            cachedPrompts = [];
+            lastPromptsContent = ""; cachedPrompts = [];
             setTimeout(() => updateMessageList(true), 100);
         };
     }
 
-    setTimeout(() => {
-        updateMessageList(true);
-        startUrlWatcher();
-    }, 1000);
+    setTimeout(() => { updateMessageList(true); startUrlWatcher(); }, 1000);
     observeConversation();
-
 })();

@@ -2,15 +2,17 @@
 // @name         Discuz! 论坛助手 (Discuz! Forum Assistant)
 // @name:en      Discuz! Forum Assistant
 // @namespace    http://tampermonkey.net/
-// @version      13.2.0
+// @version      13.13.0
 // @description  Discuz! 论坛全能助手：智能抓取模式（Alt+键只抓作者前3页）、全量抓取模式（Ctrl+Alt+键抓所有）；一键提取图片（自动修复文件名/格式/并发下载）；沉浸式阅读；自定义下载路径。
 // @description:en Discuz! Forum Assistant: Smart scraping (Alt+keys for author's first 3 pages), full scraping (Ctrl+Alt+keys); One-click image download (auto-fix filenames/extensions/concurrent); Immersive reading; Custom download path.
 // @license      GPL-3.0
 // @author       transwarp
 // @match        *://*/*thread-*-*-*.html
 // @match        *://*/*forum.php?*mod=viewthread*
+// @match        *://*/*forum.php?*mod=forumdisplay*
 // @match        *://*/*home.php?*mod=space*&do=thread*
 // @icon         https://www.discuz.net/favicon.ico
+// @connect      *
 // @grant        GM_addStyle
 // @grant        GM_download
 // @grant        GM_xmlhttpRequest
@@ -41,18 +43,18 @@
             widthMode: '860px', minLength: 0,
             
             // 单独下载配置
-            tplTextFolder: '',
+            tplTextFolder: '{{author}}',
             tplTextFileName: '{{title}}',
-            tplImgFolder: '{{title}}',
+            tplImgFolder: '{{author}}/{{title}}',
             tplImgFileName: '{{index}}_{{floor}}_{{date}}',
-            retainOriginalFiles: true, // 单独下载保留原名
+            retainOriginalFiles: true, 
             
             // 批量下载独立配置
-            batchTextFolder: '{{author}}/{{title}}',
+            batchTextFolder: '{{author}}',
             batchTextFileName: '{{title}}',
             batchImgFolder: '{{author}}/{{title}}',
             batchImgFileName: '{{index}}_{{floor}}_{{date}}',
-            batchRetainOriginal: true, // 批量下载保留原名
+            batchRetainOriginal: true,
 
             allowDuplicate: false,
             batchText: true,
@@ -61,7 +63,11 @@
 
             // 高级网络配置
             maxConcurrency: 5,   
-            downloadDelay: 100   
+            downloadDelay: 100,
+            scanDelay: 800,
+            
+            // 扫描逻辑 (新)
+            scanStartMode: '1' // '1' = 强制从第一页, 'current' = 从当前页
         },
         userConfig: {},
         downloadHistory: new Set()
@@ -81,9 +87,10 @@
         try { 
             var parsed = JSON.parse(saved); 
             App.userConfig = Object.assign(App.userConfig, parsed);
-            // 补全字段
-            if(App.userConfig.batchRetainOriginal === undefined) App.userConfig.batchRetainOriginal = true;
+            if(App.userConfig.scanDelay === undefined) App.userConfig.scanDelay = 800;
             if(App.userConfig.maxConcurrency === undefined) App.userConfig.maxConcurrency = 5;
+            if(App.userConfig.downloadDelay === undefined) App.userConfig.downloadDelay = 100;
+            if(App.userConfig.scanStartMode === undefined) App.userConfig.scanStartMode = '1';
         } catch(e){} 
     }
 
@@ -109,6 +116,18 @@
                 if (pair[0] == variable) { return pair[1]; }
             }
             return null;
+        },
+        getCurrentPageNumber: function(url) {
+            // 尝试解析 url 中的 page 参数，如果找不到则返回 1
+            var u = url || window.location.href;
+            var match = u.match(/[?&]page=(\d+)/);
+            if (match) return parseInt(match[1]);
+            // 尝试伪静态 forum-fid-page.html
+            match = u.match(/-(\d+)\.html/); 
+            // 注意：伪静态可能是 forum-fid-page.html，或者是 thread-tid-page-1.html
+            // 这里做一个简单的尝试，不一定100%准确，默认回退到1
+            if (match) return parseInt(match[1]);
+            return 1;
         },
         buildUrl: function(tid, page, authorid) {
             var baseUrl = window.location.origin + '/forum.php?mod=viewthread&tid=' + tid + '&page=' + page;
@@ -136,19 +155,6 @@
         sanitizeFilename: function(name) {
             return name.replace(/[\\:*?"<>|]/g, '_').replace(/[\r\n\t]/g, '').replace(/\s+/g, ' ').trim().substring(0, 200);
         },
-        detectExtension: function(url, defaultExt) {
-            if (!url) return defaultExt || '.jpg';
-            var cleanUrl = url.split('?')[0].toLowerCase();
-            if (cleanUrl.endsWith('.png')) return '.png';
-            if (cleanUrl.endsWith('.gif')) return '.gif';
-            if (cleanUrl.endsWith('.webp')) return '.webp';
-            if (cleanUrl.endsWith('.jpeg')) return '.jpg';
-            if (cleanUrl.endsWith('.bmp')) return '.bmp';
-            if (cleanUrl.endsWith('.mp4')) return '.mp4';
-            if (cleanUrl.endsWith('.mov')) return '.mov';
-            if (cleanUrl.endsWith('.avi')) return '.avi';
-            return defaultExt || '.jpg';
-        },
         extractDate: function(str) {
             var match = str.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
             if (match) {
@@ -174,14 +180,45 @@
             if (h1) return h1.innerText.trim();
             return doc.title.split(' - ')[0].trim();
         },
-        saveHistory: function() { localStorage.setItem(App.historyKey, JSON.stringify(Array.from(App.downloadHistory))); }
+        saveHistory: function() { localStorage.setItem(App.historyKey, JSON.stringify(Array.from(App.downloadHistory))); },
+        exportHistory: function() {
+            var content = JSON.stringify(Array.from(App.downloadHistory));
+            var blob = new Blob([content], {type: "application/json"});
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.href = url; a.download = 'discuz_history.json';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            UI.showToast("✅ 历史记录已导出");
+        },
+        importHistory: function() {
+            var input = document.createElement('input'); input.type = 'file'; input.accept = '.json';
+            input.onchange = function(e) {
+                var file = e.target.files[0]; if (!file) return;
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        var arr = JSON.parse(e.target.result);
+                        if (Array.isArray(arr)) {
+                            arr.forEach(function(id) { App.downloadHistory.add(id); });
+                            Utils.saveHistory(); UI.showToast("✅ 导入 " + arr.length + " 条");
+                        }
+                    } catch(err) { alert("文件错误"); }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        },
+        clearHistory: function() {
+            if (confirm("⚠️ 确定要清空历史记录吗？")) {
+                App.downloadHistory.clear(); Utils.saveHistory(); UI.showToast("🗑️ 记录已清空");
+            }
+        }
     };
 
     // 3. 样式定义
     var Styles = {
         init: function() {
             var css = [
-                '#gm-start-panel { position: fixed; z-index: 2147483647 !important; display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); padding: 12px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.05); width: 170px; box-sizing: border-box; transition: opacity 0.3s; }',
+                '#gm-start-panel { position: fixed; z-index: 2147483647 !important; display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); padding: 12px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.05); width: 180px; box-sizing: border-box; transition: opacity 0.3s; }',
                 '.gm-drag-handle { padding: 0 0 6px 0; cursor: move; text-align: center; font-size: 10px; color: #999; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 4px; user-select: none; }',
                 '.gm-btn-main { padding: 10px 0; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; width: 100%; box-sizing: border-box; }',
                 '.gm-btn-main:hover { transform: translateY(-2px); filter: brightness(1.1); }',
@@ -208,8 +245,12 @@
                 '.gm-check-group { display: flex; gap: 15px; margin-top: 5px; }',
                 '.gm-check-item { display: flex; align-items: center; font-size: 12px; cursor: pointer; }',
                 '.gm-check-item input { margin-right: 4px; }',
-                '.gm-action-btn { width: 100%; padding: 8px; background: #27ae60; color: white; border: none; border-radius: 4px; margin-top: 12px; cursor: pointer; font-weight: bold; }',
+                '.gm-action-btn { width: auto; padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }',
                 '.gm-action-btn:hover { background: #2ecc71; }',
+                '.gm-hist-btn { padding: 4px 8px; background: #95a5a6; color: white; border: none; border-radius: 4px; font-size: 11px; cursor: pointer; margin-right: 5px; }',
+                '.gm-hist-btn:hover { background: #7f8c8d; }',
+                '.gm-hist-btn.danger { background: #e74c3c; }',
+                '.gm-hist-btn.danger:hover { background: #c0392b; }',
                 '#gm-reader-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-color); color: var(--text-color); z-index: 2147483640; font-family: var(--font-family); overflow: hidden; outline: none; line-height: 1.5; }',
                 '#gm-reader-scroll-box { position: relative; z-index: 2147483641; width: 100%; height: 100%; box-sizing: border-box; display: block; overflow-y: auto; padding: 40px 0 120px 0; scroll-behavior: smooth; }',
                 '.gm-content-wrapper { width: var(--content-width); max-width: 95vw; margin: 0 auto; padding: 60px 80px; box-sizing: border-box; background-color: var(--paper-color); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-radius: 8px; min-height: calc(100vh - 100px); }',
@@ -243,50 +284,232 @@
         queue: [],
         totalThreads: 0,
         processedCount: 0,
+        filters: {},
         isScanning: false,
+
+        showFilterDialog: function() {
+            var popup = document.getElementById('gm-filter-popup');
+            if (popup) { popup.style.display = 'block'; return; }
+
+            popup = document.createElement('div');
+            popup.id = 'gm-filter-popup';
+            popup.style.top = '100px'; popup.style.left = '50%'; popup.style.transform = 'translateX(-50%)';
+
+            var html = `
+                <div class="gm-popup-title">
+                    <span>🔍 批量下载设置</span>
+                    <span style="cursor:pointer" onclick="document.getElementById('gm-filter-popup').style.display='none'">❌</span>
+                </div>
+
+                <div class="gm-popup-subtitle">扫描范围</div>
+                <div class="gm-input-group">
+                    <div class="gm-checkbox-row" style="margin-top:0;">
+                        <input type="radio" name="gm-scan-mode" id="gm-scan-mode-1" value="1" ${App.userConfig.scanStartMode !== 'current'?'checked':''}>
+                        <label for="gm-scan-mode-1" style="margin-right:15px;">从第 1 页开始 (全量)</label>
+                        
+                        <input type="radio" name="gm-scan-mode" id="gm-scan-mode-curr" value="current" ${App.userConfig.scanStartMode === 'current'?'checked':''}>
+                        <label for="gm-scan-mode-curr">从当前页开始 (续传)</label>
+                    </div>
+                </div>
+
+                <div class="gm-popup-subtitle">扫描/下载设置</div>
+                <div class="gm-input-group">
+                    <span class="gm-input-label">扫描翻页间隔 (ms)</span>
+                    <input class="gm-popup-input" type="number" id="inp-scan-delay" value="${App.userConfig.scanDelay}" min="0" step="100">
+                </div>
+                
+                <div class="gm-input-group" style="display:flex; gap:10px; margin-top:5px;">
+                    <div style="flex:1"><span class="gm-input-label">并发数</span><input class="gm-popup-input" type="number" id="inp-max-threads" value="${App.userConfig.maxConcurrency}" min="1"></div>
+                    <div style="flex:1"><span class="gm-input-label">下载间隔(ms)</span><input class="gm-popup-input" type="number" id="inp-download-delay" value="${App.userConfig.downloadDelay}" min="0"></div>
+                </div>
+
+                <div class="gm-popup-subtitle">下载内容</div>
+                <div class="gm-check-group">
+                    <label class="gm-check-item"><input type="checkbox" id="gm-opt-text" ${App.userConfig.batchText?'checked':''}>文本</label>
+                    <label class="gm-check-item"><input type="checkbox" id="gm-opt-img" ${App.userConfig.batchImg?'checked':''}>图片</label>
+                    <label class="gm-check-item"><input type="checkbox" id="gm-opt-video" ${App.userConfig.batchVideo?'checked':''}>视频</label>
+                </div>
+
+                <div class="gm-popup-subtitle">选项</div>
+                <div class="gm-checkbox-row">
+                    <input type="checkbox" id="gm-opt-dup" ${App.userConfig.allowDuplicate?'checked':''}>
+                    <label for="gm-opt-dup">允许重复下载 (忽略历史)</label>
+                </div>
+                <div class="gm-checkbox-row">
+                    <input type="checkbox" id="gm-opt-batch-retain" ${App.userConfig.batchRetainOriginal?'checked':''}>
+                    <label for="gm-opt-batch-retain">保留原始文件名 (图片)</label>
+                </div>
+                
+                <div class="gm-input-group" style="margin-top:10px;">
+                    <span class="gm-input-label">批量图片/视频目录</span>
+                    <input class="gm-popup-input" id="inp-batch-img-folder" value="${App.userConfig.batchImgFolder||''}">
+                </div>
+                <div class="gm-input-group">
+                    <span class="gm-input-label">批量图片文件名</span>
+                    <input class="gm-popup-input" id="inp-batch-img-file" value="${App.userConfig.batchImgFileName||''}">
+                </div>
+                <div class="gm-input-group">
+                    <span class="gm-input-label">批量文本目录</span>
+                    <input class="gm-popup-input" id="inp-batch-txt-folder" value="${App.userConfig.batchTextFolder||''}">
+                </div>
+                <div class="gm-input-group">
+                    <span class="gm-input-label">批量文本文件名</span>
+                    <input class="gm-popup-input" id="inp-batch-txt-file" value="${App.userConfig.batchTextFileName||''}">
+                </div>
+                
+                <div class="gm-tags-container-small">
+                    <div class="gm-tag-small" onclick="UI.insertTag('{{author}}')">昵称</div>
+                    <div class="gm-tag-small" onclick="UI.insertTag('{{author_id}}')">UID</div>
+                    <div class="gm-tag-small" onclick="UI.insertTag('{{title}}')">标题</div>
+                    <div class="gm-tag-small" onclick="UI.insertTag('{{date}}')">日期</div>
+                    <div class="gm-tag-small" onclick="UI.insertTag('{{index}}')">序号</div>
+                </div>
+
+                <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #eee; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <button class="gm-hist-btn" id="gm-btn-import" title="导入 .json 历史记录">📥 导入</button>
+                        <button class="gm-hist-btn" id="gm-btn-export" title="导出历史记录为 .json">📤 导出</button>
+                        <button class="gm-hist-btn danger" id="gm-btn-clear" title="清空所有记录">🗑️ 清空</button>
+                    </div>
+                    <button class="gm-action-btn" id="gm-btn-start-batch">🚀 开始下载</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            // 绑定事件
+            var inputs = ['gm-opt-text', 'gm-opt-img', 'gm-opt-video', 'gm-opt-dup', 'gm-opt-batch-retain', 
+                          'inp-batch-img-folder', 'inp-batch-img-file', 'inp-batch-txt-folder', 'inp-batch-txt-file',
+                          'inp-max-threads', 'inp-download-delay', 'inp-scan-delay'];
+            
+            inputs.forEach(function(id) {
+                var el = document.getElementById(id);
+                if(!el) return;
+                
+                if(el.type === 'checkbox') {
+                    el.onchange = function() {
+                        if(id === 'gm-opt-text') App.userConfig.batchText = this.checked;
+                        if(id === 'gm-opt-img') App.userConfig.batchImg = this.checked;
+                        if(id === 'gm-opt-video') App.userConfig.batchVideo = this.checked;
+                        if(id === 'gm-opt-dup') App.userConfig.allowDuplicate = this.checked;
+                        if(id === 'gm-opt-batch-retain') App.userConfig.batchRetainOriginal = this.checked;
+                        localStorage.setItem(App.key, JSON.stringify(App.userConfig));
+                    };
+                } else {
+                    el.onfocus = function() { UI.lastFocusedInput = this; };
+                    el.oninput = function() {
+                        if(id === 'inp-batch-img-folder') App.userConfig.batchImgFolder = this.value;
+                        if(id === 'inp-batch-img-file') App.userConfig.batchImgFileName = this.value;
+                        if(id === 'inp-batch-txt-folder') App.userConfig.batchTextFolder = this.value;
+                        if(id === 'inp-batch-txt-file') App.userConfig.batchTextFileName = this.value;
+                        if(id === 'inp-max-threads') App.userConfig.maxConcurrency = parseInt(this.value) || 5;
+                        if(id === 'inp-download-delay') App.userConfig.downloadDelay = parseInt(this.value) || 100;
+                        if(id === 'inp-scan-delay') App.userConfig.scanDelay = parseInt(this.value) || 800;
+                        localStorage.setItem(App.key, JSON.stringify(App.userConfig));
+                    };
+                }
+            });
+            
+            // Radio buttons for scan mode
+            document.getElementById('gm-scan-mode-1').onchange = function() { if(this.checked) { App.userConfig.scanStartMode = '1'; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); } };
+            document.getElementById('gm-scan-mode-curr').onchange = function() { if(this.checked) { App.userConfig.scanStartMode = 'current'; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); } };
+
+            // 绑定历史记录按钮
+            document.getElementById('gm-btn-start-batch').onclick = function() {
+                // 再次检查配置是否完整
+                if (!App.userConfig.batchText && !App.userConfig.batchImg && !App.userConfig.batchVideo) {
+                    alert("请至少勾选一种下载内容！"); return;
+                }
+                popup.style.display = 'none';
+                SpaceCrawler.startScan();
+            };
+            document.getElementById('gm-btn-import').onclick = Utils.importHistory;
+            document.getElementById('gm-btn-export').onclick = Utils.exportHistory;
+            document.getElementById('gm-btn-clear').onclick = Utils.clearHistory;
+        },
 
         startScan: function() {
             if (this.isScanning) return;
             var url = window.location.href;
-            if (url.match(/[?&]page=\d+/)) url = url.replace(/(page=)\d+/, '$11');
-            else url += (url.indexOf('?') !== -1 ? '&' : '?') + 'page=1';
+            var startPage = 1;
+
+            if (App.userConfig.scanStartMode === 'current') {
+                // 尝试保留当前页码
+                startPage = Utils.getCurrentPageNumber(url);
+            } else {
+                // 强制从第1页开始
+                // 简单粗暴替换 page 参数
+                if (url.match(/[?&]page=\d+/)) {
+                    url = url.replace(/(page=)\d+/, '$11');
+                } else if (url.match(/forum-\d+-\d+\.html/)) {
+                    // 简单适配伪静态，将 forum-fid-page.html 替换为 page=1
+                    url = url.replace(/-(\d+)\.html/, '-1.html');
+                } else {
+                    url += (url.indexOf('?') !== -1 ? '&' : '?') + 'page=1';
+                }
+            }
 
             this.isScanning = true;
-            UI.updateStatus('准备第1页...', '#f39c12');
+            UI.updateStatus('准备开始...', '#f39c12');
             UI.showProgress();
             this.queue = [];
-            this.scanPage(url, 1);
+            this.scanPage(url, startPage);
         },
 
         scanPage: function(url, pageNum) {
             UI.updateStatus('扫描第 ' + pageNum + ' 页', '#f39c12');
+            
+            var scanDelay = parseInt(App.userConfig.scanDelay);
+            if (isNaN(scanDelay)) scanDelay = 800;
+            
+            var isForumDisplay = url.indexOf('mod=forumdisplay') !== -1;
+
             Utils.fetchDoc(url, function(doc) {
-                var rows = doc.querySelectorAll('table tr');
-                rows.forEach(function(tr) {
-                    var titleTh = tr.querySelector('th');
-                    if (!titleTh) return;
-                    var titleLink = titleTh.querySelector('a[href*="tid"]');
-                    if (!titleLink) return;
+                if (isForumDisplay) {
+                     var tbodies = doc.querySelectorAll('tbody[id^="normalthread_"]');
+                     tbodies.forEach(function(tbody) {
+                         var tr = tbody.querySelector('tr');
+                         var titleLink = tr.querySelector('a.xst') || tr.querySelector('th > a[href*="tid"]');
+                         if(!titleLink) return;
+                         var tidMatch = titleLink.href.match(/tid=(\d+)/);
+                         if (!tidMatch) return;
+                         var tid = tidMatch[1];
+                         var title = titleLink.innerText.trim();
+                         var authLink = tbody.querySelector('.by cite a');
+                         var authorName = authLink ? authLink.innerText.trim() : "匿名";
+                         var uid = '0';
+                         if(authLink && authLink.href.match(/uid=(\d+)/)) uid = authLink.href.match(/uid=(\d+)/)[1];
 
-                    var tidMatch = titleLink.href.match(/tid=(\d+)/);
-                    if (!tidMatch) return;
-                    var tid = tidMatch[1];
-                    var title = titleLink.innerText.trim();
-                    var forumLink = tr.querySelector('a[href*="fid"]');
-                    var forumName = forumLink ? forumLink.innerText.trim() : "";
-                    
-                    var byTd = tr.querySelector('td.by');
-                    var timeStr = "";
-                    if (byTd) {
-                        var em = byTd.querySelector('em'); 
-                        if (em) timeStr = em.innerText.trim();
-                        if (em && em.querySelector('a')) timeStr = em.querySelector('a').innerText.trim();
-                    }
-
-                    if (!App.userConfig.allowDuplicate && App.downloadHistory.has(tid)) return;
-
-                    SpaceCrawler.queue.push({ tid: tid, title: title, forum: forumName, date: timeStr });
-                });
+                         var dateEm = tbody.querySelector('.by em span') || tbody.querySelector('.by em');
+                         var date = dateEm ? dateEm.innerText.trim() : "";
+                         
+                         if (!App.userConfig.allowDuplicate && App.downloadHistory.has(tid)) return;
+                         SpaceCrawler.queue.push({ tid: tid, title: title, forum: "", date: date, author: authorName, uid: uid });
+                     });
+                } else {
+                    var rows = doc.querySelectorAll('table tr');
+                    rows.forEach(function(tr) {
+                        var titleTh = tr.querySelector('th');
+                        if (!titleTh) return;
+                        var titleLink = titleTh.querySelector('a[href*="tid"]');
+                        if (!titleLink) return;
+                        var tidMatch = titleLink.href.match(/tid=(\d+)/);
+                        if (!tidMatch) return;
+                        var tid = tidMatch[1];
+                        var title = titleLink.innerText.trim();
+                        
+                        var uid = Utils.getQuery(url, 'uid') || '0';
+                        
+                        var byTd = tr.querySelector('td.by');
+                        var timeStr = "";
+                        if (byTd) {
+                            var em = byTd.querySelector('em'); 
+                            if (em) timeStr = em.innerText.trim();
+                            if (em && em.querySelector('a')) timeStr = em.querySelector('a').innerText.trim();
+                        }
+                        if (!App.userConfig.allowDuplicate && App.downloadHistory.has(tid)) return;
+                        SpaceCrawler.queue.push({ tid: tid, title: title, forum: "", date: timeStr, author: "", uid: uid });
+                    });
+                }
 
                 var nextBtn = doc.querySelector('.pg .nxt') || doc.querySelector('#pgt .nxt');
                 if (nextBtn) {
@@ -295,7 +518,7 @@
                         if (nextUrl.indexOf('/') === 0) nextUrl = window.location.origin + nextUrl;
                         else nextUrl = window.location.origin + '/' + nextUrl; 
                     }
-                    setTimeout(function() { SpaceCrawler.scanPage(nextUrl, pageNum + 1); }, 800);
+                    setTimeout(function() { SpaceCrawler.scanPage(nextUrl, pageNum + 1); }, scanDelay);
                 } else {
                     SpaceCrawler.isScanning = false;
                     SpaceCrawler.totalThreads = SpaceCrawler.queue.length;
@@ -338,15 +561,24 @@
 
             Utils.fetchDoc(url, function(doc) {
                 var fullTitle = Utils.getThreadTitle(doc);
-                var authorName = "匿名";
-                var authLink = doc.querySelector('.authi .xw1') || doc.querySelector('.authi a[href*="uid"]');
-                if(authLink) authorName = authLink.innerText.trim();
+                var authorName = taskInfo.author || "匿名"; 
+                var authorId = taskInfo.uid || '0';
+                
+                // Try to get more accurate author info from thread
+                if(authorName === "匿名" || authorId === '0') {
+                    var authLink = doc.querySelector('.authi .xw1') || doc.querySelector('.authi a[href*="uid"]');
+                    if(authLink) {
+                        authorName = authLink.innerText.trim();
+                        if(authLink.href.match(/uid=(\d+)/)) authorId = authLink.href.match(/uid=(\d+)/)[1];
+                    }
+                }
 
                 var threadContext = {
                     forum_name: taskInfo.forum || 'Discuz',
                     title: fullTitle || taskInfo.title, 
                     html_title: doc.title,
                     author: authorName, 
+                    author_id: authorId,
                     post_url: url, url: url, tid: tid,
                     date: Utils.extractDate(taskInfo.date || '') || Scraper.getTemplateData().date 
                 };
@@ -357,7 +589,7 @@
                 if (App.userConfig.batchText) {
                     var posts = Scraper.parsePosts(doc);
                     if (posts.length > 0) {
-                        var content = "=== " + threadContext.title + " ===\nUID: " + threadContext.author + "\nLink: " + url + "\n\n";
+                        var content = "=== " + threadContext.title + " ===\nUID: " + threadContext.author_id + "\nLink: " + url + "\n\n";
                         content += posts.map(function(p) { return "### " + p.floor + "楼\n\n" + p.text; }).join('\n\n' + '-'.repeat(30) + '\n\n');
                         var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
                         allMedia.push({ url: URL.createObjectURL(blob), floor: '1', date: posts[0].date, type: 'text', ext: '.txt' });
@@ -404,7 +636,7 @@
             var finished = 0; var total = uniqueItems.length;
 
             var imgFolderTpl = App.userConfig.batchImgFolder || '{{author}}/{{title}}';
-            var txtFolderTpl = App.userConfig.batchTextFolder || '{{author}}/{{title}}';
+            var txtFolderTpl = App.userConfig.batchTextFolder || '{{author}}';
 
             var queue = uniqueItems.slice();
 
@@ -429,7 +661,6 @@
                     ext = '.txt';
                 } else if (item.type === 'img') {
                     folderName = Utils.renderTemplate(imgFolderTpl, threadContext);
-                    // 批量下载独立保留原名设置
                     if (App.userConfig.batchRetainOriginal && item.fileName && item.fileName.length > 2) {
                         baseName = Utils.sanitizeFilename(item.fileName);
                         if(baseName.toLowerCase().endsWith('.jpg')) baseName=baseName.slice(0,-4);
@@ -522,6 +753,16 @@
                     if (img.className && img.className.indexOf('vm') !== -1) return;
                     
                     var originalName = img.getAttribute('title') || img.getAttribute('alt') || '';
+                    if ((!originalName || originalName.length < 3) && img.id && img.id.indexOf('aimg_') === 0) {
+                        var menuId = img.id + '_menu';
+                        // 注意：如果是批量下载，doc 是 XHR 返回的文档；如果是当前页，doc 是 document
+                        var tipDiv = doc.getElementById(menuId);
+                        if (tipDiv) {
+                            var fnEl = tipDiv.querySelector('p > strong');
+                            if (fnEl) originalName = fnEl.innerText.trim();
+                        }
+                    }
+                    
                     images.push({ url: src, floor: floor, date: date, fileName: originalName });
                 });
             });
@@ -585,21 +826,38 @@
                  if(a) { var m = a.href.match(/uid=(\d+)/); if(m) authorid = m[1]; }
              }
              App.meta.authorid = authorid || '0';
+             // 获取单帖作者名
+             var an = document.querySelector('.authi .xw1');
+             App.meta.authorName = an ? an.innerText.trim() : "匿名";
+             
              App.isRunning = true; App.textData = []; App.imgData = [];
              Scraper.loopPage(1);
         },
         loopPage: function(page) {
             UI.updateStatus('P ' + page, '#e67e22');
             var url = Utils.buildUrl(App.meta.tid, page, App.meta.authorid);
-            Utils.fetchDoc(url, function(doc) {
+            
+            var currentPage = Utils.getCurrentPageNumber();
+            // 优化：如果是当前页，直接使用 document 解析，无需重新请求
+            if (page === currentPage) {
                  if (App.currentMode === 'images') {
-                     var imgs = Scraper.parseImages(doc); if (imgs.length > 0) App.imgData = App.imgData.concat(imgs);
+                     var imgs = Scraper.parseImages(document); if (imgs.length > 0) App.imgData = App.imgData.concat(imgs);
                  } else {
-                     var posts = Scraper.parsePosts(doc); if (posts.length > 0) App.textData = App.textData.concat(posts);
+                     var posts = Scraper.parsePosts(document); if (posts.length > 0) App.textData = App.textData.concat(posts);
                  }
-                 var nextBtn = doc.querySelector('.pg .nxt') || doc.querySelector('#pgt .nxt');
+                 var nextBtn = document.querySelector('.pg .nxt') || document.querySelector('#pgt .nxt');
                  if (nextBtn) { setTimeout(function() { Scraper.loopPage(page + 1); }, 600); } else { Scraper.finish(); }
-            }, function(){ App.isRunning = false; });
+            } else {
+                Utils.fetchDoc(url, function(doc) {
+                     if (App.currentMode === 'images') {
+                         var imgs = Scraper.parseImages(doc); if (imgs.length > 0) App.imgData = App.imgData.concat(imgs);
+                     } else {
+                         var posts = Scraper.parsePosts(doc); if (posts.length > 0) App.textData = App.textData.concat(posts);
+                     }
+                     var nextBtn = doc.querySelector('.pg .nxt') || doc.querySelector('#pgt .nxt');
+                     if (nextBtn) { setTimeout(function() { Scraper.loopPage(page + 1); }, 600); } else { Scraper.finish(); }
+                }, function(){ App.isRunning = false; });
+            }
         },
         finish: function() {
             App.isRunning = false;
@@ -616,7 +874,12 @@
         downloadImagesViaBlob: function(mediaList) {
              var uniqueItems = []; var seenUrls = new Set();
              mediaList.forEach(function(item) { if (!seenUrls.has(item.url)) { seenUrls.add(item.url); uniqueItems.push(item); } });
-             var active = 0; var max = 5; var finished = 0; var total = uniqueItems.length;
+             var active = 0; 
+             // 修复：单贴模式下也要读取配置
+             var max = parseInt(App.userConfig.maxConcurrency) || 5; 
+             var delay = parseInt(App.userConfig.downloadDelay) || 100;
+             
+             var finished = 0; var total = uniqueItems.length;
              var globalData = Scraper.getTemplateData();
              var folderName = Utils.renderTemplate(App.userConfig.tplImgFolder || '{{title}}', globalData);
              var queue = uniqueItems.slice();
@@ -652,16 +915,23 @@
                              var blobUrl = URL.createObjectURL(blob);
                              GM_download({
                                  url: blobUrl, name: filename, saveAs: false,
-                                 onload: function() { URL.revokeObjectURL(blobUrl); active--; finished++; UI.updateProgress(finished, total); UI.updateStatus(finished+'/'+total, '#e67e22'); if (finished === total) finish(); else process(); },
-                                 onerror: function() { active--; finished++; UI.updateProgress(finished, total); if (finished === total) finish(); else process(); }
+                                 onload: function() { URL.revokeObjectURL(blobUrl); active--; finished++; UI.updateProgress(finished, total); UI.updateStatus(finished+'/'+total, '#e67e22'); check(); 
+                                 // Add single download to history
+                                 App.downloadHistory.add(App.meta.tid); Utils.saveHistory();
+                                 },
+                                 onerror: function() { active--; finished++; UI.updateProgress(finished, total); check(); }
                              });
-                         } else { active--; finished++; UI.updateProgress(finished, total); if (finished === total) finish(); else process(); }
+                         } else { active--; finished++; UI.updateProgress(finished, total); check(); }
                      },
-                     onerror: function() { active--; finished++; UI.updateProgress(finished, total); if (finished === total) finish(); else process(); }
+                     onerror: function() { active--; finished++; UI.updateProgress(finished, total); check(); }
                  });
-             };
-             var finish = function() { UI.hideProgress(); UI.updateStatus('完成', '#27ae60'); setTimeout(function() { UI.resetButtons(); }, 2000); };
-             process();
+                 
+                 function check() { 
+                     if (finished === total) finish(); else setTimeout(process, delay); 
+                 }
+            };
+            var finish = function() { UI.hideProgress(); UI.updateStatus('完成', '#27ae60'); setTimeout(function() { UI.resetButtons(); }, 2000); };
+            process();
         },
 
         doDownloadText: function() {
@@ -677,7 +947,11 @@
             UI.showProgress(); UI.updateProgress(100, 100);
             GM_download({
                 url: url, name: fullPath, saveAs: false,
-                onload: function() { URL.revokeObjectURL(url); UI.hideProgress(); UI.updateStatus('完成', '#27ae60'); setTimeout(function() { UI.resetButtons(); }, 2000); }
+                onload: function() { 
+                    URL.revokeObjectURL(url); UI.hideProgress(); UI.updateStatus('完成', '#27ae60'); setTimeout(function() { UI.resetButtons(); }, 2000); 
+                    // Add single download to history
+                    App.downloadHistory.add(App.meta.tid); Utils.saveHistory();
+                }
             });
         },
         getTemplateData: function() {
@@ -688,6 +962,7 @@
                 title: App.meta.title || '无标题',
                 html_title: document.title,
                 author: App.meta.authorName || App.meta.authorid || '匿名',
+                author_id: App.meta.authorid || '0',
                 post_url: window.location.href, url: window.location.href, tid: App.meta.tid, date: dateStr
             };
         }
@@ -709,8 +984,9 @@
             p.innerHTML = '<div class="gm-drag-handle">::: 助手 :::</div>';
             
             var isSpacePage = window.location.href.indexOf('home.php') !== -1 && window.location.href.indexOf('do=thread') !== -1;
+            var isForumDisplay = window.location.href.indexOf('mod=forumdisplay') !== -1;
 
-            if (isSpacePage) {
+            if (isSpacePage || isForumDisplay) {
                 // 批量模式：分体式按钮
                 var g = document.createElement('div'); g.className = 'gm-split-group';
                 
@@ -763,6 +1039,16 @@
             popup.innerHTML = `
                 <div class="gm-popup-title">📂 单帖配置 <span style="cursor:pointer;float:right" onclick="this.parentNode.parentNode.style.display='none'">❌</span></div>
                 
+                <div class="gm-popup-subtitle">高级设置 (全局)</div>
+                <div class="gm-input-group" style="display:flex; gap:10px;">
+                    <div style="flex:1"><span class="gm-input-label">并发数</span><input class="gm-popup-input" type="number" id="inp-tpl-max-threads" value="${App.userConfig.maxConcurrency}" min="1"></div>
+                    <div style="flex:1"><span class="gm-input-label">间隔(ms)</span><input class="gm-popup-input" type="number" id="inp-tpl-download-delay" value="${App.userConfig.downloadDelay}" min="0"></div>
+                </div>
+                <div class="gm-checkbox-row" style="margin-bottom:10px;border-bottom:1px dashed #eee;padding-bottom:10px;">
+                    <input type="checkbox" id="gm-opt-single-dup" ${App.userConfig.allowDuplicate?'checked':''}>
+                    <label for="gm-opt-single-dup">允许重复下载 (忽略历史)</label>
+                </div>
+
                 <div class="gm-checkbox-row" style="margin-bottom:10px;border-bottom:1px dashed #eee;padding-bottom:10px;">
                     <input type="checkbox" id="gm-opt-retain-name" ${App.userConfig.retainOriginalFiles ? 'checked' : ''}>
                     <label for="gm-opt-retain-name" title="尝试从图片标题提取原始文件名">保留原始文件名 (优先使用 alt/title)</label>
@@ -773,9 +1059,20 @@
                 <div class="gm-input-group"><span class="gm-input-label">文本目录</span><input class="gm-popup-input" id="inp-tpl-txt-folder" value="${App.userConfig.tplTextFolder||''}"></div>
                 <div class="gm-input-group"><span class="gm-input-label">文本文件名</span><input class="gm-popup-input" id="inp-tpl-txt-file" value="${App.userConfig.tplTextFileName}"></div>
                 <div class="gm-tags-container-small">
+                    <div class="gm-tag-small" onclick="UI.insertTag('{{author}}')">昵称</div>
+                    <div class="gm-tag-small" onclick="UI.insertTag('{{author_id}}')">UID</div>
                     <div class="gm-tag-small" onclick="UI.insertTag('{{title}}')">标题</div>
                     <div class="gm-tag-small" onclick="UI.insertTag('{{index}}')">序号</div>
                     <div class="gm-tag-small" onclick="UI.insertTag('{{date}}')">日期</div>
+                </div>
+
+                <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #eee; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:12px;color:#666;">历史记录</span>
+                    <div>
+                        <button class="gm-hist-btn" id="gm-btn-import-single" title="导入 .json 历史记录">📥</button>
+                        <button class="gm-hist-btn" id="gm-btn-export-single" title="导出历史记录">📤</button>
+                        <button class="gm-hist-btn danger" id="gm-btn-clear-single" title="清空历史">🗑️</button>
+                    </div>
                 </div>
             `;
             document.body.appendChild(popup);
@@ -784,8 +1081,23 @@
             bind('inp-tpl-img-folder', 'tplImgFolder'); bind('inp-tpl-img-file', 'tplImgFileName');
             bind('inp-tpl-txt-folder', 'tplTextFolder'); bind('inp-tpl-txt-file', 'tplTextFileName');
             
+            // New inputs bindings for single panel
+            var elThreads = document.getElementById('inp-tpl-max-threads');
+            if(elThreads) elThreads.oninput = function() { App.userConfig.maxConcurrency = parseInt(this.value) || 5; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); };
+            
+            var elDelay = document.getElementById('inp-tpl-download-delay');
+            if(elDelay) elDelay.oninput = function() { App.userConfig.downloadDelay = parseInt(this.value) || 100; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); };
+            
+            var elDup = document.getElementById('gm-opt-single-dup');
+            if(elDup) elDup.onchange = function() { App.userConfig.allowDuplicate = this.checked; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); };
+
             var ck = document.getElementById('gm-opt-retain-name');
             if(ck) ck.onchange = function() { App.userConfig.retainOriginalFiles = this.checked; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); };
+
+            // Bind history buttons for single mode
+            document.getElementById('gm-btn-import-single').onclick = Utils.importHistory;
+            document.getElementById('gm-btn-export-single').onclick = Utils.exportHistory;
+            document.getElementById('gm-btn-clear-single').onclick = Utils.clearHistory;
         },
 
         renderBatchConfigPopup: function() {
@@ -847,7 +1159,7 @@
             // 绑定事件
             var inputs = ['gm-opt-text', 'gm-opt-img', 'gm-opt-video', 'gm-opt-dup', 'gm-opt-batch-retain', 
                           'inp-batch-img-folder', 'inp-batch-img-file', 'inp-batch-txt-folder', 'inp-batch-txt-file',
-                          'inp-max-threads', 'inp-download-delay'];
+                          'inp-max-threads', 'inp-download-delay', 'inp-scan-delay'];
             
             inputs.forEach(function(id) {
                 var el = document.getElementById(id);
@@ -871,6 +1183,7 @@
                         if(id === 'inp-batch-txt-file') App.userConfig.batchTextFileName = this.value;
                         if(id === 'inp-max-threads') App.userConfig.maxConcurrency = parseInt(this.value) || 5;
                         if(id === 'inp-download-delay') App.userConfig.downloadDelay = parseInt(this.value) || 100;
+                        if(id === 'inp-scan-delay') App.userConfig.scanDelay = parseInt(this.value) || 800;
                         localStorage.setItem(App.key, JSON.stringify(App.userConfig));
                     };
                 }
@@ -957,7 +1270,7 @@
             if (e.altKey && (e.key === 'i' || e.key === 'I')) { e.preventDefault(); Scraper.init('images', !e.ctrlKey); }
         },
         spacePageHandler: function(e) {
-            if (window.location.href.indexOf('do=thread') === -1) return;
+            if (window.location.href.indexOf('do=thread') === -1 && window.location.href.indexOf('mod=forumdisplay') === -1) return;
             if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
             if (e.key === 'ArrowLeft') {
                 var prev = document.querySelector('.pg .pgb a') || document.querySelector('.pg a.prev');

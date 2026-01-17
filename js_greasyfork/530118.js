@@ -3,7 +3,7 @@
 // @description  Set playback speed for Read Aloud on ChatGPT.com, navigate between messages, and open a settings menu by clicking the speed display to toggle additional UI tweaks. Features include color-coded icons under ChatGPT's responses, highlighted color for bold text, compact sidebar, square design, and more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      5.15.2
+// @version      5.15.4
 // @namespace    TimMacy.ReadAloudSpeedster
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=chatgpt.com
 // @match        https://*.chatgpt.com/*
@@ -18,9 +18,9 @@
 
 /************************************************************************
 *                                                                       *
-*                    Copyright © 2025 Tim Macy                          *
+*                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 5.15.2 - Read Aloud Speedster             *
+*                    Version: 5.15.4 - Read Aloud Speedster             *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -407,7 +407,7 @@
         main div.flex.basis-auto.flex-col .pb-25,
         main > #thread div.flex.flex-col.text-sm.thread-xl\\:pt-header-height,
         main > #thread div.\\@thread-xl\\/thread\\:pt-header-height.flex.flex-col.text-sm {
-            padding-bottom: 60dvh !important;
+            padding-bottom: 25dvh !important;
         }
 
         #thread article[data-turn-id*="request-WEB"] {
@@ -925,7 +925,7 @@
 
         /* scroll position fix */
         article:has([data-message-author-role]) {
-            scroll-margin-top: 52px !important;
+            scroll-margin-top: 0 !important;
         }
 
         #sidebar-header button:has(svg path[d^="M7.94556"]) {
@@ -1639,6 +1639,10 @@
                 nav div.hoverable:has(use[href*="#f6d0e2"]) {
                     transform: translate(100%, 32px);
                 }
+
+                #stage-slideover-sidebar nav div.overflow-hidden > h2 {
+                    display: none;
+                }
             `
         },
         justifyText: {
@@ -1948,8 +1952,8 @@
         copyrightLink.href = 'https://github.com/TimMacy';
         copyrightLink.target = '_blank';
         copyrightLink.rel = 'noopener';
-        copyrightLink.textContent = 'Copyright © 2025 Tim Macy';
-        copyrightLink.title = 'Copyright © 2025 Tim Macy';
+        copyrightLink.textContent = 'Copyright © 2025–2026 Tim Macy';
+        copyrightLink.title = 'Copyright © 2025–2026 Tim Macy';
 
         footer.appendChild(copyrightLink);
         footer.appendChild(saveButton);
@@ -2159,7 +2163,7 @@
 
         // observer for new messages
         let stopButtonPresent;
-        const targetSelector = '#thread-bottom-container form div.flex.items-center.gap-2 > div';
+        const targetSelector = '#thread-bottom-container form div.flex.items-center.gap-2 > div.ms-auto';
         const stopBtnSelectors = 'button[data-testid="stop-button"],#composer-submit-button[aria-label="Stop streaming"]';
         document.querySelector(stopBtnSelectors) ? stopButtonPresent = true : stopButtonPresent = false;
 
@@ -2171,7 +2175,7 @@
                 stopButtonPresent = false;
                 requestAnimationFrame(() => {
                     checkForNewBelow();
-                    update();
+                    requestAnimationFrame(() => update());
                 });
             }
         });
@@ -2183,7 +2187,7 @@
             if (chatObserver || !targetChat) return;
             if (queryMessages().length) {
                 populateCache();
-                requestAnimationFrame(() => update());
+                requestAnimationFrame(() => { requestAnimationFrame(() => update()); });
                 return;
             }
 
@@ -2191,7 +2195,7 @@
                 if (queryMessages().length) {
                     populateCache();
                     stopObserver();
-                    requestAnimationFrame(() => update());
+                    requestAnimationFrame(() => { requestAnimationFrame(() => update()); });
                 }
             });
             chatObserver.observe(targetChat, { childList: true });

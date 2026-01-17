@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          TreeDibsMapper
 // @namespace     http://tampermonkey.net/
-// @version       3.12.1
+// @version       3.12.3
 // @description   Dibs, Faction-wide notes, and war management systems for Torn (PC AND TornPDA Support)
 // @author        TreeMapper [3573576]
 // @match         https://www.torn.com/loader.php?sid=attack&user2ID=*
@@ -154,7 +154,7 @@
 
     // Central configuration
     const config = {
-        VERSION: '3.12.1',
+        VERSION: '3.12.3',
         API_GET_URL: 'https://apiget-codod64xdq-uc.a.run.app',
         API_POST_URL: 'https://apipost-codod64xdq-uc.a.run.app',
         API_HTTP_GET_URL: 'https://us-central1-tornuserstracker.cloudfunctions.net/apiHttpGet',
@@ -530,6 +530,66 @@
                 lastReset = Date.now();
             }
         };
+    })();
+    // Lightweight IndexedDB reader for FF Scouter v2.71+ cache; old versions stay on localStorage.
+    const ffscouterIdb = (() => {
+        const DB_NAME = 'ffscouter-cache';
+        const STORE = 'cache';
+        let warmed = false;
+        let pending = null;
+
+        const openDb = () => new Promise((resolve, reject) => {
+            const req = indexedDB.open(DB_NAME, 1);
+            req.onupgradeneeded = (ev) => {
+                const db = ev.target.result;
+                if (!db.objectStoreNames.contains(STORE)) {
+                    const store = db.createObjectStore(STORE, { keyPath: 'player_id' });
+                    store.createIndex('expiry', ['expiry'], { unique: false });
+                }
+            };
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => reject(req.error);
+        });
+
+        const getAll = async () => {
+            const db = await openDb();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(STORE, 'readonly');
+                const req = tx.objectStore(STORE).getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => reject(req.error);
+            });
+        };
+
+        const warmCache = () => {
+            if (warmed || pending) return pending || Promise.resolve();
+            if (typeof indexedDB === 'undefined') return Promise.resolve();
+            warmed = true;
+            pending = getAll()
+                .then((rows) => {
+                    if (!rows || !rows.length) return;
+                    const now = Date.now();
+                    state.ffscouterCache = state.ffscouterCache || {};
+                    let merged = 0;
+                    for (const row of rows) {
+                        const sid = String(row?.player_id || '').trim();
+                        if (!sid) continue;
+                        if (row.expiry && row.expiry < now) continue;
+                        state.ffscouterCache[sid] = row;
+                        merged++;
+                    }
+                    if (merged) {
+                        try { storage.set('ffscouterCache', state.ffscouterCache); } catch (_) {}
+                        try { adapterMemoController.clear(); } catch (_) {}
+                    }
+                })
+                .catch((err) => {
+                    try { tdmlogger('debug', `[FFScouter] IndexedDB warm failed: ${err?.message || err}`); } catch (_) {}
+                });
+            return pending;
+        };
+
+        return { warmCache };
     })();
     const normalizeTimestampMs = (value) => {
         try {
@@ -2433,6 +2493,10 @@
             const suppress = state.needsSuppression && state.needsSuppression[opponentId];
             const activeDibs = Array.isArray(state.dibsData) ? state.dibsData.find(d => d && String(d.opponentId) === String(opponentId) && d.dibsActive) : null;
             const canAdmin = state.script?.canAdministerMedDeals && storage.get('adminFunctionality', true) === true;
+            const fs = (state.script && state.script.factionSettings) || {};
+            const currentAttackMode = (fs.options && fs.options.attackMode) || fs.attackMode || null;
+            const warType = state.warData?.warType || null;
+            const attackModeLocksDibs = warType === 'Ranked War' && ['FFA','Turtle'].includes(String(currentAttackMode || '').trim());
 
             // Suppression overrides everything (still clickable to show warning)
             if (suppress) {
@@ -2461,6 +2525,18 @@
                         : null;
                 if (removeHandler) btn.onclick = (e) => removeHandler(opponentId, e.currentTarget);
                 else btn.onclick = (e) => { ui.showMessageBox('Handler unavailable. Please reload the page.', 'warning', 3000); };
+                return;
+            }
+
+            if (attackModeLocksDibs) {
+                const modeLabel = currentAttackMode || 'Unknown';
+                const msg = `Dibs disabled in Ranked War (${modeLabel}).`;
+                const cls = 'btn dibs-btn btn-dibs-disabled';
+                if (btn.textContent !== 'Dibs Disabled') btn.textContent = 'Dibs Disabled';
+                if (btn.className !== cls) btn.className = cls;
+                btn.disabled = false; // keep clickable for the explanatory toast
+                btn.title = msg;
+                btn.onclick = () => ui.showMessageBox(msg, 'info', 4000);
                 return;
             }
 
@@ -3377,6 +3453,9 @@
             // they can be cleared when the element is removed.
         }
     };
+
+// Warm FF Scouter IndexedDB cache (v2.71+) into in-memory cache for readFFScouter; older versions still use localStorage fallback.
+try { ffscouterIdb.warmCache(); } catch (_) {}
 
         // Validate/migrate persisted userScore: accept new shape { warId, v }
         try {
@@ -8740,17 +8819,19 @@
             // Ordered badge ensures (explicit ordering preserved for stable dock layout):
             // 1) API usage counter
             exec(ui.ensureApiUsageBadge, ui.updateApiUsageBadge);
-            // 2) Inactivity timer
+            // 2) Attack mode indicator (ranked wars only)
+            exec(ui.ensureAttackModeBadge, ui.ensureAttackModeBadge);
+            // 3) Inactivity timer
             exec(ui.ensureInactivityTimer, null);
-            // 3) Opponent status
+            // 4) Opponent status
             exec(ui.ensureOpponentStatus, null);
-            // 4) Faction score
+            // 5) Faction score
             exec(ui.ensureFactionScoreBadge, ui.updateFactionScoreBadge);
-            // 5) User score
+            // 6) User score
             exec(ui.ensureUserScoreBadge, ui.updateUserScoreBadge);
-            // 6) Dibs/Deals
+            // 7) Dibs/Deals
             exec(ui.ensureDibsDealsBadge, ui.updateDibsDealsBadge);
-            // 7) Chain watcher badge (kept last so it's visually stable and can expand)
+            // 8) Chain watcher badge (kept last so it's visually stable and can expand)
             exec(ui.ensureChainWatcherBadge, ui.updateChainWatcherBadge);
             // Chain timer intentionally not part of the primary badge order; ensure separately (keeps top-left logical grouping)
             exec(ui.ensureChainTimer, () => { /* chain timer skipped on passive tab to avoid duplication */ });
@@ -9956,70 +10037,56 @@
             if (handlers?.debouncedUpdateApiUsageBadge) { handlers.debouncedUpdateApiUsageBadge(); } else { ui.updateApiUsageBadge(); }
         },
         ensureAttackModeBadge: () => {
-            // Respect user-configured visibility
-            if (!storage.get('attackModeBadgeEnabled', true)) { const ex = document.getElementById('tdm-attack-mode'); if (ex) ex.remove(); state.ui.attackModeEl = null; return; }
-            // Compact badge next to other chat header widgets
-            const chatRoot = document.querySelector('.root___lv7vM');
-            if (!chatRoot) return;
+            const enabled = storage.get('attackModeBadgeEnabled', true);
+            const existing = document.getElementById('tdm-attack-mode');
+            const warId = state.lastRankWar?.id;
             const isRanked = (state.warData?.warType === 'Ranked War');
-            const warActive = !!(state.lastRankWar && utils.isWarActive?.(state.lastRankWar.id));
+            const warActive = !!(warId && utils.isWarInActiveOrGrace?.(warId, 6));
             // Only show attack mode during active ranked wars
-            if (!isRanked || !warActive) {
-                const existing = document.getElementById('tdm-attack-mode');
+            if (!enabled || !isRanked || !warActive) {
                 if (existing) existing.remove();
                 state.ui.attackModeEl = null;
                 return;
             }
-            if (!isRanked) {
-                const existing = document.getElementById('tdm-attack-mode');
-                if (existing) existing.remove();
-                state.ui.attackModeEl = null;
-                return;
-            }
+
+            ui.ensureBadgeDock();
+            ui.ensureBadgeDockToggle();
+            const items = ui.ensureBadgeDockItems();
+            if (!items) return;
+
             const fs = (state.script && state.script.factionSettings) || {};
             const mode = (fs.options && fs.options.attackMode) || fs.attackMode || 'FFA';
-            // Always read-only badge; no admin editing from header
-            const isAdmin = false;
 
-            const existing = document.getElementById('tdm-attack-mode');
-            if (!existing) {
-                const el = utils.createElement('div', {
+            let el = existing;
+            if (!el) {
+                el = utils.createElement('div', {
                     id: 'tdm-attack-mode',
-                    className: 'tdm-text-halo',
                     title: 'Faction attack mode',
-                    style: { display: 'inline-flex', alignItems: 'center', gap: '6px', marginRight: '8px', color: '#ffd166', fontWeight: '700', fontSize: '12px', padding: '0 2px' }
+                    style: ui._composeDockBadgeStyle({
+                        background: 'rgba(52, 33, 3, 0.9)',
+                        border: '1px solid rgba(255, 179, 71, 0.55)',
+                        color: '#ffe3b3'
+                    })
                 });
-                chatRoot.insertBefore(el, chatRoot.firstChild);
-                state.ui.attackModeEl = el;
-            } else if (existing.parentNode !== chatRoot) {
-                chatRoot.insertBefore(existing, chatRoot.firstChild);
-                state.ui.attackModeEl = existing;
-            } else {
-                state.ui.attackModeEl = existing;
+                items.appendChild(el);
+            } else if (el.parentNode !== items) {
+                items.appendChild(el);
             }
+            state.ui.attackModeEl = el;
 
-            if (!state.ui.attackModeEl) return;
-
-            // If already rendered with same admin state, update in place and return
             const prev = state.ui._attackModeRendered || {};
-            if (prev.isAdmin === isAdmin) {
-                const span = state.ui.attackModeEl.querySelector('.tdm-attack-mode-value');
-                if (span) {
-                    if (span.textContent !== String(mode)) span.textContent = String(mode);
-                    state.ui._attackModeRendered = { mode, isAdmin };
-                    return;
-                }
+            const valueSpan = el.querySelector('.tdm-attack-mode-value');
+            if (valueSpan && prev.mode === mode) {
+                if (valueSpan.textContent !== String(mode)) valueSpan.textContent = String(mode);
+                return;
             }
 
-            // Full (re)render
-            state.ui.attackModeEl.innerHTML = '';
-            const label = utils.createElement('span', { textContent: 'Atk Mode:' });
-            let valueNode;
-            // Always read-only span
-            valueNode = utils.createElement('span', { className: 'tdm-attack-mode-value', textContent: mode, style: { color: '#fff' } });
-            state.ui.attackModeEl.appendChild(label);
-            state.ui.attackModeEl.appendChild(valueNode);
-            state.ui._attackModeRendered = { mode, isAdmin };
+            el.innerHTML = '';
+            const label = utils.createElement('span', { textContent: 'Atk Mode:', style: { opacity: 0.8 } });
+            const valueNode = utils.createElement('span', { className: 'tdm-attack-mode-value', textContent: mode, style: { color: '#fff', fontWeight: '700' } });
+            el.appendChild(label);
+            el.appendChild(valueNode);
+            state.ui._attackModeRendered = { mode };
         },
         removeAttackModeBadge: () => {
             const el = document.getElementById('tdm-attack-mode');
@@ -13706,6 +13773,17 @@
             const safeOpponentName = opponentName || `ID ${opponentId}`;
             opponentName = utils.sanitizePlayerName(safeOpponentName, opponentId);
 
+            const isTermedWar = state.warData?.warType === 'Termed War';
+            if (!isTermedWar) {
+                // Ranked wars should not surface score-cap UI; clear any stale state from prior termed wars
+                state.user.hasReachedScoreCap = false;
+                state.user._scoreCapWarId = null;
+                try {
+                    const stale = attackContainer.querySelector('.score-cap-warning');
+                    if (stale) stale.remove();
+                } catch(_) { /* noop */ }
+            }
+
             // --- FIX START: Build new content in a fragment to prevent flicker ---
             const contentFragment = document.createDocumentFragment();
 
@@ -13713,8 +13791,8 @@
             // Buttons render immediately; warning is verified asynchronously and updated in place
             setTimeout(() => {
                 const existingWarning = attackContainer.querySelector('.score-cap-warning');
-                // Individual cap banner on attack page only after user cap reached
-                if (!state.user.hasReachedScoreCap) { if (existingWarning) existingWarning.remove(); }
+                // Individual cap banner on attack page only after user cap reached in termed wars
+                if (!isTermedWar || !state.user.hasReachedScoreCap) { if (existingWarning) existingWarning.remove(); return; }
                 (async () => {
                     try {
                         const oppFactionId = state.warData?.opponentFactionId || state.lastOpponentFactionId || state?.warData?.opponentId;
@@ -13741,7 +13819,7 @@
                                 inOppFaction = !!arr2.find(x => String(x.id) === String(opponentId));
                             }
                         }
-                        if (inOppFaction && state.user.hasReachedScoreCap) {
+                        if (inOppFaction && isTermedWar && state.user.hasReachedScoreCap) {
                             if (!existingWarning) {
                                 const scoreCapWarning = utils.createElement('div', {
                                     className: 'score-cap-warning',
@@ -22293,18 +22371,32 @@
                         }
                     }
                     // Handle userScore from meta if present (Enhancement #1)
+                    const warIdUsed = globalData?.meta?.warIdUsed || null;
+                    const currentWarId = state.lastRankWar?.id || null;
                     if (globalData?.meta?.userScore) {
-                        state.userScore = globalData.meta.userScore;
-                        try {
-                            tdmlogger('debug', `[GlobalData] Received userScore: ${JSON.stringify(state.userScore)}`);
-                            // Persist lightweight userScore together with the warId to avoid cross-war bleed
-                            try { storage.set('userScore', { warId: state.lastRankWar?.id || null, v: state.userScore }); } catch(_) { storage.set('userScore', state.userScore); }
-                        } catch(_) {}
-                        // Update the badge if the UI function exists
-                        if (typeof ui.updateUserScoreBadge === 'function') {
-                            ui.updateUserScoreBadge();
+                        // Only accept the score if it matches the current war; otherwise drop any cached value
+                        if (!warIdUsed || !currentWarId || String(warIdUsed) === String(currentWarId)) {
+                            state.userScore = globalData.meta.userScore;
+                            try {
+                                tdmlogger('debug', `[GlobalData] Received userScore: ${JSON.stringify(state.userScore)}`);
+                                // Persist lightweight userScore together with the warId to avoid cross-war bleed
+                                try { storage.set('userScore', { warId: currentWarId, v: state.userScore }); } catch(_) { storage.set('userScore', state.userScore); }
+                            } catch(_) {}
+                            if (typeof ui.updateUserScoreBadge === 'function') {
+                                ui.updateUserScoreBadge();
+                            }
+                        } else {
+                            state.userScore = null;
+                            try { if (storage && typeof storage.remove === 'function') storage.remove('userScore'); } catch(_) {}
+                            try { tdmlogger('debug', `[GlobalData] Ignored userScore (war mismatch meta=${warIdUsed} current=${currentWarId})`); } catch(_) {}
                         }
                     } else {
+                        // If backend responded for this war but omitted userScore, clear stale cache so badge can recompute from summary rows
+                        if (warIdUsed && currentWarId && String(warIdUsed) === String(currentWarId) && state.userScore) {
+                            state.userScore = null;
+                            try { if (storage && typeof storage.remove === 'function') storage.remove('userScore'); } catch(_) {}
+                            try { ui.updateUserScoreBadge?.(); } catch(_) {}
+                        }
                         try { tdmlogger('debug', `[GlobalData] No userScore in meta.`); } catch(_) {}
                     }
                 } catch(_) { /* non-fatal */ }
@@ -23227,7 +23319,12 @@
             const warId = state.lastRankWar?.id;
             if (!warId) return; // Exit if we don't have a valid war ID
             // Only check while the war is active or within grace window
-            if (!utils.isWarInActiveOrGrace(warId, 6)) return;
+            if (!utils.isWarInActiveOrGrace(warId, 6)) {
+                // War is over (or outside grace) — clear any lingering cap state
+                state.user.hasReachedScoreCap = false;
+                state.user._scoreCapWarId = null;
+                return;
+            }
 
             const storageKey = `scoreCapAcknowledged_${warId}`; // individual
             const storageKeyFaction = `scoreCapFactionAcknowledged_${warId}`;

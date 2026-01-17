@@ -3,7 +3,7 @@
 // @name:ja      Twitter/X 動画 ダウンローダー (Premium)
 // @name:zh-CN   Twitter/X 视频下载器 (Premium)
 // @namespace    https://twisaver.net/
-// @version      1.0
+// @version      1.1
 // @description  Add a Download button under Twitter/X videos that opens Twisaver with the tweet URL.
 // @description:ja  ワンクリックでTwitter/Xの動画やGIFを保存します。Twisaverで高速・高画質にダウンロード。
 // @description:zh-CN  在 Twitter/X 视频下方添加下载按钮，点击直接跳转 Twisaver 进行下载。
@@ -89,7 +89,6 @@
   }
 
   function getTweetUrl(article) {
-    // 只抓取包含 /status/ 的推文链接
     const anchor = article.querySelector('a[href*="/status/"]');
     if (!anchor) return null;
 
@@ -100,8 +99,18 @@
   }
 
   function isVideoTweet(article) {
-    // 仅对包含 video 标签的推文加按钮
     return Boolean(article.querySelector('video'));
+  }
+
+  function findActionGroup(article) {
+    const actionTarget = article.querySelector(
+      'div[data-testid="reply"],div[data-testid="retweet"],div[data-testid="like"],div[data-testid="bookmark"]'
+    );
+    if (actionTarget) {
+      const group = actionTarget.closest('div[role="group"]');
+      if (group) return group;
+    }
+    return article.querySelector('div[role="group"]');
   }
 
   function buildTargetUrl(tweetUrl) {
@@ -125,10 +134,7 @@
     const icon = document.createElement('img');
     icon.className = ICON_CLASS;
     const fallbackIcon =
-      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="%23536' +
-      '471" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3v12"/><path ' +
-      'd="M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>';
-    // 优先使用 favicon，加载失败时回退到内联 SVG
+      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="%23536471" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>';
     icon.src = 'https://twisaver.net/favicon.ico';
     icon.addEventListener(
       'error',
@@ -166,11 +172,10 @@
   }
 
   function insertButton(article) {
-    const actionGroup = article.querySelector('div[role="group"]');
+    const actionGroup = findActionGroup(article);
     if (!actionGroup) return;
     if (actionGroup.querySelector(`.${BUTTON_CLASS}`)) return;
 
-    // 让父容器可溢出显示，避免气泡被裁剪
     article.style.overflow = 'visible';
     actionGroup.style.overflow = 'visible';
     actionGroup.style.position = 'relative';
@@ -199,7 +204,6 @@
   }
 
   const observer = new MutationObserver(() => {
-    // SPA + 无限滚动：使用防抖避免高频触发
     scheduleScan();
   });
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Lazy Crimes
 // @namespace    http://tampermonkey.net/
-// @version      1.1.3.1
+// @version      1.1.4
 // @description  Adds a spam crime button for everybody that should've stayed on crimes 1.0
 // @author       Heartflower [2626587]
 // @match        https://www.torn.com/loader.php?sid=crimes*
@@ -2157,6 +2157,7 @@
                 }
 
                 let hasCommit = nextSteps.includes('commit');
+
                 let commitBtn = item.querySelector('.commit-button');
                 let disabled = commitBtn?.classList.contains('disabled');
 
@@ -2455,7 +2456,7 @@
                 itemBtn.click();
 
                 setTimeout(function () {
-                    expanded = crime.classList.contains('hf-expanded');
+                    expanded = document.body.querySelector('.itemSelector___hlEBl');
 
                     if (expanded && itemBtn) {
                         crime.classList.add('hf-expanded');
@@ -2463,7 +2464,7 @@
                         console.warn(`Can't seem to expand. Skipping for now...`);
                         crime.setAttribute('hf-next-steps', 'skip');
                     }
-                }, 100);
+                }, 500);
 
                 return;
             }

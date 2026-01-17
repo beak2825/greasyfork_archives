@@ -4,7 +4,7 @@
 // @match        https://www.lingq.com/*
 // @match        https://www.youtube-nocookie.com/*
 // @match        https://www.youtube.com/embed/*
-// @version      9.8.0
+// @version      9.9.0
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @grant       GM_xmlhttpRequest
@@ -57,6 +57,7 @@
         autoFinishing: false,
         focusPlayingSentence: false,
         showTranslation: false,
+        usePageMode: false,
         
         keyboardShortcut: false,
         shortcutVideoFullscreen: 'p',
@@ -1410,6 +1411,7 @@
             addCheckbox(container1, "autoFinishingCheckbox", "Finish Lesson Automatically", settings.autoFinishing);
             addCheckbox(container1, "focusPlayingSentenceCheckbox", "Focus on Playing Sentence", settings.focusPlayingSentence);
             addCheckbox(container1, "showTranslationCheckbox", "Show Translation Automatically", settings.showTranslation);
+            addCheckbox(container1, "usePageModeCheckbox", "Use Paging Mode", settings.usePageMode);
             
             columns.appendChild(container1);
             
@@ -2051,6 +2053,11 @@
                 settings.showTranslation = event.target.checked
             });
             
+            const usePageModeCheckbox = document.getElementById("usePageModeCheckbox");
+            usePageModeCheckbox.addEventListener('change', (event) => {
+                settings.usePageMode = event.target.checked;
+            });
+            
             function setupShortcutInput(inputId, settingKey) {
                 const input = document.getElementById(inputId);
                 if (!input) return;
@@ -2235,6 +2242,7 @@
                 document.getElementById("autoFinishingCheckbox").checked = defaults.autoFinishing;
                 document.getElementById("focusPlayingSentenceCheckbox").checked = defaults.focusPlayingSentence;
                 document.getElementById("showTranslationCheckbox").checked = defaults.showTranslation;
+                document.getElementById("usePageModeCheckbox").checked = defaults.usePageMode;
                 
                 document.getElementById("keyboardShortcutCheckbox").value = defaults.keyboardShortcut;
                 document.getElementById("shortcutVideoFullscreenInput").value = defaults.shortcutVideoFullscreen;
@@ -3149,6 +3157,13 @@
                 const selectedStyleType = event.target.value;
                 applyStyles(selectedStyleType, document.getElementById("colorModeSelector").value);
             });
+            
+            const usePageModeCheckbox = document.getElementById("usePageModeCheckbox");
+            if (usePageModeCheckbox) {
+                usePageModeCheckbox.addEventListener('change', () => {
+                    applyStyles();
+                });
+            }
         }
         
         function createReaderUI() {
@@ -3161,6 +3176,8 @@
             
             addElementToNavBar(completeLessonButton);
         }
+        
+        
         
         function generateBaseCSS(colorSettings) {
             return `
@@ -3307,6 +3324,7 @@
                 #chat-container .word-message b:nth-of-type(1) {
                     position: relative;
                     font-size: 1.05rem;
+                    font-weight: 600;
                 }
                 
                 #chat-container :is(.word-message, .sentence-message) b:nth-of-type(1):hover {
@@ -3410,7 +3428,7 @@
                     color: var(--font-color);
                     line-height: normal;
                     margin-bottom: 20px;
-                    max-height: 300px;
+                    height: 200px;
                     overflow-y: scroll;
                     resize: vertical;
                     flex-direction: column;
@@ -3437,6 +3455,8 @@
         }
         
         function generateLayoutCSS() {
+            const isPageMode = settings.usePageMode;
+            
             return `
             :root {
                 --article-height: calc(var(--app-height) - var(--height-big));
@@ -3452,7 +3472,6 @@
             .reader-container {
                 line-height: var(--line-height) !important;
                 font-size: var(--font-size) !important;
-                padding: 0 !important;
             }
     
             .sentence-text-head {
@@ -3565,6 +3584,7 @@
     
             .reader-container-wrapper {
                 height: 100% !important;
+                overflow-y: ${isPageMode ? "scroll" : "visible"} !important;
             }
     
             .widget-area {
@@ -3661,12 +3681,11 @@
             /*make prev/next page buttons compact*/
     
             .reader-component {
-                grid-template-columns: 0 1fr 0 !important;
-                align-items: baseline;
+                grid-template-columns: ${isPageMode ? "1.5rem" : "0"} 1fr ${isPageMode ? "1.5rem" : "0"} !important;
             }
     
             .reader-component > :is(.nav--left, .nav--right) {
-                visibility: hidden;
+                visibility: ${isPageMode ? "visible" : "hidden"} !important;
             }
     
             .reader-component > div > a.button > span {
@@ -3685,11 +3704,13 @@
             /*font settings*/
     
             .reader-container {
+                padding: 0 !important;
                 margin: 0 !important;
                 float: left !important;
-                columns: unset !important;
-                overflow-y: scroll !important;
                 max-width: unset !important;
+                columns: ${isPageMode ? "100vw auto" : "unset"} !important;
+                overflow-y: ${isPageMode ? "visible" : "scroll"} !important;
+                height: ${isPageMode ? "100vh" : "100%"} !important;
             }
     
             /*video viewer*/
@@ -4128,8 +4149,10 @@
                             
                             const summaryElement = createElement("div", {
                                 className: "quick-summary",
+                                style: "position: relative;",
                                 innerHTML: quickSummary
                             });
+
                             changeScrollAmount(".quick-summary", 0.2);
                             summaryElement.addEventListener('wheel', (event) => event.stopPropagation());
                             node.parentNode.prepend(summaryElement);
@@ -4146,9 +4169,15 @@
                 if (settings.prependSummary) {
                     getQuickSummary(llmProvider, llmApiKey, llmModel, lessonContent)
                         .then(result => {
-                            document.querySelector(".quick-summary").innerHTML = result;
                             quickSummary = result;
-                        })
+                            
+                            const summaryElement = document.querySelector(".quick-summary");
+                            if (summaryElement) {
+                                summaryElement.innerHTML = result;
+                            }
+                        }).catch(error => {
+                        console.error("Failed to fetch summary:", error);
+                    });
                 }
                 
                 getLessonSummary(llmProvider, llmApiKey, llmModel, lessonContent).then(summary => {
@@ -4156,26 +4185,71 @@
                 })
             }
             
+            function setupNavigationScrollReset() {
+                const navSelectors = [
+                    ".reader-component .nav--left a",
+                    ".reader-component .nav--right a"
+                ];
+                
+                navSelectors.forEach((selector) => {
+                    waitForElement(selector, 5000).then((button) => {
+                        if (!button) return;
+                        
+                        button.addEventListener("click", () => {
+                            setTimeout(() => {
+                                const wrapper = document.querySelector(".reader-container-wrapper");
+                                if (wrapper) {
+                                    wrapper.scrollTop = 0;
+                                }
+                            }, 150);
+                        });
+                    });
+                });
+            }
+            
             const observer = new MutationObserver(function (mutations) {
                 mutations.forEach((mutation) => {
-                    // should I clear the summaries?
-                    console.debug('Observer:', `Sentence text child created. ${mutation.type}`, mutation.addedNodes);
                     mutation.addedNodes.forEach(async (node) => {
                         if (node.nodeType !== Node.ELEMENT_NODE) return;
                         if (!node.matches(".loadedContent")) return;
                         
-                        changeScrollAmount(".reader-container", 0.3);
+                        const isPageMode = settings.usePageMode;
+                        if (isPageMode) {
+                            const readerContainer = node.querySelector(".reader-container");
+                            readerContainer?.addEventListener("wheel", (event) => {
+                                const wrapper = readerContainer.closest(".reader-container-wrapper");
+                                if (wrapper) {
+                                    wrapper.scrollTop += event.deltaY;
+                                    event.preventDefault();
+                                }
+                            }, { passive: false });
+                        }
+                        
+                        const scrollTarget = isPageMode ? ".reader-container-wrapper" : ".reader-container";
+                        changeScrollAmount(scrollTarget, 0.3);
+                        
                         setupSentenceFocus(node);
+                        
                         if (settings.showTranslation) showTranslation();
                         changeTranslationColor(node);
+                        
                         await waitForElement('.sentence-text p', 10000);
                         generateLessonSummary(node);
+                        
+                        const summaryElement = node.querySelector(".quick-summary");
+                        if (summaryElement) {
+                            summaryElement.addEventListener('wheel', (event) => {
+                                event.stopPropagation();
+                            }, { passive: false });
+                        }
                     });
                 });
             });
             
             const sentenceText = await waitForElement('.sentence-text', 10000);
-            observer.observe(sentenceText, {childList: true});
+            observer.observe(sentenceText, { childList: true });
+            
+            setupNavigationScrollReset();
         }
         
         async function setupLLMs() {
@@ -4316,11 +4390,13 @@
                     
                     if (!word) return;
                     
+                    /*
                     wordElem.addEventListener("click", async () => {
                         navigator.clipboard.writeText(word)
                             .then(() => showToast("Word Copied!", true))
                             .catch(() => showToast("Failed to copy word.", false));
                     });
+                    */
                     
                     if (meaningElem) {
                         meaningElem.addEventListener("click", async (e) => {
@@ -4862,24 +4938,28 @@
                    - Inflections: If the input is conjugated (e.g., "書いていました"), output the dictionary form ("書く").
                 
                 2. IPA Pronunciation
-                   - Provide standard IPA strictly for the **Base Form** enclosed in brackets (e.g., [wɜːrd]).
+                   - Provide IPA for the **Base Form** enclosed in brackets.
+                   - Simplify Constraints: Eliminate narrow phonetic diacritics (e.g., lowering [̞], voiceless [̥], compressed [ᵝ], or dental [̪] marks).
+                   - Ensure the output represents the standard, dictionary-style pronunciation, not a precise phonetic realization.
                 
                 3. Contextual Definition
-                   - Provide the single, most specific meaning in ${userLanguage} that fits the Context.
+                   - Identify the single standard dictionary definition of the Base Form in ${userLanguage} that corresponds to the sense used in the Context.
                    - Do not use parentheses for alternative meanings or additional explanation. Do not provide a comma-separated list of synonyms.
                    - Output must be a definitive, short phrase or single word perfectly substituting the term in the context.
                 
                 4. Contextual Explanation
-                   - Explain why this word is used here or how the context shifts its meaning.
+                   - This is where you bridge the "Standard Definition" and the "Specific Context".
+                   - Explain how the dictionary meaning applies here, explaining specific nuances, tense, or implications.
                 
                 5. Example Generation
                    - Create a new, high-quality penetrating example sentence in ${lessonLanguage} using the Base Form.
-                   - Translate accurately into ${userLanguage}.
+                   - And translate accurately into ${userLanguage}.
+                   - Ensure the usage helps the user understand the general applicability of this specific sense.
                 
                 ## Output Structure (HTML)
-                
+
                 <b>[Base Form in ${lessonLanguage}]</b> <span>/[IPA]/</span> <i>([Part of Speech in ${userLanguage}])</i>
-                <p>[Concise Definition in ${userLanguage}]</p>
+                <p>[Standard Dictionary Definition in ${userLanguage}]</p>
                 <hr>
                 <p>[Contextual Explanation in ${userLanguage}]</p>
                 <hr>
@@ -4896,7 +4976,7 @@
                 <b>translator</b> <span>[trænsˈleɪtər]</span> <i>(명사)</i>
                 <p>번역가</p>
                 <hr>
-                <p>외국어로 된 콘텐츠를 다른 언어로 번역하는 전문가를 지칭합니다.</p>
+                <p>한 언어로 된 텍스트나 말을 다른 언어로 바꾸는 사람을 뜻하는 일반적인 단어입니다. 문맥에서는 성경 번역을 담당한 특정 그룹을 지칭하고 있습니다.</p>
                 <hr>
                 <ul>
                   <li>Many translators work freely.</li>
@@ -4909,24 +4989,24 @@
                 <b>lograr</b> <span>[loˈɣɾaɾ]</span> <i>(verb)</i>
                 <p>To achieve</p>
                 <hr>
-                <p>This means to successfully reach or accomplish a goal through effort.</p>
+                <p>Refers to the act of reaching a goal or result, typically through effort. The context highlights obtaining specific objectives.</p>
                 <hr>
                 <ul>
                   <li>Espero lograr todas mis metas.</li>
                   <li>I hope to achieve all my goals.</li>
                 </ul>
                 
-                ### Example 3: Phrase/Expression (Original: German, User: French)
-                User Input: 'Input: "imstande sein", Context: "Er war imstande, das Problem zu lösen."'
+                ### Example 3: Context-Specific Sense (Original: German, User: French)
+                User Input: 'Input: "anstellen", Context: "Was hast du mit der Schere angestellt?"'
                 Assistant Output:
-                <b>imstande sein</b> <span>[ɪmˈʃtandə zaɪ̯n]</span> <i>(expression)</i>
-                <p>Être capable de</p>
+                <b>anstellen</b> <span>[ˈanˌʃtɛlən]</span> <i>(verb)</i>
+                <p>Faire (quelque chose de mal)</p>
                 <hr>
-                <p>Cela signifie avoir la capacité ou la compétence nécessaire pour faire quelque chose.</p>
+                <p>Bien que "anstellen" puisse signifier "employer", dans ce contexte, il signifie "commettre" ou "faire" une bêtise. C'est le sens standard utilisé pour des actions négatives ou maladroites.</p>
                 <hr>
                 <ul>
-                  <li>Sie war imstande, es zu tun.</li>
-                  <li>Elle était capable de le faire.</li>
+                  <li>Er hat wieder etwas Dummes angestellt.</li>
+                  <li>Il a encore fait quelque chose de stupide.</li>
                 </ul>
                 
                 ### Example 4: Adverb Retention (Original: English, User: Japanese)
@@ -4935,24 +5015,24 @@
                 <b>recklessly</b> <span>[ˈrɛklɪsli]</span> <i>(副詞)</i>
                 <p>無謀に</p>
                 <hr>
-                <p>結果や危険を顧みずに行動する様子を表します。元の単語が副詞（-ly）であるため、基本形も形容詞（reckless）ではなく副詞（recklessly）として扱います。</p>
+                <p>危険や結果を十分に考えずに行動することを指す定義です。文脈では運転という行為が安全を無視して行われたことを説明しています。</p>
                 <hr>
                 <ul>
                   <li>She spent money recklessly.</li>
                   <li>彼女は無謀にお金を使った。</li>
                 </ul>
                 
-                ### Example 5: Conjugated Verb to Base Form (Original: Japanese, User: Korean)
+                ### Example 5: Conjugated Verb (Original: Japanese, User: Korean)
                 User Input: 'Input: "入っていました", Context: "箱の中に手紙が入っていました。"'
                 Assistant Output:
-                <b>入る</b> <span>[haɪru]</span> <i>(동사)</i>
+                <b>入る</b> <span>[haiɾɯ]</span> <i>(동사)</i>
                 <p>들어있다</p>
                 <hr>
-                <p>기본형 '入る'은 보통 '들어가다'를 의미하지만, 문맥인 '문서가 상자 안에...'에서는 사물의 존재 상태를 나타내므로 '들어있다'로 정의합니다. 문법적으로는 '入る'의 상태 지속 형태입니다.</p>
+                <p>사전적으로는 '밖에서 안으로 이동하다' 또는 '안에 존재하다'를 의미합니다. 이 문맥에서는 '이동'보다는 편지가 상자 안에 이미 존재하는 '상태'를 나타내는 의미로 쓰였습니다.</p>
                 <hr>
                 <ul>
-                  <li>部屋に入る。</li>
-                  <li>방에 들어가다.</li>
+                  <li>カバンに本が入る。</li>
+                  <li>가방에 책이 들어간다 (들어있다).</li>
                 </ul>
                 `;
                 
@@ -5025,7 +5105,7 @@
                 </ul>
                 
                 ### Example 4: Multiple Sentences (Original: Spanish, User: French)
-                User Input: 'Input: "El sol brillaba con fuerza. Los pájaros cantaban en los árboles." '
+                User Input: 'Input: "El sol brillaba con fuerza. Los pájaros cantaban en los árboles." 'r
                 Assistant Output:
                 <p><b>Le soleil brillait fort. Les oiseaux chantaient dans les arbres.</b></p>
                 <hr>
@@ -5049,10 +5129,10 @@
                 ## Logic Branching via Intent Detection
                 
                 ### Condition A: Correction Request (Priority)
-                Trigger: User phrases like "Wrong word," "Base form is incorrect," "Fix the meaning," "Use X instead of Y."
+                Trigger: User phrases like "Wrong word," "Base form is incorrect," "Fix the meaning," "Use X instead of Y," or points out an error.
                 Action:
                 1. Identify the Error: Determine what part of the previous structured output (Base form, IPA, Definition, or Example) needs fixing based on user input.
-                2. RE-GENERATE STRUCTURE: You MUST output the correction using the exact HTML structure defined in the original Analysis Prompt (word or sentence mode).
+                2. Re-generate Structure: You MUST output the correction using the exact HTML structure used for the previous original response (word or sentence mode).
                 3. No Conversational Filler: DO NOT say "Sorry," "Here is the fixed version," or "I understood." Just output the corrected HTML code block.
                 
                 ### Condition B: Referential Query
@@ -5066,7 +5146,7 @@
                 
                 ### Example 1: Strict Correction (User forces Adverb form)
                 Scenario: Previous output for "happily" showed base form "happy". User complains.
-                User Input: "The base form should be the adverb, not adjective."
+                User Input: "The basae form should be the adverb, not adjective."
                 Assistant Output:
                 <b>happily</b> <span>[ˈhæpɪli]</span> <i>(adverb)</i>
                 <p>In a happy way</p>

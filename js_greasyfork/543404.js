@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WritingTeam Achievement Plan Generator
 // @namespace    http://tampermonkey.net/
-// @version      2.3
+// @version      2.4
 // @description  Writing Plan generator compatible with new grouped achievements.
 // @author       PS2Hagrid / Player1041
 // @match        https://retroachievements.org/game2/*
@@ -31,11 +31,27 @@
     // 5 - [11279] (PlayStation) Spyro the Dragon
     // 6 - (PlayStation) [11279] Spyro the Dragon
     let titleOrder = parseInt(localStorage.getItem("titleOrder") || "1", 10);
+    const bannerTarget = document.querySelector(
+            "#app > div > main > div > div > div.absolute.inset-x-0.bottom-0.z-20.mx-auto.max-w-screen-xl.px-4.pb-\\[46px\\].transition-\\[padding\\].sm\\:px-5.md\\:px-6.xl\\:px-0 > div > div > div"
+    );
 
-    const titleAndID = document.querySelector("#app > div > main > article > div > div.flex.flex-col.gap-3 > div.flex.gap-4.sm\\:gap-6 > div > div.flex.flex-col.gap-1.sm\\:gap-0\\.5");
+    const noBannerTarget = document.querySelector(
+            "#app > div > main > article > div > div.flex.flex-col.gap-3 > div.flex.gap-4.sm\\:gap-6 > div > div.hidden.flex-wrap.gap-x-2.gap-y-1.text-neutral-300.light\\:text-neutral-700.sm\\:flex > div"
+    );
 
-    const gameTitle = titleAndID?.querySelector('h1 > span')?.textContent.trim();
-    const gameSystem = titleAndID?.querySelector('span.flex.items-center > span')?.textContent.trim();
+    let gameTitle = ""
+    let gameSystem = ""
+
+    if (bannerTarget) {
+        const titleAndSystem = document.querySelector("#app > div > main > div > div > div.absolute.inset-x-0.bottom-0.z-20.mx-auto.max-w-screen-xl.px-4.pb-\\[46px\\].transition-\\[padding\\].sm\\:px-5.md\\:px-6.xl\\:px-0 > div > div")
+        gameTitle = titleAndSystem?.querySelector('h1 > span').textContent.trim();
+        gameSystem = titleAndSystem?.querySelector('div > a > span').textContent.trim();
+    } else {
+        const titleAndSystem = document.querySelector("#app > div > main > article > div > div.flex.flex-col.gap-3 > div.flex.gap-4.sm\\:gap-6 > div > div.flex.flex-col.gap-1.sm\\:gap-0\\.5");
+        gameTitle = titleAndSystem?.querySelector('h1 > span')?.textContent.trim();
+        gameSystem = titleAndSystem?.querySelector('span.flex.items-center > span')?.textContent.trim();
+    };
+
     const gameId = window.location.pathname.split('/').pop();
     const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwzQCW8p467nvosPhe9f7WvRpExy3LmmXEaj-yorqc80sUhFmOYcbmjR-OOlVGdUB9AaQ/exec';
 
@@ -147,11 +163,9 @@
         };
     }
     function insertButton() {
-        const targetDiv = document.querySelector(
-            "#app > div > main > article > div > div.flex.flex-col.gap-3 > div.flex.gap-4.sm\\:gap-6 > div > div.hidden.flex-wrap.gap-x-2.gap-y-1.text-neutral-300.light\\:text-neutral-700.sm\\:flex > div"
-        );
 
-        if (!targetDiv || document.getElementById("writing-generator")) return;
+
+        const targetDiv = bannerTarget ?? noBannerTarget;
 
         // Create button
         const button = document.createElement("button");

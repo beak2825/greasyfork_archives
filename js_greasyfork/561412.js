@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AO3: mothman's Mark for Later Button 
 // @namespace    http://tampermonkey.net/
-// @version      1.9
+// @version      2.1
 // @description  Adds a native AO3 button that perfectly matches any site skin's colors and shapes.
 // @author       mothman
 // @match        http://archiveofourown.org/*
@@ -29,12 +29,8 @@
         let button = document.createElement("a");
         button.innerHTML = "Mark for Later";
 
-        // ADDING NATIVE CLASSES:
-        // 'button' gives it the border, gradient, and hover effects
-        // 'action' is a standard AO3 class for interactive buttons
         button.className = "mfl-custom-btn button action";
 
-        // Minimal CSS just for positioning/scaling
         button.style.marginLeft = "10px";
         button.style.fontSize = "0.8em";
         button.style.verticalAlign = "middle";
@@ -70,10 +66,9 @@
 
                 if (postResponse.ok) {
                     button.innerHTML = "Marked!";
-                    // We don't force a color here so it doesn't clash with skins
                     button.style.opacity = "0.5";
                     button.style.pointerEvents = "none";
-                    button.style.boxShadow = "none"; // Makes it look "pressed"
+                    button.style.boxShadow = "none";
                 }
             } catch (err) {
                 button.innerHTML = "Error";

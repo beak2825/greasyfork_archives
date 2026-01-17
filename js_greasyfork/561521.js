@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Abdullah Abbas WME Suite
 // @namespace       https://greasyfork.org/users/AbdullahAbbas
-// @version         2026.01.15.17
+// @version         2026.01.17.01
 // @description     حزمة أدوات عبد الله عباس الشاملة (أزرار الطرق + النسخ الذكي + تلوين التعديلات + الملاحظات + مدينة بديلة)
 // @author          Abdullah Abbas
 // @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -26,7 +26,8 @@
 
     const SCRIPT_NAME = 'Abdullah Abbas WME Suite';
     const SCRIPT_VERSION = GM_info.script.version;
-    const SETTINGS_STORE_NAME = 'AbdullahAbbas_WME_Suite_Settings_V25';
+    // تم تحديث مفتاح التخزين لضمان إعادة تعيين اللغة إلى الإنجليزية كافتراضي للجميع
+    const SETTINGS_STORE_NAME = 'AbdullahAbbas_WME_Suite_Settings_V26';
 
     // --- NOTES CONSTANTS ---
     const NOTES_STORE_KEY = "WME_ABDULLAH_NOTES_DATA";
@@ -281,7 +282,7 @@
             let loadedSettings = {};
             try { loadedSettings = $.parseJSON(localStorage.getItem(SETTINGS_STORE_NAME)) || {}; } catch(e) { console.error('Error loading settings', e); }
             const defaultSettings = {
-                lastVersion: SCRIPT_VERSION, preferredLocale: 'en',
+                lastVersion: SCRIPT_VERSION, preferredLocale: 'en', // ENGLISH DEFAULT
                 ui_road_collapsed: true, ui_smartcopy_collapsed: true, ui_coloring_collapsed: true, ui_notes_collapsed: true,
                 roadButtons: true, roadTypeButtons: [...RENDER_ORDER], lockButtons: true,
                 utilButtons: true,
@@ -308,7 +309,7 @@
 
         function saveSettingsToStorage() {
             const settings = {
-                lastVersion: SCRIPT_VERSION, preferredLocale: _settings.preferredLocale,
+                lastVersion: SCRIPT_VERSION, preferredLocale: _settings.preferredLocale, // SAVE LANGUAGE PREFERENCE
                 ui_road_collapsed: _settings.ui_road_collapsed, ui_smartcopy_collapsed: _settings.ui_smartcopy_collapsed, ui_coloring_collapsed: _settings.ui_coloring_collapsed, ui_notes_collapsed: _settings.ui_notes_collapsed,
                 roadButtons: _settings.roadButtons, roadTypeButtons: _settings.roadTypeButtons, lockButtons: _settings.lockButtons,
                 utilButtons: _settings.utilButtons,
