@@ -262,5 +262,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495854,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-23T08:20:59.000Z",
+    "code_updated_at": "2025-11-03T06:19:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 825381,
+        "name": "coccvo",
+        "created_at": "2021-10-15T08:11:11.000Z",
+        "url": "https://greasyfork.org/users/825381-coccvo"
+      }
+    ],
+    "name": "开源阅读web端快捷键",
+    "description": "开源阅读web服务添加wasd快捷键支持，ws键滚动，ad键切换章节",
+    "url": "https://greasyfork.org/scripts/495854-%E5%BC%80%E6%BA%90%E9%98%85%E8%AF%BBweb%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE",
+    "code_url": "https://update.greasyfork.org/scripts/495854/%E5%BC%80%E6%BA%90%E9%98%85%E8%AF%BBweb%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE.user.js",
+    "code_size": 4318,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

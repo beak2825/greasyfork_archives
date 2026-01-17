@@ -1,0 +1,33 @@
+{
+  "id": 495960,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-24T13:26:41.000Z",
+  "code_updated_at": "2025-03-20T17:27:22.000Z",
+  "namespace": "bb89542e-b358-4be0-8c01-3797d1f3a1e3",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1306391,
+      "name": "bonk-dev",
+      "created_at": "2024-05-24T12:25:10.000Z",
+      "url": "https://greasyfork.org/users/1306391-bonk-dev"
+    }
+  ],
+  "name": "ArchTranslator",
+  "description": "Useful tools for ArchWiki translators, now written in TypeScript.",
+  "url": "https://greasyfork.org/scripts/495960-archtranslator",
+  "code_url": "https://update.greasyfork.org/scripts/495960/ArchTranslator.user.js",
+  "code_size": 52599,
+  "license": "MIT License",
+  "version": "2.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

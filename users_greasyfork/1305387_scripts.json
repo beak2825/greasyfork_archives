@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495761,
+    "daily_installs": 0,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-22T07:54:05.000Z",
+    "code_updated_at": "2024-05-22T07:54:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305387,
+        "name": "比香菇傻一点",
+        "created_at": "2024-05-22T07:45:00.000Z",
+        "url": "https://greasyfork.org/users/1305387-%E6%AF%94%E9%A6%99%E8%8F%87%E5%82%BB%E4%B8%80%E7%82%B9"
+      }
+    ],
+    "name": "CSDN Allow Copy",
+    "description": "移除CSDN复制限制",
+    "url": "https://greasyfork.org/scripts/495761-csdn-allow-copy",
+    "code_url": "https://update.greasyfork.org/scripts/495761/CSDN%20Allow%20Copy.user.js",
+    "code_size": 807,
+    "license": "MIT License",
+    "version": "2024-05-20",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

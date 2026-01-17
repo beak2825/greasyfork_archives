@@ -1,0 +1,59 @@
+{
+  "id": 495900,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-23T19:01:29.000Z",
+  "code_updated_at": "2024-05-23T19:01:29.000Z",
+  "namespace": "https://raw.githubusercontent.com/timriker/F5-UI-FrontendEnhancements/master/F5-Frontend-Enhancements.js",
+  "support_url": "https://devcentral.f5.com/s/articles/webui-tweaks-v12-1109",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1306077,
+      "name": "Tim Riker",
+      "created_at": "2024-05-23T18:58:19.000Z",
+      "url": "https://greasyfork.org/users/1306077-tim-riker",
+      "scripts": [
+        {
+          "id": 495900,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-23T19:01:29.000Z",
+          "code_updated_at": "2024-05-23T19:01:29.000Z",
+          "namespace": "https://raw.githubusercontent.com/timriker/F5-UI-FrontendEnhancements/master/F5-Frontend-Enhancements.js",
+          "support_url": "https://devcentral.f5.com/s/articles/webui-tweaks-v12-1109",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "F5 Frontend Enhancements",
+          "description": "F5 BIG-IP Frontend UI Enhancements",
+          "url": "https://greasyfork.org/scripts/495900-f5-frontend-enhancements",
+          "code_url": "https://update.greasyfork.org/scripts/495900/F5%20Frontend%20Enhancements.user.js",
+          "code_size": 91736,
+          "license": "MIT License",
+          "version": "25",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "F5 Frontend Enhancements",
+  "description": "F5 BIG-IP Frontend UI Enhancements",
+  "url": "https://greasyfork.org/scripts/495900-f5-frontend-enhancements",
+  "code_url": "https://update.greasyfork.org/scripts/495900/F5%20Frontend%20Enhancements.user.js",
+  "code_size": 91736,
+  "license": "MIT License",
+  "version": "25",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

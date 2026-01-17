@@ -1,0 +1,33 @@
+{
+  "id": 496065,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-25T14:42:16.000Z",
+  "code_updated_at": "2024-05-25T14:42:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1305873,
+      "name": "bel0rus",
+      "created_at": "2024-05-23T09:48:27.000Z",
+      "url": "https://greasyfork.org/users/1305873-bel0rus"
+    }
+  ],
+  "name": "Theme Grey",
+  "description": "<title>Theme Grey</title>",
+  "url": "https://greasyfork.org/scripts/496065-theme-grey",
+  "code_url": "https://update.greasyfork.org/scripts/496065/Theme%20Grey.user.js",
+  "code_size": 1283,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 495328,
+  "daily_installs": 1,
+  "total_installs": 88,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-18T01:54:12.000Z",
+  "code_updated_at": "2024-05-18T02:23:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1302950,
+      "name": "hansaes",
+      "created_at": "2024-05-17T07:01:43.000Z",
+      "url": "https://greasyfork.org/users/1302950-hansaes",
+      "scripts": [
+        {
+          "id": 495328,
+          "daily_installs": 1,
+          "total_installs": 88,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-18T01:54:12.000Z",
+          "code_updated_at": "2024-05-18T02:23:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Steam 批量操作",
+          "description": "批量出售，批量下架",
+          "url": "https://greasyfork.org/scripts/495328-steam-%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C",
+          "code_url": "https://update.greasyfork.org/scripts/495328/Steam%20%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C.user.js",
+          "code_size": 8653,
+          "license": null,
+          "version": "1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Steam 批量操作",
+  "description": "批量出售，批量下架",
+  "url": "https://greasyfork.org/scripts/495328-steam-%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C",
+  "code_url": "https://update.greasyfork.org/scripts/495328/Steam%20%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C.user.js",
+  "code_size": 8653,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -526,5 +526,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495941,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-24T08:41:08.000Z",
+    "code_updated_at": "2024-05-24T08:41:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805514,
+        "name": "Zyenth",
+        "created_at": "2021-08-17T08:06:40.000Z",
+        "url": "https://greasyfork.org/users/805514-zyenth"
+      }
+    ],
+    "name": "KRUNKER.IO AIMBOT, XRAY, SPINBOT, WIREFRAME, FOV BOX, AND 3RD PERSON BY DOGEWARE (no key)",
+    "description": "Krunker's Mod Menu Aimbot targets nearest VISIBLE player. Adjust Smoothing for precision. Use Xray to see through walls, wireframe for players & world, and more",
+    "url": "https://greasyfork.org/scripts/495941-krunker-io-aimbot-xray-spinbot-wireframe-fov-box-and-3rd-person-by-dogeware-no-key",
+    "code_url": "https://update.greasyfork.org/scripts/495941/KRUNKERIO%20AIMBOT%2C%20XRAY%2C%20SPINBOT%2C%20WIREFRAME%2C%20FOV%20BOX%2C%20AND%203RD%20PERSON%20BY%20DOGEWARE%20%28no%20key%29.user.js",
+    "code_size": 23559,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 495939,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-24T08:24:44.000Z",
+    "code_updated_at": "2024-05-24T08:24:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805514,
+        "name": "Zyenth",
+        "created_at": "2021-08-17T08:06:40.000Z",
+        "url": "https://greasyfork.org/users/805514-zyenth"
+      }
+    ],
+    "name": "Teclado Virtual con CPS Counter",
+    "description": "Teclado virtual con contador de clics por segundo (CPS) en Tempermonkey.",
+    "url": "https://greasyfork.org/scripts/495939-teclado-virtual-con-cps-counter",
+    "code_url": "https://update.greasyfork.org/scripts/495939/Teclado%20Virtual%20con%20CPS%20Counter.user.js",
+    "code_size": 3078,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 495898,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-23T18:46:21.000Z",
+    "code_updated_at": "2024-05-23T18:46:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805514,
+        "name": "Zyenth",
+        "created_at": "2021-08-17T08:06:40.000Z",
+        "url": "https://greasyfork.org/users/805514-zyenth"
+      }
+    ],
+    "name": "MooMoo.io Visuals",
+    "description": "Visually improve moomoo.io by changing the style of certain elements and showing weapon reload bars.",
+    "url": "https://greasyfork.org/scripts/495898-moomoo-io-visuals",
+    "code_url": "https://update.greasyfork.org/scripts/495898/MooMooio%20Visuals.user.js",
+    "code_size": 5929,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 495298,
+    "daily_installs": 5,
+    "total_installs": 1075,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-17T16:38:49.000Z",
+    "code_updated_at": "2024-05-30T14:21:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805514,
+        "name": "Zyenth",
+        "created_at": "2021-08-17T08:06:40.000Z",
+        "url": "https://greasyfork.org/users/805514-zyenth"
+      }
+    ],
+    "name": "MooMoo.io Visuals",
+    "description": "Visually improve moomoo.io by changing the style of certain elements and showing weapon reload bars.",
+    "url": "https://greasyfork.org/scripts/495298-moomoo-io-visuals",
+    "code_url": "https://update.greasyfork.org/scripts/495298/MooMooio%20Visuals.user.js",
+    "code_size": 9850,
+    "license": "Copyright (c) 2024 Zyenth, _VcrazY_",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 495297,
+    "daily_installs": 0,
+    "total_installs": 95,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-17T16:08:41.000Z",
+    "code_updated_at": "2024-05-17T16:08:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 805514,
+        "name": "Zyenth",
+        "created_at": "2021-08-17T08:06:40.000Z",
+        "url": "https://greasyfork.org/users/805514-zyenth"
+      }
+    ],
+    "name": "MooMoo.io Big Store",
+    "description": "Simple script that make store bigger",
+    "url": "https://greasyfork.org/scripts/495297-moomoo-io-big-store",
+    "code_url": "https://update.greasyfork.org/scripts/495297/MooMooio%20Big%20Store.user.js",
+    "code_size": 750,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

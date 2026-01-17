@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496148,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-26T14:54:15.000Z",
+    "code_updated_at": "2024-05-26T14:55:20.000Z",
+    "namespace": "jl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1307518,
+        "name": "jl12776",
+        "created_at": "2024-05-26T14:47:49.000Z",
+        "url": "https://greasyfork.org/users/1307518-jl12776"
+      }
+    ],
+    "name": "Reddit - Fix Other Discussions",
+    "description": "Link other discussions to search",
+    "url": "https://greasyfork.org/scripts/496148-reddit-fix-other-discussions",
+    "code_url": "https://update.greasyfork.org/scripts/496148/Reddit%20-%20Fix%20Other%20Discussions.user.js",
+    "code_size": 764,
+    "license": "MIT License",
+    "version": "2024.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495703,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-21T18:41:32.000Z",
+    "code_updated_at": "2024-05-24T13:49:30.000Z",
+    "namespace": "Vinicius Branco",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305199,
+        "name": "vjbranco",
+        "created_at": "2024-05-21T18:25:14.000Z",
+        "url": "https://greasyfork.org/users/1305199-vjbranco"
+      }
+    ],
+    "name": "RD STATION - Form Validation - Organization",
+    "description": "Form Validation dor RD STATION",
+    "url": "https://greasyfork.org/scripts/495703-rd-station-form-validation-organization",
+    "code_url": "https://update.greasyfork.org/scripts/495703/RD%20STATION%20-%20Form%20Validation%20-%20Organization.user.js",
+    "code_size": 11093,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "1.2",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

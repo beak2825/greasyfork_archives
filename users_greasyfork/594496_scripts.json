@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495315,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-17T20:59:14.000Z",
+    "code_updated_at": "2024-05-22T22:12:27.000Z",
+    "namespace": "https://greasyfork.org/en/users/594496-divided-by",
+    "support_url": null,
+    "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=dividedbyerror@gmail.com&item_name=Reddit+Redirect+Donation",
+    "contribution_amount": "$1",
+    "users": [
+      {
+        "id": 594496,
+        "name": "dividedby",
+        "created_at": "2020-06-16T00:48:28.000Z",
+        "url": "https://greasyfork.org/users/594496-dividedby"
+      }
+    ],
+    "name": "New Reddit Hot Redirect",
+    "description": "Redirects default frontpage from 'best' to 'hot' and entire site to new.reddit.com",
+    "url": "https://greasyfork.org/scripts/495315-new-reddit-hot-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/495315/New%20Reddit%20Hot%20Redirect.user.js",
+    "code_size": 1006,
+    "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 495408,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-18T17:25:14.000Z",
+  "code_updated_at": "2024-05-18T17:25:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1303791,
+      "name": "HLAKI",
+      "created_at": "2024-05-18T17:14:26.000Z",
+      "url": "https://greasyfork.org/users/1303791-hlaki",
+      "scripts": [
+        {
+          "id": 495408,
+          "daily_installs": 0,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-18T17:25:14.000Z",
+          "code_updated_at": "2024-05-18T17:25:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "pixelgalactic.fun picture overlay",
+          "description": "take over the whole world!",
+          "url": "https://greasyfork.org/scripts/495408-pixelgalactic-fun-picture-overlay",
+          "code_url": "https://update.greasyfork.org/scripts/495408/pixelgalacticfun%20picture%20overlay.user.js",
+          "code_size": 1154713,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "pixelgalactic.fun picture overlay",
+  "description": "take over the whole world!",
+  "url": "https://greasyfork.org/scripts/495408-pixelgalactic-fun-picture-overlay",
+  "code_url": "https://update.greasyfork.org/scripts/495408/pixelgalacticfun%20picture%20overlay.user.js",
+  "code_size": 1154713,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

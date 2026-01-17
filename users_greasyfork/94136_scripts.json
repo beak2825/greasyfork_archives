@@ -130,5 +130,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495454,
+    "daily_installs": 0,
+    "total_installs": 3074,
+    "fan_score": "64.6",
+    "good_ratings": 7,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-19T01:59:01.000Z",
+    "code_updated_at": "2024-08-30T04:03:52.000Z",
+    "namespace": "https://www.runningcheese.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 94136,
+        "name": "runningcheese",
+        "created_at": "2017-01-12T06:58:26.000Z",
+        "url": "https://greasyfork.org/users/94136-runningcheese"
+      }
+    ],
+    "name": "RawChat 账号池助手",
+    "description": "自动登录和切换账号，让你实现 GPT-4 自由。",
+    "url": "https://greasyfork.org/scripts/495454-rawchat-%E8%B4%A6%E5%8F%B7%E6%B1%A0%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/495454/RawChat%20%E8%B4%A6%E5%8F%B7%E6%B1%A0%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 20603,
+    "license": null,
+    "version": "2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

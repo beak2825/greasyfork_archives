@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495486,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-19T08:35:23.000Z",
+    "code_updated_at": "2024-05-19T08:52:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1304066,
+        "name": "marcosouvereyns",
+        "created_at": "2024-05-19T08:33:48.000Z",
+        "url": "https://greasyfork.org/users/1304066-marcosouvereyns"
+      }
+    ],
+    "name": "Youtube Music Random Playlist Button",
+    "description": "Adds a button that when clicked, plays a random playlist. Works when viewing the Playlists section of the User's Library (https://music.youtube.com/library/playlists).",
+    "url": "https://greasyfork.org/scripts/495486-youtube-music-random-playlist-button",
+    "code_url": "https://update.greasyfork.org/scripts/495486/Youtube%20Music%20Random%20Playlist%20Button.user.js",
+    "code_size": 5199,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

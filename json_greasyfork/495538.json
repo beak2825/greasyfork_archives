@@ -1,0 +1,59 @@
+{
+  "id": 495538,
+  "daily_installs": 0,
+  "total_installs": 213,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-19T22:40:48.000Z",
+  "code_updated_at": "2024-05-19T22:40:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 455947,
+      "name": "S O",
+      "created_at": "2020-03-08T11:57:58.000Z",
+      "url": "https://greasyfork.org/users/455947-s-o",
+      "scripts": [
+        {
+          "id": 495538,
+          "daily_installs": 0,
+          "total_installs": 213,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-19T22:40:48.000Z",
+          "code_updated_at": "2024-05-19T22:40:47.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "黄金右键-灵活控制视频倍速(改)-Golden Right-Flexibly control the playback rate of videos (edited)",
+          "description": "长按\"→\"键加速倍速播放, 松开\"→\"键恢复用户初始速度, 点击\">\"加速倍速增加, 点击\"<\"加速倍速减小, 点击\"?\"重置正常速度到1倍速, 重置加速速度到2倍速, 灵活追剧看视频~ 支持b站、YouTube、腾讯视频、优酷...",
+          "url": "https://greasyfork.org/scripts/495538-%E9%BB%84%E9%87%91%E5%8F%B3%E9%94%AE-%E7%81%B5%E6%B4%BB%E6%8E%A7%E5%88%B6%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F-%E6%94%B9-golden-right-flexibly-control-the-playback-rate-of-videos-edited",
+          "code_url": "https://update.greasyfork.org/scripts/495538/%E9%BB%84%E9%87%91%E5%8F%B3%E9%94%AE-%E7%81%B5%E6%B4%BB%E6%8E%A7%E5%88%B6%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%28%E6%94%B9%29-Golden%20Right-Flexibly%20control%20the%20playback%20rate%20of%20videos%20%28edited%29.user.js",
+          "code_size": 13900,
+          "license": null,
+          "version": "1.1.1.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "黄金右键-灵活控制视频倍速(改)-Golden Right-Flexibly control the playback rate of videos (edited)",
+  "description": "长按\"→\"键加速倍速播放, 松开\"→\"键恢复用户初始速度, 点击\">\"加速倍速增加, 点击\"<\"加速倍速减小, 点击\"?\"重置正常速度到1倍速, 重置加速速度到2倍速, 灵活追剧看视频~ 支持b站、YouTube、腾讯视频、优酷...",
+  "url": "https://greasyfork.org/scripts/495538-%E9%BB%84%E9%87%91%E5%8F%B3%E9%94%AE-%E7%81%B5%E6%B4%BB%E6%8E%A7%E5%88%B6%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F-%E6%94%B9-golden-right-flexibly-control-the-playback-rate-of-videos-edited",
+  "code_url": "https://update.greasyfork.org/scripts/495538/%E9%BB%84%E9%87%91%E5%8F%B3%E9%94%AE-%E7%81%B5%E6%B4%BB%E6%8E%A7%E5%88%B6%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%28%E6%94%B9%29-Golden%20Right-Flexibly%20control%20the%20playback%20rate%20of%20videos%20%28edited%29.user.js",
+  "code_size": 13900,
+  "license": null,
+  "version": "1.1.1.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

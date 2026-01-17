@@ -64,5 +64,170 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495685,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-21T13:11:21.000Z",
+    "code_updated_at": "2024-05-21T13:11:21.000Z",
+    "namespace": "educoder-answer-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 541676,
+        "name": "Citron甜柠🍋",
+        "created_at": "2020-04-26T02:06:59.000Z",
+        "url": "https://greasyfork.org/users/541676-citron%E7%94%9C%E6%9F%A0"
+      }
+    ],
+    "name": "educoder-answer-helper",
+    "description": "educoder answer helper is from the Internet.",
+    "url": "https://greasyfork.org/scripts/495685-educoder-answer-helper",
+    "code_url": "https://update.greasyfork.org/scripts/495685/educoder-answer-helper.user.js",
+    "code_size": 421,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 495493,
+    "daily_installs": 0,
+    "total_installs": 235,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-05-19T09:45:08.000Z",
+    "code_updated_at": "2024-07-05T00:49:00.000Z",
+    "namespace": "https://github.com/lcandy2/user.js/tree/main/websites/educoder.net/educoder-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 541676,
+        "name": "Citron甜柠🍋",
+        "created_at": "2020-04-26T02:06:59.000Z",
+        "url": "https://greasyfork.org/users/541676-citron%E7%94%9C%E6%9F%A0"
+      }
+    ],
+    "name": "头歌助手 Educoder Helper",
+    "description": "【本脚本需配合《头歌复制助手 Educoder Copy Helper》使用，使用脚本前请确保复制助手已安装】📝解除头歌复制粘贴限制，解除头哥复制缩短限制，支持考试；✨增加“一键复制”、“一键全部文件复制”、“导出全部文件”、“一键完成视频任务”等功能。🧹简单高效代码，无需权限配置，清除广告界面，全自动化签到，安装即用。💛安全开源可读，无论是编译前后的代码均保持开源和易读性，保护隐私与账号安全",
+    "url": "https://greasyfork.org/scripts/495493-%E5%A4%B4%E6%AD%8C%E5%8A%A9%E6%89%8B-educoder-helper",
+    "code_url": "https://update.greasyfork.org/scripts/495493/%E5%A4%B4%E6%AD%8C%E5%8A%A9%E6%89%8B%20Educoder%20Helper.user.js",
+    "code_size": 55746,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "2.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 495490,
+    "daily_installs": 0,
+    "total_installs": 665,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-19T08:58:59.000Z",
+    "code_updated_at": "2024-07-05T00:48:59.000Z",
+    "namespace": "https://github.com/lcandy2/user.js/tree/main/websites/educoder.net/educoder-copy-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 541676,
+        "name": "Citron甜柠🍋",
+        "created_at": "2020-04-26T02:06:59.000Z",
+        "url": "https://greasyfork.org/users/541676-citron%E7%94%9C%E6%9F%A0"
+      }
+    ],
+    "name": "头歌复制助手 Educoder Copy Helper",
+    "description": "📝解除头歌复制粘贴限制，解除头哥复制缩短限制，支持考试；✨与《头歌助手 EduCoder Helper》搭配使用解锁“一键复制”、“一键全部文件复制”、“导出全部文件”等功能。🧹大小仅1.82KB，极小尺寸，无需任何权限，无需任何配置，安装即用。💛安全开源可读，无论是编译前后的代码均保持开源和易读性，防止窃取其他信息",
+    "url": "https://greasyfork.org/scripts/495490-%E5%A4%B4%E6%AD%8C%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B-educoder-copy-helper",
+    "code_url": "https://update.greasyfork.org/scripts/495490/%E5%A4%B4%E6%AD%8C%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B%20Educoder%20Copy%20Helper.user.js",
+    "code_size": 8393,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "2.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 495404,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-18T16:27:07.000Z",
+    "code_updated_at": "2024-05-18T16:44:27.000Z",
+    "namespace": "https://github.com/lcandy2/user.js/tree/main/websites/my-subs.co/download-subtitles-without-waiting",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 541676,
+        "name": "Citron甜柠🍋",
+        "created_at": "2020-04-26T02:06:59.000Z",
+        "url": "https://greasyfork.org/users/541676-citron%E7%94%9C%E6%9F%A0"
+      }
+    ],
+    "name": "Download Subtitles without Waiting",
+    "description": "Download subtitles without waiting. Supports My-Subs.co and so on.",
+    "url": "https://greasyfork.org/scripts/495404-download-subtitles-without-waiting",
+    "code_url": "https://update.greasyfork.org/scripts/495404/Download%20Subtitles%20without%20Waiting.user.js",
+    "code_size": 3781,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 495345,
+    "daily_installs": 0,
+    "total_installs": 224,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-18T05:46:24.000Z",
+    "code_updated_at": "2024-05-18T12:50:33.000Z",
+    "namespace": "https://github.com/lcandy2/user.js/tree/main/websites/chaoxing.com/chaoxing-assignment",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 541676,
+        "name": "Citron甜柠🍋",
+        "created_at": "2020-04-26T02:06:59.000Z",
+        "url": "https://greasyfork.org/users/541676-citron%E7%94%9C%E6%9F%A0"
+      }
+    ],
+    "name": "学习通任务一览 Chaoxing Assignment",
+    "description": "支持作业、考试列表快速查看 | 电脑端快速查看，绝不错过任何作业与考试 | 【💡操作简单】学习通任务一览，无需任何配置，安装即可使用。【📅功能专注】专为查看作业和考试列表设计，增加提醒功能，确保不错过任何重要任务。【⏱️快速查看】在电脑端快速显示所有待办的作业和即将到来的考试，帮助及时安排学习计划，有效管理时间。【🚀提升体验】这一功能填补了原版学习通的空白，为学术生活带来了极大的便利和效率。",
+    "url": "https://greasyfork.org/scripts/495345-%E5%AD%A6%E4%B9%A0%E9%80%9A%E4%BB%BB%E5%8A%A1%E4%B8%80%E8%A7%88-chaoxing-assignment",
+    "code_url": "https://update.greasyfork.org/scripts/495345/%E5%AD%A6%E4%B9%A0%E9%80%9A%E4%BB%BB%E5%8A%A1%E4%B8%80%E8%A7%88%20Chaoxing%20Assignment.user.js",
+    "code_size": 30434,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

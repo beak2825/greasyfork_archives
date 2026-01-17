@@ -30,6 +30,72 @@
     "version": "1.4",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 496171,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-26T19:32:42.000Z",
+    "code_updated_at": "2024-05-26T20:06:34.000Z",
+    "namespace": "https://www.knaperyaden.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 473330,
+        "name": "יודל ליבער",
+        "created_at": "2020-04-02T02:33:42.000Z",
+        "url": "https://greasyfork.org/users/473330-%D7%99%D7%95%D7%93%D7%9C-%D7%9C%D7%99%D7%91%D7%A2%D7%A8"
+      }
+    ],
+    "name": "Ivelt Auto Copy Post Content",
+    "description": "Copy text to clipboard when clicking submit on Ivelt forum",
+    "url": "https://greasyfork.org/scripts/496171-ivelt-auto-copy-post-content",
+    "code_url": "https://update.greasyfork.org/scripts/496171/Ivelt%20Auto%20Copy%20Post%20Content.user.js",
+    "code_size": 1456,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 495731,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-21T23:26:51.000Z",
+    "code_updated_at": "2024-06-03T11:52:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 473330,
+        "name": "יודל ליבער",
+        "created_at": "2020-04-02T02:33:42.000Z",
+        "url": "https://greasyfork.org/users/473330-%D7%99%D7%95%D7%93%D7%9C-%D7%9C%D7%99%D7%91%D7%A2%D7%A8"
+      }
+    ],
+    "name": "Hide Weather Report Posts from Avimelech",
+    "description": "Hide posts within אבימלך׳ס נייעס טישל! containing specific weather-related texts and allow them to be toggled",
+    "url": "https://greasyfork.org/scripts/495731-hide-weather-report-posts-from-avimelech",
+    "code_url": "https://update.greasyfork.org/scripts/495731/Hide%20Weather%20Report%20Posts%20from%20Avimelech.user.js",
+    "code_size": 3868,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

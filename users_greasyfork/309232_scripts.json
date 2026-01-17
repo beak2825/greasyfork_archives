@@ -229,5 +229,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495329,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-18T02:07:17.000Z",
+    "code_updated_at": "2024-05-18T02:07:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "扇贝阅读单词自动发音",
+    "description": "文章阅读页面，点击单词显示释义的同时自动发音该单词",
+    "url": "https://greasyfork.org/scripts/495329-%E6%89%87%E8%B4%9D%E9%98%85%E8%AF%BB%E5%8D%95%E8%AF%8D%E8%87%AA%E5%8A%A8%E5%8F%91%E9%9F%B3",
+    "code_url": "https://update.greasyfork.org/scripts/495329/%E6%89%87%E8%B4%9D%E9%98%85%E8%AF%BB%E5%8D%95%E8%AF%8D%E8%87%AA%E5%8A%A8%E5%8F%91%E9%9F%B3.user.js",
+    "code_size": 1703,
+    "license": "MIT License",
+    "version": "2024-05-17",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

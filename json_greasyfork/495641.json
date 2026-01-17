@@ -1,0 +1,33 @@
+{
+  "id": 495641,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-21T02:33:36.000Z",
+  "code_updated_at": "2024-05-21T03:33:56.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1101475,
+      "name": "minnieo",
+      "created_at": "2023-06-16T11:10:30.000Z",
+      "url": "https://greasyfork.org/users/1101475-minnieo"
+    }
+  ],
+  "name": "kiwifarms gallery",
+  "description": "5/20/2024, 7:04:08 PM",
+  "url": "https://greasyfork.org/scripts/495641-kiwifarms-gallery",
+  "code_url": "https://update.greasyfork.org/scripts/495641/kiwifarms%20gallery.user.js",
+  "code_size": 5202,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

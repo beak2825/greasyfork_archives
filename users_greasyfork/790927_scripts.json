@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496209,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T06:43:57.000Z",
+    "code_updated_at": "2024-05-27T06:43:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790927,
+        "name": "fly9593",
+        "created_at": "2021-07-06T10:36:43.000Z",
+        "url": "https://greasyfork.org/users/790927-fly9593"
+      }
+    ],
+    "name": "CSDN 移除博客中包含下载链接的元素",
+    "description": "移除 CSDN 博客页面上包含下载链接的元素，以提高页面可读性，消除不需要的下载推荐内容。",
+    "url": "https://greasyfork.org/scripts/496209-csdn-%E7%A7%BB%E9%99%A4%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8C%85%E5%90%AB%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E7%9A%84%E5%85%83%E7%B4%A0",
+    "code_url": "https://update.greasyfork.org/scripts/496209/CSDN%20%E7%A7%BB%E9%99%A4%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8C%85%E5%90%AB%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E7%9A%84%E5%85%83%E7%B4%A0.user.js",
+    "code_size": 1170,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

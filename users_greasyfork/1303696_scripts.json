@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495392,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-18T14:04:24.000Z",
+    "code_updated_at": "2024-05-30T08:54:28.000Z",
+    "namespace": "https://greasyfork.org/users/1303696",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1303696,
+        "name": "xswzaq44321",
+        "created_at": "2024-05-18T13:44:18.000Z",
+        "url": "https://greasyfork.org/users/1303696-xswzaq44321"
+      }
+    ],
+    "name": "替換 marumaru 影片與歌詞延遲",
+    "description": "替換 marumaru 播放的影片成你指定的 youtube 影片，方便用純音樂版練歌，也可以調整歌詞延遲",
+    "url": "https://greasyfork.org/scripts/495392-%E6%9B%BF%E6%8F%9B-marumaru-%E5%BD%B1%E7%89%87%E8%88%87%E6%AD%8C%E8%A9%9E%E5%BB%B6%E9%81%B2",
+    "code_url": "https://update.greasyfork.org/scripts/495392/%E6%9B%BF%E6%8F%9B%20marumaru%20%E5%BD%B1%E7%89%87%E8%88%87%E6%AD%8C%E8%A9%9E%E5%BB%B6%E9%81%B2.user.js",
+    "code_size": 5443,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

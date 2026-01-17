@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496116,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-26T06:27:07.000Z",
+    "code_updated_at": "2024-05-26T06:27:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1306539,
+        "name": "邢捕头",
+        "created_at": "2024-05-24T17:51:26.000Z",
+        "url": "https://greasyfork.org/users/1306539-%E9%82%A2%E6%8D%95%E5%A4%B4"
+      }
+    ],
+    "name": "ZSHExtension",
+    "description": "一个简单的Chrome扩展，用于在所有页面插入一行代码。",
+    "url": "https://greasyfork.org/scripts/496116-zshextension",
+    "code_url": "https://update.greasyfork.org/scripts/496116/ZSHExtension.user.js",
+    "code_size": 3191,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

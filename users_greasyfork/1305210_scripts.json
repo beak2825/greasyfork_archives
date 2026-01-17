@@ -1,0 +1,68 @@
+[
+  {
+    "id": 495714,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-21T20:01:01.000Z",
+    "code_updated_at": "2024-06-05T21:03:52.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305210,
+        "name": "regularuser548",
+        "created_at": "2024-05-21T19:34:53.000Z",
+        "url": "https://greasyfork.org/users/1305210-regularuser548"
+      }
+    ],
+    "name": "MyStat Timesetter",
+    "description": "Скрипт который автоматически ставит время в окне загрузки дз в Майстате",
+    "url": "https://greasyfork.org/scripts/495714-mystat-timesetter",
+    "code_url": "https://update.greasyfork.org/scripts/495714/MyStat%20Timesetter.user.js",
+    "code_size": 1061,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 495713,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-21T19:50:59.000Z",
+    "code_updated_at": "2024-06-28T18:41:16.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305210,
+        "name": "regularuser548",
+        "created_at": "2024-05-21T19:34:53.000Z",
+        "url": "https://greasyfork.org/users/1305210-regularuser548"
+      }
+    ],
+    "name": "MyStat homework display",
+    "description": "Скрипт который отображает текстовые дз прямо в Майстате",
+    "url": "https://greasyfork.org/scripts/495713-mystat-homework-display",
+    "code_url": "https://update.greasyfork.org/scripts/495713/MyStat%20homework%20display.user.js",
+    "code_size": 3107,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

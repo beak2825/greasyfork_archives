@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495760,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-22T07:44:44.000Z",
+    "code_updated_at": "2024-11-07T11:11:08.000Z",
+    "namespace": "https://androidworld.nl/ & https://androidworld.be/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305384,
+        "name": "Sparky",
+        "created_at": "2024-05-22T07:40:53.000Z",
+        "url": "https://greasyfork.org/users/1305384-sparky"
+      }
+    ],
+    "name": "Androidworld admin link",
+    "description": "Add link to edit post in Androidworld pages",
+    "url": "https://greasyfork.org/scripts/495760-androidworld-admin-link",
+    "code_url": "https://update.greasyfork.org/scripts/495760/Androidworld%20admin%20link.user.js",
+    "code_size": 1920,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

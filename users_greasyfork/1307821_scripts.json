@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496211,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T06:51:57.000Z",
+    "code_updated_at": "2024-05-28T07:30:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1307821,
+        "name": "RyanRan",
+        "created_at": "2024-05-27T06:28:55.000Z",
+        "url": "https://greasyfork.org/users/1307821-ryanran"
+      }
+    ],
+    "name": "一件复制lilishop项目token",
+    "description": "获取lilishop accessToken",
+    "url": "https://greasyfork.org/scripts/496211-%E4%B8%80%E4%BB%B6%E5%A4%8D%E5%88%B6lilishop%E9%A1%B9%E7%9B%AEtoken",
+    "code_url": "https://update.greasyfork.org/scripts/496211/%E4%B8%80%E4%BB%B6%E5%A4%8D%E5%88%B6lilishop%E9%A1%B9%E7%9B%AEtoken.user.js",
+    "code_size": 1829,
+    "license": null,
+    "version": "0.0.2",
+    "locale": "hu",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

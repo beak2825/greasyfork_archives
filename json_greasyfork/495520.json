@@ -1,0 +1,59 @@
+{
+  "id": 495520,
+  "daily_installs": 0,
+  "total_installs": 494,
+  "fan_score": "74.1",
+  "good_ratings": 11,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-19T16:36:46.000Z",
+  "code_updated_at": "2025-09-27T14:53:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1304262,
+      "name": "sk 163",
+      "created_at": "2024-05-19T16:29:28.000Z",
+      "url": "https://greasyfork.org/users/1304262-sk-163",
+      "scripts": [
+        {
+          "id": 495520,
+          "daily_installs": 0,
+          "total_installs": 494,
+          "fan_score": "74.1",
+          "good_ratings": 11,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-19T16:36:46.000Z",
+          "code_updated_at": "2025-09-27T14:53:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "米家中枢极客版助手",
+          "description": "登录极客版页面后，自动开启助手插件，显示设备、变量与自动化的关系，方便查找设备或变量用在了哪些自动化中。点击自动化规则名称即可跳转到自动化页面并高亮所对应的设备或变量卡片。支持快捷键折叠/展开，关闭，适应画布布局，设备高亮，日志高亮，自动适应画布、设置自动化列表布局样式等功能。",
+          "url": "https://greasyfork.org/scripts/495520-%E7%B1%B3%E5%AE%B6%E4%B8%AD%E6%9E%A2%E6%9E%81%E5%AE%A2%E7%89%88%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/495520/%E7%B1%B3%E5%AE%B6%E4%B8%AD%E6%9E%A2%E6%9E%81%E5%AE%A2%E7%89%88%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 116923,
+          "license": "MIT License",
+          "version": "v0.9.13",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "米家中枢极客版助手",
+  "description": "登录极客版页面后，自动开启助手插件，显示设备、变量与自动化的关系，方便查找设备或变量用在了哪些自动化中。点击自动化规则名称即可跳转到自动化页面并高亮所对应的设备或变量卡片。支持快捷键折叠/展开，关闭，适应画布布局，设备高亮，日志高亮，自动适应画布、设置自动化列表布局样式等功能。",
+  "url": "https://greasyfork.org/scripts/495520-%E7%B1%B3%E5%AE%B6%E4%B8%AD%E6%9E%A2%E6%9E%81%E5%AE%A2%E7%89%88%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/495520/%E7%B1%B3%E5%AE%B6%E4%B8%AD%E6%9E%A2%E6%9E%81%E5%AE%A2%E7%89%88%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 116923,
+  "license": "MIT License",
+  "version": "v0.9.13",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

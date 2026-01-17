@@ -1,0 +1,59 @@
+{
+  "id": 495777,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-22T10:52:12.000Z",
+  "code_updated_at": "2024-05-23T11:47:44.000Z",
+  "namespace": "mtDev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286802,
+      "name": "mtDev",
+      "created_at": "2024-04-11T08:24:19.000Z",
+      "url": "https://greasyfork.org/users/1286802-mtdev",
+      "scripts": [
+        {
+          "id": 495777,
+          "daily_installs": 0,
+          "total_installs": 33,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-22T10:52:12.000Z",
+          "code_updated_at": "2024-05-23T11:47:44.000Z",
+          "namespace": "mtDev",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "开水团工时插件",
+          "description": "Attendance Notification!",
+          "url": "https://greasyfork.org/scripts/495777-%E5%BC%80%E6%B0%B4%E5%9B%A2%E5%B7%A5%E6%97%B6%E6%8F%92%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/495777/%E5%BC%80%E6%B0%B4%E5%9B%A2%E5%B7%A5%E6%97%B6%E6%8F%92%E4%BB%B6.user.js",
+          "code_size": 16769,
+          "license": "AGPL License",
+          "version": "2.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "开水团工时插件",
+  "description": "Attendance Notification!",
+  "url": "https://greasyfork.org/scripts/495777-%E5%BC%80%E6%B0%B4%E5%9B%A2%E5%B7%A5%E6%97%B6%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/495777/%E5%BC%80%E6%B0%B4%E5%9B%A2%E5%B7%A5%E6%97%B6%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 16769,
+  "license": "AGPL License",
+  "version": "2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

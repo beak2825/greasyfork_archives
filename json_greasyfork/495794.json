@@ -1,0 +1,59 @@
+{
+  "id": 495794,
+  "daily_installs": 1,
+  "total_installs": 651,
+  "fan_score": "67.6",
+  "good_ratings": 8,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-22T14:01:52.000Z",
+  "code_updated_at": "2024-05-22T14:01:52.000Z",
+  "namespace": "coredumperror",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1305524,
+      "name": "coredumperror",
+      "created_at": "2024-05-22T13:47:17.000Z",
+      "url": "https://greasyfork.org/users/1305524-coredumperror",
+      "scripts": [
+        {
+          "id": 495794,
+          "daily_installs": 1,
+          "total_installs": 651,
+          "fan_score": "67.6",
+          "good_ratings": 8,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-22T14:01:52.000Z",
+          "code_updated_at": "2024-05-22T14:01:52.000Z",
+          "namespace": "coredumperror",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bluesky Image Downloader",
+          "description": "Adds a download button to images posted to Bluesky, which immediately downloads the image in max quality and with a descriptive filename for easy sorting.",
+          "url": "https://greasyfork.org/scripts/495794-bluesky-image-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/495794/Bluesky%20Image%20Downloader.user.js",
+          "code_size": 16226,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bluesky Image Downloader",
+  "description": "Adds a download button to images posted to Bluesky, which immediately downloads the image in max quality and with a descriptive filename for easy sorting.",
+  "url": "https://greasyfork.org/scripts/495794-bluesky-image-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/495794/Bluesky%20Image%20Downloader.user.js",
+  "code_size": 16226,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

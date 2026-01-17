@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495667,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-21T07:36:10.000Z",
+    "code_updated_at": "2024-05-21T07:36:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1304939,
+        "name": "Nobody277",
+        "created_at": "2024-05-21T07:34:37.000Z",
+        "url": "https://greasyfork.org/users/1304939-nobody277"
+      }
+    ],
+    "name": "Modify Next Button Class",
+    "description": "This will make it so on the boat slide you can always click the next arrow.",
+    "url": "https://greasyfork.org/scripts/495667-modify-next-button-class",
+    "code_url": "https://update.greasyfork.org/scripts/495667/Modify%20Next%20Button%20Class.user.js",
+    "code_size": 1525,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 495947,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-24T10:03:39.000Z",
+  "code_updated_at": "2024-09-20T02:54:52.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 157119,
+      "name": "李生",
+      "created_at": "2017-10-26T16:21:54.000Z",
+      "url": "https://greasyfork.org/users/157119-%E6%9D%8E%E7%94%9F",
+      "scripts": [
+        {
+          "id": 437027,
+          "daily_installs": 0,
+          "total_installs": 613,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-12-14T07:50:19.000Z",
+          "code_updated_at": "2021-12-30T09:51:23.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "探测黑名单Plus - colg.cn",
+          "description": "2020/11/27 下午10:18:36",
+          "url": "https://greasyfork.org/scripts/437027-%E6%8E%A2%E6%B5%8B%E9%BB%91%E5%90%8D%E5%8D%95plus-colg-cn",
+          "code_url": "https://update.greasyfork.org/scripts/437027/%E6%8E%A2%E6%B5%8B%E9%BB%91%E5%90%8D%E5%8D%95Plus%20-%20colgcn.user.js",
+          "code_size": 4964,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🤖ChatGPT - Prompt提示选择器",
+  "description": "一个帮助用户在ChatGPT原生网页快速选择 ChatGPT 提示\"Prompt\"的脚本。",
+  "url": "https://greasyfork.org/scripts/495947-chatgpt-prompt%E6%8F%90%E7%A4%BA%E9%80%89%E6%8B%A9%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/495947/%F0%9F%A4%96ChatGPT%20-%20Prompt%E6%8F%90%E7%A4%BA%E9%80%89%E6%8B%A9%E5%99%A8.user.js",
+  "code_size": 14381,
+  "license": "GNU GPLv3",
+  "version": "1.0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

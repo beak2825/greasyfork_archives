@@ -1,0 +1,33 @@
+{
+  "id": 496005,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-24T23:28:51.000Z",
+  "code_updated_at": "2024-05-24T23:28:51.000Z",
+  "namespace": "https://greasyfork.org/users/166843",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 23987,
+      "name": "Aoi Rabbit",
+      "created_at": "2015-12-20T08:40:21.000Z",
+      "url": "https://greasyfork.org/users/23987-aoi-rabbit"
+    }
+  ],
+  "name": "WME 真っ直ぐ",
+  "description": "Straighten selected WME segment(s) by aligning along straight line between two end points and removing geometry nodes.",
+  "url": "https://greasyfork.org/scripts/496005-wme-%E7%9C%9F%E3%81%A3%E7%9B%B4%E3%81%90",
+  "code_url": "https://update.greasyfork.org/scripts/496005/WME%20%E7%9C%9F%E3%81%A3%E7%9B%B4%E3%81%90.user.js",
+  "code_size": 52234,
+  "license": "GPLv3",
+  "version": "2024.01.31.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

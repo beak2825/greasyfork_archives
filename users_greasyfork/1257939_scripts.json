@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495876,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-23T13:44:23.000Z",
+    "code_updated_at": "2025-12-22T17:44:39.000Z",
+    "namespace": "https://greasyfork.org/users/1257939",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257939,
+        "name": "Accus1958",
+        "created_at": "2024-02-05T19:34:30.000Z",
+        "url": "https://greasyfork.org/users/1257939-accus1958"
+      }
+    ],
+    "name": "BoardGameGeek Link Tabletop Simulator Steam Workshop",
+    "description": "Adds a link to BoardGameGeek to search for the game on the Steam Tabletop Simulator workshop",
+    "url": "https://greasyfork.org/scripts/495876-boardgamegeek-link-tabletop-simulator-steam-workshop",
+    "code_url": "https://update.greasyfork.org/scripts/495876/BoardGameGeek%20Link%20Tabletop%20Simulator%20Steam%20Workshop.user.js",
+    "code_size": 1459,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

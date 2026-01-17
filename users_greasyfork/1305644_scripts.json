@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495810,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-22T19:55:53.000Z",
+    "code_updated_at": "2025-02-13T04:43:14.000Z",
+    "namespace": "script727288273783",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305644,
+        "name": "tkrclient",
+        "created_at": "2024-05-22T19:46:05.000Z",
+        "url": "https://greasyfork.org/users/1305644-tkrclient"
+      }
+    ],
+    "name": "tkrclient",
+    "description": "try out extension on https://github.com/tkrclient/tkrclient ---------------------------- this script only works on the website \"iogames.fun\", allows for color picking, and reduction of spam messages by disallowing long string of text, and disallowing certain unicodes (not emojis)",
+    "url": "https://greasyfork.org/scripts/495810-tkrclient",
+    "code_url": "https://update.greasyfork.org/scripts/495810/tkrclient.user.js",
+    "code_size": 8581,
+    "license": "MIT License",
+    "version": "1.46",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

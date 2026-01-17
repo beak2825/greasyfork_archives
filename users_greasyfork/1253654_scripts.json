@@ -96,6 +96,39 @@
     "version": "1.5",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 495996,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-24T21:01:16.000Z",
+    "code_updated_at": "2024-08-22T15:54:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1253654,
+        "name": "Richard Litten",
+        "created_at": "2024-01-26T20:44:47.000Z",
+        "url": "https://greasyfork.org/users/1253654-richard-litten"
+      }
+    ],
+    "name": "eBay Spec Scraper wVARIABLE IMAGES (Updated)",
+    "description": "Updated script to reliably copy eBay listing info including prices.",
+    "url": "https://greasyfork.org/scripts/495996-ebay-spec-scraper-wvariable-images-updated",
+    "code_url": "https://update.greasyfork.org/scripts/495996/eBay%20Spec%20Scraper%20wVARIABLE%20IMAGES%20%28Updated%29.user.js",
+    "code_size": 5536,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

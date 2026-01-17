@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496212,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-27T06:53:16.000Z",
+    "code_updated_at": "2024-05-27T06:54:54.000Z",
+    "namespace": "https://greasyfork.org/users/1307833",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1307833,
+        "name": "RestSon",
+        "created_at": "2024-05-27T06:50:59.000Z",
+        "url": "https://greasyfork.org/users/1307833-restson"
+      }
+    ],
+    "name": "Fitgirl-Repacks Add Link to Steam Search",
+    "description": "Replaces title with clickable link to steam search of game",
+    "url": "https://greasyfork.org/scripts/496212-fitgirl-repacks-add-link-to-steam-search",
+    "code_url": "https://update.greasyfork.org/scripts/496212/Fitgirl-Repacks%20Add%20Link%20to%20Steam%20Search.user.js",
+    "code_size": 10856,
+    "license": "N/A",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

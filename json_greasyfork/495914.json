@@ -1,0 +1,59 @@
+{
+  "id": 495914,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-24T00:07:47.000Z",
+  "code_updated_at": "2024-05-24T00:07:47.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1305368,
+      "name": "红豆煮南国",
+      "created_at": "2024-05-22T07:11:58.000Z",
+      "url": "https://greasyfork.org/users/1305368-%E7%BA%A2%E8%B1%86%E7%85%AE%E5%8D%97%E5%9B%BD",
+      "scripts": [
+        {
+          "id": 495914,
+          "daily_installs": 0,
+          "total_installs": 55,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-24T00:07:47.000Z",
+          "code_updated_at": "2024-05-24T00:07:47.000Z",
+          "namespace": "",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动刷新插件",
+          "description": "网页自动刷新",
+          "url": "https://greasyfork.org/scripts/495914-%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E6%8F%92%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/495914/%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E6%8F%92%E4%BB%B6.user.js",
+          "code_size": 828,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动刷新插件",
+  "description": "网页自动刷新",
+  "url": "https://greasyfork.org/scripts/495914-%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/495914/%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 828,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

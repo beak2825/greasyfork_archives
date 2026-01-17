@@ -1,0 +1,59 @@
+{
+  "id": 495753,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-22T04:01:09.000Z",
+  "code_updated_at": "2024-05-22T04:01:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1305272,
+      "name": "cshaptx4869",
+      "created_at": "2024-05-22T02:45:44.000Z",
+      "url": "https://greasyfork.org/users/1305272-cshaptx4869",
+      "scripts": [
+        {
+          "id": 495753,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-22T04:01:09.000Z",
+          "code_updated_at": "2024-05-22T04:01:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网道文档助手",
+          "description": "文档滚动时目录悬浮",
+          "url": "https://greasyfork.org/scripts/495753-%E7%BD%91%E9%81%93%E6%96%87%E6%A1%A3%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/495753/%E7%BD%91%E9%81%93%E6%96%87%E6%A1%A3%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 1100,
+          "license": "MIT License",
+          "version": "1.0.0-2024-05-22",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网道文档助手",
+  "description": "文档滚动时目录悬浮",
+  "url": "https://greasyfork.org/scripts/495753-%E7%BD%91%E9%81%93%E6%96%87%E6%A1%A3%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/495753/%E7%BD%91%E9%81%93%E6%96%87%E6%A1%A3%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 1100,
+  "license": "MIT License",
+  "version": "1.0.0-2024-05-22",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

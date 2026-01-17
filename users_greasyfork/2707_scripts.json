@@ -129,6 +129,39 @@
     "version": "v0.73-0-ga1f4088-dirty",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 496119,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-26T08:38:09.000Z",
+    "code_updated_at": "2024-06-17T13:39:53.000Z",
+    "namespace": "xyzabcd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2707,
+        "name": "pepe100",
+        "created_at": "2014-06-10T08:27:40.000Z",
+        "url": "https://greasyfork.org/users/2707-pepe100"
+      }
+    ],
+    "name": "Caché de Ropas (ex-Duellstat)",
+    "description": "create a duell statistik",
+    "url": "https://greasyfork.org/scripts/496119-cach%C3%A9-de-ropas-ex-duellstat",
+    "code_url": "https://update.greasyfork.org/scripts/496119/Cach%C3%A9%20de%20Ropas%20%28ex-Duellstat%29.user.js",
+    "code_size": 1078830,
+    "license": null,
+    "version": "v0.77.1",
+    "locale": "es",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

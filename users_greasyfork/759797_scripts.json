@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495823,
+    "daily_installs": 0,
+    "total_installs": 77,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-22T23:47:53.000Z",
+    "code_updated_at": "2024-05-22T23:47:53.000Z",
+    "namespace": "greasyfork.org/legosavant",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 759797,
+        "name": "Lego Savant",
+        "created_at": "2021-04-16T00:31:37.000Z",
+        "url": "https://greasyfork.org/users/759797-lego-savant"
+      }
+    ],
+    "name": "Tiktok for discord users",
+    "description": "Removes all the bloat and most of the tiktok interface",
+    "url": "https://greasyfork.org/scripts/495823-tiktok-for-discord-users",
+    "code_url": "https://update.greasyfork.org/scripts/495823/Tiktok%20for%20discord%20users.user.css",
+    "code_size": 3064,
+    "license": "The Unlicense",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

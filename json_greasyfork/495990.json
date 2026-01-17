@@ -1,0 +1,33 @@
+{
+  "id": 495990,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-24T19:30:46.000Z",
+  "code_updated_at": "2024-05-24T19:51:33.000Z",
+  "namespace": "https://greasyfork.org/fr/scripts/495990-wme-mapsfr",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 150543,
+      "name": "Laurent Hembord",
+      "created_at": "2017-08-26T22:27:52.000Z",
+      "url": "https://greasyfork.org/users/150543-laurent-hembord"
+    }
+  ],
+  "name": "WME MapsFr",
+  "description": "Ce script créer des boutons pour accéder à des liens externes.",
+  "url": "https://greasyfork.org/scripts/495990-wme-mapsfr",
+  "code_url": "https://update.greasyfork.org/scripts/495990/WME%20MapsFr.user.js",
+  "code_size": 102110,
+  "license": null,
+  "version": "2024.05.24.001",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

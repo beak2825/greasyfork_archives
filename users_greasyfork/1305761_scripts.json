@@ -1,0 +1,101 @@
+[
+  {
+    "id": 495847,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-23T05:56:01.000Z",
+    "code_updated_at": "2024-05-23T05:56:01.000Z",
+    "namespace": "https://greasyfork.org/en/users/1225524-kaitlin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305761,
+        "name": "sonervousgirl2",
+        "created_at": "2024-05-23T05:20:44.000Z",
+        "url": "https://greasyfork.org/users/1305761-sonervousgirl2"
+      }
+    ],
+    "name": "personal test script3",
+    "description": "Blocked users can be synced but do not actually change anything in the SW results yet.",
+    "url": "https://greasyfork.org/scripts/495847-personal-test-script3",
+    "code_url": "https://update.greasyfork.org/scripts/495847/personal%20test%20script3.user.js",
+    "code_size": 7179,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 495846,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-23T05:54:22.000Z",
+    "code_updated_at": "2024-05-23T05:54:21.000Z",
+    "namespace": "https://greasyfork.org/en/users/1225524-kaitlin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305761,
+        "name": "sonervousgirl2",
+        "created_at": "2024-05-23T05:20:44.000Z",
+        "url": "https://greasyfork.org/users/1305761-sonervousgirl2"
+      }
+    ],
+    "name": "personal test script2",
+    "description": "Blocked users can be synced but do not actually change anything in the SW results yet.",
+    "url": "https://greasyfork.org/scripts/495846-personal-test-script2",
+    "code_url": "https://update.greasyfork.org/scripts/495846/personal%20test%20script2.user.js",
+    "code_size": 7178,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 495843,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-23T05:21:31.000Z",
+    "code_updated_at": "2024-05-23T05:49:13.000Z",
+    "namespace": "https://greasyfork.org/en/users/1225524-kaitlin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305761,
+        "name": "sonervousgirl2",
+        "created_at": "2024-05-23T05:20:44.000Z",
+        "url": "https://greasyfork.org/users/1305761-sonervousgirl2"
+      }
+    ],
+    "name": "personal test script",
+    "description": "Blocked users can be synced but do not actually change anything in the SW results yet.",
+    "url": "https://greasyfork.org/scripts/495843-personal-test-script",
+    "code_url": "https://update.greasyfork.org/scripts/495843/personal%20test%20script.user.js",
+    "code_size": 7177,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495330,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-18T02:10:14.000Z",
+    "code_updated_at": "2024-05-18T02:10:14.000Z",
+    "namespace": "https://zacklight.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1303383,
+        "name": "Zackhardtoname",
+        "created_at": "2024-05-18T02:07:51.000Z",
+        "url": "https://greasyfork.org/users/1303383-zackhardtoname"
+      }
+    ],
+    "name": "reset LeetCode editor on load",
+    "description": "Reset LeetCode on load so you wouldn't accidentally see a previously submitted solution!",
+    "url": "https://greasyfork.org/scripts/495330-reset-leetcode-editor-on-load",
+    "code_url": "https://update.greasyfork.org/scripts/495330/reset%20LeetCode%20editor%20on%20load.user.js",
+    "code_size": 1744,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

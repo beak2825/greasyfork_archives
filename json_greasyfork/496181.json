@@ -1,0 +1,33 @@
+{
+  "id": 496181,
+  "daily_installs": 0,
+  "total_installs": 749,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-26T22:01:38.000Z",
+  "code_updated_at": "2024-05-29T19:51:46.000Z",
+  "namespace": "9nice",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 970328,
+      "name": "9nice",
+      "created_at": "2022-10-13T19:20:37.000Z",
+      "url": "https://greasyfork.org/users/970328-9nice"
+    }
+  ],
+  "name": "DMM_areapass",
+  "description": "Unblock DMM area check",
+  "url": "https://greasyfork.org/scripts/496181-dmm-areapass",
+  "code_url": "https://update.greasyfork.org/scripts/496181/DMM_areapass.user.js",
+  "code_size": 1071,
+  "license": "MIT License",
+  "version": "3.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

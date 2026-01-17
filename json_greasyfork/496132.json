@@ -1,0 +1,59 @@
+{
+  "id": 496132,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-26T11:41:13.000Z",
+  "code_updated_at": "2024-05-26T11:41:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294022,
+      "name": "海的鼻涕",
+      "created_at": "2024-04-27T16:49:26.000Z",
+      "url": "https://greasyfork.org/users/1294022-%E6%B5%B7%E7%9A%84%E9%BC%BB%E6%B6%95",
+      "scripts": [
+        {
+          "id": 496132,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-26T11:41:13.000Z",
+          "code_updated_at": "2024-05-26T11:41:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "鼻涕直播专用",
+          "description": "一：5到15分钟上一次链接（这个时间最好可以自定义），小黄车一共会挂20个以上的链接 ，不上连接的时候放在后面（20号以后）  二：每次上连接时，需要弹讲解改到1号链接 每8到10秒弹一次 共弹3 次（需要自定义）。第三次弹完取消讲解之后 放到1号链接20秒 后又放到20链接以后",
+          "url": "https://greasyfork.org/scripts/496132-%E9%BC%BB%E6%B6%95%E7%9B%B4%E6%92%AD%E4%B8%93%E7%94%A8",
+          "code_url": "https://update.greasyfork.org/scripts/496132/%E9%BC%BB%E6%B6%95%E7%9B%B4%E6%92%AD%E4%B8%93%E7%94%A8.user.js",
+          "code_size": 15279,
+          "license": "Mag",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "鼻涕直播专用",
+  "description": "一：5到15分钟上一次链接（这个时间最好可以自定义），小黄车一共会挂20个以上的链接 ，不上连接的时候放在后面（20号以后）  二：每次上连接时，需要弹讲解改到1号链接 每8到10秒弹一次 共弹3 次（需要自定义）。第三次弹完取消讲解之后 放到1号链接20秒 后又放到20链接以后",
+  "url": "https://greasyfork.org/scripts/496132-%E9%BC%BB%E6%B6%95%E7%9B%B4%E6%92%AD%E4%B8%93%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/496132/%E9%BC%BB%E6%B6%95%E7%9B%B4%E6%92%AD%E4%B8%93%E7%94%A8.user.js",
+  "code_size": 15279,
+  "license": "Mag",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

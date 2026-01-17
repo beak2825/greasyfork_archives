@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495380,
+    "daily_installs": 14,
+    "total_installs": 6404,
+    "fan_score": "13.9",
+    "good_ratings": 1,
+    "ok_ratings": 3,
+    "bad_ratings": 2,
+    "created_at": "2024-05-18T11:48:26.000Z",
+    "code_updated_at": "2025-06-25T12:01:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": "https://www.donationalerts.com/r/ChyppitauZ",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1087245,
+        "name": "Chyppitau Coder",
+        "created_at": "2023-05-30T11:05:10.000Z",
+        "url": "https://greasyfork.org/users/1087245-chyppitau-coder"
+      }
+    ],
+    "name": "EvoWorld.io MEGAHACK",
+    "description": "Cheat for evoworld/flyordie with 25+ hacks and emoji hack mod for evoworld! The largest cheat with good and understandable code. Please support this project, I did all this ALONE! It's still a beta version.",
+    "url": "https://greasyfork.org/scripts/495380-evoworld-io-megahack",
+    "code_url": "https://update.greasyfork.org/scripts/495380/EvoWorldio%20MEGAHACK.user.js",
+    "code_size": 47792,
+    "license": "MIT License",
+    "version": "2.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

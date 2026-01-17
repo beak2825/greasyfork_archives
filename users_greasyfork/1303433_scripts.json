@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 495341,
+    "daily_installs": 1,
+    "total_installs": 26,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-18T04:44:45.000Z",
+    "code_updated_at": "2024-05-18T04:44:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1303433,
+        "name": "Angury",
+        "created_at": "2024-05-18T04:36:51.000Z",
+        "url": "https://greasyfork.org/users/1303433-angury"
+      }
+    ],
+    "name": "ChatGPT 对话问题导航",
+    "description": "在ChatGPT页面添加一个对话导航目录，并为每个项添加序号，加入可控制显示/隐藏的按钮，默认状态为显示",
+    "url": "https://greasyfork.org/scripts/495341-chatgpt-%E5%AF%B9%E8%AF%9D%E9%97%AE%E9%A2%98%E5%AF%BC%E8%88%AA",
+    "code_url": "https://update.greasyfork.org/scripts/495341/ChatGPT%20%E5%AF%B9%E8%AF%9D%E9%97%AE%E9%A2%98%E5%AF%BC%E8%88%AA.user.js",
+    "code_size": 3211,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

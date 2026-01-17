@@ -1,0 +1,34 @@
+{
+  "id": 495864,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-23T09:54:28.000Z",
+  "code_updated_at": "2024-05-26T19:34:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1305873,
+      "name": "bel0rus",
+      "created_at": "2024-05-23T09:48:27.000Z",
+      "url": "https://greasyfork.org/users/1305873-bel0rus",
+      "scripts": []
+    }
+  ],
+  "name": "Mobile Theme",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/495864-mobile-theme",
+  "code_url": "https://update.greasyfork.org/scripts/495864/Mobile%20Theme.user.js",
+  "code_size": 1223628,
+  "license": null,
+  "version": "5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

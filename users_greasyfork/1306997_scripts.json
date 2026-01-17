@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496072,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-25T15:14:42.000Z",
+    "code_updated_at": "2024-06-29T12:06:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1306997,
+        "name": "GreatNXY",
+        "created_at": "2024-05-25T14:43:31.000Z",
+        "url": "https://greasyfork.org/users/1306997-greatnxy"
+      }
+    ],
+    "name": "豆瓣短评评分",
+    "description": "为豆瓣电影页面提供最新影评和热门影评评分",
+    "url": "https://greasyfork.org/scripts/496072-%E8%B1%86%E7%93%A3%E7%9F%AD%E8%AF%84%E8%AF%84%E5%88%86",
+    "code_url": "https://update.greasyfork.org/scripts/496072/%E8%B1%86%E7%93%A3%E7%9F%AD%E8%AF%84%E8%AF%84%E5%88%86.user.js",
+    "code_size": 6172,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

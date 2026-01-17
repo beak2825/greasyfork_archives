@@ -1,0 +1,34 @@
+{
+  "id": 495874,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-23T13:25:09.000Z",
+  "code_updated_at": "2024-05-23T13:54:07.000Z",
+  "namespace": "http://tampermonkey.net/webtrn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 70520,
+      "name": "fananhua",
+      "created_at": "2016-10-02T00:13:51.000Z",
+      "url": "https://greasyfork.org/users/70520-fananhua",
+      "scripts": []
+    }
+  ],
+  "name": "中华医学教育在线视频解锁",
+  "description": "对中华医学教育在线的在线视频进行解锁，可以播放学习列表中的任意视频",
+  "url": "https://greasyfork.org/scripts/495874-%E4%B8%AD%E5%8D%8E%E5%8C%BB%E5%AD%A6%E6%95%99%E8%82%B2%E5%9C%A8%E7%BA%BF%E8%A7%86%E9%A2%91%E8%A7%A3%E9%94%81",
+  "code_url": "https://update.greasyfork.org/scripts/495874/%E4%B8%AD%E5%8D%8E%E5%8C%BB%E5%AD%A6%E6%95%99%E8%82%B2%E5%9C%A8%E7%BA%BF%E8%A7%86%E9%A2%91%E8%A7%A3%E9%94%81.user.js",
+  "code_size": 1966,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

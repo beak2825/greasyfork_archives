@@ -1,0 +1,59 @@
+{
+  "id": 496033,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-25T05:08:43.000Z",
+  "code_updated_at": "2024-07-27T02:48:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1306702,
+      "name": "wojiwo03",
+      "created_at": "2024-05-25T05:00:07.000Z",
+      "url": "https://greasyfork.org/users/1306702-wojiwo03",
+      "scripts": [
+        {
+          "id": 496033,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-25T05:08:43.000Z",
+          "code_updated_at": "2024-07-27T02:48:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "极空间Evolved",
+          "description": "极空间的增强脚本",
+          "url": "https://greasyfork.org/scripts/496033-%E6%9E%81%E7%A9%BA%E9%97%B4evolved",
+          "code_url": "https://update.greasyfork.org/scripts/496033/%E6%9E%81%E7%A9%BA%E9%97%B4Evolved.user.js",
+          "code_size": 6980,
+          "license": "MIT License",
+          "version": "0.1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "极空间Evolved",
+  "description": "极空间的增强脚本",
+  "url": "https://greasyfork.org/scripts/496033-%E6%9E%81%E7%A9%BA%E9%97%B4evolved",
+  "code_url": "https://update.greasyfork.org/scripts/496033/%E6%9E%81%E7%A9%BA%E9%97%B4Evolved.user.js",
+  "code_size": 6980,
+  "license": "MIT License",
+  "version": "0.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 495946,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-05-24T10:03:30.000Z",
+    "code_updated_at": "2024-05-24T10:03:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 934878,
+        "name": "蕃薯",
+        "created_at": "2022-07-12T06:54:48.000Z",
+        "url": "https://greasyfork.org/users/934878-%E8%95%83%E8%96%AF"
+      }
+    ],
+    "name": "Bandai",
+    "description": "Take over ariel",
+    "url": "https://greasyfork.org/scripts/495946-bandai",
+    "code_url": "https://update.greasyfork.org/scripts/495946/Bandai.user.js",
+    "code_size": 3435,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

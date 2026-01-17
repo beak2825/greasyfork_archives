@@ -1,0 +1,59 @@
+{
+  "id": 495597,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-20T13:32:52.000Z",
+  "code_updated_at": "2024-05-20T13:32:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1304608,
+      "name": "Momo Mimo",
+      "created_at": "2024-05-20T13:26:39.000Z",
+      "url": "https://greasyfork.org/users/1304608-momo-mimo",
+      "scripts": [
+        {
+          "id": 495597,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-05-20T13:32:52.000Z",
+          "code_updated_at": "2024-05-20T13:32:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "トップページをマシにするためのツール",
+          "description": "小説家になろうのトップページをマシにするツールです。",
+          "url": "https://greasyfork.org/scripts/495597-%E3%83%88%E3%83%83%E3%83%97%E3%83%9A%E3%83%BC%E3%82%B8%E3%82%92%E3%83%9E%E3%82%B7%E3%81%AB%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AE%E3%83%84%E3%83%BC%E3%83%AB",
+          "code_url": "https://update.greasyfork.org/scripts/495597/%E3%83%88%E3%83%83%E3%83%97%E3%83%9A%E3%83%BC%E3%82%B8%E3%82%92%E3%83%9E%E3%82%B7%E3%81%AB%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AE%E3%83%84%E3%83%BC%E3%83%AB.user.js",
+          "code_size": 5513,
+          "license": "MIT License",
+          "version": "2024-05-19",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "トップページをマシにするためのツール",
+  "description": "小説家になろうのトップページをマシにするツールです。",
+  "url": "https://greasyfork.org/scripts/495597-%E3%83%88%E3%83%83%E3%83%97%E3%83%9A%E3%83%BC%E3%82%B8%E3%82%92%E3%83%9E%E3%82%B7%E3%81%AB%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AE%E3%83%84%E3%83%BC%E3%83%AB",
+  "code_url": "https://update.greasyfork.org/scripts/495597/%E3%83%88%E3%83%83%E3%83%97%E3%83%9A%E3%83%BC%E3%82%B8%E3%82%92%E3%83%9E%E3%82%B7%E3%81%AB%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AE%E3%83%84%E3%83%BC%E3%83%AB.user.js",
+  "code_size": 5513,
+  "license": "MIT License",
+  "version": "2024-05-19",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}
