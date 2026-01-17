@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cascade-Scripts
 // @namespace    http://tampermonkey.net/
-// @version      0.0.2
+// @version      0.0.3
 // @description  a mod for idle.vidski.dev
 // @author       Cascade
 // @match        https://idle.vidski.dev/*
@@ -51,7 +51,7 @@
 
         // Extract YD (actions) - it starts with "const YD={" and goes until we hit the next const/let/var declaration
         function extractYD() {
-            return genericSlice('={1:{id:1,actions:{1:{id:1,skill_id:1,skill_level:1,name:{de:"Kupferader",en:"Copper Vein"}', 1);
+            return genericSlice('={1:{id:1,actions:{1:{id:1,skill_id:1,skill_level:1,action_type:"GATHERING",category:null,combat:null,name:{de:"Kupferader",en:"Copper Vein"}', 1);
         }
 
         // Extract Ti (skills)
@@ -157,7 +157,7 @@
     const euler_mascheroni = 0.57721566490153286060651209008240243104215933593992;
 
     let help = {
-        tiers: [1, 15, 30, 55, 65, 75, 85, 100],
+        tiers: [1, 10, 25, 40, 55, 70, 85, 100, 115],
         first_greater_than: (arr, num) => arr.find(x => x > num),
         format_time: (seconds) => {
             let h = Math.floor(seconds / 3600);
@@ -218,10 +218,10 @@
 
 
     window.cascade = {
-        help: () => this.help,
-        db: () => this.db,
-        me: () => this.me,
-        me_ready: () => this.me_ready
+        get help() { return help; },
+        get db() { return db; },
+        get me() { return me; },
+        get me_ready() { return me_ready; },
     }
 
     // actual script below
@@ -302,6 +302,62 @@
         return { container: container, tab_contents: tabContents, tab_buttons: tabButtons};
     }
 
+    function recalculate_stats(){
+        const i = me.equipment
+        let bx = {
+            health: 50,
+            armor: 0,
+            block_chance: 0,
+            damage: 0,
+            attack_speed: 0,
+            mining_speed: 0,
+            mining_quality: 0,
+            fishing_speed: 0,
+            fishing_quality: 0,
+            smithing_speed: 0,
+            smithing_quality: 0,
+            smelting_speed: 0,
+            smelting_quality: 0,
+            woodcutting_speed: 0,
+            woodcutting_quality: 0,
+            cooking_speed: 0
+        }
+        , n = {
+            ...bx
+        };
+        if (i) {
+            for (const [,r] of Object.entries(i)) {
+                if (!r)
+                    continue;
+                const l = db.items[r];
+                if (!(!l || !l.stats))
+                    for (const u in n){
+                        //Object.prototype.hasOwnProperty.call(l.stats, u) && console.log("stat", u, l.stats[u])
+                        Object.prototype.hasOwnProperty.call(l.stats, u) && (n[u] += l.stats[u])
+                    }
+            }
+            n.damage === 0 && (n.damage = 2);
+            n.attack_speed === 0 && (n.attack_speed = 2e3);
+
+            //console.log("calculated stats: ", n)
+            return n
+        }
+    }
+
+    function get_current_action_name(){
+        let action_titles = $('div.text-card-foreground').find('div.text-sm:contains("Lv.")').parent().find('div.text-2xl')
+
+        let current_action_name = "unknown";
+        if(action_titles.length == 2){
+        //combat, first one is your name.
+            current_action_name = action_titles.eq(1).text().trim()
+
+        } else {
+            //normal skill
+            current_action_name = action_titles.text().trim()
+        }
+        return current_action_name
+    }
     function get_calcs(data){
         let current_skill = data.current_skill
         let current_level = data.current_level
@@ -313,16 +369,24 @@
         let next_level_xp = data.next_level_xp
         let next_tier_xp = data.next_tier_xp
         let current_action = data.current_action
-        let actual_action_duration = data.actual_action_duration
+        let actual_action_duration_seconds = data.actual_action_duration_seconds
+        let calculated_stats = data.calculated_stats
 
         let calculations = []
-        let aph = 3600 / actual_action_duration
+        let aph = 3600.0 / actual_action_duration_seconds
+        //console.log("aph ", aph)
         let xph = aph * current_action.experience
 
         let next_level_time = (next_level_xp - current_xp) / xph * 3600
         let next_tier_time = (next_tier_xp - current_xp) / xph * 3600
 
-        calculations.push([["/images/items/" + current_action.image, "actions/hr"], help.round(aph, 0.1)])
+        let action_img = "images/items/" + current_action.image
+
+        if(current_action.action_type == "COMBAT"){
+            action_img = "/images/ui/combat/" + current_action.image
+        }
+
+        calculations.push([[action_img, "actions/hr"], help.round(aph, 0.1)])
 
         calculations.push([["/images/ui/skills/" + current_skill.image, "xp/hr"], help.round(xph)])
 
@@ -332,7 +396,7 @@
 
         calculations.push(["item", "per hr", "quantity", "rate"])
 
-        let quality_bonus = 1 + (me.stats[current_skill.name.toLowerCase() + '_quality'] ?? 0) / 100
+        let quality_bonus = 1 + (calculated_stats[current_skill.name.toLowerCase() + '_quality'] ?? 0) / 100
         for (let i = 0; i < current_action.rewards.length; i++){
             current_action.rewards[i].drop_rate_with_bonus = current_action.rewards[i].drop_rate * quality_bonus
         }
@@ -374,11 +438,14 @@
     }
 
     let current_tab = "Calculations"
+    const clear_panel = () => $('#cascade_container').remove();
     function update(){
-        $('#cascade_container').remove();
+
+        clear_panel()
 
         let current_skill_name = $('header.sticky').find('span.text-foreground').find('span.inline-flex.items-center').text().trim()
-        let current_action_name = $('div.text-card-foreground').find('div.text-sm:contains("Lv.")').parent().find('div.text-2xl').text().trim()
+
+        let current_action_name = get_current_action_name()
         let current_skill = dbf.skill('name', current_skill_name)
         if(!current_skill || !current_action_name || !current_skill_name) return;
 
@@ -390,9 +457,26 @@
         let next_tier_xp = help.level_to_xp(next_tier_level)
 
         let current_action = dbf.action_skill('name.en', current_action_name, current_skill.id)
-        let actual_action_duration = $('div.text-2xl.font-semibold').filter(function() {return $(this).text().trim() === "Actions";}).parent().parent().find('table').find('td:contains("' + current_action_name + '")').closest('tr').find('td:eq(2)').text().replace('s', '').trim();
+        console.log("Update", current_action)
 
-        let calcs = get_calcs({current_skill, current_level, current_xp, next_level_level: current_level + 1, next_tier_level, next_level_xp, next_tier_xp, current_action, actual_action_duration})
+        let action_duration_original_ms
+        let actual_action_duration_seconds
+
+        let calculated_stats = recalculate_stats()
+
+        if(current_action.action_type == "COMBAT"){
+            console.log("Combat not supported")
+            action_duration_original_ms = 3600000
+            actual_action_duration_seconds = 3600
+        } else {
+            action_duration_original_ms = current_action.duration
+
+            // due to how speed works, 50% "speed" results in 2x more actions, and 99% "speed" results in 100x more actions.
+            let speed_or_more_accurately_duration_reduction_factor = (1 - ((calculated_stats[current_skill.name.toLowerCase() + '_speed']??0)) / 100.0)
+            actual_action_duration_seconds = action_duration_original_ms / 1000 * (speed_or_more_accurately_duration_reduction_factor)
+        }
+
+        let calcs = get_calcs({current_skill, current_level, current_xp, next_level_level: current_level + 1, next_tier_level, next_level_xp, next_tier_xp, current_action, actual_action_duration_seconds, calculated_stats})
 
         let calcs_table = create_table({
             items: calcs,
@@ -410,33 +494,27 @@
 
         tab_menu.tab_buttons[current_tab].click()
 
+
         return current_action
     }
 
-    // calling update
-    
-    setInterval(checkURLChange, 100);
-    setTimeout(update, 300);
+    // check for when action title changes
+    let last_action_title
+    setInterval(check_action, 100)
 
-    let interval_id
-    let currentWindowURL
-    
-    // Checks for URI changes and reloads the update pane 
-    function checkURLChange() {
-        if (currentWindowURL == null || currentWindowURL == "") {
-            currentWindowURL = window.location.href;
-        } else {
-            // User change the page, refresh the update pane
-            if (currentWindowURL != window.location.href) {
-                update()
-                
-                if (interval_id != null) {
-                    clearInterval(interval_id)
-                } 
-                interval_id = setInterval(update, 2000)
+    function check_action(){
+        const value = get_current_action_name()
 
-                currentWindowURL = window.location.href
-            }
+        if(value != last_action_title){
+            // update when action is changed
+            clear_panel()
+            setTimeout(update, 55)
         }
+        last_action_title = value
+
     }
+
+    // also update when 5s passes
+    setInterval(update, 5000)
+
 })();

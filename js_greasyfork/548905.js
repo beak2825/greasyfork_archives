@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         导航面板
 // @namespace    http://tampermonkey.net/
-// @version      7.0
+// @version      7.1
 // @description  多功能导航面板，支持侧边栏/顶栏/底栏显示，可自定义位置、颜色、搜索引擎。支持收藏管理、镜像站点数据共享、拖拽排序等功能。默认关闭，可在油猴菜单中为任意网站启用。
 // @author       You
 // @match        *://*/*
@@ -132,7 +132,11 @@
         sideBarOffset: 0, // 侧边栏垂直偏移量（%）：-80到80，负数上移，正数下移
         openInCurrentTab: false, // 左键当前页打开，中键新页打开
         autoExpandContent: false, // 收藏内容默认展开
-        topBarModulesOrder: ['search', 'favorites', 'buttons'], // 顶栏模块顺序
+        topBarModulesOrder: [
+            { id: 'search', order: 0, visible: true },
+            { id: 'favorites', order: 1, visible: true },
+            { id: 'buttons', order: 2, visible: true }
+        ], // 顶栏模块顺序
         primaryColor: platformData[currentPlatform].color, // 主题色
         customPanelName: '', // 自定义面板名称
         sharedDomains: [currentHost] // 共享数据的域名列表，默认只包含当前域名
@@ -151,7 +155,21 @@
     if (siteConfig.sideBarOffset === undefined) siteConfig.sideBarOffset = 0;
     if (siteConfig.openInCurrentTab === undefined) siteConfig.openInCurrentTab = false;
     if (siteConfig.autoExpandContent === undefined) siteConfig.autoExpandContent = false;
-    if (!siteConfig.topBarModulesOrder) siteConfig.topBarModulesOrder = ['search', 'favorites', 'buttons'];
+    if (!siteConfig.topBarModulesOrder || !Array.isArray(siteConfig.topBarModulesOrder) || siteConfig.topBarModulesOrder.length === 0) {
+        siteConfig.topBarModulesOrder = [
+            { id: 'search', order: 0, visible: true },
+            { id: 'favorites', order: 1, visible: true },
+            { id: 'buttons', order: 2, visible: true }
+        ];
+    }
+    // 兼容旧版本：如果是字符串数组，转换为对象数组
+    if (siteConfig.topBarModulesOrder.length > 0 && typeof siteConfig.topBarModulesOrder[0] === 'string') {
+        siteConfig.topBarModulesOrder = siteConfig.topBarModulesOrder.map((id, index) => ({
+            id: id,
+            order: index,
+            visible: true
+        }));
+    }
     if (!siteConfig.primaryColor) siteConfig.primaryColor = platformData[currentPlatform].color;
     if (siteConfig.customPanelName === undefined) siteConfig.customPanelName = '';
     if (!siteConfig.sharedDomains || !Array.isArray(siteConfig.sharedDomains)) siteConfig.sharedDomains = [currentHost];
@@ -215,33 +233,10 @@
 
     function saveSiteConfig() { GM_setValue(configKey, siteConfig); }
 
-    // 安全保存用户数据 - 先读取最新数据，避免多标签页冲突
+    // 安全保存用户数据 - 直接保存，保持顺序
     function saveUsers() {
-        // 从存储中读取最新数据
-        const latestUsers = GM_getValue(storageKey, []);
-
-        // 合并本地更改（去重）
-        const userMap = new Map();
-
-        // 先添加最新的存储数据
-        latestUsers.forEach(user => {
-            const key = `${user.name}_${user.url}`;
-            userMap.set(key, user);
-        });
-
-        // 再添加/更新本地数据
-        platformUsers.forEach(user => {
-            const key = `${user.name}_${user.url}`;
-            userMap.set(key, user);
-        });
-
-        // 转换回数组并保存
-        const mergedUsers = Array.from(userMap.values());
-        GM_setValue(storageKey, mergedUsers);
-
-        // 更新本地引用
-        platformUsers.length = 0;
-        platformUsers.push(...mergedUsers);
+        // 直接保存platformUsers数组，保持用户排序的顺序
+        GM_setValue(storageKey, platformUsers);
     }
 
     // 监听存储变化，实现跨标签页同步
@@ -1257,7 +1252,7 @@
                 </div>
                 <div class="setting-section top-only" style="display: ${siteConfig.position === 'top' || siteConfig.position === 'bottom' ? 'block' : 'none'};">
                     <h3>顶栏底栏模块排序</h3>
-                    <div class="style-list" id="topbar-modules-order-list"></div>
+                    <div class="style-list" id="topbar-modules-list"></div>
                 </div>
             </div>
         `;
@@ -1354,85 +1349,104 @@
         settingsPanel.querySelector('#export-data-btn').onclick = exportData;
         settingsPanel.querySelector('#import-data-btn').onclick = importData;
 
-        // 顶栏模块配置
-        const modulesListContainer = settingsPanel.querySelector('#topbar-modules-list');
-        if (modulesListContainer && siteConfig.position === 'top') {
+        // 辅助函数：只更新模块排序列表，避免刷新整个设置面板
+        function updateModulesOrderList(panel, sortedModules) {
+            const modulesListContainer = panel.querySelector('#topbar-modules-list');
+            if (!modulesListContainer) return;
+
             const moduleNames = {
                 'search': '搜索框',
-                'favoritesButtons': '收藏夹和按钮'
+                'favorites': '收藏内容',
+                'buttons': '操作按钮'
             };
 
-            // 按order排序显示
-            const sortedModules = [...siteConfig.topBarModules].sort((a, b) => a.order - b.order);
+            // 清空现有内容
+            modulesListContainer.innerHTML = '';
 
-            sortedModules.forEach((module, index) => {
+            // 重新排序并渲染
+            const reorderedModules = [...sortedModules].sort((a, b) => a.order - b.order);
+
+            reorderedModules.forEach((module, index) => {
                 const item = document.createElement('div');
                 item.className = 'module-config-item';
-                item.draggable = true;
-                item.dataset.moduleId = module.id;
-
-                // 拖拽手柄
-                const dragHandle = document.createElement('span');
-                dragHandle.className = 'module-drag-handle';
-                dragHandle.textContent = '☰';
-                item.appendChild(dragHandle);
+                item.style.flex = '1';
+                item.style.display = 'flex';
+                item.style.flexDirection = 'column';
+                item.style.alignItems = 'center';
+                item.style.gap = '8px';
 
                 // 模块名称
                 const nameSpan = document.createElement('span');
-                nameSpan.className = 'module-name';
                 nameSpan.textContent = moduleNames[module.id] || module.id;
+                nameSpan.style.fontSize = '14px';
+                nameSpan.style.fontWeight = '600';
                 item.appendChild(nameSpan);
+
+                // 箭头按钮容器
+                const arrowContainer = document.createElement('div');
+                arrowContainer.style.display = 'flex';
+                arrowContainer.style.gap = '8px';
+
+                // 左箭头按钮
+                const leftBtn = document.createElement('button');
+                leftBtn.textContent = '←';
+                leftBtn.className = 'rename-btn-mini';
+                leftBtn.style.width = '36px';
+                leftBtn.disabled = index === 0;
+                if (leftBtn.disabled) leftBtn.style.opacity = '0.3';
+                leftBtn.onclick = () => {
+                    const temp = reorderedModules[index - 1].order;
+                    reorderedModules[index - 1].order = module.order;
+                    module.order = temp;
+                    saveSiteConfig();
+                    updateModulesOrderList(panel, reorderedModules);
+                    renderPanel();
+                };
+                arrowContainer.appendChild(leftBtn);
+
+                // 右箭头按钮
+                const rightBtn = document.createElement('button');
+                rightBtn.textContent = '→';
+                rightBtn.className = 'rename-btn-mini';
+                rightBtn.style.width = '36px';
+                rightBtn.disabled = index === reorderedModules.length - 1;
+                if (rightBtn.disabled) rightBtn.style.opacity = '0.3';
+                rightBtn.onclick = () => {
+                    const temp = reorderedModules[index + 1].order;
+                    reorderedModules[index + 1].order = module.order;
+                    module.order = temp;
+                    saveSiteConfig();
+                    updateModulesOrderList(panel, reorderedModules);
+                    renderPanel();
+                };
+                arrowContainer.appendChild(rightBtn);
+                item.appendChild(arrowContainer);
 
                 // 可见性开关
                 const visibleToggle = document.createElement('div');
-                visibleToggle.className = `toggle-switch module-visible-toggle ${module.visible ? 'active' : ''}`;
+                visibleToggle.className = `toggle-switch ${module.visible ? 'active' : ''}`;
+                visibleToggle.style.marginTop = '8px';
                 visibleToggle.onclick = () => {
                     visibleToggle.classList.toggle('active');
                     module.visible = visibleToggle.classList.contains('active');
                     saveSiteConfig();
+                    renderPanel(); // 只刷新主面板，不刷新设置面板
                 };
                 item.appendChild(visibleToggle);
 
                 modulesListContainer.appendChild(item);
-
-                // 拖拽事件
-                item.ondragstart = (e) => {
-                    item.classList.add('dragging');
-                    e.dataTransfer.effectAllowed = 'move';
-                    e.dataTransfer.setData('text/html', item.innerHTML);
-                };
-
-                item.ondragend = () => {
-                    item.classList.remove('dragging');
-                    modulesListContainer.querySelectorAll('.module-config-item').forEach(i => i.classList.remove('drag-over'));
-                };
-
-                item.ondragover = (e) => {
-                    e.preventDefault();
-                    const draggingItem = modulesListContainer.querySelector('.dragging');
-                    if (draggingItem && draggingItem !== item) {
-                        const rect = item.getBoundingClientRect();
-                        const midpoint = rect.top + rect.height / 2;
-                        if (e.clientY < midpoint) {
-                            modulesListContainer.insertBefore(draggingItem, item);
-                        } else {
-                            modulesListContainer.insertBefore(draggingItem, item.nextSibling);
-                        }
-                    }
-                };
-
-                item.ondrop = (e) => {
-                    e.preventDefault();
-                    // 更新order
-                    const items = Array.from(modulesListContainer.querySelectorAll('.module-config-item'));
-                    items.forEach((itm, idx) => {
-                        const moduleId = itm.dataset.moduleId;
-                        const moduleConfig = siteConfig.topBarModules.find(m => m.id === moduleId);
-                        if (moduleConfig) moduleConfig.order = idx;
-                    });
-                    saveSiteConfig();
-                };
             });
+        }
+
+        // 顶栏模块配置
+        const modulesListContainer = settingsPanel.querySelector('#topbar-modules-list');
+        if (modulesListContainer && (siteConfig.position === 'top' || siteConfig.position === 'bottom')) {
+            // 水平布局
+            modulesListContainer.style.display = 'flex';
+            modulesListContainer.style.gap = '12px';
+
+            // 使用辅助函数初始化模块列表
+            updateModulesOrderList(settingsPanel, siteConfig.topBarModulesOrder);
         }
 
         // Toggle开关事件处理
@@ -1451,6 +1465,8 @@
 
         // 样式列表
         const styleList = settingsPanel.querySelector('#style-list');
+        let draggedElement = null; // 拖拽状态变量（外部作用域）
+
         platformUsers.forEach((user, index) => {
             const item = document.createElement('div');
             item.className = 'style-item';
@@ -1524,8 +1540,12 @@
                     platformUsers[index].name = newName.trim();
                     saveUsers();
                     renderPanel();
-                    settingsPanel.remove();
-                    openSettings();
+                    // 更新当前项的显示
+                    const nameSpan = item.querySelector('.style-item-name');
+                    if (nameSpan) {
+                        nameSpan.textContent = newName.trim();
+                        nameSpan.title = newName.trim();
+                    }
                 }
             };
             controls.appendChild(renameBtn);
@@ -1539,8 +1559,12 @@
                     platformUsers.splice(index, 1);
                     saveUsers();
                     renderPanel();
-                    settingsPanel.remove();
-                    openSettings();
+                    // 移除当前项
+                    item.remove();
+                    // 重新索引其他项
+                    styleList.querySelectorAll('.style-item').forEach((styleItem, idx) => {
+                        styleItem.dataset.userIndex = idx;
+                    });
                 }
             };
             controls.appendChild(deleteBtn);
@@ -1548,28 +1572,69 @@
             item.appendChild(controls);
             styleList.appendChild(item);
 
-            // 拖拽排序
-            item.ondragstart = () => { draggedIndex = index; item.classList.add('dragging'); };
-            item.ondragend = () => { item.classList.remove('dragging'); draggedIndex = null; settingsPanel.remove(); openSettings(); };
-            item.ondragover = (e) => { e.preventDefault(); item.classList.add('drag-over'); };
-            item.ondragleave = () => item.classList.remove('drag-over');
+            // 拖拽排序 - 改进版，更灵敏
+            item.ondragstart = (e) => {
+                draggedElement = item;
+                item.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            };
+
+            item.ondragend = () => {
+                item.classList.remove('dragging');
+                styleList.querySelectorAll('.style-item').forEach(i => i.classList.remove('drag-over'));
+
+                // 根据DO M顺序重新构建platformUsers数组
+                const newOrder = [];
+                styleList.querySelectorAll('.style-item').forEach(styleItem => {
+                    // 使用存储的用户对象引用
+                    if (styleItem._userObject) {
+                        newOrder.push(styleItem._userObject);
+                    }
+                });
+
+                platformUsers.length = 0;
+                platformUsers.push(...newOrder);
+                saveUsers();
+                renderPanel();
+
+                draggedElement = null;
+            };
+
+            item.ondragover = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+
+            item.ondragenter = (e) => {
+                e.preventDefault();
+                if (draggedElement && draggedElement !== item) {
+                    const rect = item.getBoundingClientRect();
+                    const midpoint = rect.top + rect.height / 2;
+
+                    if (e.clientY < midpoint) {
+                        styleList.insertBefore(draggedElement, item);
+                    } else {
+                        styleList.insertBefore(draggedElement, item.nextSibling);
+                    }
+                }
+            };
+
+            item.ondragleave = () => {
+                item.classList.remove('drag-over');
+            };
+
             item.ondrop = (e) => {
                 e.preventDefault();
                 item.classList.remove('drag-over');
-                if (draggedIndex !== null && draggedIndex !== index) {
-                    const temp = platformUsers[draggedIndex];
-                    platformUsers.splice(draggedIndex, 1);
-                    const newIndex = draggedIndex < index ? index - 1 : index;
-                    platformUsers.splice(newIndex, 0, temp);
-                    saveUsers();
-                    renderPanel();
-                }
             };
+
+            // 存储用户对象的直接引用（而非索引）
+            item._userObject = user;
         });
 
         // 搜索引擎列表
         const searchList = settingsPanel.querySelector('#search-engine-list');
-        let draggedSearchIndex = null;
+        let draggedSearchElement = null; // 拖拽状态变量（外部作用域）
 
         siteConfig.searchEngines.forEach((engine, index) => {
             const item = document.createElement('div');
@@ -1599,42 +1664,77 @@
                 if (confirm(`确定要删除搜索引擎 "${engine.name}" 吗？`)) {
                     siteConfig.searchEngines.splice(index, 1);
                     saveSiteConfig();
-                    settingsPanel.remove();
-                    openSettings();
+                    renderPanel();
+                    // 移除当前项
+                    item.remove();
+                    // 重新索引其他项
+                    searchList.querySelectorAll('.style-item').forEach((searchItem, idx) => {
+                        searchItem.dataset.searchIndex = idx;
+                    });
                 }
             };
             item.appendChild(deleteBtn);
 
             searchList.appendChild(item);
 
-            // 拖拽排序
-            item.ondragstart = () => {
-                draggedSearchIndex = index;
+            // 拖拽排序 - 改进版，更灵敏
+            item.ondragstart = (e) => {
+                draggedSearchElement = item;
                 item.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
             };
+
             item.ondragend = () => {
                 item.classList.remove('dragging');
-                draggedSearchIndex = null;
-                settingsPanel.remove();
-                openSettings();
+                searchList.querySelectorAll('.style-item').forEach(i => i.classList.remove('drag-over'));
+
+                // 根据DO M顺序重新构建searchEngines数组
+                const newOrder = [];
+                searchList.querySelectorAll('.style-item').forEach(searchItem => {
+                    // 使用存储的搜索引擎对象引用
+                    if (searchItem._engineObject) {
+                        newOrder.push(searchItem._engineObject);
+                    }
+                });
+
+                siteConfig.searchEngines.length = 0;
+                siteConfig.searchEngines.push(...newOrder);
+                saveSiteConfig();
+                renderPanel();
+
+                draggedSearchElement = null;
             };
+
             item.ondragover = (e) => {
                 e.preventDefault();
-                item.classList.add('drag-over');
+                e.dataTransfer.dropEffect = 'move';
             };
-            item.ondragleave = () => item.classList.remove('drag-over');
+
+            item.ondragenter = (e) => {
+                e.preventDefault();
+                if (draggedSearchElement && draggedSearchElement !== item) {
+                    const rect = item.getBoundingClientRect();
+                    const midpoint = rect.top + rect.height / 2;
+
+                    if (e.clientY < midpoint) {
+                        searchList.insertBefore(draggedSearchElement, item);
+                    } else {
+                        searchList.insertBefore(draggedSearchElement, item.nextSibling);
+                    }
+                }
+            };
+
+            item.ondragleave = () => {
+                item.classList.remove('drag-over');
+            };
+
             item.ondrop = (e) => {
                 e.preventDefault();
                 item.classList.remove('drag-over');
-                if (draggedSearchIndex !== null && draggedSearchIndex !== index) {
-                    const temp = siteConfig.searchEngines[draggedSearchIndex];
-                    siteConfig.searchEngines.splice(draggedSearchIndex, 1);
-                    const newIndex = draggedSearchIndex < index ? index - 1 : index;
-                    siteConfig.searchEngines.splice(newIndex, 0, temp);
-                    saveSiteConfig();
-                    renderPanel();
-                }
             };
+
+            // 存储搜索引擎对象的直接引用
+            item._engineObject = engine;
         });
 
         // 共享域名列表
@@ -2431,12 +2531,20 @@
                 'favorites': createFavoritesModule,
                 'buttons': createButtonsModule
             };
-            siteConfig.topBarModulesOrder.forEach(moduleId => {
-                const creator = moduleCreators[moduleId];
-                if (creator) {
-                    const moduleElement = creator();
-                    if (moduleElement) {
-                        mainContainer.appendChild(moduleElement);
+            // 按order排序，然后根据visible属性过滤
+            const sortedModules = [...siteConfig.topBarModulesOrder].sort((a, b) => a.order - b.order);
+            sortedModules.forEach(module => {
+                // 兼容旧版本：如果是字符串，直接使用；如果是对象，提取id和visible
+                const moduleId = typeof module === 'string' ? module : module.id;
+                const isVisible = typeof module === 'string' ? true : (module.visible !== false);
+
+                if (isVisible) {
+                    const creator = moduleCreators[moduleId];
+                    if (creator) {
+                        const moduleElement = creator();
+                        if (moduleElement) {
+                            mainContainer.appendChild(moduleElement);
+                        }
                     }
                 }
             });

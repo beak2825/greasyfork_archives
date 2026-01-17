@@ -1,20 +1,21 @@
 // ==UserScript==
-// @name Youtube WideScreen (New Design Polymer) [USw] v.70
+// @name Youtube WideScreen (New Design Polymer) [USw] v.71
 // @namespace youtube.com
-// @version 70000.0.0
+// @version 71000.0.0
 // @description For a Wide Screen and the YouTube New Design
 // @author decembre
 // @license unlicense
 // @grant GM_addStyle
 // @run-at document-start
 // @match *://*.youtube.com/*
-// @downloadURL https://update.greasyfork.org/scripts/409893/Youtube%20WideScreen%20%28New%20Design%20Polymer%29%20%5BUSw%5D%20v70.user.js
-// @updateURL https://update.greasyfork.org/scripts/409893/Youtube%20WideScreen%20%28New%20Design%20Polymer%29%20%5BUSw%5D%20v70.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/409893/Youtube%20WideScreen%20%28New%20Design%20Polymer%29%20%5BUSw%5D%20v71.user.js
+// @updateURL https://update.greasyfork.org/scripts/409893/Youtube%20WideScreen%20%28New%20Design%20Polymer%29%20%5BUSw%5D%20v71.meta.js
 // ==/UserScript==
 
 (function() {
 let css = `
-/* 0- YouTube WideScreen (New Design Polymer) v.70 (new70) - TEST TOTARA -From UserCSS - HOME Simple / SEARCH (2 By Row) / CHAT - TEST (No Color)- QUANTUM */
+
+/* 0- YouTube WideScreen (New Design Polymer) v.71 (new71) - TEST TOTARA -From UserCSS - HOME Simple / SEARCH (2 By Row) / CHAT - TEST (No Color)- QUANTUM */
 
 /* YouTube WideScreen (New Design Polymer DEV Test */
 /* ==== 0- YouTube WideScreen (New Design Polymer) [USw] v.56 (new6) - USw - FIX CY Fung FIX ==== */
@@ -9533,18 +9534,6 @@ html:has([fullscreen]) .ytp-chrome-controls {
     border: none  !important;
 /*border: 1px solid red  !important;*/
 }
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 @-moz-document url-prefix("https://www.youtube.com/watch?") {
@@ -9925,7 +9914,7 @@ border-left: 5px solid rgb(34, 34, 34);
 
 
 
-/* RELATED VIDEOS TABS */
+/* (new71) RELATED VIDEOS TABS */
 
 html:not([plugin-tabview-youtube]):has(tabview-view-pos-thead) #related ytd-watch-next-secondary-results-renderer #items.ytd-watch-next-secondary-results-renderer:not(.thumbnail-and-metadata-wrapper):not(.ytd-video-preview):not(a#lockup-container) {
     position: fixed !important;
@@ -9952,8 +9941,8 @@ html:not([plugin-tabview-youtube]):has(tabview-view-pos-thead) #items .ytd-watch
     float: left;
     clear: none;
     width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
+    max-width: 32% !important;
+    min-width: 32% !important;
     height: 100% !important;
     min-height: 25vh !important;
     max-height: 180px !important;
@@ -9961,7 +9950,7 @@ html:not([plugin-tabview-youtube]):has(tabview-view-pos-thead) #items .ytd-watch
     padding: 0.2rem !important;
     border-radius: 3px !important;
 background-color: black !important;
-/*border: 1px solid lime !important;*/
+/*border: 1px dashed aqua  !important;*/
 }
 
 html:not([plugin-tabview-youtube]):has(tabview-view-pos-thead) ytd-watch-flexy[is-two-columns_] #right-tabs .tab-content #tab-info > ytd-expandable-video-description-body-renderer {
@@ -10012,15 +10001,6 @@ border-left: 1px solid rgb(34, 34, 34);
     overflow: hidden auto !important;
 border: 1px solid rgb(34, 34, 34) !important;
 }
-
-
-
-
-
-
-
-
-
 }
 
 @-moz-document domain("youtube.com") {
@@ -10349,9 +10329,9 @@ tp-yt-app-drawer#guide + ytd-mini-guide-renderer.ytd-app[hidden] + ytd-page-mana
 
 
 
-/* (new56) ========== SEARCH RESULTS - MINI PANEL VISIBLE ======  */
+/* (new71) ========== SEARCH RESULTS - MINI PANEL VISIBLE ======  */
 
-/* (new56) TOP SEARCH - MINI PANEL - NAVBAR - MINI GUIDE VISIBLE - BIG LEFT PANEL CLOSE  */
+/* (new71) TOP SEARCH - with MINI PANEL - NAVBAR - MINI GUIDE VISIBLE - BIG LEFT PANEL CLOSE  */
 ytd-mini-guide-renderer.ytd-app[mini-guide-visible] + ytd-page-manager#page-manager ytd-search.ytd-page-manager #header.ytd-search,
 tp-yt-app-drawer#guide + ytd-mini-guide-renderer.ytd-app:not([hidden]) + ytd-page-manager#page-manager.ytd-app ytd-search[has-search-header][has-bigger-thumbs] #header.ytd-search {
     position: fixed !important;
@@ -10365,10 +10345,269 @@ tp-yt-app-drawer#guide + ytd-mini-guide-renderer.ytd-app:not([hidden]) + ytd-pag
 /* tp-yt-app-drawer#guide + ytd-mini-guide-renderer.ytd-app:not([hidden]) + ytd-page-manager#page-manager.ytd-app ytd-search[has-search-header][has-bigger-thumbs] #header.ytd-search + ytd-two-column-search-results-renderer.ytd-search[mini-guide-visible] , */
 ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search {
     width: 100% !important;
-    min-width: 100% !important;
+    min-width: 86vw !important;
+    max-width: 86vw !important;
     margin: 6.3vh 0 0 0 !important;
 /*background: peru !important;*/
 }
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: 86.5vh !important;
+    overflow: hidden auto !important;
+/*border: 1px solid aqua  !important;*/
+}
+
+/* (new71) SEARCH - SHORT - SIMILAR SEARCH CARROUSEL HORIZONTAL  */
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents ytd-horizontal-card-list-renderer:not(.ytd-expandable-metadata-renderer) {
+    display: inline-block !important;
+    min-width: 84vw !important;
+    max-width: 84vw !important;
+    margin:  2vh 0 2vh 10px !important;
+border: 1px solid silver  !important;
+}
+
+
+/* (new71) SEARCH - SHORT - CONTAINER */
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer {
+    position: relative;
+    display: inline-block !important;
+    -moz-box-orient: unset !important;
+    -moz-box-direction: unset !important;
+    flex-direction: unset !important;
+    height: auto !important;
+    margin:  0 0 0 0 !important;
+    padding: 0 0 0vh 0 !important;
+/*background: brown !important;*/
+/*border: 1px solid aqua  !important;*/
+}
+
+/* (new71) SEARCH - SHORT - ITEMS - HEADER */
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer yt-section-header-view-model {
+    display: inline-block !important;
+    width: 98% !important;
+    height: 3vh !important;
+    line-height: 3vh !important;
+/*border: 1px solid aqua  !important;*/
+}
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer yt-section-header-view-model .yt-shelf-header-layout--disable-horizontal-padding {
+    display: inline-block !important;
+    max-height: 3vh !important;
+    min-height: 3vh !important;
+    line-height: 2vh !important;
+    padding: 0 0 0 0 !important;
+/*background: olive !important;*/
+}
+
+/* (new71) SEARCH - SHORT - ITEMS - ITEMS */
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer .ytd-item-section-renderer > div {
+    display: block;
+    float: left !important;
+    width: 48% !important;
+    height: 20vh !important;
+    margin:  0 10px 0 10px !important;
+    border-radius: 5px !important;
+border: 1px solid silver !important;
+}
+
+/* (new71) SEARCH - SHORT - ITEMS - LAST ITEM */
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer .ytGridShelfViewModelGridShelfRow.ytd-item-section-renderer:last-of-type .ytGridShelfViewModelGridShelfItem {
+    display: block;
+    float: left !important;
+    width: 100% !important;
+    height: 20vh !important;
+    margin:  0 10px 0 10px !important;
+    border-radius: 5px !important;
+border: 1px solid silver !important;
+}
+
+
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer ytm-shorts-lockup-view-model-v2{
+    display: inline-block !important;
+    width: 100% !important;
+    height: 20vh !important;
+    margin:  0 0px 0 0 !important;
+    overflow: hidden !important;
+/*border: 1px solid yellow  !important;*/
+}
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer ytm-shorts-lockup-view-model-v2 ytm-shorts-lockup-view-model{
+    display: inline-block !important;
+    width: 100% !important;
+    height: 20vh !important;
+    margin:  0 0px 0 0 !important;
+    overflow: hidden !important;
+/*border: 1px solid yellow  !important;*/
+}
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer ytm-shorts-lockup-view-model-v2 ytm-shorts-lockup-view-model .shortsLockupViewModelHostEndpoint {
+    position: relative;
+    display: block;
+    float: left !important;
+    width: 50% !important;
+  text-decoration: none;
+/*border: 1px solid yellow  !important;*/
+}
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer ytm-shorts-lockup-view-model-v2 yt-thumbnail-view-model{
+  padding-top: 0% !important;
+    height: 20vh !important;
+    object-fit: contain !important;
+}
+ytd-search[has-search-header] ytd-two-column-search-results-renderer.ytd-search #primary ytd-section-list-renderer.ytd-two-column-search-results-renderer #contents.ytd-section-list-renderer grid-shelf-view-model.ytd-item-section-renderer ytm-shorts-lockup-view-model-v2 yt-thumbnail-view-model img{
+  padding-top: 0% !important;
+    height: 20vh !important;
+    object-fit: contain !important;
+}
+
+/* (new71) SEARCH - SHORT - ITEMS - META */
+a.shortsLockupViewModelHostEndpoint.reel-item-endpoint + .shortsLockupViewModelHostOutsideMetadata.shortsLockupViewModelHostMetadataRounded.shortsLockupViewModelHostOutsideMetadataHasMenu {
+    position: relative;
+    display: block;
+    float: right  !important;
+    min-width: 48% !important;
+    max-width: 48% !important;
+    min-height: 20vh !important;
+    max-height: 20vh !important;
+    margin: 0 0 0 0 !important;
+    padding: 0 0 0 0 !important;
+    border-radius:  0 !important;
+border: 1px solid silver  !important;
+}
+
+
+a.shortsLockupViewModelHostEndpoint.reel-item-endpoint + .shortsLockupViewModelHostOutsideMetadata.shortsLockupViewModelHostMetadataRounded.shortsLockupViewModelHostOutsideMetadataHasMenu > div:not(.image-overlay-text) {
+    position: relative;
+    display: inline-block !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-height: 20vh !important;
+    max-height: 20vh !important;
+    margin: 0 0 0 0 !important;
+    padding: 0 0 0 0 !important;
+/*border: 1px solid yellow  !important;*/
+}
+a.shortsLockupViewModelHostEndpoint.reel-item-endpoint + .shortsLockupViewModelHostOutsideMetadata.shortsLockupViewModelHostMetadataRounded.shortsLockupViewModelHostOutsideMetadataHasMenu > div:not(.image-overlay-text) h3.shortsLockupViewModelHostOutsideMetadataTitle {
+    position: relative;
+    display: block;
+    float: left  !important;
+    width: 100% !important;
+    min-width: 98% !important;
+    max-width: 98% !important;
+    height: 100% !important;
+    min-height: 17vh !important;
+    max-height: 17vh !important;
+    margin: 0 0 0 0 !important;
+    padding: 0 0 0 0 !important;
+/*border: 1px solid yellow  !important;*/
+}
+
+a.shortsLockupViewModelHostEndpoint.reel-item-endpoint + .shortsLockupViewModelHostOutsideMetadata.shortsLockupViewModelHostMetadataRounded.shortsLockupViewModelHostOutsideMetadataHasMenu > div:not(.image-overlay-text) .shortsLockupViewModelHostOutsideMetadataSubhead {
+    position: relative;
+    display: block;
+    float: left  !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    min-height: 5vh !important;
+    max-height: 5vh !important;
+    margin: 0 0 0 0 !important;
+    padding: 0 0 0 5px !important;
+border-top: 1px solid silver !important;
+}
+
+
+a.shortsLockupViewModelHostEndpoint.reel-item-endpoint + .shortsLockupViewModelHostOutsideMetadata.shortsLockupViewModelHostMetadataRounded.shortsLockupViewModelHostOutsideMetadataHasMenu > div:not(.image-overlay-text) h3.shortsLockupViewModelHostOutsideMetadataTitle a {
+    position: relative;
+    display: inline-block !important;
+    width: 100% !important;
+    min-width: 98% !important;
+    max-width: 98% !important;
+    height: 100% !important;
+    min-height: 20vh !important;
+    max-height: 20vh !important;
+    margin: 0 0 0 0 !important;
+    padding: 0 0 0 0 !important;
+/*border: 1px solid yellow  !important;*/
+}
+
+a.shortsLockupViewModelHostEndpoint.reel-item-endpoint + .shortsLockupViewModelHostOutsideMetadata.shortsLockupViewModelHostMetadataRounded.shortsLockupViewModelHostOutsideMetadataHasMenu > div:not(.image-overlay-text) a.shortsLockupViewModelHostEndpoint.shortsLockupViewModelHostOutsideMetadataEndpoint span{
+    position: relative;
+    float: left  !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical !important;
+    width: 100% !important;
+    min-width: 97% !important;
+    max-width: 97% !important;
+    height: 100% !important;
+    min-height: 16.5vh !important;
+    max-height: 16.5vh !important;
+    margin: 0 0 0 0 !important;
+    padding: 0 5px 0 05px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+
+/*border: 1px solid yellow  !important;*/
+}
+
+/* (new71) SEARCH - SHORT - ITEMS - BUT MORE / LESS */
+.ytGridShelfViewModelGridShelfBottomButtonContainer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 130px;
+  background-color: transparent !important;
+  transform: translate(-50%,50%);
+}
+
+/* (new71) SEARCH - SHORT - CONTINATION */
+#contents.ytd-item-section-renderer + #continuations {
+    position: relative;
+    float: left  !important;
+    width: 100% !important;
+    height: 1vh !important;
+    margin: 0 0 0 0 !important;
+/*background-color: red !important;*/
+}
+
+
+
+/* (new71) SEARCH - SHORT - ITEMS - HORIZONTAL */
+
+.yt-lockup-view-model.yt-lockup-view-model--horizontal.yt-lockup-view-model--collection-stack-2{
+    width: 100% !important;
+    min-width: 100% !important;
+    margin: 0 0 0 0 !important;
+/*border: 1px solid aqua !important;*/
+}
+/* (new71) SEARCH - SHORT - ITEMS - HORIZ THUMB */
+.yt-lockup-view-model.yt-lockup-view-model--horizontal.yt-lockup-view-model--collection-stack-2 .yt-lockup-view-model__content-image {
+    position: relative;
+    display: block !important;
+    float: left !important;
+    min-width: 50% !important;
+    max-width: 50% !important;
+    min-height: 20vh !important;
+    max-height: 20vh !important;
+    margin: 0 0 0 0 !important;
+    padding: 0 0 0 0 !important;
+/*border: 1px solid yellow  !important;*/
+}
+
+/* (new71) SEARCH - SHORT - ITEMS - HORIZ META */
+.yt-lockup-view-model.yt-lockup-view-model--horizontal.yt-lockup-view-model--collection-stack-2 .yt-lockup-view-model__metadata {
+    position: relative;
+    display: block !important;
+    float: right  !important;
+    min-width: 48% !important;
+    max-width: 48% !important;
+    min-height: 20vh !important;
+    max-height: 20vh !important;
+    margin: -14.5vh 0 0 50.3% !important;
+    padding: 0 5px 0 5px !important;
+/*border: 1px solid aqua  !important;*/
+}
+
 
 /* MEDIA QUERIES QUANTUM - MINI GUIDE VISIBLE */
 #primary.ytd-two-column-search-results-renderer {
@@ -10494,6 +10733,25 @@ border: 1px solid #333 !important;
 /*border: 1px solid aqua !important;*/
 }
 
+/* ACTU /  ASSOCAITED SEARCH - CARROUSEL */
+#contents.ytd-item-section-renderer > .ytd-item-section-renderer:not(ytd-ad-slot-renderer):not(ytd-reel-shelf-renderer):not([modern-typography]):not(ytd-search-pyv-renderer).ytd-item-section-renderer:has(.grid-subheader)  {
+    float: left  !important;
+    height: 25vh !important;
+    width: 100% !important;
+    max-width: calc(800px + var(--ytd-rich-grid-item-margin)) !important;
+    margin: 0 3px 4px 0 !important;
+    border-radius: 5px  !important;
+    overflow: visible !important;
+background: brown !important;
+border: 1px solid #333 !important;
+}
+#contents.ytd-item-section-renderer > .ytd-item-section-renderer:not(ytd-ad-slot-renderer):not(ytd-reel-shelf-renderer):not([modern-typography]):not(ytd-search-pyv-renderer).ytd-item-section-renderer:has(.grid-subheader) .grid-subheader.ytd-shelf-renderer {
+    height: 2vh !important;
+    margin-top: 0px !important;
+}
+#contents.ytd-item-section-renderer > .ytd-item-section-renderer:not(ytd-ad-slot-renderer):not(ytd-reel-shelf-renderer):not([modern-typography]):not(ytd-search-pyv-renderer).ytd-item-section-renderer:has(.grid-subheader) #contents.ytd-shelf-renderer {
+  margin-top: 0px !important;
+}
 /* (new57) EXPANDABLE THUMBNAIL */
 #contents.ytd-item-section-renderer > ytd-shelf-renderer.ytd-item-section-renderer[modern-typography] .grid-subheader + #contents  ytd-vertical-list-renderer.ytd-shelf-renderer #items.ytd-vertical-list-renderer ytd-video-renderer.ytd-vertical-list-renderer  #expandable-metadata.ytd-video-renderer:not(:empty) ,
 

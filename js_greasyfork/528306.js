@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Pinpointing Duels (Game Master)
+// @name         Pinpointing Duels (Game Master - HellCup Edition)
 // @namespace    http://tampermonkey.net/
-// @version      2.0.6
+// @version      2.1.7
 // @description  The script that makes pinpointing matter. Read more at the GeoClassics discord server or check out Pinpointing Tournaments on twitch.tv/GeoClassics.
 // @match        https://www.geoguessr.com/*
 // @icon         https://i.imgur.com/eKp3nIa.png
@@ -9,13 +9,24 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/528306/Pinpointing%20Duels%20%28Game%20Master%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/528306/Pinpointing%20Duels%20%28Game%20Master%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/528306/Pinpointing%20Duels%20%28Game%20Master%20-%20HellCup%20Edition%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/528306/Pinpointing%20Duels%20%28Game%20Master%20-%20HellCup%20Edition%29.meta.js
 // ==/UserScript==
 
 (function() {
 
+    let movementAllowed = true;
+
+    // === NEW: First-guess state ===
+    let lastProcessedRound = 0;
+    let latestEarlyNo5k = { blue: false, red: false };
+    let announcedRoundBySide = { blue: 0, red: 0 };
+    let queuedPenalty = { blue: null, red: null }; // { nick, round } per side
+    let lastFlushedRound = 0;
+
     GM_registerMenuCommand("Game Master Settings", showSettingsPanel);
+
+    const userNameMap = {};
 
 function showSettingsPanel() {
     if (document.getElementById('settings-panel')) return;
@@ -36,7 +47,7 @@ function showSettingsPanel() {
         padding: 20px;
         z-index: 10000;
         border-radius: 10px;
-        font-family: sans-serif;
+        font-family: ggFont, sans-serif;
         width: 300px;
     `;
 
@@ -157,87 +168,120 @@ function updateScoreBoxPosition(horizontalPercent, verticalPx) {
     }
 }
 
-/*function showTieDisplay(points) {
-    const container = document.querySelector(".round-score-animations_scoreTable__BpRHh");
-    if (!container) return;
-
-    // Avoid duplicates
-    if (document.getElementById("tieDisplayMessage")) return;
-
-    const wrapper = document.createElement("div");
-    wrapper.id = "tieDisplayMessage";
-    wrapper.innerHTML = `
-        <div style="margin: 0 auto; font-size: 32px; text-align: center; color: #f2f2f2;">TIE!</div>
-        <div style="margin: 20px auto 0 auto; font-size: 20px; text-align: center; color: #ccc;">TIE RANGE: ${points} points</div>
-    `;
-    container.insertBefore(wrapper, container.firstChild);
-}
-
-function showPenaltyDisplay(team) {
-    const container = document.querySelector(".round-score-animations_scoreTable__BpRHh");
-    if (!container) return;
-
-    // Avoid duplicates
-    if (document.getElementById("penaltyDisplayMessage")) return;
-
-    const wrapper = document.createElement("div");
-    wrapper.id = "penaltyDisplayMessage";
-    wrapper.innerHTML = `
-        <div style="margin: 0 auto; font-size: 24px; text-align: center; color: #f2f2f2;">NON 5K PENALTY FOR ${team}</div>
-    `;
-    container.insertBefore(wrapper, container.firstChild);
-}
-
-function showBonusDisplay(team) {
-    const container = document.querySelector(".round-score-animations_scoreTable__BpRHh");
-    if (!container) return;
-
-    if (document.getElementById("bonusDisplayMessage")) return;
-
-    const wrapper = document.createElement("div");
-    wrapper.id = "bonusDisplayMessage";
-    wrapper.innerHTML = `
-        <div style="margin: 0 auto; font-size: 28px; text-align: center; color: #90ee90;">${team} got a bonus point for 5K!</div>
-    `;
-    container.insertBefore(wrapper, container.firstChild);
-}*/
 function showResultDisplay(message) {
     const container = document.querySelector(".round-score-animations_scoreTable__BpRHh");
     if (!container) return;
 
-    // Avoid duplicates
     if (document.getElementById("roundDisplayMessage")) return;
 
     const wrapper = document.createElement("div");
     wrapper.id = "roundDisplayMessage";
     wrapper.innerHTML = `
-        <div style="padding: 20px 0; margin: 0 auto; font-size: 32px; line-height: 48px; text-align: center; color: #f2f2f2;">${message}</div>
+        <div style="padding: 20px 10px; width: 35%; margin: 8px auto; font-size: 24px; line-height: 28px; text-align: center; color: #f2f2f2; background: rgb(14, 25, 29); border-radius: 5px;">${message}</div>
     `;
     container.insertBefore(wrapper, container.firstChild);
 }
 
-function showPenaltyDisplay(message) {
-    const container = document.querySelector(".round-score-animations_scoreTable__BpRHh");
-    if (!container) return;
+const FIRST_GUESS_DURATION_MS = 5000;
+const FIRST_GUESS_BANNER_ID_PREFIX = "firstGuessBanner-";
 
-    // Avoid duplicates
-    if (document.getElementById("roundDisplayPenalty")) return;
+function showFirstGuessBanner({ team, nick, variant }) {
 
-    const wrapper = document.createElement("div");
-    wrapper.id = "roundDisplayPenalty";
-    wrapper.innerHTML = `
-        <div style="padding: 20px 0; margin: 24px auto; font-size: 24px; line-height: 24px; text-align: center; color: #f2f2f2;">SCORE 0 FOR GUESSING EARLY AND MISSING 5K: ${message}</div>
+    const colorMap = {
+        lockedin: { bg: "#0e191d", accent: "#fcba03", text: "#ffffff" },
+        penalized:   { bg: "#540000", accent: "#ff4d4f", text: "#ffffff" }
+    };
+    const { bg, accent, text } = colorMap[variant];
+
+    // Container (stack banners)
+    let stack = document.getElementById("first-guess-banner-stack");
+    if (!stack) {
+        stack = document.createElement("div");
+        stack.id = "first-guess-banner-stack";
+        stack.style.cssText = `
+            position: fixed;
+            top: 350px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10050;
+            pointer-events: none;
+        `;
+        document.body.appendChild(stack);
+    }
+
+    const id = `${FIRST_GUESS_BANNER_ID_PREFIX}${team}-${Date.now()}`;
+    const el = document.createElement("div");
+    el.id = id;
+    el.style.cssText = `
+        min-width: 520px;
+        max-width: 820px;
+        padding: 14px 18px;
+        border-radius: 10px;
+        background: ${bg};
+        color: ${text};
+        font-family: ggFont, sans-serif;
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 32px;
+        text-align: center;
+        border: 2px solid ${accent};
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        transform: translateY(-8px);
+        opacity: 0;
+        transition: opacity 220ms ease, transform 260ms ease;
+        pointer-events: none;
     `;
-    container.insertBefore(wrapper, container.firstChild);
+
+    let message = "";
+    if (variant === "lockedin") {
+        message = `${nick} has locked in their guess`;
+    } else {
+        message = `${nick} locked in early and didn’t 5K — 0 points`;
+    }
+
+    // Team accent pill
+    const pill = document.createElement("span");
+    pill.textContent = team.toUpperCase() + " TEAM";
+    pill.style.cssText = `
+        display: inline-block;
+        margin-right: 10px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: ${team};
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 12px;
+        vertical-align: middle;
+    `;
+
+    const textNode = document.createElement("span");
+    textNode.textContent = ` ${message}`;
+
+    el.appendChild(pill);
+    el.appendChild(textNode);
+    stack.appendChild(el);
+
+    requestAnimationFrame(() => {
+        el.style.opacity = "1";
+        el.style.transform = "translateY(0)";
+    });
+
+    setTimeout(() => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(-8px)";
+        setTimeout(() => el.remove(), 250);
+    }, FIRST_GUESS_DURATION_MS);
 }
 
     'use strict';
 
-    // Inject custom CSS for the overlay backdrop and active round wrapper to use your default image.
     const customStyles = `
         .overlay_backdrop__ueiEF,
         .views_activeRoundWrapper__1_J5M {
-            background-image: url('https://i.imgur.com/vzIi2Wl.jpeg') !important;
+            background-image: url('https://i.imgur.com/mPr3kLz.png') !important;
             background-position: center !important;
             background-size: cover !important;
             background-repeat: no-repeat !important;
@@ -247,16 +291,65 @@ function showPenaltyDisplay(message) {
     styleElem.textContent = customStyles;
     document.head.appendChild(styleElem);
 
+document.getElementById('pp-kill-anim-style')?.remove();
+
+function setKillAnimEnabled(on) {
+  const ID = 'pp-kill-anim-style';
+  let el = document.getElementById(ID);
+  if (on) {
+    if (el) return; // already on
+    el = document.createElement('style');
+    el.id = ID;
+    el.textContent = `
+      /* BLUE side (left) — punish BLUE */
+      body[data-pp-blue-punished="1"]
+      div[class*="round-score-animations_scoreColumnLeft"]:not([class*="static"])
+      div[class*="scoreContainer"] > div:not([class*="damage"]) {
+        display: none !important; visibility: hidden !important; opacity: 0 !important;
+      }
+      body[data-pp-blue-punished="1"]
+      div[class*="round-score-animations_scoreColumnLeft"]:not([class*="static"]) {
+        transform: none !important; transition: none !important; animation: none !important;
+      }
+      body[data-pp-blue-punished="1"]
+      div[class*="round-score-animations_scoreColumnRight"]:not([class*="static"])
+      div[class*="damage"] {
+        display: none !important; visibility: hidden !important; opacity: 0 !important;
+      }
+      /* RED side (right) — punish RED */
+      body[data-pp-red-punished="1"]
+      div[class*="round-score-animations_scoreColumnRight"]:not([class*="static"])
+      div[class*="scoreContainer"] > div:not([class*="damage"]) {
+        display: none !important; visibility: hidden !important; opacity: 0 !important;
+      }
+      body[data-pp-red-punished="1"]
+      div[class*="round-score-animations_scoreColumnRight"]:not([class*="static"]) {
+        transform: none !important; transition: none !important; animation: none !important;
+      }
+      body[data-pp-red-punished="1"]
+      div[class*="round-score-animations_scoreColumnLeft"]:not([class*="static"])
+      div[class*="damage"] {
+        display: none !important; visibility: hidden !important; opacity: 0 !important;
+      }
+    `;
+    document.head.appendChild(el);
+  } else {
+    el?.remove();
+    document.body.removeAttribute('data-pp-blue-punished');
+    document.body.removeAttribute('data-pp-red-punished');
+  }
+}
+
     let firstTo = GM_getValue('firstTo', 10); // Fallback 10
     let winThreshold = firstTo; //Win Value
     let tieRange = GM_getValue('tieRange', 0);
 
     let leftScore = 0, rightScore = 0;
-    let gameOver = false; // Flag to ensure the end screen is only shown once
-    let currentDuel = false; // Flag to ensure the end screen is only shown once
+    let gameOver = false;
+    let currentDuel = false;
 
-    // Remove unwanted UI elements and ensure our score display exists.
     const modifyHealthBars = () => {
+        if (!movementAllowed) return;
         const healthContainer = document.querySelector(".cam-hud_playerBadge__RViHv");
         if (!healthContainer) return;
         document.querySelectorAll('[class*="wc-health-bar_container__zK0hz"]').forEach(bar => bar.style.visibility = "hidden");
@@ -295,24 +388,19 @@ function showPenaltyDisplay(message) {
         updateScoreBoxPosition(GM_getValue('scoreBoxOffset', 30), GM_getValue('scoreBoxTop', 86));
     };
 
-    // Create and display the end screen overlay.
     const showEndScreen = () => {
-        const overlay = document.createElement("div");
-        overlay.id = "endScreenOverlay";
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: linear-gradient(180deg,rgba(6,43,20,1),rgba(11,65,43,1) 95%),#062b14;
-            color: #5adb95;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            text-align: center;
-        `;
-        const winnerText = (leftScore >= winThreshold) ? "BLUE WINS THE GAME" : "RED WINS THE GAME!";
+    const overlay = document.createElement("div");
+    overlay.id = "endScreenOverlay";
+    overlay.style.cssText = `
+        position: fixed; inset: 0;
+        background: linear-gradient(180deg,rgba(6,43,20,1),rgba(11,65,43,1) 95%),#062b14;
+        color: #5adb95; display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        z-index: 9999; text-align: center;
+        opacity: 0; transform: scale(0.96);
+        transition: opacity 500ms ease, transform 600ms ease;
+    `;
+        const winnerText = (leftScore >= winThreshold) ? "BLUE WINS THE GAME!" : "RED WINS THE GAME!";
         const scoreText = `${leftScore}-${rightScore}`;
 
         const winnerElem = document.createElement("div");
@@ -339,36 +427,59 @@ function showPenaltyDisplay(message) {
         `;
 
         const button = document.createElement("button");
-        button.innerText = "Okay";
+        button.innerText = "FINISH";
         button.className = "button_button__aR6_e button_variantPrimary__u3WzI";
         button.addEventListener("click", () => {
             overlay.remove();
         });
 
-        overlay.appendChild(winnerElem);
-        overlay.appendChild(scoreElem);
-        overlay.appendChild(messageElem);
-        overlay.appendChild(button);
+        overlay.append(winnerElem, scoreElem, button);
         document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+        overlay.style.opacity = "1";
+        overlay.style.transform = "scale(1)";
+    });
     };
 
-    // Flash the score element by toggling backgrounds every 0.5s for 5s.
     const flashScore = (scoreElement) => {
         const originalBackground = scoreElement.style.background;
         const flashBackground = "linear-gradient(180deg,rgba(90,219,149,1),rgba(60,200,110,1) 95%),#5adb95";
         let flashCount = 0;
         const interval = setInterval(() => {
-            // Toggle the background on odd/even counts.
             scoreElement.style.background = (flashCount % 2 === 0) ? flashBackground : originalBackground;
             flashCount++;
-            if (flashCount >= 10) { // 10 toggles * 0.5s = 5 seconds total.
+            if (flashCount >= 10) {
                 clearInterval(interval);
                 scoreElement.style.background = originalBackground;
             }
         }, 500);
     };
 
-    // Update cumulative scores.
+    function getPlayerName(teams, teamIndex, rnd) {
+        const team = teams[teamIndex];
+        if (!team) return "";
+
+        let earliest = null; // { t, playerId }
+        for (const p of (team.players || [])) {
+            for (const g of (p.guesses || [])) {
+                if (g.roundNumber !== rnd) continue;
+                const is5k = (g.distance != null && g.distance < 25) || g.score === 5000;
+                if (!is5k || !g.created) continue;
+                const t = new Date(g.created).getTime();
+                if (!earliest || t < earliest.t) earliest = { t, playerId: p.playerId };
+            }
+        }
+        if (earliest) return userNameMap[earliest.playerId] || "Guest";
+
+        for (const p of (team.players || [])) {
+            const g = (p.guesses || []).find(gg => gg.roundNumber === rnd && gg.score === 5000);
+            if (g) return userNameMap[p.playerId] || "Guest";
+        }
+
+        return team.name;
+    }
+
     const updateScores = (response) => {
         let team0Score = 0, team1Score = 0;
         let newTeam0Score = 0, newTeam1Score = 0;
@@ -377,11 +488,11 @@ function showPenaltyDisplay(message) {
         const maxRoundTime = response.options.maxRoundTime;
 
          for (let i = 0; i < response.currentRoundNumber && newTeam0Score < winThreshold && newTeam1Score < winThreshold; i++) {
+            let team0Winner = null, team1Winner = null;
+
             if (!response.rounds[i].hasProcessedRoundTimeout) continue;
             const oldDisplayMessage = document.getElementById("roundDisplayMessage");
             if (oldDisplayMessage) oldDisplayMessage.remove();
-            const oldPenaltyMessage = document.getElementById("roundDisplayPenalty");
-            if (oldPenaltyMessage) oldPenaltyMessage.remove();
 
             let roundStartTime = new Date(response.rounds[i]?.startTime)/1000 || Infinity;
             let roundEndTime = new Date(response.rounds[i]?.endTime)/1000 || Infinity;
@@ -397,7 +508,7 @@ function showPenaltyDisplay(message) {
                 let score = Math.round(5000*Math.exp(-10*currentGuess.distance/response.options?.map?.maxErrorDistance)) || 0;
                 score = currentGuess.distance < 25 ? 5000 : score;
                 if (guessTime < team0Time && guessTime < roundEndTime) {
-                    team0Time = guessTime; team0RoundScore = score;
+                    team0Time = guessTime; team0RoundScore = score; team0Winner = response.teams[0].players[j];
                 } else if (score > team0BestScore) {
                     team0BestScore = score;
                 }
@@ -411,7 +522,7 @@ function showPenaltyDisplay(message) {
                 let score = Math.round(5000*Math.exp(-10*currentGuess.distance/response.options?.map?.maxErrorDistance)) || 0;
                 score = currentGuess.distance < 25 ? 5000 : score;
                 if (guessTime < team1Time && guessTime < roundEndTime) {
-                    team1Time = guessTime; team1RoundScore = score;
+                    team1Time = guessTime; team1RoundScore = score; team1Winner = response.teams[1].players[j];
                 } else if (score > team1BestScore) {
                     team1BestScore = score;
                 }
@@ -420,12 +531,10 @@ function showPenaltyDisplay(message) {
 
 
             if (team0RoundScore < 5000 && team0Time < team1Time && team0Time < (roundStartTime + maxRoundTime - timeAfterGuess)) {
-                showPenaltyDisplay("BLUE");
                 team0RoundScore = 0;
             } else if (team1RoundScore < 5000 && team1Time < team0Time && team1Time < (roundStartTime + maxRoundTime - timeAfterGuess)) {
-                showPenaltyDisplay("RED");
                 team1RoundScore = 0;
-            } // Score counted as 0 if penalty for early sending
+            }
 
             let message = '', tieMessage = '', winMessage = '';
             team0Score = newTeam0Score; team1Score = newTeam1Score;
@@ -433,21 +542,33 @@ function showPenaltyDisplay(message) {
             if (tieRange > 0) tieDistance = Math.floor((5000 - highestScore) / tieRange);
 
             if (team0RoundScore === 5000 && team1RoundScore === 5000) {
-                if (team0Time < team1Time) newTeam0Score++;
-                else if (team1Time < team0Time) newTeam1Score++;
-                message = `Point for fastest 5K`;
-            } else if (team0RoundScore == 5000 || team1RoundScore == 5000) {
-                 if (team0RoundScore == 5000) newTeam0Score += 2; else newTeam1Score += 2;
-                message = `2 points for solo 5K`;
+                 if (team0Time < team1Time) {
+                     newTeam0Score++;
+                     message = `1 point for the fastest 5K by ${getPlayerName(response.teams, 0, i+1)}`;
+                 } else if (team1Time < team0Time) {
+                     newTeam1Score++;
+                     message = `1 point for the fastest 5K by ${getPlayerName(response.teams, 1, i+1)}`;
+                 } else {
+                     message = `Both teams 5K at the same time`;
+                 }
+            }
+            else if (team0RoundScore === 5000 || team1RoundScore === 5000) {
+                if (team0RoundScore === 5000) {
+                    newTeam0Score += 2;
+                    message = `2 points for a solo 5K by ${getPlayerName(response.teams, 0, i+1)}`;
+                } else {
+                    newTeam1Score += 2;
+                    message = `2 points for a solo 5K by ${getPlayerName(response.teams, 1, i+1)}`;
+                }
             } else if (team0RoundScore > team1RoundScore + tieDistance || team1RoundScore > team0RoundScore + tieDistance) {
                 if (team0RoundScore > team1RoundScore + tieDistance) newTeam0Score++; else newTeam1Score ++;
-                message = `Point for closest guess`;
-                if (tieRange>0) tieMessage = `<br><span style="font-size: 14px;">TIE RANGE: ${tieDistance} POINTS</span>`;
+                message = `1 point for the closest guess`;
+                if (tieRange>0) tieMessage = `<br><span style="font-size: 14px; color: #22dd22;">TIE RANGE: ${tieDistance} POINTS</span>`;
             } else {
                 message = `TIE!`;
-                if (tieRange>0) tieMessage = `<br><span style="font-size: 14px;">TIE RANGE: ${tieDistance} POINTS</span>`;
+                if (tieRange>0) tieMessage = `<br><span style="font-size: 14px; color: #22dd22">TIE RANGE: ${tieDistance} POINTS</span>`;
             }
-            if (message !== `TIE!`) winMessage = (newTeam0Score > team0Score) ? "BLUE WINS THE ROUND! <br>" : "RED WINS THE ROUND! <br>";
+            if (message !== `TIE!`) winMessage = (newTeam0Score > team0Score) ? "BLUE WINS <br>" : "RED WINS <br>";
             const isMatchPoint = newTeam0Score >= winThreshold - 2 || newTeam1Score >= winThreshold - 2;
             showResultDisplay(`${winMessage} ${message} ${isMatchPoint ? "<br>MATCH POINT!" : "" } ${tieMessage}`);
         }
@@ -471,28 +592,201 @@ function showPenaltyDisplay(message) {
 
         if (!gameOver && (leftScore >= winThreshold || rightScore >= winThreshold)) {
             gameOver = true;
-            showEndScreen();
+            setTimeout(showEndScreen, 2500)
         }
     };
 
-    // Update the background image of the active round wrapper based on the current scores.
+    function roundTimedOutOrScoringVisible(response) {
+        const rn = response.currentRoundNumber;
+        const round = (response.rounds || []).find(r => r.roundNumber === rn);
+        if (!round) return false;
+
+        if (round.hasProcessedRoundTimeout) return true;
+
+        if (document.querySelector('div[class*="round-score-animations_scoreTable"]')) return true;
+
+        const start = round.startTime ? Date.parse(round.startTime) / 1000 : null;
+        const max   = response.options?.maxRoundTime || null;
+        if (start && max) {
+            const now = Date.now() / 1000;
+            if (now >= start + max) return true;
+        }
+        return false;
+    }
+
+    function processFirstGuesses(response) {
+        const roundNumber = response.currentRoundNumber;
+        if (!roundNumber) return;
+        if (roundTimedOutOrScoringVisible(response)) return; // don’t banner post-timeout
+
+        // Reset tracking when the round advances
+        if (roundNumber !== lastProcessedRound) {
+            lastProcessedRound = roundNumber;
+            latestEarlyNo5k = { blue: false, red: false };
+            announcedRoundBySide = { blue: 0, red: 0 };
+            queuedPenalty = { blue: null, red: null };
+            lastFlushedRound = 0;
+            document.body.removeAttribute('data-pp-blue-punished');
+            document.body.removeAttribute('data-pp-red-punished');
+        }
+
+        const roundObj = (response.rounds || []).find(r => r.roundNumber === roundNumber);
+        const startSec       = roundObj?.startTime ? Date.parse(roundObj.startTime) / 1000 : null;
+        const maxRoundTime   = response.options?.maxRoundTime ?? null;
+        const timeAfterGuess = response.options?.roundTime ?? null;
+        const windowStartSec = (startSec != null && maxRoundTime != null && timeAfterGuess != null)
+        ? startSec + (maxRoundTime - timeAfterGuess)
+        : null;
+
+        const allGuesses = [];
+        (response.teams || []).forEach(team => {
+            (team.players || []).forEach(p => {
+                (p.guesses || []).forEach(g => {
+                    if (g.roundNumber === roundNumber && g.created) {
+                        allGuesses.push({ createdSec: new Date(g.created).getTime()/1000, playerId: p.playerId });
+                    }
+                });
+            });
+        });
+        if (!allGuesses.length) return;
+        allGuesses.sort((a,b)=>a.createdSec-b.createdSec);
+        const globalFirstTime = allGuesses[0].createdSec;
+
+        const isFiveK = (distance) => {
+            const E = response.options?.map?.maxErrorDistance || 1;
+            let score = Math.round(5000 * Math.exp(-10 * distance / E)) || 0;
+            if (distance < 25) score = 5000;
+            return score === 5000;
+        };
+
+        (response.teams || []).forEach((team, tIdx) => {
+            const side = (tIdx === 0 ? 'blue' : 'red');
+            if (announcedRoundBySide[side] === roundNumber) return; // one banner per side per round
+
+            // Team’s earliest guess
+            let earliest = null;
+            (team.players || []).forEach(p => {
+                (p.guesses || []).forEach(g => {
+                    if (g.roundNumber === roundNumber && g.created) {
+                        const t = new Date(g.created).getTime()/1000;
+                        if (!earliest || t < earliest.createdSec) {
+                            earliest = { createdSec: t, distance: g.distance ?? null, playerId: p.playerId };
+                        }
+                    }
+                });
+            });
+            if (!earliest || earliest.distance == null) return;
+
+            const EPS = 0.0005;
+            const isFirstLock = Math.abs(earliest.createdSec - globalFirstTime) <= EPS;
+            const isEarly = isFirstLock && (
+                windowStartSec != null ? (earliest.createdSec < windowStartSec) : true
+            );
+
+            const nick = userNameMap[earliest.playerId] || 'Guest';
+
+            showFirstGuessBanner({ team: side, nick, variant: 'lockedin' });
+            announcedRoundBySide[side] = roundNumber;
+
+            if (isEarly && !isFiveK(earliest.distance)) {
+                queuedPenalty[side] = { nick, round: roundNumber, t: earliest.createdSec };
+            }
+        });
+    }
+
+    function flushQueuedPenaltiesWhenScoringVisible(response) {
+        const rn = response.currentRoundNumber;
+        if (!rn || lastFlushedRound === rn) return;
+
+        const round = (response.rounds || []).find(r => r.roundNumber === rn);
+        const scoringShown = document.querySelector('div[class*="round-score-animations_scoreTable"]');
+        if (!(round?.hasProcessedRoundTimeout || scoringShown)) return;
+
+        const qb = queuedPenalty.blue;
+        const qr = queuedPenalty.red;
+        let penalSide = null;
+
+        if (qb && qb.round === rn && qr && qr.round === rn) {
+            // both queued → penalize the earliest
+            penalSide = (qb.t <= qr.t) ? 'blue' : 'red';
+        } else if (qb && qb.round === rn) {
+            penalSide = 'blue';
+        } else if (qr && qr.round === rn) {
+            penalSide = 'red';
+        }
+
+        if (penalSide) {
+            latestEarlyNo5k[penalSide] = true;
+            document.body.setAttribute(`data-pp-${penalSide}-punished`, '1');
+            const q = queuedPenalty[penalSide];
+            showFirstGuessBanner({ team: penalSide, nick: q.nick, variant: 'penalized' });
+        }
+
+        queuedPenalty.blue = null;
+        queuedPenalty.red  = null;
+
+        tryOverrideRoundResultScores();
+        lastFlushedRound = rn;
+    }
+
+
+    function tryOverrideRoundResultScores() {
+        if (!latestEarlyNo5k.blue && !latestEarlyNo5k.red) return;
+
+        const LEFT_COLS  = document.querySelectorAll('div[class*="round-score-animations_scoreColumnLeft"]');
+        const RIGHT_COLS = document.querySelectorAll('div[class*="round-score-animations_scoreColumnRight"]');
+
+        const zeroColumnNumbers = (colEl) => {
+            if (!colEl) return;
+
+            colEl.querySelectorAll('div[class*="static"] div[class*="shadow-text_root"]')
+                .forEach(n => { n.textContent = '0'; });
+
+            colEl.querySelectorAll('div[class*="scoreContainer"] > div:not([class*="damage"])')
+                .forEach(n => { n.textContent = '0'; });
+            colEl.querySelectorAll('div[class*="scoreContainer"] div[class*="shadow-text_root"]:not(div[class*="damage"] *)')
+                .forEach(n => { n.textContent = '0'; });
+
+            colEl.querySelectorAll('div[class*="damage"] div[class*="shadow-text_root"]')
+                .forEach(n => { n.textContent = '0'; });
+        };
+
+        const applyForSide = (cols, sideKey) => {
+            if (!latestEarlyNo5k[sideKey]) return;
+            cols.forEach(zeroColumnNumbers);
+        };
+
+        applyForSide(LEFT_COLS,  'blue');
+        applyForSide(RIGHT_COLS, 'red');
+
+        if (!document.body.__pp_rezero_scheduled) {
+            document.body.__pp_rezero_scheduled = true;
+            setTimeout(() => {
+                try {
+                    const L = document.querySelectorAll('div[class*="round-score-animations_scoreColumnLeft"]');
+                    const R = document.querySelectorAll('div[class*="round-score-animations_scoreColumnRight"]');
+                    applyForSide(L, 'blue');
+                    applyForSide(R, 'red');
+                } finally {
+                    document.body.__pp_rezero_scheduled = false;
+                }
+            }, 120); 
+        }
+    }
+
     const updateActiveRoundBackground = () => {
-        let bgUrl = "https://i.imgur.com/vzIi2Wl.jpeg"; // default background
-        // If game is over, use default background.
+        let bgUrl = "https://i.imgur.com/mPr3kLz.png"; // default background
         if (leftScore >= winThreshold || rightScore >= winThreshold) {
-            bgUrl = "https://i.imgur.com/vzIi2Wl.jpeg";
+            bgUrl = "https://i.imgur.com/mPr3kLz.png";
         }
-        // Both players at match point.
-        else if (leftScore === (winThreshold-1) && rightScore === (winThreshold-1)) {
-            bgUrl = "https://i.imgur.com/fkDBh8y.jpeg";
+        else if (leftScore >= winThreshold - 2 && rightScore >= winThreshold - 2) {
+            bgUrl = "https://i.imgur.com/7CRPEfG.png";
         }
-        // Left at match point.
-        else if (leftScore === (winThreshold-1)) {
-            bgUrl = "https://i.imgur.com/AFaqXv0.jpeg";
+        else if (leftScore >= winThreshold - 2) {
+            bgUrl = "https://i.imgur.com/QOGqB12.png";
         }
-        // Right at match point.
-        else if (rightScore === (winThreshold-1)) {
-            bgUrl = "https://i.imgur.com/u6jRQuM.jpeg";
+        else if (rightScore >= winThreshold - 2) {
+            bgUrl = "https://i.imgur.com/wUvmJ71.png";
         }
         const activeRoundElem = document.querySelector(".views_activeRoundWrapper__1_J5M");
         if (activeRoundElem) {
@@ -503,27 +797,65 @@ function showPenaltyDisplay(message) {
         }
     };
 
-    const fetchDuelData = () => {
+    async function fetchDuelData() {
         const duelId = location.pathname.split("/")[2];
         if (!duelId) return;
 
         if (gameOver) {
-            if (duelId != currentDuel) {
+            if (duelId !== currentDuel) {
                 gameOver = false;
             } else {
                 return;
             }
         }
-
         currentDuel = duelId;
-        fetch(`https://game-server.geoguessr.com/api/duels/${duelId}/spectate`, { method: "GET", credentials: "include" })
-            .then(res => res.json())
-            .then(updateScores)
-            .catch(err => {});
-    };
+
+        const res = await fetch(
+          `https://game-server.geoguessr.com/api/duels/${duelId}/spectate`,
+          { method: "GET", credentials: "include" }
+        );
+        const data = await res.json();
+        updateActiveRoundBackground();
+        const {
+            forbidMoving,
+            forbidZooming,
+            forbidRotating
+        } = data.options.movementOptions;
+
+        movementAllowed = !(forbidMoving || forbidZooming || forbidRotating);
+
+        setKillAnimEnabled(movementAllowed);
+
+        if (!movementAllowed) {
+            return;
+        }
+
+        const allPlayers = data.teams.flatMap(t => t.players);
+        await Promise.all(allPlayers.map(async p => {
+          if (userNameMap[p.playerId]) return;
+          try {
+            const r = await fetch(
+              `https://www.geoguessr.com/api/v3/users/${p.playerId}`,
+              { credentials: "include" }
+            );
+            if (!r.ok) throw new Error("not-found");
+            const u = await r.json();
+            userNameMap[p.playerId] = u.nick;
+          } catch {
+            // guest or missing account → safe default
+            userNameMap[p.playerId] = "Guest";
+          }
+        }));
+
+        updateScores(data);
+        processFirstGuesses(data);
+        flushQueuedPenaltiesWhenScoringVisible(data); // ← add this
+    }
+
 
     const observer = new MutationObserver(() => {
         requestAnimationFrame(modifyHealthBars);
+        requestAnimationFrame(tryOverrideRoundResultScores);
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
@@ -531,7 +863,6 @@ function showPenaltyDisplay(message) {
         fetchDuelData();
     }
 
-    // Listen for URL changes to auto-activate the script.
     (function() {
         const _wr = type => {
             const orig = history[type];
@@ -557,12 +888,6 @@ function showPenaltyDisplay(message) {
         if (location.href.includes("duels")) {
             fetchDuelData();
         }
-    }, 5000);
-
-            if (location.href.includes("duels")) {
-        scanStyles().then(_ => {
-            fetchDuelData();
-        });
-    }
+    }, 2000);
 
 })();

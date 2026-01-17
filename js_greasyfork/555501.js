@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         publink-ai-beautify
 // @namespace    http://tampermonkey.net/
-// @version      0.12
+// @version      0.13
 // @description ai 样式美化
 // @author       huangbc
 // @license      MIT
@@ -31,6 +31,10 @@
         .pc-header .ant-carousel.carousel-wrap,
         .incentive-wrap,
         .wx-qr-code-wrap-wrap,
+        .new-badge,
+        .hot-badge,
+        .lab-badge,
+        .WorkflowCollections-purchased-badge,
         .temp-gallery-list {
            display: none !important;
         }

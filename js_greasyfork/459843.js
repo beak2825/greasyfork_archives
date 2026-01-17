@@ -3,7 +3,7 @@
 // @name:en            Happymh Reading Helper
 // @name:zh-CN         嗨皮漫画阅读助手
 // @name:zh-TW         嗨皮漫畫閱讀助手
-// @version            2.7.20
+// @version            2.7.21
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -364,11 +364,12 @@
     }
 
     #happymhConfigElement .title {
-        width: 100%;
+        width: calc(100% - 8px);
+        margin: 4px auto;
     }
 
     #happymhConfigElement div.item {
-        width: 348px;
+        width: auto;
         display: flex;
     }
 
@@ -408,7 +409,7 @@
     }
 </style>
 <div id="happymhConfigElement">
-    <div class="title" style="width: calc(100% - 8px);">
+    <div class="title">
         ${i18n.config.title}
     </div>
     <div class="item">
@@ -524,6 +525,9 @@ div:has(>#page-area) {
     max-height: max-content !important;
     overflow: auto !important;
 }
+div[class$='root']:has(>div[class$='adTip']),
+[data-ad-id],
+[id^='supr-ad-container'],
 .PUBFUTURE,
 [class*="overlay"],
 trek-popup,
@@ -537,7 +541,9 @@ img[height='1'][width='1'] {
                 "iframe",
                 ".adsbygoogle",
                 "#google_pedestal_container",
-                "#root>div>div:has(>a)",
+                //"div[class$='root']:has(>div[class$='adTip'])",
+                "[data-ad-id]",
+                "[id^='supr-ad-container']",
                 "//div[text()='Done']",
                 "#notice-react",
                 "#alert-confirm-react",
@@ -554,6 +560,14 @@ img[height='1'][width='1'] {
             childList: true,
             subtree: true
         });
+    }
+
+    if (configs.removeAd == 1 && isListPage) {
+        addGlobalStyle(`
+.friend-link {
+    display: none !important;
+}
+        `);
     }
 
     if (configs.openInNewTab == 1 && !isReadPage && !isListPage && !isUserPage) {
@@ -718,7 +732,7 @@ footer {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
     border-radius: 5px;
 }
-#mainContent .images {
+#mainContent .image {
     width: 100%;
     height: auto;
     display: block;
@@ -753,6 +767,7 @@ footer {
         let currentChapterId = localStorageHistory.read_chapter_id;
         let chapterListData = [];
         let isObtainedAllChapters = false;
+        let isRemoveOldChapter = false;
 
         let currentViewChapterId = currentChapterId;
         let infiniteScrollSwitch = true;
@@ -971,7 +986,7 @@ footer {
   <svg class="MuiSvgIcon-root MuiSvgIcon-colorAction MuiSvgIcon-fontSizeMedium" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="user-select: none; width: 1em;height: 1em; display: inline-block; fill: currentcolor;flex-shrink: 0; font-size: 1.5rem; color: rgba(0, 0, 0, 0.54); transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);">
     <path d="M21.99 2H2v16h16l4 4-.01-20zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"></path>
   </svg>
-  <h6 class="MuiTypography-root MuiTypography-h6" style="color: #000; margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 500; font-size: 1.25rem; line-height: 1.6; letter-spacing: 0.0075em;">数据请求中...</h6>
+  <h6 class="MuiTypography-root MuiTypography-h6" style="color: #000; margin: 0px; font-family: sans-serif, Roboto, Helvetica, Arial; font-weight: 500; font-size: 1.25rem; line-height: 1.6; letter-spacing: 0.0075em;">数据请求中...</h6>
 </div>`;
             div.insertAdjacentHTML("beforeend", messageHtml);
             div.insertAdjacentHTML("beforeend", '<div style="display:none; overflow-x: hidden; overflow-y: auto;  max-height: calc(100% - 50px); margin: 2px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 3px -2px, rgba(0, 0, 0, 0.14) 0px 3px 4px 0px, rgba(0, 0, 0, 0.12) 0px 1px 8px 0px;"><ul class="MuiList-root MuiList-padding" style="display: block; padding-left: 10px;"></ul></div>');
@@ -1069,17 +1084,17 @@ footer {
 
                         liHtmls += `
 <li class="MuiListItem-root MuiListItem-alignItemsFlexStart" style="display: block; padding: 0 10px 0 0;">
-    <div class="MuiListItemText-root MuiListItemText-multiline" style="flex: 1 1 auto; min-width: 0px; margin-top: 6px; margin-bottom: 6px; font-weight: bolder; color: rgba(0, 0, 0, 0.87);">
-        <span class="MuiTypography-root MuiTypography-body1 MuiTypography-displayBlock" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 1rem; line-height: 1.5; letter-spacing: 0.00938em; display: block; font-weight: bolder; color: rgba(0, 0, 0, 0.87);">${item.user.username}</span>
+    <div class="MuiListItemText-root MuiListItemText-multiline" style="min-width: 0px; margin-top: 6px; margin-bottom: 6px; font-weight: bolder; color: rgba(0, 0, 0, 0.87);">
+        <span class="MuiTypography-root MuiTypography-body1 MuiTypography-displayBlock" style="margin: 0px; font-family: sans-serif, Roboto, Helvetica, Arial; font-size: 16px; line-height: 1.5; display: block; font-weight: bolder; color: #673ab7;">${item.user.username}</span>
         <div class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">
             <div class="MuiBox-root">
                 <div class="MuiBox-root">
-                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary MuiTypography-noWrap" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 400; font-size: 0.75rem; line-height: 1.66; letter-spacing: 0.03333em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: rgba(0, 0, 0, 0.6);">章节: ${item.ch_name}</span>
+                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary MuiTypography-noWrap" style="margin: 0px; font-family: sans-serif, Roboto, Helvetica, Arial; font-weight: 400; font-size: 12px; line-height: 1.66; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: rgba(0, 0, 0, 0.6);">章节: ${item.ch_name}</span>
                     <br>
-                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 400; font-size: 0.75rem; line-height: 1.66; letter-spacing: 0.03333em; color: rgba(0, 0, 0, 0.6);">${item.create_time}</span>
+                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary" style="margin: 0px; font-family: sans-serif, Roboto, Helvetica, Arial; font-weight: 400; font-size: 12px; line-height: 1.66; color: rgba(0, 0, 0, 0.6);">${item.create_time}</span>
                 </div>
                 <div class="MuiBox-root">
-                    <p class="MuiTypography-root MuiTypography-body1" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 400; font-size: 1rem; line-height: 1.5; letter-spacing: 0.00938em; color: rgba(0, 0, 0, 0.87); word-break: break-all;">${item.content}</p>
+                    <p class="MuiTypography-root MuiTypography-body1" style="margin: 0px; font-family: sans-serif, Roboto, Helvetica, Arial; font-weight: 400; font-size: 16px; line-height: 1.5; color: rgba(0, 0, 0, 0.87); word-break: break-all;">${item.content}</p>
                 </div>
             </div>
             ${subHtml}
@@ -1180,7 +1195,7 @@ footer {
 
             const imgs = srcs.map((src, i) => {
                 const img = new Image();
-                img.className = "images";
+                img.className = "image";
                 img.setAttribute("referrerpolicy", "origin");
                 if (configs.autoReload == 1) {
                     img.dataset.errorNum = 0;
@@ -1337,16 +1352,18 @@ footer {
                     }
 
                     const pagerTitles = gae(".chapterTitle");
-                    const images = gae(".images");
+                    const images = gae(".image");
 
                     if (pagerTitles.length > 3 && images.length > 30) {
+                        isRemoveOldChapter = true;
                         const titleE = pagerTitles[0];
                         const parentE = titleE.parentNode;
                         titleE.remove();
 
-                        while (parentE.firstElementChild.classList.contains("images")) {
+                        while (parentE.firstElementChild.classList.contains("image")) {
                             parentE.firstElementChild.remove();
                         }
+                        setTimeout(() => (isRemoveOldChapter = false), 500);
                     }
                 }
             } else {
@@ -1484,7 +1501,7 @@ footer {
                 if (st > lastScrollTop) {
                     buttons.forEach(e => (e.style.display = "none"));
                     lastScrollTop = st;
-                } else if (st < lastScrollTop - 20) {
+                } else if (!isRemoveOldChapter && st < lastScrollTop - 20) {
                     const leftNum = (ge(".MuiContainer-root").offsetLeft + 24);
 
                     buttons.forEach(e => {

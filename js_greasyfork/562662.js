@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.934
+// @version      0.4.937
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, and sentientmilk for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -476,14 +476,6 @@
                     type: 'checkbox',
                     default: true
                 },
-                itemTooltip_useKMBFormat: {
-                    id: 'itemTooltip_useKMBFormat',
-                    label: 'Use KMB format for prices (1.23M instead of 1,234,567)',
-                    type: 'checkbox',
-                    default: false,
-                    dependencies: ['itemTooltip_prices'],
-                    help: 'Display large numbers in item tooltips using K/M/B abbreviations with 2 decimal places'
-                },
                 itemTooltip_profit: {
                     id: 'itemTooltip_profit',
                     label: 'Show production cost and profit',
@@ -727,10 +719,10 @@
                 },
                 invBadgePrices: {
                     id: 'invBadgePrices',
-                    label: 'Show bid/ask prices on item icons',
+                    label: 'Show price badges on item icons',
                     type: 'checkbox',
                     default: false,
-                    help: 'Displays stack value on inventory items (works independently of sorting)'
+                    help: 'Displays per-item ask or bid price on inventory items'
                 },
                 invBadgePrices_type: {
                     id: 'invBadgePrices_type',
@@ -739,7 +731,7 @@
                     default: 'Ask',
                     options: ['None', 'Ask', 'Bid'],
                     dependencies: ['invBadgePrices'],
-                    help: 'Choose which price to show on badges: Ask (buying price), Bid (selling price), or None (hide badges)'
+                    help: 'Ask (instant-buy price), Bid (instant-sell price), or None'
                 },
                 profitCalc_pricingMode: {
                     id: 'profitCalc_pricingMode',
@@ -914,6 +906,13 @@
             title: 'UI Enhancements',
             icon: '🎨',
             settings: {
+                formatting_useKMBFormat: {
+                    id: 'formatting_useKMBFormat',
+                    label: 'Use K/M/B number formatting (e.g., 1.5M instead of 1,500,000)',
+                    type: 'checkbox',
+                    default: true,
+                    help: 'Applies to tooltips, action panels, profit displays, and all number formatting throughout the UI'
+                },
                 expPercentage: {
                     id: 'expPercentage',
                     label: 'Left sidebar: Show skill XP percentages',
@@ -1177,6 +1176,20 @@
                     type: 'color',
                     default: '#FFFFFF',
                     help: 'Color for remaining XP text below skill bars in left navigation'
+                },
+                color_invBadge_ask: {
+                    id: 'color_invBadge_ask',
+                    label: 'Inventory Badge: Ask Price',
+                    type: 'color',
+                    default: '#047857',
+                    help: 'Color for Ask price badges on inventory items (seller asking price - better selling value)'
+                },
+                color_invBadge_bid: {
+                    id: 'color_invBadge_bid',
+                    label: 'Inventory Badge: Bid Price',
+                    type: 'color',
+                    default: '#60a5fa',
+                    help: 'Color for Bid price badges on inventory items (buyer bid price - instant-sell value)'
                 }
             }
         }
@@ -1556,6 +1569,13 @@
                     description: 'Shows XP progress percentage in left sidebar',
                     settingKey: 'expPercentage'
                 },
+                largeNumberFormatting: {
+                    enabled: true,
+                    name: 'Use K/M/B Number Formatting',
+                    category: 'UI',
+                    description: 'Display large numbers as 1.5M instead of 1,500,000',
+                    settingKey: 'formatting_useKMBFormat'
+                },
 
                 // Task Features
                 taskProfitDisplay: {
@@ -1833,6 +1853,8 @@
             this.COLOR_GOLD = this.getSettingValue('color_gold', "#ffa500");
             this.COLOR_ACCENT = this.getSettingValue('color_accent', "#22c55e");
             this.COLOR_REMAINING_XP = this.getSettingValue('color_remaining_xp', "#FFFFFF");
+            this.COLOR_INVBADGE_ASK = this.getSettingValue('color_invBadge_ask', "#047857");
+            this.COLOR_INVBADGE_BID = this.getSettingValue('color_invBadge_bid', "#60a5fa");
 
             // Set legacy SCRIPT_COLOR_MAIN to accent color
             this.SCRIPT_COLOR_MAIN = this.COLOR_ACCENT;
@@ -4364,6 +4386,7 @@
      * Pure functions for formatting numbers and time
      */
 
+
     /**
      * Format numbers with thousand separators
      * @param {number} num - The number to format
@@ -4622,6 +4645,47 @@
         }
         // 1B+: B with 2 decimals
         return sign + (absNum / 1000000000).toFixed(2) + 'B';
+    }
+
+    /**
+     * Format a decimal value as a percentage
+     * @param {number} value - The decimal value to format (e.g., 0.05 for 5%)
+     * @param {number} decimals - Number of decimal places (default: 1)
+     * @returns {string} Formatted percentage (e.g., "5.0%", "12.5%")
+     *
+     * @example
+     * formatPercentage(0.05) // "5.0%"
+     * formatPercentage(0.125, 1) // "12.5%"
+     * formatPercentage(0.00123, 2) // "0.12%"
+     * formatPercentage(0.00123, 3) // "0.123%"
+     */
+    function formatPercentage(value, decimals = 1) {
+        if (value === null || value === undefined) {
+            return null;
+        }
+
+        return (value * 100).toFixed(decimals) + '%';
+    }
+
+    /**
+     * Format large numbers based on user preference
+     * Uses K/M/B notation or full numbers depending on setting
+     * @param {number} value - The number to format
+     * @param {number} decimals - Number of decimal places for K/M/B format (default: 1)
+     * @returns {string} Formatted number (e.g., "1.5M" or "1,500,000")
+     *
+     * @example
+     * // With K/M/B enabled (default)
+     * formatLargeNumber(1500000) // "1.5M"
+     * formatLargeNumber(2300) // "2.3K"
+     *
+     * // With K/M/B disabled
+     * formatLargeNumber(1500000) // "1,500,000"
+     * formatLargeNumber(2300) // "2,300"
+     */
+    function formatLargeNumber(value, decimals = 1) {
+        const useAbbreviations = config.getSetting('formatting_useKMBFormat') !== false;
+        return useAbbreviations ? formatKMB(value, decimals) : formatWithSeparator(value);
     }
 
     /**
@@ -7853,7 +7917,7 @@
      * @returns {string} Formatted number
      */
     function formatTooltipPrice(num) {
-        const useKMB = config.getSetting('itemTooltip_useKMBFormat');
+        const useKMB = config.getSetting('formatting_useKMBFormat');
         return useKMB ? networthFormatter(num) : numberFormatter(num);
     }
 
@@ -8006,14 +8070,14 @@
                 return; // Skip price/profit display for containers
             }
 
-            // Get market price (for base item, enhancement level 0)
-            const price = marketAPI.getPrice(itemHrid, 0);
-
             // Only check enhancement level for regular item tooltips (not collection tooltips)
             let enhancementLevel = 0;
             if (isItemTooltip && !isCollectionTooltip) {
                 enhancementLevel = this.extractEnhancementLevel(tooltipElement);
             }
+
+            // Get market price for the specific enhancement level (0 for base items, 1-20 for enhanced)
+            const price = marketAPI.getPrice(itemHrid, enhancementLevel);
 
             // Inject price display only if we have market data
             if (price && (price.ask > 0 || price.bid > 0)) {
@@ -8446,10 +8510,10 @@
                 for (const drop of dropsToShow) {
                     if (!drop.hasPriceData) {
                         // Show item without price data in gray
-                        html += `<div style="color: ${config.COLOR_TEXT_SECONDARY};">• ${drop.itemName} (${(drop.dropRate * 100).toFixed(2)}%): ${drop.avgCount.toFixed(2)} avg → No price data</div>`;
+                        html += `<div style="color: ${config.COLOR_TEXT_SECONDARY};">• ${drop.itemName} (${formatPercentage(drop.dropRate, 2)}): ${drop.avgCount.toFixed(2)} avg → No price data</div>`;
                     } else {
                         // Format drop rate percentage
-                        const dropRatePercent = (drop.dropRate * 100).toFixed(2);
+                        const dropRatePercent = formatPercentage(drop.dropRate, 2);
 
                         // Show full drop breakdown
                         html += `<div>• ${drop.itemName} (${dropRatePercent}%): ${drop.avgCount.toFixed(2)} avg → ${formatTooltipPrice(drop.expectedValue)}</div>`;
@@ -11863,14 +11927,14 @@
         const profitPerDay = Math.round(profitData.profitPerDay);
         const revenue = Math.round(profitData.revenuePerHour);
         const costs = Math.round(profitData.drinkCostPerHour);
-        const summary = `${formatWithSeparator(profit)}/hr, ${formatWithSeparator(profitPerDay)}/day`;
+        const summary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
 
         // ===== Build Detailed Breakdown Content =====
         const detailsContent = document.createElement('div');
 
         // Revenue Section
         const revenueDiv = document.createElement('div');
-        revenueDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-bottom: 4px;">Revenue: ${formatWithSeparator(revenue)}/hr</div>`;
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
 
         // Base Output subsection
         const baseOutputContent = document.createElement('div');
@@ -11882,10 +11946,10 @@
 
                 // Show processing percentage for processed items
                 if (output.isProcessed && output.processingChance) {
-                    const processingPercent = (output.processingChance * 100).toFixed(1);
-                    line.textContent = `• ${output.name}: (${processingPercent}%) ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)} each → ${formatWithSeparator(Math.round(output.revenuePerHour))}/hr`;
+                    const processingPercent = formatPercentage(output.processingChance, 1);
+                    line.textContent = `• ${output.name}: (${processingPercent}) ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(output.revenuePerHour))}/hr`;
                 } else {
-                    line.textContent = `• ${output.name}: ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)} each → ${formatWithSeparator(Math.round(output.revenuePerHour))}/hr`;
+                    line.textContent = `• ${output.name}: ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(output.revenuePerHour))}/hr`;
                 }
 
                 baseOutputContent.appendChild(line);
@@ -11895,7 +11959,7 @@
         const baseRevenue = profitData.baseOutputs?.reduce((sum, o) => sum + o.revenuePerHour, 0) || 0;
         const baseOutputSection = createCollapsibleSection(
             '',
-            `Base Output: ${formatWithSeparator(Math.round(baseRevenue))}/hr (${profitData.baseOutputs?.length || 0} item${profitData.baseOutputs?.length !== 1 ? 's' : ''})`,
+            `Base Output: ${formatLargeNumber(Math.round(baseRevenue))}/hr (${profitData.baseOutputs?.length || 0} item${profitData.baseOutputs?.length !== 1 ? 's' : ''})`,
             null,
             baseOutputContent,
             false,
@@ -11915,7 +11979,8 @@
                 const decimals = drop.dropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${(drop.dropRate * 100).toFixed(drop.dropRate < 0.01 ? 3 : 2)}%) → ${formatWithSeparator(Math.round(drop.revenuePerHour))}/hr`;
+                const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
                 essenceContent.appendChild(line);
             }
 
@@ -11923,7 +11988,7 @@
             const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
             essenceSection = createCollapsibleSection(
                 '',
-                `Essence Drops: ${formatWithSeparator(Math.round(essenceRevenue))}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
+                `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
                 null,
                 essenceContent,
                 false,
@@ -11939,7 +12004,8 @@
                 const decimals = drop.dropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${(drop.dropRate * 100).toFixed(drop.dropRate < 0.01 ? 3 : 2)}%) → ${formatWithSeparator(Math.round(drop.revenuePerHour))}/hr`;
+                const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
                 rareFindContent.appendChild(line);
             }
 
@@ -11947,7 +12013,7 @@
             const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
             rareFindSection = createCollapsibleSection(
                 '',
-                `Rare Finds: ${formatWithSeparator(Math.round(rareFindRevenue))}/hr (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
+                `Rare Finds: ${formatLargeNumber(Math.round(rareFindRevenue))}/hr (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
                 null,
                 rareFindContent,
                 false,
@@ -11965,7 +12031,7 @@
 
         // Costs Section
         const costsDiv = document.createElement('div');
-        costsDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-top: 12px; margin-bottom: 4px;">Costs: ${formatWithSeparator(costs)}/hr</div>`;
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
 
         // Drink Costs subsection
         const drinkCostsContent = document.createElement('div');
@@ -11973,7 +12039,7 @@
             for (const drink of profitData.drinkCosts) {
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${drink.name}: ${drink.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(drink.priceEach)} → ${formatWithSeparator(Math.round(drink.costPerHour))}/hr`;
+                line.textContent = `• ${drink.name}: ${drink.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(drink.priceEach)} → ${formatLargeNumber(Math.round(drink.costPerHour))}/hr`;
                 drinkCostsContent.appendChild(line);
             }
         }
@@ -11981,7 +12047,7 @@
         const drinkCount = profitData.drinkCosts?.length || 0;
         const drinkCostsSection = createCollapsibleSection(
             '',
-            `Drink Costs: ${formatWithSeparator(costs)}/hr (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
+            `Drink Costs: ${formatLargeNumber(costs)}/hr (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
             null,
             drinkCostsContent,
             false,
@@ -12055,7 +12121,7 @@
         color: ${profitColor};
         margin-bottom: 8px;
     `;
-        netProfitLine.textContent = `Net Profit: ${formatWithSeparator(profit)}/hr, ${formatWithSeparator(profitPerDay)}/day`;
+        netProfitLine.textContent = `Net Profit: ${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
         topLevelContent.appendChild(netProfitLine);
 
         const detailedBreakdownSection = createCollapsibleSection(
@@ -12142,20 +12208,20 @@
         const bonusRevenueTotal = profitData.bonusRevenue?.totalBonusRevenue || 0;
         const revenue = Math.round(profitData.itemsPerHour * profitData.priceAfterTax + profitData.gourmetBonusItems * profitData.priceAfterTax + bonusRevenueTotal);
         const costs = Math.round(profitData.materialCostPerHour + profitData.totalTeaCostPerHour);
-        const summary = `${formatWithSeparator(profit)}/hr, ${formatWithSeparator(profitPerDay)}/day`;
+        const summary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
 
         // ===== Build Detailed Breakdown Content =====
         const detailsContent = document.createElement('div');
 
         // Revenue Section
         const revenueDiv = document.createElement('div');
-        revenueDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-bottom: 4px;">Revenue: ${formatWithSeparator(revenue)}/hr</div>`;
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
 
         // Base Output subsection
         const baseOutputContent = document.createElement('div');
         const baseOutputLine = document.createElement('div');
         baseOutputLine.style.marginLeft = '8px';
-        baseOutputLine.textContent = `• Base Output: ${profitData.itemsPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(profitData.priceAfterTax))} each → ${formatWithSeparator(Math.round(profitData.itemsPerHour * profitData.priceAfterTax))}/hr`;
+        baseOutputLine.textContent = `• Base Output: ${profitData.itemsPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(profitData.priceAfterTax))} each → ${formatLargeNumber(Math.round(profitData.itemsPerHour * profitData.priceAfterTax))}/hr`;
         baseOutputContent.appendChild(baseOutputLine);
 
         const baseRevenue = profitData.itemsPerHour * profitData.priceAfterTax;
@@ -12174,13 +12240,13 @@
             const gourmetContent = document.createElement('div');
             const gourmetLine = document.createElement('div');
             gourmetLine.style.marginLeft = '8px';
-            gourmetLine.textContent = `• Gourmet Bonus: ${profitData.gourmetBonusItems.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(profitData.priceAfterTax))} each → ${formatWithSeparator(Math.round(profitData.gourmetBonusItems * profitData.priceAfterTax))}/hr`;
+            gourmetLine.textContent = `• Gourmet Bonus: ${profitData.gourmetBonusItems.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(profitData.priceAfterTax))} each → ${formatLargeNumber(Math.round(profitData.gourmetBonusItems * profitData.priceAfterTax))}/hr`;
             gourmetContent.appendChild(gourmetLine);
 
             const gourmetRevenue = profitData.gourmetBonusItems * profitData.priceAfterTax;
             gourmetSection = createCollapsibleSection(
                 '',
-                `Gourmet Bonus: ${formatWithSeparator(Math.round(gourmetRevenue))}/hr (${(profitData.gourmetBonus * 100).toFixed(1)}% gourmet)`,
+                `Gourmet Bonus: ${formatLargeNumber(Math.round(gourmetRevenue))}/hr (${formatPercentage(profitData.gourmetBonus, 1)} gourmet)`,
                 null,
                 gourmetContent,
                 false,
@@ -12206,7 +12272,8 @@
                 const decimals = drop.dropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${(drop.dropRate * 100).toFixed(drop.dropRate < 0.01 ? 3 : 2)}%) → ${formatWithSeparator(Math.round(drop.revenuePerHour))}/hr`;
+                const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
                 essenceContent.appendChild(line);
             }
 
@@ -12214,7 +12281,7 @@
             const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
             essenceSection = createCollapsibleSection(
                 '',
-                `Essence Drops: ${formatWithSeparator(Math.round(essenceRevenue))}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
+                `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
                 null,
                 essenceContent,
                 false,
@@ -12230,7 +12297,8 @@
                 const decimals = drop.dropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${(drop.dropRate * 100).toFixed(drop.dropRate < 0.01 ? 3 : 2)}%) → ${formatWithSeparator(Math.round(drop.revenuePerHour))}/hr`;
+                const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
                 rareFindContent.appendChild(line);
             }
 
@@ -12238,7 +12306,7 @@
             const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
             rareFindSection = createCollapsibleSection(
                 '',
-                `Rare Finds: ${formatWithSeparator(Math.round(rareFindRevenue))}/hr (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
+                `Rare Finds: ${formatLargeNumber(Math.round(rareFindRevenue))}/hr (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
                 null,
                 rareFindContent,
                 false,
@@ -12255,7 +12323,7 @@
 
         // Costs Section
         const costsDiv = document.createElement('div');
-        costsDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-top: 12px; margin-bottom: 4px;">Costs: ${formatWithSeparator(costs)}/hr</div>`;
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
 
         // Material Costs subsection
         const materialCostsContent = document.createElement('div');
@@ -12273,10 +12341,10 @@
                 // Add Artisan reduction info if present (only show if actually reduced)
                 if (profitData.artisanBonus > 0 && material.baseAmount && material.amount !== material.baseAmount) {
                     const baseAmountPerHour = material.baseAmount * profitData.actionsPerHour;
-                    materialText += ` (${baseAmountPerHour.toFixed(1)} base -${(profitData.artisanBonus * 100).toFixed(1)}% 🍵)`;
+                    materialText += ` (${baseAmountPerHour.toFixed(1)} base -${formatPercentage(profitData.artisanBonus, 1)} 🍵)`;
                 }
 
-                materialText += ` @ ${formatWithSeparator(Math.round(material.askPrice))} → ${formatWithSeparator(Math.round(material.totalCost * profitData.actionsPerHour))}/hr`;
+                materialText += ` @ ${formatWithSeparator(Math.round(material.askPrice))} → ${formatLargeNumber(Math.round(material.totalCost * profitData.actionsPerHour))}/hr`;
 
                 line.textContent = materialText;
                 materialCostsContent.appendChild(line);
@@ -12285,7 +12353,7 @@
 
         const materialCostsSection = createCollapsibleSection(
             '',
-            `Material Costs: ${formatWithSeparator(Math.round(profitData.materialCostPerHour))}/hr (${profitData.materialCosts?.length || 0} material${profitData.materialCosts?.length !== 1 ? 's' : ''})`,
+            `Material Costs: ${formatLargeNumber(Math.round(profitData.materialCostPerHour))}/hr (${profitData.materialCosts?.length || 0} material${profitData.materialCosts?.length !== 1 ? 's' : ''})`,
             null,
             materialCostsContent,
             false,
@@ -12299,7 +12367,7 @@
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 // Tea structure: { itemName, pricePerDrink, drinksPerHour, totalCost }
-                line.textContent = `• ${tea.itemName}: ${tea.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(tea.pricePerDrink))} → ${formatWithSeparator(Math.round(tea.totalCost))}/hr`;
+                line.textContent = `• ${tea.itemName}: ${tea.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(tea.pricePerDrink))} → ${formatLargeNumber(Math.round(tea.totalCost))}/hr`;
                 teaCostsContent.appendChild(line);
             }
         }
@@ -12307,7 +12375,7 @@
         const teaCount = profitData.teaCosts?.length || 0;
         const teaCostsSection = createCollapsibleSection(
             '',
-            `Drink Costs: ${formatWithSeparator(Math.round(profitData.totalTeaCostPerHour))}/hr (${teaCount} drink${teaCount !== 1 ? 's' : ''})`,
+            `Drink Costs: ${formatLargeNumber(Math.round(profitData.totalTeaCostPerHour))}/hr (${teaCount} drink${teaCount !== 1 ? 's' : ''})`,
             null,
             teaCostsContent,
             false,
@@ -12329,7 +12397,7 @@
         // Artisan Bonus (still shown here for reference, also embedded in materials)
         if (profitData.artisanBonus > 0) {
             modifierLines.push(`<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY});">Modifiers:</div>`);
-            modifierLines.push(`<div style="margin-left: 8px;">• Artisan: -${(profitData.artisanBonus * 100).toFixed(1)}% material requirement</div>`);
+            modifierLines.push(`<div style="margin-left: 8px;">• Artisan: -${formatPercentage(profitData.artisanBonus, 1)} material requirement</div>`);
         }
 
         // Gourmet Bonus
@@ -12337,7 +12405,7 @@
             if (modifierLines.length === 0) {
                 modifierLines.push(`<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY});">Modifiers:</div>`);
             }
-            modifierLines.push(`<div style="margin-left: 8px;">• Gourmet: +${(profitData.gourmetBonus * 100).toFixed(1)}% bonus items</div>`);
+            modifierLines.push(`<div style="margin-left: 8px;">• Gourmet: +${formatPercentage(profitData.gourmetBonus, 1)} bonus items</div>`);
         }
 
         modifiersDiv.innerHTML = modifierLines.join('');
@@ -12363,7 +12431,7 @@
         color: ${profitColor};
         margin-bottom: 8px;
     `;
-        netProfitLine.textContent = `Net Profit: ${formatWithSeparator(profit)}/hr, ${formatWithSeparator(profitPerDay)}/day`;
+        netProfitLine.textContent = `Net Profit: ${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
         topLevelContent.appendChild(netProfitLine);
 
         const detailedBreakdownSection = createCollapsibleSection(
@@ -14878,7 +14946,7 @@
                 const speedLines = [];
                 speedLines.push(`Base: ${baseTime.toFixed(2)}s → ${actionTime.toFixed(2)}s`);
                 if (speedBonus > 0) {
-                    speedLines.push(`Speed: +${(speedBonus * 100).toFixed(1)}% | ${(3600 / actionTime).toFixed(0)}/hr`);
+                    speedLines.push(`Speed: +${formatPercentage(speedBonus, 1)} | ${(3600 / actionTime).toFixed(0)}/hr`);
                 } else {
                     speedLines.push(`${(3600 / actionTime).toFixed(0)}/hr`);
                 }
@@ -14890,9 +14958,9 @@
                     for (const item of speedBreakdown.equipmentAndTools) {
                         const enhText = item.enhancementLevel > 0 ? ` +${item.enhancementLevel}` : '';
                         const detailText = item.enhancementBonus > 0 ?
-                            ` (${(item.baseBonus * 100).toFixed(1)}% + ${(item.enhancementBonus * item.enhancementLevel * 100).toFixed(1)}%)` :
+                            ` (${formatPercentage(item.baseBonus, 1)} + ${formatPercentage(item.enhancementBonus * item.enhancementLevel, 1)})` :
                             '';
-                        speedLines.push(`  - ${item.itemName}${enhText}: +${(item.scaledBonus * 100).toFixed(1)}%${detailText}`);
+                        speedLines.push(`  - ${item.itemName}${enhText}: +${formatPercentage(item.scaledBonus, 1)}${detailText}`);
                     }
 
                     // Consumables
@@ -15086,70 +15154,81 @@
                     numberInput
                 );
 
-                // ===== SECTION 3: Quick Queue Setup =====
-                const queueContent = document.createElement('div');
-                queueContent.style.cssText = `
-                color: var(--text-color-secondary, ${config.COLOR_TEXT_SECONDARY});
-                font-size: 0.9em;
-                margin-top: 8px;
-                margin-bottom: 8px;
-            `;
+                // ===== SECTION 3: Quick Queue Setup (Skip for combat) =====
+                let queueContent = null;
 
-                // FIRST ROW: Time-based buttons (hours)
-                queueContent.appendChild(document.createTextNode('Do '));
+                if (hasNormalXP) {
+                    queueContent = document.createElement('div');
+                    queueContent.style.cssText = `
+                    color: var(--text-color-secondary, ${config.COLOR_TEXT_SECONDARY});
+                    font-size: 0.9em;
+                    margin-top: 8px;
+                    margin-bottom: 8px;
+                `;
 
-                this.presetHours.forEach(hours => {
-                    const button = this.createButton(hours === 0.5 ? '0.5' : hours.toString(), () => {
-                        // How many actions (outputs) fit in X hours?
-                        // With efficiency, fewer actual attempts produce more outputs
-                        // Time (seconds) = hours × 3600
-                        // Actual attempts = Time / actionTime
-                        // Queue count (outputs) = Actual attempts × efficiencyMultiplier
-                        // Round to whole number (input doesn't accept decimals)
-                        const totalSeconds = hours * 60 * 60;
-                        const actualAttempts = Math.round(totalSeconds / actionTime);
-                        const actionCount = Math.round(actualAttempts * efficiencyMultiplier);
-                        this.setInputValue(numberInput, actionCount);
+                    // FIRST ROW: Time-based buttons (hours)
+                    queueContent.appendChild(document.createTextNode('Do '));
+
+                    this.presetHours.forEach(hours => {
+                        const button = this.createButton(hours === 0.5 ? '0.5' : hours.toString(), () => {
+                            // How many actions (outputs) fit in X hours?
+                            // With efficiency, fewer actual attempts produce more outputs
+                            // Time (seconds) = hours × 3600
+                            // Actual attempts = Time / actionTime
+                            // Queue count (outputs) = Actual attempts × efficiencyMultiplier
+                            // Round to whole number (input doesn't accept decimals)
+                            const totalSeconds = hours * 60 * 60;
+                            const actualAttempts = Math.round(totalSeconds / actionTime);
+                            const actionCount = Math.round(actualAttempts * efficiencyMultiplier);
+                            this.setInputValue(numberInput, actionCount);
+                        });
+                        queueContent.appendChild(button);
                     });
-                    queueContent.appendChild(button);
-                });
 
-                queueContent.appendChild(document.createTextNode(' hours'));
-                queueContent.appendChild(document.createElement('div')); // Line break
+                    queueContent.appendChild(document.createTextNode(' hours'));
+                    queueContent.appendChild(document.createElement('div')); // Line break
 
-                // SECOND ROW: Count-based buttons (times)
-                queueContent.appendChild(document.createTextNode('Do '));
+                    // SECOND ROW: Count-based buttons (times)
+                    queueContent.appendChild(document.createTextNode('Do '));
 
-                this.presetValues.forEach(value => {
-                    const button = this.createButton(value.toLocaleString(), () => {
-                        this.setInputValue(numberInput, value);
+                    this.presetValues.forEach(value => {
+                        const button = this.createButton(value.toLocaleString(), () => {
+                            this.setInputValue(numberInput, value);
+                        });
+                        queueContent.appendChild(button);
                     });
-                    queueContent.appendChild(button);
-                });
 
-                const maxButton = this.createButton('Max', () => {
-                    const maxValue = this.calculateMaxValue(panel, actionDetails, gameData);
-                    // Handle both infinity symbol and numeric values
-                    if (maxValue === '∞' || maxValue > 0) {
-                        this.setInputValue(numberInput, maxValue);
-                    }
-                });
-                queueContent.appendChild(maxButton);
+                    const maxButton = this.createButton('Max', () => {
+                        const maxValue = this.calculateMaxValue(panel, actionDetails, gameData);
+                        // Handle both infinity symbol and numeric values
+                        if (maxValue === '∞' || maxValue > 0) {
+                            this.setInputValue(numberInput, maxValue);
+                        }
+                    });
+                    queueContent.appendChild(maxButton);
 
-                queueContent.appendChild(document.createTextNode(' times'));
+                    queueContent.appendChild(document.createTextNode(' times'));
+                } // End hasNormalXP check - queueContent only created for non-combat
 
-                // Insert sections: inputContainer -> queueContent -> speedSection (if exists) -> levelProgressSection
-                inputContainer.insertAdjacentElement('afterend', queueContent);
+                // Insert sections into DOM
+                if (queueContent) {
+                    // Non-combat: Insert queueContent first
+                    inputContainer.insertAdjacentElement('afterend', queueContent);
 
-                if (speedSection) {
-                    queueContent.insertAdjacentElement('afterend', speedSection);
-                    if (levelProgressSection) {
-                        speedSection.insertAdjacentElement('afterend', levelProgressSection);
+                    if (speedSection) {
+                        queueContent.insertAdjacentElement('afterend', speedSection);
+                        if (levelProgressSection) {
+                            speedSection.insertAdjacentElement('afterend', levelProgressSection);
+                        }
+                    } else {
+                        if (levelProgressSection) {
+                            queueContent.insertAdjacentElement('afterend', levelProgressSection);
+                        }
                     }
                 } else {
-                    // No speedSection for combat - insert levelProgressSection directly after queueContent
+                    // Combat: Insert levelProgressSection directly after inputContainer
                     if (levelProgressSection) {
-                        queueContent.insertAdjacentElement('afterend', levelProgressSection);
+                        inputContainer.insertAdjacentElement('afterend', levelProgressSection);
                     }
                 }
 
@@ -15557,12 +15636,14 @@
                 // Efficiency means each action repeats, giving more XP per performed action
                 const xpPerPerformedAction = xpPerAction * efficiencyMultiplier;
 
-                // Calculate real actions needed for this level
+                // Calculate real actions needed for this level (attempts)
                 const actionsForLevel = Math.ceil(xpNeeded / xpPerPerformedAction);
-                totalActions += actionsForLevel;
 
-                // Time is simply actions × time per action
-                // (efficiency already factored into action count)
+                // Convert attempts to outputs (queue input expects outputs, not attempts)
+                const outputsToQueue = Math.round(actionsForLevel * efficiencyMultiplier);
+                totalActions += outputsToQueue;
+
+                // Time is based on attempts (actions performed), not outputs
                 totalTime += actionsForLevel * actionTime;
             }
 
@@ -20150,8 +20231,8 @@
             const percentage = parseFloat(widthStyle.replace('%', ''));
             if (isNaN(percentage)) return;
 
-            // Format with 1 decimal place
-            const formattedPercentage = percentage.toFixed(1) + '%';
+            // Format with 1 decimal place (convert from percentage to decimal first)
+            const formattedPercentage = formatPercentage(percentage / 100, 1);
 
             // Check if we already have a percentage span
             let percentageSpan = levelContainer.querySelector('.mwi-exp-percentage');
@@ -21166,8 +21247,8 @@
                         for (const output of details.baseOutputs) {
                             const itemsForTask = (output.itemsPerHour / actionsPerHour) * quantity;
                             const revenueForTask = output.revenuePerHour * hoursNeeded;
-                            const dropRateText = output.dropRate < 1.0 ? ` (${(output.dropRate * 100).toFixed(1)}% drop)` : '';
-                            const processingText = output.isProcessed ? ` [${(output.processingChance * 100).toFixed(1)}% processed]` : '';
+                            const dropRateText = output.dropRate < 1.0 ? ` (${formatPercentage(output.dropRate, 1)} drop)` : '';
+                            const processingText = output.isProcessed ? ` [${formatPercentage(output.processingChance, 1)} processed]` : '';
                             lines.push(`<div>• ${output.name}: ${itemsForTask.toFixed(1)} items @ ${numberFormatter(Math.round(output.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}${dropRateText}${processingText}</div>`);
                         }
                     }
@@ -27237,6 +27318,7 @@
             this.updateDebounce = null;
             this.isDragging = false;
             this.unregisterScreenObserver = null;
+            this.pollInterval = null;
             this.isOnEnhancingScreen = false;
             this.isCollapsed = false; // Track collapsed state
         }
@@ -27264,38 +27346,61 @@
          * Set up screen observer to detect Enhancing screen using centralized observer
          */
         setupScreenObserver() {
-            // Check if setting is enabled
-            if (!config.getSetting('enhancementTracker_showOnlyOnEnhancingScreen')) {
-                // Setting is disabled, always show tracker
+            // Check if setting is enabled (default to false if undefined)
+            const showOnlyOnEnhancingScreen = config.getSetting('enhancementTracker_showOnlyOnEnhancingScreen');
+
+            if (showOnlyOnEnhancingScreen !== true) {
+                // Setting is disabled or undefined, always show tracker
                 this.isOnEnhancingScreen = true;
                 this.show();
-                return;
+            } else {
+                // Setting enabled, check current screen
+                this.checkEnhancingScreen();
+                this.updateVisibility();
             }
 
-            // Initial check and set visibility
-            this.checkEnhancingScreen();
-            this.updateVisibility(); // Always set initial visibility
-
             // Register with centralized DOM observer for enhancing panel detection
+            // Note: Enhancing screen uses EnhancingPanel_enhancingPanel, not SkillActionDetail_enhancingComponent
             this.unregisterScreenObserver = domObserver.onClass(
                 'EnhancementUI-ScreenDetection',
-                'SkillActionDetail_enhancingComponent',
-                () => {
+                'EnhancingPanel_enhancingPanel',
+                (node) => {
                     this.checkEnhancingScreen();
                 },
-                { debounce: true, debounceDelay: 100 }
+                { debounce: false }
             );
+
+            // Poll for both setting changes and panel removal
+            this.pollInterval = setInterval(() => {
+                const currentSetting = config.getSetting('enhancementTracker_showOnlyOnEnhancingScreen');
+
+                if (currentSetting !== true) {
+                    // Setting disabled - always show
+                    if (!this.isOnEnhancingScreen) {
+                        this.isOnEnhancingScreen = true;
+                        this.updateVisibility();
+                    }
+                } else {
+                    // Setting enabled - check if panel exists
+                    const panel = document.querySelector('[class*="EnhancingPanel_enhancingPanel"]');
+                    const shouldBeOnScreen = !!panel;
+
+                    if (this.isOnEnhancingScreen !== shouldBeOnScreen) {
+                        this.isOnEnhancingScreen = shouldBeOnScreen;
+                        this.updateVisibility();
+                    }
+                }
+            }, 500);
         }
 
         /**
          * Check if currently on Enhancing screen
          */
         checkEnhancingScreen() {
-            const enhancingPanel = document.querySelector('div.SkillActionDetail_enhancingComponent__17bOx');
+            const enhancingPanel = document.querySelector('[class*="EnhancingPanel_enhancingPanel"]');
             const wasOnEnhancingScreen = this.isOnEnhancingScreen;
             this.isOnEnhancingScreen = !!enhancingPanel;
 
-            // Only update visibility if screen state changed
             if (wasOnEnhancingScreen !== this.isOnEnhancingScreen) {
                 this.updateVisibility();
             }
@@ -27307,14 +27412,11 @@
         updateVisibility() {
             const showOnlyOnEnhancingScreen = config.getSetting('enhancementTracker_showOnlyOnEnhancingScreen');
 
-            if (!showOnlyOnEnhancingScreen) {
-                // Setting is disabled, always show
+            if (showOnlyOnEnhancingScreen !== true) {
                 this.show();
             } else if (this.isOnEnhancingScreen) {
-                // On Enhancing screen, show
                 this.show();
             } else {
-                // Not on Enhancing screen, hide
                 this.hide();
             }
         }
@@ -27835,7 +27937,7 @@
             const totalAttempts = session.totalAttempts;
             const totalSuccess = session.totalSuccesses;
             session.totalFailures;
-            totalAttempts > 0 ? ((totalSuccess / totalAttempts) * 100).toFixed(1) : '0.0';
+            totalAttempts > 0 ? formatPercentage(totalSuccess / totalAttempts, 1) : '0.0%';
 
             const duration = getSessionDuration(session);
             const durationText = this.formatDuration(duration);
@@ -27961,7 +28063,7 @@
             let rows = '';
             for (const level of levels) {
                 const levelData = session.attemptsPerLevel[level];
-                const rate = (levelData.successRate * 100).toFixed(1);
+                const rate = formatPercentage(levelData.successRate, 1);
                 const isCurrent = (parseInt(level) === session.currentLevel);
 
                 const rowStyle = isCurrent ? `
@@ -27976,7 +28078,7 @@
                     <td style="${compactCellStyle} text-align: center;">${level}</td>
                     <td style="${compactCellStyle} text-align: right;">${levelData.success}</td>
                     <td style="${compactCellStyle} text-align: right;">${levelData.fail}</td>
-                    <td style="${compactCellStyle} text-align: right;">${rate}%</td>
+                    <td style="${compactCellStyle} text-align: right;">${rate}</td>
                 </tr>
             `;
             }
@@ -28982,12 +29084,21 @@
             // Get all runs from unified storage
             const allRuns = await storage.getJSON('allRuns', this.unifiedStoreName, []);
 
-            // Check for duplicates (same timestamp, team, and duration)
-            const isDuplicate = allRuns.some(r =>
-                r.timestamp === run.timestamp &&
-                r.teamKey === teamKey &&
-                Math.abs(r.duration - run.duration) < 1000 // Within 1 second
-            );
+            // Parse incoming timestamp
+            const newTimestamp = new Date(run.timestamp).getTime();
+
+            // Check for duplicates (same time window, team, and duration)
+            const isDuplicate = allRuns.some(r => {
+                const existingTimestamp = new Date(r.timestamp).getTime();
+                const timeDiff = Math.abs(existingTimestamp - newTimestamp);
+                const durationDiff = Math.abs(r.duration - run.duration);
+
+                // Consider duplicate if:
+                // - Within 10 seconds of each other (handles timestamp precision differences)
+                // - Same team
+                // - Duration within 2 seconds (handles minor timing differences)
+                return timeDiff < 10000 && r.teamKey === teamKey && durationDiff < 2000;
+            });
 
             if (!isDuplicate) {
                 // Create unified format run
@@ -29003,7 +29114,8 @@
                     validated: true,
                     source: 'chat',
                     waveTimes: null,
-                    avgWaveTime: null
+                    avgWaveTime: null,
+                    keyCountsMap: run.keyCountsMap || null  // Include key counts if available
                 };
 
                 // Add to front of list (most recent first)
@@ -30103,24 +30215,37 @@
                 slowestWave,
                 wavesCompleted: completedRunData.wavesCompleted,
                 waveTimes: completedWaveTimes,
-                keyCountMessages: completedKeyCountMessages  // Store key data for history
+                keyCountMessages: completedKeyCountMessages,  // Store key data for history
+                keyCountsMap: completedRunData.keyCountsMap  // Include for backward compatibility
             };
 
-            // Phase 5: Run history is now built exclusively from party chat messages
-            // by dungeon-tracker-chat-annotations.js (saveRunsFromEvents method).
-            //
-            // This approach uses server-provided chat timestamps instead of wall-clock time,
-            // which prevents hibernation-corrupted durations (e.g., 625-minute runs when
-            // the computer sleeps mid-dungeon).
-            //
-            // WebSocket tracking is still active for live UI features:
-            // - Elapsed time display
-            // - Wave counter
-            // - Progress bar
-            // - Key counts display
-            //
-            // But we NO LONGER save runs to storage from WebSocket events.
-            // Chat message parsing is the single source of truth for historical run data.
+            // Auto-save completed run to history if we have complete data
+            // Only saves runs completed during live tracking (Option A)
+            if (validated && completedRunData.keyCountsMap && completedRunData.dungeonHrid) {
+                try {
+                    // Extract team from keyCountsMap
+                    const team = Object.keys(completedRunData.keyCountsMap).sort();
+                    const teamKey = dungeonTrackerStorage.getTeamKey(team);
+
+                    // Get dungeon name from HRID
+                    const dungeonInfo = dungeonTrackerStorage.getDungeonInfo(completedRunData.dungeonHrid);
+                    const dungeonName = dungeonInfo ? dungeonInfo.name : 'Unknown';
+
+                    // Build run object in unified format
+                    const runToSave = {
+                        timestamp: new Date(firstTimestamp).toISOString(),  // Use party message timestamp
+                        duration: partyMessageDuration,  // Server-validated duration
+                        dungeonName: dungeonName,
+                        keyCountsMap: completedRunData.keyCountsMap  // Include key counts
+                    };
+
+                    // Save to database (with duplicate detection)
+                    await dungeonTrackerStorage.saveTeamRun(teamKey, runToSave);
+                    console.log('[Dungeon Tracker] Auto-saved completed run to history');
+                } catch (error) {
+                    console.error('[Dungeon Tracker] Failed to auto-save run:', error);
+                }
+            }
 
             // Notify completion
             this.notifyCompletion(completedRun);
@@ -30455,6 +30580,7 @@
             this.enabled = true;
             this.observer = null;
             this.lastSeenDungeonName = null; // Cache last known dungeon name
+            this.cumulativeStatsByDungeon = {}; // Persistent cumulative counters for rolling averages
         }
 
         /**
@@ -30549,7 +30675,7 @@
             // NOTE: Run saving is done manually via the Backfill button
             // Chat annotations only add visual time labels to messages
 
-            // Calculate in-memory stats from visible chat messages (for averages when no backfill exists)
+            // Calculate in-memory stats from visible chat messages (for color thresholds only)
             const inMemoryStats = this.calculateStatsFromEvents(events);
 
             // Continue with visual annotations
@@ -30620,16 +30746,27 @@
 
                     this.insertAnnotation(label, color, e.msg, false);
 
-                    // Add average if this is a successful run
+                    // Add cumulative average if this is a successful run
                     if (diff && dungeonName && dungeonName !== 'Unknown') {
-                        // Check storage first, fall back to in-memory stats
-                        const storageStats = await dungeonTrackerStorage.getStatsByName(dungeonName);
-                        const stats = storageStats.totalRuns > 0 ? storageStats : inMemoryStats[dungeonName];
-
-                        if (stats && stats.totalRuns > 1 && stats.avgTime > 0) {
-                            const avgLabel = `Average: ${this.formatTime(stats.avgTime)}`;
-                            this.insertAnnotation(avgLabel, '#deb887', e.msg, true); // Tan color
+                        // Initialize dungeon tracking if needed
+                        if (!this.cumulativeStatsByDungeon[dungeonName]) {
+                            this.cumulativeStatsByDungeon[dungeonName] = {
+                                runCount: 0,
+                                totalTime: 0
+                            };
                         }
+
+                        // Add this run to cumulative totals
+                        const dungeonStats = this.cumulativeStatsByDungeon[dungeonName];
+                        dungeonStats.runCount++;
+                        dungeonStats.totalTime += diff;
+
+                        // Calculate cumulative average (average of all runs up to this point)
+                        const cumulativeAvg = Math.floor(dungeonStats.totalTime / dungeonStats.runCount);
+
+                        // Show cumulative average
+                        const avgLabel = `Average: ${this.formatTime(cumulativeAvg)}`;
+                        this.insertAnnotation(avgLabel, '#deb887', e.msg, true); // Tan color
                     }
                 }
             }
@@ -30940,6 +31077,7 @@
 
             // Clear cached state
             this.lastSeenDungeonName = null;
+            this.cumulativeStatsByDungeon = {}; // Reset cumulative counters
             this.enabled = true; // Reset to default enabled state
 
             // Remove all annotations from DOM
@@ -32853,11 +32991,11 @@
                 headerRuns.textContent = stats.totalRuns.toString();
             }
 
-            // Update header keys (always visible)
+            // Update header keys (always visible) - show current key count from current run
             const headerKeys = this.container.querySelector('#mwi-dt-header-keys');
             if (headerKeys) {
-                const selfKeyCount = (run.keyCountsMap && run.keyCountsMap[characterName]) || 0;
-                headerKeys.textContent = selfKeyCount.toLocaleString();
+                const currentKeys = (run.keyCountsMap && run.keyCountsMap[characterName]) || 0;
+                headerKeys.textContent = currentKeys.toLocaleString();
             }
 
             // Update run-level stats in content area (2x2 grid)
@@ -35088,7 +35226,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.934',
+            version: '0.4.937',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

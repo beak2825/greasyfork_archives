@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pano Detective
 // @namespace    https://greasyfork.org/users/1179204
-// @version      2.6.2
+// @version      2.6.3
 // @description  Find the exact time a Google Street View image was taken (default coverage)
 // @author       KaKa
 // @include      *://maps.google.com/*
@@ -1516,7 +1516,7 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
                     try {
                         const [captureTime, drivingEnd] = await Promise.all([
                             binarySearch({"lat": lat, "lng": lng}, timeRange.startDate, timeRange.endDate, panoId),
-                            CONFIG.SHOW_SPEED?seekDrivingEnd(metaData, timeRange):null
+                            CONFIG.SPEED_SHOW?seekDrivingEnd(metaData, timeRange):null
                         ]);
                         if (!captureTime) {
                             console.error('Failed to get capture time');
@@ -1557,7 +1557,7 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
                                     altUnit = 'ft';
                                 }
                                 const altIcon = displayAltitude > 50 ? mountain : wave;
-                                if(CONFIG.SHOW_SPEED){
+                                if(CONFIG.SPEED_SHOW){
                                     logoSpan.textContent += ` ${altIcon} ${Math.round(displayAltitude * 100) / 100}${altUnit}`;}
                                 else{
                                     logoSpan.textContent = ` ${altIcon} ${Math.round(displayAltitude * 100) / 100}${altUnit}`;};

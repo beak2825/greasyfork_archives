@@ -1,61 +1,81 @@
 // ==UserScript==
-// @name         Wowhead Tooltips on Reddit
+// @name         Wowhead Tooltips on Reddit (Optimized)
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @license      MIT
-// @description  Show Wowhead tooltips on valid Reddit Wowhead links
-// @author       Nighthawk42
+// @description  Show Wowhead tooltips on Reddit with support for icons and dynamic loading.
+// @author       Nighthawk42 & Gemini
 // @match        https://*.reddit.com/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/498631/Wowhead%20Tooltips%20on%20Reddit.user.js
-// @updateURL https://update.greasyfork.org/scripts/498631/Wowhead%20Tooltips%20on%20Reddit.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/498631/Wowhead%20Tooltips%20on%20Reddit%20%28Optimized%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/498631/Wowhead%20Tooltips%20on%20Reddit%20%28Optimized%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Function to add Wowhead script
-    function addWowheadScript() {
-        let script = document.createElement('script');
+    // 1. Configure Wowhead Tooltips
+    // Customize these: iconizeLinks (shows item icons), colorLinks (rarity colors)
+    window.whTooltips = {
+        colorLinks: true,
+        iconizeLinks: true,
+        renameLinks: false,
+        iconSize: 'small'
+    };
+
+    // 2. Inject Wowhead Power Script
+    function initWowhead() {
+        if (document.getElementById('wowhead-power-script')) return;
+        const script = document.createElement('script');
+        script.id = 'wowhead-power-script';
         script.src = 'https://wow.zamimg.com/widgets/power.js';
         script.async = true;
         document.head.appendChild(script);
     }
 
-    // Add Wowhead script to the page
-    addWowheadScript();
-
-    // Function to process links and add wowhead-tooltip class
+    // 3. Process Links
     function processWowheadLinks() {
-        let links = document.querySelectorAll('a[href*="wowhead.com"]');
-        links.forEach(link => {
-            let href = link.href;
-            link.setAttribute('data-wowhead', href);
-            link.setAttribute('rel', 'external');
+        const links = document.querySelectorAll('a[href*="wowhead.com"]:not([data-wh-processed])');
 
-            // Determine the version from the URL and add corresponding attributes or classes
-            if (href.includes('/beta/')) {
-                link.classList.add('wowhead-beta');
-            } else if (href.includes('/ptr-2/')) {
-                link.classList.add('wowhead-ptr-2');
-            } else if (href.includes('/ptr/')) {
-                link.classList.add('wowhead-ptr');
-            } else if (href.includes('/classic/')) {
-                link.classList.add('wowhead-classic');
-            } else if (href.includes('/cata/')) {
-                link.classList.add('wowhead-cata');
-            } else {
-                link.classList.add('wowhead-live');
-            }
+        if (links.length === 0) return;
+
+        links.forEach(link => {
+            const href = link.href;
+            link.setAttribute('data-wh-processed', 'true');
+
+            // Map subdomains/paths to Wowhead versions
+            if (href.includes('/beta/')) link.classList.add('wowhead-beta');
+            else if (href.includes('/ptr/')) link.classList.add('wowhead-ptr');
+            else if (href.includes('/classic/')) link.classList.add('wowhead-classic');
+            else if (href.includes('/cata/')) link.classList.add('wowhead-cata');
+            else if (href.includes('/tbc/')) link.classList.add('wowhead-tbc');
+            else if (href.includes('/wotlk/')) link.classList.add('wowhead-wotlk');
+            else link.classList.add('wowhead-live');
+
+            // Force data-wowhead attribute to ensure the tooltip engine sees it
+            link.setAttribute('data-wowhead', href);
         });
+
+        // Tell Wowhead to scan the page for the new links we just labeled
+        if (window.$WowheadPower) {
+            window.$WowheadPower.refreshLinks();
+        }
     }
 
-    // Process links on page load
+    // 4. Execution Logic
+    initWowhead();
     processWowheadLinks();
 
-    // Listen for new links being added to the page (e.g., infinite scrolling)
-    new MutationObserver(processWowheadLinks).observe(document.body, {
+    // 5. Optimized Observer (Debounced)
+    let debounceTimer;
+    const observer = new MutationObserver(() => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(processWowheadLinks, 500); // Wait for scrolling/loading to pause
+    });
+
+    observer.observe(document.body, {
         childList: true,
         subtree: true
     });
+
 })();

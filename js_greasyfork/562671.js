@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         WaniKani Dark Mode - by SGAIPG
-// @description  A simple Dark Mode interface for WaniKani
+// @description  Dark Mode for the WaniKani interface.
 // @match 	 http://wanikani.com/*
 // @match 	 http://www.wanikani.com/*
 // @match 	 https://wanikani.com/*
 // @match 	 https://www.wanikani.com/*
 // @run-at       document-start
-// @version 0.0.1.20260114184420
+// @version 0.0.1.20260114183754
 // @namespace https://greasyfork.org/users/1559642
 // @downloadURL https://update.greasyfork.org/scripts/562671/WaniKani%20Dark%20Mode%20-%20by%20SGAIPG.user.js
 // @updateURL https://update.greasyfork.org/scripts/562671/WaniKani%20Dark%20Mode%20-%20by%20SGAIPG.meta.js
@@ -20,24 +20,52 @@ body {
   background-color: #222222 !important;
 }
 /* ==UserStyle==
-@name			WaniKani Dark Mode - by SGAIPG
+@name			WaniKani Custom Dark Mode - by SGAIPG
 @description		A simple Dark Mode interface for WaniKani
- @match 	 	http://wanikani.com/*
-@match 	 		http://www.wanikani.com/*
-@match 	 		https://wanikani.com/*
-@match 	 		https://www.wanikani.com/*
+@match 			<all_urls>
 @weight 		999
-==/UserStyle== */	
+==/UserStyle== */
 
 
 	
 	
+
+/* Styling variables */
+:root {
+	
+	/* General */
+--color-widget-background: #6a6c6d;
+--color-widget-border: #6a6c6d;
+--color-count-bubble-text: #222222;
+--color-text: white;
+	
+	/* Item spread variables */
+--color-item-spread-row-background: #808080;
+--color-item-spread-row-hover-background: #606060;
+--color-item-spread-row-border: #808080;
+--color-item-spread-row-icon: white; 
+--color-widget-primary-text: white;
+--color-item-spread-total-background: #999999;
+--color-item-spread-total-border: #999999;
+--color-blue-dark: #01aaff;
+--color-pink-dark: #ff01aa;
+--color-purple-dark: #aa00ff;
+
+/* Other */
+
+}
+
+
+
+
+
+
+
 
 /* -------------- MAIN PAGE -------------- */
 /* Main background */
-html, body {
-  background: #222222 !important;
-  background-color: #222222 !important;
+.html, .body {
+  background: #333333 !important;
 }
 
 .site-content-container {
@@ -48,7 +76,7 @@ html, body {
 /* Footer color manipulation */
 .footer--illustrated {
 	position: relative;
-	overflow: hidden; /* ensures pseudo-element doesn’t overflow */
+	overflow: hidden;
 }
 
 .footer--illustrated::before {
@@ -56,13 +84,13 @@ html, body {
 	position: absolute;
 	top: 0; left: 0; right: 0; bottom: 0;
 	background: url("/assets/footer-bg-4d7ea4d5.gif") no-repeat center center/cover;
-	filter: invert(0.5) brightness(0.5) contrast(1.1); /* tweak brightness if needed */
+	filter: invert(0.5) brightness(0.5) contrast(1.1);
 	z-index: 0;
 }
 
 .footer--illustrated > * {
 	position: relative;
-	z-index: 1; /* ensures content appears above the background */
+	z-index: 1; 
 }
 
 
@@ -109,11 +137,91 @@ p a {
 	border: 1px solid lightgrey;
 }
 
+.wk-button--primary .wk-button__text, .wk-button--secondary .wk-button__text, .wk-button--subscribe .wk-button__text, .wk-button--danger .wk-button__text, .wk-button--quiz .wk-button__text {
+	color: #222222;
+}
 
+.wk-form__select {
+	color: #222222;
+}
 
 
 
 /* Plugins */
+
+#wkof_ds .wkof_settings .right > *:not(input[type="checkbox"]),
+#WkitTopBar.WkitDark .WkitSelector {
+  /* disable the gloss effect on safari */
+  padding-left: 10px;
+  color: white;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>') no-repeat;
+  background-size: 18px;
+  background-position: calc(100% - 3px) 50%;
+  background-repeat: no-repeat;
+  background-color: #464646;
+  border-color: #464646;
+  padding-right: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+ select {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>') no-repeat !important;
+  }
+}
+
+#wkof_ds #wkofs_Item_Inspector :not(.pre_list_btn_grp) > button, 
+#wkof_ds #wkofs_advSearchFilters button {
+	color: black;
+}
+
+#WkitTopBar.WkitDark .WkitHeader {
+	background-color: #464646;
+}
+
+#WkitTopBar.WkitDark .WkitTableList table tr {
+	border: 2px #6a6c6d;
+}
+
+.WkitControlBar * {
+	color: white;
+}
+
+.WkitTooltipContent {
+	background-color: #282728 !important;
+	padding: 15px !important;
+	border-radius: 15px !important;
+}
+
+#WkitTopBar.WkitDark .WkitSmallCaps {
+	text-shadow: 0 0px 0;
+	color: white;
+	box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0px 0px rgba(0, 0, 0, 0);
+}
+
+#WkitTopBar {
+	width: 100%;
+	margin-left: 0px;
+	border-radius: 15px;
+	margin-bottom: 24px;
+	padding-top: 20px;
+}
+
+#WkitTopBar .WkitTableList, #WkitTopBar .WkitSpan4 {
+	max-width: 350px;
+	margin: 0 0 12px;
+	padding-left: 7px;
+	padding-right: 7px;
+}
+
+#leech_table {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .generate-image-button {
 	background-color: #e7e9eb;
 	font-weight: 500;
@@ -138,6 +246,82 @@ p a {
 
 .subject-section img {
 	border-radius: 10px;
+}
+
+#timeline {
+	border-bottom: 0px solid #333333;
+	border-radius: 15px;
+	background-color: #6a6c6d;
+	padding: 20px;
+}
+
+#timeline .review_info .inner {
+	background-color: rgba(28,28,28,1); 
+	padding: 15px;
+	border-radius: 8px;
+	border: 2px solid #444444;
+}
+
+#timeline > .link {
+	color: grey;
+	border-radius: 5px;
+}
+
+#timeline > .link:hover {
+	color: black;
+}
+
+#timeline svg .label-x text.redtic {
+	fill: #61d1ff
+}
+
+#timeline svg .grid .redtic {
+	stroke: #61d1ff;
+	stroke-width: 3;
+}
+
+#dppContainer .dppFootnote.dppNoteText {
+	color: lightgrey;
+}
+
+#wkof_ds .ui-widget-content, #wkof_ds .wkof_settings legend {
+	color: white;
+}
+
+.ui-dialog {
+	border: 3px solid darkgrey !important;
+	background: #333333 !important;
+}
+
+.ui-dialog-titlebar {
+	border: 0px solid black !important; 
+}
+
+#dppContainer .dppBlockItem .dppPopup, 
+#wkof_ds .ui-dialog .ui-dialog-content, 
+#wkof_ds .ui-dialog .ui-dialog-buttonpane {
+	background-color: #333333;
+	border-color: #222222;
+	border-top: 1px solid #333333;
+}
+
+#wkof_ds .ui-dialog .ui-dialog-titlebar{
+	background: #333333;
+	color: white;
+	text-shadow: 0 0px 0 #ffffff;
+}
+
+.ui-dialog, .ui-corner-all, .ui-widget, 
+.ui-widget-content, .ui-front, .ui-dialog-buttons, 
+.ui-draggable, .ui-resizable, .wkof_settings_dialog {
+	background-color: #6a6c6d;
+	color: white;
+	text-shadow: 0 0px 0 #ffffff;
+}
+
+#dppContainer .dppIn90pct {
+	background-color: #6a6c6d !important;
+	border-color: #6a6c6d !important
 }
 
 
@@ -294,6 +478,10 @@ button.sitemap__section-header--help:focus{
 	color: white;
 }
 
+.study-streak-widget__day-icon {
+	color: black;
+}
+
 .study-streak-widget__day:last-child {
 	background-color: #858585;
 }
@@ -411,8 +599,8 @@ button.sitemap__section-header--help:focus{
 }
 
 .item-spread-table-row {
-	background-color: #555555;
-	border-color: #545454;
+	background-color: #808080;
+	border-color: #808080;
 	color: white;
 }
 
@@ -421,7 +609,7 @@ button.sitemap__section-header--help:focus{
 }
 
 .item-spread-table-row__total {
-	color: grey;
+	color: white;
 }
 
 .item-spread-graph-widget__graph-y-axis,
@@ -548,6 +736,11 @@ button.sitemap__section-header--help:focus{
 
 .subject-srs-progress__stage-text {
 	color: lightgrey;
+}
+
+.subject-progress * {
+	box-shadow: 0px 0px 0px #e3e3e3;
+	text-shadow: 0px 0px 0px #e3e3e3;
 }
 
 .level-progress-widget__subject-list-button * {
@@ -1097,6 +1290,10 @@ button.sitemap__section-header--help:focus{
 
 .danger-zone .wk-panel__title {
 	color: white;
+}
+
+.wk-button--danger * {
+	color: white !important;
 }
 
 #username_frame strong {

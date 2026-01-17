@@ -2,9 +2,9 @@
 // @name         CDN & Server Info Displayer (UI Overhaul)
 // @name:en      CDN & Server Info Displayer (UI Overhaul)
 // @namespace    http://tampermonkey.net/
-// @version      7.52.0
-// @description  [v7.52.0] 智能DNS选择: 根据用户IP所在地区自动选择最优DNS服务器(中国大陆使用阿里DNS,其他地区使用Google DNS),解决国内外CDN分流和DNS污染问题,支持VPN分流场景实时切换。
-// @description:en [v7.52.0] Smart DNS Selection: Automatically choose optimal DNS server based on user's IP location (Alibaba DNS for mainland China, Google DNS for other regions), solving CDN geo-routing and DNS pollution issues, with real-time switching support for VPN split tunneling.
+// @version      7.53.0
+// @description  [v7.53.0] 新增知道创宇加速乐CDN检测支持,修复Fastly误判问题。智能DNS选择: 根据用户IP所在地区自动选择最优DNS服务器(中国大陆使用阿里DNS,其他地区使用Google DNS),解决国内外CDN分流和DNS污染问题,支持VPN分流场景实时切换。
+// @description:en [v7.53.0] Added KnowSec JiaSuLe CDN detection support, fixed Fastly false positive issue. Smart DNS Selection: Automatically choose optimal DNS server based on user's IP location (Alibaba DNS for mainland China, Google DNS for other regions), solving CDN geo-routing and DNS pollution issues, with real-time switching support for VPN split tunneling.
 // @author       Zhou Sulong
 // @license      MIT
 // @match        *://*/*
@@ -12,7 +12,7 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_getResourceText
-// @resource     cdn_rules https://raw.githubusercontent.com/zhousulong/cdn-server-info-userscript/main/cdn_rules.json?v=7.50.6
+// @resource     cdn_rules https://raw.githubusercontent.com/zhousulong/cdn-server-info-userscript/main/cdn_rules.json?v=7.53.0
 // @connect      dns.alidns.com
 // @connect      dns.google
 // @connect      1.1.1.1
@@ -515,6 +515,29 @@
                     cache: cache,
                     pop: pop,
                     extra: `Req-ID: ${requestId}`,
+                };
+            }
+        },
+        'KnowSec JiaSuLe': {
+            getInfo: (h, rule) => {
+                let cache = 'N/A';
+                const bkdCache = h.get('x-bkd-cache');
+                if (bkdCache) {
+                    cache = bkdCache.toUpperCase();
+                } else {
+                    cache = getCacheStatus(h);
+                }
+
+
+                // x-via-jsl contains node hash (e.g., "8b19e79,-"), not geographic location
+                // So we don't extract POP from it
+                const viaJsl = h.get('x-via-jsl');
+
+                return {
+                    provider: 'KnowSec JiaSuLe',
+                    cache: cache,
+                    pop: 'N/A',
+                    extra: viaJsl ? `Via-JSL: ${viaJsl}` : 'N/A',
                 };
             }
         },

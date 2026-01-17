@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Optimize work experience at Microsoft
 // @namespace    https://www.microsoft.com/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Optimize work experience at Microsoft!
 // @author       Guosen Wang
 // @match        https://ms.portal.azure.com/*
@@ -80,18 +80,24 @@ function handleDOMTargets(targets, options = {}) {
 
   // If there are unprocessed targets or in continuous mode, create an observer
   if (!processed.every(Boolean) || continuousMode) {
-    observer = new MutationObserver(checkAndProcess);
-    observer.observe(document.body, { childList: true, subtree: true });
+    function startObserver() {
+      if (!document.body) {
+        requestAnimationFrame(startObserver);
+        return;
+      }
 
-    // Timeout protection (only for non-continuous mode)
-    if (!continuousMode) {
-      const timeoutId = setTimeout(() => {
-        if (observer) {
-          observer.disconnect();
+      observer = new MutationObserver(checkAndProcess);
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      if (!continuousMode) {
+        const timeoutId = setTimeout(() => {
+          observer?.disconnect();
           observer = null;
-        }
-      }, timeout);
+        }, timeout);
+      }
     }
+
+    startObserver();
   }
 }
 
@@ -100,14 +106,14 @@ function handleDOMTargets(targets, options = {}) {
  */
 function m365pulse() {
   handleDOMTargets([
-    { 
-      selector: 'a.right:nth-child(1)', 
-      text: 'New Version', 
-      action: element => element.remove() 
+    {
+      selector: 'a.right:nth-child(1)',
+      text: 'New Version',
+      action: element => element.remove()
     },
-    { 
-      selector: 'div[class^="feedback-"]', 
-      action: element => element.parentElement?.remove() 
+    {
+      selector: 'div[class^="feedback-"]',
+      action: element => element.parentElement?.remove()
     }
   ], { timeout: 10000 });
 }
@@ -117,9 +123,9 @@ function m365pulse() {
  */
 function azure() {
   handleDOMTargets([
-    { 
-      selector: '#_weave_e_6', 
-      action: element => element.remove() 
+    {
+      selector: '#_weave_e_6',
+      action: element => element.remove()
     },
     {
       selector: '#_weave_e_5 > div.fxs-topbar-internal.fxs-internal-full',

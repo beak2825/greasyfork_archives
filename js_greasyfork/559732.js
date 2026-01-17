@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Juxtaposition Pretendo Enhancer
 // @namespace    https://github.com/ItsFuntum/Juxtaposition-Enhancer
-// @version      2026-01-12
+// @version      2026-01-16-rev1
 // @description  Userscript that improves Pretendo's Juxtaposition on the web.
 // @author       Funtum
 // @match        *://juxt.pretendo.network/*
@@ -35,6 +35,97 @@
       }
     });
     observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function scaleToJuxtResolution(img) {
+    const TARGETS = [
+      { w: 800, h: 450 },
+      { w: 400, h: 240 },
+      { w: 320, h: 240 },
+      { w: 640, h: 480 },
+    ];
+
+    const srcAspect = img.width / img.height;
+
+    // Pick closest aspect ratio
+    let target = TARGETS.reduce(
+      (best, t) => {
+        const diff = Math.abs(srcAspect - t.w / t.h);
+        return diff < best.diff ? { t, diff } : best;
+      },
+      { t: TARGETS[0], diff: Infinity }
+    ).t;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = target.w;
+    canvas.height = target.h;
+
+    const ctx = canvas.getContext("2d");
+
+    // Black bars
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Scale image to fit
+    const scale = Math.min(
+      canvas.width / img.width,
+      canvas.height / img.height
+    );
+
+    const drawW = img.width * scale;
+    const drawH = img.height * scale;
+
+    const x = (canvas.width - drawW) / 2;
+    const y = (canvas.height - drawH) / 2;
+
+    ctx.drawImage(img, x, y, drawW, drawH);
+
+    return canvas.toDataURL("image/jpeg", 0.92);
+  }
+
+  function processScreenshot(popup) {
+    const screenshotValue = popup.querySelector("#screenshot-value");
+    const preview = popup.querySelector("#screenshot-preview");
+    const fileInput = popup.querySelector("#screenshot-input");
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      if (file.type !== "image/jpeg") {
+        alert("Only JPEG screenshots are supported.");
+        fileInput.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const dataUrl = reader.result.toString();
+
+        const img = new Image();
+        img.onload = () => {
+          const scaledDataUrl = scaleToJuxtResolution(img);
+
+          // Strip prefix for server
+          const base64 = scaledDataUrl.replace(/^data:image\/jpeg;base64,/, "");
+
+          screenshotValue.value = base64;
+
+          // Preview scaled image
+          preview.src = scaledDataUrl;
+          preview.style.display = "block";
+
+          // Prevent uploading both screenshot AND memo (painting/drawing)
+          const memoValue = popup.querySelector("#memo-value");
+          if (memoValue) memoValue.value = "";
+        };
+
+        img.src = dataUrl;
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 
   if (communityPage) {
@@ -93,6 +184,12 @@
     </label>
   </div>
 
+  <div class="screenshot-upload">
+    <input type="file" id="screenshot-input" accept="image/jpeg">
+    <input type="hidden" name="screenshot" id="screenshot-value">
+    <img id="screenshot-preview" style="display:none; max-width:100%; border-radius:6px;">
+  </div>
+
   <div id="button-wrapper">
     <input type="submit" class="post-button fixed-bottom-button" value="Post">
   </div>
@@ -100,6 +197,7 @@
 `;
 
       document.querySelector(".community-top").appendChild(popup);
+      processScreenshot(popup);
 
       // --- Feeling selector: change Mii expression when clicking buttons ---
       const miiFace = popup.querySelector("#mii-face");
@@ -180,6 +278,12 @@
     </label>
   </div>
 
+  <div class="screenshot-upload">
+    <input type="file" id="screenshot-input" accept="image/jpeg">
+    <input type="hidden" name="screenshot" id="screenshot-value">
+    <img id="screenshot-preview" style="display:none; max-width:100%; border-radius:6px;">
+  </div>
+
   <div id="button-wrapper">
     <input type="submit" class="post-button fixed-bottom-button" value="Reply">
   </div>
@@ -187,6 +291,7 @@
 `;
 
     postsWrapper.appendChild(popup);
+    processScreenshot(popup);
 
     // --- Feeling selector: change Mii expression when clicking buttons ---
     const miiFace = popup.querySelector("#mii-face");
@@ -202,7 +307,10 @@
 
   function addViewLikes() {
     const wrappers = document.querySelectorAll(".post-buttons-wrapper");
-    const userMiiIcon_raw = document.querySelector(".mii-icon").src;
+    const userMiiIconEl = document.querySelector(".mii-icon");
+    if (!userMiiIconEl) return;
+
+    const userMiiIcon_raw = userMiiIconEl.src;
     const userMiiIcon_base = userMiiIcon_raw.substring(
       0,
       userMiiIcon_raw.lastIndexOf("/") + 1
@@ -211,7 +319,9 @@
     wrappers.forEach((wrapper) => {
       const postsWrapper = wrapper.closest(".posts-wrapper");
       const postId = postsWrapper.id;
-      const postMiiIcon_raw = postsWrapper.querySelector(".user-icon ").src;
+      const postMiiIcon_raw = postsWrapper.querySelector(".user-icon")?.src;
+      if (!postMiiIcon_raw) return;
+
       const postMiiIcon_base = postMiiIcon_raw.substring(
         0,
         postMiiIcon_raw.lastIndexOf("/") + 1

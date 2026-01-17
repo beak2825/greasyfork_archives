@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FlatChat+
 // @namespace    com.dounford.flatmmo.flatChat
-// @version      1.5.1.8
+// @version      1.5.2
 // @description  Better chat for FlatMMO
 // @author       Dounford
 // @license      MIT
@@ -1699,7 +1699,7 @@
 				this.showWarning(data + " removed from Watched List");
 			}, `Removes a term from the Watched List.<br><b>Usage:</b>/unwatchword [term]`);
 
-			window.FlatMMOPlus.registerCustomChatCommand("ticks", (command, data='') => {
+			window.FlatMMOPlus.registerCustomChatCommand("tick", (command, data='') => {
 				this.showWarning(`The current action takes ${progress_bar_target + 1} ticks (${(progress_bar_target + 1) / 2} seconds)`);
 			}, `Shows the time needed to complete the current action`);
 

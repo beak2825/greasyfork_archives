@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - de/at/ch
-// @version         4.2.7.3
+// @version         4.2.8.0
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1214,60 +1214,6 @@ else if (matchDomain('faz.net')) {
   }
   let ads = 'div.lay-PaySocial, div.iqadtile_wrapper, div.iqdcontainer';
   hideDOMStyle(ads);
-}
-
-else if (matchDomain('freitag.de')) {
-  let paywall = document.querySelector('section.qa-paywall');
-  if (paywall) {
-    removeDOMElement(paywall);
-    let related = document.querySelector('div.c-teaser-plus-related--paywall');
-    if (related)
-      related.classList.remove('c-teaser-plus-related--paywall');
-    let article = document.querySelector('div.bo-article-text');
-    if (article) {
-      let json_script = getArticleJsonScript();
-      if (json_script) {
-        let json = JSON.parse(json_script.text);
-        if (json) {
-          let json_text = breakText_headers(json.articleBody);
-          let pars = json_text.split(/\n\n/g);
-          if (json_text) {
-            article.innerHTML = '';
-            for (let par of pars) {
-              if (!par.startsWith('Placeholder ')) {
-                let par_new = document.createElement('p');
-                par_new.innerText = par;
-                article.appendChild(par_new);
-              }
-            }
-          }
-        }
-      } else {
-        let hidden_article = document.querySelector('div.o-paywall');
-        if (hidden_article) {
-          let par_first = true;
-          let pars = breakText_headers(hidden_article.innerText).split(/\n\n/g);
-          for (let par of pars) {
-            let par_new = document.createElement('p');
-            let overlap = '';
-            if (par_first) {
-              let intro = article.querySelectorAll('p');
-              let intro_last = intro[intro.length - 1];
-              par = par.trim();
-              overlap = findOverlap(intro_last.innerText, par);
-              if (overlap)
-                intro_last.innerText = intro_last.innerText.replace(new RegExp(overlap + '$'), '') + par;
-              par_first = false;
-            }
-            if (!overlap && !par.startsWith('Placeholder ')) {
-              par_new.innerText = par;
-              article.appendChild(par_new);
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 else if (matchDomain('handelsblatt.com')) {

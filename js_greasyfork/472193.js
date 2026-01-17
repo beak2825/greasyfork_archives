@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn VNDB uploady new
 // @namespace    none
-// @version      9.002
+// @version      10
 // @description  input game title or vndb id (anything with v(digits)) and click vndb to fill
 // @author       ingts
 // @match        https://gazellegames.net/upload.php*
@@ -87,6 +87,7 @@ function fillUpload(result) {
 
     document.querySelector('input[name="tags"]').value =
         `visual.novel${foundTags.size > 0 ? ', ' + Array.from(foundTags).join(', ') : ''}`
+        + (result.releases.some(r => r.has_ero) ? ', adult' : '')
 
     document.getElementById('year').value = getYear(result)
 

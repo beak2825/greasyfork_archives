@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         NIGGA CLIENT
-// @description  Cheat mod for deadshot.io have fun
+// @name         NIGGA CLIENT +
+// @description  debug mod for deadshot.io have fun
 // @author       levifrsn63
 // @match        *://*deadshot.io/*
 // @license      Nigga University
 // @run-at       document-start
-// @version      1.69
+// @version      2.67
 // @namespace https://greasyfork.org/users/
-// @downloadURL https://update.greasyfork.org/scripts/560838/NIGGA%20CLIENT.user.js
-// @updateURL https://update.greasyfork.org/scripts/560838/NIGGA%20CLIENT.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560838/NIGGA%20CLIENT%20%2B.user.js
+// @updateURL https://update.greasyfork.org/scripts/560838/NIGGA%20CLIENT%20%2B.meta.js
 // ==/UserScript==
 
 (function() {
@@ -18,37 +18,24 @@
     // DISABLE AUTO-FULLSCREEN
     // ====================================
     const blockFullscreen = () => {
-        // Block requestFullscreen on all elements
-        if (Element.prototype.requestFullscreen) {
-            Element.prototype.requestFullscreen = function() {
-                console.log('[Anti-Fullscreen] Blocked requestFullscreen');
-                return Promise.reject(new Error('Fullscreen blocked by client'));
-            };
-        }
-        if (Element.prototype.webkitRequestFullscreen) {
-            Element.prototype.webkitRequestFullscreen = function() {
-                console.log('[Anti-Fullscreen] Blocked webkitRequestFullscreen');
-                return Promise.reject(new Error('Fullscreen blocked by client'));
-            };
-        }
-        if (Element.prototype.mozRequestFullScreen) {
-            Element.prototype.mozRequestFullScreen = function() {
-                console.log('[Anti-Fullscreen] Blocked mozRequestFullScreen');
-                return Promise.reject(new Error('Fullscreen blocked by client'));
-            };
-        }
-        if (Element.prototype.msRequestFullscreen) {
-            Element.prototype.msRequestFullscreen = function() {
-                console.log('[Anti-Fullscreen] Blocked msRequestFullscreen');
-                return Promise.reject(new Error('Fullscreen blocked by client'));
-            };
-        }
+        const wrap = (proto, prop) => {
+            try {
+                if (proto && proto[prop]) {
+                    proto[prop] = function() {
+                        console.log(`[Anti-Fullscreen] Blocked ${prop}`);
+                        return Promise.reject(new Error('Fullscreen blocked by client'));
+                    };
+                }
+            } catch (e) {}
+        };
+        wrap(Element.prototype, 'requestFullscreen');
+        wrap(Element.prototype, 'webkitRequestFullscreen');
+        wrap(Element.prototype, 'mozRequestFullScreen');
+        wrap(Element.prototype, 'msRequestFullscreen');
 
-        // Block fullscreen change events
-        document.addEventListener('fullscreenchange', (e) => {
+        document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
-                document.exitFullscreen();
-                console.log('[Anti-Fullscreen] Exited fullscreen mode');
+                try { document.exitFullscreen(); } catch (e) {}
             }
         }, true);
     };
@@ -75,6 +62,9 @@
         mobile: false,
         vertexThreshold: 300,
         menuVisible: true,
+        targetInfoVisible: true,
+        showPressH: true,
+        menuScale: 1.0,
         x: 20,
         y: 20
     };
@@ -94,8 +84,9 @@
         targetID: -1,
         programCounter: 0,
         modelMatrices: [],
-        vpMatrices: [],
+        vpMatrix: null,
         totalTargets: 0,
+        canvas: null,
         autoFinder: {
             scanning: false,
             results: [],
@@ -129,7 +120,7 @@
 
     const options = {
         ESP: [
-            { label: 'ESP Enabled [E]', type: 'checkbox', key: 'espEnabled' },
+            { label: 'ESP [E]', type: 'checkbox', key: 'espEnabled' },
             { label: 'Show Boxes', type: 'checkbox', key: 'showBoxes' },
             { label: 'Show Distance', type: 'checkbox', key: 'showDistance' },
             { label: 'Show Tracers', type: 'checkbox', key: 'showTracers' },
@@ -142,17 +133,140 @@
             { label: 'Crosshair Color', type: 'color', key: 'crosshairColor' }
         ],
         Target: [
-            { label: 'Target ID', type: 'info', getter: () => state.targetID },
-            { label: 'Active Targets', type: 'info', getter: () => state.totalTargets },
-            { label: 'Prev Target [←]', type: 'button', action: () => { state.targetID--; updateID(); } },
-            { label: 'Next Target [→]', type: 'button', action: () => { state.targetID++; updateID(); } },
-            { label: '---', type: 'divider' },
-            { label: 'Auto-Finder', type: 'header' },
-            { label: 'Scan Status', type: 'info', getter: () => state.autoFinder.scanning ? 'Scanning...' : 'Idle' },
-            { label: 'Start Scan [-50 to +50]', type: 'button', action: startAutoScan },
-            { label: 'Stop Scan', type: 'button', action: stopAutoScan },
-            { label: 'Scan Results', type: 'scanResults' },
-            { label: 'Best Guess', type: 'info', getter: getBestGuess }
+            {
+                label: 'Auto vs Manual Info',
+                type: 'custom',
+                render: (row) => {
+                    if (!config.targetInfoVisible) return;
+                    Object.assign(row.style, {
+                        background: 'rgba(54, 69, 181, 0.05)',
+                        border: '1px solid rgba(54, 69, 181, 0.2)',
+                        padding: '12px',
+                        marginBottom: '15px',
+                        fontSize: '11px',
+                        position: 'relative',
+                        display: 'block',
+                        borderRadius: '4px'
+                    });
+                    const closeBtn = document.createElement('div');
+                    closeBtn.textContent = '×';
+                    Object.assign(closeBtn.style, {
+                        position: 'absolute',
+                        top: '4px',
+                        right: '8px',
+                        cursor: 'pointer',
+                        fontSize: '18px',
+                        color: '#3645B5',
+                        opacity: '0.6'
+                    });
+                    closeBtn.onmouseenter = () => closeBtn.style.opacity = '1';
+                    closeBtn.onmouseleave = () => closeBtn.style.opacity = '0.6';
+                    closeBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        config.targetInfoVisible = false;
+                        save();
+                        renderContent();
+                    };
+                    row.appendChild(closeBtn);
+                    const text = document.createElement('div');
+                    text.innerHTML = '<b style="color:#3645B5">PRO TIP:</b> Use <b style="color:#ddd">Auto-Finder</b> for zero misses. Tweak ID with <b style="color:#ddd">Arrow Keys</b> (<b style="color:#ddd">↑↓</b> for Auto, <b style="color:#ddd">←→</b> for Manual) until enemies turn <b style="color:#ff4444">red</b>.';
+                    text.style.color = '#888';
+                    text.style.lineHeight = '1.4';
+                    row.appendChild(text);
+                }
+            },
+            {
+                label: 'Status',
+                type: 'custom',
+                render: (row) => {
+                    Object.assign(row.style, {
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        padding: '8px 6px',
+                        borderBottom: '1px solid #333',
+                        marginBottom: '10px'
+                    });
+                    row.innerHTML = `
+                        <div style="display:flex; flex-direction:column; gap:2px">
+                            <span style="color:#555; font-size:10px; text-transform:uppercase">Target ID</span>
+                            <span style="color:#ddd; font-weight:bold">${state.targetID}</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:2px; text-align:right">
+                            <span style="color:#555; font-size:10px; text-transform:uppercase">Active</span>
+                            <span style="color:#3645B5; font-weight:bold">${state.totalTargets}</span>
+                        </div>
+                    `;
+                }
+            },
+            {
+                label: 'Manual Control',
+                type: 'custom',
+                render: (row) => {
+                    Object.assign(row.style, {
+                        display: 'flex',
+                        gap: '2px',
+                        marginBottom: '15px'
+                    });
+                    const btnStyle = {
+                        flex: '1',
+                        background: '#232323',
+                        border: '1px solid #3a3a3a',
+                        color: '#888',
+                        padding: '6px',
+                        textAlign: 'center',
+                        cursor: 'pointer',
+                        fontSize: '11px',
+                        borderRadius: '2px'
+                    };
+                    const prev = document.createElement('div');
+                    prev.textContent = 'PREV';
+                    Object.assign(prev.style, btnStyle);
+                    prev.onclick = () => { state.targetID--; updateID(); renderContent(); };
+
+                    const next = document.createElement('div');
+                    next.textContent = 'NEXT';
+                    Object.assign(next.style, btnStyle);
+                    next.onclick = () => { state.targetID++; updateID(); renderContent(); };
+
+                    [prev, next].forEach(b => {
+                        b.onmouseenter = () => { b.style.background = '#2a2a2a'; b.style.color = '#ddd'; };
+                        b.onmouseleave = () => { b.style.background = '#232323'; b.style.color = '#888'; };
+                    });
+
+                    row.appendChild(prev);
+                    row.appendChild(next);
+                }
+            },
+            { label: 'Auto Nigga Finder', type: 'header' },
+            {
+                label: 'Scan Controls',
+                type: 'custom',
+                render: (row) => {
+                    Object.assign(row.style, {
+                        display: 'flex',
+                        gap: '2px',
+                        marginBottom: '10px'
+                    });
+                    const start = document.createElement('div');
+                    start.textContent = state.autoFinder.scanning ? 'SCANNING...' : 'START SCAN';
+                    Object.assign(start.style, {
+                        flex: '2',
+                        background: state.autoFinder.scanning ? '#3645B5' : '#232323',
+                        border: '1px solid #3a3a3a',
+                        color: state.autoFinder.scanning ? '#fff' : '#888',
+                        padding: '8px',
+                        textAlign: 'center',
+                        cursor: 'pointer',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        borderRadius: '2px'
+                    });
+                    start.onclick = state.autoFinder.scanning ? stopAutoScan : startAutoScan;
+
+                    row.appendChild(start);
+                }
+            },
+            { label: 'Scan Results', type: 'scanResults' }
         ],
         Settings: [
             { label: 'Mobile Mode [M]', type: 'checkbox', key: 'mobile' },
@@ -193,7 +307,7 @@
 
             scanFrameCount++;
 
-            if (scanFrameCount >= 3) {
+            if (scanFrameCount >= 2) {
                 if (state.totalTargets > 0) {
                     if (!state.autoFinder.scanData[state.targetID]) {
                         state.autoFinder.scanData[state.targetID] = [];
@@ -207,7 +321,7 @@
 
             updateID();
             renderContent();
-        }, 50);
+        }, 30);
     }
 
     function stopAutoScan() {
@@ -276,7 +390,7 @@
             position: 'fixed',
             top: config.y + 'px',
             left: config.x + 'px',
-            width: '320px',
+            width: (320 * config.menuScale) + 'px',
             background: '#2b2b2b',
             color: '#f1f1f1',
             fontFamily: 'Consolas, "Courier New", monospace',
@@ -285,8 +399,10 @@
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
             padding: '0px',
             userSelect: 'none',
-            transition: 'width 0.2s ease',
-            display: config.menuVisible ? 'block' : 'none'
+            transition: 'width 0.2s ease, transform 0.1s ease',
+            display: config.menuVisible ? 'block' : 'none',
+            transform: `scale(${config.menuScale})`,
+            transformOrigin: 'top left'
         });
         document.body.appendChild(leftPanel);
 
@@ -344,7 +460,9 @@
         Object.assign(tabBar.style, {
             display: 'flex',
             borderBottom: '1px solid #3a3a3a',
-            background: '#232323'
+            background: '#232323',
+            height: '35px',
+            boxSizing: 'border-box'
         });
         leftPanel.appendChild(tabBar);
 
@@ -434,7 +552,84 @@
 
         renderContent();
         updateRightPanel();
+        updateHHint();
         makeDraggable();
+        makeResizable();
+    }
+
+    function makeResizable() {
+        const handle = document.createElement('div');
+        Object.assign(handle.style, {
+            position: 'absolute',
+            right: '0',
+            bottom: '0',
+            width: '15px',
+            height: '15px',
+            cursor: 'nwse-resize',
+            background: 'linear-gradient(135deg, transparent 50%, #3645B5 50%)',
+            zIndex: 100000
+        });
+        leftPanel.appendChild(handle);
+
+        let startX, startScale;
+
+        handle.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            startX = e.clientX;
+            startScale = config.menuScale;
+
+            const onMouseMove = (moveEvent) => {
+                const deltaX = moveEvent.clientX - startX;
+                // Fine control: 320px base width means deltaX / 320 is the scale change
+                const newScale = Math.max(0.5, Math.min(2.5, startScale + (deltaX / 320)));
+                config.menuScale = newScale;
+                leftPanel.style.transform = `scale(${config.menuScale})`;
+                leftPanel.style.width = (320 * config.menuScale) + 'px';
+            };
+
+            const onMouseUp = () => {
+                save();
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+            };
+
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+        });
+    }
+
+    let hHint;
+    function updateHHint() {
+        if (!config.showPressH) {
+            if (hHint) hHint.remove();
+            return;
+        }
+        if (!hHint) {
+            hHint = document.createElement('div');
+            Object.assign(hHint.style, {
+                position: 'fixed',
+                bottom: '10px',
+                left: '20px',
+                background: '#2b2b2b',
+                color: '#888',
+                padding: '5px 10px',
+                fontSize: '12px',
+                fontFamily: 'Consolas, monospace',
+                border: '1px solid #3a3a3a',
+                zIndex: 99998,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+            });
+            document.body.appendChild(hHint);
+        }
+        hHint.innerHTML = 'PRESS H TO HIDE UI <span style="cursor:pointer;color:#3645B5;font-weight:bold;font-size:14px;" onclick="window.closeHHint()">×</span>';
+        window.closeHHint = () => {
+            config.showPressH = false;
+            save();
+            hHint.remove();
+        };
     }
 
     function renderContent() {
@@ -528,6 +723,12 @@
                 });
 
                 row.appendChild(resultsContainer);
+                contentArea.appendChild(row);
+                return;
+            }
+
+            if (opt.type === 'custom') {
+                opt.render(row);
                 contentArea.appendChild(row);
                 return;
             }
@@ -630,8 +831,43 @@
                 slider.value = config[opt.key] / scale;
                 Object.assign(slider.style, {
                     width: '80px',
-                    accentColor: '#3645B5'
+                    height: '6px',
+                    webkitAppearance: 'none',
+                    appearance: 'none',
+                    background: '#3a3a3a',
+                    outline: 'none',
+                    borderRadius: '0px',
+                    cursor: 'pointer',
+                    border: 'none'
                 });
+
+                if (!document.getElementById('slider-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'slider-styles';
+                    style.innerHTML = `
+                        input[type=range]::-webkit-slider-thumb {
+                            -webkit-appearance: none;
+                            appearance: none;
+                            width: 14px;
+                            height: 14px;
+                            background: #3645B5;
+                            cursor: pointer;
+                            border-radius: 0px;
+                            border: 1px solid #1a1a1a;
+                            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2);
+                        }
+                        input[type=range]::-moz-range-thumb {
+                            width: 14px;
+                            height: 14px;
+                            background: #3645B5;
+                            cursor: pointer;
+                            border-radius: 0px;
+                            border: 1px solid #1a1a1a;
+                            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2);
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
 
                 const valueLabel = document.createElement('span');
                 valueLabel.textContent = Math.round(config[opt.key] * 100) / 100;
@@ -648,6 +884,12 @@
 
                     if (opt.key === 'crosshairSize') {
                         updateCrosshairVisibility();
+                    }
+                    if (opt.key === 'menuScale') {
+                        if (leftPanel) {
+                            leftPanel.style.transform = `scale(${config.menuScale})`;
+                            leftPanel.style.width = (320 * config.menuScale) + 'px';
+                        }
                     }
                 });
 
@@ -974,31 +1216,32 @@
             if (!ctx || (args[0] !== 'webgl' && args[0] !== 'webgl2')) return ctx;
             if (proxyCache.has(ctx)) return proxyCache.get(ctx);
 
-            const handler = {
-                get(target, prop) {
-                    const val = target[prop];
-                    if (typeof val === 'function') {
-                        if (prop === 'uniformMatrix4fv') {
-                            return function(location, transpose, value) {
-                                if (value && value.length === 16) {
-                                    if (Math.abs(value[11] + 1) < 0.1 && Math.abs(value[15]) < 0.1) {
-                                        if (state.vpMatrices.length > 3) state.vpMatrices.shift();
-                                        state.vpMatrices.push(new Float32Array(value));
-                                    }
-                                    const gl = target;
-                                    const pid = programMap.get(gl.getParameter(gl.CURRENT_PROGRAM));
-                                    if (pid === state.targetID) {
-                                        if (Math.abs(value[3]) < 1e-6 &&
-                                            Math.abs(value[7]) < 1e-6 &&
-                                            Math.abs(value[15] - 1) < 1e-6 &&
-                                            state.modelMatrices.length < 100) {
-                                            state.modelMatrices.push(new Float32Array(value));
-                                        }
+        const handler = {
+            get(target, prop) {
+                const val = target[prop];
+                if (typeof val === 'function') {
+                    if (prop === 'uniformMatrix4fv') {
+                        return function(location, transpose, value) {
+                            if (value && value.length === 16) {
+                                // Optimized: Extract matrices immediately and only keep what's needed for the current frame
+                                if (Math.abs(value[11] + 1) < 0.1 && Math.abs(value[15]) < 0.1) {
+                                    state.vpMatrix = new Float32Array(value);
+                                    // Trigger render immediately on camera update for lowest possible latency
+                                    if (state.canvas) render(state.canvas);
+                                }
+                                const gl = target;
+                                const pid = programMap.get(gl.getParameter(gl.CURRENT_PROGRAM));
+                                if (pid === state.targetID) {
+                                    if (Math.abs(value[3]) < 1e-6 &&
+                                        Math.abs(value[7]) < 1e-6 &&
+                                        Math.abs(value[15] - 1) < 1e-6) {
+                                        state.modelMatrices.push(new Float32Array(value));
                                     }
                                 }
-                                return val.apply(target, arguments);
                             }
+                            return val.apply(target, arguments);
                         }
+                    }
                         if (prop === 'useProgram') {
                             return function(program) {
                                 if (program && !programMap.has(program)) programMap.set(program, state.programCounter++);
@@ -1012,7 +1255,7 @@
                                 const pid = programMap.get(program);
 
                                 const originalMode = mode;
-                                if (config.wireframe && !program.isUIProgram && count > 6) {
+                                if (config.wireframe && !program.isUIProgram && count > config.vertexThreshold) {
                                     mode = gl.LINES;
                                 }
 
@@ -1033,7 +1276,7 @@
                                 const gl = target;
                                 const program = gl.getParameter(gl.CURRENT_PROGRAM);
 
-                                if (config.wireframe && !program.isUIProgram && count > 6) {
+                                if (config.wireframe && !program.isUIProgram && count > config.vertexThreshold) {
                                     mode = gl.LINES;
                                 }
 
@@ -1060,6 +1303,7 @@
     // ====================================
     function setupCanvas() {
         const canvas = document.createElement('canvas');
+        state.canvas = canvas;
         canvas.id = 'esp-overlay-canvas';
         canvas.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:2147483645;pointer-events:none;";
         document.documentElement.appendChild(canvas);
@@ -1073,7 +1317,8 @@
         updateCanvasSize();
 
         function loop() {
-            render(canvas);
+            // Only render if we have new matrices to avoid flickering or redundant work
+            // But keep the loop for general updates
             requestAnimationFrame(loop);
         }
         loop();
@@ -1097,7 +1342,7 @@
     }
 
     function render(canvas) {
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
         const w = canvas.width;
         const h = canvas.height;
         const cx = w / 2;
@@ -1105,21 +1350,30 @@
 
         ctx.clearRect(0, 0, w, h);
 
-        if(state.modelMatrices.length > 50) state.modelMatrices.length = 0;
-        if (state.vpMatrices.length === 0) return;
+        if (state.modelMatrices.length === 0 || !state.vpMatrix) {
+            state.totalTargets = 0;
+            return;
+        }
 
-        const vp = state.vpMatrices[state.vpMatrices.length - 1];
+        const vp = state.vpMatrix;
         state.totalTargets = 0;
 
         const processedPositions = [];
         const MIN_DISTANCE = 0.5;
+
+        // Optimized: pre-calculated values for stroke/fill to avoid repeated string concatenation
+        const boxStrokeStyle = config.espColor + Math.round(config.boxOpacity * 255).toString(16).padStart(2, '0');
+        const tracerStrokeStyle = config.espColor + Math.round(config.tracerOpacity * 255).toString(16).padStart(2, '0');
 
         for (let i = 0; i < state.modelMatrices.length; i++) {
             const mat = state.modelMatrices[i];
             const wx = mat[12], wy = mat[13], wz = mat[14];
 
             let isDuplicate = false;
-            for (const pos of processedPositions) {
+            // Limit duplicate check to speed up processing
+            const checkLimit = Math.min(processedPositions.length, 15);
+            for (let j = 0; j < checkLimit; j++) {
+                const pos = processedPositions[j];
                 const dx = wx - pos.x;
                 const dy = wy - pos.y;
                 const dz = wz - pos.z;
@@ -1150,16 +1404,16 @@
             if (head.x < -100 || head.x > w + 100 || head.y < -100 || head.y > h + 100) continue;
 
             state.totalTargets++;
-            const dist3D = Math.sqrt(wx*wx + wy*wy + wz*wz);
 
             if (config.espEnabled) {
                 if (config.showBoxes) {
-                    ctx.strokeStyle = config.espColor + Math.round(config.boxOpacity * 255).toString(16).padStart(2, '0');
+                    ctx.strokeStyle = boxStrokeStyle;
                     ctx.lineWidth = config.espThickness;
                     ctx.strokeRect(head.x - boxW/2, head.y, boxW, boxH);
                 }
 
                 if (config.showDistance) {
+                    const dist3D = Math.sqrt(wx*wx + wy*wy + wz*wz);
                     ctx.font = 'bold 12px monospace';
                     ctx.fillStyle = config.espColor;
                     ctx.strokeStyle = '#000';
@@ -1172,7 +1426,7 @@
                     ctx.beginPath();
                     ctx.moveTo(cx, h);
                     ctx.lineTo(foot.x, foot.y);
-                    ctx.strokeStyle = config.espColor + Math.round(config.tracerOpacity * 255).toString(16).padStart(2, '0');
+                    ctx.strokeStyle = tracerStrokeStyle;
                     ctx.lineWidth = 1.5;
                     ctx.stroke();
                 }
@@ -1196,13 +1450,58 @@
         return { x: (X/W + 1) * w * 0.5, y: (-Y/W + 1) * h * 0.5, w: W };
     }
 
+    window.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === 'y') {
+            if (confirm('Wipe all stored data for mod? This will reset all settings and reload the page.')) {
+                localStorage.removeItem("esp_eclipse_config");
+                location.reload();
+            }
+        }
+        if (e.key.toLowerCase() === 'h') {
+            minimized = !minimized;
+            config.menuVisible = !minimized;
+            leftPanel.style.width = minimized ? '30px' : '320px';
+            arrow.style.left = minimized ? '35px' : '85px';
+            arrow.textContent = minimized ? '⚙' : '◀';
+            arrow.style.fontSize = minimized ? '16px' : '14px';
+            contentArea.style.display = minimized ? 'none' : 'block';
+            tabBar.style.display = minimized ? 'none' : 'flex';
+            clientText.style.opacity = minimized ? '0' : '1';
+            save();
+        }
+        if (e.key === 'ArrowLeft') {
+            state.targetID--;
+            updateID();
+            renderContent();
+        }
+        if (e.key === 'ArrowRight') {
+            state.targetID++;
+            updateID();
+            renderContent();
+        }
+        if (e.key === 'ArrowUp') {
+            if (state.autoFinder.results.length > 0) {
+                let nextIdx = state.autoFinder.filterIndex - 1;
+                if (nextIdx < 0) nextIdx = state.autoFinder.results.length - 1;
+                selectScanResult(nextIdx);
+            }
+        }
+        if (e.key === 'ArrowDown') {
+            if (state.autoFinder.results.length > 0) {
+                let nextIdx = state.autoFinder.filterIndex + 1;
+                if (nextIdx >= state.autoFinder.results.length) nextIdx = 0;
+                selectScanResult(nextIdx);
+            }
+        }
+    });
+
     // ====================================
     // INITIALIZE
     // ====================================
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', setupCanvas);
     } else {
-        setupCanvas();
+        setTimeout(setupCanvas, 100);
     }
 
 })();

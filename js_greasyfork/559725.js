@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Twitter: always Following tab
 // @namespace      https://andrybak.dev
-// @version        3
+// @version        4.2
 // @description    Select the "Following" tab on Twitter automatically, with chronological sorting.
 // @author         Andrei Rybak
 // @license        MIT
@@ -101,7 +101,8 @@
 			svgIcon.dispatchEvent(new MouseEvent('click', { bubbles:true }));
 			info('Clicked on the dropdown icon.');
 			mySetTimeout(() => {
-				const dropdownOptions = document.querySelectorAll('[data-testid="Dropdown"] > div');
+				// "Dropdown" for the desktop view, "sheetDialog" for the mobile website
+				const dropdownOptions = document.querySelectorAll('[data-testid="Dropdown"] > div, [data-testid="sheetDialog"] > div');
 				const recentOptions = Array.from(dropdownOptions).filter(ddo => ddo.innerText.includes('Recent'));
 				if (recentOptions.length === 0) {
 					tryAgainLater('Cannot find option "Recent".');
@@ -110,6 +111,7 @@
 				const recentOption = recentOptions[0];
 				info('Selecting sort by "Recent"...');
 				recentOption.click();
+				info('Done.');
 			}, 2000);
 		}, 1000);
 	}

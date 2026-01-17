@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         TornPDA Travel: All Countries Stock + Profit
+// @name        TornPDA Travel: All Countries Stock + Profit
 // @namespace    grimsnecrosis.tpda.travel.allcountries
-// @version      1.0.9
+// @version      1.1.0
 // @description  TornPDA-only: Shows abroad stock across all countries (YATA export) with profit using Torn itemmarket average_price. Filter by country + sort (incl profit). Panel anchored below welcome box and above travel tabs. Item names shown + improved readability + highlights best profit row + profit color coding + category-colored names (plushies/flowers/xanax). Updated column REMOVED; if YATA data is stale (>5 min) highlights TOP 10 rows.
 // @author       Grimsnecrosis
 // @match        https://www.torn.com/page.php?sid=travel*
@@ -361,14 +361,71 @@
   /***********************
    * PDA HTTP
    ***********************/
-  async function httpGetJson(url) {
-    if (typeof window.PDA_httpGet !== "function") {
-      throw new Error("PDA_httpGet not available (are you in TornPDA?)");
-    }
-    const res = await window.PDA_httpGet(url, {});
-    if (!res || !res.responseText) throw new Error("No response from PDA_httpGet");
-    return JSON.parse(res.responseText);
+ /***********************
+ * PDA HTTP (hardened with retry + fallback)
+ ***********************/
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+function gmFetch(url) {
+  return new Promise((resolve, reject) => {
+    GM_xmlhttpRequest({
+      method: "GET",
+      url,
+      timeout: 20000,
+      onload: (r) => {
+        try {
+          resolve(JSON.parse(r.responseText));
+        } catch (e) {
+          reject(new Error("GM parse failed"));
+        }
+      },
+      onerror: () => reject(new Error("GM request failed")),
+      ontimeout: () => reject(new Error("GM timeout")),
+    });
+  });
+}
+
+async function pdaFetch(url) {
+  // PDA has used both names in different builds
+  const fn =
+    window.PDA_httpGet ||
+    (window.PDA && window.PDA.httpGet);
+
+  if (typeof fn !== "function") {
+    throw new Error("PDA_httpGet unavailable");
   }
+
+  const res = await fn(url, {});
+  if (!res || !res.responseText) {
+    throw new Error("Empty PDA response");
+  }
+
+  return JSON.parse(res.responseText);
+}
+
+async function httpGetJson(url, retries = 3) {
+  let lastErr;
+
+  // Try PDA first with retries
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await pdaFetch(url);
+    } catch (e) {
+      lastErr = e;
+      await sleep(400 + i * 300);
+    }
+  }
+
+  // Fallback to GM request
+  try {
+    console.warn("[TPDA Travel] Falling back to GM request:", url);
+    return await gmFetch(url);
+  } catch (e) {
+    throw new Error(`All fetch methods failed: ${lastErr?.message || e.message}`);
+  }
+}
 
   /***********************
    * Throttled queue for avg price calls

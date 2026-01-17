@@ -2,7 +2,7 @@
 // @name         PTE  Pixiv→Eagle 标签管理
 // @name:en      PTE  Pixiv→Eagle Tag Manager
 // @author       Mliechoy
-// @version      1.4
+// @version      1.5
 // @description        一键导入 Pixiv 图片/动图到 Eagle；支持详情/列表/勾选三种模式；实时进度/ETA/可取消；面板可拖拽并记忆位置；本地或 Eagle 模式切换；作者文件夹自动归档。
 // @description:en     One-click import Pixiv to Eagle (ugoira→GIF); detail/list/selected modes; progress & ETA; cancel; draggable panel with position memory; local only.
 // @description:ja     Pixiv を Eagle にワンクリックで取り込み（ugoira→GIF 含む）；詳細/一覧/選択の取り込み；進捗・ETA・キャンセル；ドラッグ可能＆位置記憶のパネル；ローカル通信。
@@ -36,10 +36,10 @@
   'use strict';
 
   /******************** 常量 & 工具 ********************/
-  const BIG_GIF_LIMIT = 40 * 1024 * 1024; // 约 40MB：ugoira→GIF 体积超过此值时优先切换为本地模式
-  const INDEXEDDB_THRESHOLD = 1000; // 标签数超过此数量时，自动升级到 IndexedDB 存储
-  const FILTER_THRESHOLD = 500; // 过滤标签/作品数超过此数量时，自动升级到 IndexedDB 存储
-  const MAX_CONCURRENT_REQUESTS = 3; // 最多同时发起的网络请求数
+  const BIG_GIF_LIMIT = 40 * 1024 * 1024; // 40MB：ugoira→GIF 体积超过此值时切换为本地模式
+  const INDEXEDDB_THRESHOLD = 1000; //// 标签数超过此数量时，使用 IndexedDB 存储
+  const FILTER_THRESHOLD = 500; // 过滤标签/作品数超过此数量时，使用 IndexedDB 存储
+  const MAX_CONCURRENT_REQUESTS = 3; // 最大并发请求数
   const EAGLE = { base: 'http://localhost:41595', api: { add: '/api/item/addFromURLs', list: '/api/folder/list', create: '/api/folder/create', update: '/api/folder/update' } };
   
   // 翻译 API 默认配置
@@ -75,11 +75,11 @@
   /******************** IndexedDB 标签存储 ********************/
   const TagDB = (() => {
     let db = null;
-    let isAvailable = true; // IndexedDB 可用性标志
+    let isAvailable = true; 
     const DB_NAME = 'PTE_TagDB';
     const STORE_NAME = 'data';
 
-    // 错误恢复：检查 IndexedDB 是否可用
+    // 检查 IndexedDB 是否可用
     const checkIndexedDBAvailable = async () => {
       try {
         const test = indexedDB.open('__PTE_TEST__');
@@ -170,7 +170,7 @@
     };
 
     return {
-      // 标签翻译 - 混合存储模式：优先读 localStorage，超过阈值时使用 IndexedDB
+      // 标签翻译 - 优先从 IndexedDB 读取
       async getAllTags() {
         try {
           if (!isAvailable) {
@@ -178,27 +178,29 @@
             return (lsTags && typeof lsTags === 'object') ? lsTags : {};
           }
           
-          const lsTags = LS.get('tagTranslations', {});
-          const tagCount = lsTags && typeof lsTags === 'object' ? Object.keys(lsTags).length : 0;
-          
-          if (tagCount > 0 && tagCount < INDEXEDDB_THRESHOLD) {
-            return lsTags;
+          try {
+            await ensureOpen();
+            const idbTags = await new Promise((resolve) => {
+              const tx = db.transaction([STORE_NAME], 'readonly');
+              const store = tx.objectStore(STORE_NAME);
+              const req = store.get('tags');
+              req.onsuccess = () => {
+                const tags = req.result?.value || {};
+                resolve((tags && typeof tags === 'object') ? tags : {});
+              };
+              req.onerror = () => {
+                resolve(null);
+              };
+            });
+            
+            if (idbTags && Object.keys(idbTags).length > 0) {
+              return idbTags;
+            }
+          } catch (e) {
+            // IndexedDB 读取失败，继续尝试 localStorage
           }
-          
-          await ensureOpen();
-          return new Promise((resolve) => {
-            const tx = db.transaction([STORE_NAME], 'readonly');
-            const store = tx.objectStore(STORE_NAME);
-            const req = store.get('tags');
-            req.onsuccess = () => {
-              const tags = req.result?.value || {};
-              resolve((tags && typeof tags === 'object') ? tags : {});
-            };
-            req.onerror = () => {
-              console.warn('[PTE] getAllTags IndexedDB 读取失败');
-              resolve({});
-            };
-          });
+          const lsTags = LS.get('tagTranslations', {});
+          return (lsTags && typeof lsTags === 'object') ? lsTags : {};
         } catch (e) {
           isAvailable = false;
           console.warn('[PTE] getAllTags 失败，恢复 localStorage:', e.message);
@@ -246,35 +248,22 @@
 
       // 过滤标签
       async getExcludeTags() {
-        if (!isAvailable) {
-          return LS.get('excludeTags', '') || '';
+        try {
+          // 从 IndexedDB 读取排除标签
+          const idbVal = await getItem('excludeTags');
+          if (idbVal) {
+            return idbVal;
+          }
+        } catch (e) {
+          console.warn('[PTE] 从 IndexedDB 读取排除标签失败:', e.message);
         }
         
         const lsVal = LS.get('excludeTags', '');
-        const count = lsVal ? lsVal.split(',').filter(Boolean).length : 0;
-        
-        if (count < FILTER_THRESHOLD) {
-          return lsVal || '';
-        }
-        
-        try {
-          const val = await getItem('excludeTags');
-          return val || '';
-        } catch (e) {
-          isAvailable = false;
-          return LS.get('excludeTags', '') || '';
-        }
+        return lsVal || '';
       },
 
       async saveExcludeTags(tagsStr) {
         if (!isAvailable) {
-          LS.set('excludeTags', tagsStr);
-          return true;
-        }
-        
-        const count = tagsStr ? tagsStr.split(',').filter(Boolean).length : 0;
-        
-        if (count < FILTER_THRESHOLD) {
           LS.set('excludeTags', tagsStr);
           return true;
         }
@@ -315,13 +304,6 @@
           return true;
         }
         
-        const count = timeMap && typeof timeMap === 'object' ? Object.keys(timeMap).length : 0;
-        
-        if (count < FILTER_THRESHOLD) {
-          LS.set('excludeTagsWithTime', timeMap);
-          return true;
-        }
-        
         try {
           return await setItem('excludeTagsWithTime', timeMap);
         } catch (e) {
@@ -333,35 +315,22 @@
 
       // 过滤作品
       async getExcludeWorksTags() {
-        if (!isAvailable) {
-          return LS.get('excludeWorksTags', '') || '';
+        try {
+          // 从 IndexedDB 读取过滤作品标签
+          const idbVal = await getItem('excludeWorksTags');
+          if (idbVal) {
+            return idbVal;
+          }
+        } catch (e) {
+          console.warn('[PTE] 从 IndexedDB 读取过滤作品标签失败:', e.message);
         }
         
         const lsVal = LS.get('excludeWorksTags', '');
-        const count = lsVal ? lsVal.split(',').filter(Boolean).length : 0;
-        
-        if (count < FILTER_THRESHOLD) {
-          return lsVal || '';
-        }
-        
-        try {
-          const val = await getItem('excludeWorksTags');
-          return val || '';
-        } catch (e) {
-          isAvailable = false;
-          return LS.get('excludeWorksTags', '') || '';
-        }
+        return lsVal || '';
       },
 
       async saveExcludeWorksTags(tagsStr) {
         if (!isAvailable) {
-          LS.set('excludeWorksTags', tagsStr);
-          return true;
-        }
-        
-        const count = tagsStr ? tagsStr.split(',').filter(Boolean).length : 0;
-        
-        if (count < FILTER_THRESHOLD) {
           LS.set('excludeWorksTags', tagsStr);
           return true;
         }
@@ -386,21 +355,12 @@
           return val || {};
         } catch (e) {
           isAvailable = false;
-          // 降级：返回 localStorage
           return LS.get('excludeWorksWithTime', {}) || {};
         }
       },
 
       async saveExcludeWorksWithTime(timeMap) {
-        // 如果 IndexedDB 不可用，保存到 localStorage
         if (!isAvailable) {
-          LS.set('excludeWorksWithTime', timeMap);
-          return true;
-        }
-        
-        const count = timeMap && typeof timeMap === 'object' ? Object.keys(timeMap).length : 0;
-        
-        if (count < FILTER_THRESHOLD) {
           LS.set('excludeWorksWithTime', timeMap);
           return true;
         }
@@ -425,23 +385,24 @@
           const oldTags = LS.get('tagTranslations', {});
           const tagCount = oldTags && typeof oldTags === 'object' ? Object.keys(oldTags).length : 0;
           
-          if (tagCount >= INDEXEDDB_THRESHOLD && tagCount > 0) {
+          if (tagCount > 0) {
             await this.saveTags(oldTags);
-            console.log('[PTE] 已将 localStorage 标签迁移到 IndexedDB，共', tagCount, '条');
+            console.log('[PTE] 已将 localStorage 标签翻译迁移到 IndexedDB，共', tagCount, '条');
             migrated = true;
-          } else if (tagCount > 0) {
-            console.log('[PTE] 标签数（' + tagCount + '条）未达到迁移阈值（' + INDEXEDDB_THRESHOLD + '），保持使用 localStorage');
           }
 
+          // 迁移排除标签
           const oldExcludeTags = LS.get('excludeTags', '');
           if (oldExcludeTags) {
             await this.saveExcludeTags(oldExcludeTags);
+            console.log('[PTE] 已将排除标签迁移到 IndexedDB');
             migrated = true;
           }
 
           const oldExcludeTagsTime = LS.get('excludeTagsWithTime', {});
           if (oldExcludeTagsTime && Object.keys(oldExcludeTagsTime).length > 0) {
             await this.saveExcludeTagsWithTime(oldExcludeTagsTime);
+            console.log('[PTE] 已将排除标签时间戳迁移到 IndexedDB');
             migrated = true;
           }
 
@@ -449,17 +410,20 @@
           const oldExcludeWorks = LS.get('excludeWorksTags', '');
           if (oldExcludeWorks) {
             await this.saveExcludeWorksTags(oldExcludeWorks);
+            console.log('[PTE] 已将过滤作品标签迁移到 IndexedDB');
             migrated = true;
           }
 
           const oldExcludeWorksTime = LS.get('excludeWorksWithTime', {});
           if (oldExcludeWorksTime && Object.keys(oldExcludeWorksTime).length > 0) {
             await this.saveExcludeWorksWithTime(oldExcludeWorksTime);
+            console.log('[PTE] 已将过滤作品标签时间戳迁移到 IndexedDB');
             migrated = true;
           }
 
           if (migrated) {
             await setItem('migrationCompleted', true);
+            console.log('[PTE] 数据迁移完成，所有数据已保存到 IndexedDB');
           }
 
           return migrated;
@@ -591,6 +555,71 @@
             console.error('[PTE] 降级保存也失败:', fallbackErr.message);
             return false;
           }
+        }
+      },
+
+      // 手动从 localStorage 同步所有数据到 IndexedDB
+      async syncFromLocalStorage() {
+        try {
+          let syncedCount = 0;
+          let details = [];
+
+          // 同步已保存的标签翻译
+          const oldTags = LS.get('tagTranslations', {});
+          if (oldTags && typeof oldTags === 'object' && Object.keys(oldTags).length > 0) {
+            await this.saveTags(oldTags);
+            const count = Object.keys(oldTags).length;
+            details.push(`标签翻译 ${count} 条`);
+            syncedCount++;
+          }
+
+          // 同步排除标签
+          const oldExcludeTags = LS.get('excludeTags', '');
+          if (oldExcludeTags) {
+            await this.saveExcludeTags(oldExcludeTags);
+            const count = oldExcludeTags.split(',').filter(Boolean).length;
+            details.push(`排除标签 ${count} 条`);
+            syncedCount++;
+          }
+
+          // 同步排除标签时间戳
+          const oldExcludeTagsTime = LS.get('excludeTagsWithTime', {});
+          if (oldExcludeTagsTime && typeof oldExcludeTagsTime === 'object' && Object.keys(oldExcludeTagsTime).length > 0) {
+            await this.saveExcludeTagsWithTime(oldExcludeTagsTime);
+            details.push(`标签时间戳 ${Object.keys(oldExcludeTagsTime).length} 条`);
+            syncedCount++;
+          }
+
+          // 同步过滤作品标签
+          const oldExcludeWorks = LS.get('excludeWorksTags', '');
+          if (oldExcludeWorks) {
+            await this.saveExcludeWorksTags(oldExcludeWorks);
+            const count = oldExcludeWorks.split(',').filter(Boolean).length;
+            details.push(`过滤作品 ${count} 条`);
+            syncedCount++;
+          }
+
+          // 同步过滤作品时间戳
+          const oldExcludeWorksTime = LS.get('excludeWorksWithTime', {});
+          if (oldExcludeWorksTime && typeof oldExcludeWorksTime === 'object' && Object.keys(oldExcludeWorksTime).length > 0) {
+            await this.saveExcludeWorksWithTime(oldExcludeWorksTime);
+            details.push(`作品时间戳 ${Object.keys(oldExcludeWorksTime).length} 条`);
+            syncedCount++;
+          }
+
+          console.log('[PTE] 手动同步完成:', details.join(', '));
+          return {
+            success: syncedCount > 0,
+            details: details,
+            message: syncedCount > 0 ? `已同步 ${details.join('、')}` : '没有需要同步的数据'
+          };
+        } catch (e) {
+          console.warn('[PTE] 手动同步失败:', e.message);
+          return {
+            success: false,
+            details: [],
+            message: '同步失败: ' + e.message
+          };
         }
       }
     };
@@ -980,6 +1009,7 @@
     return r?.data?.id || r?.id || r?.folderId;
   }
   async function updateFolderDesc(id, desc) { await xhr({ url: EAGLE.base + EAGLE.api.update, method: 'POST', data: { folderId: id, newDescription: desc, description: desc } }); }
+  async function renameFolder(id, newName) { return await xhr({ url: EAGLE.base + '/api/folder/rename', method: 'POST', data: { folderId: id, newName: newName } }); }
   function flattenFolders(tree) {
     const out = []; const st = [...(Array.isArray(tree) ? tree : [tree])].filter(Boolean);
     while (st.length) { const f = st.shift(); out.push(f); if (f.children?.length) st.push(...f.children); }
@@ -1278,6 +1308,12 @@
   var tagManagerModalUpdateCallback = null;
   var isTagLibraryInitialized = false;
   
+  // 全局过滤变量（供 saveExcludeFilters 函数访问）
+  var excludeTagsSet = new Set();
+  var excludeWorksSet = new Set();
+  var excludeTagsWithTime = {};
+  var excludeWorksWithTime = {};
+  
   (async () => {
     try {
       const migrated = await TagDB.migrateFromLocalStorage();
@@ -1291,10 +1327,18 @@
           tagManagerModalUpdateCallback();
         }
       }
-      const autoBackupMode = getAutoBackupMode();
-      if (autoBackupMode && autoBackupMode !== 'off') {
-        startAutoBackup(autoBackupMode);
+      
+      // 加载并输出排除标签库信息
+      const excludeTagsStr = await TagDB.getExcludeTags();
+      const excludeTags = excludeTagsStr ? excludeTagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+      if (excludeTags.length > 0) {
+        console.log('[PTE] 已加载过滤标签库，共', excludeTags.length, '条');
       }
+      
+      // 加载并输出过滤作品库信息
+      const excludeWorksStr = await TagDB.getExcludeWorksTags();
+      const excludeWorks = excludeWorksStr ? excludeWorksStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+      console.log('[PTE] 已加载过滤作品库，共', excludeWorks.length, '条');
     } catch (e) {
       console.warn('[PTE] 标签库初始化失败:', e);
       try {
@@ -1321,8 +1365,6 @@
   })();
 
   /******************** 备份管理 ********************/
-  let autoBackupTimer = null;
-  
   const BackupManager = {
     saveBackup: (data) => {
       try {
@@ -1395,39 +1437,6 @@
     }
   };
 
-  function startAutoBackup(mode) {
-    if (autoBackupTimer) clearInterval(autoBackupTimer);
-    
-    let interval = 0;
-    if (mode === 'daily') {
-      interval = 24 * 60 * 60 * 1000;
-    } else if (mode === 'weekly') {
-      interval = 7 * 24 * 60 * 60 * 1000;
-    } else if (mode === 'monthly') {
-      interval = 30 * 24 * 60 * 60 * 1000;
-    } else {
-      return;
-    }
-    BackupManager.autoBackup();
-    autoBackupTimer = setInterval(() => {
-      BackupManager.autoBackup();
-    }, interval);
-    
-    console.log('[PTE] 自动备份已启动，间隔:', mode);
-  }
-
-  function stopAutoBackup() {
-    if (autoBackupTimer) {
-      clearInterval(autoBackupTimer);
-      autoBackupTimer = null;
-      console.log('[PTE] 自动备份已关闭');
-    }
-  }
-
-  const getAutoBackupMode = () => {
-    return LS.get('autoBackup', 'off');
-  }
-
   async function saveTagsToStore() {
     try {
       await TagDB.saveTags(savedTags);
@@ -1456,14 +1465,19 @@
       
       // 500ms 后执行保存（防止频繁写入）
       saveExcludeFiltersDebounceTimer = setTimeout(async () => {
-        if (type === 'tag') {
-          await TagDB.saveExcludeTags(Array.from(excludeTagsSet).join(','));
-          await TagDB.saveExcludeTagsWithTime(excludeTagsWithTime);
-        } else {
-          await TagDB.saveExcludeWorksTags(Array.from(excludeWorksSet).join(','));
-          await TagDB.saveExcludeWorksWithTime(excludeWorksWithTime);
+        try {
+          if (type === 'tag') {
+            await TagDB.saveExcludeTags(Array.from(excludeTagsSet).join(','));
+            await TagDB.saveExcludeTagsWithTime(excludeTagsWithTime);
+          } else {
+            await TagDB.saveExcludeWorksTags(Array.from(excludeWorksSet).join(','));
+            await TagDB.saveExcludeWorksWithTime(excludeWorksWithTime);
+          }
+        } catch (e) {
+          console.error('[PTE] 保存过滤数据失败:', e);
+        } finally {
+          saveExcludeFiltersDebounceTimer = null;
         }
-        saveExcludeFiltersDebounceTimer = null;
       }, 500);
     } catch (e) {
       console.warn('[PTE] 保存过滤数据失败:', e);
@@ -1617,7 +1631,6 @@
         const tagDelayEl = box.querySelector('#pteTagExtractDelay');
         const dlMinEl = box.querySelector('#pteDownloadDelayMin');
         const dlMaxEl = box.querySelector('#pteDownloadDelayMax');
-        const autoBackupEl = box.querySelector('#pteAutoBackup');
         
         if (tagDelayEl && tagDelayEl.value) setTagExtractDelay(parseInt(tagDelayEl.value) || 300);
         if (dlMinEl && dlMaxEl) {
@@ -1697,8 +1710,9 @@
       pointerEvents: 'auto'
     });
 
-    // 直接从 localStorage 读取最新的排除标签
-    const excludedTags = LS.get('excludeTags', '') || CFG.filters.excludeTags || '';
+    // 从 IndexedDB 读取最新的排除标签（确保显示最新数据）
+    const excludedTagsStr = await TagDB.getExcludeTags() || LS.get('excludeTags', '') || CFG.filters.excludeTags || '';
+    const excludedTags = excludedTagsStr;
 
     box.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;border-bottom:2px solid #409eff;padding-bottom:12px;cursor:grab;user-select:none;" id="pteDragHandle" onmousedown="return true;">
@@ -1706,6 +1720,7 @@
         <button id="pteBackupHistory" style="padding:6px 12px;border:none;border-radius:4px;background:#ff9800;color:#fff;cursor:pointer;font-weight:600;font-size:11px;white-space:nowrap;display:flex;align-items:center;gap:4px;">📜 备份历史</button>
         <button id="pteBackupExport" style="padding:6px 12px;border:none;border-radius:4px;background:#67c23a;color:#fff;cursor:pointer;font-weight:600;font-size:11px;white-space:nowrap;">导出备份</button>
         <button id="pteBackupImport" style="padding:6px 12px;border:none;border-radius:4px;background:#409eff;color:#fff;cursor:pointer;font-weight:600;font-size:11px;white-space:nowrap;">导入备份</button>
+        <button id="pteSyncToIndexed" style="padding:6px 12px;border:none;border-radius:4px;background:#fa8072;color:#fff;cursor:pointer;font-weight:600;font-size:11px;white-space:nowrap;">🔄 同步到IndexedDB</button>
         <button id="pteRepairDB" style="padding:6px 12px;border:none;border-radius:4px;background:#f56c6c;color:#fff;cursor:pointer;font-weight:600;font-size:11px;white-space:nowrap;display:none;" title="仅在 IndexedDB 损坏时出现">修复数据库</button>
         <span style="margin-left:auto;color:#666;font-size:12px;">已保存翻译: ${Object.keys(savedTags).length} | 已排除: ${excludedTags.split(',').filter(Boolean).length}</span>
       </div>
@@ -2414,15 +2429,15 @@
 
     // ========== 两个独立列表 ==========
     // 过滤标签列表（导入时移除这些标签）
-    let excludeTagsSet = new Set(
+    excludeTagsSet = new Set(
       excludedTags.split(',')
         .map(t => t.trim().replace(/^["']|["']$/g, ''))
         .filter(Boolean)
     );
     
     // 过滤作品列表（跳过含这些标签的作品）
-    let excludeWorksTagsStr = LS.get('excludeWorksTags', '');
-    let excludeWorksSet = new Set(
+    let excludeWorksTagsStr = await TagDB.getExcludeWorksTags() || LS.get('excludeWorksTags', '');
+    excludeWorksSet = new Set(
       excludeWorksTagsStr.split(',')
         .map(t => t.trim().replace(/^["']|["']$/g, ''))
         .filter(Boolean)
@@ -2432,8 +2447,10 @@
     let currentExcludeMode = 'tag';
 
     // 排除标签的排序和时间戳
-    let excludeTagsWithTime = LS.get('excludeTagsWithTime', {});
-    let excludeWorksWithTime = LS.get('excludeWorksWithTime', {});
+    const excludeTagsWithTimeIDB = await TagDB.getExcludeTagsWithTime() || {};
+    const excludeWorksWithTimeIDB = await TagDB.getExcludeWorksWithTime() || {};
+    excludeTagsWithTime = Object.keys(excludeTagsWithTimeIDB).length > 0 ? excludeTagsWithTimeIDB : LS.get('excludeTagsWithTime', {});
+    excludeWorksWithTime = Object.keys(excludeWorksWithTimeIDB).length > 0 ? excludeWorksWithTimeIDB : LS.get('excludeWorksWithTime', {});
     let excludeSortMode = LS.get('excludeSortMode', 'alpha-asc'); // 'alpha-asc', 'alpha-desc', 'time-new', 'time-old'
 
     // 初始化时间戳（仅第一次）
@@ -3370,9 +3387,24 @@
         return;
       }
 
-      // 检查是否已翻译
-      const savedTranslations = LS.get('tagTranslations', {});
+      // 检查是否已翻译 - 使用 savedTags 全局变量（从 IndexedDB 加载）而不是 localStorage
+      // 这确保了从 localStorage 迁移到 IndexedDB 后能正确识别已保存的标签
+      const savedTranslations = Object.assign({}, savedTags); // 使用全局的 savedTags，确保包含 IndexedDB 数据
       const savedTagsList = Object.keys(savedTranslations);
+
+      // 确保 excludeTagsSet 已正确加载（从 IndexedDB 或 localStorage）
+      // 如果还未初始化，则从存储中动态加载
+      let currentExcludeTagsSet = excludeTagsSet;
+      if (!currentExcludeTagsSet || currentExcludeTagsSet.size === 0) {
+        // 动态加载排除标签，确保获取最新数据
+        const excludeTagsStr = LS.get('excludeTags', '');
+        currentExcludeTagsSet = new Set(
+          excludeTagsStr.split(',')
+            .map(t => t.trim().replace(/^["']|["']$/g, ''))
+            .filter(Boolean)
+        );
+        console.log('[PTE] 动态加载排除标签，共', currentExcludeTagsSet.size, '个');
+      }
 
       // 提取标签到输入框
       const existingTags = transInput.value.trim().split('\n').filter(Boolean);
@@ -3380,8 +3412,9 @@
       // 直接从 allTags 中移除已保存的标签（不区分大小写）
       const tagsToFilter = new Set();
       allTags.forEach(t => {
+        // 检查是否已保存：需要对比原始标签和保存的标签（不区分大小写）
         const isSaved = savedTagsList.some(st => lower(st) === lower(t));
-        const isExcluded = Array.from(excludeTagsSet).some(ex => {
+        const isExcluded = Array.from(currentExcludeTagsSet).some(ex => {
           const lowerEx = lower(ex);
           return lower(t).includes(lowerEx) || lowerEx.includes(lower(t));
         });
@@ -3403,14 +3436,14 @@
       const tagClassification = {};  // 记录每个标签的分类
 
       Array.from(allTagsInUse).forEach(t => {
-        // 先检查是否已保存（不区分大小写）
+        // 先检查是否已保存（不区分大小写）- 使用 savedTranslations 对象进行更严格的检查
         const isSaved = savedTagsList.some(st => lower(st) === lower(t));
         if (isSaved) {
           tagClassification[t] = 'saved';
         } else {
           // 再检查是否已排除（精确匹配）
           const lowerTag = lower(t);
-          const isExcluded = Array.from(excludeTagsSet).some(ex => {
+          const isExcluded = Array.from(currentExcludeTagsSet).some(ex => {
             return lower(ex) === lowerTag;
           });
           if (isExcluded) {
@@ -4471,6 +4504,46 @@
       input.click();
     };
 
+    // 同步 localStorage 数据到 IndexedDB
+    box.querySelector('#pteSyncToIndexed').onclick = async () => {
+      try {
+        showToast('⏳ 正在同步数据到 IndexedDB...');
+        const result = await TagDB.syncFromLocalStorage();
+        
+        if (result.success) {
+          // 刷新内存数据
+          Object.assign(savedTags, await TagDB.getAllTags());
+          
+          // 重新加载过滤标签和过滤作品
+          const excludeStr = await TagDB.getExcludeTags();
+          excludeTagsSet.clear();
+          excludeStr.split(',').filter(Boolean).forEach(t => excludeTagsSet.add(t));
+          
+          const worksStr = await TagDB.getExcludeWorksTags();
+          excludeWorksSet.clear();
+          worksStr.split(',').filter(Boolean).forEach(t => excludeWorksSet.add(t));
+          
+          // 刷新 UI
+          updateSavedList();
+          updateExcludeList();
+          
+          addOperationLog('手动同步数据', result.details.join('、'));
+          updateOperationHistory();
+          
+          showToast(`✅ 已同步：${result.details.join('、')}`);
+        } else {
+          if (result.details.length === 0) {
+            showToast('⚠️ 没有需要同步的数据（localStorage 为空）');
+          } else {
+            showToast(`❌ 同步失败：${result.message}`);
+          }
+        }
+      } catch (e) {
+        console.error('[PTE] 同步失败:', e);
+        showToast('❌ 同步失败：' + e.message);
+      }
+    };
+
     // 修复 IndexedDB - 清除损坏的数据库
     box.querySelector('#pteRepairDB').onclick = async () => {
       if (!confirm('是否清除损坏的 IndexedDB？\n\n注：清除后数据将保留在 localStorage 中，脚本会自动从 localStorage 恢复。')) {
@@ -5423,6 +5496,9 @@
 
     showScan();
 
+    // 确保数据已迁移到 IndexedDB
+    const migrated = await TagDB.migrateFromLocalStorage();
+    
     let ids = []; const onUser = isUser();
 
     if (mode === 'selected') {
@@ -5443,11 +5519,11 @@
     if (cancel) { closeScan(); return; }
     if (!ids.length) { closeScan(); showToast(mode === 'selected' ? '请先勾选作品' : '未在本页找到作品'); return; }
 
-    // 读取两个独立列表
+    // 读取两个独立列表 - 确保从 IndexedDB/localStorage 获取最新数据
     // 过滤标签列表（导入时移除这些标签）
-    const excludeTagsStr = LS.get('excludeTags', '') || CFG.filters.excludeTags || '';
+    const excludeTagsStr = await TagDB.getExcludeTags() || CFG.filters.excludeTags || '';
     // 过滤作品列表（跳过含这些标签的作品）
-    const excludeWorksStr = LS.get('excludeWorksTags', '') || '';
+    const excludeWorksStr = await TagDB.getExcludeWorksTags() || '';
 
     // 修正标签中的引号和特殊字符
     const cleanExcludeTag = (tag) => {
@@ -5462,7 +5538,8 @@
     const filterWorksSet = new Set(
       excludeWorksStr.split(',').map(cleanExcludeTag).filter(Boolean)
     );
-    const savedTranslations = LS.get('tagTranslations', {});
+    // 使用全局的 savedTags 变量（从 IndexedDB 加载），而不是 localStorage
+    const savedTranslations = Object.assign({}, savedTags);
 
     // 创建不区分大小写的翻译查询函数
     const getTranslationCaseInsensitive = (tag) => {
@@ -5634,13 +5711,16 @@
   async function importOne(id, mergeGif = false) {
     cancel = false;
     try {
+      // 确保数据已迁移到 IndexedDB
+      await TagDB.migrateFromLocalStorage();
+      
       const info = await illustInfoAndPages(id);
 
-      // 读取两个独立列表
+      // 读取两个独立列表 - 确保从 IndexedDB/localStorage 获取最新数据
       // 过滤标签列表（导入时移除这些标签）
-      const excludeTagsStr = LS.get('excludeTags', '') || CFG.filters.excludeTags || '';
+      const excludeTagsStr = await TagDB.getExcludeTags() || CFG.filters.excludeTags || '';
       // 过滤作品列表（跳过含这些标签的作品）
-      const excludeWorksStr = LS.get('excludeWorksTags', '') || '';
+      const excludeWorksStr = await TagDB.getExcludeWorksTags() || '';
 
       // 检查是否需要跳过含过滤作品标签的作品
       if (excludeWorksStr) {
@@ -5652,8 +5732,8 @@
         }
       }
 
-      // 获取已保存的翻译
-      const savedTranslations = LS.get('tagTranslations', {});
+      // 获取已保存的翻译 - 使用全局的 savedTags 变量（从 IndexedDB 加载）
+      const savedTranslations = Object.assign({}, savedTags);
 
       // 创建不区分大小写的翻译查询函数
       const getTranslationCaseInsensitive = (tag) => {

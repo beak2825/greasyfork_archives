@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sofascore Chances
 // @namespace    https://greasyfork.org/users/21515
-// @version      0.2.0
+// @version      0.2.1
 // @description  Replace betting odds with chances calculated by the odds
 // @author       CennoxX
 // @homepage     https://twitter.com/CennoxX
@@ -24,7 +24,7 @@
         document.querySelectorAll(selector).forEach(span => {
             for (var el = span.parentElement; el; el = el.parentElement) {
                 var matches = el.querySelectorAll(selector);
-                if (matches.length == 3) {
+                if (matches.length == 3 && Number(matches[0].innerHTML)) {
                     result.push([...matches]);
                     break;
                 }
@@ -32,15 +32,15 @@
         });
         result.forEach(i=>{
             const [homeNode, tieNode, awayNode] = i;
-            if (homeNode.innerHTML.includes("%")) return;
+            if (homeNode.innerHTML && homeNode.innerHTML.includes("%")) return;
             var home = getNodeValue(homeNode);
             var tie = getNodeValue(tieNode);
             var away = getNodeValue(awayNode);
             var all = 1 / home + 1 / tie + 1 / away;
             requestAnimationFrame(() => {
-                homeNode.textContent = getChance(home, all);
-                tieNode.textContent = getChance(tie, all);
-                awayNode.textContent = getChance(away, all);
+                homeNode.innerHTML = getChance(home, all);
+                tieNode.innerHTML = getChance(tie, all);
+                awayNode.innerHTML = getChance(away, all);
             });
         });
     },500);

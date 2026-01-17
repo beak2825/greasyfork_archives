@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Netflix household bypass
 // @namespace    https://greasyfork.org/users/821661
-// @version      1.0.1a
-// @description  Bypass residency block — last checked workings on 23-09-2025
+// @version      1.0.2
+// @description  Bypass residency block — Last tested on 16-01-2026.
 // @author       hdyzen
 // @match        https://www.netflix.com/*
 // @icon         https://www.google.com/s2/favicons?domain=www.netflix.com&sz=64
@@ -29,4 +29,13 @@ window.fetch = async (...args) => {
     }
 
     return response;
+};
+
+const originalOpen = XMLHttpRequest.prototype.open;
+
+XMLHttpRequest.prototype.open = function (method, url, async = true, user, password) {
+    if (url.includes("/msl_v1/cadmium/")) {
+        this.send = () => {};
+    }
+    return originalOpen.call(this, method, url, async, user, password);
 };

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OptiTranslate
 // @namespace    com.vonkleist.optitranslate
-// @version      4.0
+// @version      1488
 // @description  Three engines: Google, Bing, Yandex. Total coverage.
 // @author       VonKleistL
 // @match        *://*/*
@@ -15,14 +15,21 @@
 (function() {
     'use strict';
 
-    const TARGET_LANG = 'en'; 
+    const TARGET_LANG = navigator.language.split('-')[0] || 'en';
 
-    // Safety: Don't run on translation sites
-    if (window.location.hostname.match(/(translate|googleusercontent|yandex|bing|microsoft)/)) return;
+    // Safety: Don't run on translation sites or system pages
+    if (window.location.hostname.match(/(translate|googleusercontent|yandex|bing|microsoft|apple|icloud)/)) return;
     
-    const pageLang = document.documentElement.lang || navigator.language;
-    if (pageLang && pageLang.toLowerCase().startsWith(TARGET_LANG)) return;
-    if (document.body.innerText.length < 50) return;
+    // Improved Language Detection
+    function isPageInTargetLang() {
+        const docLang = document.documentElement.lang.toLowerCase();
+        const metaLang = document.querySelector('meta[http-equiv="content-language"]')?.content?.toLowerCase();
+        const detected = docLang || metaLang || '';
+        return detected.startsWith(TARGET_LANG);
+    }
+
+    if (isPageInTargetLang()) return;
+    if (document.body.innerText.length < 100) return; // Ignore very small pages
 
     // --- HOST ---
     const host = document.createElement('div');
@@ -37,26 +44,31 @@
             all: initial; 
             z-index: 2147483647;
             position: fixed;
-            bottom: 30px;
-            right: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
             pointer-events: none;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
         
         .opti-panel {
-            background: rgba(18, 18, 20, 0.96);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-            border-radius: 26px;
-            padding: 6px;
+            background: rgba(28, 28, 30, 0.85);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border-radius: 24px;
+            padding: 8px;
             display: flex;
-            gap: 6px;
-            transform: translateY(120%);
+            gap: 8px;
+            transform: translateY(150%);
             opacity: 0;
-            transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.35s;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s;
             pointer-events: auto;
+            max-width: 90vw;
         }
 
         .opti-panel.visible {
@@ -66,56 +78,60 @@
 
         .opti-btn {
             border: none;
-            padding: 0 14px;
-            height: 42px;
-            border-radius: 20px;
+            padding: 0 16px;
+            height: 44px;
+            border-radius: 18px;
             color: #fff;
-            font-size: 13px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.1s;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .opti-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
+            filter: brightness(1.2);
         }
 
-        /* Google: Blue */
+        /* Google: Vibrant Blue */
         #btn-google {
-            background: linear-gradient(135deg, #4285F4, #357AE8);
-            box-shadow: 0 3px 12px rgba(66, 133, 244, 0.35);
+            background: linear-gradient(135deg, #007AFF, #0056B3);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
         }
 
-        /* Bing: Teal/Green */
+        /* Microsoft: Deep Teal */
         #btn-bing {
-            background: linear-gradient(135deg, #008272, #00695C);
-            box-shadow: 0 3px 12px rgba(0, 130, 114, 0.35);
+            background: linear-gradient(135deg, #32D74B, #248A3D);
+            box-shadow: 0 4px 12px rgba(50, 215, 75, 0.3);
         }
 
-        /* Yandex: Red */
+        /* Yandex: Sunset Orange */
         #btn-yandex {
-            background: linear-gradient(135deg, #FC3F1D, #D81E05);
-            box-shadow: 0 3px 12px rgba(252, 63, 29, 0.35);
+            background: linear-gradient(135deg, #FF9F0A, #FF3B30);
+            box-shadow: 0 4px 12px rgba(255, 159, 10, 0.3);
         }
 
         .opti-close {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             border: none;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 20px;
+            color: #fff;
+            font-size: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
         }
         
         .opti-close:active {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
         }
     `;
     shadow.appendChild(style);
@@ -131,51 +147,40 @@
     `;
     shadow.appendChild(panel);
 
-    // --- THE GHOST ANCHOR METHOD ---
-    function forceOpen(url) {
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => a.remove(), 100);
+    // --- NAVIGATION ---
+    function navigate(url) {
+        // iOS Safari behaves better with simple window.location for same-tab
+        // or a real anchor click for new tab. 
+        // We'll use window.location.href to translate the current page.
+        window.location.href = url;
         closePanel();
     }
 
     // --- TRIGGERS ---
-    
-    // 1. Google Translate
     shadow.getElementById('btn-google').onclick = (e) => {
-        e.preventDefault();
         const url = encodeURIComponent(window.location.href);
-        forceOpen(`https://translate.google.com/translate?sl=auto&tl=${TARGET_LANG}&u=${url}`);
+        navigate(`https://translate.google.com/translate?sl=auto&tl=${TARGET_LANG}&u=${url}`);
     };
 
-    // 2. Microsoft Bing Translator
     shadow.getElementById('btn-bing').onclick = (e) => {
-        e.preventDefault();
         const url = encodeURIComponent(window.location.href);
-        forceOpen(`https://www.translatetheweb.com/?from=&to=${TARGET_LANG}&dl=${TARGET_LANG}&a=${url}`);
+        // Updated Bing/Microsoft translator URL
+        navigate(`https://www.bing.com/translator?to=${TARGET_LANG}&url=${url}`);
     };
 
-    // 3. Yandex Translate
     shadow.getElementById('btn-yandex').onclick = (e) => {
-        e.preventDefault();
         const url = encodeURIComponent(window.location.href);
-        forceOpen(`https://translate.yandex.com/translate?url=${url}&lang=auto-en`);
+        navigate(`https://translate.yandex.com/translate?url=${url}&lang=auto-${TARGET_LANG}`);
     };
 
-    // 4. Close
     shadow.getElementById('do-close').onclick = () => closePanel();
 
     function closePanel() {
         panel.classList.remove('visible');
-        setTimeout(() => host.remove(), 500);
+        setTimeout(() => host.remove(), 600);
     }
 
     // --- ENTRANCE ---
-    setTimeout(() => panel.classList.add('visible'), 600);
+    setTimeout(() => panel.classList.add('visible'), 800);
 
 })();

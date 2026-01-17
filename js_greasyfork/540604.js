@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Lazy Crimes
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
+// @version      1.1.3.1
 // @description  Adds a spam crime button for everybody that should've stayed on crimes 1.0
 // @author       Heartflower [2626587]
 // @match        https://www.torn.com/loader.php?sid=crimes*
@@ -60,7 +60,19 @@
 
         // Create the "Lazy Crimes" button and check nerve value
         let button = createLazyButton();
-        btnContainer.appendChild(button);
+
+        if (settings['Floating Button']) {
+            let crimeRoot = document.body.querySelector('.crime-root');
+            document.body.appendChild(button);
+            button.classList.add('hf-floating-lazy-btn');
+        } else {
+            btnContainer.appendChild(button);
+        }
+
+        if (settings['Bigger Button']) {
+            button.classList.add('hf-bigger-lazy-btn');
+        }
+
         disableButtons(nerve);
 
         // Variable to use later for certain crimes
@@ -82,12 +94,6 @@
                 ignoreNextClick = true;
 
             });
-
-            if (settings['Floating Button']) {
-                button.classList.add('hf-floating-btn');
-                let crimesApp = document.body.querySelector('.crimes-app');
-                crimesApp.appendChild(button);
-            }
         }
 
         if (window.location.href.includes('arson')) {
@@ -154,6 +160,8 @@
                 }
 
                 return;
+            } else if (window.location.href.includes('pickpocketing')) {
+                button.classList.remove('hf-no-target');
             }
 
             // Click the commit crime button if it exists and isn't disabled
@@ -363,7 +371,19 @@
 
         // Create lazy crimes button and check nerve
         let button = createLazyButton();
-        btnContainer.appendChild(button);
+
+        if (settings['Floating Button']) {
+            let crimeRoot = document.body.querySelector('.crime-root');
+            document.body.appendChild(button);
+            button.classList.add('hf-floating-lazy-btn');
+        } else {
+            btnContainer.appendChild(button);
+        }
+
+        if (settings['Bigger Button']) {
+            button.classList.add('hf-bigger-lazy-btn');
+        }
+
         disableButtons(nerve);
 
         button.addEventListener('click', function () {
@@ -652,7 +672,19 @@
 
         // Create the lazy crimes button
         let button = createLazyButton();
-        btnContainer.appendChild(button);
+
+        if (settings['Floating Button']) {
+            let crimeRoot = document.body.querySelector('.crime-root');
+            document.body.appendChild(button);
+            button.classList.add('hf-floating-lazy-btn');
+        } else {
+            btnContainer.appendChild(button);
+        }
+
+        if (settings['Bigger Button']) {
+            button.classList.add('hf-bigger-lazy-btn');
+        }
+
         disableButtons(nerve);
 
         let icon = document.body.querySelector('.hf-lazy-crimes-icon');
@@ -970,7 +1002,20 @@
 
         // Create button
         let button = createLazyButton();
-        btnContainer.appendChild(button);
+
+        if (settings['Floating Button']) {
+            let crimeRoot = document.body.querySelector('.crime-root');
+            document.body.appendChild(button);
+            button.classList.add('hf-floating-lazy-btn');
+        } else {
+            btnContainer.appendChild(button);
+        }
+
+        if (settings['Bigger Button']) {
+            button.classList.add('hf-bigger-lazy-btn');
+        }
+
+
         disableButtons(nerve);
 
         button.addEventListener('click', function () {
@@ -1103,7 +1148,7 @@
                 'Manor House': 'Residential',
                 'Self Storage Facility': 'Commercial',
                 'Postal Office': 'Commercial',
-                'Funeral Directors': 'Commercial',
+                'Funeral Parlor': 'Commercial',
                 'Market': 'Commercial',
                 'Cleaning Agency': 'Commercial',
                 'Barbershop': 'Commercial',
@@ -1314,7 +1359,19 @@
 
         // Create lazy crimes button
         let button = createLazyButton();
-        btnContainer.appendChild(button);
+
+        if (settings['Floating Button']) {
+            let crimeRoot = document.body.querySelector('.crime-root');
+            document.body.appendChild(button);
+            button.classList.add('hf-floating-lazy-btn');
+        } else {
+            btnContainer.appendChild(button);
+        }
+
+        if (settings['Bigger Button']) {
+            button.classList.add('hf-bigger-lazy-btn');
+        }
+
         disableButtons(nerve);
 
         let bestValue = -Infinity;
@@ -1775,6 +1832,7 @@
 
         // If emails less than 20k, farm emails
         let emails = Number(document.body.querySelector('.count___dBcR7').textContent.replaceAll(',', ''));
+
         if (emails < 20000 && !commitButtons[0].classList.contains('disabled')) {
             commitButtons[0].click();
             done = true;
@@ -1799,7 +1857,9 @@
                     if (ariaLabel === "Scraper active") found = true;
                 }
 
+
                 if (found === false && !commitButtons[0].classList.contains('disabled')) {
+
                     commitButtons[0].click();
                     done = true;
                     return;
@@ -1824,6 +1884,7 @@
                 }
 
                 if (found === false && !commitButtons[0].classList.contains('disabled')) {
+
                     commitButtons[0].click();
                     done = true;
                     return;
@@ -1899,7 +1960,10 @@
 
         let options = ['strong', 'soft', 'back', 'accelerate', 'capitalize', 'dollar'];
 
-        for (let item of items) {
+        // Reverse to go bottom-up
+        let reversedItems = Array.from(items).reverse();
+
+        for (let item of reversedItems) {
             let emails = item.querySelector('.emailAddresses___ky_qG');
             if (emails) continue;
 
@@ -2067,7 +2131,7 @@
             skip = true;
         }
 
-        let previousCommitBtn = previous?.querySelector('commit-button');
+        let previousCommitBtn = previous?.querySelector('.commit-button');
         let disabled = previousCommitBtn?.classList.contains('disabled');
 
         if (nextStepsPrevious.includes('commit') && disabled) {
@@ -2093,7 +2157,7 @@
                 }
 
                 let hasCommit = nextSteps.includes('commit');
-                let commitBtn = item.querySelector('commit-button');
+                let commitBtn = item.querySelector('.commit-button');
                 let disabled = commitBtn?.classList.contains('disabled');
 
                 // Skip those pesky damage requirements or empty crimes
@@ -2101,7 +2165,7 @@
 
                 // For higher nerve: prefer non-commit, remember a commit in case we need it
                 if (nerve > 15) {
-                    if (hasCommit) {
+                    if (hasCommit && !disabled) {
                         if (!commitCandidate) commitCandidate = item;
                         continue;
                     }
@@ -2113,6 +2177,8 @@
                 // For low nerve: only take commit items
                 if (!hasCommit) continue;
 
+                if (nextSteps.includes('commit') && disabled) continue;
+
                 next = item;
                 break;
             }
@@ -2122,7 +2188,6 @@
         }
 
         if (!next) {
-
             // Warning no more arsons possible due to nerve or otherwise
             lazyBtn.title = 'No available arson found on last click';
 
@@ -2152,6 +2217,11 @@
                     let ariaLabel = commitBtn.getAttribute('aria-label');
                     if (ariaLabel.includes(`You don't have the required item`)) {
                         next.title = `Please buy the item required for this crime. Skipping for now...`;
+                    }
+
+                    if (ariaLabel.includes(`You haven't selected an item`)) {
+                        console.warn('Wrongful commit step, parsing again');
+                        setTimeout(() => parseArson([next]), 30);
                     }
 
                     return;
@@ -2277,8 +2347,11 @@
 
     function selectArsonItem(step, crime, itemSelectors, selectedLabels, index, backupIndexes) {
         let itemBtn = crime.querySelector('.itemButton___Y_SMO');
+
         let ariaLabel = itemBtn.getAttribute('aria-label');
+
         let expanded = crime.classList.contains('hf-expanded');
+
         let selected = selectedLabels.some(label => ariaLabel === label);
 
         let itemSelectBtn = document.body.querySelectorAll(itemSelectors)[index];
@@ -2286,6 +2359,10 @@
         let test = document.body.querySelector('.igniters___sGPAS .button___TEova');
 
         let nextSteps = crime.getAttribute('hf-next-steps')?.split(',');
+
+        if (ariaLabel === 'Select item') {
+            selected = false;
+        }
 
         if (selected) {
             // Commit button
@@ -2305,7 +2382,8 @@
         } else {
             if (expanded) {
                 if (!itemSelectBtn) {
-                    console.warn('Something went wrong. Exiting button click');
+                    console.warn('Item select button not found, removing expanded note.');
+                    crime.classList.remove('hf-expanded');
                     return;
                 }
 
@@ -2319,9 +2397,11 @@
                         // Check if locked, else say need to do unique or smth
 
                         if (silhouette) {
-                            crime.title = `Please buy the item required for the step "${step}". Skipping for now...`
+                            crime.title = `Please buy the item required for the step "${step}". Skipping for now...`;
+                            crime.setAttribute('hf-next-steps', 'skip');
                         } else {
-                            crime.title = `You have not yet unlocked the required item for the step ${step}. Skipping for now...`
+                            crime.title = `You have not yet unlocked the required item for the step ${step}. Skipping for now...`;
+                            crime.setAttribute('hf-next-steps', 'skip');
                         }
 
                         return;
@@ -2347,10 +2427,20 @@
                         // Check if locked, else say need to do unique or smth
 
                         if (silhouette) {
-                            crime.title = `Please buy the item required for the step "${step}". Skipping for now...`
+                            crime.title = `Please buy the item required for the step "${step}". Skipping for now...`;
+                            crime.setAttribute('hf-next-steps', 'skip');
                         } else {
-                            crime.title = `You have not yet unlocked the required item for ${step}. Skipping for now...`
+                            crime.title = `You have not yet unlocked the required item for ${step}. Skipping for now...`;
+                            crime.setAttribute('hf-next-steps', 'skip');
                         }
+
+                        itemBtn.click(); // Close it again
+                        itemBtn.setAttribute('aria-expanded', false);
+
+                        let itemSelector = document.body.querySelector('.itemSelector___hlEBl');
+                        itemSelector.remove();
+
+                        crime.classList.remove('hf-expanded');
 
                         return;
                     }
@@ -2364,7 +2454,16 @@
             } else {
                 itemBtn.click();
 
-                crime.classList.add('hf-expanded');
+                setTimeout(function () {
+                    expanded = crime.classList.contains('hf-expanded');
+
+                    if (expanded && itemBtn) {
+                        crime.classList.add('hf-expanded');
+                    } else {
+                        console.warn(`Can't seem to expand. Skipping for now...`);
+                        crime.setAttribute('hf-next-steps', 'skip');
+                    }
+                }, 100);
 
                 return;
             }
@@ -2373,6 +2472,35 @@
 
     function parseArson(items) {
         let mobile = !document.body.querySelector('.searchFormWrapper___LXcWp');
+
+        const commitActions = ['Inquire', 'Breach', 'Plant', 'Collect'];
+
+        const scenarios = [
+            {
+                requestkey: 'Accelerant requested: Gaseous',
+                steps: 'gases,lighter'
+            },
+            {
+                requestkey: 'Accelerant requested: Liquids',
+                steps: 'liquids,lighter'
+            },
+            {
+                requestkey: 'Accelerant requested: Solids',
+                steps: 'solids,lighter'
+            },
+            {
+                requestkey: 'Accidental cause requested',
+                steps: 'gases,lighter'
+            },
+            {
+                requestkey: 'High-visibility fire requested',
+                steps: 'diesel,flamethrower,magnesium'
+            },
+            {
+                requestkey: 'Highly-suspicious fire requested',
+                steps: 'gasoline,lighter,magnesium'
+            }
+        ];
 
         for (let item of items) {
             let scenarioTitleElement = item.querySelector(mobile ? '.titleMeterIcons___xfLVM' : '.titleAndScenario___uWExi');
@@ -2394,12 +2522,14 @@
 
             for (let icon of [...requestIcons].slice(1)) {
                 let label = icon.getAttribute('aria-label');
+
                 if (label) requests.add(label);
             }
 
             let fireMeter = item.querySelector('.fireMeter___cexDs')?.getAttribute('aria-label') || '';
 
             let commitBtn = item.querySelector('.commit-button');
+
             let buttonTitle = mobile
             ? commitBtn.getAttribute('aria-label')?.split(',')[0]
             : commitBtn?.querySelector('.title___kEtkc')?.textContent?.trim() || '';
@@ -2409,113 +2539,46 @@
                 continue;
             }
 
-            if (buttonTitle == 'Inquire' || buttonTitle == 'Breach' || buttonTitle == 'Plant' || buttonTitle == 'Collect') {
-                item.setAttribute('hf-next-steps', 'commit');
-            } else if (buildingDamage !== 'Building with no visible damage') {
-                // Skipping for now for no duplicate arsons upon refresh
-            } else if (requests.has('Total destruction required')) {
-                // Skipping for now ~ possibly too complex to lazify
-
+            // Skipping damages for now - possibly too complex to lazify
+            if (
+                [...requests].some(req =>
+                                   /total destruction required|more than.*damage required|less than.*damage required|between.*damage required/i.test(req)
+                                  )
+            ) {
                 item.setAttribute('hf-next-steps', 'skip');
+                continue;
+            }
 
-                // item.setAttribute('hf-min-destruction', 100);
-                // item.setAttribute('hf-warning', 'damage');
-            } else if ([...requests].some(req => /more than.*damage required/i.test(req))) {
-                // Skipping for now ~ possibly too complex to lazify
+            let matchedScenario = scenarios.find(s => requests.has(s.requestkey));
 
-                // let match = [...requests]
-                // .map(req => req.match(/more than\s*(\d+)%\s*damage required/i))
-                // .find(Boolean);
+            if (matchedScenario) {
+                if (matchedScenario.requestkey in settings && settings[matchedScenario.requestkey] === false) {
+                    item.setAttribute('hf-next-steps', 'skip');
+                    continue;
+                }
 
-                // let damageRequired = match ? parseInt(match[1], 10) : 0;
+                if (commitActions.includes(buttonTitle)) {
+                    item.setAttribute('hf-next-steps', 'commit');
+                    continue;
+                }
 
-                // console.log("More than this damage required:", damageRequired, item);
+                // Prevent duplicate steps upon refreshing page
+                if (buildingDamage !== 'Building with no visible damage') continue;
 
-                item.setAttribute('hf-next-steps', 'skip');
-                // item.setAttribute('hf-min-destruction', damageRequired);
-                // item.setAttribute('hf-warning', 'damage');
-            } else if ([...requests].some(req => /less than.*damage required/i.test(req))) {
-                // Skipping for now ~ possibly too complex to lazify
-
-                // let match = [...requests]
-                // .map(req => req.match(/less than\s*(\d+)%\s*damage required/i))
-                // .find(Boolean);
-
-                // let damageRequired = match ? parseInt(match[1], 10) : 0;
-
-                // console.log("LESS than this damage required:", damageRequired, item);
-
-                item.setAttribute('hf-next-steps', 'skip');
-                // item.setAttribute('hf-max-destruction', damageRequired);
-                // item.setAttribute('hf-warning', 'damage');
-            } else if ([...requests].some(req => /between.*damage required/i.test(req))) {
-                // Skipping for now ~ possibly too complex to lazify
-
-                // let match = [...requests]
-                // .map(req => req.match(/between\s*(\d+)%\s*and\s*(\d+)%\s*damage required/i))
-                // .find(Boolean);
-
-                // let minDamageRequired = match ? parseInt(match[1], 10) : 0;
-                // let maxDamageRequired = match ? parseInt(match[2], 10) : 0;
-
-                // console.log("Min damage required:", minDamageRequired, item);
-                // console.log("Max damage required:", maxDamageRequired, item);
-
-                item.setAttribute('hf-next-steps', 'skip');
-                // item.setAttribute('hf-min-destruction', minDamageRequired);
-                // item.setAttribute('hf-max-destruction', maxDamageRequired);
-                // item.setAttribute('hf-warning', 'damage');
-            } else if (requests.has('Accelerant requested: Gaseous')) {
-                item.setAttribute('hf-next-steps', 'gases,lighter');
-                item.setAttribute('hf-warning', 'gaseous');
-            } else if (requests.has('Accelerant requested: Liquids')) {
-                item.setAttribute('hf-next-steps', 'liquids,lighter');
-                item.setAttribute('hf-warning', 'gaseous');
-            } else if (requests.has('Accelerant requested: Solids')) {
-                // Need to check if this is correct
-
-                item.setAttribute('hf-next-steps', 'solids,lighter');
-                item.setAttribute('hf-warning', 'gaseous');
-            } else if (requests.has('Accidental cause requested')) {
-                item.setAttribute('hf-next-steps', 'gases,lighter');
-                item.setAttribute('hf-warning', 'accidental');
-            } else if (requests.has('High-visibility fire requested')) {
-                item.setAttribute('hf-next-steps', 'diesel,flamethrower,magnesium');
-                item.setAttribute('hf-warning', 'visibility');
-            } else if (requests.has('Highly-suspicious fire requested')) {
-                item.setAttribute('hf-next-steps', 'gasoline,lighter,magnesium');
-                item.setAttribute('hf-warning', 'visibility');
-            } else if ([...requests].some(r => r.startsWith('Accelerant requested:'))) {
-                // Can't find info on others so will have to wait until some spawn... or not
+                item.setAttribute('hf-next-steps', matchedScenario.steps);
+                continue;
             } else {
-                // Gasoline, fire
+                if (commitActions.includes(buttonTitle)) {
+                    item.setAttribute('hf-next-steps', 'commit');
+                    continue;
+                }
+
+                // Prevent duplicate steps upon refreshing page
+                if (buildingDamage !== 'Building with no visible damage') continue;
+
                 item.setAttribute('hf-next-steps', 'liquids,lighter');
             }
 
-            // For gathering info, can remove upon publishing --
-            let crime = {
-                title,
-                scenario,
-                responderStatus,
-                buildingDamage,
-                type,
-                requests: [...requests],
-                fireMeter,
-                buttonTitle
-            };
-
-            // Check for duplicates — identical except buttonTitle
-            let isDuplicate = arsoncrimes.some(c =>
-                                               c.title === crime.title &&
-                                               c.scenario === crime.scenario &&
-                                               c.responderStatus === crime.responderStatus &&
-                                               c.buildingDamage === crime.buildingDamage &&
-                                               c.type === crime.type &&
-                                               JSON.stringify(c.requests) === JSON.stringify(crime.requests) &&
-                                               c.fireMeter === crime.fireMeter
-                                              );
-
-            if (!isDuplicate) arsoncrimes.push(crime);
         }
 
         // If no ideal target reached, do "forced" rerun of the function
@@ -2609,7 +2672,6 @@
         let observer = new MutationObserver(function(mutationsList, observer) {
             for (let mutation of mutationsList) {
                 if (mutation.type === 'characterData') {
-                    // console.log('Character change', mutation.target, mutation.target.parentNode.classList);
                     // Disable buttons if nerve goes down
 
                     if (mutation.target.parentNode.classList.contains('bar-value___NTdce')) {
@@ -2774,6 +2836,27 @@
         let checkboxDiv = document.createElement('div');
         checkboxDiv.classList.add('hf-checkbox-container');
 
+        let buttonOptionsDiv = document.createElement('div');
+        buttonOptionsDiv.classList.add('hf-btn-options-container');
+
+        let buttonOptionsSpan = document.createElement('span');
+        buttonOptionsSpan.textContent = 'Enable/disable button options:';
+        buttonOptionsDiv.appendChild(buttonOptionsSpan);
+
+        let options = ['Floating Button', 'Bigger Button'];
+
+        for (let option of options) {
+            let buttonOptionsContainer = document.createElement('div');
+            buttonOptionsContainer.classList.add('hf-lazy-crime-container');
+
+            addToggle(buttonOptionsContainer, option);
+
+            buttonOptionsDiv.appendChild(buttonOptionsContainer);
+        }
+
+        checkboxDiv.appendChild(buttonOptionsDiv);
+
+
         let infoSpan = document.createElement('span');
         infoSpan.textContent = 'Enable/disable which crimes you want the Lazy Crimes button and/or merit button(s) to appear for here.';
         checkboxDiv.appendChild(infoSpan);
@@ -2791,8 +2874,9 @@
             'Disposal': ['Dissolving Agent', 'No Dissolving', 'Always Abandon', 'Low Nerve First'],
             'Cracking': [],
             'Forgery': ['PreferredForgeryProject'],
-            'Scamming': ['Scraper', 'Phisher', 'ScammingMinLevel', 'Floating Button'],
-            'Arson': ['PreferredLighter', 'PreferredLiquids', 'PreferredSolids' ,'PreferredGases'],
+            'Scamming': ['Scraper', 'Phisher', 'ScammingMinLevel'],
+            'Arson': ['PreferredLighter', 'PreferredLiquids', 'PreferredSolids' ,'PreferredGases', 'Accelerant requested: Gaseous', 'Accelerant requested: Liquids', 'Accelerant requested: Solids',
+                      'Accidental cause requested', 'High-visibility fire requested', 'Highly-suspicious fire requested'],
         }
 
         for (let crime in crimes) {
@@ -2926,8 +3010,7 @@
                         crimeContainer.appendChild(toggleContainer);
 
                         continue;
-                    } else if (item === 'Floating Button' && !mobile) {
-                        continue;
+                        // } else if (item === 'GaseousAccelerant' || item === 'LiquidAccelerant' || item === 'SolidAccelerant' || item === 'AccidentalCause' || item === 'HighVisibility' || item === 'HighSuspicion') {
                     }
 
                     let toggle = addToggle(crimeContainer, item, crimes[crime]);
@@ -3032,7 +3115,9 @@
         let savedInfo = settings[labelText];
 
         if (savedInfo === true) input.checked = true;
-        if (!savedInfo || savedInfo === false) input.checked = false;
+        if (savedInfo === false) input.checked = false;
+
+        if ((labelText === 'Floating Button' || labelText === 'Bigger Button') && !savedInfo) input.checked = false;
 
         if (labelText === 'Enable All') input.checked = false;
 
@@ -3420,12 +3505,17 @@
     }
 
     addStyle(`
-        .hf-floating-btn {
+        .hf-floating-lazy-btn {
             z-index: 999999;
             position: fixed;
             font-size: 15px;
-            top: 270px;
-            left: 20px;
+            top: 50vh;
+            left: 50px;
+        }
+
+        .hf-bigger-lazy-btn {
+            padding: 6px 10px;
+            font-size: x-large;
         }
 
         .hf-lazy-crimes-btn-container {
@@ -3444,7 +3534,7 @@
             font-weight: bold;
         }
 
-        .hf-lazy-crimes-button.hf-mobile {
+        .hf-lazy-crimes-button.hf-mobile:not(.hf-floating-lazy-btn) {
             font-size: smaller;
         }
 
@@ -3488,6 +3578,10 @@
             display: flex;
             flex-direction: column;
             padding-top: 15px;
+        }
+
+        .hf-btn-options-container {
+           padding-bottom: 15px;
         }
 
         .hf-lazy-crime-container {

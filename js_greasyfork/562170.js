@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Copy YouTube Transcript to Clipboard
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Adds button that copies transcript to clipboard.
 // @author       432enjoyer
 // @license      MIT
@@ -150,16 +150,21 @@
             try {
                 const player = unsafeWindow.movie_player || document.getElementById('movie_player');
                 const data = player.getPlayerResponse();
+                let transcriptText = "";
 
                 try {
-                    const text = await fetchTranscriptAPI(data);
-                    GM_setClipboard(text);
-                    span.innerText = 'Copied!';
+                    transcriptText = await fetchTranscriptAPI(data);
                 } catch (apiErr) {
                     console.log("API failed, switching to UI...", apiErr);
                     span.innerText = 'Searching...';
-                    await openPanelAndCopy();
+                    transcriptText = await openPanelAndCopy();
+                }
+
+                if (transcriptText) {
+                    GM_setClipboard(transcriptText);
                     span.innerText = 'Copied!';
+                } else {
+                    throw new Error("No text found");
                 }
             } catch (e) {
                 console.error(e);
@@ -311,7 +316,7 @@
     }
 
     async function openPanelAndCopy() {
-        if (document.querySelector('ytd-transcript-segment-renderer')) {
+        if (document.querySelector('ytd-transcript-segment-renderer, ytd-transcript-search-segment-renderer')) {
             return scrapeText();
         }
         const expander = document.querySelector('ytd-text-inline-expander') || document.querySelector('#description-inline-expander');
@@ -336,7 +341,7 @@
         const text = scrapeText();
         const closeBtn = document.querySelector('[target-id="engagement-panel-searchable-transcript"] button[aria-label^="Close"]');
         if (closeBtn) closeBtn.click();
-        GM_setClipboard(text);
+        return text;
     }
 
     function scrapeText() {

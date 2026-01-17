@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Holotower ImgOps Links
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  Add "imgops" link after file information on Holotower boards (uploads to litterbox first)
+// @version      1.1.0
+// @description  Add "imgops" link after file information on Holotower boards (direct for images, litterbox for video frames)
 // @author       slopffian
 // @match        https://boards.holotower.org/*
 // @match        http://boards.holotower.org/*
@@ -161,16 +161,14 @@
     }
 
     /**
-     * Get thumbnail image blob from post
+     * Get thumbnail URL from post
      */
-    async function getThumbnailBlob(fileInfo) {
+    function getThumbnailUrl(fileInfo) {
         const thumbnailImg = fileInfo.closest('.file').querySelector('img.post-image');
         if (!thumbnailImg || !thumbnailImg.src) {
             throw new Error('No thumbnail found');
         }
-
-        const response = await fetch(thumbnailImg.src);
-        return await response.blob();
+        return thumbnailImg.src;
     }
 
     // ==================== Litterbox Upload ====================
@@ -199,89 +197,60 @@
     }
 
     /**
-     * Get blob for image or video file
-     */
-    async function getImageBlob(fileUrl, useVideoThumbnail, fileInfo) {
-        const isVideo = /\.(webm|mp4)$/i.test(fileUrl);
-
-        if (isVideo) {
-            if (useVideoThumbnail) {
-                // Use Holotower's pre-generated thumbnail
-                return await getThumbnailBlob(fileInfo);
-            } else {
-                // Extract first non-blank frame from video
-                return await extractFirstFrameFromVideo(fileUrl);
-            }
-        } else {
-            // Regular image - fetch directly
-            const response = await fetch(fileUrl);
-            return await response.blob();
-        }
-    }
-
-    /**
-     * Get appropriate filename for the blob
-     */
-    function getFilename(fileUrl, blob, useVideoThumbnail) {
-        const isVideo = /\.(webm|mp4)$/i.test(fileUrl);
-
-        if (isVideo) {
-            const suffix = useVideoThumbnail ? '_thumb.jpg' : '.jpg';
-            return getFilenameFromUrl(fileUrl, suffix);
-        }
-
-        // For images
-        let filename = getFilenameFromUrl(fileUrl);
-        if (!filename) {
-            const extension = blob.type ? blob.type.split('/')[1] : 'jpg';
-            filename = `image.${extension}`;
-        }
-        return filename;
-    }
-
-    /**
-     * Main upload and imgops handler with caching
+     * Main imgops handler - direct for server images, litterbox for video frames
      */
     async function handleImgOpsClick(fileUrl, imgopsLink, fileInfo, useVideoThumbnail = false) {
-        const linkType = useVideoThumbnail ? 'thumb' : 'frame';
-        const prefix = useVideoThumbnail ? 'imgops (thumb' : 'imgops (';
+        const isVideo = /\.(webm|mp4)$/i.test(fileUrl);
 
         try {
+            // Case 1: Regular image - go directly to imgops
+            if (!isVideo) {
+                window.open(`${CONFIG.IMGOPS_URL}${fileUrl}`, '_blank');
+                updateLinkState(imgopsLink, 'imgops ✓', 'pointer', 'green');
+                return;
+            }
+
+            // Case 2: Video thumbnail - use server thumbnail URL directly
+            if (useVideoThumbnail) {
+                const thumbnailUrl = getThumbnailUrl(fileInfo);
+                window.open(`${CONFIG.IMGOPS_URL}${thumbnailUrl}`, '_blank');
+                updateLinkState(imgopsLink, 'imgops (thumb) ✓', 'pointer', 'green');
+                return;
+            }
+
+            // Case 3: Video frame extraction - needs litterbox upload
             // Check cache first
             const cachedUrl = litterboxCache.get(imgopsLink);
             if (cachedUrl) {
-                updateLinkState(imgopsLink, `${prefix}checking...)`, 'wait');
+                updateLinkState(imgopsLink, 'imgops (checking...)', 'wait');
 
                 const isValid = await isLitterboxUrlValid(cachedUrl);
                 if (isValid) {
                     window.open(`${CONFIG.IMGOPS_URL}${cachedUrl}`, '_blank');
-                    const successText = useVideoThumbnail ? 'imgops (thumb) ✓' : 'imgops ✓';
-                    updateLinkState(imgopsLink, successText, 'pointer', 'green');
+                    updateLinkState(imgopsLink, 'imgops ✓', 'pointer', 'green');
                     return;
                 }
             }
 
-            // Upload new file
-            updateLinkState(imgopsLink, `${prefix}loading...)`, 'wait');
+            // Extract frame and upload to litterbox
+            updateLinkState(imgopsLink, 'imgops (loading...)', 'wait');
 
-            const blob = await getImageBlob(fileUrl, useVideoThumbnail, fileInfo);
-            const filename = getFilename(fileUrl, blob, useVideoThumbnail);
+            const blob = await extractFirstFrameFromVideo(fileUrl);
+            const filename = getFilenameFromUrl(fileUrl, '.jpg');
             const litterboxUrl = await uploadToLitterbox(blob, filename);
 
             // Cache and open
             litterboxCache.set(imgopsLink, litterboxUrl);
             window.open(`${CONFIG.IMGOPS_URL}${litterboxUrl}`, '_blank');
-
-            const successText = useVideoThumbnail ? 'imgops (thumb) ✓' : 'imgops ✓';
-            updateLinkState(imgopsLink, successText, 'pointer', 'green');
+            updateLinkState(imgopsLink, 'imgops ✓', 'pointer', 'green');
 
         } catch (error) {
-            console.error(`Error uploading ${linkType} to litterbox:`, error);
+            console.error('Error processing for imgops:', error);
             const errorText = useVideoThumbnail ? 'imgops (thumb error)' : 'imgops (error)';
             updateLinkState(imgopsLink, errorText, 'pointer', 'red');
 
             if (!useVideoThumbnail) {
-                alert('Failed to upload image to litterbox. Please try again.');
+                alert('Failed to process image for imgops. Please try again.');
             }
         }
     }

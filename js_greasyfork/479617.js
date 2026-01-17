@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           FicbookExtractor
 // @namespace      90h.yy.zz
-// @version        0.10.0
+// @version        1.0.2
 // @author         Ox90
 // @match          https://ficbook.net/readfic/*
 // @description    The script allows you to download books to an FB2 file without any limits
@@ -406,6 +406,14 @@ async function getBookContent(doc, log) {
       log.warning("Аннотация не найдена");
     }
     log.message("---");
+    // Настройка управления задержками
+    let sleepIndex = 1;
+    const chapterSleepValues = [ 600, 100 ];
+    const userSleepValue = Settings.get("chapterpause", true);
+    if (userSleepValue > 0) {
+      sleepIndex = 0;
+      chapterSleepValues[0] = userSleepValue;
+    }
     // Получение и формирование глав
     doc.bindParser("chp", new ChapterParser());
     const chapters = doc.chapters;
@@ -421,7 +429,9 @@ async function getBookContent(doc, log) {
         let chData = chItem.data;
         if (!chData) {
           const url = new URL(`/readfic/${encodeURIComponent(doc.id)}/${encodeURIComponent(chItem.id)}`, document.location);
-          await sleep(100);
+          if (userSleepValue) {
+            await sleep(chapterSleepValues[sleepIndex]);
+          }
           chData = getChapterData(await Loader.addJob(url));
         }
         // Преобразование в FB2
@@ -445,6 +455,7 @@ async function getBookContent(doc, log) {
           }
           log.message("Ждем 30 секунд");
           await sleep(30000);
+          if (sleepIndex > 0) --sleepIndex;
         } else {
           throw err;
         }
@@ -458,6 +469,38 @@ async function getBookContent(doc, log) {
       log.warning(`Найдены неизвестные элементы: ${doc.unknowns}`);
       log.message("Преобразованы в текст без форматирования");
     }
+    // Анализ изображений
+    const webpList = [];
+    const imgTypes = doc.binaries.reduce((map, bin) => {
+      if (bin instanceof FB2Image && bin.value) {
+        if (bin.type === "image/webp") webpList.push(bin);
+      }
+      return map;
+    }, new Map());
+    if (webpList.length) {
+      log.message("---");
+      log.warning("Найдены изображения формата WebP. Могут быть проблемы с отображением на старых читалках.");
+      await new Promise(resolve => setTimeout(resolve, 100)); // Для обновления лога перед запросом
+      if (confirm("Выполнить конвертацию WebP --> JPEG?")) {
+        const li = log.message("Конвертация изображений...");
+        let ecnt = 0;
+        for (const img of webpList) {
+          try {
+            await img.convert("image/jpeg");
+          } catch (err) {
+            console.log(`Ошибка конвертации изображения: id=${img.id}; type=${img.type};`);
+            ++ecnt;
+          }
+        }
+        if (!ecnt) {
+          li.ok();
+        } else {
+          li.fail();
+          log.warning("Часть изображений не удалось сконвертировать!");
+        }
+      }
+    }
+    //--
     log.message("---");
     log.message("Готово!");
   } catch (err) {
@@ -797,20 +840,31 @@ class Dialog {
     stForm.style.margin = ".75em 0";
     stForm.style.border = "1px solid lightgray";
     stForm.style.borderRadius = "5px";
-    stForm.innerHTML = '<div><label>Шаблон имени файла (без расширения)</label>' +
-      '<input type="text" style="width:100%; background-color:transparent; border:1px solid gray; border-radius:3px; font-size:90%">' +
+    stForm.innerHTML = '<div><label style="width:100%">Шаблон имени файла (без расширения)</label>' +
+      '<input name="option1" type="text" style="width:100%; background-color:transparent; border:1px solid gray; border-radius:3px; font-size:90%">' +
       '<ul style="color:gray; font-size:85%; margin:0; padding-left:1em;">' +
       '<li>\\a - Автор книги;</li><li>\\t - Название книги;</li><li>\\i - Идентификатор книги;</li><li>\\c - Количество глав;</li>' +
-      '<li>&lt;…&gt; - Если внутри такого блока будут отсутвовать данные для шаблона, то весь блок будет удален;</li>' +
+      '<li>&lt;…&gt; - Если внутри такого блока будут отсутсвовать данные для шаблона, то весь блок будет удален;</li>' +
       '</ul><div style="color:gray; font-size:85%;">' +
-      '<span style="color:red; font-weight:bold;">!</span> Оставьте это поле пустым, если хотите вернуть шаблон по умолчанию.</div>';
+      '<span style="color:red; font-weight:bold;">!</span> Оставьте это поле пустым, если хотите вернуть шаблон по умолчанию.</div></div>' +
+      '<div><label style="width:100%">Пауза между запросами глав (msecs)</label>' +
+      '<input name="option2" type="text" style="width:5em; background-color:transparent; border:1px solid gray; border-radius:3px; font-size:90%">' +
+      '<span style="color:gray; font-size:85%;"> Допустимые значения от 0 до 10000.</span>' +
+      '<div style="color:gray; font-size:85%;"><span style="color:red; font-weight:bold;">!</span>' +
+      ' Для автоматического управления паузами оставьте это поле пустым.</div></div>';
     stBtn.addEventListener("click", event => {
       if (stForm.style.display) {
-        stForm.querySelector("input").value = Settings.get("filename");
+        stForm.querySelector('input[name="option1"]').value = Settings.get("filename");
+        const pauseValue = Settings.get("chapterpause");
+        if (pauseValue >= 0) {
+          stForm.querySelector('input[name="option2"]').value = pauseValue;
+        }
         stForm.style.removeProperty("display");
       } else {
         stForm.style.display = "none";
-        Settings.set("filename", stForm.querySelector("input").value);
+        Settings.set("filename", stForm.querySelector('input[name="option1"]').value);
+        const pause = Number(stForm.querySelector('input[name="option2"]').value);
+        Settings.set("chapterpause", pause !== NaN ? pause : -1);
         Settings.save();
       }
     });
@@ -928,6 +982,8 @@ class Settings {
       case "filename":
         if (typeof(val) !== "string" || val.trim() === "") val = "<\\a. >\\t [FBN-\\i]";
         break;
+      case "chapterpause":
+        if (typeof(val) !== "number" || val < -1 || val > 10000) val = -1;
     }
     return val;
   }

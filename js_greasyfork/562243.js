@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Team Xtreme texture pack
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-05
+// @version      2026-01-17
 // @description  Dark mode texture pack
 // @author       You
 // @match        *://junon.io/*
@@ -42,7 +42,12 @@ select,
 #welcome_container .settings_menu_btn,
 #mini_map_menu,
 #command_block_menu,
-#logout_btn {
+#logout_btn,
+.settings_container,
+.game_invite_container,
+.back_main_menu_btn,
+.new_game_container,
+.restart_btn {
     border: inset 2px #b100b1;
     background-color: #000000cc;
     border-radius: 5px;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Quick HN Importer
 // @namespace    http://www.wazebelgium.be/
-// @version      2.0.4
+// @version      2.0.5
 // @description  Quickly add house numbers based on open data sources of house numbers
 // @author       Tom 'Glodenox' Puttemans
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
@@ -174,7 +174,7 @@ repository.addSource((left, bottom, right, top) => {
   }, (response) => {
     let features = [];
     response.response.features?.forEach((feature) => {
-      let streetName = feature.properties.STRNAMEFRE || feature.properties.STRNAMEDUT;
+      let streetName = cleanupName(feature.properties.STRNAMEFRE || feature.properties.STRNAMEDUT);
       features.push({
         type: "Feature",
         id: feature.properties.INSPIRE_ID,
@@ -205,7 +205,7 @@ repository.addSource((left, bottom, right, top) => {
       if (feature.attributes.ADR_FIN != null) {
         return;
       }
-      let streetName = feature.attributes.RUE_NM.replace(/ \([A-Z]{2}\)$/, "");
+      let streetName = cleanupName(feature.attributes.RUE_NM.replace(/ \([A-Z]{2}\)$/, ""));
       features.push(turf.point([ feature.geometry.x, feature.geometry.y ], {
         street: streetName,
         number: feature.attributes.ADR_NUMERO,
@@ -235,7 +235,7 @@ repository.addSource((left, bottom, right, top) => {
         id: feature.properties.identificatie,
         geometry: feature.geometry,
         properties: {
-          street: feature.properties.openbare_ruimte,
+          street: cleanupName(feature.properties.openbare_ruimte),
           number: feature.properties.huisnummer.toString(),
           municipality: feature.properties.woonplaats,
           type: 'active'
@@ -532,6 +532,58 @@ function findNearestSegment(feature, matchName) {
 
 function simplifyNumber(number) {
   return number.replace(/[\/-]/, "_");
+}
+
+function cleanupName(name) {
+  const sanitizeChars = Object.entries({
+    // EN DASH / HYPHEN (U+002D)
+    '\u1806': '\u002D', // '?'
+    '\u2010': '\u002D', // '-'
+    '\u2011': '\u002D', // '-'
+    '\u2012': '\u002D', // '-'
+    '\u2013': '\u002D', // '–'
+    '\uFE58': '\u002D', // '?'
+    '\uFE63': '\u002D', // '?'
+    '\uFF0D': '\u002D', // '-'
+
+    // SINGLE QUOTES (U+0027)
+    '\u003C': '\u0027', // '<'
+    '\u003E': '\u0027', // '>'
+    '\u2018': '\u0027', // '‘'
+    '\u2019': '\u0027', // '’'
+    '\u201A': '\u0027', // '‚'
+    '\u201B': '\u0027', // '''
+    '\u2039': '\u0027', // '‹'
+    '\u203A': '\u0027', // '›'
+    '\u275B': '\u0027', // '?'
+    '\u275C': '\u0027', // '?'
+    '\u276E': '\u0027', // '?'
+    '\u276F': '\u0027', // '?'
+    '\uFF07': '\u0027', // '''
+    '\u300C': '\u0027', // '?'
+    '\u300D': '\u0027', // '?'
+
+    // // DOUBLE QUOTES (U+0022)
+    '\u00AB': '\u0022', // '«'
+    '\u00BB': '\u0022', // '»'
+    '\u201C': '\u0022', // '“'
+    '\u201D': '\u0022', // '”'
+    '\u201E': '\u0022', // '„'
+    '\u201F': '\u0022', // '"'
+    '\u275D': '\u0022', // '?'
+    '\u275E': '\u0022', // '?'
+    '\u2E42': '\u0022', // '?'
+    '\u301D': '\u0022', // '?'
+    '\u301E': '\u0022', // '?'
+    '\u301F': '\u0022', // '?'
+    '\uFF02': '\u0022', // '"'
+    '\u300E': '\u0022', // '?'
+    '\u300F': '\u0022', // '?'
+  });
+
+  return sanitizeChars.reduce((acc, [char, stdChar]) => {
+    return acc.replaceAll(char, stdChar);
+  }, name.normalize());
 }
 
 function httpRequest(params, process) {

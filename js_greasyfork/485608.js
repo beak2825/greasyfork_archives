@@ -8,7 +8,7 @@
 // @grant           GM_addStyle
 // @run-at          document-body
 // @noframes
-// @version         3.0.7
+// @version         3.0.8
 // @icon            https://cdn.jsdelivr.net/gh/zenstorage/Reddit-NSFW-Unblur/assets/icon.png
 // @author          hdyzen
 // @description     Unblur nsfw in Shreddit
@@ -24,7 +24,20 @@ const PREFS = {
     spoiler: GM_getValue("unblurSpoiler", false),
 };
 
-const mutationsHandler = () => {
+const observer = new MutationObserver(repeatedTask);
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributeFilter: ["blurred", "reason"],
+});
+
+function onceTask() {
+    enableNSFWSearch();
+    handlePopupVisible();
+}
+onceTask();
+
+function repeatedTask() {
     removeModal();
     removeQRNSFW();
     initToggles();
@@ -35,20 +48,8 @@ const mutationsHandler = () => {
         unblurPosts();
     }
     if (PREFS.enabled && PREFS.spoiler) unblurTextSpoiler();
-};
-
-const observer = new MutationObserver(mutationsHandler);
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributeFilter: ["blurred", "reason"],
-});
-
-function init() {
-    enableNSFWSearch();
-    handlePopupVisible();
 }
-init();
+repeatedTask();
 
 function removeModal() {
     const modal = document.querySelector("#blocking-modal");
@@ -71,31 +72,33 @@ function removeQRNSFW() {
 function unblurCards() {
     const highlights = document.querySelectorAll("community-highlight-card[blurred]");
     for (const highlight of highlights) {
-        if (highlight.hasAttribute("nsfw") && PREFS.nsfw) highlight.removeAttribute("blurred");
-        if (highlight.hasAttribute("spoiler") && PREFS.spoiler) highlight.removeAttribute("blurred");
+        const shouldUnblur = (highlight.hasAttribute("nsfw") && PREFS.nsfw) || (highlight.hasAttribute("spoiler") && PREFS.spoiler);
+        if (!shouldUnblur) continue;
+
+        highlight.removeAttribute("blurred");
     }
 
-    const rights = document.querySelectorAll("reddit-pdp-right-rail-post [data-testid='post-thumbnail'] [icon-name]");
-    for (const right of rights) {
-        const type = right.getAttribute("icon-name");
-        const scrim = right.closest(".thumbnail-shadow");
-        const thumb = right.closest("[data-testid='post-thumbnail']");
-        const blur = thumb.querySelector("img[style*='blur']");
+    const thumbs = document.querySelectorAll(
+        ":is(reddit-pdp-right-rail-post, shreddit-post) [data-testid='post-thumbnail'] :is([icon-name='nsfw-fill'], [icon-name='caution-fill'])",
+    );
+    for (const thumb of thumbs) {
+        const type = thumb.getAttribute("icon-name");
+        const shouldUnblur = (type === "nsfw-fill" && PREFS.nsfw) || (type === "caution-fill" && PREFS.spoiler);
 
-        if (type === "nsfw-fill" && PREFS.nsfw) {
-            right.style.removeProperty("filter");
-            blur.style.removeProperty("filter");
-            scrim.remove();
-        }
-        if (type === "caution-fill" && PREFS.spoiler) {
-            right.style.removeProperty("filter");
-            blur.style.removeProperty("filter");
-            scrim.remove();
-        }
+        if (!shouldUnblur) continue;
+
+        const scrim = thumb.closest(".thumbnail-shadow");
+        const blur = thumb.closest("[data-testid='post-thumbnail']")?.querySelector("img[style*='blur']");
+
+        thumb.style.removeProperty("filter");
+        blur.style.removeProperty("filter");
+        scrim.remove();
     }
 
     const medias = document.querySelectorAll("search-telemetry-tracker shreddit-blurred-container");
     for (const media of medias) {
+        if (media.blurred === false) continue;
+
         const nextElementIsSpoiler = media.nextElementSibling;
 
         if (!nextElementIsSpoiler && PREFS.nsfw) media.blurred = false;
@@ -135,9 +138,7 @@ function unblurTextSpoiler() {
 
 function unblurPromo() {
     const promo = document.querySelector("xpromo-nsfw-blocking-container");
-    if (!promo) return;
-
-    const prompt = promo.shadowRoot.querySelector(".prompt");
+    const prompt = promo?.shadowRoot?.querySelector(".prompt");
     if (prompt) prompt.remove();
 
     const viewInApp = document.querySelector("xpromo-nsfw-blocking-container .viewInApp");
@@ -209,11 +210,13 @@ function onMainToggleChange(el, isChecked) {
     GM_setValue("autoUnblur", isChecked);
     PREFS.enabled = isChecked;
     updateStatusIndicator(el, isChecked);
+    repeatedTask();
 }
 
 function onSecondaryToggleChange(key, isChecked) {
     GM_setValue(key, isChecked);
     PREFS[key === "unblurNSFW" ? "nsfw" : "spoiler"] = isChecked;
+    repeatedTask();
 }
 
 function initToggles() {

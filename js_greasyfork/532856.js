@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            hinatazaka46.com-design-fix
 // @namespace       https://greasyfork.org/ja/users/1328592-naoqv
-// @version         0.78
+// @version         0.79
 // @description:en  Hinatazaka46 website Look and Feel sleek
 // @description:ja  日向坂46 デザインフィックス
 // @license         MIT
@@ -1558,8 +1558,8 @@ Please disable the userscript: "Hinatazaka46-lookandfeel".`);
         body.innerHTML = "This page is no longer available";
         return;
       }
-      const isNotMemberBlog = location.search.match(/(cd=hinafes_blog|cd=event)/g);
-      if (isNotMemberBlog) {
+      const isMemberBlog = document.querySelector(".p-blog-head-container") ? true : false;
+      if (!isMemberBlog) {
         return;
       }
       if (isMobile()) {
@@ -5168,7 +5168,8 @@ isValid(element) {
       { d: "251222", n: "CDTV ライブ! ライブ! クリスマス 年間ランキングFes. 出演" },
       { d: "251231", n: "CDTVライブ！ライブ！年越しカウントダウンFes.2025→2026 出演" },
       { d: "260125", n: "LAWSON 50th Anniversary presents Special LIVE ~櫻坂46 / 日向坂46~ 開催" },
-      { d: "260126", n: '16th シングル "クリフハンガー" 発売' },
+      { d: "260127", n: "日向坂46・\\38;のオールナイトニッポン0(ZERO) 放送" },
+      { d: "260128", n: '16th シングル "クリフハンガー" 発売' },
       { d: "260129", n: "\\18; 卒業セレモニー 開催" }
     ];
     const CSS_BIOGRAPHY = `

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      7.5
-// @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt, Quillbot, Character.
+// @version      8.0
+// @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Quillbot, Canva, Genspark, Character, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -25,6 +25,10 @@
 // @match        https://chatglm.cn/*
 // @match        https://web.chatboxai.app/*
 // @match        https://lmarena.ai/*
+// @match        https://quillbot.com/*
+// @match        https://www.canva.com/*
+// @match        https://www.genspark.ai/*
+// @match        https://character.ai/*
 // @match        https://spacefrontiers.org/*
 // @match        https://app.scienceos.ai/*
 // @match        https://evidencehunt.com/*
@@ -36,8 +40,6 @@
 // @match        https://www.openevidence.com/*
 // @match        https://www.pathway.md/*
 // @match        https://math-gpt.org/*
-// @match        https://quillbot.com/*
-// @match        https://character.ai/*
 // @grant        GM_addStyle
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/545883/AI%20Conversation%20Navigator.user.js
@@ -144,7 +146,7 @@
             domain: 'deepai.org',
             includePath: 'deepai.org/chat',
             userMessage: '.chatbox',
-            shiftTarget: '.chat-layout-container, .new-chat-button-container, .persistent-compose-area'
+            shiftTarget: '.chat-layout-container, .new-chat-button-container, .persistent-compose-area, .nav-items'
         },
         huggingface: {
             domain: 'huggingface.co',
@@ -184,9 +186,9 @@
         },
         longcat: {
             domain: 'longcat.chat',
+            includePath: 'longcat.chat/c/',
             userMessage: '.user-message',
-            shiftTarget: '.page-container',
-            alwaysShow: true
+            shiftTarget: '.content',
         },
         chatglm: {
             domain: 'chatglm.cn',
@@ -204,7 +206,33 @@
             domain: 'lmarena.ai',
             includePath: 'lmarena.ai/c/',
             userMessage: '.justify-end.gap-2',
-            shiftTarget: '#chat-area'
+            shiftTarget: '#chat-area',
+            reverse: true
+        },
+        quillbot: {
+            domain: 'quillbot.com',
+            includePath: 'quillbot.com/ai-chat/c/',
+            userMessage: 'div.MuiGrid-root.MuiGrid-container > div.MuiGrid-root > p.MuiTypography-root.MuiTypography-bodyMedium.MuiTypography-paragraph',
+            shiftTarget: '#root-client'
+        },
+        canva: {
+            domain: 'www.canva.com',
+            includePath: 'www.canva.com/ai/',
+            userMessage: '#_r_1_ .uV9Uzw .Ka9auQ p',
+            shiftTarget: '#root'
+        },
+        genspark: {
+            domain: 'www.genspark.ai',
+            includePath: 'www.genspark.ai/agents?',
+            userMessage: '.conversation-item-desc.user',
+            shiftTarget: '.n-config-provider'
+        },
+        character: {
+            domain: 'character.ai',
+            includePath: 'character.ai/chat/',
+            userMessage: '.w-full .bg-surface-elevation-3.opacity-90',
+            shiftTarget: '#__next, #chat-header-background',
+            reverse: true
         },
         spacefrontiers: {
             domain: 'spacefrontiers.org',
@@ -271,18 +299,6 @@
             userMessage: '.w-full.flex.items-end.flex-col.pb-8.relative',
             shiftTarget: '.overflow-x-hidden, .px-2.flex.flex-col.gap-1'
         },
-        quillbot: {
-            domain: 'quillbot.com',
-            includePath: 'quillbot.com/ai-chat/c/',
-            userMessage: 'div.MuiGrid-root.MuiGrid-container > div.MuiGrid-root > p.MuiTypography-root.MuiTypography-bodyMedium.MuiTypography-paragraph',
-            shiftTarget: '#root-client'
-        },
-        character: {
-            domain: 'character.ai',
-            includePath: 'character.ai/chat/',
-            userMessage: '.w-full .bg-surface-elevation-3.opacity-90',
-            shiftTarget: '#__next, #chat-header-background'
-        }
     };
 
     function getCurrentConfig() {
@@ -299,10 +315,11 @@
     if (!CURRENT_SITE) return;
 
     const BASE_CONTAINER_CSS = `
-        right: 0px; width: ${NAV_WIDTH}px; max-height: 90vh; overflow-y: auto;
+        right: 0px; width: ${NAV_WIDTH}px; bottom: 0px; overflow-y: auto;
         z-index: 9999;
         transition: width 0.3s, padding 0.3s, opacity 0.3s, transform 0.3s;
         font-family: Calibri, sans-serif; font-size: 17px; color: CanvasText; position: fixed;text-align: left;
+        border-left: 1px solid color-mix(in srgb, CanvasText 15%, transparent);
     `;
 
     const getShiftStyle = (width, selector = '') => {
@@ -341,7 +358,7 @@
     if (allUserSelectors) {
         GM_addStyle(`
             ${allUserSelectors} {
-                scroll-margin-top: 100px !important;
+                scroll-margin-top: 50px !important;
             }
         `);
     }
@@ -368,12 +385,14 @@
         if (!container) {
             container = document.createElement('div');
             container.id = 'message-nav';
-            const topValue = '55px';
+            const topValue = '0';
             container.style.cssText = `top: ${topValue}; ${BASE_CONTAINER_CSS}`;
             const header = document.createElement('div');
             Object.assign(header.style, {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', fontWeight: 'bold'
+                cursor: 'pointer', fontWeight: 'bold',
+                position: 'sticky', top: '0', zIndex: '10', padding: '10px 0', backgroundColor: 'Canvas',
+                borderBottom : '1px solid color-mix(in srgb, CanvasText 15%, transparent)'
             });
 
             const toggleBtn = document.createElement('button');
@@ -399,10 +418,18 @@
                     content.style.display = 'block';
                     container.style.width = `${currentWidth}px`;
                     toggleBtn.textContent = 'Close';
+                    header.style.backgroundColor = 'Canvas';
+                    header.style.borderBottom = '1px solid color-mix(in srgb, CanvasText 15%, transparent)';
+                    container.style.borderLeft = '1px solid color-mix(in srgb, CanvasText 15%, transparent)';
+                    container.style.top = '0px'
                 } else {
                     content.style.display = 'none';
+                    container.style.borderLeft = 'none';
                     container.style.width = `${NAV_COLLAPSED_WIDTH}px`;
                     toggleBtn.textContent = 'Open';
+                    header.style.backgroundColor = 'transparent';
+                    header.style.borderBottom = 'none';
+                    container.style.top = '55px'
                 }
                 updateBodyClassForLayout();
             };
@@ -418,7 +445,7 @@
             return CURRENT_SITE.customFinder();
         }
 
-        const prompts = [];
+        let prompts = [];
         if (!CURRENT_SITE.userMessage) return prompts;
 
         const elements = document.querySelectorAll(CURRENT_SITE.userMessage);
@@ -426,6 +453,10 @@
             const text = element.textContent.trim();
             if (text) prompts.push({ element, text });
         });
+
+        if (CURRENT_SITE.reverse) {
+            prompts.reverse();
+        }
 
         return prompts;
     }
@@ -437,8 +468,12 @@
         }
 
         if (!CURRENT_SITE.userMessage) return null;
+        const elements = Array.from(document.querySelectorAll(CURRENT_SITE.userMessage));
 
-        const elements = document.querySelectorAll(CURRENT_SITE.userMessage);
+        if (CURRENT_SITE.reverse) {
+            elements.reverse();
+        }
+
         return elements[targetIndex] || null;
     }
 

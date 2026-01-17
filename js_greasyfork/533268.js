@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         8chanSS
-// @version      1.58.7
+// @version      1.59.0
 // @namespace    8chanss
 // @description  A userscript to add functionality to 8chan.
 // @author       otakudude
@@ -19,7 +19,14 @@
 // @grant        GM.listValues
 // @grant        GM.xmlHttpRequest
 // @connect      youtube.com
-// @connect      i.ytimg.com
+// @connect      twitch.tv
+// @connect      static-cdn.jtvnw.net
+// @connect      clips-media-assets2.twitch.tv
+// @connect      api.fxtwitter.com
+// @connect      embed.bsky.app
+// @connect      bsky.app
+// @connect      cdn.bsky.app
+// @connect      *.twimg.com
 // @run-at       document-start
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAZlBMVEUAAABdlloAhl758AH58AH58AcAhl758ADj4CYAh14AhV4AhV0Ahl748AcChl4Chl0Ab2H58AIAhl758AD58AAAhl757wL48AD47wL78QL47wcAh1748AF3oFfs5yEAh1/68QDz7BM5qSu8AAAAH3RSTlMA/lg/OYtM8g/onXtoXzAaCdzBsIFzczMeaCXXyrmp9ddA3QAAANpJREFUSMft0tkOgjAQheFjtVCQVVxwnfr+L+kWM5FOC73TxP/6fBedFJwpyx5CtSpqSHXWpns4qYxo1cDtkNp7GoOW9KgSwM4+09KeEhmw4H0IuGJDAbCw79a8nwJYFDQCuO1gT8oLWCiKAXavKA5cZ78I5n/wBx7wfb+1TwOggpD2gxxSpvWBrIbY3AcUPK1lkMNbJ4FV4wd964KsQqBF6oAEwcoh2GAk/QlyjNYx4AeHMicGxxoTOrRvIB5IPtULJJhY+QIFJrd9gCUi0tdZjqgu5yYOGAO5G/kyc3TkciPeAAAAAElFTkSuQmCC
 // @downloadURL https://update.greasyfork.org/scripts/533268/8chanSS.user.js
@@ -116,7 +123,7 @@ onReady(async function () {
     const HIDDEN_POSTS_KEY = '8chanSS_hiddenPosts';
     const FILTERED_NAMES_KEY = '8chanSS_filteredNames';
     const FILTERED_IDS_KEY = '8chanSS_filteredIDs';
-    const VERSION = "1.58.7";
+    const VERSION = "1.59.0";
     const scriptSettings = {
         site: {
             _siteTWTitle: { type: "title", label: ":: Thread Watcher" },
@@ -167,7 +174,7 @@ onReady(async function () {
             enableScrollArrows: { label: "Show Up/Down Arrows", default: false },
             _siteMediaTitle: { type: "title", label: ":: Media" },
             _siteSection3: { type: "separator" },
-            enableFitImage: { label: "Fit Expanded Images and Videos", default: true },
+            enableFitImage: { label: "Fit expanded Images and Videos", default: true },
             blurSpoilers: {
                 label: "Blur Spoilers",
                 default: false,
@@ -310,7 +317,7 @@ onReady(async function () {
             },
             _stylingSiteTitle: { type: "title", label: ":: Site Styling" },
             _stylingSection2: { type: "separator" },
-            hideAnnouncement: { label: "Hide Announcement", default: false },
+            hideAnnouncement: { label: "Hide Announcement (unhides if new announcement posted)", default: false },
             hidePanelMessage: { label: "Hide Panel Message", default: false },
             hidePostingForm: {
                 label: "Hide Posting Form",
@@ -325,6 +332,7 @@ onReady(async function () {
             hideBanner: { label: "Hide Board Banners", default: false },
             hideNoCookieLink: { label: "Hide No Cookie? Link", default: false },
             hideJannyTools: { label: "Hide Janitor Forms", default: false },
+            hlCurrentBoard: { label: "Highlight Current Board", default: false },
             _stylingThreadTitle: { type: "title", label: ":: Thread Styling" },
             _stylingSection3: { type: "separator" },
             enableSidebar: {
@@ -348,16 +356,6 @@ onReady(async function () {
         miscel: {
             enableShortcuts: { label: "Enable Keyboard Shortcuts", type: "checkbox", default: true },
             enableUpdateNotif: { label: "8chanSS update notifications", default: true },
-            enhanceYoutube: {
-                label: "Enhanced Youtube Links",
-                default: true,
-                subOptions: {
-                    ytThumbs: {
-                        label: "Show Thumbnails on Hover",
-                        default: true,
-                    }
-                }
-            },
             switchTimeFormat: { label: "Enable 12-hour Clock (AM/PM)", default: false },
             truncFilenames: {
                 label: "Truncate filenames",
@@ -370,6 +368,36 @@ onReady(async function () {
                         min: 5,
                         max: 50
                     }
+                }
+            },
+            _miscelThreadTitle: { type: "title", label: ":: Linkification" },
+            _miscelSection1: { type: "separator" },
+            enhanceLinks_showIcons: {
+                label: "Show Icons and Titles",
+                default: true,
+                subOptions: {
+                    showIconsYoutube: { label: "Youtube", default: true },
+                    showIconsTwitch: { label: "Twitch", default: true },
+                    showIconsX: { label: "X.com", default: true },
+                    showIconsBsky: { label: "Bluesky", default: true },
+                    showIconsRentry: { label: "Rentry", default: true },
+                    showIconsCatbox: { label: "Catbox", default: true }
+                }
+            },
+            enhanceLinks_showThumbnails: {
+                label: "Show Thumbnails on Hover",
+                default: true,
+                subOptions: {
+                    showThumbnailsYoutube: { label: "Youtube", default: true },
+                    showThumbnailsTwitch: { label: "Twitch", default: true }
+                }
+            },
+            enhanceLinks_enableEmbeds: {
+                label: "Enable Embedding",
+                default: false,
+                subOptions: {
+                    enableEmbedsX: { label: "X.com", default: true },
+                    enableEmbedsBsky: { label: "Bluesky", default: true }
                 }
             },
             enableTheSauce: {
@@ -414,17 +442,19 @@ onReady(async function () {
     Object.freeze(scriptSettings); 
     function flattenSettings() {
         const result = {};
-        Object.keys(scriptSettings).forEach((category) => {
-            Object.keys(scriptSettings[category]).forEach((key) => {
+        function flattenRecursive(obj, prefix = '') {
+            Object.keys(obj).forEach((key) => {
                 if (key.startsWith('_')) return;
-                result[key] = scriptSettings[category][key];
-                const subOptions = scriptSettings[category][key].subOptions;
-                if (!subOptions || typeof subOptions !== "object") return;
-                Object.keys(subOptions).forEach((subKey) => {
-                    const fullKey = `${key}_${subKey}`;
-                    result[fullKey] = subOptions[subKey];
-                });
+                const fullKey = prefix ? `${prefix}_${key}` : key;
+                result[fullKey] = obj[key];
+                const subOptions = obj[key].subOptions;
+                if (subOptions && typeof subOptions === "object") {
+                    flattenRecursive(subOptions, fullKey);
+                }
             });
+        }
+        Object.keys(scriptSettings).forEach((category) => {
+            flattenRecursive(scriptSettings[category]);
         });
         return Object.freeze(result);
     }
@@ -494,6 +524,7 @@ onReady(async function () {
             hidePostingForm_showCatalogForm: "show-catalog-form",
             hidePanelMessage: "hide-panelmessage",
             highlightOnYou: "highlight-yous",
+            hlCurrentBoard: "hl-currentBoard",
             threadHideCloseBtn: "hide-close-btn",
             hideCheckboxes: "hide-checkboxes",
             hideNoCookieLink: "hide-nocookie",
@@ -559,7 +590,7 @@ onReady(async function () {
 
         let css = "";
         if (window.pageType?.is8chan) {
-            css += "#dynamicAnnouncement,#panelMessage,#postingForm{visibility:visible}#navFadeEnd,#navFadeMid,.watchedNotification::before,:root.disable-banner #bannerImage,:root.hide-announcement #dynamicAnnouncement,:root.hide-checkboxes .deletionCheckBox,:root.hide-close-btn .inlineQuote>.innerPost>.postInfo.title>a:first-child,:root.hide-jannytools #actionsForm,:root.hide-jannytools #boardContentLinks,:root.hide-nocookie #captchaBody>table:nth-child(2)>tbody:first-child>tr:nth-child(2),:root.hide-panelmessage #panelMessage,:root.hide-posting-form #postingForm{display:none}#sideCatalogDiv{z-index:200;background:var(--background-gradient)}:root.is-catalog.show-catalog-form #postingForm{display:block!important}:root.is-thread footer{visibility:hidden;height:0}:root.op-background .opCell>.innerOP{padding-top:.25em;width:100%;background:var(--contrast-color);border:1px solid var(--horizon-sep-color);border-top-width:0;border-left-width:0}nav.navHeader{z-index:300}:not(:root.bottom-header) .navHeader{box-shadow:0 1px 2px rgba(0,0,0,.15)}:root.bottom-header nav.navHeader{top:auto!important;bottom:0!important;box-shadow:0 -1px 2px rgba(0,0,0,.15)}:root.highlight-yous .innerOP:has(> .opHead.title > .youName),:root.highlight-yous .innerPost:has(> .postInfo.title > .youName),:root.highlight-yous .yourPost{border-left:dashed #68b723 2px!important}:root.highlight-yous .innerPost:has(>.divMessage>.you),:root.highlight-yous .innerPost:has(>.divMessage>:not(div)>.you),:root.highlight-yous .innerPost:has(>.divMessage>:not(div)>:not(div)>.you),:root.highlight-yous .quotesYou{border-left:solid var(--subject-color) 2px!important}:root.fit-replies :not(.hidden).innerPost{margin-left:10px;display:flow-root}:root.fit-replies :not(.hidden,.inlineQuote).innerPost{margin-left:0}.multipleUploads .uploadCell:not(.expandedCell){max-width:215px}:root.ss-blur-spoilers .quoteTooltip img[src*=\"audioGenericThumb\.png\"],:root.ss-blur-spoilers .quoteTooltip img[src*=\"custom\.spoiler\"],:root.ss-blur-spoilers .quoteTooltip img[src*=\"spoiler\.png\"]{filter:blur(5px)!important;transition:filter .3s ease}:root.fit-images :not(#media-viewer)>.imgExpanded,:root.fit-images :not(#media-viewer)>video{max-height:90vh!important;object-fit:contain;width:auto!important}:not(:root.auto-expand-tw) #watchedMenu .floatingContainer{overflow-x:hidden;overflow-wrap:break-word}:root.auto-expand-tw #watchedMenu .floatingContainer{height:fit-content!important;padding-bottom:10px;resize:horizontal}.watchedCellLabel a::before{content:attr(data-board);color:#aaa;margin-right:4px;font-weight:700}.watchButton.watched-active::before{color:#dd003e!important}#media-viewer,#multiboardMenu,#settingsMenu,#watchedMenu{font-size:smaller;padding:5px!important;box-shadow:-3px 3px 2px 0 rgba(0,0,0,.19)}#watchedMenu,#watchedMenu .floatingContainer{max-width:100vw}.watchedNotification::before{padding-right:2px}#watchedMenu .floatingContainer{scrollbar-width:thin;scrollbar-color:var(--link-color) var(--contrast-color)}.ss-active{font-weight:700}.markAllRead::before{content:\"\\e065\"}.scroll-arrow-btn{position:fixed;right:50px;width:36px;height:35px;background:#222;color:#fff;border:none;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.18);font-size:22px;cursor:pointer;opacity:.7;z-index:800;display:flex;align-items:center;justify-content:center;transition:opacity .2s,background .2s}:root:not(.is-index,.is-catalog).ss-sidebar .scroll-arrow-btn{right:330px!important}.scroll-arrow-btn:hover{opacity:1;background:#444}#scroll-arrow-up{bottom:80px}#scroll-arrow-down{bottom:32px}.bumpLockIndicator::after{padding-right:3px}.floatingMenu.focused{z-index:305!important}#quick-reply{padding:0}#media-viewer{padding:20px 0 0!important}#media-viewer.topright{top:26px!important;right:0!important;left:auto!important;max-height:97%!important;max-width:max-content!important}#media-viewer.topleft{top:26px!important;left:0!important;right:auto!important;max-height:97%!important;max-width:max-content!important}#media-viewer.topright::after{pointer-events:none}#media-viewer.topleft::after{pointer-events:none}.ss-chevron{transition:transform .2s;margin-left:6px;font-size:12px;display:inline-block}a.imgLink[data-filemime^='audio/'],a.originalNameLink[href$='.m4a'],a.originalNameLink[href$='.mp3'],a.originalNameLink[href$='.ogg'],a.originalNameLink[href$='.wav']{position:relative}.audio-preview-indicator{display:none;position:absolute;background:rgba(0,0,0,.7);color:#fff;padding:5px;font-size:12px;border-radius:3px;z-index:1000;left:0;top:0;white-space:nowrap;pointer-events:none}a.originalNameLink:hover .audio-preview-indicator,a[data-filemime^='audio/']:hover .audio-preview-indicator{display:block}.yt-icon{width:16px;height:13px;vertical-align:middle;margin-right:2px}.id-glow{box-shadow:0 0 12px var(--subject-color)}.id-dotted{border:2px dotted #fff}.apng-canvas-snapshot{display:block;position:absolute;z-index:1}.apng-overlay{position:absolute;z-index:2;cursor:pointer;user-select:none}.chSS-mascot{position:fixed;height:auto;object-fit:contain;pointer-events:none;z-index:-1;user-select:none;-webkit-user-drag:none}#setting_enableMascots_mascotUrls{resize:vertical;min-height:80px}:root.backlink-icon .panelBacklinks>a{display:inline-block;width:12px;height:12px;margin:0 2px;text-decoration:none;font-size:0;vertical-align:middle;color:var(--link-color)}:root.backlink-icon .panelBacklinks>a::before{content:'▶';font-size:12px;display:inline-block;line-height:.6;color:var(--link-color);transform:rotate(0);transition:transform .1s ease-in-out,opacity .1s ease-in-out;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI Symbol',Roboto,Ubuntu,Cantarell,sans-serif}:root.backlink-icon .panelBacklinks>a.inlined::before{transform:rotate(90deg);opacity:.7;color:var(--link-hover-color);line-height:.9}";
+            css += "#dynamicAnnouncement,#panelMessage,#postingForm{visibility:visible}#navFadeEnd,#navFadeMid,.watchedNotification::before,:root.disable-banner #bannerImage,:root.hide-announcement #dynamicAnnouncement,:root.hide-checkboxes .deletionCheckBox,:root.hide-close-btn .inlineQuote>.innerPost>.postInfo.title>a:first-child,:root.hide-jannytools #actionsForm,:root.hide-jannytools #boardContentLinks,:root.hide-nocookie #captchaBody>table:nth-child(2)>tbody:first-child>tr:nth-child(2),:root.hide-panelmessage #panelMessage,:root.hide-posting-form #postingForm{display:none}#sideCatalogDiv{z-index:200;background:var(--background-gradient)}:root.is-catalog.show-catalog-form #postingForm{display:block!important}:root.is-thread footer{visibility:hidden;height:0}:root.op-background .opCell>.innerOP{padding-top:.25em;width:100%;background:var(--contrast-color);border:1px solid var(--horizon-sep-color);border-top-width:0;border-left-width:0}nav.navHeader{z-index:300}:not(:root.bottom-header) .navHeader{box-shadow:0 1px 2px rgba(0,0,0,.15)}:root.bottom-header nav.navHeader{top:auto!important;bottom:0!important;box-shadow:0 -1px 2px rgba(0,0,0,.15)}:root.hl-currentBoard .navBoardsLink--current{font-weight:800;color:var(--link-color)!important;text-transform:uppercase}:root.hl-currentBoard .navBoardsLink--current:hover{color:var(--link-color-hover)!important}:root.highlight-yous .innerOP:has(> .opHead.title > .youName),:root.highlight-yous .innerPost:has(> .postInfo.title > .youName),:root.highlight-yous .yourPost{border-left:dashed #68b723 2px!important}:root.highlight-yous .innerPost:has(>.divMessage>.you),:root.highlight-yous .innerPost:has(>.divMessage>:not(div)>.you),:root.highlight-yous .innerPost:has(>.divMessage>:not(div)>:not(div)>.you),:root.highlight-yous .quotesYou{border-left:solid var(--subject-color) 2px!important}:root.fit-replies :not(.hidden).innerPost{margin-left:10px;display:flow-root}:root.fit-replies :not(.hidden,.inlineQuote).innerPost{margin-left:0}.multipleUploads .uploadCell:not(.expandedCell){max-width:215px}:root.ss-blur-spoilers .quoteTooltip img[src*=\"audioGenericThumb\.png\"],:root.ss-blur-spoilers .quoteTooltip img[src*=\"custom\.spoiler\"],:root.ss-blur-spoilers .quoteTooltip img[src*=\"spoiler\.png\"]{filter:blur(5px)!important;transition:filter .3s ease}:root.fit-images :not(#media-viewer)>.imgExpanded,:root.fit-images :not(#media-viewer)>video{max-height:90vh!important;object-fit:contain;width:auto!important}:not(:root.auto-expand-tw) #watchedMenu .floatingContainer{overflow-x:hidden;overflow-wrap:break-word}:root.auto-expand-tw #watchedMenu .floatingContainer{height:fit-content!important;padding-bottom:10px;resize:horizontal}.watchedCellLabel a::before{content:attr(data-board);color:#aaa;margin-right:4px;font-weight:700}.watchButton.watched-active::before{color:#dd003e!important}#media-viewer,#multiboardMenu,#settingsMenu,#watchedMenu{font-size:smaller;padding:5px!important;box-shadow:-3px 3px 2px 0 rgba(0,0,0,.19)}#watchedMenu,#watchedMenu .floatingContainer{max-width:100vw}.watchedNotification::before{padding-right:2px}#watchedMenu .floatingContainer{scrollbar-width:thin;scrollbar-color:var(--link-color) var(--contrast-color)}.ss-active{font-weight:700}.markAllRead::before{content:\"\\e065\"}.scroll-arrow-btn{position:fixed;right:50px;width:36px;height:35px;background:#222;color:#fff;border:none;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.18);font-size:22px;cursor:pointer;opacity:.7;z-index:800;display:flex;align-items:center;justify-content:center;transition:opacity .2s,background .2s}:root:not(.is-index,.is-catalog).ss-sidebar .scroll-arrow-btn{right:330px!important}.scroll-arrow-btn:hover{opacity:1;background:#444}#scroll-arrow-up{bottom:80px}#scroll-arrow-down{bottom:32px}.bumpLockIndicator::after{padding-right:3px}.floatingMenu.focused{z-index:305!important}#quick-reply{padding:0}#media-viewer{padding:20px 0 0!important}#media-viewer.topright{top:26px!important;right:0!important;left:auto!important;max-height:97%!important;max-width:max-content!important}#media-viewer.topleft{top:26px!important;left:0!important;right:auto!important;max-height:97%!important;max-width:max-content!important}#media-viewer.topright::after{pointer-events:none}#media-viewer.topleft::after{pointer-events:none}.ss-chevron{transition:transform .2s;margin-left:6px;font-size:12px;display:inline-block}a.imgLink[data-filemime^='audio/'],a.originalNameLink[href$='.m4a'],a.originalNameLink[href$='.mp3'],a.originalNameLink[href$='.ogg'],a.originalNameLink[href$='.wav']{position:relative}.audio-preview-indicator{display:none;position:absolute;background:rgba(0,0,0,.7);color:#fff;padding:5px;font-size:12px;border-radius:3px;z-index:1000;left:0;top:0;white-space:nowrap;pointer-events:none}a.originalNameLink:hover .audio-preview-indicator,a[data-filemime^='audio/']:hover .audio-preview-indicator{display:block}.yt-icon{width:16px;height:13px;vertical-align:middle;margin-right:2px}.id-glow{box-shadow:0 0 12px var(--subject-color)}.id-dotted{border:2px dotted #fff}.apng-canvas-snapshot{display:block;position:absolute;z-index:1}.apng-overlay{position:absolute;z-index:2;cursor:pointer;user-select:none}.chSS-mascot{position:fixed;height:auto;object-fit:contain;pointer-events:none;z-index:-1;user-select:none;-webkit-user-drag:none}#setting_enableMascots_mascotUrls{resize:vertical;min-height:80px}:root.backlink-icon .panelBacklinks>a{display:inline-block;width:12px;height:12px;margin:0 2px;text-decoration:none;font-size:0;vertical-align:middle;color:var(--link-color)}:root.backlink-icon .panelBacklinks>a::before{content:'▶';font-size:12px;display:inline-block;line-height:.6;color:var(--link-color);transform:rotate(0);transition:transform .1s ease-in-out,opacity .1s ease-in-out;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI Symbol',Roboto,Ubuntu,Cantarell,sans-serif}:root.backlink-icon .panelBacklinks>a.inlined::before{transform:rotate(90deg);opacity:.7;color:var(--link-hover-color);line-height:.9}";
         }
         if (window.pageType?.isThread) {
             css += ":root.sticky-qr #quick-reply{display:block;top:auto!important;bottom:0}:root.sticky-qr.ss-sidebar #quick-reply{left:auto!important;right:0!important}:root.sticky-qr.ss-leftsidebar #quick-reply{left:0!important;right:auto!important}:root.sticky-qr #qrbody{resize:vertical;max-height:50vh;height:130px}#selectedDivQr,:root.sticky-qr #selectedDiv{display:inline-flex;overflow:scroll hidden;max-width:300px}#qrbody{min-width:300px}:root.bottom-header #quick-reply{bottom:28px!important}:root.fade-qr #quick-reply{padding:0;opacity:.7;transition:opacity .3s ease}:root.fade-qr #quick-reply:focus-within,:root.fade-qr #quick-reply:hover{opacity:1}#qrFilesBody{max-width:310px}#quick-reply{box-shadow:-3px 3px 2px 0 rgba(0,0,0,.19)}#unread-line{height:2px;border:none!important;pointer-events:none!important;background-image:linear-gradient(to left,rgba(185,185,185,.2),var(--text-color),rgba(185,185,185,.2));margin:-3px auto -3px auto;width:60%}:root.ss-sidebar #bannerImage{width:19rem;right:0;position:fixed;top:26px}:root.ss-sidebar.bottom-header #bannerImage{top:0!important}:root.ss-leftsidebar #bannerImage{width:19rem;left:0;position:fixed;top:26px}:root.ss-leftsidebar.bottom-header #bannerImage{top:0!important}.quoteTooltip{z-index:999}.nestedQuoteLink{text-decoration:underline dashed!important}:root.hide-stub .unhideButton{display:none}.quoteTooltip .innerPost{overflow:hidden}.inlineQuote .innerPost,.quoteTooltip .innerPost{box-shadow:-1px 1px 2px 0 rgba(0,0,0,.19)}.inlineQuote{margin-top:4px}.postInfo.title>.inlineQuote{margin-left:15px}.postCell.is-hidden-by-filter{display:none}.reply-inlined{opacity:.5;text-decoration:underline dashed!important;text-underline-offset:2px}.quote-inlined{opacity:.5;text-decoration:underline dashed!important;text-underline-offset:2px}.target-highlight{background:var(--marked-color);border-color:var(--marked-border-color);color:var(--marked-text-color)}.statLabel{color:var(--link-color)}.statNumb{color:var(--text-color)}.postCell::before{display:inline!important;height:auto!important}.threadedReplies{border-left:1px solid #ccc;padding-left:15px}.ss-idlinks-floating{position:absolute;background:var(--background-color);color:var(--text-color);border:1px solid var(--navbar-text-color);padding:8px 15px 10px 10px;box-shadow:0 2px 12px rgba(0,0,0,.25);max-height:60vh;overflow-y:auto;font-size:14px;max-width:56vw;z-index:990;scrollbar-width:thin}.ss-idlinks-floating .innerPost,.ss-vertical-id-list .innerPost{background:0 0;display:block!important;border:none;box-shadow:none;outline:0;padding:0;margin:0}.ss-idlinks-floating .innerPost{padding:0 1px 2px 0!important}";
@@ -681,7 +712,6 @@ onReady(async function () {
         { key: "enableThreadHiding", fn: featureCatalogHiding },
         { key: "switchTimeFormat", fn: featureLabelCreated12h },
         { key: "enableIdFilters", fn: featureIdFiltering },
-        { key: "enhanceYoutube", fn: enhanceYouTubeLinks },
         { key: "threadStatsInHeader", fn: threadInfoHeader },
         { key: "enableHashNav", fn: hashNavigation },
         { key: "hideAnnouncement", fn: featureHideAnnouncement },
@@ -2449,54 +2479,87 @@ onReady(async function () {
             }
         });
     })();
-    async function enhanceYouTubeLinks() {
+    (async function enhanceLinks() {
         if (!(window.pageType?.isThread || window.pageType?.isIndex)) {
             return;
         }
-        const ytThumbsEnabled = await getSetting("enhanceYoutube_ytThumbs");
-        const ytTitleCache = {};
+        const enableShowIcons = await getSetting("enhanceLinks_showIcons");
+        const enableShowThumbnails = await getSetting("enhanceLinks_showThumbnails");
+        const enableEmbeds = await getSetting("enhanceLinks_enableEmbeds");
+        const showIconsYoutube = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsYoutube");
+        const showIconsTwitch = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsTwitch");
+        const showIconsX = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsX");
+        const showIconsBsky = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsBsky");
+        const showIconsRentry = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsRentry");
+        const showIconsCatbox = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsCatbox");
+        
+        const showThumbnailsYoutube = enableShowThumbnails && await getSetting("enhanceLinks_showThumbnails_showThumbnailsYoutube");
+        const showThumbnailsTwitch = enableShowThumbnails && await getSetting("enhanceLinks_showThumbnails_showThumbnailsTwitch");
+        
+        const enableEmbedsX = enableEmbeds && await getSetting("enhanceLinks_enableEmbeds_enableEmbedsX");
+        const enableEmbedsBsky = enableEmbeds && await getSetting("enhanceLinks_enableEmbeds_enableEmbedsBsky");
+        if (!showIconsYoutube && !showIconsTwitch && !showIconsX && !showIconsBsky && !showIconsRentry && !showIconsCatbox &&
+            !showThumbnailsYoutube && !showThumbnailsTwitch &&
+            !enableEmbedsX && !enableEmbedsBsky) {
+            return;
+        }
         const MAX_CACHE_SIZE = 350;
         const ORDER_KEY = "_order";
         const TRACKING_PARAMS = [
             "si", "feature", "ref", "fsi", "source",
             "utm_source", "utm_medium", "utm_campaign", "gclid", "gclsrc", "fbclid"
         ];
-        const ytThumbCache = {};
-        function loadCache() {
+        const YT_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="18" height="16" style="vertical-align:middle;margin-right:2px;"><path fill="#FF0000" d="M549.7 124.1c-6.3-23.7-24.9-42.4-48.6-48.6C456.5 64 288 64 288 64s-168.5 0-213.1 11.5c-23.7 6.3-42.4 24.9-48.6 48.6C16 168.5 16 256 16 256s0 87.5 10.3 131.9c6.3 23.7 24.9 42.4 48.6 48.6C119.5 448 288 448 288 448s168.5 0 213.1-11.5c23.7-6.3 42.4-24.9 48.6-48.6 10.3-44.4 10.3-131.9 10.3-131.9s0-87.5-10.3-131.9zM232 334.1V177.9L361 256 232 334.1z"/></svg>`;
+        const TWITCH_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="16" style="vertical-align:middle;margin-right:2px;"><path fill="#9146FF" d="M391.17,103.47H352.54v109.7h38.63ZM285,103H246.37V212.75H285ZM120.83,0,24.31,91.42V420.58H140.14V512l96.53-91.42h77.25L487.69,256V0ZM449.07,237.75l-77.22,73.12H294.61l-67.6,64v-64H140.14V36.58H449.07Z"/></svg>`;
+        function loadCache(cacheKey) {
             try {
-                const data = localStorage.getItem('ytTitleCache');
+                const data = localStorage.getItem(cacheKey);
                 if (data) {
                     const parsed = JSON.parse(data);
-                    Object.assign(ytTitleCache, parsed);
-                    if (!Array.isArray(ytTitleCache[ORDER_KEY])) {
-                        ytTitleCache[ORDER_KEY] = [];
+                    if (!Array.isArray(parsed[ORDER_KEY])) {
+                        parsed[ORDER_KEY] = [];
                     }
-                } else {
-                    ytTitleCache[ORDER_KEY] = [];
+                    return parsed;
                 }
-            } catch (e) {
-                ytTitleCache[ORDER_KEY] = [];
-            }
+            } catch (e) { }
+            return { [ORDER_KEY]: [] };
         }
-        function saveCache() {
+        function saveCache(cacheKey, cache) {
             try {
-                localStorage.setItem('ytTitleCache', JSON.stringify(ytTitleCache));
+                localStorage.setItem(cacheKey, JSON.stringify(cache));
             } catch (e) { }
         }
-        loadCache();
-        function getYouTubeId(url) {
+        const ytTitleCache = loadCache('ytTitleCache');
+
+        function getYouTubeInfo(url) {
             try {
                 const u = new URL(url);
                 if (u.hostname === 'youtu.be') {
-                    return u.pathname.slice(1);
+                    const id = u.pathname.slice(1);
+                    return { type: 'video', id: id };
                 }
                 if (u.hostname.endsWith('youtube.com')) {
                     if (u.pathname === '/watch') {
-                        return u.searchParams.get('v');
+                        const videoId = u.searchParams.get('v');
+                        if (videoId) {
+                            return { type: 'video', id: videoId };
+                        }
                     }
                     const liveMatch = u.pathname.match(/^\/(live|embed|shorts)\/([a-zA-Z0-9_-]{11})/);
                     if (liveMatch) {
-                        return liveMatch[2];
+                        return { type: 'video', id: liveMatch[2] };
+                    }
+                    const postMatch = u.pathname.match(/^(?:\/@([a-zA-Z0-9_-]+))?\/post\/([a-zA-Z0-9_-]+)/);
+                    if (postMatch) {
+                        return { 
+                            type: 'post', 
+                            id: postMatch[2],
+                            channel: postMatch[1] || null
+                        };
+                    }
+                    const channelMatch = u.pathname.match(/^\/(?:@|c\/|channel\/|user\/)([a-zA-Z0-9_-]+)/);
+                    if (channelMatch) {
+                        return { type: 'channel', id: channelMatch[1] };
                     }
                 }
             } catch (e) { }
@@ -2550,7 +2613,7 @@ onReady(async function () {
                     ytTitleCache[ORDER_KEY].splice(idx, 1);
                 }
                 ytTitleCache[ORDER_KEY].push(cleanId);
-                saveCache();
+                saveCache('ytTitleCache', ytTitleCache);
                 return ytTitleCache[cleanId];
             }
             try {
@@ -2562,8 +2625,7 @@ onReady(async function () {
                         onload: (response) => {
                             if (response.status === 200) {
                                 try {
-                                    const jsonData = JSON.parse(response.responseText);
-                                    resolve(jsonData);
+                                    resolve(JSON.parse(response.responseText));
                                 } catch (e) {
                                     reject(e);
                                 }
@@ -2583,52 +2645,51 @@ onReady(async function () {
                         const oldest = ytTitleCache[ORDER_KEY].shift();
                         delete ytTitleCache[oldest];
                     }
-                    saveCache();
+                    saveCache('ytTitleCache', ytTitleCache);
                 }
                 return title;
             } catch {
                 return null;
             }
         }
+        function getYouTubeThumbnailUrl(videoId) {
+            return `https://i.ytimg.com/vi_webp/${videoId}/hqdefault.webp`;
+        }
+
         async function fetchAsDataURL(url) {
             return new Promise((resolve) => {
-                GM.xmlHttpRequest({
-                    method: "GET",
-                    url: url,
-                    responseType: "blob",
-                    timeout: 8000,
-                    onload: (response) => {
-                        if (response.status === 200 && response.response) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => resolve(reader.result);
-                            reader.onerror = () => resolve(null);
-                            reader.readAsDataURL(response.response);
-                        } else {
-                            resolve(null);
-                        }
-                    },
-                    onerror: () => resolve(null),
-                    ontimeout: () => resolve(null)
-                });
+                try {
+                    GM.xmlHttpRequest({
+                        method: "GET",
+                        url: url,
+                        responseType: "blob",
+                        timeout: 10000,
+                        onload: (response) => {
+                            if (response.status === 200 && response.response) {
+                                try {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => resolve(reader.result);
+                                    reader.onerror = () => resolve(null);
+                                    reader.readAsDataURL(response.response);
+                                } catch (e) {
+                                    resolve(null);
+                                }
+                            } else {
+                                resolve(null);
+                            }
+                        },
+                        onerror: () => resolve(null),
+                        ontimeout: () => resolve(null)
+                    });
+                } catch (e) {
+                    resolve(null);
+                }
             });
         }
-        async function fetchYouTubeThumbnailAsDataURL(videoId) {
-            if (ytThumbCache.hasOwnProperty(videoId)) {
-                return ytThumbCache[videoId];
-            }
-            const webpUrl = `https://i.ytimg.com/vi_webp/${videoId}/hqdefault.webp`;
-            const jpgUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 
-            let dataUrl = await fetchAsDataURL(webpUrl);
-            if (!dataUrl) {
-                dataUrl = await fetchAsDataURL(jpgUrl);
-            }
-            ytThumbCache[videoId] = dataUrl;
-            return dataUrl;
-        }
-        function addThumbnailHover(link, videoId) {
-            if (link.dataset.ytThumbHover) return;
-            link.dataset.ytThumbHover = "1";
+        function addThumbnailHover(link, thumbnailUrl, altText = "Thumbnail") {
+            if (link.dataset.thumbHover) return;
+            link.dataset.thumbHover = "1";
             let thumbDiv = null;
             let lastImg = null;
             let lastHoverToken = 0;
@@ -2654,13 +2715,13 @@ onReady(async function () {
                     img.style.maxWidth = '280px';
                     img.style.maxHeight = '200px';
                     img.style.borderRadius = '3px';
-                    img.alt = "YouTube thumbnail";
+                    img.alt = altText;
                     img.src = "data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQv///wAAACH5BAEAAAMALAAAAAAQABAAAAIgjI+py+0Po5yUFQA7"; 
 
                     lastImg = img;
                     const hoverToken = ++lastHoverToken;
 
-                    fetchYouTubeThumbnailAsDataURL(videoId).then(dataUrl => {
+                    fetchAsDataURL(thumbnailUrl).then(dataUrl => {
                         if (lastImg === img && hoverToken === lastHoverToken) {
                             if (dataUrl) {
                                 img.src = dataUrl;
@@ -2705,42 +2766,778 @@ onReady(async function () {
             link.addEventListener('mousemove', moveThumb);
             link.addEventListener('mouseleave', hideThumb);
         }
+        function processYouTubeLink(link) {
+            if (link.dataset.enhanced) return;
+            const ytInfo = getYouTubeInfo(link.href);
+            if (!ytInfo) return;
+            link.dataset.enhanced = "1";
 
-        function processLinks(root = document) {
-            root.querySelectorAll('a[href*="youtu"]').forEach(link => {
-                if (link.dataset.ytEnhanced) return;
-                const videoId = getYouTubeId(link.href);
-                const cleanId = sanitizeYouTubeId(videoId);
-                if (!cleanId) return;
-                link.dataset.ytEnhanced = "1";
-                const cleanUrl = stripTrackingParams(link.href);
-                if (cleanUrl !== link.href) {
-                    link.href = cleanUrl;
-                }
-                fetchYouTubeTitle(cleanId).then(title => {
-                    if (title) {
-                        link.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="18" height="16" style="vertical-align:middle;margin-right:2px;"><path fill="#FF0000" d="M549.7 124.1c-6.3-23.7-24.9-42.4-48.6-48.6C456.5 64 288 64 288 64s-168.5 0-213.1 11.5c-23.7 6.3-42.4 24.9-48.6 48.6C16 168.5 16 256 16 256s0 87.5 10.3 131.9c6.3 23.7 24.9 42.4 48.6 48.6C119.5 448 288 448 288 448s168.5 0 213.1-11.5c23.7-6.3 42.4-24.9 48.6-48.6 10.3-44.4 10.3-131.9 10.3-131.9s0-87.5-10.3-131.9zM232 334.1V177.9L361 256 232 334.1z"/></svg><span></span> ${title}`;
+            const cleanUrl = stripTrackingParams(link.href);
+            if (cleanUrl !== link.href) {
+                link.href = cleanUrl;
+            }
+
+            if (showIconsYoutube) {
+                if (ytInfo.type === 'video') {
+                    const cleanId = sanitizeYouTubeId(ytInfo.id);
+                    if (cleanId) {
+                        fetchYouTubeTitle(cleanId).then(title => {
+                            if (title) link.innerHTML = `${YT_ICON} ${title}`;
+                        });
                     }
-                });
-                if (ytThumbsEnabled) {
-                    addThumbnailHover(link, cleanId);
+                } else if (ytInfo.type === 'post') {
+                    link.innerHTML = `${YT_ICON} ${link.textContent.trim()}`;
+                } else if (ytInfo.type === 'channel') {
+                    const channelName = ytInfo.id.startsWith('@') ? ytInfo.id : `@${ytInfo.id}`;
+                    link.innerHTML = `${YT_ICON} ${channelName}`;
                 }
+            }
+
+            if (showThumbnailsYoutube && ytInfo.type === 'video') {
+                const cleanId = sanitizeYouTubeId(ytInfo.id);
+                if (cleanId) {
+                    const thumbUrl = getYouTubeThumbnailUrl(cleanId);
+                    addThumbnailHover(link, thumbUrl, "YouTube thumbnail");
+                }
+            }
+        }
+
+        function extractTitleAndThumbnail(html) {
+            const result = { title: null, thumbnail: null };
+            const jsonLdMatch = html.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i);
+            if (jsonLdMatch) {
+                try {
+                    const jsonLd = JSON.parse(jsonLdMatch[1]);
+                    if (jsonLd.name) result.title = jsonLd.name.trim();
+                } catch (e) {}
+            }
+            if (!result.title) {
+                const ogTitleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i);
+                if (ogTitleMatch && ogTitleMatch[1]) {
+                    const title = ogTitleMatch[1].trim();
+                    if (title !== 'Twitch') result.title = title;
+                }
+            }
+            if (!result.title) {
+                const twitterTitleMatch = html.match(/<meta\s+name=["']twitter:title["']\s+content=["']([^"']+)["']/i);
+                if (twitterTitleMatch && twitterTitleMatch[1]) {
+                    const title = twitterTitleMatch[1].trim();
+                    if (title !== 'Twitch') result.title = title;
+                }
+            }
+            const ogImageMatch = html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i);
+            if (ogImageMatch && ogImageMatch[1]) result.thumbnail = ogImageMatch[1].trim();
+            if (!result.thumbnail) {
+                const twitterImageMatch = html.match(/<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
+                if (twitterImageMatch && twitterImageMatch[1]) result.thumbnail = twitterImageMatch[1].trim();
+            }
+            return result;
+        }
+
+        function getTwitchInfo(url) {
+            try {
+                const u = new URL(url);
+                if (u.hostname.includes('twitch.tv')) {
+                    const videoMatch = u.pathname.match(/^\/videos?\/(\d+)/);
+                    if (videoMatch) {
+                        return { type: 'video', id: videoMatch[1] };
+                    }
+                    const clipMatch = u.pathname.match(/^\/([a-zA-Z0-9_]+)\/clip\/([a-zA-Z0-9_-]+)/);
+                    if (clipMatch) {
+                        return { type: 'clip', id: clipMatch[2], username: clipMatch[1] };
+                    }
+                    const channelMatch = u.pathname.match(/^\/([a-zA-Z0-9_]+)\/?$/);
+                    if (channelMatch) {
+                        return { type: 'channel', id: channelMatch[1] };
+                    }
+                }
+            } catch (e) { }
+            return null;
+        }
+
+
+        function getTwitchThumbnailUrl(twitchInfo) {
+            if (!twitchInfo) return null;
+            if (twitchInfo.type === 'clip') {
+                const clipParts = twitchInfo.id.split('-');
+                const slug = clipParts.length > 1 ? clipParts.slice(0, -1).join('-') : twitchInfo.id;
+                return `https://clips-media-assets2.twitch.tv/${slug}-preview-480x272.jpg`;
+            } else if (twitchInfo.type === 'channel') {
+                return `https://static-cdn.jtvnw.net/previews-ttv/live_user_${twitchInfo.id}-320x180.jpg`;
+            }
+            return null;
+        }
+
+        async function fetchTwitchPageInfo(url) {
+            try {
+                const response = await new Promise((resolve, reject) => {
+                    GM.xmlHttpRequest({
+                        method: 'GET',
+                        url: url,
+                        onload: (r) => r.status === 200 ? resolve(r.responseText) : reject(new Error(`HTTP ${r.status}`)),
+                        onerror: reject
+                    });
+                });
+                return extractTitleAndThumbnail(response);
+            } catch (e) {
+                return { title: null, thumbnail: null };
+            }
+        }
+
+        function processTwitchLink(link) {
+            if (link.dataset.enhanced) return;
+            const twitchInfo = getTwitchInfo(link.href);
+            if (!twitchInfo) return;
+            
+            if (link.closest('.embedContainer, .embed-wrapper, [data-embed], .embed') || 
+                link.hasAttribute('data-embed') || 
+                link.classList.contains('embed-link')) {
+                return;
+            }
+            
+            link.dataset.enhanced = "1";
+
+            if (showIconsTwitch) {
+                const originalText = link.textContent.trim();
+                let displayText = twitchInfo.type === 'channel' ? twitchInfo.id : 
+                                 twitchInfo.type === 'clip' ? twitchInfo.username : 
+                                 `Video ${twitchInfo.id}`;
+                link.innerHTML = `${TWITCH_ICON} ${displayText}`;
+                
+                if (twitchInfo.type === 'clip') {
+                    const pageUrl = `https://www.twitch.tv/${twitchInfo.username}/clip/${twitchInfo.id}`;
+                    fetchTwitchPageInfo(pageUrl).then(info => {
+                        if (info.title) link.innerHTML = `${TWITCH_ICON} ${info.title}`;
+                        if (showThumbnailsTwitch) {
+                            const thumbUrl = info.thumbnail || getTwitchThumbnailUrl(twitchInfo);
+                            if (thumbUrl) addThumbnailHover(link, thumbUrl, "Twitch thumbnail");
+                        }
+                    });
+                } else if (twitchInfo.type === 'video') {
+                    const pageUrl = `https://www.twitch.tv/videos/${twitchInfo.id}`;
+                    fetchTwitchPageInfo(pageUrl).then(info => {
+                        if (info.title) link.innerHTML = `${TWITCH_ICON} ${info.title}`;
+                    });
+                }
+            }
+
+            if (showThumbnailsTwitch && twitchInfo.type === 'channel') {
+                const thumbUrl = getTwitchThumbnailUrl(twitchInfo);
+                if (thumbUrl) addThumbnailHover(link, thumbUrl, "Twitch thumbnail");
+            }
+        }
+
+        function isRentryLink(url) {
+            try {
+                const u = new URL(url);
+                return u.hostname === 'rentry.co' || u.hostname === 'rentry.org';
+            } catch (e) { }
+            return false;
+        }
+
+        function processRentryLink(link) {
+            if (link.dataset.enhanced) return;
+            if (!isRentryLink(link.href)) return;
+            link.dataset.enhanced = "1";
+
+            if (showIconsRentry) {
+                const originalText = link.textContent.trim();
+                link.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAATlBMVEUAAABpaWlkZGQnJydOTk6ampqhoaFVVVUeHh4AAAAfHx9GRkYAAABWVlY0NDQAAAD////09PT39/fq6urW1tbm5ub4+Pjb29vJycmlpaVxvf/cAAAAEHRSTlMAtryBp/30nnLnwby5uLRc+iRAsgAAAGNJREFUGNNlj1kOgCAMRKWi4m4HcLn/RYVgaoD3+dJOZpqalpRAbRBkwR+wFITCIUBFwb9gEeh7ZIKXifOLzsWXs8hw95qLZ9yLl0tL6Daz9EAUwyAiVofX2iNVT+PIGErjKl4JVwl/6XPAZgAAAABJRU5ErkJggg==" width="18" height="16" style="vertical-align:middle;margin-right:2px;" alt="Rentry"> ${originalText}`;
+            }
+        }
+
+        function isCatboxLink(url) {
+            try {
+                const u = new URL(url);
+                return u.hostname === 'catbox.moe' || u.hostname.endsWith('.catbox.moe');
+            } catch (e) { }
+            return false;
+        }
+
+        function processCatboxLink(link) {
+            if (link.dataset.enhanced) return;
+            if (!isCatboxLink(link.href)) return;
+            link.dataset.enhanced = "1";
+
+            if (showIconsCatbox) {
+                const originalText = link.textContent.trim();
+                link.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAApVBMVEUAAAD59/by7+3y6ebx7er03dfz3dfw4t/yzcTvxb325N7y2tPw1M7x5OH59PLu4OHKsavvy8vg0c729PKvmZP05+T34drpyMPy4dzpzsjizMfz5eHv29b29PH19PXk3Nrq19X+8+787un55eD0w7r93ND618v329Pp3tn3yL7t4dz94db2zsr5zsLSycHgyMHTv7i4sK2noZ2znZeKhHuQcWt1ZWM1yKHZAAAAIXRSTlMABw9CIv6Tiv784M/LXzEe/fr48O/q5+fYyMCzoJeFbFh1mpGHAAAApElEQVQY02WPVxKDMAxECTa9pfcmyTY1vdz/aMEEZshk/1azkt4arQbGj0xnY/YsY0simgeDLmdbSIhoRca+2XZ8ANTy40kTCcFCAAIoLdSX+BRqX1wIS3erB2yYAcDjlZKsZjv9cvyE273IFCmXWD1IRoDZGSCVJ5s3UOn1DVVthYi+0IFSUqpcCLvl4qHIc+F5C9ahJ+ujs4oPnBu9ql23f30AG0UPKlXkC0QAAAAASUVORK5CYII=" width="18" height="16" style="vertical-align:middle;margin-right:2px;" alt="Catbox"> ${originalText}`;
+            }
+        }
+
+        function isXLink(url) {
+            try {
+                const u = new URL(url);
+                return u.hostname.includes('x.com') || u.hostname.includes('twitter.com');
+            } catch (e) { }
+            return false;
+        }
+
+        function getXPostId(url) {
+            try {
+                const u = new URL(url);
+                const match = u.pathname.match(/\/status\/(\d+)/);
+                return match ? match[1] : null;
+            } catch (e) { }
+            return null;
+        }
+
+        function getXPostInfo(url) {
+            try {
+                const u = new URL(url);
+                const match = u.pathname.match(/\/([^\/]+)\/status\/(\d+)/);
+                if (match) {
+                    return { username: match[1], statusId: match[2] };
+                }
+            } catch (e) { }
+            return null;
+        }
+
+        function applyEmbedStyles(container) {
+            container.style.marginTop = '10px';
+            container.style.border = '1px solid #444';
+            container.style.padding = '15px';
+            container.style.boxShadow = '0 2px 8px rgba(0,0,0,0.4)';
+        }
+
+        function createAuthorDiv(authorName, authorUrl, handlePrefix = '@') {
+            if (!authorName && !authorUrl) return null;
+            const div = document.createElement('div');
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.gap = '8px';
+            if (authorName) {
+                const name = document.createElement('strong');
+                name.textContent = authorName;
+                name.style.color = 'var(--text-color, #fff)';
+                div.appendChild(name);
+            }
+            if (authorUrl) {
+                const link = document.createElement('a');
+                link.href = authorUrl;
+                link.textContent = `${handlePrefix}${authorUrl.split('/').pop()}`;
+                link.target = '_blank';
+                link.style.color = 'var(--link-color, #00E)';
+                div.appendChild(link);
+            }
+            return div;
+        }
+
+        function createEmbedCard(oembedData, viewLinkText, originalUrl) {
+            const card = document.createElement('div');
+            card.style.display = 'flex';
+            card.style.flexDirection = 'column';
+            card.style.gap = '10px';
+            
+            const authorDiv = createAuthorDiv(oembedData.author_name, oembedData.author_url);
+            if (authorDiv) card.appendChild(authorDiv);
+            
+            if (oembedData.html) {
+                const contentDiv = document.createElement('div');
+                contentDiv.innerHTML = oembedData.html;
+                contentDiv.style.color = 'var(--text-color, #fff)';
+                contentDiv.querySelectorAll('script').forEach(script => script.remove());
+                card.appendChild(contentDiv);
+            }
+            
+            if (oembedData.thumbnail_url) {
+                const img = document.createElement('img');
+                img.src = oembedData.thumbnail_url;
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                img.style.borderRadius = '4px';
+                img.style.cursor = 'pointer';
+                img.onclick = () => window.open(originalUrl, '_blank');
+                card.appendChild(img);
+            }
+            
+            const linkDiv = document.createElement('div');
+            const link = document.createElement('a');
+            link.href = originalUrl;
+            link.textContent = viewLinkText;
+            link.target = '_blank';
+            link.style.color = 'var(--link-color, #00E)';
+            linkDiv.appendChild(link);
+            card.appendChild(linkDiv);
+            
+            return card;
+        }
+
+        function createFxEmbedCard(fxData, viewLinkText, originalUrl) {
+            const card = document.createElement('div');
+            card.style.display = 'flex';
+            card.style.flexDirection = 'column';
+            card.style.gap = '10px';
+            if (fxData.code !== 200) {
+                card.innerHTML = `<a href="${originalUrl}" target="_blank">${originalUrl}</a>`;
+                return card;
+            }
+            const post = fxData.tweet || fxData.post || fxData;
+            if (post.author) {
+                const authorUrl = post.author.url || 
+                    (post.author.screen_name ? `https://x.com/${post.author.screen_name}` : null) ||
+                    (post.author.handle ? `https://bsky.app/profile/${post.author.handle}` : null);
+                const authorDiv = createAuthorDiv(post.author.name, authorUrl);
+                if (authorDiv) card.appendChild(authorDiv);
+            }
+            const text = post.text || post.content || '';
+            if (text) {
+                const textDiv = document.createElement('div');
+                textDiv.style.color = 'var(--text-color, #fff)';
+                textDiv.style.whiteSpace = 'pre-wrap';
+                textDiv.style.wordWrap = 'break-word';
+                textDiv.textContent = text;
+                card.appendChild(textDiv);
+            }
+            if (post.media) {
+                const photos = post.media.photos || post.media.images || [];
+                if (photos.length > 0) {
+                    const mediaContainer = document.createElement('div');
+                    mediaContainer.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-top:8px';
+                    photos.forEach(photo => {
+                        mediaContainer.appendChild(createMediaImage(photo.url || photo));
+                    });
+                    card.appendChild(mediaContainer);
+                }
+                
+                const videos = post.media.videos || [];
+                if (videos.length > 0) {
+                    const video = videos[0];
+                    const videoContainer = document.createElement('div');
+                    videoContainer.style.cssText = 'margin-top:8px;position:relative';
+                    
+                    if (video.url) {
+                        const videoEl = document.createElement('video');
+                        videoEl.controls = true;
+                        videoEl.style.cssText = 'max-width:100%;height:auto;border-radius:4px;display:block';
+                        fetchMediaAsBlob(video.url).then(blobUrl => {
+                            videoEl.src = blobUrl;
+                        }).catch(() => {
+                            videoEl.style.display = 'none';
+                            if (video.thumbnail_url) {
+                                videoContainer.appendChild(createVideoThumbnail(video.thumbnail_url, originalUrl));
+                            }
+                        });
+                        videoEl.onerror = () => {
+                            videoEl.style.display = 'none';
+                            if (video.thumbnail_url) {
+                                videoContainer.appendChild(createVideoThumbnail(video.thumbnail_url, originalUrl));
+                            }
+                        };
+                        videoContainer.appendChild(videoEl);
+                    } else if (video.thumbnail_url) {
+                        videoContainer.appendChild(createVideoThumbnail(video.thumbnail_url, originalUrl));
+                    }
+                    card.appendChild(videoContainer);
+                }
+            }
+            
+            return card;
+        }
+
+        function getContentTypeFromUrl(url) {
+            const match = url.match(/\.(jpg|jpeg|png|gif|webp|mp4|webm)$/i);
+            if (!match) return 'application/octet-stream';
+            const ext = match[1].toLowerCase();
+            const types = {
+                jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+                gif: 'image/gif', webp: 'image/webp',
+                mp4: 'video/mp4', webm: 'video/webm'
+            };
+            return types[ext] || 'application/octet-stream';
+        }
+
+        async function fetchMediaAsBlob(url) {
+            return new Promise((resolve, reject) => {
+                GM.xmlHttpRequest({
+                    method: 'GET',
+                    url: url,
+                    responseType: 'arraybuffer',
+                    onload: (r) => {
+                        if (r.status === 200) {
+                            try {
+                                let contentType = 'application/octet-stream';
+                                if (typeof r.getResponseHeader === 'function') {
+                                    contentType = r.getResponseHeader('Content-Type') || getContentTypeFromUrl(url);
+                                } else if (r.responseHeaders) {
+                                    const match = r.responseHeaders.match(/content-type:\s*([^\r\n]+)/i);
+                                    contentType = match ? match[1].trim() : getContentTypeFromUrl(url);
+                                } else {
+                                    contentType = getContentTypeFromUrl(url);
+                                }
+                                const blob = new Blob([r.response], { type: contentType });
+                                resolve(URL.createObjectURL(blob));
+                            } catch (e) {
+                                reject(e);
+                            }
+                        } else {
+                            reject(new Error(`HTTP ${r.status}`));
+                        }
+                    },
+                    onerror: reject,
+                    ontimeout: () => reject(new Error('Timeout'))
+                });
             });
         }
-        processLinks(document);
-        const divThreadsObs = observeSelector('#divThreads', { childList: true, subtree: true });
-        if (divThreadsObs) {
-            divThreadsObs.addHandler(function enhanceYoutubeLinksHandler(mutations) {
-                for (const mutation of mutations) {
-                    for (const addedNode of mutation.addedNodes) {
-                        if (addedNode.nodeType === 1) {
-                            processLinks(addedNode);
+
+        function createMediaImage(url, onClick) {
+            const img = document.createElement('img');
+            img.style.cssText = 'max-width:100%;max-height:400px;height:auto;border-radius:4px;cursor:pointer';
+            img.onclick = onClick || (() => window.open(url, '_blank'));
+            img.onerror = () => { img.style.display = 'none'; };
+            fetchMediaAsBlob(url).then(blobUrl => {
+                img.src = blobUrl;
+            }).catch(() => {
+                img.style.display = 'none';
+            });
+            return img;
+        }
+
+        function createVideoThumbnail(thumbnailUrl, originalUrl) {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'position:relative;cursor:pointer';
+            wrapper.onclick = () => window.open(originalUrl, '_blank');
+            
+            const img = createMediaImage(thumbnailUrl);
+            wrapper.appendChild(img);
+            
+            const playBtn = document.createElement('div');
+            playBtn.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff';
+            playBtn.innerHTML = '▶';
+            wrapper.appendChild(playBtn);
+            
+            return wrapper;
+        }
+
+        async function createXEmbed(url) {
+            const embedContainer = document.createElement('div');
+            embedContainer.className = 'embedContainer';
+            applyEmbedStyles(embedContainer);
+            
+            try {
+                const postInfo = getXPostInfo(url);
+                if (!postInfo) {
+                    throw new Error('Invalid X.com URL');
+                }
+                
+                const response = await new Promise((resolve, reject) => {
+                    GM.xmlHttpRequest({
+                        method: 'GET',
+                        url: `https://api.fxtwitter.com/${encodeURIComponent(postInfo.username)}/status/${postInfo.statusId}`,
+                        onload: (r) => {
+                            if (r.status === 200) {
+                                try {
+                                    resolve(JSON.parse(r.responseText));
+                                } catch (e) {
+                                    reject(e);
+                                }
+                            } else {
+                                reject(new Error(`HTTP ${r.status}`));
+                            }
+                        },
+                        onerror: reject,
+                        ontimeout: () => reject(new Error('Timeout'))
+                    });
+                });
+                embedContainer.appendChild(createFxEmbedCard(response, 'View on X.com', url));
+            } catch (e) {
+                embedContainer.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
+            }
+            return embedContainer;
+        }
+
+        function addEmbedButton(link, createEmbedFn) {
+            if (link.nextSibling?.classList?.contains('embedButton') ||
+                link.closest('.embedContainer, .embed-wrapper, [data-embed], .embed')) {
+                return;
+            }
+            
+            const embedButton = document.createElement('span');
+            embedButton.className = 'embedButton glowOnHover';
+            embedButton.textContent = '[Embed]';
+            
+            embedButton.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const embedContainer = embedButton.nextElementSibling;
+                if (embedContainer?.classList.contains('embedContainer')) {
+                    embedContainer.remove();
+                    embedButton.textContent = '[Embed]';
+                } else {
+                    embedButton.textContent = '[Loading...]';
+                    embedButton.style.pointerEvents = 'none';
+                    try {
+                        const newContainer = await createEmbedFn(link.href);
+                        embedButton.parentNode.insertBefore(newContainer, embedButton.nextSibling);
+                        embedButton.textContent = '[Remove]';
+                    } catch (error) {
+                        embedButton.textContent = '[Embed]';
+                        console.error('Failed to create embed:', error);
+                    } finally {
+                        embedButton.style.pointerEvents = 'auto';
+                    }
+                }
+            });
+            
+            link.nextSibling 
+                ? link.parentNode.insertBefore(embedButton, link.nextSibling)
+                : link.parentNode.appendChild(embedButton);
+        }
+
+        function processXLink(link) {
+            if (link.dataset.enhanced) return;
+            if (!isXLink(link.href)) return;
+            link.dataset.enhanced = "1";
+
+            if (showIconsX) {
+                link.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="16" style="vertical-align:middle;margin-right:2px;" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.48 11.25H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> ${link.textContent.trim()}`;
+            }
+            
+            if (enableEmbedsX && getXPostId(link.href)) {
+                addEmbedButton(link, createXEmbed);
+            }
+        }
+
+        function isBskyLink(url) {
+            try {
+                const u = new URL(url);
+                return u.hostname.includes('bsky.app');
+            } catch (e) { }
+            return false;
+        }
+
+        function getBskyPostId(url) {
+            try {
+                const u = new URL(url);
+                const match = u.pathname.match(/\/profile\/[^\/]+\/post\/([a-zA-Z0-9_-]+)/);
+                return match ? match[1] : null;
+            } catch (e) { }
+            return null;
+        }
+
+        function extractBskyMedia(html) {
+            const result = { images: [], videos: [], title: null, author: null };
+            const ogTitleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i);
+            if (ogTitleMatch && ogTitleMatch[1]) {
+                result.title = ogTitleMatch[1].trim();
+            }
+            if (!result.title) {
+                const twitterTitleMatch = html.match(/<meta\s+name=["']twitter:title["']\s+content=["']([^"']+)["']/i);
+                if (twitterTitleMatch && twitterTitleMatch[1]) {
+                    result.title = twitterTitleMatch[1].trim();
+                }
+            }
+            const ogSiteNameMatch = html.match(/<meta\s+property=["']og:site_name["']\s+content=["']([^"']+)["']/i);
+            if (ogSiteNameMatch && ogSiteNameMatch[1]) {
+                result.author = ogSiteNameMatch[1].trim();
+            }
+            const ogImageMatches = html.matchAll(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/gi);
+            for (const match of ogImageMatches) {
+                if (match[1] && !match[1].includes('embed.bsky.app')) {
+                    result.images.push(match[1].trim());
+                }
+            }
+            if (result.images.length === 0) {
+                const twitterImageMatch = html.match(/<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
+                if (twitterImageMatch && twitterImageMatch[1] && !twitterImageMatch[1].includes('embed.bsky.app')) {
+                    result.images.push(twitterImageMatch[1].trim());
+                }
+            }
+            const ogVideoMatch = html.match(/<meta\s+property=["']og:video["']\s+content=["']([^"']+)["']/i);
+            if (ogVideoMatch && ogVideoMatch[1]) {
+                result.videos.push(ogVideoMatch[1].trim());
+            }
+            const ogVideoImageMatch = html.match(/<meta\s+property=["']og:video:image["']\s+content=["']([^"']+)["']/i);
+            if (ogVideoImageMatch && ogVideoImageMatch[1] && result.videos.length > 0) {
+                result.videos[0] = { url: result.videos[0], thumbnail: ogVideoImageMatch[1].trim() };
+            }
+            const jsonLdMatch = html.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i);
+            if (jsonLdMatch) {
+                try {
+                    const jsonLd = JSON.parse(jsonLdMatch[1]);
+                    if (jsonLd.image && !result.images.length) {
+                        if (Array.isArray(jsonLd.image)) {
+                            result.images = jsonLd.image.map(img => typeof img === 'string' ? img : img.url || img.contentUrl).filter(Boolean);
+                        } else if (typeof jsonLd.image === 'string') {
+                            result.images.push(jsonLd.image);
+                        } else if (jsonLd.image.url || jsonLd.image.contentUrl) {
+                            result.images.push(jsonLd.image.url || jsonLd.image.contentUrl);
                         }
                     }
-                }
-            });
+                } catch (e) {}
+            }
+            
+            return result;
         }
-    }
+
+        async function createBskyEmbed(url) {
+            const embedContainer = document.createElement('div');
+            embedContainer.className = 'embedContainer';
+            applyEmbedStyles(embedContainer);
+            
+            try {
+                const [oembedResponse, pageHtml] = await Promise.all([
+                    new Promise((resolve, reject) => {
+                        GM.xmlHttpRequest({
+                            method: 'GET',
+                            url: `https://embed.bsky.app/oembed?url=${encodeURIComponent(url)}&maxwidth=600`,
+                            onload: (r) => {
+                                if (r.status === 200) {
+                                    try {
+                                        resolve(JSON.parse(r.responseText));
+                                    } catch (e) {
+                                        resolve(null);
+                                    }
+                                } else {
+                                    resolve(null);
+                                }
+                            },
+                            onerror: () => resolve(null),
+                            ontimeout: () => resolve(null)
+                        });
+                    }),
+                    new Promise((resolve, reject) => {
+                        GM.xmlHttpRequest({
+                            method: 'GET',
+                            url: url,
+                            onload: (r) => {
+                                if (r.status === 200) {
+                                    resolve(r.responseText);
+                                } else {
+                                    resolve(null);
+                                }
+                            },
+                            onerror: () => resolve(null),
+                            ontimeout: () => resolve(null)
+                        });
+                    })
+                ]);
+                
+                const card = document.createElement('div');
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.gap = '10px';
+                let mediaData = { images: [], videos: [], title: null, author: null };
+                if (pageHtml) {
+                    mediaData = extractBskyMedia(pageHtml);
+                }
+                const authorName = oembedResponse?.author_name || mediaData.author || 'Bluesky';
+                const authorUrl = oembedResponse?.author_url || url;
+                const authorDiv = createAuthorDiv(authorName, authorUrl);
+                if (authorDiv) card.appendChild(authorDiv);
+                if (oembedResponse?.html) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = oembedResponse.html;
+                    const blockquote = tempDiv.querySelector('blockquote');
+                    if (blockquote) {
+                        const textDiv = document.createElement('div');
+                        textDiv.style.color = 'var(--text-color, #fff)';
+                        textDiv.style.whiteSpace = 'pre-wrap';
+                        textDiv.style.wordWrap = 'break-word';
+                        const textContent = blockquote.cloneNode(true);
+                        textContent.querySelectorAll('script').forEach(s => s.remove());
+                        textDiv.textContent = textContent.textContent || blockquote.textContent;
+                        card.appendChild(textDiv);
+                    }
+                }
+                
+                if (mediaData.images.length > 0) {
+                    const mediaContainer = document.createElement('div');
+                    mediaContainer.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-top:8px';
+                    mediaData.images.forEach(imageUrl => {
+                        mediaContainer.appendChild(createMediaImage(imageUrl));
+                    });
+                    card.appendChild(mediaContainer);
+                }
+                
+                if (mediaData.videos.length > 0) {
+                    mediaData.videos.forEach(video => {
+                        const videoContainer = document.createElement('div');
+                        videoContainer.style.marginTop = '8px';
+                        
+                        if (typeof video === 'object' && video.thumbnail) {
+                            videoContainer.appendChild(createVideoThumbnail(video.thumbnail, url));
+                        } else if (typeof video === 'string') {
+                            const videoEl = document.createElement('video');
+                            videoEl.controls = true;
+                            videoEl.style.cssText = 'max-width:100%;height:auto;border-radius:4px;display:block';
+                            fetchMediaAsBlob(video).then(blobUrl => {
+                                videoEl.src = blobUrl;
+                            }).catch(() => {
+                                videoEl.style.display = 'none';
+                            });
+                            videoEl.onerror = () => { videoEl.style.display = 'none'; };
+                            videoContainer.appendChild(videoEl);
+                        }
+                        card.appendChild(videoContainer);
+                    });
+                }
+                
+                if (oembedResponse?.thumbnail_url && mediaData.images.length === 0 && mediaData.videos.length === 0) {
+                    card.appendChild(createMediaImage(oembedResponse.thumbnail_url, () => window.open(url, '_blank')));
+                }
+                
+                embedContainer.appendChild(card);
+            } catch (e) {
+                console.error('Bluesky embed error:', e);
+                embedContainer.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
+            }
+            return embedContainer;
+        }
+
+        function processBskyLink(link) {
+            if (link.dataset.enhanced) return;
+            if (!isBskyLink(link.href)) return;
+            link.dataset.enhanced = "1";
+
+            if (showIconsBsky) {
+                link.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 57" width="18" height="16" style="vertical-align:middle;margin-right:2px;"><path fill="#0085FF" d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.130.044.410.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"/></svg> ${link.textContent.trim()}`;
+            }
+            
+            if (enableEmbedsBsky && getBskyPostId(link.href)) {
+                addEmbedButton(link, createBskyEmbed);
+            }
+        }
+
+        function processLinks(root = document) {
+            if (showIconsYoutube || showThumbnailsYoutube) {
+                root.querySelectorAll('a[href*="youtu"]').forEach(processYouTubeLink);
+            }
+            if (showIconsTwitch || showThumbnailsTwitch) {
+                root.querySelectorAll('a[href*="twitch"]').forEach(processTwitchLink);
+            }
+            if (showIconsRentry) {
+                root.querySelectorAll('a[href*="rentry.co"], a[href*="rentry.org"]').forEach(processRentryLink);
+            }
+            if (showIconsCatbox) {
+                root.querySelectorAll('a[href*="catbox.moe"]').forEach(processCatboxLink);
+            }
+            if (showIconsX || enableEmbedsX) {
+                root.querySelectorAll('a[href*="x.com"], a[href*="twitter.com"]').forEach(processXLink);
+            }
+            if (showIconsBsky || enableEmbedsBsky) {
+                root.querySelectorAll('a[href*="bsky.app"]').forEach(processBskyLink);
+            }
+        }
+        processLinks(document);
+
+        function enhanceLinksHandler(mutations) {
+            for (const mutation of mutations) {
+                for (const addedNode of mutation.addedNodes) {
+                    if (addedNode.nodeType === 1) {
+                        processLinks(addedNode);
+                    }
+                }
+            }
+        }
+
+        const divThreadsObs = observeSelector('#divThreads', { childList: true, subtree: true });
+        if (divThreadsObs) divThreadsObs.addHandler(enhanceLinksHandler);
+
+        const quoteTooltipObs = observeSelector('.quoteTooltip', { childList: true, subtree: true });
+        if (quoteTooltipObs) quoteTooltipObs.addHandler(enhanceLinksHandler);
+    })();
     async function featureLabelCreated12h() {
         if (window.pageType?.isCatalog) {
             return;
@@ -3042,35 +3839,42 @@ onReady(async function () {
             });
         }
         setTimeout(processIDLabels, 50);
-        const divThreadsObs = observeSelector('#divThreads', { childList: true, subtree: true });
-        if (divThreadsObs) {
-            const debouncedProcess = debounce(processIDLabels, 50);
+        const debouncedProcess = debounce(processIDLabels, 50);
 
-            divThreadsObs.addHandler(function showIDCountHandler(mutations) {
-                let hasNewLabels = false;
+        function showIDCountHandler(mutations) {
+            let hasNewLabels = false;
 
-                for (const mutation of mutations) {
-                    for (const node of mutation.addedNodes) {
-                        if (node.nodeType === Node.ELEMENT_NODE) {
-                            if (node.classList?.contains('labelId')) {
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        if (node.classList?.contains('labelId')) {
+                            hasNewLabels = true;
+                            break;
+                        } else if (node.querySelectorAll) {
+                            const newLabels = node.querySelectorAll('.labelId');
+                            if (newLabels.length > 0) {
                                 hasNewLabels = true;
                                 break;
-                            } else if (node.querySelectorAll) {
-                                const newLabels = node.querySelectorAll('.labelId');
-                                if (newLabels.length > 0) {
-                                    hasNewLabels = true;
-                                    break;
-                                }
                             }
                         }
                     }
-                    if (hasNewLabels) break;
                 }
+                if (hasNewLabels) break;
+            }
 
-                if (hasNewLabels) {
-                    debouncedProcess();
-                }
-            });
+            if (hasNewLabels) {
+                debouncedProcess();
+            }
+        }
+
+        const divThreadsObs = observeSelector('#divThreads', { childList: true, subtree: true });
+        if (divThreadsObs) {
+            divThreadsObs.addHandler(showIDCountHandler);
+        }
+
+        const quoteTooltipObs = observeSelector('.quoteTooltip', { childList: true, subtree: true });
+        if (quoteTooltipObs) {
+            quoteTooltipObs.addHandler(showIDCountHandler);
         }
     }
     async function featureQuoteThreading() {

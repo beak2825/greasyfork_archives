@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         x-RedDragon Client
 // @namespace    https://www.youtube.com/@x-RedDragonOficial
-// @version      1.5.6.0
+// @version      1.5.6.1
 // @description  R=InstaNormal | T=ReverseInsta | Y=BoostInsta | G=BoostSpike | B=4Traps/Boost | C=4Spikes | ,=AntiTrap | M=AutoMills | F=Trap/BoostPad | V=Spike | N=Mill | H=Teleport/Turret | AutoBiomeHat | Esc=MenuGoldbot/Music | ClickRight=FastBreak | AutoHeal | AutoGG | AntiInstas | Visual Mods.
 // @icon         https://i.imgur.com/AFJt4iq.png
 // @author       x-RedDragonYT
@@ -1762,146 +1762,7 @@ window.addEventListener('load', () => {
 })();
 
 //Radar
-(function () {
-    "use strict";
-
-    const playersMap = new Map();
-    let playerId = null;
-    let radarLayer = null;
-    let wsHooked = false;
-
-    function getRadarLayer() {
-        if (radarLayer) return radarLayer;
-
-        radarLayer = document.createElement("div");
-        radarLayer.id = "xrd-radar-layer";
-
-        Object.assign(radarLayer.style, {
-            position: "fixed",
-            inset: "0",
-            pointerEvents: "none",
-            contain: "strict",
-            willChange: "transform",
-            zIndex: "40"
-        });
-
-        const ui = document.getElementById("mainMenu");
-        if (ui) {
-            const z = parseInt(getComputedStyle(ui).zIndex);
-            if (!isNaN(z)) radarLayer.style.zIndex = z - 1;
-        }
-
-        document.documentElement.appendChild(radarLayer);
-        return radarLayer;
-    }
-
-    function hookWebSocketSafely() {
-        if (wsHooked) return;
-        wsHooked = true;
-
-        const originalAddEvent = WebSocket.prototype.addEventListener;
-
-        WebSocket.prototype.addEventListener = function (type, listener, options) {
-            if (type === "message") {
-                const wrapped = (e) => {
-                    try {
-                        if (e.data instanceof ArrayBuffer) {
-                            const data = msgpack.decode(e.data);
-
-                            if (data[0] === "C") {
-                                playerId = data[1][0];
-                            }
-
-                            if (data[0] === "a") {
-                                playersMap.clear();
-                                const info = data[1][0];
-                                for (let i = 0; i < info.length; i += 13) {
-                                    playersMap.set(info[i], {
-                                        x: info[i + 1],
-                                        y: info[i + 2],
-                                        team: info[i + 7]
-                                    });
-                                }
-                            }
-                        }
-                    } catch (_) {}
-
-                    listener.call(this, e);
-                };
-
-                return originalAddEvent.call(this, type, wrapped, options);
-            }
-
-            return originalAddEvent.call(this, type, listener, options);
-        };
-    }
-
-    function createArrow(id) {
-        let arrow = document.getElementById("xrd-r-" + id);
-        if (arrow) return arrow;
-
-        arrow = document.createElement("div");
-        arrow.id = "xrd-r-" + id;
-
-        Object.assign(arrow.style, {
-            position: "fixed",
-            width: "0",
-            height: "0",
-            borderStyle: "solid",
-            borderWidth: "10px 0 10px 20px",
-            pointerEvents: "none",
-            zIndex: "1"
-        });
-
-        getRadarLayer().appendChild(arrow);
-        return arrow;
-    }
-
-    function updateRadar() {
-        requestAnimationFrame(updateRadar);
-
-        if (!playerId || !playersMap.has(playerId)) return;
-
-        const me = playersMap.get(playerId);
-        const cx = innerWidth / 2;
-        const cy = innerHeight / 2;
-
-        for (const [id, p] of playersMap) {
-            if (id === playerId) continue;
-
-            const arrow = createArrow(id);
-
-            const dx = p.x - me.x;
-            const dy = me.y - p.y;
-
-            const angle = Math.atan2(dy, dx);
-            const rotation = -angle * 180 / Math.PI;
-
-            const dist = Math.min(Math.hypot(dx, dy) / 600, 1);
-
-            Object.assign(arrow.style, {
-                display: "block",
-                opacity: dist,
-                transform: `rotate(${rotation}deg)`,
-                left: `${cx + Math.cos(angle) * cy * dist}px`,
-                top: `${cy - Math.sin(angle) * cy * dist}px`,
-                borderColor:
-                    p.team && p.team === me.team
-                        ? "transparent transparent transparent #00ff00"
-                        : "transparent transparent transparent #ff0000"
-            });
-        }
-
-        document.querySelectorAll('[id^="xrd-r-"]').forEach(el => {
-            const id = +el.id.replace("xrd-r-", "");
-            if (!playersMap.has(id)) el.remove();
-        });
-    }
-
-    hookWebSocketSafely();
-    updateRadar();
-
-})();
+(function(){const _=['Map','div','xrd-radar-layer','fixed','0','none','strict','transform','40','mainMenu','zIndex','appendChild','documentElement','addEventListener','message','decode','C','a','clear','set','createElement','style','pointerEvents','contain','willChange','getElementById','getComputedStyle','isNaN','innerWidth','innerHeight','requestAnimationFrame','has','get','atan2','PI','hypot','cos','sin','querySelectorAll','remove','xrd-r-','block','opacity','rotate(','deg)','left','top','#00ff00','#ff0000'];const $=i=>_[i];let M=new window[$(0)](),I=null,L=null,H=false;function G(){if(L)return L;L=document[$(20)]($(1));L.id=$(2);Object.assign(L[$(21)],{position:$(3),inset:$(4),pointerEvents:$(5),contain:$(6),willChange:$(7),zIndex:$(8)});const u=document[$(25)]($(9));if(u){const z=parseInt(window[$(26)](u)[$(10)]);if(!window[$(27)](z))L[$(21)][$(10)]=z-1}document[$(12)][$(11)](L);return L}function W(){if(H)return;H=true;const A=WebSocket.prototype[$(13)];WebSocket.prototype[$(13)]=function(t,l,o){if(t===$(14)){const w=function(e){try{if(e.data instanceof ArrayBuffer){const d=msgpack[$(15)](e.data);if(d[0]===$(16))I=d[1][0];else if(d[0]===$(17)){M[$(18)]();const r=d[1][0];for(let i=0;i<r.length;i+=13)M[$(19)](r[i],{x:r[i+1],y:r[i+2],t:r[i+7]})}}}catch(e){}l.call(this,e)};return A.call(this,t,w,o)}return A.call(this,t,l,o)}}function A(i){let e=document[$(25)]($(40)+i);if(e)return e;e=document[$(20)]($(1));e.id=$(40)+i;Object.assign(e[$(21)],{position:$(3),width:$(4),height:$(4),borderStyle:'solid',borderWidth:'10px 0 10px 20px',pointerEvents:$(5),zIndex:'1'});G()[$(11)](e);return e}function R(){window[$(30)](R);if(!I||!M[$(31)](I))return;const m=M[$(32)](I),cx=window[$(28)]/2,cy=window[$(29)]/2;for(const [i,p] of M){if(i===I)continue;const a=A(i),dx=p.x-m.x,dy=m.y-p.y,ang=Math[$(33)](dy,dx),rot=-ang*180/Math[$(34)],dist=Math.min(Math[$(35)](dx,dy)/600,1);Object.assign(a[$(21)],{display:$(41),opacity:dist,transform:$(43)+rot+$(44),left:(cx+Math[$(36)](ang)*cy*dist)+'px',top:(cy-Math[$(37)](ang)*cy*dist)+'px',borderColor:p.t&&p.t===m.t?'transparent transparent transparent '+$(47):'transparent transparent transparent '+$(48)})}document[$(38)]('[id^="'+$(40)+'"]').forEach(e=>{const i=+e.id.replace($(40),'');M[$(31)](i)||e[$(39)]()})}W();R()})();
 
 //Menu
 (function () {

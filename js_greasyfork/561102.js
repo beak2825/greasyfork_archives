@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         freebtcco.in Auto
+// @name         freebtcco.in Auto roll
 // @namespace    http://tampermonkey.net/
 // @version      1.4
 // @description  Faucet automatic collection 24 hours a day
@@ -7,8 +7,8 @@
 // @icon         https://i.imgur.com/tnqS60o.jpeg
 // @match        https://freebtcco.in/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/561102/freebtccoin%20Auto.user.js
-// @updateURL https://update.greasyfork.org/scripts/561102/freebtccoin%20Auto.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561102/freebtccoin%20Auto%20roll.user.js
+// @updateURL https://update.greasyfork.org/scripts/561102/freebtccoin%20Auto%20roll.meta.js
 // ==/UserScript==
 
 (function () {

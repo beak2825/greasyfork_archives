@@ -40,7 +40,7 @@
 // @name:ug             مېنىڭ پرومپتۇم
 // @name:vi             Lời nhắc của tôi
 // @namespace           https://github.com/0H4S
-// @version             3.7
+// @version             3.8
 // @description         Save and use your personalized prompts in your own library. Use Dynamic Prompt mode to insert interactive information and adapt commands as needed. Attach and reuse files anytime without reselections. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, and Google AI Mode.
 // @description:pt-BR   Salve e use seus prompts personalizados na sua própria biblioteca de prompts. Use o modo Prompt Dinâmico para inserir informações interativas e adaptar comandos conforme sua necessidade. Anexe e use arquivos sempre que quiser, sem precisar selecionar tudo de novo. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM e Google Modo IA.
 // @description:zh-CN   保存并在您自己的库中使用自定义提示词。使用动态提示词模式插入交互信息并根据需要调整指令。随时附加和使用文件，无需重新选择。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI Mode。
@@ -174,7 +174,7 @@
     }
 
     // --- NOTIFICADOR ---
-    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '3.7',};
+    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '3.8',};
     const notifier      = new ScriptNotifier(SCRIPT_CONFIG);
     notifier.run();
 
@@ -1136,6 +1136,16 @@
     function applyTheme(configData) {
         if (!configData) return;
         const themeDef = importedThemes[configData.themeId] || themeDefinitions[configData.themeId] || themeDefinitions['default'];
+        Object.assign(ICONS, DEFAULT_ICONS);
+        if (themeDef.icons) {
+            const validCustomIcons = {};
+            Object.keys(themeDef.icons).forEach(key => {
+                if (DEFAULT_ICONS.hasOwnProperty(key)) {
+                    validCustomIcons[key] = themeDef.icons[key];
+                }
+            });
+            Object.assign(ICONS, validCustomIcons);
+        }
         let targetMode = configData.mode;
         if (targetMode === 'auto') {
             targetMode = mediaQueryList.matches ? 'dark' : 'light';
@@ -1278,8 +1288,21 @@
             /* ===================== */
 
             :root {
-                /* --- TIPOGRAFIA --- */
-                --mp-font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                /* --- STACK UNIVERSAL --- */
+                --mp-font-stack-i18n: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Apple SD Gothic Neo", "Noto Sans CJK SC", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+                /* --- VARIÁVEL BASE --- */
+                --mp-font-family-base: var(--mp-font-stack-i18n);
+
+                /* --- TÍTULOS E CABEÇALHOS --- */
+                --mp-font-family-heading: var(--mp-font-stack-i18n);
+
+                /* --- ÁREA DE EDIÇÃO E INPUTS --- */
+                --mp-font-family-editor: var(--mp-font-stack-i18n);
+
+                /* --- BOTÕES E ELEMENTOS DE AÇÃO --- */
+                --mp-font-family-button: var(--mp-font-stack-i18n);
+
 
                 /* --- CORES BASE (MODO CLARO) --- */
                 --mp-bg-primary: #ffffff;
@@ -1304,7 +1327,6 @@
                 --mp-accent-edit-hover: #f08c00;
                 --mp-accent-close: #f03e3e;
                 --mp-accent-close-hover: #c92a2a;
-
                 --mp-btn-export-background: rgba(34, 129, 207, 0.1);
                 --mp-btn-export-color: #2281cfff;
                 --mp-btn-add-background: rgba(32, 201, 97, 0.1);
@@ -1349,7 +1371,6 @@
                     --mp-accent-edit-hover: #ffe066;
                     --mp-accent-close: #ff6b6b;
                     --mp-accent-close-hover: #ff8787;
-
                     --mp-btn-export-background: rgba(116, 192, 252, 0.15);
                     --mp-btn-export-color: #74c0fc;
                     --mp-btn-add-background: rgba(105, 219, 124, 0.15);
@@ -1450,6 +1471,7 @@
                 padding: 10px;
                 width: 100%;
                 height: 100%;
+                font-family: var(--mp-font-family-editor) !important;
             }
 
             .mp-modal-box .form-group:has(#__ap_text) .mp-scroll-wrapper {
@@ -1555,6 +1577,7 @@
             }
 
             .modal-title {
+                font-family: var(--mp-font-family-heading) !important;
                 font-size: 18px;
                 font-weight: 600;
                 margin: 0 0 20px;
@@ -2037,6 +2060,7 @@
             }
 
             .prompt-title {
+                font-family: var(--mp-font-family-heading) !important;
                 font-size: 14px;
                 font-weight: 500;
                 flex: 1;
@@ -2069,6 +2093,7 @@
                 justify-content: center;
                 line-height: 0;
                 color: var(--mp-text-secondary);
+                font-family: var(--mp-font-family-button) !important;
             }
 
             .action-btn svg {
@@ -2106,6 +2131,7 @@
                 color: var(--mp-text-secondary);
                 transition: all 0.2s ease;
                 height: auto;
+                font-family: var(--mp-font-family-button) !important;
             }
 
             .menu-footer-btn:not(:last-child) {
@@ -2172,7 +2198,7 @@
                 box-sizing: border-box;
                 transition: border-color 0.2s, box-shadow 0.2s;
                 outline: 0 !important;
-                font-family: var(--mp-font-family-base) !important;
+                font-family: var(--mp-font-family-editor) !important;
                 font-size: 14px !important;
             }
 
@@ -2324,7 +2350,7 @@
                 border: 1px solid var(--mp-border-primary);
                 background-color: var(--mp-bg-secondary);
                 color: var(--mp-text-primary);
-                font-family: var(--mp-font-family-base) !important;
+                font-family: var(--mp-font-family-editor) !important;
                 font-size: 13px;
                 box-sizing: border-box;
                 outline: none;
@@ -2424,6 +2450,7 @@
                 border-top: 1px solid var(--mp-border-primary);
                 padding-top: 16px;
                 flex-shrink: 0;
+                font-family: var(--mp-font-family-button) !important;
             }
 
             #__ap_placeholders_container {
@@ -2482,6 +2509,7 @@
             .dynamic-input {
                 min-height: 45px !important;
                 line-height: 1.5;
+                font-family: var(--mp-font-family-editor) !important;
             }
 
             /* ===================== */
@@ -2506,7 +2534,7 @@
                 cursor: pointer;
                 text-align: center;
                 transition: all 0.2s ease;
-                font-family: var(--mp-font-family-base) !important;
+                font-family: var(--mp-font-family-button) !important;
                 flex-shrink: 0;
             }
 
@@ -2536,7 +2564,7 @@
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.2s ease-in-out;
-                font-family: var(--mp-font-family-base) !important;
+                font-family: var(--mp-font-family-button) !important;
             }
 
             .save-button:hover {
@@ -2595,6 +2623,7 @@
                 font-weight: 600;
                 color: var(--mp-text-primary);
                 margin: 0 0 8px;
+                font-family: var(--mp-font-family-heading) !important;
             }
 
             .mp-info-col p {
@@ -2668,6 +2697,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 max-width: 100%;
+                font-family: var(--mp-font-family-heading) !important;
             }
 
             /* ===================== */
@@ -2699,12 +2729,12 @@
             }
 
             .mp-tooltip-content {
+                font-family: var(--mp-font-family-button) !important;
                 background-color: var(--mp-text-primary);
                 color: var(--mp-bg-primary);
                 padding: 5px 10px;
                 border-radius: var(--mp-border-radius-sm);
                 white-space: nowrap;
-                font-family: var(--mp-font-family-base) !important;
                 font-size: 12px;
                 font-weight: 500;
                 box-shadow: var(--mp-shadow-md);
@@ -2785,6 +2815,7 @@
             }
 
             .mp-tab-btn {
+                font-family: var(--mp-font-family-button) !important;
                 flex: 1;
                 background: none;
                 border: none;
@@ -2845,6 +2876,7 @@
                 justify-content: space-between;
                 align-items: center;
                 transition: all 0.2s;
+                font-family: var(--mp-font-family-button) !important;
             }
 
             .mp-action-btn-full:hover {
@@ -3063,6 +3095,7 @@
         setaBaixo:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><path fill="currentColor" fill-rule="evenodd" d="M2.16 6.246c.225 0 .45.062.65.196l6.229 4.156 6.037-4.197a1.175 1.175 0 0 1 1.304 1.958l-6.688 4.63a1.17 1.17 0 0 1-1.304.002l-6.88-4.589a1.178 1.178 0 0 1 .652-2.156"/></svg>`
 
     };
+    const DEFAULT_ICONS = { ...ICONS };
 
     // =================
     // #endregion ESTILOS GLOBAIS
@@ -3532,13 +3565,19 @@
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = '.json';
+        fileInput.multiple = true;
         fileInput.style.display = 'none';
         box.appendChild(fileInput);
         fileInput.onchange = (e) => {
-            if (e.target.files && e.target.files[0]) {
-                importThemesFromFile(e.target.files[0], () => {
-                    renderThemeList();
-                    fileInput.value = '';
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                Array.from(files).forEach((file, index) => {
+                    importThemesFromFile(file, () => {
+                        if (index === files.length - 1) {
+                            renderThemeList();
+                            fileInput.value = '';
+                        }
+                    });
                 });
             }
         };
@@ -3801,7 +3840,7 @@
         setSafeInnerHTML(box, modalContentHTML);
         overlay.appendChild(box);
         const container = box.querySelector('#__ap_placeholders_container');
-        container.style.maxHeight = '350px';
+        container.style.maxHeight = '450px';
         setupEnhancedScroll(container);
         const expandBtn = box.querySelector('#__ap_ph_expand_btn');
         let isExpanded = false;
@@ -3844,13 +3883,13 @@
     // --- EDITAR/CRIAR PROMPT ---
     function createPromptModal() {
         const overlay = document.createElement('div');
-        overlay.className   = 'mp-overlay mp-hidden';
-        overlay.id          = '__ap_modal_overlay';
-        const box           = document.createElement('div');
-        box.className       = 'mp-modal-box';
-        box.id              = '__ap_modal_box_el';
-        box.style.cssText   = 'overflow-y: auto; padding-bottom: 24px;';
-        box.onclick         = e => e.stopPropagation();
+        overlay.className = 'mp-overlay mp-hidden';
+        overlay.id = '__ap_modal_overlay';
+        const box = document.createElement('div');
+        box.className = 'mp-modal-box';
+        box.id = '__ap_modal_box_el';
+        box.style.cssText = 'overflow-y: auto; padding-bottom: 24px;';
+        box.onclick = e => e.stopPropagation();
         setSafeInnerHTML(box, `
             <!-- BOTÕES (EXPANDIR/RECOLHER, INFO, FECHAR) -->
             <button id="__ap_expand_btn" class="mp-modal-expand-btn" title="${getTranslation('expand')}">${ICONS.expand}</button>
@@ -4468,12 +4507,23 @@
             textarea.style.resize = 'vertical';
             textarea.style.height = 'auto';
             textarea.placeholder = data.varName ? data.varName : '';
+
+            // --- CTRL+ENTER (adiciona quebra de linha) ENTER (envia o formulário) ---
             textarea.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' && !event.shiftKey) {
+                if (event.isComposing || event.keyCode === 229) {
+                    return;
+                }
+                if (event.key === 'Enter') {
+                    if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
+                        event.stopPropagation();
+                        return;
+                    }
                     event.preventDefault();
+                    event.stopPropagation();
                     document.getElementById('__ap_insert_prompt').click();
                 }
             });
+
             formGroup.appendChild(textarea);
             container.appendChild(formGroup);
         });

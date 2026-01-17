@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WaniKani RadicalGuessr
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.1.0
 // @description  Enhance your kanji lessons by attempting to guess which radicals make up a kanji.
 // @author       romans-boi
 // @license      MIT
@@ -176,7 +176,7 @@
       const subjectSection = state.lesson.radicalsSection;
 
       const subjectItems = subjectSection.querySelector(
-        ".subject-list__items"
+        ".subject-list__items",
       ).children;
 
       for (let index = 0; index < subjectItems.length; index++) {
@@ -193,7 +193,7 @@
         coverDiv.title = "Tap to reveal";
 
         const title = subjectItems[index].querySelector(
-          ".subject-character__meaning"
+          ".subject-character__meaning",
         ).textContent;
 
         const radical = new Radical(title, coverDiv);
@@ -248,7 +248,7 @@
       console.log(description);
       description.textContent = description.textContent.replace(
         "Can you see where the radicals fit in the kanji?",
-        "Can you guess which radicals make up this kanji?"
+        "Can you guess which radicals make up this kanji?",
       );
     },
 
@@ -258,17 +258,7 @@
       // Skip handling submit if every radical is already uncovered
       if (radicals.every((radical) => !radical.isCovered)) return;
 
-      const normalizeText = (text) => {
-        return text.trim().toLowerCase();
-      };
-
-      const matchingRadicalIndex = radicals.findIndex(
-        (radical) =>
-          // Checking isCovered accounts for mutliple radicals with same name (still
-          // reveals one at a time)
-          radical.isCovered &&
-          normalizeText(radical.title) == normalizeText(inputText)
-      );
+      const matchingRadicalIndex = this.getPassingAnswerIndex(radicals, inputText);
 
       if (matchingRadicalIndex !== -1) {
         // Reset the input only if correct, and reveal radical
@@ -277,6 +267,44 @@
       } else {
         this.showIncorrectAnimation();
       }
+    },
+
+    getPassingAnswerIndex(radicals, input) {
+      const normalizeText = (text) => {
+        return text.trim().toLowerCase();
+      };
+
+      const inputNormalised = normalizeText(input);
+
+      // Use Levenshtein Distance to calculate similarity of answer
+      // to any of the radicals. The tolerance and algorithm is same one
+      // WaniKani uses for its inputs.
+      const distances = radicals.map((radical, index) => ({
+        index,
+        distance: radical.isCovered
+          ? LevenshteinUtils.getLevenshteinDistance(
+              normalizeText(radical.title),
+              inputNormalised,
+            )
+          : Infinity,
+      }));
+
+      const closest = distances.reduce((min, current) =>
+        current.distance < min.distance ? current : min,
+      );
+
+      const tolerance = LevenshteinUtils.getLevenshteinTolerance(inputNormalised);
+
+      if (closest.distance <= tolerance) {
+        return closest.index;
+      }
+
+      return -1;
+    },
+
+    isPassing(title, input) {
+      const tolerance = getLevenshteinTolerance(input);
+      return getLevenshteinDistance(title, input) <= tolerance;
     },
 
     showIncorrectAnimation() {
@@ -329,7 +357,74 @@
 
   // ==========================================================================================
   // ------------------------------------------------------------------------------------------
-  // Utils and helpers
+  // Levenshtein utils - note this was taken directly from WaniKani's levenshtein_helpers.
+  // ------------------------------------------------------------------------------------------
+  // ==========================================================================================
+  const LevenshteinUtils = {
+    getLevenshteinTolerance(word) {
+      const levenshteinTolerances = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 2, 7: 2 }
+
+      if (
+        Object.prototype.hasOwnProperty.call(levenshteinTolerances, word.length)
+      ) {
+        return levenshteinTolerances[word.length];
+      }
+      return 2 + Math.floor(word.length / 7) * 1; // is the * 1 to cast it to a number?
+    },
+
+    getLevenshteinDistance(s, t) {
+      const d = [];
+      const n = s.length;
+      const m = t.length;
+
+      if (n === 0) return m;
+      if (m === 0) return n;
+
+      for (let i = n; i >= 0; i -= 1) {
+        d[i] = [];
+      }
+
+      for (let i = n; i >= 0; i -= 1) {
+        d[i][0] = i;
+      }
+      for (let j = m; j >= 0; j -= 1) d[0][j] = j;
+
+      for (let i = 1; i <= n; i += 1) {
+        const sI = s.charAt(i - 1);
+
+        for (let j = 1; j <= m; j += 1) {
+          if (i === j && d[i][j] > 4) return n;
+
+          const tJ = t.charAt(j - 1);
+          const cost = sI === tJ ? 0 : 1;
+
+          let mi = d[i - 1][j] + 1;
+          const b = d[i][j - 1] + 1;
+          const c = d[i - 1][j - 1] + cost;
+
+          if (b < mi) mi = b;
+          if (c < mi) mi = c;
+
+          d[i][j] = mi;
+
+          if (
+            i > 1 &&
+            j > 1 &&
+            sI === t.charAt(j - 2) &&
+            s.charAt(i - 2) === tJ
+          ) {
+            d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + cost);
+          }
+        }
+      }
+
+      return d[n][m];
+    },
+  };
+
+  // ==========================================================================================
+  // ------------------------------------------------------------------------------------------
+  // Other utils and helpers
   // ------------------------------------------------------------------------------------------
   // ==========================================================================================
 

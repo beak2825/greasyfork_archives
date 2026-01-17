@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Background Video Playback Fix (Instagram, Facebook, Reddit, TikTok)
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      1.1
+// @version      1.6
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Prevents videos from pausing when the tab/window loses visibility or focus. Spoofs Page Visibility API, blocks lifecycle events, and auto-resumes videos paused by the site.
@@ -30,8 +30,8 @@
     // Block visibility/lifecycle events from reaching site handlers
     blockVisibilityEvents: true,
 
-    // Block focus/blur events (some sites pause on blur instead of visibilitychange)
-    // Note: May affect features like "mark as read" in messaging
+    // Block window-level focus/blur events (some sites pause on blur instead of visibilitychange)
+    // Element-level focus (inputs, etc.) still works normally
     blockFocusBlurEvents: true,
 
     // Auto-resume videos paused by the site while the page is backgrounded
@@ -91,8 +91,6 @@
     const getters = {
       hidden: extractGetter(docProto, 'hidden'),
       visibilityState: extractGetter(docProto, 'visibilityState'),
-      webkitHidden: extractGetter(docProto, 'webkitHidden'),
-      webkitVisibilityState: extractGetter(docProto, 'webkitVisibilityState'),
     };
 
     // Bind hasFocus if available
@@ -106,7 +104,6 @@
      */
     const isHidden = () => {
       if (getters.hidden) return !!getters.hidden.call(document);
-      if (getters.webkitHidden) return !!getters.webkitHidden.call(document);
       return false;
     };
 
@@ -116,7 +113,6 @@
      */
     const getState = () => {
       if (getters.visibilityState) return String(getters.visibilityState.call(document));
-      if (getters.webkitVisibilityState) return String(getters.webkitVisibilityState.call(document));
       return 'visible';
     };
 
@@ -143,8 +139,6 @@
       const spoofedProperties = {
         hidden: { get: () => false, configurable: true, enumerable: true },
         visibilityState: { get: () => 'visible', configurable: true, enumerable: true },
-        webkitHidden: { get: () => false, configurable: true, enumerable: true },
-        webkitVisibilityState: { get: () => 'visible', configurable: true, enumerable: true },
       };
 
       // Define on document instance (less invasive than prototype modification)
@@ -171,6 +165,20 @@
   };
 
   /**
+   * Event handler for focus/blur that only blocks window-level events (tab switching).
+   * Allows element-level focus/blur to propagate for UI components.
+   * @param {Event} event
+   */
+  const blockWindowLevelFocusBlur = (event) => {
+    // Only block if the event target is the window itself (tab switching)
+    // Allow focus/blur on actual elements (inputs, buttons, etc.) to propagate
+    if (event.target === window || event.target === document) {
+      event.stopImmediatePropagation();
+      log(`Blocked window-level event: ${event.type}`);
+    }
+  };
+
+  /**
    * Adds blocking listeners for specified event types on a target.
    * @param {EventTarget} target
    * @param {string[]} eventTypes
@@ -186,9 +194,6 @@
   if (CONFIG.blockVisibilityEvents) {
     const visibilityEvents = [
       'visibilitychange',
-      'webkitvisibilitychange',
-      'mozvisibilitychange',
-      'msvisibilitychange',
       'pagehide',
       'pageshow',
       'freeze',
@@ -201,9 +206,13 @@
   }
 
   if (CONFIG.blockFocusBlurEvents) {
-    addBlockingListeners(window, ['blur', 'focus']);
-    addBlockingListeners(document, ['blur', 'focus', 'focusin', 'focusout']);
-    log('Focus/blur events blocked');
+    // Use selective blocking: only block focus/blur when target is window/document
+    // This allows element-level focus (search inputs, etc.) to work normally
+    for (const type of ['blur', 'focus']) {
+      window.addEventListener(type, blockWindowLevelFocusBlur, true);
+      document.addEventListener(type, blockWindowLevelFocusBlur, true);
+    }
+    log('Focus/blur events blocked (window-level only, element focus allowed)');
   }
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -213,9 +222,6 @@
   if (CONFIG.autoResumeVideos) {
     /** Symbol to mark videos we've already processed */
     const HOOKED = Symbol('bgPlayback.hooked');
-
-    /** WeakSet to track processed videos (backup for symbol check) */
-    const processedVideos = new WeakSet();
 
     /** Timestamp of the last user gesture */
     let lastGestureTime = 0;
@@ -300,10 +306,9 @@
      */
     const hookVideo = (video) => {
       if (!(video instanceof HTMLVideoElement)) return;
-      if (video[HOOKED] || processedVideos.has(video)) return;
+      if (video[HOOKED]) return;
 
       video[HOOKED] = true;
-      processedVideos.add(video);
 
       video.addEventListener('pause', handleVideoPause, { passive: true });
 
