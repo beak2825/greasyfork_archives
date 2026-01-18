@@ -1,0 +1,68 @@
+[
+  {
+    "id": 392315,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-12T13:45:34.000Z",
+    "code_updated_at": "2019-11-12T13:45:33.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156839,
+        "name": "themightydeity",
+        "created_at": "2017-10-23T09:39:57.000Z",
+        "url": "https://greasyfork.org/users/156839-themightydeity"
+      }
+    ],
+    "name": "Reddit Comment Sort Top",
+    "description": "11/12/2019, 3:02:52 PM",
+    "url": "https://greasyfork.org/scripts/392315-reddit-comment-sort-top",
+    "code_url": "https://update.greasyfork.org/scripts/392315/Reddit%20Comment%20Sort%20Top.user.js",
+    "code_size": 812,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 392314,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-12T13:44:53.000Z",
+    "code_updated_at": "2019-11-12T13:44:52.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156839,
+        "name": "themightydeity",
+        "created_at": "2017-10-23T09:39:57.000Z",
+        "url": "https://greasyfork.org/users/156839-themightydeity"
+      }
+    ],
+    "name": "Magnet Remove Tracker",
+    "description": "Removes trackers from magnet uri",
+    "url": "https://greasyfork.org/scripts/392314-magnet-remove-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/392314/Magnet%20Remove%20Tracker.user.js",
+    "code_size": 1897,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392292,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-12T02:55:01.000Z",
+    "code_updated_at": "2019-11-12T02:55:01.000Z",
+    "namespace": "https://greasyfork.org/en/users/397101-zenek-kowalski",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397101,
+        "name": "Zenek Kowalski",
+        "created_at": "2019-11-12T02:47:34.000Z",
+        "url": "https://greasyfork.org/users/397101-zenek-kowalski"
+      }
+    ],
+    "name": "test script",
+    "description": "test script 1",
+    "url": "https://greasyfork.org/scripts/392292-test-script",
+    "code_url": "https://update.greasyfork.org/scripts/392292/test%20script.user.js",
+    "code_size": 1220,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

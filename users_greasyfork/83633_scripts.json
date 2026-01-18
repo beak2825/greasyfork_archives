@@ -30,6 +30,39 @@
     "version": "1.82",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 392376,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-13T13:41:51.000Z",
+    "code_updated_at": "2019-12-23T17:34:08.000Z",
+    "namespace": "http://tool.liumingye.cn/qqws/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 83633,
+        "name": "zhouhuajdsh",
+        "created_at": "2016-11-29T03:13:40.000Z",
+        "url": "https://greasyfork.org/users/83633-zhouhuajdsh"
+      }
+    ],
+    "name": "QQ音乐付费无损音乐免费下载",
+    "description": "提供QQ音乐付费歌曲，320K下载、无损FLAC下载、无损APE下载、歌词下载，可以解析歌单列表、歌手歌单、分类歌单、专辑列表；提供网易云音乐歌曲、歌单解析。",
+    "url": "https://greasyfork.org/scripts/392376-qq%E9%9F%B3%E4%B9%90%E4%BB%98%E8%B4%B9%E6%97%A0%E6%8D%9F%E9%9F%B3%E4%B9%90%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/392376/QQ%E9%9F%B3%E4%B9%90%E4%BB%98%E8%B4%B9%E6%97%A0%E6%8D%9F%E9%9F%B3%E4%B9%90%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 3931,
+    "license": "MIT License",
+    "version": "1.1.7.1",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

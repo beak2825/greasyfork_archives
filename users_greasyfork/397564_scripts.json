@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392369,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-13T12:35:56.000Z",
+    "code_updated_at": "2019-11-14T09:40:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397564,
+        "name": "Maximilien",
+        "created_at": "2019-11-13T12:29:12.000Z",
+        "url": "https://greasyfork.org/users/397564-maximilien"
+      }
+    ],
+    "name": "Modif DashBoard",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/392369-modif-dashboard",
+    "code_url": "https://update.greasyfork.org/scripts/392369/Modif%20DashBoard.user.js",
+    "code_size": 2642,
+    "license": null,
+    "version": "0.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

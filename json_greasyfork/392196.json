@@ -1,0 +1,59 @@
+{
+  "id": 392196,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-09T23:32:27.000Z",
+  "code_updated_at": "2019-12-05T05:48:53.000Z",
+  "namespace": "PhiLhoSoft",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 396454,
+      "name": "PhiLhoSoft",
+      "created_at": "2019-11-09T16:37:29.000Z",
+      "url": "https://greasyfork.org/users/396454-philhosoft",
+      "scripts": [
+        {
+          "id": 392196,
+          "daily_installs": 0,
+          "total_installs": 33,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-09T23:32:27.000Z",
+          "code_updated_at": "2019-12-05T05:48:53.000Z",
+          "namespace": "PhiLhoSoft",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AdopteUnMec - montre charmes",
+          "description": "Montre les charmes (info supprimée) dans l'encart de popularité des profils AdopteUnMec",
+          "url": "https://greasyfork.org/scripts/392196-adopteunmec-montre-charmes",
+          "code_url": "https://update.greasyfork.org/scripts/392196/AdopteUnMec%20-%20montre%20charmes.user.js",
+          "code_size": 4463,
+          "license": null,
+          "version": "1.1",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AdopteUnMec - montre charmes",
+  "description": "Montre les charmes (info supprimée) dans l'encart de popularité des profils AdopteUnMec",
+  "url": "https://greasyfork.org/scripts/392196-adopteunmec-montre-charmes",
+  "code_url": "https://update.greasyfork.org/scripts/392196/AdopteUnMec%20-%20montre%20charmes.user.js",
+  "code_size": 4463,
+  "license": null,
+  "version": "1.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

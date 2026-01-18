@@ -1,0 +1,59 @@
+{
+  "id": 392156,
+  "daily_installs": 0,
+  "total_installs": 77,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-08T19:20:08.000Z",
+  "code_updated_at": "2020-02-02T18:13:07.000Z",
+  "namespace": ";_;",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 396181,
+      "name": "raawkins",
+      "created_at": "2019-11-08T19:14:32.000Z",
+      "url": "https://greasyfork.org/users/396181-raawkins",
+      "scripts": [
+        {
+          "id": 392156,
+          "daily_installs": 0,
+          "total_installs": 77,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-08T19:20:08.000Z",
+          "code_updated_at": "2020-02-02T18:13:07.000Z",
+          "namespace": ";_;",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Manganelo/Mangakalot, no image spacing",
+          "description": "Removes image spacing on reader",
+          "url": "https://greasyfork.org/scripts/392156-manganelo-mangakalot-no-image-spacing",
+          "code_url": "https://update.greasyfork.org/scripts/392156/ManganeloMangakalot%2C%20no%20image%20spacing.user.js",
+          "code_size": 684,
+          "license": null,
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Manganelo/Mangakalot, no image spacing",
+  "description": "Removes image spacing on reader",
+  "url": "https://greasyfork.org/scripts/392156-manganelo-mangakalot-no-image-spacing",
+  "code_url": "https://update.greasyfork.org/scripts/392156/ManganeloMangakalot%2C%20no%20image%20spacing.user.js",
+  "code_size": 684,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

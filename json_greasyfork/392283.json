@@ -1,0 +1,59 @@
+{
+  "id": 392283,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2019-11-12T00:46:09.000Z",
+  "code_updated_at": "2019-11-12T03:28:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 397080,
+      "name": "botprogrammer",
+      "created_at": "2019-11-12T00:37:54.000Z",
+      "url": "https://greasyfork.org/users/397080-botprogrammer",
+      "scripts": [
+        {
+          "id": 392283,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2019-11-12T00:46:09.000Z",
+          "code_updated_at": "2019-11-12T03:28:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "signature for what? [sfw]",
+          "description": "Read premium content from Observador (www.observador.pt) website media without paying.",
+          "url": "https://greasyfork.org/scripts/392283-signature-for-what-sfw",
+          "code_url": "https://update.greasyfork.org/scripts/392283/signature%20for%20what%20%5Bsfw%5D.user.js",
+          "code_size": 1446,
+          "license": null,
+          "version": "1.25",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "signature for what? [sfw]",
+  "description": "Read premium content from Observador (www.observador.pt) website media without paying.",
+  "url": "https://greasyfork.org/scripts/392283-signature-for-what-sfw",
+  "code_url": "https://update.greasyfork.org/scripts/392283/signature%20for%20what%20%5Bsfw%5D.user.js",
+  "code_size": 1446,
+  "license": null,
+  "version": "1.25",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

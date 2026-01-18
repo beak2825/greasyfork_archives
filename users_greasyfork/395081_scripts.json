@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392141,
+    "daily_installs": 0,
+    "total_installs": 224,
+    "fan_score": "75.7",
+    "good_ratings": 12,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-08T11:18:21.000Z",
+    "code_updated_at": "2025-10-25T05:30:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395081,
+        "name": "Sándor Körözsi",
+        "created_at": "2019-11-05T11:33:19.000Z",
+        "url": "https://greasyfork.org/users/395081-s%C3%A1ndor-k%C3%B6r%C3%B6zsi"
+      }
+    ],
+    "name": "Youtube Save to... playlist incremental search",
+    "description": "This script injects a search field into the dialog where user can save a video to a playlist. When the user starts to type an incremental search is implemented and the playlists are filtered out",
+    "url": "https://greasyfork.org/scripts/392141-youtube-save-to-playlist-incremental-search",
+    "code_url": "https://update.greasyfork.org/scripts/392141/Youtube%20Save%20to%20playlist%20incremental%20search.user.js",
+    "code_size": 5802,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

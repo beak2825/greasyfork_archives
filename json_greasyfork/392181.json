@@ -1,0 +1,33 @@
+{
+  "id": 392181,
+  "daily_installs": 0,
+  "total_installs": 97,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-09T13:27:41.000Z",
+  "code_updated_at": "2022-01-22T17:34:17.000Z",
+  "namespace": "https://greasyfork.org/users/321857-anakunda",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 321857,
+      "name": "Anakunda",
+      "created_at": "2019-07-29T18:28:12.000Z",
+      "url": "https://greasyfork.org/users/321857-anakunda"
+    }
+  ],
+  "name": "Discogs API links",
+  "description": "Adds links to view current page in JSON format (release, master release, artist, label)",
+  "url": "https://greasyfork.org/scripts/392181-discogs-api-links",
+  "code_url": "https://update.greasyfork.org/scripts/392181/Discogs%20API%20links.user.js",
+  "code_size": 4574,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "1.10.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

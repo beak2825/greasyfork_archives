@@ -1,0 +1,33 @@
+{
+  "id": 392299,
+  "daily_installs": 0,
+  "total_installs": 483,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-12T06:47:36.000Z",
+  "code_updated_at": "2019-11-13T11:18:13.000Z",
+  "namespace": "https://github.com/Virtual-Dimension/TrulyShield/blob/master/TrulyLuoguShield.js",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 250933,
+      "name": "Ara Li",
+      "created_at": "2019-03-01T09:45:32.000Z",
+      "url": "https://greasyfork.org/users/250933-ara-li"
+    }
+  ],
+  "name": "新·真·洛谷屏蔽功能",
+  "description": "拉低质量小学生？仗势怼人大佬佬？不存在的！",
+  "url": "https://greasyfork.org/scripts/392299-%E6%96%B0-%E7%9C%9F-%E6%B4%9B%E8%B0%B7%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD",
+  "code_url": "https://update.greasyfork.org/scripts/392299/%E6%96%B0%C2%B7%E7%9C%9F%C2%B7%E6%B4%9B%E8%B0%B7%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD.user.js",
+  "code_size": 1710,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.45",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

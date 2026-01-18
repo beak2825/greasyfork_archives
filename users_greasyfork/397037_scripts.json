@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392354,
+    "daily_installs": 0,
+    "total_installs": 280,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-13T06:38:31.000Z",
+    "code_updated_at": "2019-11-13T08:31:49.000Z",
+    "namespace": "https://greasyfork.org/en/users/397037-damn-shooterz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397037,
+        "name": "Damn Shooterz",
+        "created_at": "2019-11-11T19:01:46.000Z",
+        "url": "https://greasyfork.org/users/397037-damn-shooterz"
+      }
+    ],
+    "name": "Tinychat.com forced upgrade overlay and blur fix",
+    "description": "Removes the forced upgrade overlay and blur so as to let everyone see other cams even without a paid subscription.",
+    "url": "https://greasyfork.org/scripts/392354-tinychat-com-forced-upgrade-overlay-and-blur-fix",
+    "code_url": "https://update.greasyfork.org/scripts/392354/Tinychatcom%20forced%20upgrade%20overlay%20and%20blur%20fix.user.js",
+    "code_size": 3614,
+    "license": null,
+    "version": "1.1.2B",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

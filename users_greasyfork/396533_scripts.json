@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392198,
+    "daily_installs": 0,
+    "total_installs": 186,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-10T00:50:48.000Z",
+    "code_updated_at": "2020-08-08T06:52:39.000Z",
+    "namespace": "FAT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 396533,
+        "name": "ObeseNerd",
+        "created_at": "2019-11-10T00:46:14.000Z",
+        "url": "https://greasyfork.org/users/396533-obesenerd"
+      }
+    ],
+    "name": "JES (jumpin.chat enhancement suite)",
+    "description": "Fixes some jumpin.chat shortcomings and adds useful features.  Examples: Dark mode, maximise cams, streamlines the user interface, toggle user list, alert phrase highlighting and sound alerts, and more!",
+    "url": "https://greasyfork.org/scripts/392198-jes-jumpin-chat-enhancement-suite",
+    "code_url": "https://update.greasyfork.org/scripts/392198/JES%20%28jumpinchat%20enhancement%20suite%29.user.js",
+    "code_size": 16725,
+    "license": "MIT License",
+    "version": "0.24",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

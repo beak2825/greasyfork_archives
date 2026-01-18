@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392208,
+    "daily_installs": 0,
+    "total_installs": 227,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-10T06:35:23.000Z",
+    "code_updated_at": "2019-11-10T06:35:23.000Z",
+    "namespace": "https://igg-games.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 148960,
+        "name": "chan022",
+        "created_at": "2017-08-13T12:32:39.000Z",
+        "url": "https://greasyfork.org/users/148960-chan022"
+      }
+    ],
+    "name": "igg-games.com ad skip",
+    "description": "igg-games ad skipper",
+    "url": "https://greasyfork.org/scripts/392208-igg-games-com-ad-skip",
+    "code_url": "https://update.greasyfork.org/scripts/392208/igg-gamescom%20ad%20skip.user.js",
+    "code_size": 1172,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

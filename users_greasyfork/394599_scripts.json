@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392233,
+    "daily_installs": 0,
+    "total_installs": 1597,
+    "fan_score": "30.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2019-11-10T17:59:22.000Z",
+    "code_updated_at": "2019-11-10T19:42:17.000Z",
+    "namespace": "https://greasyfork.org/zh-CN",
+    "support_url": "http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=973354623@qq.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394599,
+        "name": "橙汁",
+        "created_at": "2019-11-03T17:54:53.000Z",
+        "url": "https://greasyfork.org/users/394599-%E6%A9%99%E6%B1%81"
+      }
+    ],
+    "name": "4399赛尔号屏蔽广告",
+    "description": "屏蔽4399赛尔号网页中的各种广告，带来清爽浏览体验。已覆盖4399赛尔号绝大部分相关网页，屏蔽内容包括百度推广广告、游戏面板广告、视频播放广告、顶部链接广告、底部链接广告等。",
+    "url": "https://greasyfork.org/scripts/392233-4399%E8%B5%9B%E5%B0%94%E5%8F%B7%E5%B1%8F%E8%94%BD%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/392233/4399%E8%B5%9B%E5%B0%94%E5%8F%B7%E5%B1%8F%E8%94%BD%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 8852,
+    "license": "GNU General Public License version 2; https://opensource.org/licenses/GPL-2.0",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

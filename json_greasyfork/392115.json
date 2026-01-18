@@ -1,0 +1,33 @@
+{
+  "id": 392115,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-07T20:41:49.000Z",
+  "code_updated_at": "2021-10-29T21:20:22.000Z",
+  "namespace": "wildhareFedFilter",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 395301,
+      "name": "tnoskilz",
+      "created_at": "2019-11-06T05:06:03.000Z",
+      "url": "https://greasyfork.org/users/395301-tnoskilz"
+    }
+  ],
+  "name": "Userlist Filter",
+  "description": "Filters targets from player search results (includes a fed filter)",
+  "url": "https://greasyfork.org/scripts/392115-userlist-filter",
+  "code_url": "https://update.greasyfork.org/scripts/392115/Userlist%20Filter.user.js",
+  "code_size": 13972,
+  "license": null,
+  "version": "0.6.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

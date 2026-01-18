@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392122,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-08T01:14:15.000Z",
+    "code_updated_at": "2019-11-08T01:14:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 180900,
+        "name": "KoctrX",
+        "created_at": "2018-04-19T13:15:53.000Z",
+        "url": "https://greasyfork.org/users/180900-koctrx"
+      }
+    ],
+    "name": "Evennode",
+    "description": "Evennode delete projects multiple",
+    "url": "https://greasyfork.org/scripts/392122-evennode",
+    "code_url": "https://update.greasyfork.org/scripts/392122/Evennode.user.js",
+    "code_size": 2859,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

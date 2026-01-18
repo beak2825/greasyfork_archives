@@ -1,0 +1,59 @@
+{
+  "id": 392350,
+  "daily_installs": 0,
+  "total_installs": 751,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-13T04:08:45.000Z",
+  "code_updated_at": "2019-11-13T04:08:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 397431,
+      "name": "YOUNG KING OURs",
+      "created_at": "2019-11-13T04:08:31.000Z",
+      "url": "https://greasyfork.org/users/397431-young-king-ours",
+      "scripts": [
+        {
+          "id": 392350,
+          "daily_installs": 0,
+          "total_installs": 751,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-13T04:08:45.000Z",
+          "code_updated_at": "2019-11-13T04:08:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kissanime Anti-Captcha",
+          "description": "Automatically solves captchas on Kissanime.ru",
+          "url": "https://greasyfork.org/scripts/392350-kissanime-anti-captcha",
+          "code_url": "https://update.greasyfork.org/scripts/392350/Kissanime%20Anti-Captcha.user.js",
+          "code_size": 13537,
+          "license": null,
+          "version": "Sept. 2017",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kissanime Anti-Captcha",
+  "description": "Automatically solves captchas on Kissanime.ru",
+  "url": "https://greasyfork.org/scripts/392350-kissanime-anti-captcha",
+  "code_url": "https://update.greasyfork.org/scripts/392350/Kissanime%20Anti-Captcha.user.js",
+  "code_size": 13537,
+  "license": null,
+  "version": "Sept. 2017",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

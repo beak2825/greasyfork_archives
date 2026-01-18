@@ -1,0 +1,33 @@
+{
+  "id": 392232,
+  "daily_installs": 1,
+  "total_installs": 201,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-10T16:48:04.000Z",
+  "code_updated_at": "2019-11-10T16:48:04.000Z",
+  "namespace": "https://marthijnhoiting.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 47622,
+      "name": "Wim Weijers",
+      "created_at": "2016-06-06T13:50:40.000Z",
+      "url": "https://greasyfork.org/users/47622-wim-weijers"
+    }
+  ],
+  "name": "Block adblocker warnings",
+  "description": "Blocked warning @ NU.NL",
+  "url": "https://greasyfork.org/scripts/392232-block-adblocker-warnings",
+  "code_url": "https://update.greasyfork.org/scripts/392232/Block%20adblocker%20warnings.user.js",
+  "code_size": 731,
+  "license": "Copyright by Marthijn Hoiting",
+  "version": "0.1",
+  "locale": "nl",
+  "deleted": false,
+  "visibility": "public"
+}
