@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               LANraragi 推荐栏
 // @namespace     https://github.com/Kelcoin
-// @version            1.3.1
+// @version            1.4
 // @description     基于标签为 LANraragi 阅读器下方推荐区：猜你喜欢 & 同作者
 // @author             Kelcoin
 // @match              *://*/reader?id=*
@@ -20,10 +20,10 @@
     // ==========================================
     const CONFIG = {
         // 每个视图最多显示多少个归档
-        perViewLimit: 13,
+        perViewLimit: 15,
 
         // 总共最多显示多少个归档（猜你喜欢 + 同作者）
-        totalLimit: 26,
+        totalLimit: 30,
 
         // 是否在加载完成后自动展开
         autoExpand: false,
@@ -115,6 +115,7 @@
             'group:': 0.1,
             'artist:': 0.1,
             'category:': 0.1,
+            'other:AI 超分': 0,
             'language:': 0,
             'uploader:': 0,
             'timestamp:': 0,
@@ -136,7 +137,7 @@
     // 样式：阅读器下方的卡片区域
     // ==========================================
     const style = document.createElement('style');
-        style.textContent = `
+    style.textContent = `
         .lrr-rec-progress {
             position: absolute;
             top: 4px;
@@ -233,7 +234,7 @@
 
         #lrr-rec-status-msg {
             position: absolute;
-            right: 48px;
+            right: 80px; /* 调整位置给刷新按钮腾空间 */
             top: 50%;
             transform: translateY(-50%);
             font-size: 12px;
@@ -272,8 +273,21 @@
             border-color: rgba(206, 224, 255, 0.55) !important;
             font-weight: 600 !important;
         }
+        
+        /* 针对同作者按钮的隐显动画 */
+        #lrr-rec-btn-artist {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-        .lrr-rec-toggle {
+        .lrr-rec-controls {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            pointer-events: auto;
+        }
+
+        .lrr-rec-toggle, .lrr-rec-refresh {
             pointer-events: auto;
             cursor: pointer;
             color: #fff;
@@ -287,29 +301,36 @@
             transition: all 0.2s;
         }
 
-        .lrr-rec-toggle:hover {
+        .lrr-rec-toggle:hover, .lrr-rec-refresh:hover {
             opacity: 1;
             background: rgba(255, 255, 255, 0.1);
         }
 
+        .lrr-rec-arrow-icon, .lrr-rec-refresh-icon {
+            fill: currentColor;
+            width: 24px;
+            height: 24px;
+        }
+
+        .lrr-rec-refresh {
+            display: none; /* 默认隐藏，加载完显示 */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .lrr-rec-refresh-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* 箭头图标动画与旋转 */
         .lrr-rec-arrow-icon {
-            display: none;
-        }
-
-        /* 箭头图标 */
-        .lrr-rec-toggle::after {
-            content: '';
-            display: block;
-            width: 0;
-            height: 0;
-            border-style: solid;
             transition: transform 0.3s ease;
-            border-width: 6px 5px 0 5px;
-            border-color: #e3e9f3 transparent transparent transparent;
-            transform: rotate(0deg);
+            transform: rotate(0deg); /* 默认朝上 (展开状态) */
         }
 
-        #lrr-rec-container.collapsed .lrr-rec-toggle::after {
+        /* 收起时旋转180度 (朝下) */
+        #lrr-rec-container.collapsed .lrr-rec-arrow-icon {
             transform: rotate(180deg);
         }
 
@@ -439,6 +460,23 @@
     function logDebug(...args) {
         if (CONFIG.debug) {
             console.log('[LRR Rec]', ...args);
+        }
+    }
+
+    // 显隐动画助手函数
+    function setVisible(el, visible, displayStyle = 'flex') {
+        if (visible) {
+            el.style.display = displayStyle;
+            // 强制重绘以触发 transition
+            el.offsetHeight;
+            el.style.opacity = '1';
+        } else {
+            el.style.opacity = '0';
+            setTimeout(() => {
+                if (el.style.opacity === '0') {
+                    el.style.display = 'none';
+                }
+            }, 300); // 匹配 CSS transition 时间
         }
     }
 
@@ -848,7 +886,8 @@
         const wrapper = document.createElement('div');
         wrapper.id = 'lrr-rec-app-wrapper';
 
-        const arrowSvg = `<svg class="lrr-rec-arrow-icon" viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>`;
+        const arrowSvg = `<svg class="lrr-rec-arrow-icon" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6z"></path></svg>`;
+        const refreshSvg = `<svg class="lrr-rec-refresh-icon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></svg>`;
 
         const app = document.createElement('div');
         app.id = 'lrr-rec-app';
@@ -860,8 +899,11 @@
                         <button class="lrr-rec-tab-btn" data-target="artist" id="lrr-rec-btn-artist" style="display:none">同作者</button>
                     </div>
                     <span id="lrr-rec-status-msg">正在生成推荐...</span>
-                    <div class="lrr-rec-toggle" title="展开/收起">
-                        ${arrowSvg}
+                    <div class="lrr-rec-controls">
+                        <div class="lrr-rec-refresh" id="lrr-rec-refresh-btn" title="清理缓存并刷新">${refreshSvg}</div>
+                        <div class="lrr-rec-toggle" title="展开/收起">
+                            ${arrowSvg}
+                        </div>
                     </div>
                 </div>
                 <div id="lrr-rec-view-sim" class="lrr-rec-scroll-view">
@@ -886,6 +928,7 @@
         const btnArtist = document.getElementById('lrr-rec-btn-artist');
         const viewSim = document.getElementById('lrr-rec-view-sim');
         const viewArtist = document.getElementById('lrr-rec-view-artist');
+        const btnRefresh = document.getElementById('lrr-rec-refresh-btn');
 
         // 初始收起
         viewSim.classList.add('lrr-rec-view-hidden');
@@ -958,6 +1001,7 @@
 
         headerBar.addEventListener('click', (e) => {
             if (e.target.closest('.lrr-rec-tab-btn')) return;
+            if (e.target.closest('.lrr-rec-refresh')) return; // 避免触发 toggle
             togglePanel();
         });
 
@@ -1081,6 +1125,7 @@
             return picked;
         }
 
+        // 修改后的 buildSameAuthorData 逻辑
         async function buildSameAuthorData() {
             if (remainingTotal <= 0) return [];
             if (!Array.isArray(sourceArtist) || sourceArtist.length === 0) return [];
@@ -1088,127 +1133,185 @@
             const viewLimit = Math.min(CONFIG.perViewLimit, remainingTotal);
             if (viewLimit <= 0) return [];
 
-            const allResultsMap = new Map();
-            const searchPromises = sourceArtist.map(tag => {
-                const filter = `${tag}$`;
-                return searchArchives(filter)
-                    .then(data => ({ tag, data }))
-                    .catch(e => {
-                        logDebug('buildSameAuthor search error for tag:', tag, e);
-                        return { tag, data: [] };
-                    });
-            });
+            // 1. 乱序所有 artist 标签，准备随机抓取
+            const shuffledTags = shuffle(sourceArtist);
+            
+            const collectedArchivesMap = new Map();
+            let collectedCount = 0;
 
-            const allSearchResults = await Promise.all(searchPromises);
+            // 2. 循环标签进行搜索，直到数量足够
+            for (const tag of shuffledTags) {
+                if (collectedCount >= viewLimit * 2) break; // 适当多抓取一点供后续过滤排序，防止只抓 limit 个导致排序没意义
 
-            for (const { data } of allSearchResults) {
-                if (!Array.isArray(data) || data.length === 0) continue;
-                data.forEach(arc => {
-                    if (!arc || arc.arcid == null) return;
-                    if (arc.arcid === currentId) return;
-                    if (!allResultsMap.has(arc.arcid)) {
-                        allResultsMap.set(arc.arcid, arc);
+                try {
+                    const filter = `${tag}$`;
+                    const data = await searchArchives(filter);
+                    
+                    if (Array.isArray(data)) {
+                        for (const arc of data) {
+                            if (!arc || arc.arcid === currentId) continue;
+                            
+                            // 去重
+                            if (!collectedArchivesMap.has(arc.arcid)) {
+                                collectedArchivesMap.set(arc.arcid, arc);
+                                collectedCount++;
+                            }
+                        }
                     }
-                });
+                } catch (e) {
+                    logDebug('buildSameAuthor search error for tag:', tag, e);
+                }
+                
+                // 如果当前收集的数量已经达到要求，就不再请求下一个标签了
+                if (collectedCount >= viewLimit) break;
             }
 
-            const allResults = Array.from(allResultsMap.values());
+            let allResults = Array.from(collectedArchivesMap.values());
             if (allResults.length === 0) return [];
 
-            const shuffled = shuffle(allResults);
-            const picked = shuffled.slice(0, viewLimit);
+            // 3. 排序逻辑：
+            // 优先级 1: 未读在前，已读在后
+            // 优先级 2: 归档名称排序
+            allResults.sort((a, b) => {
+                const isReadA = (parseInt(a.pagecount) > 0 && parseInt(a.progress) >= parseInt(a.pagecount));
+                const isReadB = (parseInt(b.pagecount) > 0 && parseInt(b.progress) >= parseInt(b.pagecount));
+
+                if (isReadA !== isReadB) {
+                    // 如果 A 是已读，B 是未读，则 A 放后面 (返回 1)
+                    return isReadA ? 1 : -1;
+                }
+
+                // 同状态下按标题排序
+                return (a.title || '').localeCompare(b.title || '');
+            });
+
+            // 4. 截取最终数量
+            const picked = allResults.slice(0, viewLimit);
 
             remainingTotal = Math.max(0, remainingTotal - picked.length);
             return picked;
         }
 
         // ==========================================
-        // 执行逻辑：缓存检查 -> 生成 -> 渲染 -> 保存
+        // 执行逻辑封装
         // ==========================================
-        try {
-            const cacheKey = `lrr_rec_cache_v1_${currentId}`;
-            let cachedData = null;
+        const cacheKey = `lrr_rec_cache_v1_${currentId}`;
 
-            // 1. 尝试读取缓存
+        // 刷新按钮事件
+        btnRefresh.onclick = (e) => {
+            e.stopPropagation();
+            localStorage.removeItem(cacheKey);
+            generateAndRender(true);
+        };
+
+        async function generateAndRender(isRefresh = false) {
+            // 重置状态
+            remainingTotal = CONFIG.totalLimit;
+            if (isRefresh) {
+                viewSim.innerHTML = `<div class="lrr-rec-loading">正在刷新推荐...</div>`;
+                viewArtist.innerHTML = '';
+                viewArtist.classList.add('lrr-rec-view-hidden');
+                
+                setVisible(btnArtist, false, 'block'); // 隐藏同作者按钮
+                setVisible(btnRefresh, false, 'flex'); // 隐藏刷新按钮
+
+                if (btnArtist.classList.contains('active')) {
+                    switchTab('sim');
+                }
+            }
+
             try {
-                const raw = localStorage.getItem(cacheKey);
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    const now = Date.now();
-                    if (parsed && (now - parsed.timestamp < CONFIG.cacheExpiry)) {
-                        cachedData = parsed;
-                        logDebug('Loaded recommendations from cache');
-                    } else {
-                        logDebug('Cache expired or invalid');
-                    }
-                }
-            } catch (e) {
-                console.warn('LRR Rec: Cache read error', e);
-            }
+                let cachedData = null;
 
-            let simResult = [];
-            let artistResult = [];
-
-            if (cachedData) {
-                // 2A. 命中缓存：直接使用数据
-                simResult = cachedData.sim || [];
-                artistResult = cachedData.artist || [];
-            } else {
-                // 2B. 未命中缓存：执行构建逻辑
-                simResult = await buildYouMayLikeData();
-                artistResult = await buildSameAuthorData();
-
-                // 写入缓存 (仅当有数据时)
-                if (simResult.length > 0 || artistResult.length > 0) {
+                // 1. 尝试读取缓存 (如果不是强制刷新)
+                if (!isRefresh) {
                     try {
-                        const payload = {
-                            timestamp: Date.now(),
-                            sim: simResult,
-                            artist: artistResult
-                        };
-                        localStorage.setItem(cacheKey, JSON.stringify(payload));
+                        const raw = localStorage.getItem(cacheKey);
+                        if (raw) {
+                            const parsed = JSON.parse(raw);
+                            const now = Date.now();
+                            if (parsed && (now - parsed.timestamp < CONFIG.cacheExpiry)) {
+                                cachedData = parsed;
+                                logDebug('Loaded recommendations from cache');
+                            } else {
+                                logDebug('Cache expired or invalid');
+                            }
+                        }
                     } catch (e) {
-                        console.warn('LRR Rec: Cache write error', e);
+                        console.warn('LRR Rec: Cache read error', e);
                     }
                 }
-            }
 
-            // 3. 渲染视图
-            if (simResult.length > 0) {
-                renderArchiveList(simResult, viewSim);
-            } else {
-                viewSim.innerHTML = `<div class="lrr-rec-loading">暂无推荐结果。</div>`;
-            }
+                let simResult = [];
+                let artistResult = [];
 
-            if (artistResult.length > 0) {
-                renderArchiveList(artistResult, viewArtist);
-                btnArtist.style.display = 'block';
-                btnArtist.innerText = '同作者';
-            }
+                if (cachedData) {
+                    // 2A. 命中缓存：直接使用数据
+                    simResult = cachedData.sim || [];
+                    artistResult = cachedData.artist || [];
+                } else {
+                    // 2B. 未命中缓存：执行构建逻辑
+                    simResult = await buildYouMayLikeData();
+                    artistResult = await buildSameAuthorData();
 
-            // 4. 后续 UI 状态更新
-            if (CONFIG.autoExpand) {
-                if (container.classList.contains('collapsed')) {
-                    container.classList.remove('collapsed');
-                    // 优先显示同作者
-                    const activeTarget = btnArtist.classList.contains('active') ? 'artist' : 'sim';
-                    switchTab(activeTarget);
-                    container.style.maxHeight = '';
+                    // 写入缓存 (仅当有数据时)
+                    if (simResult.length > 0 || artistResult.length > 0) {
+                        try {
+                            const payload = {
+                                timestamp: Date.now(),
+                                sim: simResult,
+                                artist: artistResult
+                            };
+                            localStorage.setItem(cacheKey, JSON.stringify(payload));
+                        } catch (e) {
+                            console.warn('LRR Rec: Cache write error', e);
+                        }
+                    }
                 }
-                const statusMsg = document.getElementById('lrr-rec-status-msg');
-                if (statusMsg) statusMsg.style.display = 'none';
-            } else {
-                const statusMsg = document.getElementById('lrr-rec-status-msg');
-                if (statusMsg) {
-                    statusMsg.innerText = '推荐已就绪';
-                    setTimeout(() => { statusMsg.style.opacity = '0'; }, 3000);
-                }
-            }
 
-        } catch (e) {
-            console.error(e);
-            viewSim.innerHTML = `<div class="lrr-rec-loading">加载失败</div>`;
+                // 3. 渲染视图
+                if (simResult.length > 0) {
+                    renderArchiveList(simResult, viewSim);
+                } else {
+                    viewSim.innerHTML = `<div class="lrr-rec-loading">暂无推荐结果。</div>`;
+                }
+
+                if (artistResult.length > 0) {
+                    renderArchiveList(artistResult, viewArtist);
+                    btnArtist.innerText = '同作者';
+                    setVisible(btnArtist, true, 'block'); // 渐显同作者按钮
+                }
+
+                // 4. 后续 UI 状态更新
+                setVisible(btnRefresh, true, 'flex'); // 渐显刷新按钮
+
+                if (CONFIG.autoExpand && !isRefresh) { // 刷新时不自动展开，避免干扰
+                    if (container.classList.contains('collapsed')) {
+                        container.classList.remove('collapsed');
+                        // 优先显示同作者
+                        const activeTarget = btnArtist.classList.contains('active') ? 'artist' : 'sim';
+                        switchTab(activeTarget);
+                        container.style.maxHeight = '';
+                    }
+                    const statusMsg = document.getElementById('lrr-rec-status-msg');
+                    if (statusMsg) statusMsg.style.display = 'none';
+                } else {
+                    const statusMsg = document.getElementById('lrr-rec-status-msg');
+                    if (statusMsg) {
+                        // 直接隐藏状态栏，不显示“已就绪”或“刷新完成”
+                        statusMsg.style.display = 'none';
+                    }
+                }
+
+            } catch (e) {
+                console.error(e);
+                viewSim.innerHTML = `<div class="lrr-rec-loading">加载失败</div>`;
+                setVisible(btnRefresh, true, 'flex'); // 即使失败也显示刷新按钮以便重试
+            }
         }
+
+        // 启动首次生成
+        generateAndRender(false);
     }
 
     // 启动

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         【智狐修改】全网VIP视频免费解析观看 (精简交互版)
 // @namespace    zhihu_vip
-// @version      2.4
+// @version      2.7
 // @description  精选解析线路为大家提供各大视频网站(PC+移动端)视频解析服务，简洁易用
 // @author       zhihu
 // @license MIT
@@ -29,6 +29,7 @@
 // @match        *://m.le.com/vplay_*
 // @match        *://m.tv.sohu.com/v*
 // @match        *://m.pptv.com/show/*
+// @match        *://*xmflv.cc/*
 // @downloadURL https://update.greasyfork.org/scripts/561492/%E3%80%90%E6%99%BA%E7%8B%90%E4%BF%AE%E6%94%B9%E3%80%91%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E8%A7%A3%E6%9E%90%E8%A7%82%E7%9C%8B%20%28%E7%B2%BE%E7%AE%80%E4%BA%A4%E4%BA%92%E7%89%88%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/561492/%E3%80%90%E6%99%BA%E7%8B%90%E4%BF%AE%E6%94%B9%E3%80%91%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E8%A7%A3%E6%9E%90%E8%A7%82%E7%9C%8B%20%28%E7%B2%BE%E7%AE%80%E4%BA%A4%E4%BA%92%E7%89%88%29.meta.js
 // ==/UserScript==
@@ -40,49 +41,20 @@
     const CONFIG = {
         // 内置解析接口（2024年最全集 - 42个线路）
         BUILTIN_APIS: [
-            // ====== 你标记推荐的主力接口 ======
             {name: "七哥", url: "https://jx.nnxv.cn/tv.php?url="},
             {name: "虾米", url: "https://jx.xmflv.cc/?url="},
-
-            // ====== 优选高频接口 (前10) ======
-            {name: "B站综合", url: "https://jx.jsonplayer.com/player/?url="},
+            {name: "8090", url: "https://www.8090g.cn/?url="},
+            {name: "剖元", url: "https://www.pouyun.com/?url="},
             {name: "爱豆", url: "https://jx.aidouer.net/?url="},
             {name: "M3U8.TV", url: "https://jx.m3u8.tv/jiexi/?url="},
             {name: "纯净", url: "https://im1907.top/?jx="},
             {name: "OK解析", url: "https://okjx.cc/?url="},
-            {name: "夜幕", url: "https://www.yemu.xyz/?url="},
-            {name: "BL解析", url: "https://vip.bljiex.com/?v="},
             {name: "冰豆(新)", url: "https://api.qianqi.net/vip/?url="},
             {name: "JY解析", url: "https://jx.playerjy.com/?url="},
-
-            // ====== 其他备用接口 ======
             {name: "百域", url: "https://jx.618g.com/?url="},
             {name: "CK", url: "https://www.ckplayer.vip/jiexi/?url="},
-            {name: "CHok", url: "https://www.gai4.com/?url="},
-            {name: "ckmov", url: "https://www.ckmov.vip/api.php?url="},
-            {name: "H8", url: "https://www.h8jx.com/jiexi.php?url="},
-            {name: "解析", url: "https://ckmov.ccyjjd.com/ckmov/?url="},
-            {name: "解析la", url: "https://api.jiexi.la/?url="},
-            {name: "老板", url: "https://vip.laobandq.com/jiexi.php?url="},
-            {name: "MAO", url: "https://www.mtosz.com/m3u8.php?url="},
-            {name: "诺讯", url: "https://www.nxflv.com/?url="},
             {name: "PM", url: "https://www.playm3u8.cn/jiexi.php?url="},
             {name: "盘古", url: "https://www.pangujiexi.cc/jiexi.php?url="},
-            {name: "RDHK", url: "https://jx.rdhk.net/?v="},
-            {name: "人人迷", url: "https://jx.blbo.cc:4433/?url="},
-            {name: "思云", url: "https://jx.ap2p.cn/?url="},
-            {name: "思古3", url: "https://jsap.attakids.com/?url="},
-            {name: "听乐", url: "https://jx.dj6u.com/?url="},
-            {name: "维多", url: "https://jx.ivito.cn/?url="},
-            {name: "YT", url: "https://jx.yangtu.top/?url="},
-            {name: "云端", url: "https://sb.5gseo.net/?url="},
-            {name: "0523", url: "https://go.yh0523.cn/y.cy?url="},
-            {name: "17云", url: "https://www.1717yun.com/jx/ty.php?url="},
-            {name: "180", url: "https://jx.000180.top/jx/?url="},
-            {name: "4K", url: "https://jx.4kdv.com/?url="},
-            {name: "8090", url: "https://www.8090g.cn/?url="},
-            {name: "剖元", url: "https://www.pouyun.com/?url="},
-            {name: "全民", url: "https://43.240.74.102:4433?url="}
         ],
 
         // 要删除的广告元素
@@ -108,8 +80,13 @@
             '#toplevel',// qq
             '#vip-container',// qq
             '#module-pc_detail_rec_main',// qq
-            '#module-pc_detail_rec_main',// qq
-            '.creative-player-1-layer'// qq
+            '.creative-player-1-layer',// qq
+            'creative-player-video-ad-container',// qqgg
+            '#adv_wrap_hh',//gg
+            '.preview-mini-player',// miniplay
+            '.corner-wrap',
+            '.scroll-content-wrap',
+            '.tool-wrapper'
         ],
 
         // 默认设置

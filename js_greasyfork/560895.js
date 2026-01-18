@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LANraragi 阅读模式
 // @namespace    https://github.com/Kelcoin
-// @version      4.5.2
+// @version      4.6
 // @description  为 LANraragi 阅读器添加阅读模式
 // @author       Kelcoin
 // @match        *://*/reader?id=*
@@ -26,6 +26,7 @@
     const BODY_READING_CLASS = 'lrr-reading-mode';
     const SETTINGS_MODAL_ID = 'lrr-reading-settings-modal';
     const LOADING_MASK_ID = 'lrr-reading-loading-mask';
+    const PROGRESS_BAR_ID = 'lrr-reading-auto-progress';
 
     // 交互参数
     const MAX_DRAG_RATIO = 1.0;
@@ -41,7 +42,8 @@
         btnPosition: 'right', 
         pageGap: 0,
         expandDirection: 'up', // 默认向上展开
-        autoTurnInterval: 3
+        autoTurnInterval: 5,
+        autoProgressPos: 'none'
     };
 
     let userSettings = { ...DEFAULT_SETTINGS };
@@ -146,7 +148,6 @@
 
         // 2. 动态设置热区位置
         if (hitArea) {
-            // 先重置，防止 CSS 干扰
             hitArea.style.left = 'auto'; 
             hitArea.style.right = 'auto';
             
@@ -159,6 +160,40 @@
 
         if (display) {
             display.style.gap = `${userSettings.pageGap}px`;
+        }
+
+        // 3. [新增] 进度条位置设置
+        let progressBar = document.getElementById(PROGRESS_BAR_ID);
+        if (!progressBar) {
+            progressBar = document.createElement('div');
+            progressBar.id = PROGRESS_BAR_ID;
+            document.body.appendChild(progressBar);
+        }
+
+        // 重置样式
+        progressBar.style.top = ''; progressBar.style.bottom = '';
+        progressBar.style.left = ''; progressBar.style.right = '';
+        progressBar.style.width = ''; progressBar.style.height = '';
+        progressBar.style.display = 'none';
+
+        const pos = userSettings.autoProgressPos || 'none';
+        
+        if (pos !== 'none') {
+            progressBar.style.display = 'block';
+            // 根据位置设置固定边和初始尺寸
+            if (pos === 'top') {
+                progressBar.style.top = '0'; progressBar.style.left = '0';
+                progressBar.style.height = '3px'; progressBar.style.width = '0%';
+            } else if (pos === 'bottom') {
+                progressBar.style.bottom = '0'; progressBar.style.left = '0';
+                progressBar.style.height = '3px'; progressBar.style.width = '0%';
+            } else if (pos === 'left') {
+                progressBar.style.left = '0'; progressBar.style.top = '0';
+                progressBar.style.width = '3px'; progressBar.style.height = '0%';
+            } else if (pos === 'right') {
+                progressBar.style.right = '0'; progressBar.style.top = '0';
+                progressBar.style.width = '3px'; progressBar.style.height = '0%';
+            }
         }
     }
     
@@ -456,10 +491,41 @@
     // ==========================================
     
     function scheduleNextAutoTurn() {
+        // 先清理旧的
         if (autoTurnState.timer) clearTimeout(autoTurnState.timer);
         if (!autoTurnState.active) return;
 
-        const interval = Math.max(1, userSettings.autoTurnInterval || 3) * 1000;
+        const intervalSec = Math.max(1, userSettings.autoTurnInterval || 3);
+        const intervalMs = intervalSec * 1000;
+
+        // 设置进度条动画
+        const progressBar = document.getElementById(PROGRESS_BAR_ID);
+        const pos = userSettings.autoProgressPos || 'none';
+        
+        if (progressBar && pos !== 'none') {
+            // 1. 强制重置状态 (移除 transition)
+            progressBar.style.transition = 'none';
+            
+            // ---- 修复开始：确保在动画开始前，厚度（3px）是存在的 ----
+            if (pos === 'top' || pos === 'bottom') {
+                progressBar.style.width = '0%';
+                progressBar.style.height = '3px'; // 强制恢复高度，防止被意外归零
+            } else {
+                progressBar.style.height = '0%';
+                progressBar.style.width = '3px';  // 强制恢复宽度
+            }
+            // ---- 修复结束 ----
+            
+            // 2. 触发重绘 (Reflow)，这是 CSS 动画重置的关键
+            void progressBar.offsetWidth;
+
+            // 3. 开始新动画
+            const prop = (pos === 'top' || pos === 'bottom') ? 'width' : 'height';
+            progressBar.style.transition = `${prop} ${intervalSec}s linear`;
+            
+            if (pos === 'top' || pos === 'bottom') progressBar.style.width = '100%';
+            else progressBar.style.height = '100%';
+        }
 
         autoTurnState.timer = setTimeout(() => {
             if (!autoTurnState.active) return;
@@ -469,7 +535,7 @@
             } else {
                 stopAutoTurn();
             }
-        }, interval);
+        }, intervalMs);
     }
 
     function startAutoTurn() {
@@ -499,6 +565,23 @@
         }
         updateAutoTurnBtnState();
         
+        const progressBar = document.getElementById(PROGRESS_BAR_ID);
+        if (progressBar) {
+            progressBar.style.transition = 'none';
+            const pos = userSettings.autoProgressPos || 'none';
+            
+            if (pos === 'top' || pos === 'bottom') {
+                progressBar.style.width = '0%';
+                progressBar.style.height = '3px'; // 保持高度可见
+            } else if (pos === 'left' || pos === 'right') {
+                progressBar.style.height = '0%';
+                progressBar.style.width = '3px';  // 保持宽度可见
+            } else {
+                progressBar.style.width = '0';
+                progressBar.style.height = '0';
+            }
+        }
+
         const indicator = document.getElementById(PAGE_INDICATOR_ID);
         if (indicator && isReadingMode()) {
             indicator.textContent = "■ 自动翻页停止";
@@ -563,6 +646,16 @@
                 }
                 body.${BODY_READING_CLASS} #${LOADING_MASK_ID}.visible {
                     display: block;
+                }
+
+                #${PROGRESS_BAR_ID} {
+                    position: fixed;
+                    z-index: 200005; /* 最高层级 */
+                    background-color: #4CAF50; /* 进度条颜色 */
+                    pointer-events: none;
+                    opacity: 0.8;
+                    width: 0; height: 0;
+                    box-shadow: 0 0 4px rgba(76, 175, 80, 0.6);
                 }
 
                 body.${BODY_READING_CLASS} * {
@@ -845,6 +938,17 @@
                         <span class="lrr-setting-label">自动翻页间隔 (秒)</span>
                         <input type="number" class="lrr-input" id="lrr-cfg-interval" min="1" max="60" placeholder="3">
                     </div>
+                    
+                    <div class="lrr-setting-item">
+                        <span class="lrr-setting-label">自动翻页进度条位置</span>
+                        <select class="lrr-select" id="lrr-cfg-progress-pos">
+                            <option value="none">不显示</option>
+                            <option value="top">顶部</option>
+                            <option value="bottom">底部</option>
+                            <option value="left">左侧</option>
+                            <option value="right">右侧</option>
+                        </select>
+                    </div>
 
                     <div class="lrr-setting-item">
                         <span class="lrr-setting-label">双页间距 (px)</span>
@@ -878,6 +982,7 @@
             const elGap = document.getElementById('lrr-cfg-gap');
             const elExpand = document.getElementById('lrr-cfg-expand');
             const elInterval = document.getElementById('lrr-cfg-interval');
+            const elProgress = document.getElementById('lrr-cfg-progress-pos');
 
             elAuto.addEventListener('change', (e) => { userSettings.autoEnter = e.target.checked; saveSettings(); });
             elPos.addEventListener('change', (e) => { userSettings.btnPosition = e.target.value; saveSettings(); });
@@ -892,6 +997,11 @@
                 userSettings.expandDirection = e.target.value;
                 saveSettings();
             });
+            // [新增] 监听进度条位置变更
+            elProgress.addEventListener('change', (e) => {
+                userSettings.autoProgressPos = e.target.value;
+                saveSettings();
+            });
         }
 
         // 同步 UI
@@ -900,6 +1010,7 @@
         document.getElementById('lrr-cfg-gap').value = userSettings.pageGap;
         document.getElementById('lrr-cfg-interval').value = userSettings.autoTurnInterval || 3;
         document.getElementById('lrr-cfg-expand').value = userSettings.expandDirection || 'up';
+        document.getElementById('lrr-cfg-progress-pos').value = userSettings.autoProgressPos || 'none';
 
         modal.style.display = 'flex';
         document.body.style.userSelect = 'none';
@@ -1171,7 +1282,21 @@
         if (now - lastTurnTime < 150) return;
         lastTurnTime = now;
 
-        // 2. 【关键修改】立即开启遮罩，防止后续操作和连点
+        // [新增] 逻辑核心：如果开启了自动翻页，无论这次是由自动触发还是手动触发，
+        // 都立即重置当前的计时器和进度条，给用户“重置”的反馈。
+        if (autoTurnState.active) {
+            if (autoTurnState.timer) clearTimeout(autoTurnState.timer);
+            // 立即重置进度条动画到 0
+            const progressBar = document.getElementById(PROGRESS_BAR_ID);
+            const pos = userSettings.autoProgressPos || 'none';
+            if (progressBar && pos !== 'none') {
+                progressBar.style.transition = 'none';
+                if (pos === 'top' || pos === 'bottom') progressBar.style.width = '0%';
+                else progressBar.style.height = '0%';
+            }
+        }
+
+        // 2. 立即开启遮罩，防止后续操作和连点
         toggleLoadingMask(true);
 
         const manga = isMangaMode();
@@ -1197,23 +1322,19 @@
         }
 
         // 4. 延迟检测加载状态
-        // 这里保留延迟是为了给底层 Reader 一点时间去更新 DOM 中的 src 属性，
-        // 否则 waitForPageImageLoaded 可能会立即检测到上一张已加载好的图片从而过早关闭遮罩。
         setTimeout(() => {
             updatePageIndicator();
             attachDragEvents();
             
             // 获取下一页的索引用于检测
             const info = getPageInfo(); 
-            // 注意：这里并不一定准确，因为 DOM 可能还没更完，但 waitForPageImageLoaded 内部有重试/等待逻辑
-            // 如果自动翻页开启，继续调度
+            
+            // 如果自动翻页开启，继续调度（此时会重新开始进度条动画）
             if (autoTurnState.active) {
                 scheduleNextAutoTurn();
             }
 
             // 开始等待图片加载，加载完后会自动关闭遮罩
-            // 我们传入 info.index (当前看到的页) 或根据 intent 预判的页
-            // 由于 Reader 翻页后 currentPage 通常会更新，直接用 info.index 比较稳妥
             waitForPageImageLoaded(info.index).then(() => {
                  // 动画优化：确保位置归位
                 const display = document.getElementById('display');

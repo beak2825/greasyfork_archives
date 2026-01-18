@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         [哔哩哔哩直播]-自动切换最高画质
 // @description  自动切换直播间画质为最高画质。
+// @author       Asuna
 // @match        https://live.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
-// @version      1.4
+// @version      1.4.1
 // @license      MIT
 // @namespace https://greasyfork.org/users/1390050
 // @downloadURL https://update.greasyfork.org/scripts/563041/%5B%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%9B%B4%E6%92%AD%5D-%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8.user.js

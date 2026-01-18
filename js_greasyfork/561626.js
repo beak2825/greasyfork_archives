@@ -189,9 +189,9 @@ function injectStyles() {
 }
 
 
-/* ★変更: 詳細表示モード(.htf-show-grid-details)が有効でない場合のみ隠す */
-html:not(.htf-show-grid-details) .gallery-content.layout-grid table,
-html:not(.htf-show-grid-details) .gallery-content.layout-grid .relatedtags { 
+/* --- 変更後: 個別表示クラス(.show-local-detail)がない場合のみ隠すように条件を追加 --- */
+html:not(.htf-show-grid-details) .gallery-content.layout-grid > div:not(.show-local-detail) table,
+html:not(.htf-show-grid-details) .gallery-content.layout-grid > div:not(.show-local-detail) .relatedtags { 
     display: none !important; 
 }
 
@@ -215,7 +215,7 @@ html:not(.htf-show-grid-details) .gallery-content.layout-grid .relatedtags {
 /* Hitomiデフォルトの絶対配置やマージンを強制リセット */
 .gallery-content.layout-grid h1,
 .gallery-content.layout-grid .artist-list {
-    position: static !important;
+    position: relative !important; /* staticから変更 */
     margin: 0 !important;
     padding-left: 5px !important; /* 左詰めPadding 5px */
     width: auto !important;
@@ -236,6 +236,42 @@ html:not(.htf-show-grid-details) .gallery-content.layout-grid .relatedtags {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* --- 新規追加: 個別詳細表示ボタンのスタイル --- */
+.detail-toggle-btn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* 文字と被ったときのために背景色をつける (右端を白くする) */
+    // background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1) 30%);
+    background: #ffffffe6;
+    z-index: 10;
+}
+.detail-toggle-btn:hover {
+    background: #fff; /* ホバー時は完全に白く */
+}
+
+/* 矢印アイコン */
+.detail-toggle-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #41464e;
+    transition: transform 0.3s ease;
+}
+.detail-toggle-btn:hover svg {
+    fill: #111;
+}
+
+/* 展開時(上向き) */
+.show-local-detail .detail-toggle-btn svg {
+    transform: rotate(180deg);
 }
 
 /* ==========================================================================

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LANraragi 标签翻译
 // @namespace    https://github.com/Kelcoin
-// @version      1.1
+// @version      1.2.1
 // @description  基于 EhTagTranslation 数据库翻译并替换 LANraragi 的标签
 // @author       Kelcoin
 // @include      https://lanraragi*/*
@@ -74,6 +74,125 @@
             flex: 0 0 auto !important;
             min-width: 85px;
         }
+
+        .awesomplete > ul {
+            display: none !important;
+        }
+
+        #lrr-search-suggestions {
+            position: absolute;
+            background: rgba(28, 30, 36, 0.98); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(140, 160, 190, 0.28);
+            border-radius: 10px;
+            box-shadow: 0 10px 28px -8px rgba(5, 10, 25, 0.72), 0 4px 18px rgba(0, 0, 0, 0.36);
+            z-index: 999999;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            font-size: 14px;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            text-align: left;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(140, 160, 190, 0.4) transparent;
+        }
+
+        #lrr-search-suggestions::-webkit-scrollbar {
+            width: 6px;
+        }
+        #lrr-search-suggestions::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #lrr-search-suggestions::-webkit-scrollbar-thumb {
+            background-color: rgba(140, 160, 190, 0.4);
+            border-radius: 3px;
+        }
+
+        .lrr-suggestion-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(140, 160, 190, 0.1);
+            display: flex;
+            align-items: center;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            color: #e3e9f3;
+        }
+
+        .lrr-suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .lrr-suggestion-item:hover {
+            background-color: rgba(40, 43, 52, 0.98);
+            padding-left: 18px;
+        }
+
+        .lrr-suggestion-ns {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background-color: rgba(74, 159, 240, 0.15);
+            color: #4a9ff0;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 12px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lrr-suggestion-trans {
+            font-weight: 500;
+            margin-right: 10px;
+            color: #e3e9f3;
+            flex-shrink: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lrr-suggestion-key {
+            margin-left: auto;
+            color: #a7b1c2;
+            font-size: 0.85em;
+            font-family: Consolas, Monaco, monospace;
+            opacity: 0.8;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .lrr-suggestion-item {
+                flex-wrap: nowrap !important;
+                align-items: center; 
+                padding: 10px 8px;
+            }
+            
+            .lrr-suggestion-ns {
+                margin-right: 6px;
+                font-size: 11px;
+                padding: 2px 5px;
+            }
+
+            .lrr-suggestion-trans {
+                font-size: 13px;
+                margin-right: 8px;
+                flex: 0 1 auto; 
+                max-width: 50%; 
+            }
+
+            .lrr-suggestion-key {
+                margin-left: auto; 
+                flex: 1 1 auto;
+                text-align: right;
+                margin-top: 0;
+                font-size: 0.75em;
+                opacity: 0.7;
+                white-space: normal; 
+                word-wrap: break-word;
+                line-height: 1.2;
+            }
+        }
     `;
     document.head.appendChild(style);
 
@@ -108,7 +227,8 @@
         artist: "艺术家", category: "分类", character: "角色", cosplayer: "Cosplayer",
         date_added: "添加日期", female: "女性", group: "社团", language: "语言",
         location: "地点", male: "男性", mixed: "混合", other: "其他", parody: "原作",
-        series: "系列", source: "来源", timestamp: "发布日期", uploader: "发布者"
+        series: "系列", source: "来源", timestamp: "发布日期", uploader: "发布者",
+        reclass: "分类"
     };
 
     const CATEGORY_MAP = {
@@ -122,8 +242,8 @@
     function parseEhTagDB(rawObj) {
         if (!rawObj || typeof rawObj !== "object") throw new Error("DB root is not an object");
         const optimizedDB = {};
-
-        const nsList = Array.isArray(rawObj.data) ? rawObj.data :
+        
+        const nsList = Array.isArray(rawObj.data) ? rawObj.data : 
                        (rawObj.data ? Object.entries(rawObj.data).map(([k, v]) => ({ namespace: k, data: v })) : []);
 
         for (const nsObj of nsList) {
@@ -134,7 +254,7 @@
                 if (tagObj && tagObj.name) optimizedDB[nsKey][tagKey.toLowerCase()] = tagObj.name;
             }
         }
-
+        
         if (Object.keys(optimizedDB).length === 0) throw new Error("Parsed DB is empty");
         return optimizedDB;
     }
@@ -167,8 +287,9 @@
                 translationDB = optimizedDB;
                 saveCache(optimizedDB);
                 startObserver();
+                setupSearchSuggestions();
                 translateNode(document.body);
-            } catch (err) {}
+            } catch (err) {} 
             finally {
                 try { delete window.load_ehtagtranslation_db_text; } catch (e) { window.load_ehtagtranslation_db_text = undefined; }
             }
@@ -187,6 +308,7 @@
         if (cached && cached.data && cached.time && (now - cached.time <= UPDATE_INTERVAL) && Object.keys(cached.data).length >= 3) {
             translationDB = cached.data;
             startObserver();
+            setupSearchSuggestions();
         } else {
             loadDBViaJSONP();
         }
@@ -288,10 +410,10 @@
                 for (let i = 0; i < BOTTOM_SORT_ORDER.length; i++) {
                     const key = BOTTOM_SORT_ORDER[i];
                     if (labelTd.classList.contains(`${key}-tag`)) {
-                        row.style.order = 10 + i;
+                        row.style.order = 10 + i; 
                         hasTargetRows = true;
-
-                        if (i === 0) {
+                        
+                        if (i === 0) { 
                              row.style.borderTop = "1px dashed rgba(255,255,255,0.1)";
                              row.style.marginTop = "4px";
                              row.style.paddingTop = "2px";
@@ -310,7 +432,7 @@
     function translateNode(node) {
         if (!translationDB) return;
         const root = (node && node.querySelectorAll) ? node : document.body;
-
+        
         const spans = root.querySelectorAll('span[class$="-tag"]');
         const links = root.querySelectorAll('.gt a');
         spans.forEach(translateElement);
@@ -332,17 +454,145 @@
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
-    window.LRREhTagForceUpdate = function() {
-        deleteCache(); translationDB = null; jsonpLoadedOnce = false; loadDBViaJSONP();
-    };
+    // ============================================
+    // 搜索框中文标签反向查询建议
+    // ============================================
+    function setupSearchSuggestions() {
+        const searchInput = document.getElementById('search-input');
+        if (!searchInput) return;
 
-    if (typeof GM_registerMenuCommand !== 'undefined') {
-        GM_registerMenuCommand("强制更新翻译数据库", () => {
-            if (confirm("确定要删除本地缓存并重新下载最新的翻译数据库吗？")) {
-                window.LRREhTagForceUpdate();
+        let suggestionBox = document.getElementById('lrr-search-suggestions');
+        if (!suggestionBox) {
+            suggestionBox = document.createElement('div');
+            suggestionBox.id = 'lrr-search-suggestions';
+            document.body.appendChild(suggestionBox);
+        }
+
+        let hideTimeout;
+
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value; 
+            if (!translationDB) return;
+
+            const terms = val.split(',');
+            const currentTerm = terms[terms.length - 1].trim().toLowerCase();
+
+            if (!currentTerm || (currentTerm.includes(':') && /^[a-z0-9 _]+:[a-z0-9 _]+$/.test(currentTerm))) {
+                suggestionBox.style.display = 'none';
+                return;
+            }
+
+            const matches = [];
+            let count = 0;
+
+            for (const ns in translationDB) {
+                if (ns === 'rows') continue;
+                const nsObj = translationDB[ns];
+                for (const key in nsObj) {
+                    const trans = nsObj[key];
+                    let matchType = -1;
+                    
+                    if (trans === currentTerm || key === currentTerm) matchType = 0;
+                    else if (trans.startsWith(currentTerm)) matchType = 1;
+                    else if (key.startsWith(currentTerm)) matchType = 2;
+                    else if (trans.includes(currentTerm)) matchType = 3;
+                    else if (key.includes(currentTerm)) matchType = 4;
+
+                    if (matchType !== -1) {
+                        matches.push({ ns: ns, key: key, trans: trans, matchType: matchType, len: trans.length });
+                        count++;
+                        if (count >= 500) break; 
+                    }
+                }
+                if (count >= 500) break;
+            }
+
+            matches.sort((a, b) => {
+                if (a.matchType !== b.matchType) {
+                    return a.matchType - b.matchType;
+                }
+                return a.len - b.len;
+            });
+
+            renderSuggestions(matches.slice(0, 50), searchInput, suggestionBox);
+        });
+
+        searchInput.addEventListener('focus', () => {
+             if (searchInput.value.trim()) {
+                 searchInput.dispatchEvent(new Event('input'));
+             }
+        });
+
+        searchInput.addEventListener('blur', () => {
+            hideTimeout = setTimeout(() => {
+                suggestionBox.style.display = 'none';
+            }, 200);
+        });
+
+        window.addEventListener('resize', () => {
+            if (suggestionBox.style.display !== 'none') {
+                positionSuggestionBox(searchInput, suggestionBox);
             }
         });
     }
+
+    function positionSuggestionBox(input, box) {
+        const rect = input.getBoundingClientRect();
+        box.style.left = (rect.left + window.scrollX) + 'px';
+        box.style.top = (rect.bottom + window.scrollY + 6) + 'px'; 
+        box.style.width = rect.width + 'px';
+    }
+
+    function renderSuggestions(matches, input, box) {
+        if (matches.length === 0) {
+            box.style.display = 'none';
+            return;
+        }
+
+        box.innerHTML = '';
+        positionSuggestionBox(input, box);
+        box.style.display = 'block';
+
+        matches.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'lrr-suggestion-item';
+            
+            const nsLabel = NAMESPACE_LABEL_CN[m.ns] || m.ns;
+            
+            div.innerHTML = `
+                <span class="lrr-suggestion-ns">${nsLabel}</span>
+                <span class="lrr-suggestion-trans">${m.trans}</span>
+                <span class="lrr-suggestion-key">${m.key}</span>
+            `;
+
+            div.addEventListener('click', () => {
+                const targetNs = m.ns === 'reclass' ? 'category' : m.ns;
+                const newTag = `${targetNs}:${m.key}$`;
+                
+                const currentVal = input.value;
+                const lastCommaIndex = currentVal.lastIndexOf(',');
+                
+                let newVal;
+                if (lastCommaIndex === -1) {
+                    newVal = newTag;
+                } else {
+                    const prefix = currentVal.substring(0, lastCommaIndex + 1);
+                    newVal = prefix + ' ' + newTag;
+                }
+                
+                input.value = newVal + ', ';
+                
+                box.style.display = 'none';
+                input.focus();
+            });
+
+            box.appendChild(div);
+        });
+    }
+
+    window.LRREhTagForceUpdate = function() {
+        deleteCache(); translationDB = null; jsonpLoadedOnce = false; loadDBViaJSONP();
+    };
 
     function bootstrap() { initDB(); }
 

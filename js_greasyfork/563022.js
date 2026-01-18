@@ -1,142 +1,126 @@
 // ==UserScript==
-// @name         Luogu Hotkeys & Fixed Toolbar
-// @namespace    http://tampermonkey.net/
-// @version      6.5
-// @match        https://www.luogu.com.cn/*
+// @name         洛谷局部深色主题 (保留原版导航栏)
+// @namespace    https://github.com/dengmuyang/luogu
+// @version      1.4.0
+// @description  仅将内容区、题目区变为深色，保留顶部和侧边栏原色
+// @author       dengmuyang
+// @match        *://www.luogu.com.cn/*
 // @grant        none
 // @run-at       document-start
-// @description 强制拦截换行：Ctrl+Enter 提交；Ctrl+' 运行；支持多样例自动聚焦验证码。
-// @downloadURL https://update.greasyfork.org/scripts/563022/Luogu%20Hotkeys%20%20Fixed%20Toolbar.user.js
-// @updateURL https://update.greasyfork.org/scripts/563022/Luogu%20Hotkeys%20%20Fixed%20Toolbar.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563022/%E6%B4%9B%E8%B0%B7%E5%B1%80%E9%83%A8%E6%B7%B1%E8%89%B2%E4%B8%BB%E9%A2%98%20%28%E4%BF%9D%E7%95%99%E5%8E%9F%E7%89%88%E5%AF%BC%E8%88%AA%E6%A0%8F%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563022/%E6%B4%9B%E8%B0%B7%E5%B1%80%E9%83%A8%E6%B7%B1%E8%89%B2%E4%B8%BB%E9%A2%98%20%28%E4%BF%9D%E7%95%99%E5%8E%9F%E7%89%88%E5%AF%BC%E8%88%AA%E6%A0%8F%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    const find = (t) => Array.from(document.querySelectorAll('a, button, span, div')).find(el => el.innerText.trim().includes(t));
-    let lastKey = "";
+    const styleId = 'luogu-local-dark-theme';
+    
+    // 专门针对内容区的 CSS
+    const css = `
+        /* 1. 背景适配：排除掉 Header 和 Sidenav */
+        body, 
+        .lfe-body:not(.main-container), 
+        #app > .main-container > main {
+            background-color: #0f172a !important;
+        }
 
-    // --- 1. 创建强制置顶工具栏 ---
-    function injectToolbar() {
-        if (document.getElementById('custom-luogu-tools')) return;
+        /* 2. 内容卡片与题目容器 */
+        .card, .am-panel, .lg-article, 
+        section.padding-default, 
+        .item-container,
+        .problem-content-container,
+        .content-card {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #e2e8f0 !important;
+        }
 
-        // 创建工具栏容器
-        const toolbar = document.createElement('div');
-        toolbar.id = 'custom-luogu-tools';
-        // 使用 fixed 定位，确保它始终在最顶层
-        toolbar.style = `
-            position: fixed;
-            top: 10px;
-            right: 320px; 
-            display: flex;
-            gap: 6px;
-            z-index: 999999;
-            pointer-events: auto;
-        `;
+        /* 3. 题目页面文字颜色修正 */
+        .problem-content-container *, 
+        .lg-article *, 
+        .marked * {
+            color: #e2e8f0 !important;
+        }
 
-        const buttons = [
-            { text: 'Q:聚焦', action: () => document.querySelector('.monaco-editor textarea')?.focus() },
-            { text: 'L:记录', action: () => {
-                const pid = getPid();
-                if (pid) window.open(`https://www.luogu.com.cn/record/list?pid=${pid}`, '_blank');
-                else alert("当前不是题目页面");
-            }},
-            { text: 'RE:重置', action: () => find('重置代码')?.click() || find('重置')?.click() },
-            { text: 'P:复制', action: () => {
-                const pid = getPid();
-                if (pid) navigator.clipboard.writeText(pid).then(() => showTip("已复制: " + pid));
-            }},
-            { text: 'F:全屏', action: () => toggleFullScreen() },
-            { text: 'H:跳转', action: () => triggerH() }
-        ];
+        /* 4. 代码块与输入框 */
+        pre, code, .copy-btn {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #60a5fa !important;
+        }
+        input, textarea, .edited-container, .select-container {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+            border: 1px solid #475569 !important;
+        }
 
-        buttons.forEach(btn => {
-            const el = document.createElement('div');
-            el.innerText = btn.text;
-            el.style = `
-                cursor: pointer;
-                font-size: 12px;
-                color: #fff;
-                background: rgba(62, 175, 124, 0.9);
-                padding: 3px 10px;
-                border-radius: 20px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                font-family: sans-serif;
-                white-space: nowrap;
-            `;
-            el.onmouseover = () => el.style.background = "#2c3e50";
-            el.onmouseout = () => el.style.background = "rgba(62, 175, 124, 0.9)";
-            el.onclick = btn.action;
-            toolbar.appendChild(el);
+        /* 5. 关键：强制保护导航栏和侧边栏不被修改 */
+        #app-header, 
+        .lfe-header, 
+        header,
+        .side-navigation, 
+        nav {
+            background-color: inherit; /* 随洛谷系统设置 */
+            color: inherit;
+        }
+
+        /* 6. 链接颜色适配 */
+        a:not([class*="header"]) {
+            color: #60a5fa !important;
+        }
+
+        /* 7. 讨论区回复框等动态元素 */
+        .reply-container, .comment-item {
+            background-color: #1e293b !important;
+            border-bottom: 1px solid #334155 !important;
+        }
+    `;
+
+    function applyTheme() {
+        if (!document.getElementById(styleId)) {
+            const style = document.createElement('style');
+            style.id = styleId;
+            style.textContent = css;
+            (document.head || document.documentElement).appendChild(style);
+        }
+    }
+
+    function removeTheme() {
+        const style = document.getElementById(styleId);
+        if (style) style.remove();
+    }
+
+    // 初始化
+    const status = localStorage.getItem('luogu-theme-status') || 'dark';
+    if (status === 'dark') applyTheme();
+
+    // 切换按钮
+    function initUI() {
+        const btn = document.createElement('div');
+        btn.innerHTML = localStorage.getItem('luogu-theme-status') === 'light' ? '🌞' : '🌙';
+        Object.assign(btn.style, {
+            position: 'fixed', bottom: '20px', left: '20px',
+            width: '40px', height: '40px', background: '#3b82f6',
+            color: 'white', borderRadius: '50%', textAlign: 'center',
+            lineHeight: '40px', cursor: 'pointer', zIndex: '99999'
         });
 
-        document.body.appendChild(toolbar);
-    }
-
-    // --- 2. 逻辑辅助函数 ---
-    function getPid() {
-        const problemMatch = window.location.pathname.match(/\/problem\/([A-Z0-9_]+)/i);
-        return problemMatch ? problemMatch[1].toUpperCase() : null;
-    }
-
-    function triggerH() {
-        const target = prompt("请输入题号 (如: 1001, CF10A):");
-        if (target) {
-            let dest = target.trim();
-            dest = /^\d+$/.test(dest) ? 'P' + dest : dest.toUpperCase();
-            window.location.href = `https://www.luogu.com.cn/problem/${dest}`;
-        }
-    }
-
-    function toggleFullScreen() {
-        const nav = document.querySelector('header') || document.querySelector('.header-container');
-        const side = document.querySelector('.side') || document.querySelector('.am-u-md-4');
-        if (nav) nav.style.display = (nav.style.display === 'none' ? 'block' : 'none');
-        if (side) side.style.display = (side.style.display === 'none' ? 'block' : 'none');
-    }
-
-    function showTip(msg) {
-        const tip = document.createElement('div');
-        tip.innerText = msg;
-        tip.style = "position:fixed; top:70px; left:50%; transform:translateX(-50%); background:#34495e; color:white; padding:8px 16px; border-radius:4px; z-index:1000000;";
-        document.body.appendChild(tip);
-        setTimeout(() => tip.remove(), 1000);
-    }
-
-    // --- 3. 核心快捷键监听 ---
-    window.addEventListener('keydown', function(e) {
-        const pid = getPid();
-        if (e.altKey) {
-            if (e.code === 'KeyH') { e.preventDefault(); triggerH(); return; }
-            if (pid) {
-                if (e.code === 'KeyE' && lastKey === 'KeyR') { (find('重置代码') || find('重置'))?.click(); lastKey = ""; return; }
-                if (e.code === 'KeyR') { lastKey = 'KeyR'; setTimeout(() => { lastKey = ""; }, 2000); }
-                if (e.code === 'KeyF') { e.preventDefault(); toggleFullScreen(); return; }
-                if (e.code === 'KeyQ') { e.preventDefault(); document.querySelector('.monaco-editor textarea')?.focus(); return; }
-                if (e.code === 'KeyL') window.open(`https://www.luogu.com.cn/record/list?pid=${pid}`, '_blank');
-                if (e.code === 'KeyP') { navigator.clipboard.writeText(pid).then(() => showTip("已复制: " + pid)); }
+        btn.onclick = () => {
+            const current = localStorage.getItem('luogu-theme-status') || 'dark';
+            if (current === 'dark') {
+                removeTheme();
+                localStorage.setItem('luogu-theme-status', 'light');
+                btn.innerHTML = '🌞';
+            } else {
+                applyTheme();
+                localStorage.setItem('luogu-theme-status', 'dark');
+                btn.innerHTML = '🌙';
             }
-        }
-        // 1.8 提交与自测
-        if (pid && e.ctrlKey && e.key === 'Enter') {
-            const b = find('提交');
-            if (b) { e.preventDefault(); e.stopImmediatePropagation(); document.activeElement.blur(); b.click(); }
-        }
-        if (pid && e.ctrlKey && (e.key === "'" || e.code === "Quote")) {
-            const b = find('运行') || find('自测');
-            if (b) { e.preventDefault(); b.click(); }
-        }
-    }, true);
+        };
+        document.body.appendChild(btn);
+    }
 
-    // 验证码自动聚焦
-    const observer = new MutationObserver(() => {
-        injectToolbar(); // 确保工具栏由于页面跳转刷新后依然存在
-        const inp = document.querySelector('input[placeholder*="验证码"]');
-        if (inp && document.activeElement !== inp) {
-            inp.focus();
-            inp.oninput = function() { if (this.value.length === 4) (document.querySelector('.am-modal-btn-bold') || find('确定'))?.click(); };
-        }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-
+    if (document.readyState === 'complete') initUI();
+    else document.addEventListener('DOMContentLoaded', initUI);
 })();

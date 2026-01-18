@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         禅道Bug剩余天数提醒 + 标签管理增强版
 // @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      2.0.3
 // @description  在禅道Bug列表中添加剩余天数列，支持标签管理、分组查看、筛选等功能
 // @author       You
 // @match        https://www.j-do.cn:9012/zentao/bug-browse-*
 // @match        https://www.j-do.cn:9012/zentao/bug-*
 // @match        https://www.j-do.cn:9012/zentao/user-login*
 // @icon         https://www.zentao.net/favicon.ico
-// @grant        none
+// @grant        GM_xmlhttpRequest
+// @connect      *
 // @run-at       document-end
 // @license All Rights Reserved
 // @downloadURL https://update.greasyfork.org/scripts/561909/%E7%A6%85%E9%81%93Bug%E5%89%A9%E4%BD%99%E5%A4%A9%E6%95%B0%E6%8F%90%E9%86%92%20%2B%20%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86%E5%A2%9E%E5%BC%BA%E7%89%88.user.js
@@ -17,6 +18,23 @@
 
 (function () {
   "use strict";
+
+  // ==================== 配置项 ====================
+  const API_CONFIG = {
+    // 后端服务器地址（可根据实际情况修改）
+    // 
+    // 【重要】如果禅道网站和后端服务不在同一台电脑：
+    // 1. 使用后端服务器的实际IP地址（如 http://172.17.16.9:8080）
+    // 2. 确保网络互通（可以在浏览器中访问 http://172.17.16.9:8080）
+    // 3. 确保后端已配置CORS跨域支持
+    // 
+    // 【推荐】使用内网穿透工具（如 ngrok）：
+    // 1. 运行: ngrok http 8080
+    // 2. 使用 ngrok 提供的公网地址（如 https://xxxx.ngrok.io）
+    baseUrl: 'http://172.17.16.9:8080',
+    // 请求超时时间（毫秒）
+    timeout: 15000
+  };
 
   // 配置：根据级别设置截止天数
   const DEADLINE_CONFIG = {
@@ -942,6 +960,7 @@
                 <div class="tag-actions">
                     <button class="btn-add-tag-inline" data-bug-id="${bugId}" title="添加标签">+</button>
                     <button class="btn-add-note-inline ${noteClass}" data-bug-id="${bugId}" title="${noteTitle}">📝</button>
+                    <button class="btn-sync-issue-inline" data-bug-id="${bugId}" title="同步到系统">🔄</button>
                 </div>
             </div>
         `;
@@ -1413,6 +1432,624 @@
   }
 
   /**
+   * 显示API配置对话框
+   */
+  function showApiConfigDialog() {
+    DialogManager.show('apiConfig', () => {
+      const dialog = document.createElement("div");
+      dialog.className = "api-config-dialog";
+      dialog.innerHTML = `
+        <div class="dialog-overlay"></div>
+        <div class="dialog-content">
+          <div class="dialog-header">
+            <h3>⚙️ API服务器配置</h3>
+            <button class="dialog-close">&times;</button>
+          </div>
+          <div class="dialog-body">
+            <div class="form-group">
+              <label>服务器地址</label>
+              <input type="text" id="apiBaseUrl" value="${API_CONFIG.baseUrl}" placeholder="http://localhost:8080" />
+              <small style="color: #666; display: block; margin-top: 5px;">
+                💡 提示：<br>
+                • 同一台电脑：http://localhost:8080 或 http://127.0.0.1:8080<br>
+                • 不同电脑：http://服务器IP:8080（如 http://192.168.0.107:8080）
+              </small>
+            </div>
+            <div class="form-group">
+              <label>超时时间（毫秒）</label>
+              <input type="number" id="apiTimeout" value="${API_CONFIG.timeout}" placeholder="15000" />
+            </div>
+            <div class="form-group">
+              <label>快速选择</label>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="quick-url-btn" data-url="http://172.17.16.9:8080">172.17.16.9</button>
+                <button class="quick-url-btn" data-url="http://localhost:8080">localhost</button>
+                <button class="quick-url-btn" data-url="http://127.0.0.1:8080">127.0.0.1</button>
+                <button class="quick-url-btn" data-url="http://192.168.0.107:8080">192.168.0.107</button>
+              </div>
+            </div>
+          </div>
+          <div class="dialog-footer">
+            <button class="btn-test-api">测试连接</button>
+            <button class="btn-cancel">取消</button>
+            <button class="btn-save">保存</button>
+          </div>
+        </div>
+      `;
+
+      // 关闭按钮
+      dialog.querySelector(".dialog-close").addEventListener("click", () => {
+        DialogManager.close('apiConfig');
+      });
+      dialog.querySelector(".btn-cancel").addEventListener("click", () => {
+        DialogManager.close('apiConfig');
+      });
+
+      // 快速选择按钮
+      dialog.querySelectorAll(".quick-url-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const url = btn.getAttribute('data-url');
+          dialog.querySelector("#apiBaseUrl").value = url;
+        });
+      });
+
+      // 测试连接按钮
+      dialog.querySelector(".btn-test-api").addEventListener("click", (e) => {
+        e.preventDefault();
+        const testUrl = dialog.querySelector("#apiBaseUrl").value.trim();
+        const testTimeout = parseInt(dialog.querySelector("#apiTimeout").value) || 15000;
+        
+        // 临时修改配置进行测试
+        const originalUrl = API_CONFIG.baseUrl;
+        const originalTimeout = API_CONFIG.timeout;
+        API_CONFIG.baseUrl = testUrl;
+        API_CONFIG.timeout = testTimeout;
+        
+        testServerConnection();
+        
+        // 测试后恢复原配置
+        setTimeout(() => {
+          API_CONFIG.baseUrl = originalUrl;
+          API_CONFIG.timeout = originalTimeout;
+        }, 100);
+      });
+
+      // 保存按钮
+      dialog.querySelector(".btn-save").addEventListener("click", () => {
+        const newUrl = dialog.querySelector("#apiBaseUrl").value.trim();
+        const newTimeout = parseInt(dialog.querySelector("#apiTimeout").value) || 15000;
+        
+        if (!newUrl) {
+          alert('请输入服务器地址');
+          return;
+        }
+        
+        API_CONFIG.baseUrl = newUrl;
+        API_CONFIG.timeout = newTimeout;
+        
+        // 保存到 localStorage
+        localStorage.setItem('zentao_api_config', JSON.stringify(API_CONFIG));
+        
+        showToast('✅ 配置已保存', 'success', 2000);
+        DialogManager.close('apiConfig');
+      });
+
+      return dialog;
+    });
+  }
+
+  /**
+   * 从 localStorage 加载 API 配置
+   */
+  function loadApiConfig() {
+    try {
+      const saved = localStorage.getItem('zentao_api_config');
+      if (saved) {
+        const config = JSON.parse(saved);
+        API_CONFIG.baseUrl = config.baseUrl || API_CONFIG.baseUrl;
+        API_CONFIG.timeout = config.timeout || API_CONFIG.timeout;
+        console.log('[API配置] 已加载保存的配置:', API_CONFIG);
+      }
+    } catch (e) {
+      console.error('[API配置] 加载失败:', e);
+    }
+  }
+
+  /**
+   * 测试服务器连接
+   */
+  function testServerConnection() {
+    const loadingToast = showToast('正在测试连接...', 'info');
+    const apiUrl = `${API_CONFIG.baseUrl}/user/names`;
+    
+    console.log('[连接测试] 测试地址:', apiUrl);
+    
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: apiUrl,
+      timeout: API_CONFIG.timeout,
+      onload: function(response) {
+        hideToast(loadingToast);
+        console.log('[连接测试] 响应状态:', response.status);
+        console.log('[连接测试] 响应内容:', response.responseText);
+        
+        if (response.status === 200) {
+          try {
+            const data = JSON.parse(response.responseText);
+            showToast(`✅ 服务器连接成功！\n地址：${API_CONFIG.baseUrl}`, 'success', 3000);
+            alert(`服务器连接测试成功！\n\n服务器地址：${API_CONFIG.baseUrl}\n响应状态：${response.status}\n当前系统用户数：${data.data ? data.data.length : 0}`);
+          } catch (error) {
+            showToast(`⚠️ 服务器已连接，但响应格式异常`, 'error', 3000);
+            alert(`服务器连接成功，但响应格式异常\n\n响应内容：\n${response.responseText}`);
+          }
+        } else {
+          showToast(`❌ 服务器返回错误: ${response.status}`, 'error', 3000);
+          alert(`服务器连接失败\n\n状态码：${response.status}\n状态文本：${response.statusText}\n响应内容：\n${response.responseText}`);
+        }
+      },
+      onerror: function(error) {
+        hideToast(loadingToast);
+        console.error('[连接测试] 请求失败:', error);
+        
+        let errorMsg = `无法连接到服务器\n\n服务器地址：${API_CONFIG.baseUrl}\n\n请检查：\n1. 后端服务是否启动\n2. 服务器地址是否正确\n3. 端口 8080 是否开放\n4. 网络连接是否正常\n\n详细信息：\n状态码: ${error.status}\n状态文本: ${error.statusText}`;
+        
+        showToast(`❌ 连接失败`, 'error', 3000);
+        alert(errorMsg);
+      },
+      ontimeout: function() {
+        hideToast(loadingToast);
+        console.error('[连接测试] 请求超时');
+        alert(`连接测试超时\n\n服务器未在 ${API_CONFIG.timeout}ms 内响应\n服务器地址：${API_CONFIG.baseUrl}\n\n请检查服务器是否启动`);
+      }
+    });
+  }
+
+  /**
+   * 同步用户到系统
+   */
+  function syncUsersToSystem() {
+    const rows = document.querySelectorAll('tr[data-id]');
+    const userNamesSet = new Set();
+    
+    // 收集所有用户名（从指派给和创建者列）
+    rows.forEach(row => {
+      // 获取指派人
+      const assignedPerson = getAssignedPerson(row);
+      if (assignedPerson && assignedPerson !== '未指派') {
+        userNamesSet.add(assignedPerson);
+      }
+      
+      // 获取创建者
+      const openedByCell = row.querySelector('.c-openedBy');
+      if (openedByCell) {
+        const creator = openedByCell.textContent.trim();
+        if (creator) {
+          userNamesSet.add(creator);
+        }
+      }
+    });
+    
+    const userNames = Array.from(userNamesSet);
+    
+    if (userNames.length === 0) {
+      alert('未找到可同步的用户');
+      return;
+    }
+    
+    // 确认对话框
+    if (!confirm(`发现 ${userNames.length} 个用户，确定要同步到系统吗？\n\n用户列表：\n${userNames.slice(0, 10).join(', ')}${userNames.length > 10 ? '\n...' : ''}\n\n目标服务器：${API_CONFIG.baseUrl}`)) {
+      return;
+    }
+    
+    // 显示加载提示
+    const loadingToast = showToast('正在同步用户...', 'info');
+    
+    const apiUrl = `${API_CONFIG.baseUrl}/user/sync`;
+    console.log('[用户同步] 请求地址:', apiUrl);
+    console.log('[用户同步] 用户列表:', userNames);
+    
+    // 使用 GM_xmlhttpRequest 进行跨域请求
+    GM_xmlhttpRequest({
+      method: 'POST',
+      url: apiUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: JSON.stringify({
+        userNames: userNames
+      }),
+      timeout: API_CONFIG.timeout,
+      onload: function(response) {
+        hideToast(loadingToast);
+        console.log('[用户同步] 响应状态:', response.status);
+        console.log('[用户同步] 响应内容:', response.responseText);
+        
+        if (response.status === 200) {
+          try {
+            const data = JSON.parse(response.responseText);
+            if (data.code === 0 || data.success) {
+              showToast(`✅ 用户同步成功！共同步 ${userNames.length} 个用户`, 'success', 3000);
+              console.log('[用户同步] 成功同步用户:', userNames);
+            } else {
+              throw new Error(data.msg || data.message || '同步失败');
+            }
+          } catch (error) {
+            console.error('[用户同步] 解析响应失败:', error);
+            showToast(`❌ 用户同步失败: ${error.message}`, 'error', 5000);
+          }
+        } else {
+          showToast(`❌ 服务器返回错误: ${response.status} ${response.statusText}`, 'error', 5000);
+        }
+      },
+      onerror: function(error) {
+        hideToast(loadingToast);
+        console.error('[用户同步] 请求失败:', error);
+        
+        let errorMsg = '网络请求失败';
+        if (error.status === 408) {
+          errorMsg = `无法连接到服务器 ${API_CONFIG.baseUrl}\n请检查：\n1. 服务器是否启动\n2. 地址是否正确\n3. 网络是否通畅`;
+        } else if (error.status === 0) {
+          errorMsg = `网络连接失败\n请检查服务器地址：${API_CONFIG.baseUrl}`;
+        }
+        
+        showToast(`❌ ${errorMsg}`, 'error', 8000);
+        alert(`用户同步失败\n\n${errorMsg}\n\n详细信息：\n状态码: ${error.status}\n状态文本: ${error.statusText}`);
+      },
+      ontimeout: function() {
+        hideToast(loadingToast);
+        console.error('[用户同步] 请求超时');
+        showToast(`❌ 请求超时（${API_CONFIG.timeout}ms）\n服务器可能未响应`, 'error', 5000);
+        alert(`用户同步失败\n\n请求超时，服务器未在 ${API_CONFIG.timeout}ms 内响应\n\n请检查：\n1. 服务器是否启动\n2. 服务器地址：${API_CONFIG.baseUrl}\n3. 网络连接是否正常`);
+      }
+    });
+  }
+
+  /**
+   * 同步需求/Bug到系统（全量同步 + 归档检测）
+   */
+  function syncIssuesToSystem() {
+    const rows = document.querySelectorAll('tr[data-id]');
+    const issueList = [];
+    const zentaoBugCodes = []; // 当前禅道页面的Bug编号列表
+    
+    rows.forEach(row => {
+      // 检查行是否可见（被筛选隐藏的行不同步）
+      if (row.style.display === 'none') return;
+      
+      const issueData = extractIssueData(row);
+      if (issueData) {
+        issueList.push(issueData);
+        zentaoBugCodes.push(issueData.codeNo);
+      }
+    });
+    
+    if (issueList.length === 0) {
+      alert('未找到可同步的需求/Bug');
+      return;
+    }
+    
+    // 确认对话框
+    if (!confirm(`发现 ${issueList.length} 个需求/Bug，确定要同步到系统吗？\n\n目标服务器：${API_CONFIG.baseUrl}\n\n同步过程中会自动检测并归档禅道中不存在的Bug`)) {
+      return;
+    }
+    
+    // 显示加载提示
+    const loadingToast = showToast('正在同步需求/Bug...', 'info');
+    
+    // 第一步：获取系统中所有Bug编号，检测需要归档的Bug
+    const getAllBugsUrl = `${API_CONFIG.baseUrl}/issue/page?limit=10000`;
+    console.log('[归档检测] 获取系统中所有Bug编号...');
+    
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: getAllBugsUrl,
+      timeout: API_CONFIG.timeout,
+      onload: function(response) {
+        if (response.status === 200) {
+          try {
+            const data = JSON.parse(response.responseText);
+            if (data.code === 0 && data.data) {
+              const systemBugCodes = data.data.map(bug => bug.codeNo);
+              
+              // 找出系统中存在但禅道中不存在的Bug（需要归档）
+              const missingBugs = systemBugCodes.filter(code => !zentaoBugCodes.includes(code));
+              
+              console.log('[归档检测] 系统中Bug总数:', systemBugCodes.length);
+              console.log('[归档检测] 禅道中Bug总数:', zentaoBugCodes.length);
+              console.log('[归档检测] 需要归档的Bug数量:', missingBugs.length);
+              
+              if (missingBugs.length > 0) {
+                console.log('[归档检测] 需要归档的Bug编号:', missingBugs);
+                // 调用归档API
+                archiveMissingBugs(missingBugs, function() {
+                  // 归档完成后，继续同步当前Bug
+                  syncCurrentBugs(issueList, loadingToast);
+                });
+              } else {
+                // 没有需要归档的Bug，直接同步
+                syncCurrentBugs(issueList, loadingToast);
+              }
+            } else {
+              console.warn('[归档检测] 获取系统Bug列表失败，跳过归档检测');
+              syncCurrentBugs(issueList, loadingToast);
+            }
+          } catch (error) {
+            console.error('[归档检测] 解析响应失败:', error);
+            syncCurrentBugs(issueList, loadingToast);
+          }
+        } else {
+          console.warn('[归档检测] 服务器返回错误:', response.status);
+          syncCurrentBugs(issueList, loadingToast);
+        }
+      },
+      onerror: function(error) {
+        console.error('[归档检测] 请求失败:', error);
+        syncCurrentBugs(issueList, loadingToast);
+      },
+      ontimeout: function() {
+        console.error('[归档检测] 请求超时');
+        syncCurrentBugs(issueList, loadingToast);
+      }
+    });
+  }
+  
+  /**
+   * 归档不存在于禅道的Bug
+   */
+  function archiveMissingBugs(bugCodes, callback) {
+    if (!bugCodes || bugCodes.length === 0) {
+      if (callback) callback();
+      return;
+    }
+    
+    const apiUrl = `${API_CONFIG.baseUrl}/issue/archive-missing`;
+    console.log('[Bug归档] 请求地址:', apiUrl);
+    console.log('[Bug归档] 归档数量:', bugCodes.length);
+    console.log('[Bug归档] Bug编号:', bugCodes);
+    
+    GM_xmlhttpRequest({
+      method: 'POST',
+      url: apiUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: JSON.stringify(bugCodes),
+      timeout: API_CONFIG.timeout,
+      onload: function(response) {
+        if (response.status === 200) {
+          try {
+            const data = JSON.parse(response.responseText);
+            if (data.code === 0) {
+              const result = data.data;
+              console.log('[Bug归档] 归档成功:', result);
+              showToast(`✅ 已归档 ${result.archivedCount} 个不存在的Bug`, 'success', 3000);
+            } else {
+              console.error('[Bug归档] 归档失败:', data.msg);
+            }
+          } catch (error) {
+            console.error('[Bug归档] 解析响应失败:', error);
+          }
+        } else {
+          console.error('[Bug归档] 服务器返回错误:', response.status);
+        }
+        
+        // 无论成功失败，都继续执行回调
+        if (callback) callback();
+      },
+      onerror: function(error) {
+        console.error('[Bug归档] 请求失败:', error);
+        if (callback) callback();
+      },
+      ontimeout: function() {
+        console.error('[Bug归档] 请求超时');
+        if (callback) callback();
+      }
+    });
+  }
+  
+  /**
+   * 同步当前禅道Bug到系统
+   */
+  function syncCurrentBugs(issueList, loadingToast) {
+    const apiUrl = `${API_CONFIG.baseUrl}/issue/sync`;
+    console.log('[需求/Bug同步] 请求地址:', apiUrl);
+    console.log('[需求/Bug同步] 数据量:', issueList.length);
+    console.log('[需求/Bug同步] 请求体数据:', JSON.stringify(issueList, null, 2));
+    console.log('[需求/Bug同步] 前3条数据示例:', issueList.slice(0, 3));
+    
+    // 使用 GM_xmlhttpRequest 进行跨域请求
+    GM_xmlhttpRequest({
+      method: 'POST',
+      url: apiUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: JSON.stringify(issueList),
+      timeout: API_CONFIG.timeout,
+      onload: function(response) {
+        hideToast(loadingToast);
+        console.log('[需求/Bug同步] 响应状态:', response.status);
+        console.log('[需求/Bug同步] 响应内容:', response.responseText);
+        
+        if (response.status === 200) {
+          try {
+            const data = JSON.parse(response.responseText);
+            if (data.code === 0) {
+              const result = data.data;
+              showToast(`✅ 同步成功！\n新增: ${result.addCount}\n更新: ${result.updateCount}\n跳过: ${result.skipCount}`, 'success', 5000);
+              alert(`需求/Bug同步成功！\n\n总数: ${result.total}\n新增: ${result.addCount}\n更新: ${result.updateCount}\n跳过: ${result.skipCount}`);
+            } else {
+              throw new Error(data.msg || '同步失败');
+            }
+          } catch (error) {
+            console.error('[需求/Bug同步] 解析响应失败:', error);
+            showToast(`❌ 同步失败: ${error.message}`, 'error', 5000);
+          }
+        } else {
+          showToast(`❌ 服务器返回错误: ${response.status}`, 'error', 5000);
+        }
+      },
+      onerror: function(error) {
+        hideToast(loadingToast);
+        console.error('[需求/Bug同步] 请求失败:', error);
+        showToast(`❌ 网络请求失败`, 'error', 5000);
+        alert(`需求/Bug同步失败\n\n无法连接到服务器\n服务器地址：${API_CONFIG.baseUrl}`);
+      },
+      ontimeout: function() {
+        hideToast(loadingToast);
+        console.error('[需求/Bug同步] 请求超时');
+        showToast(`❌ 请求超时`, 'error', 5000);
+      }
+    });
+  }
+
+  /**
+   * 同步单个需求/Bug
+   */
+  function syncSingleIssue(bugId) {
+    const row = document.querySelector(`tr[data-id="${bugId}"]`);
+    if (!row) {
+      alert('未找到该Bug行');
+      return;
+    }
+    
+    const issueData = extractIssueData(row);
+    if (!issueData) {
+      alert('提取Bug数据失败');
+      return;
+    }
+    
+    // 显示加载提示
+    const loadingToast = showToast(`正在同步 Bug #${bugId}...`, 'info');
+    
+    const apiUrl = `${API_CONFIG.baseUrl}/issue/sync`;
+    console.log('[单个Bug同步] 请求地址:', apiUrl);
+    console.log('[单个Bug同步] Bug ID:', bugId);
+    console.log('[单个Bug同步] 请求体数据:', JSON.stringify([issueData], null, 2));
+    
+    GM_xmlhttpRequest({
+      method: 'POST',
+      url: apiUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: JSON.stringify([issueData]),
+      timeout: API_CONFIG.timeout,
+      onload: function(response) {
+        hideToast(loadingToast);
+        
+        if (response.status === 200) {
+          try {
+            const data = JSON.parse(response.responseText);
+            if (data.code === 0) {
+              showToast(`✅ Bug #${bugId} 同步成功`, 'success', 2000);
+            } else {
+              throw new Error(data.msg || '同步失败');
+            }
+          } catch (error) {
+            showToast(`❌ 同步失败: ${error.message}`, 'error', 3000);
+          }
+        } else {
+          showToast(`❌ 服务器返回错误: ${response.status}`, 'error', 3000);
+        }
+      },
+      onerror: function(error) {
+        hideToast(loadingToast);
+        showToast(`❌ 网络请求失败`, 'error', 3000);
+      },
+      ontimeout: function() {
+        hideToast(loadingToast);
+        showToast(`❌ 请求超时`, 'error', 3000);
+      }
+    });
+  }
+
+  /**
+   * 从表格行提取需求/Bug数据
+   */
+  function extractIssueData(row) {
+    const bugId = row.getAttribute('data-id');
+    if (!bugId) return null;
+    
+    // 判断是需求还是Bug（根据编号长度）
+    const issueType = bugId.length === 4 ? '需求' : 'Bug';
+    
+    // 标题
+    const titleCell = row.querySelector('.c-title');
+    const title = titleCell ? titleCell.textContent.trim() : '';
+    
+    // 级别（Priority）- 从.c-pri列获取
+    const priCell = row.querySelector('.c-pri');
+    let level = '';
+    if (priCell) {
+      level = priCell.textContent.trim();
+    }
+    // 如果没有级别，使用严重程度作为备选
+    if (!level) {
+      const severity = getSeverity(row);
+      const levelMap = {
+        '1': '严重',
+        '2': '中等',
+        '3': '轻微',
+        '4': '建议'
+      };
+      level = levelMap[severity] || '中等';
+    }
+    
+    // 创建者
+    const openedByCell = row.querySelector('.c-openedBy');
+    const creator = openedByCell ? openedByCell.textContent.trim() : '';
+    
+    // 处理人（指派给）
+    const handler = getAssignedPerson(row);
+    
+    // 状态（Bug状态）
+    const statusSelect = row.querySelector('.bug-status-select');
+    const status = statusSelect ? statusSelect.value : '待分析';
+    
+    // 标签
+    const tags = BugDataManager.getBugTags(bugId).join(',');
+    
+    // 备注
+    const remark = BugDataManager.getBugNote(bugId);
+    
+    // 创建时间 - 从禅道的创建日期列获取
+    const dateCell = row.querySelector('.c-openedDate');
+    let createTime = null;
+    if (dateCell) {
+      const dateText = dateCell.textContent.trim();
+      // 禅道日期格式：10-16 11:40 或 10-16
+      if (dateText) {
+        const parsedDate = parseZentaoDate(dateText);
+        if (parsedDate) {
+          // 转换为 ISO 8601 格式：yyyy-MM-ddTHH:mm:ss
+          const year = parsedDate.getFullYear();
+          const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+          const day = String(parsedDate.getDate()).padStart(2, '0');
+          const hour = String(parsedDate.getHours()).padStart(2, '0');
+          const minute = String(parsedDate.getMinutes()).padStart(2, '0');
+          const second = String(parsedDate.getSeconds()).padStart(2, '0');
+          createTime = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+        }
+      }
+    }
+    
+    return {
+      codeNo: bugId,
+      issueType: issueType,
+      title: title,
+      level: level,
+      status: status,
+      creator: creator,
+      handler: handler === '未指派' ? '' : handler,
+      tags: tags,
+      remark: remark,
+      createTime: createTime  // 添加创建时间
+    };
+  }
+
+  /**
    * 显示Excel导出对话框
    */
   function showExportDialog() {
@@ -1706,7 +2343,8 @@
 
             /* 操作按钮样式 - 内联版本 */
             .btn-add-tag-inline,
-            .btn-add-note-inline {
+            .btn-add-note-inline,
+            .btn-sync-issue-inline {
                 background: white;
                 border: 1px solid #ddd;
                 border-radius: 3px;
@@ -1738,6 +2376,12 @@
             .btn-add-note-inline.has-note {
                 background: #d1fae5;
                 border-color: #10b981;
+            }
+
+            .btn-sync-issue-inline:hover {
+                background: #f0f0f0;
+                border-color: #8b5cf6;
+                color: #8b5cf6;
             }
 
             /* Bug状态下拉框样式 */
@@ -2426,7 +3070,10 @@
 
             /* 统计配置按钮 */
             .export-excel-btn,
+            .sync-issues-btn,
             .test-persons-config-btn,
+            .sync-users-btn,
+            .api-config-btn,
             .stats-config-btn {
                 padding: 6px 12px;
                 background: white;
@@ -2439,7 +3086,10 @@
             }
 
             .export-excel-btn:hover,
+            .sync-issues-btn:hover,
             .test-persons-config-btn:hover,
+            .sync-users-btn:hover,
+            .api-config-btn:hover,
             .stats-config-btn:hover {
                 background: #f0f0f0;
                 border-color: #3b82f6;
@@ -2448,6 +3098,43 @@
 
             .export-excel-btn:hover {
                 border-color: #10b981;
+            }
+
+            .sync-issues-btn:hover {
+                border-color: #8b5cf6;
+            }
+
+            .sync-users-btn:hover {
+                border-color: #06b6d4;
+            }
+
+            .api-config-btn:hover {
+                border-color: #f59e0b;
+            }
+
+            .quick-url-btn {
+                padding: 6px 12px;
+                background: #f0f9ff;
+                border: 1px solid #bae6fd;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                color: #0369a1;
+                transition: all 0.2s;
+            }
+
+            .quick-url-btn:hover {
+                background: #e0f2fe;
+                border-color: #7dd3fc;
+            }
+
+            .btn-test-api {
+                background: #f59e0b;
+                color: white;
+            }
+
+            .btn-test-api:hover {
+                background: #d97706;
             }
 
             /* 统计配置对话框 */
@@ -3038,7 +3725,10 @@
       </div>
       <div class="summary-divider"></div>
       <button class="export-excel-btn" title="导出Excel">📊 导出</button>
+      <button class="sync-issues-btn" title="同步需求/Bug到系统">🔄 同步需求/Bug</button>
       <button class="test-persons-config-btn" title="配置测试人员">👥 测试人员</button>
+      <button class="sync-users-btn" title="同步用户到系统">👤 同步用户</button>
+      <button class="api-config-btn" title="配置服务器地址">🌐 服务器配置</button>
       <button class="stats-config-btn" title="配置统计规则">⚙️</button>
     `;
 
@@ -3092,6 +3782,33 @@
       exportBtn.addEventListener("click", (e) => {
         e.preventDefault();
         showExportDialog();
+      });
+    }
+
+    // 绑定同步用户按钮
+    const syncUsersBtn = panel.querySelector(".sync-users-btn");
+    if (syncUsersBtn) {
+      syncUsersBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        syncUsersToSystem();
+      });
+    }
+
+    // 绑定同步需求/Bug按钮
+    const syncIssuesBtn = panel.querySelector(".sync-issues-btn");
+    if (syncIssuesBtn) {
+      syncIssuesBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        syncIssuesToSystem();
+      });
+    }
+
+    // 绑定API配置按钮
+    const apiConfigBtn = panel.querySelector(".api-config-btn");
+    if (apiConfigBtn) {
+      apiConfigBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showApiConfigDialog();
       });
     }
 
@@ -4201,6 +4918,15 @@
         return;
       }
 
+      if (target.classList.contains('btn-sync-issue-inline') || target.closest('.btn-sync-issue-inline')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const btn = target.classList.contains('btn-sync-issue-inline') ? target : target.closest('.btn-sync-issue-inline');
+        const bugId = btn.getAttribute('data-bug-id');
+        if (bugId) syncSingleIssue(bugId);
+        return;
+      }
+
       if (target.classList.contains('tag-remove')) {
         e.preventDefault();
         e.stopPropagation();
@@ -4712,6 +5438,9 @@
    * 初始化Bug列表页面
    */
   function initBugListPage() {
+    // 加载API配置
+    loadApiConfig();
+
     // 添加样式
     addCustomStyles();
 

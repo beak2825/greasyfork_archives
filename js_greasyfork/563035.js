@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         XenForo Conversations E2EE + No Draft Autosave
 // @namespace    xfenc-userscript
-// @version      0.7
-// @description  Encrypt outgoing XenForo conversation messages and decrypt incoming ones locally. Blocks draft autosave requests. Wraps encrypted tokens to prevent XenForo emoji/smiley auto-formatting from corrupting ciphertext.
+// @version      0.8.3
+// @description  Encrypt outgoing XenForo conversation messages and decrypt incoming ones locally. Blocks draft autosave requests.
 // @author       martyrdom
 // @license      GNU GPLv3
 // @match        *://*/conversations/*
@@ -18,6 +18,7 @@
 (function () {
   "use strict";
 
+  //bismillah rahman raheem
   // ============================================================
   // A) NO-DRAFT AUTOSAVE (block draft-save network calls)
   // ============================================================
@@ -107,12 +108,32 @@
       window.fetch = function (input, init) {
         const url = (typeof input === "string") ? input : (input && input.url);
         const method = (init && init.method) || (input && input.method) || "";
+
+        // 1) Block drafts
         if (shouldBlock(url, init, method)) {
           logBlocked("fetch", url);
           return Promise.resolve(new Response("", { status: 204, statusText: "No Content" }));
         }
-        return origFetch(input, init);
+
+        // 2) Rewrite outgoing reply body (async)
+        return (async () => {
+          try {
+            const headers = (init && init.headers) || (input && input.headers);
+            const body = init && "body" in init ? init.body : undefined;
+            const rewritten = await rewriteOutgoingBodyIfNeeded(url, method, body, headers);
+
+            if (rewritten !== null) {
+              const newInit = Object.assign({}, init || {});
+              newInit.body = rewritten;
+              return origFetch(input, newInit);
+            }
+          } catch (e) {
+            console.warn("[XFENC] fetch rewrite failed:", e);
+          }
+          return origFetch(input, init);
+        })();
       };
+
     }
 
     // Patch XHR
@@ -134,13 +155,30 @@
         };
 
         xhr.send = function (body) {
+          // 1) Block drafts
           if (shouldBlock(_url, { body }, _method)) {
             logBlocked(`XHR ${(_method || "").toUpperCase()}`, _url);
             try { this.abort(); } catch {}
             return;
           }
-          return origSend.call(this, body);
+
+          // 2) Rewrite outgoing reply body (async)
+          (async () => {
+            try {
+              const rewritten = await rewriteOutgoingBodyIfNeeded(_url, _method, body, null);
+              if (rewritten !== null) {
+                return origSend.call(this, rewritten);
+              }
+            } catch (e) {
+              console.warn("[XFENC] XHR rewrite failed:", e);
+            }
+            return origSend.call(this, body);
+          })();
+
+          // Important: don't call origSend synchronously here (the async IIFE will).
+          return;
         };
+
 
         return xhr;
       }
@@ -197,7 +235,6 @@
   const ENC_SUFFIX = "]]";
 
   // Wrap token to prevent XenForo smiley/emoji auto-formatting corrupting ciphertext.
-  // Try "plain" first. If your forum removes [plain], switch to "code".
   const WRAP_MODE = "plain"; // "plain" | "code"
   const WRAP_PREFIX = WRAP_MODE === "plain" ? "[plain]" : "[code]";
   const WRAP_SUFFIX = WRAP_MODE === "plain" ? "[/plain]" : "[/code]";
@@ -329,7 +366,7 @@
       `${u8ToB64(salt)}:${u8ToB64(iv)}:${u8ToB64(ct)}` +
       ENC_SUFFIX;
 
-    // Wrap token to prevent XenForo formatting (emoji/smilies/etc.) from corrupting it.
+    // Wrap token to prevent XenForo formatting (emojis) from corrupting it. dont know how to make it work with formatting and no emojis unfortunately
     return `${WRAP_PREFIX}${token}${WRAP_SUFFIX}`;
   }
 
@@ -353,6 +390,125 @@
     const t = stripWrapper(text);
     return t.startsWith(ENC_PREFIX) && t.endsWith(ENC_SUFFIX);
   }
+
+    // ----------------------------
+  // 6b) OUTGOING REQUEST REWRITE
+  // ----------------------------
+
+  function isLikelyReplyEndpoint(urlObj) {
+    if (!urlObj) return false;
+    const p = urlObj.pathname.toLowerCase();
+    return (
+      p.includes("/conversations/") &&
+      (p.includes("/reply") || p.includes("/add-reply") || p.includes("/reply-preview") || p.includes("/insert"))
+    );
+  }
+
+  function toAbsUrl(u) {
+    try { return new URL(u, location.href); } catch { return null; }
+  }
+
+  function getContentTypeFromHeaders(headers) {
+    if (!headers) return "";
+    try {
+      if (headers.get) return headers.get("content-type") || "";
+      // Plain object or array-ish
+      if (Array.isArray(headers)) {
+        for (const [k, v] of headers) if (String(k).toLowerCase() === "content-type") return String(v || "");
+      }
+      for (const k of Object.keys(headers)) {
+        if (String(k).toLowerCase() === "content-type") return String(headers[k] || "");
+      }
+    } catch {}
+    return "";
+  }
+
+  async function rewriteOutgoingBodyIfNeeded(url, method, body, headers) {
+    const urlObj = toAbsUrl(url);
+    if (!urlObj) return null;
+
+    // Orewrite real sends assuming this shit works this time
+    if (!isLikelyReplyEndpoint(urlObj)) return null;
+
+    const m = String(method || "").toUpperCase();
+    if (!(m === "POST" || m === "PUT" || m === "PATCH")) return null;
+
+    const pw = await loadPassphrase();
+    if (!pw) return null;
+
+    // ---- FormData ----
+    if (typeof FormData !== "undefined" && body instanceof FormData) {
+      // Extract current message
+      const msg = body.get("message");
+      if (typeof msg !== "string" || !msg.trim()) return null;
+      if (isAlreadyEncrypted(msg)) return null;
+
+      const enc = await encryptText(msg, pw);
+
+      // Clone FormData, replacing message
+      const fd = new FormData();
+      for (const [k, v] of body.entries()) {
+        if (k === "message") fd.append(k, enc);
+        else fd.append(k, v);
+      }
+      return fd;
+    }
+
+    // ---- URLSearchParams ----
+    if (typeof URLSearchParams !== "undefined" && body instanceof URLSearchParams) {
+      const msg = body.get("message");
+      if (!msg || !String(msg).trim()) return null;
+      if (isAlreadyEncrypted(String(msg))) return null;
+
+      const enc = await encryptText(String(msg), pw);
+      const usp = new URLSearchParams(body.toString());
+      usp.set("message", enc);
+      return usp;
+    }
+
+    // ---- String body ----
+    if (typeof body === "string") {
+      const ct = getContentTypeFromHeaders(headers).toLowerCase();
+
+      // If it looks like form-encoded, rewrite via URLSearchParams
+      const looksForm =
+        ct.includes("application/x-www-form-urlencoded") ||
+        (body.includes("=") && body.includes("&") && !body.trim().startsWith("{"));
+
+      if (looksForm) {
+        const usp = new URLSearchParams(body);
+        const msg = usp.get("message");
+        if (!msg || !String(msg).trim()) return null;
+        if (isAlreadyEncrypted(String(msg))) return null;
+
+        const enc = await encryptText(String(msg), pw);
+        usp.set("message", enc);
+        return usp.toString();
+      }
+
+      // If JSON, try rewriting message property (less common for XenForo, but safe)
+      if (body.trim().startsWith("{")) {
+        try {
+          const obj = JSON.parse(body);
+          if (!obj || typeof obj !== "object") return null;
+          const msg = obj.message;
+          if (typeof msg !== "string" || !msg.trim()) return null;
+          if (isAlreadyEncrypted(msg)) return null;
+
+          obj.message = await encryptText(msg, pw);
+          return JSON.stringify(obj);
+        } catch {
+          return null;
+        }
+      }
+
+      return null;
+    }
+
+    // Unknown body type (Blob/ArrayBuffer/etc) -> don't touch
+    return null;
+  }
+
 
   // ----------------------------
   // 7) FIND THE EDITOR

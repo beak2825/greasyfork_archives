@@ -3,7 +3,7 @@
 // @namespace     https://github.com/mikoto710/esj-novel-downloader
 // @homepageURL   https://github.com/mikoto710/esj-novel-downloader
 // @supportURL    https://github.com/mikoto710/esj-novel-downloader/issues
-// @version       1.4.2
+// @version       1.4.3
 // @description   在 ESJZone 小说详情页/论坛页注入下载按钮，支持 TXT/EPUB 全本导出，支持阅读页单章节下载
 // @author        Shigure Sora
 // @license       MIT
@@ -14,7 +14,9 @@
 // @run-at        document-start
 // @grant         GM_setValue
 // @grant         GM_getValue
+// @grant         GM_xmlhttpRequest
 // @grant         unsafeWindow
+// @connect       *
 // @downloadURL https://update.greasyfork.org/scripts/562046/ESJZone%20%E5%85%A8%E6%9C%AC%E4%B8%8B%E8%BD%BD.user.js
 // @updateURL https://update.greasyfork.org/scripts/562046/ESJZone%20%E5%85%A8%E6%9C%AC%E4%B8%8B%E8%BD%BD.meta.js
 // ==/UserScript==
@@ -93,9 +95,17 @@
     }
     function sleepWithAbort(ms, signal) {
       return new Promise((resolve) => {
-        setTimeout(() => {
+        if (signal?.aborted) return resolve();
+        const onAbort = () => {
+          clearTimeout(timer);
+          signal?.removeEventListener("abort", onAbort);
+          resolve();
+        };
+        const timer = setTimeout(() => {
+          signal?.removeEventListener("abort", onAbort);
           resolve();
         }, ms);
+        signal?.addEventListener("abort", onAbort);
       });
     }
     function triggerDownload(blob, filename) {
@@ -120,28 +130,52 @@
         }
       }
     }
-    async function fetchWithTimeout(url, options = {}, timeout = 1e4, cancelSignal) {
-      const controller = new AbortController();
-      const id = setTimeout(() => controller.abort(), timeout);
-      const abortPromise = new Promise((_, reject) => {
+    function fetchWithTimeout(url, options = {}, timeout = 15e3, cancelSignal) {
+      return new Promise((resolve, reject) => {
+        if (cancelSignal?.aborted) {
+          return reject(new Error("User Aborted"));
+        }
+        let requestHandle = null;
+        const onAbort = () => {
+          if (requestHandle) {
+            requestHandle.abort();
+          }
+          reject(new Error("User Aborted"));
+        };
+        if (cancelSignal) {
+          cancelSignal.addEventListener("abort", onAbort);
+        }
+        requestHandle = GM_xmlhttpRequest({
+          method: options.method || "GET",
+          url,
+          headers: options.headers,
+          data: options.body,
+          timeout,
+          responseType: "blob",
+          anonymous: options.credentials === "omit",
+          onload: (res) => {
+            if (cancelSignal) cancelSignal.removeEventListener("abort", onAbort);
+            if (res.status >= 200 && res.status < 300) {
+              const response = new Response(res.response, {
+                status: res.status,
+                statusText: res.statusText
+              });
+              Object.defineProperty(response, "url", { value: res.finalUrl });
+              resolve(response);
+            } else {
+              reject(new Error(`Status ${res.status}`));
+            }
+          },
+          ontimeout: () => {
+            if (cancelSignal) cancelSignal.removeEventListener("abort", onAbort);
+            reject(new Error("Timeout"));
+          },
+          onerror: (err) => {
+            if (cancelSignal) cancelSignal.removeEventListener("abort", onAbort);
+            reject(new Error("Network Error"));
+          }
+        });
       });
-      const fetchPromise = fetch(url, {
-        ...options,
-        signal: controller.signal
-      }).then((res) => {
-        if (!res.ok) throw new Error(`Status ${res.status}`);
-        return res;
-      });
-      try {
-        const response = await Promise.race([fetchPromise, abortPromise]);
-        clearTimeout(id);
-        return response;
-      } catch (e) {
-        clearTimeout(id);
-        controller.abort();
-        throw e;
-      } finally {
-      }
     }
 
     function enableDrag(popup, headerSelector) {
@@ -195,6 +229,8 @@
           element.addEventListener(key.substring(2).toLowerCase(), value);
         } else if (key === "className") {
           element.className = value;
+        } else if (["checked", "value", "disabled", "selected"].includes(key)) {
+          element[key] = value;
         } else {
           element.setAttribute(key, String(value));
         }
@@ -240,11 +276,42 @@
       if (!s) return "";
       return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
     }
-    function escapeHtmlPreserveLine(s) {
-      if (!s) return "";
-      const escaped = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      const parts = escaped.split(/\n{2,}|\r\n{2,}/).map((p) => p.trim()).filter((p) => p.length > 0);
-      return parts.map((p) => `<p>${p.replace(/\n/g, "<br/>")}</p>`).join("\n");
+    function convertToXhtml(htmlString) {
+      if (!htmlString) return "";
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, "text/html");
+      const allElements = doc.body.querySelectorAll("*");
+      const validXmlNameRegex = /^[a-zA-Z_:][a-zA-Z0-9_\-\.\:]*$/;
+      allElements.forEach((el) => {
+        const attrs = Array.from(el.attributes);
+        for (const attr of attrs) {
+          const name = attr.name;
+          if (!validXmlNameRegex.test(name)) {
+            el.removeAttribute(name);
+            continue;
+          }
+          if (name.includes(":")) {
+            if (!name.startsWith("xmlns") && !name.startsWith("xml")) {
+              el.removeAttribute(name);
+            }
+          }
+        }
+      });
+      const serializer = new XMLSerializer();
+      const xhtmlParts = [];
+      Array.from(doc.body.childNodes).forEach((node) => {
+        try {
+          let str = serializer.serializeToString(node);
+          str = str.replace(/ xmlns="http:\/\/www\.w3\.org\/1999\/xhtml"/g, "");
+          xhtmlParts.push(str);
+        } catch (e) {
+          console.warn("XHTML \u5E8F\u5217\u5316\u8282\u70B9\u5931\u8D25:", node, e);
+        }
+      });
+      return xhtmlParts.join("");
+    }
+    function removeImgTags(html) {
+      return html.replace(/<img[^>]*>/gi, "");
     }
 
     async function buildEpub(chapters, metadata) {
@@ -283,7 +350,7 @@
         coverMeta = `<meta name="cover" content="cover-image" />`;
       }
       let navHtml = `<?xml version="1.0" encoding="utf-8"?>
-        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh">
+        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="zh">
           <head><title>\u76EE\u5F55</title></head>
           <body>
             <nav epub:type="toc" id="toc">
@@ -294,13 +361,22 @@
         const id = `chap_${i + 1}`;
         const filename = `${id}.xhtml`;
         const title2 = chapters[i].title || `\u7B2C${i + 1}\u7AE0`;
-        const body = chapters[i].content || "";
+        const body = convertToXhtml(chapters[i].content || "");
+        const chap = chapters[i];
+        if (chap.images && chap.images.length > 0) {
+          chap.images.forEach((img) => {
+            oebps.file(img.id, img.blob);
+            manifestItems.push(
+              `<item id="${img.id.replace(".", "_")}" href="${img.id}" media-type="${img.mediaType}" />`
+            );
+          });
+        }
         const xhtml = `<?xml version="1.0" encoding="utf-8"?>
             <html xmlns="http://www.w3.org/1999/xhtml">
               <head><title>${escapeXml(title2)}</title></head>
               <body>
                 <h2>${escapeXml(title2)}</h2>
-                <div>${escapeHtmlPreserveLine(body)}</div>
+                <div>${body}</div>
               </body>
             </html>`;
         oebps.file(filename, xhtml);
@@ -317,7 +393,7 @@
       const pubdate = (/* @__PURE__ */ new Date()).toISOString();
       const contentOpf = `<?xml version="1.0" encoding="utf-8"?>
         <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="3.0">
-          <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
             <dc:title>${title}</dc:title>
             <dc:language>zh-CN</dc:language>
             <dc:identifier id="BookId">${uniqueId}</dc:identifier>
@@ -339,7 +415,8 @@
     }
 
     const DEFAULT_CONFIG = {
-      concurrency: 5
+      concurrency: 5,
+      enableImageDownload: false
     };
     function getConcurrency() {
       let val = GM_getValue("concurrency", DEFAULT_CONFIG.concurrency);
@@ -353,6 +430,12 @@
       if (num < 1) num = 1;
       GM_setValue("concurrency", num);
       log(`\u5E76\u53D1\u6570\u5DF2\u66F4\u65B0\u4E3A: ${num}`);
+    }
+    function getImageDownloadSetting() {
+      return GM_getValue("enable_image_download", DEFAULT_CONFIG.enableImageDownload);
+    }
+    function setImageDownloadSetting(val) {
+      GM_setValue("enable_image_download", val);
     }
 
     function promisifyRequest(request) {
@@ -643,11 +726,38 @@
         toggleDownloadLock(false);
       };
       const header = createCommonHeader("\u{1F4BE} \u5BFC\u51FA\u9009\u9879", closeAction);
-      const coverStatus = data.metadata.coverBlob ? el("div", { style: "color:green;font-size:12px;margin-top:4px;" }, ["\u2714 \u5C01\u9762\u5DF2\u5305\u542B\u5728 epub \u6587\u4EF6\u4E2D"]) : el("div", { style: "color:red;font-size:12px;margin-top:4px;" }, ["\u2716 \u65E0\u5C01\u9762"]);
+      const coverStatus = data.metadata.coverBlob ? el("div", { style: "color:green;font-size:12px;margin-top:4px;" }, ["\u2714  \u5C01\u9762\u5DF2\u5305\u542B\u5728 epub \u6587\u4EF6\u4E2D"]) : el("div", { style: "color:red;font-size:12px;margin-top:4px;" }, ["\u2716  \u65E0\u5C01\u9762"]);
+      let imageStatus = "";
+      const isImageDownloadEnabled = getImageDownloadSetting();
+      if (isImageDownloadEnabled) {
+        let successCount = 0;
+        let failCount = 0;
+        data.chapters.forEach((chap) => {
+          if (chap.images) successCount += chap.images.length;
+          if (chap.imageErrors) failCount += chap.imageErrors;
+        });
+        const totalCount = successCount + failCount;
+        if (totalCount > 0) {
+          const color = failCount > 0 ? "#e6a23c" : "#2b9bd7";
+          const errorHint = failCount > 0 ? ` (\u5931\u8D25 ${failCount} \u5F20\uFF0C\u539F\u56E0\u89C1 F12)` : "";
+          imageStatus = el(
+            "div",
+            { style: `color:${color}; font-size:12px; margin-top:4px;` },
+            [`\u{1F5BC}\uFE0F \u6B63\u6587\u63D2\u56FE: ${successCount} / ${totalCount} \u5F20${errorHint}`]
+          );
+        } else {
+          imageStatus = el(
+            "div",
+            { style: "color:#999; font-size:12px; margin-top:4px;" },
+            ["\u{1F5BC}\uFE0F \u6B63\u6587\u63D2\u56FE: \u672A\u68C0\u6D4B\u5230\u56FE\u7247"]
+          );
+        }
+      }
       const infoBody = el("div", { style: "padding:20px;font-size:14px;line-height:1.5;" }, [
         el("div", {}, [`\u300A${data.metadata.title}\u300B\u5185\u5BB9\u5DF2\u5C31\u7EEA\u3002`]),
         el("div", { style: "color:#666;font-size:12px;margin-top:4px;" }, [`\u5171 ${data.chapters.length} \u7AE0`]),
-        coverStatus
+        coverStatus,
+        imageStatus
       ]);
       const btnTxt = el("button", {
         id: "esj-txt",
@@ -781,22 +891,52 @@
           }
         }
       }, [" \u6E05\u7A7A\u7F13\u5B58"]);
+      const isImageEnabled = getImageDownloadSetting();
+      const checkboxInput = el("input", {
+        type: "checkbox",
+        checked: isImageEnabled,
+        onchange: async (e) => {
+          const checked = e.target.checked;
+          setImageDownloadSetting(checked);
+          await clearAllCaches();
+          log(`\u6B63\u6587\u56FE\u7247\u4E0B\u8F7D\u5DF2${checked ? "\u5F00\u542F" : "\u5173\u95ED"}`);
+        }
+      });
+      const switchToggleImage = el("label", { className: "esj-switch" }, [
+        checkboxInput,
+        el("span", { className: "esj-slider" })
+      ]);
+      log(`\u521D\u59CB\u5316\u53C2\u6570\uFF1A\u5E76\u53D1\u6570=${currentConcurrency}\uFF0C\u56FE\u7247\u4E0B\u8F7D=${isImageEnabled}`);
+      const createDivider = () => el("hr", { style: "margin: 15px 0; border: 0; border-top: 1px solid #eee;" });
+      const rowStyle = "display:flex; align-items:center; justify-content:space-between;";
+      const rowConcurrency = el("div", { style: rowStyle }, [
+        el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u7EBF\u7A0B\u6570 (1-10):"]),
+        inputConcurrency
+      ]);
+      const rowCache = el("div", { style: rowStyle }, [
+        el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u7F13\u5B58:"]),
+        btnClear
+      ]);
+      const rowImage = el("div", { style: rowStyle }, [
+        el("div", {}, [
+          el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u6B63\u6587\u63D2\u56FE: "]),
+          el("div", { style: "font-size:12px; color:#999; margin-top: 2px;" }, ["(\u5728epub\u4E2D\u63D2\u5165\uFF0C\u4F1A\u8BA9\u901F\u5EA6\u53D8\u6162\uFF0C\u4F53\u79EF\u53D8\u5927)"])
+        ]),
+        switchToggleImage
+      ]);
+      const body = el("div", { style: "padding: 25px 20px; font-size: 14px;" }, [
+        rowConcurrency,
+        createDivider(),
+        rowImage,
+        createDivider(),
+        rowCache
+      ]);
       const popup = el("div", {
         id: "esj-settings",
         style: "position:fixed;top:30%;left:50%;transform:translateX(-50%);width:320px;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:999999;display:flex;flex-direction:column;"
       }, [
         header,
-        el("div", { style: "padding: 25px 20px; font-size: 14px;" }, [
-          el("div", { style: "margin-bottom: 20px; display:flex; align-items:center; justify-content:space-between;" }, [
-            el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u7EBF\u7A0B\u6570 (1-10):"]),
-            inputConcurrency
-          ]),
-          el("hr", { style: "margin: 15px 0; border: 0; border-top: 1px solid #eee;" }),
-          el("div", { style: "display:flex; align-items:center; justify-content:space-between;" }, [
-            el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u7F13\u5B58:"]),
-            btnClear
-          ])
-        ])
+        body
       ]);
       document.body.appendChild(popup);
       enableDrag(popup, ".esj-common-header");
@@ -875,22 +1015,345 @@ ${descText}
       const h2 = doc.querySelector("h2")?.innerText || defaultTitle;
       const bookName = document.title.split(" - ")[0].trim();
       const author = doc.querySelector(".single-post-meta div")?.innerText.trim() || "";
-      let content = doc.querySelector(".forum-content")?.innerText || "";
-      const safeTitle = h2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const titleRegex = new RegExp(`^\\s*${safeTitle}\\s*`, "i");
-      content = content.replace(titleRegex, "").trim();
-      return { title: h2, author, content, bookName };
+      doc.querySelector(".forum-content")?.innerText || "";
+      const contentEl = doc.querySelector(".forum-content");
+      let contentHtml = contentEl ? contentEl.innerHTML : "";
+      let contentText = contentEl ? contentEl.innerText : "";
+      if (contentEl) {
+        const safeTitle = h2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const titleRegex = new RegExp(`^\\s*${safeTitle}\\s*`, "i");
+        contentText = contentText.replace(titleRegex, "").trim();
+      }
+      return {
+        title: h2,
+        author,
+        contentHtml,
+        contentText,
+        bookName
+      };
     }
 
+    function getExtensionFromMime(mime) {
+      switch (mime.toLowerCase()) {
+        case "image/png":
+          return "png";
+        case "image/gif":
+          return "gif";
+        case "image/webp":
+          return "webp";
+        case "image/bmp":
+          return "bmp";
+        case "image/jpeg":
+        case "image/jpg":
+        default:
+          return "jpg";
+      }
+    }
+    async function compressImage(blob, quality = 0.7, maxWidth = 800) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(blob);
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height = maxWidth / width * height;
+            width = maxWidth;
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return resolve(blob);
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob((b) => {
+            if (b) resolve(b);
+            else resolve(blob);
+          }, "image/jpeg", quality);
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          resolve(blob);
+        };
+        img.src = url;
+      });
+    }
+    async function processHtmlImages(htmlContent, chapterIndex, signal) {
+      const div = document.createElement("div");
+      div.innerHTML = htmlContent;
+      const imgs = Array.from(div.querySelectorAll("img"));
+      const images = [];
+      let failCount = 0;
+      if (imgs.length > 0) {
+        console.log(`\u5E8F\u5217 ${chapterIndex + 1}: \u53D1\u73B0 ${imgs.length} \u5F20\u56FE\u7247\uFF0C\u5F00\u59CB\u5904\u7406...`);
+      }
+      for (let i = 0; i < imgs.length; i++) {
+        const img = imgs[i];
+        let src = img.getAttribute("src");
+        if (!src) continue;
+        let downloadSuccess = false;
+        let errorMsg = "\u672A\u77E5\u9519\u8BEF";
+        try {
+          if (src.startsWith("/")) {
+            src = location.origin + src;
+            img.setAttribute("src", src);
+          } else if (!src.startsWith("http")) {
+            src = new URL(src, location.href).href;
+            img.setAttribute("src", src);
+          }
+        } catch (e) {
+          console.warn(`\u975E\u6CD5 URL: ${src}`, e);
+          errorMsg = "URL \u683C\u5F0F\u9519\u8BEF";
+        }
+        if (src.startsWith("http")) {
+          const MAX_RETRIES = 3;
+          for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            if (signal?.aborted) break;
+            try {
+              const response = await fetchWithTimeout(src, {
+                method: "GET",
+                referrerPolicy: "no-referrer",
+                credentials: "omit"
+              }, 1e3, signal);
+              let blob = await response.blob();
+              let mimeType = blob.type;
+              let extension = getExtensionFromMime(mimeType);
+              if (blob.size > 100 * 1024) {
+                const compressedBlob = await compressImage(blob);
+                if (compressedBlob !== blob) {
+                  blob = compressedBlob;
+                  mimeType = "image/jpeg";
+                  extension = "jpg";
+                }
+              }
+              const imageFilename = `img_${chapterIndex}_${i}.${extension}`;
+              images.push({
+                id: imageFilename,
+                blob,
+                mediaType: mimeType
+              });
+              img.removeAttribute("src");
+              img.setAttribute("data-epub-src", imageFilename);
+              img.removeAttribute("srcset");
+              img.removeAttribute("loading");
+              img.style.maxWidth = "100%";
+              downloadSuccess = true;
+              break;
+            } catch (e) {
+              if (e.message === "User Aborted" || signal?.aborted) {
+                break;
+              }
+              errorMsg = e.message;
+              if (attempt < MAX_RETRIES) {
+                console.warn(`\u26A0\uFE0F \u56FE\u7247\u4E0B\u8F7D\u6CE2\u52A8\uFF0C\u91CD\u8BD5 (${attempt}/${MAX_RETRIES}): ${src}`);
+                await sleepWithAbort(1500, signal);
+              }
+            }
+          }
+        }
+        if (!downloadSuccess && !signal?.aborted) {
+          failCount++;
+          log(`\u274C [\u63D2\u56FE\u83B7\u53D6\u5931\u8D25] \u5E8F\u5217${chapterIndex + 1}: ${src} 
+\u5931\u8D25\u539F\u56E0\uFF1A ${errorMsg}`);
+          img.removeAttribute("srcset");
+          img.removeAttribute("loading");
+          img.style.maxWidth = "100%";
+          const originalAlt = img.getAttribute("alt") || "";
+          img.setAttribute("alt", `${originalAlt} (\u56FE\u7247\u52A0\u8F7D\u5931\u8D25)`);
+        }
+      }
+      let finalHtml = div.innerHTML;
+      finalHtml = finalHtml.replace(/data-epub-src="/g, 'src="');
+      return {
+        processedHtml: finalHtml,
+        images,
+        failCount
+      };
+    }
+
+    async function fetchCoverImage(url) {
+      try {
+        log("\u542F\u52A8\u5C01\u9762\u4E0B\u8F7D...");
+        const response = await fetchWithTimeout(url, {
+          method: "GET",
+          referrerPolicy: "no-referrer",
+          credentials: "omit"
+        }, 15e3);
+        const blob = await response.blob();
+        if (blob.size < 1e3) {
+          log("\u26A0 \u5C01\u9762\u6587\u4EF6\u8FC7\u5C0F\uFF0C\u5DF2\u5FFD\u7565");
+          return null;
+        }
+        let ext = "jpg";
+        if (blob.type.includes("png")) ext = "png";
+        else if (blob.type.includes("jpeg") || blob.type.includes("jpg")) ext = "jpg";
+        log("\u2714 \u5C01\u9762\u4E0B\u8F7D\u5B8C\u6210");
+        return { blob, ext };
+      } catch (e) {
+        log(`\u26A0 \u5C01\u9762\u4E0B\u8F7D\u8DF3\u8FC7: ${e.message}`);
+        return null;
+      }
+    }
+    async function downloadChapterHtml(url, title) {
+      const MAX_RETRIES = 3;
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        if (state.abortFlag) return null;
+        try {
+          const res = await fetchWithTimeout(url, { credentials: "include" }, 15e3);
+          return await res.text();
+        } catch (e) {
+          if (e.name === "AbortError" || state.abortFlag) return null;
+          if (attempt === MAX_RETRIES) {
+            log(`\u274C \u7AE0\u8282\u83B7\u53D6\u5931\u8D25 (${title}): ${e.message}`);
+          } else {
+            await sleepWithAbort(300 * attempt);
+          }
+        }
+      }
+      return null;
+    }
+    async function handleChapterContent(html, task, ctx) {
+      const { index, title } = task;
+      const { options, enableImage } = ctx;
+      const result = parseChapterHtml(html, title);
+      let finalHtml = result.contentHtml;
+      let chapterImages = [];
+      let imageErrors = 0;
+      if (enableImage) {
+        try {
+          const processed = await processHtmlImages(
+            result.contentHtml,
+            index,
+            state.abortController?.signal
+          );
+          finalHtml = processed.processedHtml;
+          chapterImages = processed.images;
+          imageErrors = processed.failCount;
+        } catch (e) {
+          const imgMatches = result.contentHtml.match(/<img\s/gi);
+          imageErrors = imgMatches ? imgMatches.length : 0;
+          log(`\u26A0\uFE0F \u56FE\u7247\u5904\u7406\u5F02\u5E38\uFF0C\u8DF3\u8FC7 ${imageErrors} \u5F20\u56FE\u7247\u3002\u7B2C ${index + 1} \u7AE0 \u6807\u9898\uFF1A${title}`);
+        }
+      } else {
+        finalHtml = removeImgTags(result.contentHtml);
+      }
+      state.globalChaptersMap.set(index, {
+        title: result.title,
+        content: finalHtml,
+        txtSegment: `${result.title}
+
+${result.author}
+
+${result.contentText}
+
+`,
+        images: chapterImages,
+        imageErrors
+      });
+    }
+    async function processChapterTask(task, ctx, isRetry = false) {
+      if (state.abortFlag) return;
+      const { index, url, title } = task;
+      const { total, options } = ctx;
+      if (!isRetry && state.globalChaptersMap.has(index)) {
+        ctx.runtime.completedCount++;
+        ctx.updateProgress();
+        return;
+      }
+      const isValidChapter = /\/forum\/\d+\/\d+\.html/.test(url) && url.includes("esjzone");
+      if (!isValidChapter) {
+        const msg = `${url} {\u975E\u7AD9\u5167\u94FE\u63A5}`;
+        state.globalChaptersMap.set(index, {
+          title,
+          content: msg,
+          txtSegment: `${title}
+${msg}
+
+`
+        });
+        ctx.runtime.completedCount++;
+        ctx.updateProgress();
+        if (!state.abortFlag && ctx.runtime.completedCount % 5 === 0) {
+          saveBookCache(options.bookId, state.globalChaptersMap);
+        }
+        log(`\u26A0\uFE0F \u8DF3\u8FC7 (${ctx.runtime.completedCount}/${total})\uFF1A${title} (\u975E\u7AD9\u5185)`);
+        await sleepWithAbort(100);
+        return;
+      }
+      const html = await downloadChapterHtml(url, title);
+      if (!html || state.abortFlag) return;
+      await handleChapterContent(html, task, ctx);
+      if (!isRetry) {
+        ctx.runtime.completedCount++;
+        ctx.updateProgress();
+      }
+      if (!state.abortFlag) {
+        if (isRetry) {
+          saveBookCache(options.bookId, state.globalChaptersMap);
+        } else {
+          if (ctx.runtime.completedCount % 5 === 0) {
+            saveBookCache(options.bookId, state.globalChaptersMap);
+          }
+        }
+      }
+      const chapter = state.globalChaptersMap.get(index);
+      const imageErrors = chapter?.imageErrors || 0;
+      const imageCount = chapter?.images?.length || 0;
+      const prefix = isRetry ? "\u267B\uFE0F \u8865\u6293" : "\u2714 \u6293\u53D6";
+      if (imageErrors > 0) {
+        log(`${prefix} (${ctx.runtime.completedCount}/${total})\uFF1A${title} (${imageErrors}/${imageCount + imageErrors} \u5F20\u56FE\u7247\u83B7\u53D6\u5931\u8D25)
+URL: ${url}`);
+      } else if (imageCount > 0) {
+        log(`${prefix} (${ctx.runtime.completedCount}/${total})\uFF1A${title} (${imageCount} \u5F20\u56FE\u7247)
+URL: ${url}`);
+      } else {
+        log(`${prefix} (${ctx.runtime.completedCount}/${total})\uFF1A${title}
+URL: ${url}`);
+      }
+      if (!state.abortFlag) {
+        const delay = Math.floor(Math.random() * 100) + 100;
+        await sleepWithAbort(delay);
+      }
+    }
+    async function checkIntegrityAndRetry(tasks, ctx) {
+      const { total, options, enableImage } = ctx;
+      log("\u6B63\u5728\u8FDB\u884C\u7AE0\u8282\u5B8C\u6574\u6027\u68C0\u67E5...");
+      const missingTasks = tasks.filter((t) => {
+        const chap = state.globalChaptersMap.get(t.index);
+        if (!chap) return true;
+        if (enableImage && chap.imageErrors && chap.imageErrors > 0) return true;
+        return false;
+      });
+      if (missingTasks.length > 0) {
+        log(`\u26A0 \u53D1\u73B0 ${missingTasks.length} \u4E2A\u7AE0\u8282\u4E0D\u5B8C\u6574 (\u7F3A\u5931\u6216\u542B\u5931\u8D25\u56FE\u7247)\uFF0C\u5C1D\u8BD5\u81EA\u52A8\u8865\u6293...`);
+        for (const task of missingTasks) {
+          if (state.abortFlag) {
+            await saveBookCache(options.bookId, state.globalChaptersMap);
+            fullCleanup(state.originalTitle);
+            break;
+          }
+          const chap = state.globalChaptersMap.get(task.index);
+          const reason = !chap ? "\u7F3A\u5931" : `\u56FE\u7247\u5931\u8D25 ${chap.imageErrors} \u5F20`;
+          log(`\u8865\u6293 [${task.index + 1}/${total}] (${reason})...`);
+          await processChapterTask(task, ctx, true);
+          await sleepWithAbort(300);
+        }
+      } else {
+        log("\u2705 \u5B8C\u6574\u6027\u68C0\u67E5\u901A\u8FC7\uFF0C\u65E0\u7F3A\u6F0F\u3002");
+      }
+    }
     async function batchDownload(options) {
-      const { bookId, bookName, author = "\u672A\u77E5\u4F5C\u8005", introTxt, coverUrl, tasks } = options;
+      const { bookId, bookName, author, introTxt, coverUrl, tasks } = options;
       const total = tasks.length;
       let popup = document.querySelector("#esj-popup");
-      if (!popup) {
-        popup = createDownloadPopup();
-      }
+      if (!popup) popup = createDownloadPopup();
       const progressEl = document.querySelector("#esj-progress");
       const titleEl = document.querySelector("#esj-title");
+      setAbortFlag(false);
+      resetAbortController();
       let cachedCount = 0;
       const cacheResult = await loadBookCache(bookId);
       if (cacheResult.map) {
@@ -900,125 +1363,33 @@ ${descText}
       if (cachedCount > 0) {
         log(`\u{1F4BE} \u5DF2\u4ECE IndexedDB \u6062\u590D ${cachedCount} \u7AE0\u7F13\u5B58`);
       }
-      const coverTaskPromise = (async () => {
-        try {
-          if (!coverUrl) return null;
-          log("\u542F\u52A8\u5C01\u9762\u4E0B\u8F7D...");
-          const response = await fetchWithTimeout(coverUrl, {
-            method: "GET",
-            referrerPolicy: "no-referrer",
-            credentials: "omit"
-          }, 15e3);
-          const blob = await response.blob();
-          if (blob.size < 1e3) {
-            log("\u26A0 \u5C01\u9762\u6587\u4EF6\u8FC7\u5C0F\uFF0C\u5DF2\u5FFD\u7565");
-            return null;
-          }
-          let ext = "jpg";
-          if (blob.type.includes("png")) ext = "png";
-          else if (blob.type.includes("jpeg") || blob.type.includes("jpg")) ext = "jpg";
-          log("\u2714 \u5C01\u9762\u4E0B\u8F7D\u5B8C\u6210");
-          return { blob, ext };
-        } catch (e) {
-          log(`\u26A0 \u5C01\u9762\u4E0B\u8F7D\u8DF3\u8FC7: ${e.message}`);
-          return null;
+      const coverTaskPromise = coverUrl ? fetchCoverImage(coverUrl) : Promise.resolve(null);
+      const ctx = {
+        options,
+        total,
+        enableImage: getImageDownloadSetting(),
+        ui: { progressEl, titleEl },
+        runtime: { completedCount: 0 },
+        updateProgress: () => {
+          if (state.abortFlag) return;
+          const count = ctx.runtime.completedCount;
+          const statusStr = `\u5168\u672C\u4E0B\u8F7D\uFF08${count}/${total}\uFF09`;
+          if (titleEl) titleEl.textContent = "\u{1F4D8} " + statusStr;
+          document.title = `[${count}/${total}] ${state.originalTitle}`;
+          updateTrayText(statusStr);
+          if (progressEl) progressEl.style.width = count / total * 100 + "%";
         }
-      })();
+      };
       const concurrency = getConcurrency();
-      let queue = [...tasks];
-      let completedCount = 0;
-      async function processChapter(task) {
-        if (state.abortFlag) return;
-        const { index, url, title } = task;
-        if (state.globalChaptersMap.has(index)) {
-          completedCount++;
-          updateProgress();
-          return;
-        }
-        const isValidChapter = /\/forum\/\d+\/\d+\.html/.test(url) && url.includes("esjzone");
-        if (!isValidChapter) {
-          const msg = `${url} {\u975E\u7AD9\u5167\u94FE\u63A5}`;
-          state.globalChaptersMap.set(index, {
-            title,
-            content: msg,
-            txtSegment: `${title}
-${msg}
-
-`
-          });
-          if (!state.abortFlag && completedCount % 5 === 0) {
-            saveBookCache(bookId, state.globalChaptersMap);
-          }
-          completedCount++;
-          updateProgress();
-          log(`\u26A0\uFE0F \u8DF3\u8FC7 (${completedCount}/${total})\uFF1A${title} (\u975E\u7AD9\u5185)`);
-          await sleepWithAbort(100);
-          return;
-        }
-        let success = false;
-        const MAX_RETRIES = 3;
-        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-          if (state.abortFlag) break;
-          try {
-            const res = await fetchWithTimeout(url, { credentials: "include" }, 15e3);
-            const html = await res.text();
-            const result = parseChapterHtml(html, title);
-            state.globalChaptersMap.set(index, {
-              title: result.title,
-              content: result.content,
-              txtSegment: `${result.title}
-
-${result.author}
-
-${result.content}
-
-`
-            });
-            if (!state.abortFlag && completedCount % 5 === 0) {
-              saveBookCache(bookId, state.globalChaptersMap);
-            }
-            success = true;
-            break;
-          } catch (e) {
-            if (e.name === "AbortError" || state.abortFlag) {
-              return;
-            }
-            if (attempt === MAX_RETRIES) {
-              log(`\u274C \u6293\u53D6\u5931\u8D25 (${title}): ${e}`);
-            } else {
-              await sleepWithAbort(300 * attempt);
-            }
-          }
-        }
-        if (state.abortFlag) return;
-        completedCount++;
-        updateProgress();
-        if (success) {
-          log(`\u2714 \u6293\u53D6 (${completedCount}/${total})\uFF1A${title}
-URL: ${url}`);
-        }
-        const delay = Math.floor(Math.random() * 200) + 100;
-        await sleepWithAbort(delay);
-      }
-      function updateProgress() {
-        if (state.abortFlag) return;
-        const statusStr = `\u5168\u672C\u4E0B\u8F7D\uFF08${completedCount}/${total}\uFF09`;
-        if (titleEl) titleEl.textContent = "\u{1F4D8} " + statusStr;
-        document.title = `[${completedCount}/${total}] ${state.originalTitle}`;
-        updateTrayText(statusStr);
-        if (progressEl) progressEl.style.width = completedCount / total * 100 + "%";
-      }
+      const queue = [...tasks];
       async function worker() {
         while (queue.length > 0 && !state.abortFlag) {
           const task = queue.shift();
-          if (task) await processChapter(task);
+          if (task) await processChapterTask(task, ctx, false);
         }
       }
       log(`\u542F\u52A8 ${concurrency} \u4E2A\u5E76\u53D1\u7EBF\u7A0B...`);
-      const workers = [];
-      for (let k = 0; k < concurrency; k++) {
-        workers.push(worker());
-      }
+      const workers = Array(concurrency).fill(0).map(() => worker());
       await Promise.all(workers);
       if (state.abortFlag) {
         log("\u6B63\u5728\u5199\u5165 IndexedDB...");
@@ -1029,26 +1400,8 @@ URL: ${url}`);
         fullCleanup(state.originalTitle);
         return;
       }
-      log("\u6B63\u5728\u8FDB\u884C\u7AE0\u8282\u5B8C\u6574\u6027\u68C0\u67E5...");
-      const missingTasks = tasks.filter((t) => !state.globalChaptersMap.has(t.index));
-      if (missingTasks.length > 0) {
-        log(`\u26A0 \u53D1\u73B0 ${missingTasks.length} \u4E2A\u7AE0\u8282\u6293\u53D6\u5931\u8D25\u6216\u9057\u6F0F\uFF0C\u5C1D\u8BD5\u81EA\u52A8\u8865\u6293...`);
-        for (const task of missingTasks) {
-          if (state.abortFlag) {
-            saveBookCache(bookId, state.globalChaptersMap);
-            break;
-          }
-          log(`\u8865\u6293 [${task.index + 1}/${total}]...`);
-          await processChapter(task);
-          saveBookCache(bookId, state.globalChaptersMap);
-          await sleepWithAbort(300);
-        }
-      } else {
-        log("\u2705 \u5B8C\u6574\u6027\u68C0\u67E5\u901A\u8FC7\uFF0C\u65E0\u7F3A\u6F0F\u3002");
-      }
+      await checkIntegrityAndRetry(tasks, ctx);
       const coverResult = await coverTaskPromise;
-      const finalCoverBlob = coverResult ? coverResult.blob : null;
-      const finalCoverExt = coverResult ? coverResult.ext : "jpg";
       log("\u2705 \u6240\u6709\u4EFB\u52A1\u5904\u7406\u5B8C\u6BD5");
       document.title = state.originalTitle;
       let finalTxt = introTxt;
@@ -1070,9 +1423,9 @@ URL: ${url}`);
         chapters: chaptersArr,
         metadata: {
           title: bookName,
-          author,
-          coverBlob: finalCoverBlob,
-          coverExt: finalCoverExt
+          author: author || "\u672A\u77E5\u4F5C\u8005",
+          coverBlob: coverResult?.blob || null,
+          coverExt: coverResult?.ext || "jpg"
         },
         epubBlob: null
       });
@@ -1233,8 +1586,8 @@ URL: ${url}`);
         }
         const html = document.documentElement.outerHTML;
         const defaultTitle = document.title.split(" - ")[0] || "\u672A\u547D\u540D\u7AE0\u8282";
-        const { title, author, content } = parseChapterHtml(html, defaultTitle);
-        if (!content) {
+        const { title, author, contentText } = parseChapterHtml(html, defaultTitle);
+        if (!contentText) {
           alert("\u672A\u627E\u5230\u6B63\u6587\u5185\u5BB9");
           return;
         }
@@ -1242,7 +1595,7 @@ URL: ${url}`);
 ${author}
 \u672C\u7AE0URL: ${location.href}
 
-${content}`;
+${contentText}`;
         const blob = new Blob([finalTxt], { type: "text/plain;charset=utf-8" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
@@ -1448,6 +1801,55 @@ ${content}`;
         
     #esj-format { 
         width: 420px; 
+    }
+
+    /* \u5F00\u5173\u6837\u5F0F (Toggle Switch) */
+    .esj-switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+        vertical-align: middle;
+    }
+
+    .esj-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .esj-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+
+    .esj-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .esj-slider {
+        background-color: #2b9bd7; /* ESJ \u84DD\u8272 */
+    }
+
+    input:focus + .esj-slider {
+        box-shadow: 0 0 1px #2b9bd7;
+    }
+
+    input:checked + .esj-slider:before {
+        transform: translateX(20px);
     }
 
 `;

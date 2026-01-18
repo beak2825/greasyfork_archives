@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         OTT 회차 수집기
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  OTT에서 "회차_날짜 에피소드명].mkv" 형식으로 정보를 수집합니다.
+// @version      1.2
+// @description  OTT에서 "회차_날짜 에피소드명" 형식으로 정보를 수집합니다.
 // @author       DongHaerang
 // @license      CC BY-NC-SA 4.0
 // @match        https://www.wavve.com/player/vod?*
 // @match        https://www.tving.com/contents/*
+// @match        https://www.coupangplay.com/titles/*
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
 // @downloadURL https://update.greasyfork.org/scripts/562753/OTT%20%ED%9A%8C%EC%B0%A8%20%EC%88%98%EC%A7%91%EA%B8%B0.user.js
@@ -16,52 +17,49 @@
 (function() {
     'use strict';
 
-    // 1. 공통 스타일 설정 (우리 친구의 디자인 가이드 반영)
+    // 1. 공통 스타일 설정
     GM_addStyle(`
         #filter-button-container {
-            position: fixed; top: 0px; left: 60%; transform: translateX(-50%);
-            z-index: 9999; display: flex; gap: 10px;
+            position: fixed; top: 10px; left: 60%; transform: translateX(-50%);
+            z-index: 999999; display: flex; gap: 10px;
         }
         .filter-btn {
-            background-color: #0073e6; color: white; border: none;
-            padding: 0px 8px; height: 30px; line-height: 30px;
+            background-color: #0073e6; color: white; border: 1px solid white;
+            padding: 5px 12px; height: auto; line-height: 1.2;
             border-radius: 5px; font-size: 14px; font-weight: bold;
             cursor: pointer; transition: background-color 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .filter-btn:hover { background-color: #005bb5; }
         #copy-notification {
-            position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.75); color: white;
-            padding: 15px 30px; border-radius: 8px; z-index: 10000;
-            font-size: 16px; opacity: 0; transition: opacity 0.3s ease-in-out;
-            pointer-events: none; text-align: center; max-width: 90%; word-break: break-all;
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.85); color: white;
+            padding: 15px 30px; border-radius: 8px; z-index: 1000000;
+            font-size: 16px; opacity: 0; transition: opacity 0.3s;
+            pointer-events: none; text-align: center;
         }
     `);
 
-    // 2. 공통 알림창 함수
     const showNotification = (message) => {
         let notify = document.getElementById('copy-notification') || document.createElement('div');
         if (!notify.id) { notify.id = 'copy-notification'; document.body.appendChild(notify); }
         notify.innerText = message;
         notify.style.opacity = '1';
-        setTimeout(() => { notify.style.opacity = '0'; }, 1000);
+        setTimeout(() => { notify.style.opacity = '0'; }, 1500);
     };
 
-    // 3. [사이트 감지] 현재 어디에 접속했는지 확인하는 함수
     const getSiteType = () => {
         const host = window.location.hostname;
         if (host.includes('wavve.com')) return 'wavve';
         if (host.includes('tving.com')) return 'tving';
+        if (host.includes('coupangplay.com')) return 'coupang';
         return null;
     };
 
-    // 4. [기능] 데이터 수집 (ALT+E)
     const collectData = () => {
         const site = getSiteType();
         let results = [];
-        let titles, infos;
+        let titles = [], infos = [];
 
         if (site === 'wavve') {
             titles = document.querySelectorAll('.title1.line2');
@@ -69,35 +67,67 @@
         } else if (site === 'tving') {
             titles = document.querySelectorAll('.item__title');
             infos = document.querySelectorAll('.item__subinfo');
+        } else if (site === 'coupang') {
+            titles = document.querySelectorAll('[data-cy="episode-title"]');
+            infos = document.querySelectorAll('[class*="episodeDate"]');
         }
 
-        if (!titles || titles.length === 0) {
-            showNotification('❌ 목록을 찾을 수 없습니다.');
+        if (titles.length === 0) {
+            showNotification('❌ 수집할 목록이 보이지 않습니다.');
             return;
         }
 
         for (let i = 0; i < titles.length; i++) {
             const fullTitle = titles[i].innerText.trim();
-            const dotIndex = fullTitle.indexOf('.');
+            let epNum = "", epTitle = "";
 
-            if (dotIndex !== -1) {
-                // 회차 번호 2자리 보정
-                const epNum = fullTitle.substring(0, dotIndex).trim().padStart(2, '0');
-                const epTitle = fullTitle.substring(dotIndex + 1).trim();
-                let dateText = "0000-00-00";
+            if (site === 'coupang') {
+                const episodeOnlyMatch = fullTitle.match(/^(\d{1,4})회$/);
+                if (episodeOnlyMatch) {
+                    epNum = episodeOnlyMatch[1].padStart(2, '0');
+                    epTitle = "";
+                }
+                else if (fullTitle.indexOf('.') !== -1) {
+                    const dotIndex = fullTitle.indexOf('.');
+                    epNum = fullTitle.substring(0, dotIndex).trim().padStart(2, '0');
+                    epTitle = fullTitle.substring(dotIndex + 1).trim();
+                }
+                else {
+                    epNum = String(i + 1).padStart(2, '0');
+                    epTitle = fullTitle;
+                }
+            } else {
+                const dotIndex = fullTitle.indexOf('.');
+                if (dotIndex !== -1) {
+                    epNum = fullTitle.substring(0, dotIndex).trim().padStart(2, '0');
+                    epTitle = fullTitle.substring(dotIndex + 1).trim();
+                } else {
+                    epNum = String(i + 1).padStart(2, '0');
+                    epTitle = fullTitle;
+                }
+            }
 
-                if (infos[i]) {
-                    const infoText = infos[i].innerText;
-                    if (site === 'wavve') {
-                        const dateMatch = infoText.match(/\d{4}-\d{2}-\d{2}/);
-                        if (dateMatch) dateText = dateMatch[0];
-                    } else if (site === 'tving') {
-                        const rawDate = infoText.split('|')[0].trim();
-                        dateText = rawDate.replace(/\./g, '-');
+            let dateText = "0000-00-00";
+            if (infos[i]) {
+                const infoText = infos[i].innerText;
+                if (site === 'wavve') {
+                    const dateMatch = infoText.match(/\d{4}-\d{2}-\d{2}/);
+                    if (dateMatch) dateText = dateMatch[0];
+                } else if (site === 'tving') {
+                    const rawDate = infoText.split('|')[0].trim();
+                    dateText = rawDate.replace(/\./g, '-');
+                } else if (site === 'coupang') {
+                    const rawDate = infoText.split('•')[0].trim();
+                    const dateMatch = rawDate.match(/(\d+)년\s*(\d+)월\s*(\d+)일/);
+                    if (dateMatch) {
+                        dateText = `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}`;
                     }
                 }
-                results.push(`${epNum}_${dateText} ${epTitle}].mkv`.trim());
             }
+
+            const formattedTitle = epTitle ? ` ${epTitle}` : "";
+            // ✨ 핵심 수정 부분: ].mkv를 제거했습니다.
+            results.push(`${epNum}_${dateText}${formattedTitle}`.trim());
         }
 
         if (results.length > 0) {
@@ -107,7 +137,6 @@
         }
     };
 
-    // 5. [기능] 정렬 토글 (ALT+Q)
     const toggleSort = () => {
         const site = getSiteType();
         if (site === 'wavve') {
@@ -127,15 +156,21 @@
                     }
                 });
             }
+        } else if (site === 'coupang') {
+            const sortBtn = document.querySelector('[data-cy="episode-sort-button"]');
+            if (sortBtn) {
+                showNotification('정렬 순서를 변경합니다.');
+                sortBtn.click();
+            }
         }
     };
 
-    // 6. [기능] 페이지 이동 (ALT+A, ALT+S)
     const navigate = (direction) => {
         const url = new URL(window.location.href);
+        const site = getSiteType();
         let currentPage = 1;
 
-        if (getSiteType() === 'wavve') {
+        if (site === 'wavve') {
             const onPage = document.querySelector('.paging-type01 a.on');
             if (onPage) currentPage = parseInt(onPage.innerText);
         } else {
@@ -149,14 +184,13 @@
         window.location.href = url.toString();
     };
 
-    // 7. 버튼 및 이벤트 설정
     const init = () => {
         if (!document.getElementById('filter-button-container')) {
             const container = document.createElement('div');
             container.id = 'filter-button-container';
             const btn = document.createElement('button');
             btn.className = 'filter-btn';
-            btn.innerText = '회차';
+            btn.innerText = '회차 수집';
             btn.onclick = collectData;
             container.appendChild(btn);
             document.body.appendChild(container);
@@ -176,7 +210,8 @@
     const observer = new MutationObserver(() => {
         const site = getSiteType();
         if ((site === 'wavve' && document.querySelector('.title1.line2')) ||
-            (site === 'tving' && document.querySelector('.item__title'))) {
+            (site === 'tving' && document.querySelector('.item__title')) ||
+            (site === 'coupang' && document.querySelector('[data-cy="episode-title"]'))) {
             init();
         }
     });

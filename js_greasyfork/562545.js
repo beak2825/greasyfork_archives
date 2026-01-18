@@ -2,14 +2,14 @@
 // @name         Bangumi Entry Intersection User Comparison + Long Comment Pin
 // @name:zh-CN   Bangumi 条目交集用户对比 + 长评置顶
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Compare audience intersection and pin long comments on Bangumi.
-// @match        https://bgm.tv/*
-// @match        http://bgm.tv/*
-// @match        https://bangumi.tv/*
-// @match        http://bangumi.tv/*
-// @match        https://chii.in/*
-// @match        http://chii.in/*
+// @match        https://bgm.tv/subject/*
+// @match        http://bgm.tv/subject/*
+// @match        https://bangumi.tv/subject/*
+// @match        http://bangumi.tv/subject/*
+// @match        https://chii.in/subject/*
+// @match        http://chii.in/subject/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue

@@ -624,6 +624,36 @@
         if (btn) btn.classList.remove('active');
     }
 
+    // --- 新規追加: 個別詳細ボタンの注入ロジック ---
+    function injectDetailToggleButtons() {
+        // グリッドレイアウトのカード要素を取得
+        const cards = document.querySelectorAll('.gallery-content > div');
+        
+        cards.forEach(card => {
+            const artistList = card.querySelector('.artist-list');
+            if (!artistList) return;
+            
+            // 既にボタンがある場合はスキップ
+            if (artistList.querySelector('.detail-toggle-btn')) return;
+            
+            const btn = document.createElement('div');
+            btn.className = 'detail-toggle-btn';
+            btn.title = 'Toggle Details';
+            // Configのアコーディオンと同じパスを使用
+            btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>`;
+            
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // 親への伝播(作品リンク移動など)を阻止
+                e.preventDefault();
+                
+                // カード要素にクラスをトグルして表示/非表示を切り替え
+                card.classList.toggle('show-local-detail');
+            });
+            
+            artistList.appendChild(btn);
+        });
+    }
+
     // グローバル公開
     window.HitomiFilterLogic = {
         toggleState,
@@ -655,6 +685,7 @@
         initGridDetails,   // ★追加
         toggleGridDetails, // ★追加
         applyGridDetails,  // ★追加
-        resetGridDetails   // ★追加
+        resetGridDetails,   // ★追加
+        injectDetailToggleButtons // ★新規追加
     };
 })(window);

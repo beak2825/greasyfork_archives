@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SV HaUI Helper
 // @namespace    https://github.com/vuquan2005/svHaUI-Helper
-// @version      1.2.1
+// @version      2.0.0
 // @author       VuQuan
 // @description  Nâng cao trải nghiệm cho sinh viên HaUI
 // @license      GPL-3.0-only
@@ -21,25 +21,6 @@
 (function () {
   'use strict';
 
-  var _GM_deleteValue = (() => typeof GM_deleteValue != "undefined" ? GM_deleteValue : void 0)();
-  var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
-  var _GM_listValues = (() => typeof GM_listValues != "undefined" ? GM_listValues : void 0)();
-  var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
-  class StorageManager {
-    get(key, defaultValue) {
-      return _GM_getValue(key, defaultValue);
-    }
-    set(key, value) {
-      _GM_setValue(key, value);
-    }
-    remove(key) {
-      _GM_deleteValue(key);
-    }
-    keys() {
-      return _GM_listValues();
-    }
-  }
-  const storage = new StorageManager();
   const LOG_LEVEL_PRIORITY = {
     debug: 0,
     info: 1,
@@ -116,60 +97,380 @@ setLevel(level) {
       this.minLevel = level;
     }
   }
-  const log$2 = new Logger({ prefix: "HaUI" });
+  const log$3 = new Logger({ prefix: "HaUI" });
   function createLogger(name) {
-    return log$2.child(name);
+    return log$3.child(name);
   }
-  const log$1 = createLogger("Settings");
   const DEFAULT_SETTINGS = {
-    logLevel: "info",
-    features: {}
+logLevel: "warn",
+captchaUndoTelex: true
   };
+  var _GM_deleteValue = (() => typeof GM_deleteValue != "undefined" ? GM_deleteValue : void 0)();
+  var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
+  var _GM_listValues = (() => typeof GM_listValues != "undefined" ? GM_listValues : void 0)();
+  var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
+  class StorageManager {
+
+
+get(key, defaultValue) {
+      return _GM_getValue(key, defaultValue);
+    }
+    set(key, value) {
+      _GM_setValue(key, value);
+    }
+    remove(key) {
+      _GM_deleteValue(key);
+    }
+    keys() {
+      return _GM_listValues();
+    }
+
+
+
+getRaw(key, defaultValue) {
+      return _GM_getValue(key, defaultValue);
+    }
+setRaw(key, value) {
+      _GM_setValue(key, value);
+    }
+removeRaw(key) {
+      _GM_deleteValue(key);
+    }
+allKeys() {
+      return _GM_listValues();
+    }
+  }
+  const storage = new StorageManager();
+  const log$2 = createLogger("BaseSetting");
+  class BaseSetting {
+key;
+displayLabel;
+displayDescription;
+_value;
+defaultValue;
+listeners = new Set();
+    constructor(config) {
+      this.key = config.key;
+      this.displayLabel = config.displayLabel;
+      this.displayDescription = config.displayDescription;
+      this.defaultValue = config.defaultValue;
+      this._value = this.load();
+    }
+
+
+
+getValue() {
+      return this._value;
+    }
+setValue(value) {
+      if (!this.validate(value)) {
+        log$2.w(`Validation failed for setting "${this.key}":`, value);
+        return false;
+      }
+      const oldValue = this._value;
+      if (this.isEqual(oldValue, value)) {
+        return true;
+      }
+      this._value = value;
+      this.save();
+      this.emit(oldValue, value);
+      return true;
+    }
+reset() {
+      this.setValue(this.defaultValue);
+    }
+isEqual(a, b) {
+      return a === b;
+    }
+
+
+
+serialize() {
+      return JSON.stringify(this._value);
+    }
+deserialize(data) {
+      try {
+        return JSON.parse(data);
+      } catch {
+        log$2.w(`Failed to deserialize setting "${this.key}", using default`);
+        return this.defaultValue;
+      }
+    }
+
+
+
+get storageKey() {
+      return `setting_${this.key}`;
+    }
+load() {
+      try {
+        const stored = storage.getRaw(this.storageKey);
+        if (stored === void 0) {
+          storage.setRaw(this.storageKey, this.defaultValue);
+          return this.defaultValue;
+        }
+        return stored;
+      } catch (e) {
+        log$2.e(`Failed to load setting "${this.key}":`, e);
+        return this.defaultValue;
+      }
+    }
+save() {
+      try {
+        storage.setRaw(this.storageKey, this._value);
+      } catch (e) {
+        log$2.e(`Failed to save setting "${this.key}":`, e);
+      }
+    }
+
+
+
+onChange(handler) {
+      this.listeners.add(handler);
+      return () => this.listeners.delete(handler);
+    }
+emit(oldValue, newValue) {
+      const event = {
+        key: this.key,
+        oldValue,
+        newValue,
+        timestamp: Date.now()
+      };
+      this.listeners.forEach((handler) => {
+        try {
+          handler(event);
+        } catch (e) {
+          log$2.e(`Error in change handler for "${this.key}":`, e);
+        }
+      });
+    }
+
+
+
+toJSON() {
+      return {
+        key: this.key,
+        displayLabel: this.displayLabel,
+        displayDescription: this.displayDescription,
+        optionType: this.optionType,
+        value: this._value,
+        defaultValue: this.defaultValue
+      };
+    }
+toString() {
+      return `${this.constructor.name}(${this.key}=${String(this._value)})`;
+    }
+  }
+  class BooleanSetting extends BaseSetting {
+    optionType = "boolean";
+    constructor(config) {
+      super(config);
+    }
+validate(value) {
+      return typeof value === "boolean";
+    }
+toggle() {
+      this.setValue(!this._value);
+    }
+isEnabled() {
+      return this._value === true;
+    }
+isDisabled() {
+      return this._value === false;
+    }
+  }
+  class SelectSetting extends BaseSetting {
+    optionType = "select";
+options;
+    constructor(config) {
+      super(config);
+      this.options = Object.freeze([...config.options]);
+    }
+validate(value) {
+      return this.options.some((opt) => opt.value === value);
+    }
+getSelectedOption() {
+      return this.options.find((opt) => opt.value === this._value);
+    }
+getSelectedLabel() {
+      return this.getSelectedOption()?.label ?? "";
+    }
+selectByIndex(index) {
+      if (index < 0 || index >= this.options.length) {
+        return false;
+      }
+      return this.setValue(this.options[index].value);
+    }
+getSelectedIndex() {
+      return this.options.findIndex((opt) => opt.value === this._value);
+    }
+isSelected(value) {
+      return this._value === value;
+    }
+  }
+  const log$1 = createLogger("SettingsManager");
   class SettingsManager {
-    settings;
+registry = new Map();
+globalListeners = new Set();
+
+
+
+logLevel;
+captchaUndoTelex;
+featureSettings = new Map();
     constructor() {
-      this.settings = this.load();
-      setGlobalLogLevel(this.settings.logLevel);
+      console.log("🔧 [HaUI:SettingsManager] Initializing settings...");
+      this.logLevel = new SelectSetting({
+        key: "logLevel",
+        displayLabel: "Log Level",
+        displayDescription: "Mức độ chi tiết của log output",
+        defaultValue: DEFAULT_SETTINGS.logLevel,
+        options: [
+          { value: "debug", label: "Debug", description: "Hiển thị tất cả logs" },
+          { value: "info", label: "Info", description: "Thông tin chung" },
+          { value: "warn", label: "Warning", description: "Cảnh báo và lỗi" },
+          { value: "error", label: "Error", description: "Chỉ lỗi" },
+          { value: "none", label: "None", description: "Tắt hoàn toàn" }
+        ]
+      });
+      setGlobalLogLevel(this.logLevel.getValue());
+      this.logLevel.onChange((event) => {
+        setGlobalLogLevel(event.newValue);
+      });
+      this.captchaUndoTelex = new BooleanSetting({
+        key: "captchaUndoTelex",
+        displayLabel: "Captcha Undo Telex",
+        displayDescription: "Tự động hoàn tác gõ Telex khi nhập captcha",
+        defaultValue: DEFAULT_SETTINGS.captchaUndoTelex
+      });
+      this.register(this.logLevel);
+      this.register(this.captchaUndoTelex);
+      log$1.d("✅ Settings ready!");
     }
-    load() {
-      try {
-        const saved = storage.get("app_settings", DEFAULT_SETTINGS);
-        return { ...DEFAULT_SETTINGS, ...saved };
-      } catch (e) {
-        log$1.e("Failed to load settings:", e);
-        return { ...DEFAULT_SETTINGS };
+
+
+
+register(setting) {
+      if (this.registry.has(setting.key)) {
+        log$1.w(`Setting "${setting.key}" already registered, overwriting`);
       }
+      this.registry.set(setting.key, setting);
+      setting.onChange((event) => {
+        this.emitGlobal(setting.key, event);
+      });
+      log$1.d(`  ${setting.key} = ${JSON.stringify(setting.getValue())}`);
     }
-    save() {
-      try {
-        storage.set("app_settings", this.settings);
-      } catch (e) {
-        log$1.e("Failed to save settings:", e);
+get(key) {
+      return this.registry.get(key);
+    }
+has(key) {
+      return this.registry.has(key);
+    }
+getAll() {
+      return Array.from(this.registry.values());
+    }
+toJSON() {
+      const result = {};
+      this.registry.forEach((setting, key) => {
+        result[key] = setting.getValue();
+      });
+      return result;
+    }
+
+
+
+isFeatureEnabled(featureId, name, description) {
+      let setting = this.featureSettings.get(featureId);
+      if (!setting) {
+        setting = new BooleanSetting({
+          key: `feature_${featureId}`,
+          displayLabel: name ?? featureId,
+          displayDescription: description ?? `Bật/tắt ${name ?? featureId}`,
+          defaultValue: true
+        });
+        this.featureSettings.set(featureId, setting);
+        this.register(setting);
       }
+      return setting.getValue();
     }
-    isFeatureEnabled(featureId) {
-      return this.settings.features[featureId] ?? true;
+setFeatureEnabled(featureId, enabled, name, description) {
+      let setting = this.featureSettings.get(featureId);
+      if (!setting) {
+        setting = new BooleanSetting({
+          key: `feature_${featureId}`,
+          displayLabel: name ?? featureId,
+          displayDescription: description ?? `Bật/tắt ${name ?? featureId}`,
+          defaultValue: true
+        });
+        this.featureSettings.set(featureId, setting);
+        this.register(setting);
+      }
+      setting.setValue(enabled);
     }
-    setFeatureEnabled(featureId, enabled) {
-      this.settings.features[featureId] = enabled;
-      this.save();
+getFeatureSetting(featureId) {
+      return this.featureSettings.get(featureId);
     }
-    setLogLevel(level) {
-      this.settings.logLevel = level;
-      setGlobalLogLevel(level);
-      this.save();
+
+
+
+onAnyChange(handler) {
+      this.globalListeners.add(handler);
+      return () => this.globalListeners.delete(handler);
     }
-    getLogLevel() {
-      return this.settings.logLevel;
+emitGlobal(key, event) {
+      this.globalListeners.forEach((handler) => {
+        try {
+          handler(key, event);
+        } catch (e) {
+          log$1.e(`Error in global change handler:`, e);
+        }
+      });
+    }
+
+
+
+resetAll() {
+      this.registry.forEach((setting) => {
+        setting.reset();
+      });
+      log$1.i("All settings reset to defaults");
     }
   }
   const settings = new SettingsManager();
+  function normalizePath(path) {
+    if (path === "/") return "/";
+    return path.replace(/\/+$/, "");
+  }
+  const CURRENT_PATH = normalizePath(window.location.pathname);
+  const CURRENT_URL = CURRENT_PATH + window.location.search;
+  const CURRENT_HREF = window.location.origin + CURRENT_URL;
   class Feature {
-    id;
+
+
+
+static currentPath = CURRENT_PATH;
+static currentUrl = CURRENT_URL;
+static currentHref = CURRENT_HREF;
+
+
+
+get currentPath() {
+      return Feature.currentPath;
+    }
+get currentUrl() {
+      return Feature.currentUrl;
+    }
+get currentHref() {
+      return Feature.currentHref;
+    }
+
+
+id;
     name;
     description;
     urlMatch;
 log;
+matchResult = null;
     constructor(config) {
       this.id = config.id;
       this.name = config.name;
@@ -177,30 +478,55 @@ log;
       this.urlMatch = config.urlMatch;
       this.log = createLogger(config.name);
     }
+
+
+
+normalizePatterns(config) {
+      if (Array.isArray(config)) {
+        return config.map((item) => {
+          if (typeof item === "object" && "pattern" in item) {
+            return item;
+          }
+          return { pattern: item };
+        });
+      }
+      if (typeof config === "object" && "pattern" in config) {
+        return [config];
+      }
+      return [{ pattern: config }];
+    }
+testPattern(pattern) {
+      if (typeof pattern === "string") {
+        return this.currentPath === pattern;
+      }
+      return pattern.test(this.currentUrl);
+    }
 shouldRun() {
-      if (!settings.isFeatureEnabled(this.id)) {
+      if (!settings.isFeatureEnabled(this.id, this.name, this.description)) {
         return false;
       }
+      this.matchResult = { matched: false };
       if (!this.urlMatch) {
+        this.matchResult.matched = true;
         return true;
       }
-      const currentUrl = window.location.href;
-      if (typeof this.urlMatch === "string") {
-        return currentUrl.includes(this.urlMatch);
+      const patterns = this.normalizePatterns(this.urlMatch);
+      for (let i = 0; i < patterns.length; i++) {
+        const { name, pattern } = patterns[i];
+        if (this.testPattern(pattern)) {
+          this.matchResult = {
+            matched: true,
+            matchIndex: i,
+            matchName: name,
+            pattern
+          };
+          return true;
+        }
       }
-      return this.urlMatch.test(currentUrl);
+      return false;
     }
 destroy() {
     }
-  }
-  function removeDiacritics(text) {
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D");
-  }
-  function keepAlphanumeric(text) {
-    return text.replace(/[^a-zA-Z0-9]/g, "");
-  }
-  function normalizeCaptchaInput(text) {
-    return keepAlphanumeric(removeDiacritics(text.toLowerCase()));
   }
   const log = createLogger("FeatureManager");
   class FeatureManager {
@@ -208,34 +534,36 @@ destroy() {
     initialized = new Set();
 register(feature) {
       if (this.features.has(feature.id)) {
-        log.w(`Feature "${feature.id}" đã được đăng ký, bỏ qua.`);
+        log.w(`Feature "${feature.id}" already registered, skipping.`);
         return;
       }
       this.features.set(feature.id, feature);
-      log.d(`Đã đăng ký: ${feature.name}`);
+      log.d(`Registered: ${feature.name}`);
     }
 registerAll(features) {
       features.forEach((f) => this.register(f));
     }
 async initAll() {
-      log.d("Bắt đầu khởi tạo features...");
+      log.d("Starting feature initialization...");
       for (const [id, feature] of this.features) {
+        log.d(`Checking feature: ${feature.name}`);
         if (this.initialized.has(id)) {
           continue;
         }
         if (!feature.shouldRun()) {
-          log.d(`Bỏ qua "${feature.name}" (không match URL hoặc bị tắt)`);
+          log.d(`Skipping "${feature.name}" (URL mismatch or disabled)`);
           continue;
         }
         try {
-          log.d(`Khởi tạo: ${feature.name}`);
+          log.d(`Initializing: ${feature.name}`);
           await feature.init();
           this.initialized.add(id);
         } catch (error) {
-          log.e(`Lỗi khi khởi tạo "${feature.name}":`, error);
+          log.e(`Error initializing "${feature.name}":`, error);
         }
+        log.d(`✅ Initialized: ${feature.name}`);
       }
-      log.i(`Đã khởi tạo ${this.initialized.size}/${this.features.size} features`);
+      log.i(`✅ Initialized ${this.initialized.size}/${this.features.size} features`);
     }
 get(id) {
       return this.features.get(id);
@@ -248,6 +576,7 @@ isInitialized(id) {
     }
   }
   const featureManager = new FeatureManager();
+  const TITLE_UPDATE_DEBOUNCE_MS = 100;
   const URL_TITLE_MAP = {
 "/": "🏠 Trang chủ",
 "/student/recharge/cashinqr": "💳 Nạp tiền QR",
@@ -322,9 +651,9 @@ friendInfo: () => {
       icon: "📖",
       getTitleFn: () => {
         const header = DOM.panelHeader();
-        if (!header) return "Chi tiết HP";
+        if (!header) return null;
         const info = DOM.parseCourseInfo(header);
-        return info ? `${info.name} (${info.code})` : "Chi tiết HP";
+        return info ? `${info.name} (${info.code})` : null;
       }
     },
 {
@@ -332,9 +661,9 @@ friendInfo: () => {
       icon: "📖",
       getTitleFn: () => {
         const header = DOM.panelHeader();
-        if (!header) return "Chi tiết HP";
+        if (!header) return null;
         const info = DOM.parseCourseInfo(header);
-        return info ? `${info.name} (${info.code})` : "Chi tiết HP";
+        return info ? `${info.name} (${info.code})` : null;
       }
     },
 {
@@ -342,7 +671,7 @@ friendInfo: () => {
       icon: "👥",
       getTitleFn: () => {
         const info = DOM.classInfo();
-        return info ? `KQ thi - ${info.subjectName} - ${info.classCode}` : "KQ thi lớp";
+        return info ? `KQ thi - ${info.subjectName} - ${info.classCode}` : null;
       }
     },
 {
@@ -350,7 +679,7 @@ friendInfo: () => {
       icon: "👥",
       getTitleFn: () => {
         const info = DOM.classInfo();
-        return info ? `KQ HT - ${info.subjectName} - ${info.classCode}` : "KQ HT lớp";
+        return info ? `KQ HT - ${info.subjectName} - ${info.classCode}` : null;
       }
     },
 {
@@ -358,7 +687,7 @@ friendInfo: () => {
       icon: "👤",
       getTitleFn: () => {
         const info = DOM.friendInfo();
-        return info ? `KQ - ${info.name} - ${info.className}` : "KQ bạn";
+        return info ? `KQ - ${info.name} - ${info.className}` : null;
       }
     },
 {
@@ -366,13 +695,14 @@ friendInfo: () => {
       icon: "👤",
       getTitleFn: () => {
         const info = DOM.friendInfo();
-        return info ? `KQ thi - ${info.name} - ${info.className}` : "KQ thi bạn";
+        return info ? `KQ thi - ${info.name} - ${info.className}` : null;
       }
     }
   ];
   class DynamicTitleFeature extends Feature {
     originalTitle = "";
     observer = null;
+    debounceTimer = null;
     constructor() {
       super({
         id: "dynamic-title",
@@ -380,34 +710,40 @@ friendInfo: () => {
         description: "Thay đổi tiêu đề tab dựa trên trang đang xem"
       });
     }
-    init() {
+init() {
       this.log.i("Initializing...");
       this.originalTitle = document.title;
-      this.updateTitle();
-      this.observeContentChanges();
+      const found = this.updateTitle();
+      if (!found) {
+        this.observeContentChanges();
+      }
       this.log.i("Ready!");
     }
-    updateTitle() {
+updateTitle() {
       const url = window.location.pathname + window.location.search;
       const pathname = window.location.pathname;
       const staticTitle = URL_TITLE_MAP[pathname];
       if (staticTitle) {
         this.setTitle(staticTitle);
-        return;
+        return true;
       }
       for (const config of DYNAMIC_URL_PATTERNS) {
         if (config.pattern.test(url)) {
           const title = config.getTitleFn();
+          if (title === null) {
+            return false;
+          }
           this.setTitle(`${config.icon} ${title}`);
-          return;
+          return true;
         }
       }
       const panelHeader = DOM.panelHeader();
       if (panelHeader) {
         this.setTitle(`📄 ${this.truncate(panelHeader, 30)}`);
-        return;
+        return true;
       }
       this.log.d("No matching pattern, keeping original title");
+      return false;
     }
     setTitle(title) {
       const newTitle = `${title} | HaUI`;
@@ -424,40 +760,93 @@ friendInfo: () => {
       const content = document.querySelector(".be-content");
       if (!content) return;
       this.observer = new MutationObserver(() => {
-        setTimeout(() => this.updateTitle(), 100);
+        if (this.debounceTimer) {
+          clearTimeout(this.debounceTimer);
+        }
+        this.debounceTimer = setTimeout(() => {
+          this.debounceTimer = null;
+          const found = this.updateTitle();
+          if (found) {
+            this.log.d("Title found, stopping observer");
+            this.observer?.disconnect();
+            this.observer = null;
+          }
+        }, TITLE_UPDATE_DEBOUNCE_MS);
       });
       this.observer.observe(content, {
         childList: true,
         subtree: true
       });
+      this.log.d("Started observing for dynamic content");
     }
-    destroy() {
+destroy() {
       document.title = this.originalTitle;
+      if (this.debounceTimer) {
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = null;
+      }
       this.observer?.disconnect();
       this.observer = null;
     }
   }
-  const CAPTCHA_HANDLERS = [
-{
-      urlPattern: /\/sso\?token=/,
+  const COMBINING_TO_TELEX = {
+    "́": "s",
+"̀": "f",
+"̉": "r",
+"̃": "x",
+"̣": "j",
+"̆": "w",
+"̛": "w"
+};
+  function getTelexChar(text) {
+    if (text.includes("đ") || text.includes("Đ")) return "d";
+    const chars = text.normalize("NFD").split("");
+    for (let i = 0; i < chars.length; i++) {
+      const char = chars[i];
+      if (COMBINING_TO_TELEX[char]) {
+        return COMBINING_TO_TELEX[char];
+      }
+      if (char === "̂") {
+        return chars[i - 1]?.toLowerCase() || "";
+      }
+    }
+    return "";
+  }
+  function removeDiacritics(text) {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D");
+  }
+  function keepAlphanumeric(text) {
+    return text.replace(/[^a-zA-Z0-9]/g, "");
+  }
+  function normalizeCaptchaInput(text) {
+    return keepAlphanumeric(removeDiacritics(text.toLowerCase()));
+  }
+  function normalizeCaptchaInputUndo(text) {
+    return keepAlphanumeric(removeDiacritics(text).toLowerCase() + getTelexChar(text));
+  }
+  const DEBOUNCE_DELAY_MS = 30;
+  const CAPTCHA_LENGTH = 5;
+  const URL_PATTERNS = [
+    { name: "sso-login", pattern: "/sso" },
+    { name: "register", pattern: "/register" }
+  ];
+  const HANDLERS = {
+    "sso-login": {
       inputSelector: "#ctl00_txtimgcode",
       submitSelector: "#ctl00_butLogin",
       imageSelector: "#ctl00_Image1"
     },
-{
-      urlPattern: /\/register\//,
+    register: {
       inputSelector: "#ctl02_txtimgcode",
       submitSelector: "#ctl02_btnSubmit",
       imageSelector: "#ctl02_Image1"
     }
-  ];
+  };
   class CaptchaHelperFeature extends Feature {
     inputEl = null;
     submitEl = null;
     currentHandler = null;
 normalizeTimer = null;
-    DEBOUNCE_DELAY = 150;
-
 handleInput = this.onInput.bind(this);
     handleKeyDown = this.onKeyDown.bind(this);
     handleBlur = this.onBlur.bind(this);
@@ -465,22 +854,23 @@ handleInput = this.onInput.bind(this);
       super({
         id: "captcha-helper",
         name: "Captcha Helper",
-        description: "Hỗ trợ nhập captcha: tự động chuyển chữ thường, loại bỏ dấu, submit khi Enter/blur"
+        description: "Hỗ trợ nhập captcha: tự động chuyển chữ thường, loại bỏ dấu, submit khi Enter/blur",
+        urlMatch: URL_PATTERNS
       });
     }
-shouldRun() {
-      if (!super.shouldRun()) return false;
-      const url = window.location.pathname + window.location.search;
-      return CAPTCHA_HANDLERS.some((h) => h.urlPattern.test(url));
-    }
-    init() {
+init() {
       this.log.i("Initializing...");
-      const url = window.location.pathname + window.location.search;
-      this.currentHandler = CAPTCHA_HANDLERS.find((h) => h.urlPattern.test(url)) || null;
-      if (!this.currentHandler) {
-        this.log.w("No matching captcha handler found");
+      const matchName = this.matchResult?.matchName;
+      if (!matchName) {
+        this.log.w("No match result available");
         return;
       }
+      this.currentHandler = HANDLERS[matchName];
+      if (!this.currentHandler) {
+        this.log.w("No handler found for:", matchName);
+        return;
+      }
+      this.log.d(`Matched pattern: "${matchName}" at ${this.currentPath}`);
       this.inputEl = document.querySelector(this.currentHandler.inputSelector);
       this.submitEl = document.querySelector(this.currentHandler.submitSelector);
       if (!this.inputEl) {
@@ -502,7 +892,7 @@ onInput() {
       }
       this.normalizeTimer = setTimeout(() => {
         this.normalizeInput();
-      }, this.DEBOUNCE_DELAY);
+      }, DEBOUNCE_DELAY_MS);
     }
 normalizeInput() {
       if (!this.inputEl) return;
@@ -511,7 +901,8 @@ normalizeInput() {
         this.normalizeTimer = null;
       }
       const original = this.inputEl.value;
-      const normalized = normalizeCaptchaInput(original);
+      const undoTelex = settings.captchaUndoTelex.getValue();
+      const normalized = undoTelex ? normalizeCaptchaInputUndo(original) : normalizeCaptchaInput(original);
       if (original !== normalized) {
         this.inputEl.value = normalized;
         this.inputEl.setSelectionRange(normalized.length, normalized.length);
@@ -533,7 +924,6 @@ onBlur() {
     }
 submit() {
       const value = this.inputEl?.value.trim() || "";
-      const CAPTCHA_LENGTH = 5;
       if (value.length < CAPTCHA_LENGTH) {
         this.log.d(`Need ${CAPTCHA_LENGTH} chars, got ${value.length}`);
         return;
@@ -543,7 +933,7 @@ submit() {
         this.submitEl.click();
       }
     }
-    destroy() {
+destroy() {
       if (this.normalizeTimer) {
         clearTimeout(this.normalizeTimer);
         this.normalizeTimer = null;
@@ -558,23 +948,17 @@ submit() {
       this.currentHandler = null;
     }
   }
-  const allFeatures = [
-    new DynamicTitleFeature(),
-    new CaptchaHelperFeature()
-
-
-
-];
+  const allFeatures = [new DynamicTitleFeature(), new CaptchaHelperFeature()];
   console.log(
-    `%c🎓 SV HaUI Helper %cv${"1.2.1"}`,
+    `%c🎓 SV HaUI Helper %cv${"2.0.0"}`,
     "color: #667eea; font-size: 20px; font-weight: bold;",
     "color: #764ba2; font-size: 14px;"
   );
   async function main() {
-    log$2.i("Đang khởi tạo...");
+    log$3.i("Initializing...");
     featureManager.registerAll(allFeatures);
     await featureManager.initAll();
-    log$2.i("✅ Đã sẵn sàng!");
+    log$3.i("✅ Ready!");
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", main);

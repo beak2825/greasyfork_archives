@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         全网VIP视频解析
+// @name         【晓风残月VIP视频解析】全网VIP视频解析
 // @namespace    akierq
-// @version      1.1.2
-// @description  全网VIP视频解析abcdefg
+// @version      1.1.3
+// @description  【晓风残月VIP视频解析】全网VIP视频解析abcdefg
 // @author       akierq
 // @match        https://*.iqiyi.com/v_*
 // @match        https://*.bilibili.com/*
@@ -69,8 +69,8 @@
 // @grant       unsafeWindow
 
 
-// @downloadURL https://update.greasyfork.org/scripts/562998/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js
-// @updateURL https://update.greasyfork.org/scripts/562998/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562998/%E3%80%90%E6%99%93%E9%A3%8E%E6%AE%8B%E6%9C%88VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E3%80%91%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js
+// @updateURL https://update.greasyfork.org/scripts/562998/%E3%80%90%E6%99%93%E9%A3%8E%E6%AE%8B%E6%9C%88VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E3%80%91%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.meta.js
 // ==/UserScript==
 
 
@@ -407,7 +407,7 @@
     // 20250426006ccgg
 
     var videoUrl = window.location.href;
-    var version = "20260117gg001";
+    var version = "20260118gg001";
 
     // 20250310005bbff , 202500501aabbcc
 
@@ -2574,7 +2574,7 @@
             var newVideoUrl = window.location.href;
             //alert(newVideoUrl);
 			
-			window.open('http://47.101.38.188/myvideo11.html?version=' + version + '&type=' + elem.id + '&url=' + encodeURIComponent(newVideoUrl));
+			window.open('http://47.101.38.188/myvideo.html?version=' + version + '&type=' + elem.id + '&url=' + encodeURIComponent(newVideoUrl));
 
             if (elem.id) {
                 //if (elem.id == 'jkgueirwe11' || elem.id == 'JX') {

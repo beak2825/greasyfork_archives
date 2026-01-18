@@ -1,16 +1,23 @@
 // ==UserScript==
 // @name         Bangumi 人物创建助手
 // @namespace    http://tampermonkey.net/
-// @version      0.2.4.1
-// @description  将VGMDB人物/组织条目和各个社交平台的用户添加到Bangumi现实人物
+// @version      0.2.8.1
+// @description  将其他维基站点人物/组织条目和各个社交平台的用户添加到Bangumi现实人物
 // @author       Gemini / SilenceAkarin
 // @license MIT
+// @icon         https://bgm.tv/img/favicon.ico
 // @match        https://vgmdb.net/artist/*
 // @match        https://vgmdb.net/org/*
 // @match        https://x.com/*
 // @match        https://twitter.com/*
+// @match        https://www.facebook.com/*
 // @match        https://space.bilibili.com/*
+// @match        *://weibo.com/n/*
+// @match        *://weibo.com/u/*
 // @match        https://www.pixiv.net/users/*
+// @match        *://vocadb.net/Ar/*
+// @match        *://touhoudb.com/Ar/*
+// @match        *://ci-en.dlsite.com/creator/*
 // @match        https://bgm.tv/person/new
 // @match        https://bangumi.tv/person/new
 // @match        https://chii.in/person/new
@@ -28,6 +35,17 @@
 // @connect      i1.hdslb.com
 // @connect      i2.hdslb.com
 // @connect      i.pximg.net
+// @connect      tva2.sinaimg.cn
+// @connect      tvax4.sinaimg.cn
+// @connect      t.cn
+// @connect      static.vocadb.net
+// @connect      static.touhoudb.com
+// @connect      media.ci-en.jp
+// @connect      yt3.googleusercontent.com
+// @connect      yt4.googleusercontent.com
+// @connect      facebook.com
+// @connect      fbcdn.net
+// @connect      *
 // @downloadURL https://update.greasyfork.org/scripts/562845/Bangumi%20%E4%BA%BA%E7%89%A9%E5%88%9B%E5%BB%BA%E5%8A%A9%E6%89%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/562845/Bangumi%20%E4%BA%BA%E7%89%A9%E5%88%9B%E5%BB%BA%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
@@ -55,7 +73,7 @@
         if (!headerNameNode) headerNameNode = document.querySelector('h1[style*="display: inline"]');
         if (!headerNameNode) return;
 
-        const isOrg = location.href.includes('/org/'); // 判断当前是否为组织页面
+        const isOrgOrProducer = location.href.includes('/org/'); // 判断当前是否为组织页面
 
         // 2. 提取 Notes 内容
         // 根据 VGMdb 结构，Notes 通常在右侧栏或下方的一个特定区域
@@ -75,17 +93,30 @@
             }
         }
 
+        // 1. 创建一个容器来包裹按钮和复选框，确保它们在同一行
+        const wrapper = document.createElement('span');
+        wrapper.style.display = 'inline-flex';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.verticalAlign = 'middle';
+
+        // 2. 创建按钮 (放在左边)
         const btn = document.createElement('button');
         btn.innerText = '🚀 导入到 Bangumi';
         btn.className = 'vgm-btn';
-        headerNameNode.parentNode.insertBefore(btn, headerNameNode.nextSibling);
+        btn.style.marginRight = '8px'; // 与右侧复选框保持间距
+        wrapper.appendChild(btn);
 
+        // 3. 创建复选框 (放在右边)
         const linkToggle = document.createElement('label');
-        linkToggle.style = "margin-left: 10px; font-size: 12px; color: #666; cursor: pointer;";
-        linkToggle.innerHTML = `<input type="checkbox" id="vgm_skip_links"> 不填充外部链接`;
-        headerNameNode.parentNode.insertBefore(linkToggle, headerNameNode.nextSibling);
+        linkToggle.style = "font-size: 12px; color: #666; cursor: pointer; display: inline-flex; align-items: center; white-space: nowrap;";
+        linkToggle.innerHTML = `<input type="checkbox" id="vgm_skip_links" style="margin-right: 3px;"> 不填充外部链接`;
+        wrapper.appendChild(linkToggle);
+
+        // 4. 将整个容器插入到页面标题后面
+        headerNameNode.parentNode.insertBefore(wrapper, headerNameNode.nextSibling);
 
         btn.onclick = async function() {
+            const originalText = btn.innerText;
             btn.innerHTML = '⌛ 提取中...';
             const data = {
                 name: '',
@@ -99,13 +130,13 @@
                 nodes: '',
                 avatarBase64: '',
                 summary: '',
-                fromPixiv: false,
+                isIllustrator: false,
                 fromSNS: false
             };
 
             // --- 新增：Organization 页面数据提取逻辑 ---
-            if (isOrg) {
-                data.isOrg = true; // 标记为组织
+            if (isOrgOrProducer) {
+                data.isOrgOrProducer = true; // 标记为组织
                 data.name = data.engName; // 组织名通常直接作为名字
 
                 // 提取 Description
@@ -128,7 +159,7 @@
                 //                 }
             }
             // --- 结束新增 ---
-            if (!isOrg) {
+            if (!isOrgOrProducer) {
                 data.isArtist = true;
                 // 1. 姓名提取
                 const leftNameSpan = document.querySelector('#leftfloat span[style*="font-size: 9pt"]');
@@ -228,7 +259,556 @@
             GM_setValue('vgmdb_to_bgm_data', data);
             window.open('https://bgm.tv/person/new', '_blank');
             btn.innerText = '✅ 提取成功';
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.style.backgroundColor = "#e84566";
+            }, 3000);
         };
+    }
+
+    // ================= VocalDB / TouhouDB 提取端 =================
+    else if (location.hostname.includes('vocadb.net') || (location.hostname.includes('touhoudb.com'))) {
+        async function scrapeData(btn) {
+            btn.innerText = '⌛ 提取中...';
+
+            // 1. 初始化存储对象
+            const data = {
+                name: '',
+                engName: '',
+                kana: '',
+                aliases: [],
+                birthdate: '',
+                bloodtype: '',
+                websites: [],
+                twitter: '',
+                PixivID: '',
+                nodes: '',
+                avatarBase64: '',
+                summary: '',
+                isArtist: false,
+                isOrgOrProducer: false,
+                isIllustrator: false,
+            };
+
+            // --- 抓取头像 ---
+            const imgElement = document.querySelector('.pull-left.entry-main-picture img');
+            if (imgElement) {
+                data.avatarBase64 = await fetchImg(imgElement.src);
+            }
+
+            const skipLinks = document.getElementById('vgm_skip_links').checked;
+            if (!skipLinks) {
+                // --- 抓取基本属性 ---
+                // --- 遍历 properties 表格 ---
+                const rows = document.querySelectorAll('table.properties tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length < 2) return;
+
+                    // 获取左侧标签列的文本
+                    const label = cells[0].textContent.trim();
+                    // 获取右侧数据列
+                    const valueCell = cells[1];
+                    const valueText = valueCell.textContent.trim();
+
+                    // 1. 处理姓名和别名
+                    if (label === 'Name') {
+                        // 提取主名字：获取第一个文本节点
+                        data.name = valueCell.childNodes[0].textContent.trim();
+                        // 提取别名
+                        const aliasSpan = valueCell.querySelector('.extraInfo');
+                        if (aliasSpan) {
+                            data.aliases = aliasSpan.innerText.split(',').map(s => s.trim());
+                        }
+                    }
+
+                    // 2. 处理 Type (修复 false 的关键)
+                    if (label === 'Type') {
+                        console.log("检测到 Type 原始文本:", valueText);
+
+                        // 判定 Music producer
+                        const artistTypes = ['Music producer', 'Vocalist'];
+                        data.isArtist = artistTypes.some(t => valueText.includes(t));
+
+                        // 判定 Org/Producer 类型
+                        const orgTypes = ['Animation producer', 'Circle'];
+                        data.isOrgOrProducer = orgTypes.some(t => valueText.includes(t));
+
+                        // 判定 Illustrator
+                        const illustTypes = ['Illustrator', 'Cover artist'];
+                        data.isIllustrator = illustTypes.some(t => valueText.includes(t));
+                    }
+
+                    // 3. 处理 Official links
+                    if (label === 'Official links') {
+                        const links = valueCell.querySelectorAll('a.extLink');
+                        // --- 修复 Official links 内部的排除逻辑 ---
+                        links.forEach(a => {
+                            const href = a.href;
+                            let title = a.innerText.trim();
+
+                            // 1. 提取 Twitter
+                            if (!data.twitter && (href.includes('twitter.com') || href.includes('x.com'))) {
+                                const m = href.match(/(?:twitter\.com|x\.com)\/([^\/\?]+)/);
+                                if (m) data.twitter = '@' + m[1];
+                                return; // 命中后跳过，不存入 websites
+                            }
+
+                            // 2. 提取 PixivID
+                            if (!data.PixivID && href.includes('pixiv.net')) {
+                                const m = href.match(/users\/(\d+)/);
+                                if (m) data.PixivID = m[1];
+                                return; // 命中后跳过，不存入 websites
+                            }
+
+                            if (title === 'YouTube Channel') {
+                                title = 'YouTube';
+                            }
+                            if (title === 'Website') {
+                                title = 'HP';
+                            }
+
+                            // 3. 最终排除判断：只有非 Twitter 且 非 Pixiv 链接才 push
+                            const isTwitter = href.includes('twitter.com') || href.includes('x.com');
+                            const isPixiv = href.includes('pixiv.net');
+
+                            if (!isTwitter && !isPixiv) {
+                                data.websites.push({ title: title, url: href });
+                            }
+
+                        });
+                    }
+                });
+            }
+
+            console.log("抓取完成:", data);
+            btn.innerText = '✅ 提取成功';
+            GM_setValue('vgmdb_to_bgm_data', data);
+            window.open('https://bgm.tv/person/new', '_blank');
+        }
+
+        function injectButtonSafe() {
+            // 检查按钮是否已存在，避免重复插入
+            if (document.getElementById('my-scraper-btn')) return;
+
+            // 定位锚点：使用你确认可以找到的 h1.page-title
+            const pageTitle = document.querySelector('h1.page-title');
+            if (!pageTitle) return;
+
+            const buttonContainer = pageTitle.nextElementSibling;
+            if (!buttonContainer || (buttonContainer.tagName !== 'P' && buttonContainer.tagName !== 'DIV')) return;
+
+            const scraperBtn = document.createElement('a');
+            scraperBtn.id = 'my-scraper-btn';
+            scraperBtn.href = 'javascript:void(0);';
+            scraperBtn.className = 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary';
+            scraperBtn.style.marginLeft = '5px';
+            scraperBtn.innerHTML = `<span class="ui-button-icon-primary ui-icon ui-icon-disk"></span><span class="ui-button-text">🚀 导入到 Bangumi</span>`;
+            const originalHTML = scraperBtn.innerHTML;
+
+            const linkToggle = document.createElement('label');
+            // 使用 margin-right 留出间距，并确保 inline-block 不换行
+            linkToggle.style = "margin-left: 10px; margin-right: 5px; font-size: 12px; color: #666; cursor: pointer; display: inline-flex; align-items: center; white-space: nowrap;";
+            linkToggle.innerHTML = `<input type="checkbox" id="vgm_skip_links" style="margin: 0 3px 0 0;"> 不填充外部链接`;
+
+
+            scraperBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                scrapeData(scraperBtn.querySelector('.ui-button-text'));
+
+                setTimeout(() => {
+                    // 3. 恢复原始的 HTML 结构（包含那两个 span）
+                    scraperBtn.innerHTML = originalHTML;
+                    scraperBtn.disabled = false;
+                    scraperBtn.style.backgroundColor = "#e84566";
+                }, 3000);
+            });
+
+            buttonContainer.appendChild(scraperBtn);
+            buttonContainer.appendChild(linkToggle);
+            console.log("按钮已注入到容器");
+        }
+
+        // --- 解决单页应用(SPA)跳转不触发脚本的问题 ---
+
+        // 1. 监听 DOM 变化：一旦发现页面主要内容区域变动，就尝试重新注入按钮
+        const observer = new MutationObserver(() => {
+            // 只有当页面出现了 page-title 且按钮还没注入时才执行
+            if (document.querySelector('h1.page-title') && !document.getElementById('my-scraper-btn')) {
+                injectButtonSafe();
+            }
+        });
+
+        // 开始监听整个 body 的子节点变化
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // 2. 初始加载执行一次
+        injectButtonSafe();
+    }
+
+    // ================= Ci-en 提取端 =================
+    else if (location.hostname.includes('ci-en.dlsite.com')) {
+        //主抓取逻辑
+        async function scrapeData() {
+
+            const data = {
+                name: '',
+                engName: '',
+                kana: '',
+                aliases: [],
+                birthdate: '',
+                bloodtype: '',
+                websites: [],
+                nodes: '',
+                avatarBase64: '',
+                summary: '',
+                isOrgOrProducer: true,
+            };
+
+            // 1. 获取名字
+            // 对应 HTML: <h2 class="e-title is-4 e-userName"><a ...> Riez-ON </a></h2>
+            const nameEl = document.querySelector('.e-userName a');
+            if (nameEl) {
+                data.name = nameEl.innerText.trim();
+            }
+
+            // 2. 获取简介
+            // 对应 HTML: <div class="c-grid-account-info">...<p class="e-text is-sub">...</p></div>
+            const summaryEl = document.querySelector('.c-grid-account-info .e-text.is-sub');
+            if (summaryEl) {
+                data.summary = summaryEl.innerText.trim();
+            }
+
+            const skipLinks = document.getElementById('vgm_skip_links').checked;
+
+            // 3. 获取第三方链接 (Websites)
+            // 对应 HTML: <ul class="c-snsList e-flex">...<li class="c-snsList-item"><a>...</a></li></ul>
+            const snsLinks = document.querySelectorAll('.c-snsList .c-snsList-item a');
+            data.websites = []; // 重置以防重复点击
+            data.websites.push({ title: 'Ci-en', url: window.location.href }); // 填充Ci-en链接
+            if (!skipLinks) {
+                snsLinks.forEach(link => {
+                    const title = link.innerText.trim() || link.textContent.trim();
+                    const href = link.href;
+                    if (href) {
+                        data.websites.push({ title: title, url: href });
+                    }
+                });
+            }
+
+            // 4. 获取头像并转换为 Base64
+            // 对应 HTML: <div class="c-grid-account-thumb">...<img ... src="..."></div>
+            const imgEl = document.querySelector('.c-grid-account-thumb img');
+            if (imgEl) {
+                // 优先取 src，如果没有则取 data-src
+                const src = imgEl.src || imgEl.getAttribute('data-src');
+                if (src) {
+                    try {
+                        data.avatarBase64 = await fetchImg(src);
+                    } catch (e) {
+                        console.error("图片抓取失败:", e);
+                    }
+                }
+            }
+            GM_setValue('vgmdb_to_bgm_data', data);
+            window.open('https://bgm.tv/person/new', '_blank');
+        }
+
+        // 注入按钮
+        function injectButton() {
+            // 1. 精准定位名字容器
+            const nameHeader = document.querySelector('.c-grid-account-name .e-userName');
+            const targetContainer = document.querySelector('.c-grid-account-name');
+
+            if (!nameHeader || !targetContainer) return;
+            if (document.getElementById('vgm_skip_links')) return; // 防止重复注入
+
+            // 2. 创建一个包装容器，设为 inline-flex 确保不换行
+            const wrapper = document.createElement('div');
+            wrapper.id = 'ci-en-helper-wrapper';
+            wrapper.style = "display: inline-flex; align-items: center; margin-left: 10px; vertical-align: middle; gap: 8px;";
+
+            // 3. 创建按钮
+            const btn = document.createElement('button');
+            btn.innerText = "🚀 导入到 Bangumi";
+            // 统一使用样式
+            btn.style = "font-size: 12px; padding: 4px 10px; cursor: pointer; background-color: #e84566; color: #fff; border: none; border-radius: 4px; white-space: nowrap; height: 26px; line-height: 1.2;";
+
+            // 4. 创建复选框标签
+            const linkToggle = document.createElement('label');
+            linkToggle.style = "font-size: 12px; color: #666; cursor: pointer; display: inline-flex; align-items: center; white-space: nowrap; font-weight: normal; margin: 0;";
+            linkToggle.innerHTML = `
+                <input type="checkbox" id="vgm_skip_links"
+                    style="margin: 0 4px 0 0 !important;
+                           width: 14px !important;
+                           height: 14px !important;
+                           appearance: checkbox !important;
+                           -webkit-appearance: checkbox !important;
+                           display: inline-block !important;
+                           visibility: visible !important;
+                           position: static !important;
+                           vertical-align: middle;">
+                <span style="vertical-align: middle;">不填充外部链接</span>`;
+
+            // 点击事件
+            btn.onclick = async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const originalText = btn.innerText;
+                btn.innerText = '⌛ 提取中...';
+                btn.disabled = true;
+                const originalBg = btn.style.backgroundColor;
+                btn.style.backgroundColor = "#ccc";
+
+                try {
+                    await scrapeData();
+                    btn.innerText = '✅ 提取成功';
+                    btn.style.backgroundColor = "#4caf50";
+                } catch (err) {
+                    console.error(err);
+                    btn.innerText = "❌ 错误";
+                    btn.style.backgroundColor = "#f44336";
+                }
+
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.style.backgroundColor = originalBg;
+                }, 3000);
+            };
+
+            // 5. 组装并注入
+            wrapper.appendChild(btn);
+            wrapper.appendChild(linkToggle);
+
+            // 关键修正：Ci-en 的名字是一个 h2，内部包含一个 a 标签
+            // 我们直接把 wrapper 放在 h2 内部的最末尾，这样它会跟随在名字后面
+            nameHeader.appendChild(wrapper);
+
+            // 确保 h2 容器不会把内容挤下去
+            nameHeader.style.display = "inline-flex";
+            nameHeader.style.alignItems = "center";
+            nameHeader.style.width = "auto";
+        }
+
+        // 等待页面加载完成（以防动态渲染延迟）
+        window.addEventListener('load', () => {
+            // 稍微延迟一下确保 DOM 稳定，或者直接执行
+            setTimeout(injectButton, 500);
+        });
+
+    }
+
+    // ================= Weibo 提取端 =================
+    else if (location.hostname.includes('weibo.com')) {
+        // --- 新增：创建/显示提示框的辅助函数 ---
+        function showToast(message, duration = 0) {
+            let toast = document.querySelector('#weibo-scrape-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'weibo-scrape-toast';
+                // 设置样式：顶部居中、橙色背景、圆角、层级最高
+                Object.assign(toast.style, {
+                    position: 'fixed',
+                    top: '20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    backgroundColor: '#eb7350',
+                    color: 'white',
+                    padding: '10px 20px',
+                    borderRadius: '8px',
+                    zIndex: '9999',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    transition: 'opacity 0.3s'
+                });
+                document.body.appendChild(toast);
+            }
+            toast.innerText = message;
+            toast.style.display = 'block';
+            toast.style.opacity = '1';
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => { toast.style.display = 'none'; }, 300);
+                }, duration);
+            }
+            return toast;
+        }
+
+        function hideToast() {
+            const toast = document.querySelector('#weibo-scrape-toast');
+            if (toast) {
+                toast.style.opacity = '0';
+                setTimeout(() => { toast.style.display = 'none'; }, 300);
+            }
+        }
+
+        async function scrapeData() {
+            const data = {
+                name: '',
+                engName: '',
+                kana: '',
+                aliases: [],
+                birthdate: '',
+                bloodtype: '',
+                websites: [],
+                twitter: '',
+                avatarBase64: '',
+                summary: '',
+                isIllustrator: false,
+                PixivID: '',
+                fromSNS: true
+            };
+
+            showToast("正在解析页面并还原短链接，请稍候...");
+
+            const expandBtn = document.querySelector('._opt_1yc79_176 .woo-font--angleDown')?.closest('._opt_1yc79_176');
+
+            if (expandBtn) {
+                expandBtn.click();
+                console.log("已触发展开按钮...");
+                // 增加延迟，确保 DOM 异步加载完成
+                await new Promise(resolve => setTimeout(resolve, 500));
+            } else {
+                console.log("未找到展开按钮，可能信息已是展开状态");
+            }
+
+            // --- 2. 获取基础信息 ---
+            const nameEl = document.querySelector('._name_1yc79_291');
+            data.name = nameEl ? nameEl.textContent.trim() : "未知名称";
+
+            const avatarEl = document.querySelector('.woo-avatar-img');
+            let avatarUrl = avatarEl ? avatarEl.src : "";
+
+            // --- 3. 基于 _box3_1yc79_193 定位简介和链接 ---
+            const detailBox = document.querySelector('._box3_1yc79_193');
+            // let summary = "";
+            //const websiteLinks = [{ title: '微博', url: window.location.href }];
+            data.websites.push({ title: '微博', url: window.location.href });
+
+            if (detailBox) {
+                // A. 抓取简介：定位包含 proBintro 图标的行
+                const introIcon = detailBox.querySelector('.woo-font--proBintro');
+                if (introIcon) {
+                    // 图标在 _icon3 容器里，我们要找它同级的 _con3 容器
+                    const introContainer = introIcon.closest('._icon3_1yc79_203')?.nextElementSibling;
+                    if (introContainer) {
+                        data.summary = introContainer.textContent.trim();
+                    }
+                }
+
+                // let formattedBirthdate = "";
+                const birthIcon = detailBox.querySelector('.woo-font--proIntro');
+                if (birthIcon) {
+                    const birthdateContainer = birthIcon.closest('._icon3_1yc79_203')?.nextElementSibling;
+                    console.log("检测到生日是否存在:", birthdateContainer ? true : false);
+                    if (birthdateContainer) {
+                        const birthDate = birthdateContainer.textContent.trim();
+                        console.log("检测到生日原始文本:", birthDate);
+
+                        const dateMatch = birthDate.match(/\d{4}-\d{2}-\d{2}/);
+                        if (dateMatch) {
+                            const dateStr = dateMatch[0]; // 拿到 "1991-07-11"
+
+                            // 2. 转换为 "1991年07月11日" 形式
+                            const parts = dateStr.split('-');
+                            data.birthdate = `${parts[0]}年${parts[1]}月${parts[2]}日`;
+                        }
+                    }
+                }
+
+                // B. 抓取链接：定位包含 proLink 图标的行
+                const linkIcon = detailBox.querySelector('.woo-font--proLink');
+                if (linkIcon) {
+                    const linkWrapper = linkIcon.closest('._icon3_1yc79_203')?.nextElementSibling;
+                    if (linkWrapper) {
+                        const anchors = linkWrapper.querySelectorAll('a');
+
+                        // 使用 for...of 以支持内部的 await
+                        for (const a of anchors) {
+                            const rawUrl = a.href;
+                            const title = a.textContent.trim();
+
+                            showToast(`正在还原链接: ${title}...`);
+                            console.log(`正在还原链接: ${rawUrl} ...`);
+                            // 调用还原函数
+                            const realUrl = await unshortenUrl(rawUrl);
+
+                            if (realUrl && !data.websites.some(item => item.url === realUrl)) {
+                                data.websites.push({
+                                    title: title,
+                                    url: realUrl
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // --- 4. 头像转 Base64 ---
+            let avatarBase64 = "";
+            if (avatarUrl) {
+                try {
+                    data.avatarBase64 = await fetchImg(avatarUrl);
+                } catch (e) {
+                    console.error("头像转换失败", e);
+                }
+            }
+            
+
+            // 6. 输出结果
+            console.log("✅ 提取成功", data);
+            showToast("✅ 提取成功，正在跳转 Bangumi...", 1500);
+            GM_setValue('vgmdb_to_bgm_data', data);
+            window.open('https://bgm.tv/person/new', '_blank');
+        }
+
+        // 添加按钮的函数
+        function addScrapeButton() {
+            // 目标容器：使用你提供的容器类名 _h3_1yc79_78
+            // 注意：因为有两个相同的类名在class里，querySelector会匹配符合规则的第一个
+            const targetContainer = document.querySelector('.woo-box-flex.woo-box-alignCenter._h3_1yc79_78._h3_1yc79_78');
+
+            // 防止重复添加
+            if (targetContainer && !document.querySelector('#weibo-scrape-btn')) {
+                const btn = document.createElement('button');
+                btn.id = 'weibo-scrape-btn';
+                btn.innerText = '🚀 导入到 Bangumi';
+                btn.style.marginLeft = '10px';
+                btn.style.padding = '4px 8px';
+                btn.style.backgroundColor = '#eb7350';
+                btn.style.color = 'white';
+                btn.style.border = 'none';
+                btn.style.borderRadius = '4px';
+                btn.style.cursor = 'pointer';
+                btn.style.fontSize = '12px';
+
+                btn.onclick = scrapeData;
+
+                targetContainer.appendChild(btn);
+            }
+        }
+
+        // 由于微博是动态加载，使用定时器或Observer来检测元素是否出现
+        // 这里简单使用定时器轮询，直到元素找到为止
+        const observer = new MutationObserver((mutations) => {
+            addScrapeButton();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // 初始尝试
+        setTimeout(addScrapeButton, 1000);
+        setTimeout(addScrapeButton, 3000);
     }
 
     // ================= X (Twitter) 提取端 =================
@@ -291,6 +871,7 @@
                 const btn = document.createElement('button');
                 btn.id = 'vgm-x-btn';
                 btn.innerText = '🚀 导入到 Bangumi';
+                const originalText = btn.innerText;
                 btn.className = 'vgm-btn'; // 复用你定义的样式
                 btn.onclick = (e) => {
                     btn.innerHTML = '⌛ 提取中...';
@@ -298,12 +879,129 @@
                     collectXData();
                     btn.innerText = '✅ 提取成功';
                 };
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.style.backgroundColor = "#e84566";
+                }, 3000);
                 nameContainer.appendChild(btn);
             }
         };
 
         const observer = new MutationObserver(injectXBtn);
         observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // ================= Facebook 提取端 =================
+    else if (location.hostname.includes('facebook.com')) {
+
+        async function scrapeFBData() {
+            // --- A. 姓名获取 ---
+            const h1 = document.querySelector('h1');
+            const name = h1 ? h1.innerText.replace('抓取 JSON', '').replace(/\s+/g, '') : "";
+
+            // --- B. 简介获取 ---
+            // 定位所有符合样式的 span
+            const allSpans = document.querySelectorAll('span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xzsf02u');
+            let summaryText = "";
+
+            for (let span of allSpans) {
+                // 排除帖子内容 (role="article") 和 信息流 (role="feed")
+                if (span.closest('[role="article"]') || span.closest('[role="feed"]')) continue;
+
+                const text = span.innerText.trim();
+                // 过滤干扰项：好友数、共同朋友、空字符串
+                if (text.includes('位好友') || text.includes('friends') || text.includes('共同朋友') || text === "") continue;
+
+                // 在 Intro 区域中，最长且包含换行或特定描述的通常是 Bio
+                if (text.length > summaryText.length) {
+                    summaryText = span.innerHTML
+                        .replace(/<br\s*[\/]?>/gi, "\n") // 保持换行
+                        .replace(/<[^>]+>/g, "")        // 移除标签
+                        .trim();
+                }
+            }
+
+            // --- C. 头像获取 ---
+            const avatarEl = document.querySelector('image[style*="height: 168px"], image[style*="height:168px"]');
+            const avatarUrl = avatarEl ? (avatarEl.getAttribute('xlink:href') || avatarEl.getAttribute('href')) : "";
+
+            const data = {
+                name: name,
+                engName: '',
+                kana: '',
+                aliases: [],
+                birthdate: '',
+                bloodtype: '',
+                websites: [{ title: 'Facebook', url: window.location.href }],
+                twitter: '',
+                nodes: '',
+                avatarBase64: '',
+                summary: summaryText,
+                isIllustrator: false,
+                fromSNS: true
+            };
+
+            if (avatarUrl) {
+                data.avatarBase64 = await fetchImg(avatarUrl);
+            }
+            GM_setValue('vgmdb_to_bgm_data', data);
+            window.open('https://bgm.tv/person/new', '_blank');
+        }
+
+        // 4. 注入按钮 (调整位置到右侧)
+        function injectButton() {
+            if (document.getElementById('fb-grabber-btn')) return;
+
+            const h1 = document.querySelector('h1');
+            if (h1) {
+                // 关键修改：让 h1 变成行内块，这样它就不会霸占整行，按钮就能排在右边
+                h1.style.display = 'inline-block';
+                h1.style.verticalAlign = 'middle';
+
+                const btn = document.createElement('button');
+                btn.id = 'fb-grabber-btn';
+                btn.innerText = '🚀 导入到 Bangumi';
+                const originalText = btn.innerText;
+
+                // 按钮样式
+                btn.style.cssText = `
+                display: inline-block;
+                margin-left: 15px;
+                padding: 6px 12px;
+                font-size: 13px;
+                background-color: #0866FF;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                vertical-align: middle;
+                font-weight: 600;
+                font-family: sans-serif;
+                white-space: nowrap;
+            `;
+
+                // 将按钮插入到 h1 之后
+                h1.after(btn);
+
+                btn.onclick = (e) => {
+                    btn.innerText = '⌛ 提取中...';
+                    e.preventDefault();
+                    scrapeFBData();
+                    btn.innerText = '✅ 提取成功';
+
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }, 3000);
+                };
+            }
+        }
+
+        // 5. 持续监听 DOM (应对 FB 的异步加载)
+        const observer = new MutationObserver(() => injectButton());
+        observer.observe(document.body, { childList: true, subtree: true });
+
     }
     // ================= Bilibili 提取端 =================
     else if (location.host === 'space.bilibili.com') {
@@ -362,13 +1060,14 @@
         const injectBiliBtn = () => {
             if (document.getElementById('vgm-bili-btn')) return;
 
-            // 寻找注入点，B 站勋章容器通常比较稳定
+            // 寻找注入点，B 站等级容器通常比较稳定
             const levelIcon = document.querySelector('.level-icon') ||
                   document.querySelector('.level');
             if (levelIcon) {
                 const btn = document.createElement('button');
                 btn.id = 'vgm-bili-btn';
                 btn.innerText = '🚀 导入到 Bangumi';
+                const originalText = btn.innerText;
                 // 使用你的通用按钮样式类名
                 btn.className = 'vgm-btn';
                 // 兼容你之前的行内样式以便快速调整
@@ -397,6 +1096,12 @@
                     e.stopPropagation();
                     collectBilibiliData();
                     btn.innerText = '✅ 提取成功';
+
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                        btn.style.backgroundColor = "#e84566";
+                    }, 3000);
                 };
 
                 // 2. 关键操作：将按钮插入到等级图标的“后面”
@@ -407,6 +1112,8 @@
                 } else {
                     levelIcon.parentNode.insertBefore(btn, levelIcon.nextSibling);
                 }
+
+
             }
         };
 
@@ -420,6 +1127,7 @@
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
+    // ================= Pixiv 提取端 =================
     else if (location.hostname.includes('pixiv.net')) {
 
         // --- 信息提取 ---
@@ -491,7 +1199,8 @@
                     twitter: xUser,
                     avatarBase64: avatarBase64,
                     summary: intro,
-                    fromPixiv: true
+                    isIllustrator: true,
+                    PixivID: pid
                 };
 
                 GM_setValue('vgmdb_to_bgm_data', data);
@@ -510,9 +1219,9 @@
                 const btn = document.createElement('button');
                 btn.id = 'vgm-pixiv-btn';
                 btn.innerText = '🚀 导入到 Bangumi';
+                const originalText = btn.innerText;
                 btn.onclick = (e) => {
                     e.preventDefault();
-                    const originalText = btn.innerText;
                     btn.innerHTML = '⌛ 提取中...';
                     extractData();
                     btn.innerText = '✅ 提取成功';
@@ -521,7 +1230,15 @@
                 h1.parentElement.style.display = 'flex';
                 h1.parentElement.style.alignItems = 'center';
                 h1.parentElement.appendChild(btn);
+
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.style.backgroundColor = "#e84566";
+                }, 3000);
             }
+
+
         }
 
         // 处理 Pixiv 的单页路由跳转
@@ -547,9 +1264,9 @@
             // 2. 根据类型勾选职位
             if (!data.fromSNS) {
                 const roleMap = {
-                    'isOrg': 'crtProProducer',
+                    'isOrgOrProducer': 'crtProProducer',
                     'isArtist': 'crtProArtist',
-                    'fromPixiv': 'crtProIllustrator',
+                    'isIllustrator': 'crtProIllustrator',
                 };
 
                 // 遍历映射表，只要 data 里的对应属性为 true，就勾选对应的框
@@ -590,6 +1307,7 @@ ${aliasBlock}}
 ${websiteBlock}
 }
 ${data.twitter ? '|X='+data.twitter : ''}
+${data.PixivID ? '|Pixiv= id='+data.PixivID : ''}
 }}`;
 
             const area = document.getElementById('subject_infobox');
@@ -720,6 +1438,29 @@ ${data.twitter ? '|X='+data.twitter : ''}
                     f.readAsDataURL(r.response);
                 },
                 onerror: () => res("")
+            });
+        });
+    }
+
+    // 还原短链接的函数
+    async function unshortenUrl(url) {
+        const currentOrigin = window.location.origin + '/';
+        if (!url.includes('t.cn')) return url; // 如果不是短链接则直接返回
+
+        return new Promise((res) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                anonymous: true,
+                headers: {
+                    "Referer": currentOrigin,
+                    "Cache-Control": "no-cache",
+                },
+                onload: (r) => {
+                    // GM_xmlhttpRequest 会自动跟随重定向，r.finalUrl 就是最终地址
+                    res(r.finalUrl || url);
+                },
+                onerror: () => res(url)
             });
         });
     }

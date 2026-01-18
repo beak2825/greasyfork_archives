@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name          Bazaar Scanner GOD MODE
+// @name          Bazaar Scanner- modded weav3r
 // @namespace     https://weav3r.dev/
 // @version       5.9
 // @description   Shows bazaar deals with NPC profit - click item eye button to see profitable deals
-// @author        Modified for NPC Profit
+// @author        srsbsns
 // @match         https://www.torn.com/*
 // @grant         GM_xmlhttpRequest
 // @grant         GM_addStyle
@@ -14,8 +14,8 @@
 // @connect       api.torn.com
 // @run-at        document-idle
 // @license       MIT
-// @downloadURL https://update.greasyfork.org/scripts/562524/Bazaar%20Scanner%20GOD%20MODE.user.js
-// @updateURL https://update.greasyfork.org/scripts/562524/Bazaar%20Scanner%20GOD%20MODE.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562524/Bazaar%20Scanner-%20modded%20weav3r.user.js
+// @updateURL https://update.greasyfork.org/scripts/562524/Bazaar%20Scanner-%20modded%20weav3r.meta.js
 // ==/UserScript==
 
 (function() {

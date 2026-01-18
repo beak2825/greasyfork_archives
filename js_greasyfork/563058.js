@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux Do 自定义类别
 // @namespace    ddc/linux-do-custom-categories
-// @version      0.0.2
+// @version      0.0.3
 // @author       DDC(NaiveMagic)
 // @description  Linux Do Custom Categories
 // @license      MIT
@@ -9,7 +9,9 @@
 // @homepage     https://github.com/zilewang7/linux-do-custom-categories
 // @match        https://linux.do/*
 // @grant        GM_getValue
+// @grant        GM_registerMenuCommand
 // @grant        GM_setValue
+// @grant        GM_unregisterMenuCommand
 // @downloadURL https://update.greasyfork.org/scripts/563058/Linux%20Do%20%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%88%AB.user.js
 // @updateURL https://update.greasyfork.org/scripts/563058/Linux%20Do%20%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%88%AB.meta.js
 // ==/UserScript==
@@ -18,10 +20,39 @@
   'use strict';
 
   var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
+  var _GM_registerMenuCommand = (() => typeof GM_registerMenuCommand != "undefined" ? GM_registerMenuCommand : void 0)();
   var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
+  var _GM_unregisterMenuCommand = (() => typeof GM_unregisterMenuCommand != "undefined" ? GM_unregisterMenuCommand : void 0)();
   const STORAGE_KEY = "categoryGroups";
   const CATEGORY_METADATA_KEY = "categoryMetadataCache";
   const TAG_ICON_CACHE_KEY = "tagIconCache";
+  const REQUEST_CONTROL_KEY = "requestControlSettings";
+  const DEFAULT_REQUEST_CONTROL_SETTINGS = {
+    concurrency: 5,
+    requestDelayMs: 200
+  };
+  function normalizeInteger(value, fallback, minValue) {
+    const numeric = typeof value === "number" ? value : typeof value === "string" ? Number(value) : Number.NaN;
+    if (!Number.isFinite(numeric)) {
+      return fallback;
+    }
+    return Math.max(minValue, Math.round(numeric));
+  }
+  function normalizeRequestControlSettings(input) {
+    const base = input ?? DEFAULT_REQUEST_CONTROL_SETTINGS;
+    return {
+      concurrency: normalizeInteger(
+        base.concurrency,
+        DEFAULT_REQUEST_CONTROL_SETTINGS.concurrency,
+        1
+      ),
+      requestDelayMs: normalizeInteger(
+        base.requestDelayMs,
+        DEFAULT_REQUEST_CONTROL_SETTINGS.requestDelayMs,
+        0
+      )
+    };
+  }
   function getCategoryGroups() {
     return _GM_getValue(STORAGE_KEY, []);
   }
@@ -57,7 +88,18 @@
   function saveTagIconCache(cache) {
     _GM_setValue(TAG_ICON_CACHE_KEY, cache);
   }
-  const MAX_CONCURRENT_REQUESTS = 5;
+  function getRequestControlSettings() {
+    const stored = _GM_getValue(REQUEST_CONTROL_KEY, null);
+    return normalizeRequestControlSettings(stored);
+  }
+  function saveRequestControlSettings(settings) {
+    const normalized = normalizeRequestControlSettings(settings);
+    _GM_setValue(REQUEST_CONTROL_KEY, normalized);
+    return normalized;
+  }
+  function resetRequestControlSettings() {
+    _GM_setValue(REQUEST_CONTROL_KEY, DEFAULT_REQUEST_CONTROL_SETTINGS);
+  }
   const MAX_RETRY_ATTEMPTS = 3;
   const RETRY_BASE_DELAY_MS = 600;
   const HIERARCHICAL_CATEGORY_ENDPOINT = "https://linux.do/categories/hierarchical_search?term=";
@@ -397,6 +439,8 @@
     const newOffsets = new Map(pageOffsets);
     const categories = new Map();
     const cachedMetadata = loadCategoryMetadataCache();
+    const requestSettings = getRequestControlSettings();
+    const requestDelayMs = requestSettings.requestDelayMs;
     let nextIndex = 0;
     const worker = async () => {
       while (true) {
@@ -433,9 +477,12 @@
             newOffsets.set(categoryId, page + 1);
           }
         }
+        if (requestDelayMs > 0) {
+          await delay(requestDelayMs, signal);
+        }
       }
     };
-    const concurrency = Math.min(MAX_CONCURRENT_REQUESTS, categoryIds.length);
+    const concurrency = Math.min(requestSettings.concurrency, categoryIds.length);
     const workers = Array.from({ length: concurrency }, () => worker());
     await Promise.all(workers);
     if (cachedMetadata.map) {
@@ -2217,6 +2264,94 @@
       loading.style.display = "none";
     }
   }
+  const MENU_IDS = {
+    concurrency: "custom-category-request-concurrency",
+    delay: "custom-category-request-delay",
+    reset: "custom-category-request-reset"
+  };
+  function unregisterMenuCommand(id) {
+    try {
+      _GM_unregisterMenuCommand(id);
+    } catch (error) {
+    }
+  }
+  function promptForNumber(label, currentValue, minValue) {
+    const input = window.prompt(`${label} (>= ${minValue})`, String(currentValue));
+    if (input === null) {
+      return null;
+    }
+    const trimmed = input.trim();
+    if (!trimmed) {
+      window.alert("请输入有效数字");
+      return null;
+    }
+    const parsed = Number(trimmed);
+    if (!Number.isFinite(parsed)) {
+      window.alert("请输入有效数字");
+      return null;
+    }
+    return Math.max(minValue, Math.round(parsed));
+  }
+  function refreshMenuCommands() {
+    Object.values(MENU_IDS).forEach((id) => unregisterMenuCommand(id));
+    const settings = getRequestControlSettings();
+    _GM_registerMenuCommand(
+      `设置并发请求数量 (当前: ${settings.concurrency})`,
+      () => {
+        const currentSettings = getRequestControlSettings();
+        const nextValue = promptForNumber("请输入并发请求数量", currentSettings.concurrency, 1);
+        if (nextValue === null || nextValue === currentSettings.concurrency) {
+          return;
+        }
+        saveRequestControlSettings({
+          ...currentSettings,
+          concurrency: nextValue
+        });
+        refreshMenuCommands();
+      },
+      {
+        id: MENU_IDS.concurrency,
+        title: "控制同时发起的请求数量"
+      }
+    );
+    _GM_registerMenuCommand(
+      `设置请求间隔 (当前: ${settings.requestDelayMs} ms)`,
+      () => {
+        const currentSettings = getRequestControlSettings();
+        const nextValue = promptForNumber(
+          "请输入请求间隔 (毫秒)",
+          currentSettings.requestDelayMs,
+          0
+        );
+        if (nextValue === null || nextValue === currentSettings.requestDelayMs) {
+          return;
+        }
+        saveRequestControlSettings({
+          ...currentSettings,
+          requestDelayMs: nextValue
+        });
+        refreshMenuCommands();
+      },
+      {
+        id: MENU_IDS.delay,
+        title: "每次请求完成后的等待时间"
+      }
+    );
+    _GM_registerMenuCommand(
+      "重置请求设置",
+      () => {
+        resetRequestControlSettings();
+        refreshMenuCommands();
+      },
+      {
+        id: MENU_IDS.reset,
+        title: `恢复默认：并发 ${DEFAULT_REQUEST_CONTROL_SETTINGS.concurrency}，间隔 ${DEFAULT_REQUEST_CONTROL_SETTINGS.requestDelayMs} ms`
+      }
+    );
+  }
+  function initMenu() {
+    refreshMenuCommands();
+  }
   let currentGroup = null;
   let currentData = null;
   let isLoading = false;
@@ -2536,6 +2671,7 @@
     }
     await injectSidebar(handleGroupClick);
     initModalObserver(handleRefresh);
+    initMenu();
     initLocationObserver();
     initCategoryClickListener();
     window.addEventListener("scroll", handleScroll);

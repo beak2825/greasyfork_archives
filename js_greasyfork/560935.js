@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         HALO Armory Tracker Pro (Alien UI) - Torn Log ID Fix
+// @name         ALIANAH/HALO
 // @namespace    http://tampermonkey.net/
 // @version      HALO.6.1
 // @description  Faction armory tracker with Torn log ID deduplication
@@ -10,8 +10,8 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @connect      api.torn.com
-// @downloadURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20Torn%20Log%20ID%20Fix.user.js
-// @updateURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20Torn%20Log%20ID%20Fix.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560935/ALIANAHHALO.user.js
+// @updateURL https://update.greasyfork.org/scripts/560935/ALIANAHHALO.meta.js
 // ==/UserScript==
 
 (function(){
@@ -23,7 +23,7 @@ const DEBUG_MODE = false;
 /* ---------- CONFIG ---------- */
 const factionIds = ["48418"];
 const REFRESH_MS = 45000;
-const V2_INTERVAL_MS = 3 * 60 * 60 * 1000; // Every 3 hours
+const V2_INTERVAL_MS = 3 * 60 * 60 * 1000;
 const PRICE_CACHE_TTL = 30 * 60 * 1000;
 const PROCESSED_LOGS_PRUNE_DAYS = 7;
 const V2_MARKERS_PRUNE_DAYS = 3;
@@ -562,7 +562,6 @@ async function fetchAllV2Logs(sinceTimestamp = 0){
     if(sinceTimestamp > 0){
         baseUrl += `&from=${sinceTimestamp}`;
     } else {
-        // Safety fallback: 24 hours
         baseUrl += `&from=${Math.floor(Date.now() / 1000) - 86400}`;
     }
     
@@ -829,26 +828,11 @@ async function runV2CatchUp(){
         v2Schedule.lastCheck = now;
         GM_setValue(STORAGE_KEYS.V2_SCHEDULE, v2Schedule);
         
-        // Get most recent processed log timestamp
-        let newestProcessedTimestamp = 0;
+        let sinceTime = v2Stats.lastRun ? Math.floor(v2Stats.lastRun / 1000) : 0;
         
-        // Find the newest timestamp from all processed logs
-        Object.values(processedLogs).forEach(log => {
-            if(log.timestamp > newestProcessedTimestamp) {
-                newestProcessedTimestamp = log.timestamp;
-            }
-        });
-        
-        let sinceTime = 0;
-        
-        if(newestProcessedTimestamp > 0) {
-            // Fetch from newest log (5 minute buffer)
-            sinceTime = newestProcessedTimestamp - 300;
-            console.log(`HALO: V2 fetching from newest log (${new Date(sinceTime * 1000).toLocaleString()})`);
-        } else {
-            // First run ever: fetch 24 hours back
+        if(sinceTime === 0 || (now - v2Stats.lastRun) > 86400000) {
             sinceTime = Math.floor(now / 1000) - 86400;
-            console.log(`HALO: First V2 run - fetching 24h from ${new Date(sinceTime * 1000).toLocaleString()}`);
+            console.log(`HALO: First V2 run or large gap, fetching from ${new Date(sinceTime * 1000).toLocaleString()}`);
         }
         
         const result = await fetchAllV2Logs(sinceTime);
@@ -1698,111 +1682,6 @@ function renderItemListCompact(items, isUsed = false) {
                     ${indicators}
                 </div>
                 <div class="item-time-slim">${timeDate}</div>
-            </div>
-        `;
-    }).join("");
-}
-
-function updateStats() {
-    const activeUsers = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])].filter(u => getNetValue(u) !== 0).length;
-    const totalProcessed = Object.keys(processedLogs).length;
-    const cachedPrices = Object.keys(priceCache).length;
-    const v2Recovered = v2Stats.recovered || 0;
-    
-    document.getElementById("statUsers").textContent = activeUsers;
-    document.getElementById("statLogs").textContent = totalProcessed;
-    document.getElementById("statCache").textContent = cachedPrices;
-    document.getElementById("statRecData").textContent = v2Recovered;
-    
-    const lastRunElement = document.getElementById("v2LastRun");
-    if(lastRunElement){
-        if(v2Stats.lastRun > 0){
-            const lastRun = new Date(v2Stats.lastRun);
-            const hours = String(lastRun.getHours()).padStart(2, '0');
-            const minutes = String(lastRun.getMinutes()).padStart(2, '0');
-            const truncated = v2Stats.truncated ? ' ⚠️' : '';
-            lastRunElement.textContent = `Last V2: ${hours}:${minutes}${truncated}`;
-            lastRunElement.title = v2Stats.truncated ? "V2 recovery was truncated - some logs may be missing" : "";
-        } else {
-            lastRunElement.textContent = "V2: Never run";
-        }
-    }
-    
-    updateStorageStats();
-}
-
-function updateStorageStats() {
-    const storageStats = document.getElementById("storageStats");
-    if (!storageStats) return;
-    
-    const activeCount = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])].length;
-    const archiveCount = Object.keys(archivedUsers).length;
-    const tier2Count = Object.values(archivedUsers).filter(a => a.compressionLevel === 1).length;
-    const tier3Count = Object.values(archivedUsers).filter(a => a.compressionLevel === 2).length;
-    
-    storageStats.innerHTML = `
-        <div>Active: ${activeCount} users</div>
-        <div>Archived: ${archiveCount} users</div>
-        <div>Tier 2: ${tier2Count} (monthly)</div>
-        <div>Tier 3: ${tier3Count} (yearly)</div>
-        <div>Last cleanup: ${lastCleanup ? new Date(lastCleanup).toLocaleDateString() : 'Never'}</div>
-    `;
-}
-
-function sortUsers(users) {
-    return users.sort((a, b) => {
-        const netA = getNetValue(a);
-        const netB = getNetValue(b);
-        
-        if (netA < 0 && netB < 0) return netA - netB;
-        if (netA < 0) return -1;
-        if (netB < 0) return 1;
-        return netB - netA;
-    });
-}
-
-function renderPanel() {
-    const div = document.getElementById("debtLog");
-    let users = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])];
-    
-    users = users.filter(u => getNetValue(u) !== 0);
-    
-    if (users.length === 0) {
-        div.innerHTML = `
-            <div class="empty-state-slim">
-                <div>NO ACTIVE BALANCES</div>
-                <div style="margin-top: 5px; font-size: 9px;">SET API KEYS</div>
-            </div>
-        `;
-        updateStats();
-        return;
-    }
-    
-    users = sortUsers(users);
-
-    div.innerHTML = users.map(u => {
-        const net = getNetValue(u);
-        const isPositive = net >= 0;
-        const balanceClass = isPositive ? 'balance-positive-slim' : 'balance-negative-slim';
-        const balanceText = isPositive ? `+$${Math.abs(net).toLocaleString()}` : `-$${Math.abs(net).toLocaleString()}`;
-        
-        return `
-            <div class="user-slim">
-                <div class="user-header-slim">
-                    <div class="user-name-slim" title="${u}">${u}</div>
-                    <div class="user-balance-slim ${balanceClass}">
-                        ${balanceText}
-                    </div>
-                </div>
-                <div class="user-details-slim">
-                    <div class="items-slim">
-                        ${renderItemListCompact(usedItems[u], true)}
-                        ${renderItemListCompact(deposits[u])}
-                    </div>
-                    <div class="user-actions-slim">
-                        <button class="action-btn-slim" data-user="${u}">CLEAR</button>
-                    </div>
-                </div>
             </div>
         `;
     }).join("");

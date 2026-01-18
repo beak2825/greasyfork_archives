@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skyskraber Hotkeys
 // @namespace    local.skyskraber.hotkeys
-// @version      1.3.2
+// @version      1.3.4
 // @description  Hokteys for Skyskraber
 // @match        https://www.skyskraber.dk/chat*
 // @match        https://skyskraber.dk/chat*
@@ -16,7 +16,7 @@
 (() => {
   "use strict";
 
-  console.log("[Hotkeys] Script loaded, version 1.3.2");
+  console.log("[Hotkeys] Script loaded, version 1.3.4");
 
   let roomExits = {};
   let navigationFrozen = false;
@@ -25,9 +25,10 @@
   let nextMove = null;
   let blockedItemId = null;
   let unblockTimeout = null;
+  let currentRoomId = null;
 
   const STORAGE_HOTKEYS_ENABLED = "HOTKEYS_ENABLED";
-  const RATE_LIMIT_MS = 400; // 0.4s between moves
+  const BASE_RATE_LIMIT_MS = 400; // 0.4s between moves
 
   /******************************************************************
    * INITIALIZATION - Wait for Core
@@ -74,7 +75,8 @@
     if (!enabled || navigationFrozen || !window.SkyskraberCore.isConnected()) return;
 
     const now = Date.now();
-    if (now - lastMove < RATE_LIMIT_MS) {
+    const rateLimit = BASE_RATE_LIMIT_MS;
+    if (now - lastMove < rateLimit) {
       // Buffer the next move if rate limited
       nextMove = e.key;
       return;
@@ -96,7 +98,8 @@
   setInterval(() => {
     if (!enabled || !nextMove) return;
     const now = Date.now();
-    if (now - lastMove >= RATE_LIMIT_MS) {
+    const rateLimit = BASE_RATE_LIMIT_MS;
+    if (now - lastMove >= rateLimit) {
       const targetRoom = roomExits[nextMove];
       if (targetRoom) {
         window.SkyskraberCore.send({
@@ -151,6 +154,7 @@
       /******** ROOM ENTRY ********/
       if (msg?.room?.id) {
         navigationFrozen = false;
+        currentRoomId = msg.room.id;
       }
 
       if (msg?.room?.fields) {

@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         HDBits Extra Filters
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.3
 // @description  Filter torrent results by seeder count, resolution, year, text search, release group, country, and duplicates with multi-page loading
 // @author       EightBall
 // @match        https://hdbits.org/browse.php*
+// @run-at       document-start
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @downloadURL https://update.greasyfork.org/scripts/563062/HDBits%20Extra%20Filters.user.js
@@ -25,6 +26,10 @@
     const STORAGE_KEY_YEAR_TO = 'hdbits_year_to';
     const STORAGE_KEY_REMOVE_DUPES = 'hdbits_remove_dupes';
     const STORAGE_KEY_COLLAPSED = 'hdbits_collapsed';
+    const STORAGE_KEY_COUNTRIES = 'hdbits_countries';
+    const STORAGE_KEY_COUNTRY_TYPE = 'hdbits_country_type';
+    const STORAGE_KEY_COUNTRY_STICKY = 'hdbits_country_sticky';
+    const STORAGE_KEY_BASE_PARAMS = 'hdbits_base_params'; // Store other search box params
 
     // Country groups for easier selection
     const COUNTRY_GROUPS = {
@@ -51,6 +56,7 @@
     let yearTo = GM_getValue(STORAGE_KEY_YEAR_TO, '');
     let removeDuplicates = GM_getValue(STORAGE_KEY_REMOVE_DUPES, true);
     let isCollapsed = GM_getValue(STORAGE_KEY_COLLAPSED, false);
+    let countrySticky = GM_getValue(STORAGE_KEY_COUNTRY_STICKY, false);
 
     // Text filter (not persisted)
     let textFilter = '';
@@ -217,6 +223,9 @@
                                 </div>
                                 <input type="button" id="country-filter-apply" value="Apply" style="flex-shrink: 0;">
                                 <input type="button" id="country-filter-clear" value="Clear" style="flex-shrink: 0;">
+                                <label style="cursor: pointer; flex-shrink: 0; margin-left: 8px;" title="Remember country selection and auto-apply on page load">
+                                    <input type="checkbox" id="country-sticky" ${countrySticky ? 'checked' : ''}> Sticky
+                                </label>
                             </div>
                             <div id="country-selection-summary" style="font-size: 10px; color: #555; display: none;"></div>
                         </div>
@@ -329,6 +338,12 @@
                 cb.indeterminate = false;
             });
             updateCountrySelectionDisplay();
+            // Clear saved countries and base params if sticky is enabled
+            if (countrySticky) {
+                GM_setValue(STORAGE_KEY_COUNTRIES, []);
+                GM_setValue(STORAGE_KEY_COUNTRY_TYPE, 'showonly');
+                GM_setValue(STORAGE_KEY_BASE_PARAMS, []);
+            }
             // Apply (this will reload without country filter)
             applyCountryFilterFromUI();
         });
@@ -338,6 +353,27 @@
             cb.addEventListener('change', function() {
                 updateCountrySelectionDisplay();
             });
+        });
+
+        // Sticky checkbox event listener
+        document.getElementById('country-sticky').addEventListener('change', function() {
+            countrySticky = this.checked;
+            GM_setValue(STORAGE_KEY_COUNTRY_STICKY, countrySticky);
+            // If enabling sticky, save current URL state including base params
+            if (countrySticky) {
+                const { countries, filterType } = getCountryFilterFromUrl();
+                GM_setValue(STORAGE_KEY_COUNTRIES, countries);
+                GM_setValue(STORAGE_KEY_COUNTRY_TYPE, filterType);
+                // Save base params
+                const baseUrl = getBaseFilterUrl();
+                const baseParams = [];
+                for (const [key, value] of baseUrl.searchParams.entries()) {
+                    if (key !== 'selected_countries[]' && key !== 'countrysearchtype' && key !== 'page') {
+                        baseParams.push([key, value]);
+                    }
+                }
+                GM_setValue(STORAGE_KEY_BASE_PARAMS, baseParams);
+            }
         });
     }
 
@@ -385,6 +421,22 @@
     function applyCountryFilterFromUI() {
         const selectedCountries = getAllSelectedCountries();
         const filterType = document.getElementById('country-filter-type').value;
+
+        // Save to storage if sticky is enabled
+        if (countrySticky) {
+            GM_setValue(STORAGE_KEY_COUNTRIES, selectedCountries);
+            GM_setValue(STORAGE_KEY_COUNTRY_TYPE, filterType);
+            // Save base params (all search box params except countries/page)
+            const baseUrl = getBaseFilterUrl();
+            const baseParams = [];
+            for (const [key, value] of baseUrl.searchParams.entries()) {
+                if (key !== 'selected_countries[]' && key !== 'countrysearchtype' && key !== 'page') {
+                    baseParams.push([key, value]);
+                }
+            }
+            GM_setValue(STORAGE_KEY_BASE_PARAMS, baseParams);
+        }
+
         const newUrl = buildCountryFilterUrl(selectedCountries, filterType);
 
         if (newUrl !== window.location.href) {
@@ -891,11 +943,74 @@
         document.getElementById('total-count').textContent = totalCount;
     }
 
+    // Show a loading indicator when redirecting for sticky country filter
+    function showStickyRedirectNotice() {
+        const searchbox = document.getElementById('searchbox');
+        if (!searchbox) return;
+
+        // Add spinner animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes hdb-spinner {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .hdb-loading-spinner {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border: 2px solid #555;
+                border-top-color: #ddd;
+                border-radius: 50%;
+                animation: hdb-spinner 0.8s linear infinite;
+                vertical-align: middle;
+                margin-right: 8px;
+            }
+        `;
+        document.head.appendChild(style);
+
+        const notice = document.createElement('table');
+        notice.id = 'seeder-filter-panel';
+        notice.setAttribute('cellpadding', '3');
+        notice.style.cssText = 'width:800px; margin-top: 5px;';
+        notice.innerHTML = `
+            <tbody>
+                <tr>
+                    <th style="padding: 8px;">
+                        <span>&nbsp;Extra Filters</span>
+                        <span style="margin-left: 15px; font-weight: normal; color: #aaa;">
+                            <span class="hdb-loading-spinner"></span>
+                            Applying saved country filter...
+                        </span>
+                    </th>
+                </tr>
+            </tbody>
+        `;
+        searchbox.parentNode.insertBefore(notice, searchbox.nextSibling);
+    }
+
     // Initialize
     function init() {
         // Track the current page as already loaded
         currentPage = getCurrentPage();
         loadedPages.add(currentPage);
+
+        // If sticky is enabled and we're on a page with country filters,
+        // update saved base params to capture any new search box selections
+        if (countrySticky) {
+            const { countries: urlCountries } = getCountryFilterFromUrl();
+            if (urlCountries.length > 0) {
+                // We're on a filtered page - save current base params
+                const baseUrl = getBaseFilterUrl();
+                const baseParams = [];
+                for (const [key, value] of baseUrl.searchParams.entries()) {
+                    if (key !== 'selected_countries[]' && key !== 'countrysearchtype' && key !== 'page') {
+                        baseParams.push([key, value]);
+                    }
+                }
+                GM_setValue(STORAGE_KEY_BASE_PARAMS, baseParams);
+            }
+        }
 
         createControlPanel();
         applyFilter();
@@ -911,10 +1026,116 @@
         }
     }
 
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+    // Check if sticky redirect is needed (doesn't trigger redirect, just checks)
+    function shouldStickyRedirect() {
+        const savedCountries = GM_getValue(STORAGE_KEY_COUNTRIES, []);
+        const { countries: urlCountries } = getCountryFilterFromUrl();
+
+        if (countrySticky && savedCountries.length > 0 && urlCountries.length === 0) {
+            const savedType = GM_getValue(STORAGE_KEY_COUNTRY_TYPE, 'showonly');
+            const savedBaseParams = GM_getValue(STORAGE_KEY_BASE_PARAMS, []);
+
+            // Build URL with saved base params + country filter
+            const url = new URL(window.location.origin + '/browse.php');
+
+            // Restore saved base params (category, codec, medium, etc.)
+            savedBaseParams.forEach(([key, value]) => {
+                url.searchParams.append(key, value);
+            });
+
+            // Add country filter
+            savedCountries.forEach(c => url.searchParams.append('selected_countries[]', c));
+            url.searchParams.set('countrysearchtype', savedType);
+
+            if (url.toString() !== window.location.href) {
+                return url.toString(); // Return the URL to redirect to
+            }
+        }
+        return null;
+    }
+
+    // Show loading overlay and hide content
+    function showRedirectOverlay() {
+        const style = document.createElement('style');
+        style.id = 'hdb-redirect-styles';
+        style.textContent = `
+            #torrent-list, #resultsarea, .browsetable { visibility: hidden !important; }
+            #hdb-redirect-overlay {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 99999;
+            }
+            @keyframes hdb-spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            #hdb-redirect-overlay .hdb-spinner {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border: 2px solid #555;
+                border-top-color: #ddd;
+                border-radius: 50%;
+                animation: hdb-spin 0.8s linear infinite;
+                vertical-align: middle;
+                margin-right: 8px;
+            }
+        `;
+        (document.head || document.documentElement).appendChild(style);
+
+        // Create overlay using table structure to match site styling
+        const overlay = document.createElement('div');
+        overlay.id = 'hdb-redirect-overlay';
+        overlay.innerHTML = `
+            <table cellpadding="3" style="width: 300px; font: 11px tahoma, arial, helvetica, sans-serif; border-collapse: collapse; background-color: #bccad6;">
+                <tbody>
+                    <tr>
+                        <th style="background-color: #2f4879; color: #fff; border: solid #000 1px; padding: 4px; font-weight: bold;">&nbsp;Extra Filters</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 15px; border: solid #000 1px; text-align: center; color: #000;">
+                            <span class="hdb-spinner"></span>
+                            Applying saved country filter...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `;
+        document.documentElement.appendChild(overlay);
+    }
+
+    // Run redirect check immediately
+    const redirectUrl = shouldStickyRedirect();
+    if (redirectUrl) {
+        // Show overlay FIRST, then redirect after a brief moment to allow render
+        const doRedirect = () => {
+            showRedirectOverlay();
+            // Small delay to allow browser to paint the overlay
+            setTimeout(() => {
+                window.location.replace(redirectUrl);
+            }, 10);
+        };
+
+        if (document.documentElement) {
+            doRedirect();
+        } else {
+            // Wait for documentElement to be created
+            const observer = new MutationObserver(() => {
+                if (document.documentElement) {
+                    observer.disconnect();
+                    doRedirect();
+                }
+            });
+            observer.observe(document, { childList: true });
+        }
     } else {
-        init();
+        // No redirect needed, proceed with normal init
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     }
 })();

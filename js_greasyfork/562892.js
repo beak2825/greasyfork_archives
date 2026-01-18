@@ -495,17 +495,41 @@
         if (processedContainers.has(container)) return;
         processedContainers.add(container);
 
-        container.classList.add('video-container');
-        container.style.position = 'relative';
+        // Ищем непосредственного родителя видео, который содержит только видео
+        let videoContainer = video.parentElement;
+
+        // Проверяем, что это не слишком большой контейнер
+        // Ищем ближайший div, который примерно равен размеру видео
+        while (videoContainer && videoContainer !== container) {
+            const rect = videoContainer.getBoundingClientRect();
+            const videoRect = video.getBoundingClientRect();
+
+            // Если контейнер примерно равен размеру видео (с небольшим запасом)
+            if (Math.abs(rect.width - videoRect.width) < 50 &&
+                Math.abs(rect.height - videoRect.height) < 50) {
+                break;
+            }
+            videoContainer = videoContainer.parentElement;
+            if (videoContainer === container) break;
+        }
+
+        // Если не нашли подходящий, используем прямого родителя видео
+        if (!videoContainer || videoContainer === container) {
+            videoContainer = video.parentElement;
+        }
+
+        videoContainer.classList.add('video-container');
+        videoContainer.style.position = 'relative';
 
         const overlay = document.createElement('div');
         overlay.className = 'video-overlay';
-        container.appendChild(overlay);
+        videoContainer.appendChild(overlay);
 
         createVolumeControl(overlay, video);
         createSeekBar(overlay, video);
         createSpeedControl(overlay, video);
     }
+
 
     function findAndProcessVideos() {
         const videos = document.querySelectorAll('video');

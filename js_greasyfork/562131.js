@@ -4,7 +4,7 @@
 // @description  Améliore l'interface de Kraland
 // @author       Somin
 // @namespace    somin
-// @version      beta.0.20
+// @version      beta.0.23
 // @match        http://www.kraland.org/*
 // @match        http://kraland.org/*
 // @match        http://test.kraland.org/*
@@ -302,6 +302,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
         //--- détection de la page
         let path = window.location.pathname;
+        navseven();
         switch(true) {
             case path.startsWith('/jouer/plateau'):
                 mainp();
@@ -322,7 +323,6 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                 console.log('test56');
         }
 
-        navseven();
         function navseven(){
             const nav=document.getElementById('navbar');
             //--- close sub
@@ -431,24 +431,21 @@ modalObserver.observe(document.body, { childList: true, subtree: true });
         }
 
         function pnjp(){
-            let panels=containerf.querySelectorAll('.panel-default');
-            for(let i=0;i<panels.length;i++){
-                panels[i].style.marginBottom=mBottomSize;
-                let panelHeading=panels[i].querySelector('.panel-heading');
-                panelHeading.style.padding='5px';
-                let panelBody=panels[i].querySelector('.panel-body');
-                panelBody.style.padding='5px';
-            }
+            let oneSide=cRight.querySelector('.dashboard');
+            //pjStyle(oneSide);
+            boxStyle(oneSide);
+            let sndSide=cRight.querySelectorAll('.dashboard')[1];
+            //pjStyle(sndSide);
+            boxStyle(sndSide);
+            let orange=oneSide.querySelector('div.alert.alert-warning');
+            orange.style.marginBottom='0px';
+            orange.style.padding='5px';
         }
         function batp(){
-            let panels=containerf.querySelectorAll('.panel-default');
-            for(let i=0;i<panels.length;i++){
-                panels[i].style.marginBottom=mBottomSize;
-                let panelHeading=panels[i].querySelector('.panel-heading');
-                panelHeading.style.padding='5px';
-                let panelBody=panels[i].querySelector('.panel-body');
-                panelBody.style.padding='5px';
-            }
+            let invSide=cRight.querySelector('.dashboard');
+            boxStyle(invSide);
+            let matSide=cRight.querySelectorAll('.dashboard')[1];
+            boxStyle(matSide);
         }
         function persop(){
             let panels=containerf.querySelectorAll('.panel-default');
@@ -544,31 +541,39 @@ modalObserver.observe(document.body, { childList: true, subtree: true });
                 bpanels[i].style.marginBottom=mBottomSize;
                 let boxType=bpanels[i].querySelector('h3').lastChild.textContent.trim();
                 if(boxType!=='Bâtiment'){pbStyle(bpanels[i]);}
-                switch(boxType){
-                    case "Bâtiment":
-                        bStyle(bpanels[i]);
-                        break;
-                    case "Commerce":
+                switch(true){
+                    case boxType.startsWith("Bâtiments Privés"):
                         cStyle(bpanels[i]);
                         break;
-                    case "Matériel":
+                    case boxType.startsWith("Bâtiments Publics"):
+                        cStyle(bpanels[i]);
+                        break;
+                    case boxType.startsWith("Bâtiment") :
+                        bStyle(bpanels[i]);
+                        break;
+                    case boxType.startsWith("Commerce"):
+                        cStyle(bpanels[i]);
+                        break;
+                    case boxType.startsWith("Matériel"):
                         mStyle(bpanels[i]);
                         break;
-                    case "Installation":
+                    case boxType.startsWith("Installation"):
                         iStyle(bpanels[i]);
                         break;
-                    case "Argent" :
+                    case boxType.startsWith("Argent"):
                         vStyle();
                         break;
-                    case "Bâtiments Privés":
+                    case boxType.startsWith("Employés de fonction"):
+                        cStyle(bpanels[i]);
+                        //npcStyle(bpanels[i]);
                         break;
-                    case "Bâtiments Publics":
+                    case boxType.startsWith("Employés"):
+                        npcStyle(bpanels[i]);
+                        cStyle(bpanels[i]);
                         break;
-                    case "Employés":
-                        break;
-                    case "Employés de fonction":
-                        break;
-                    case "Esclaves":
+                    case boxType.startsWith("Esclaves"):
+                        cStyle(bpanels[i]);
+                        //npcStyle(bpanels[i]);
                         break;
                     default :
                         console.log('boxType unknown : '+boxType);
@@ -586,22 +591,43 @@ modalObserver.observe(document.body, { childList: true, subtree: true });
 
             }
 
-            // box batiment
+            //--- box batiment
             function bStyle(bbox){
-                let abox=bbox.querySelector('a');
-                abox.style.border='none';
-                abox.style.padding='0px';
+                let panelHeading=bbox.querySelector('.panel-heading');
+                panelHeading.style.padding='5px';
                 let pbody=bbox.querySelector('.panel-body');
                 pbody.style.paddingBottom='5px';
                 pbody.style.paddingTop='5px';
-                let pdb=bbox.querySelector('.panel-body .row .progress');
+                let abox=bbox.querySelector('a');
+                let abcolor=getComputedStyle(abox).borderColor;
+                abox.style.border='none';
+                abox.style.padding='0px';
+                abox.style.width='33%';
+                abox.style.float='left';
+
+                let pdbr=bbox.querySelector('.panel-body .row');
+                pdbr.querySelector('div').style.width='20%';
+                pdbr.querySelector('div').style.minWidth='125px';
+                let pdb=pdbr.querySelector('.progress');
                 pdb.style.marginBottom='0px';
+                //pdb.parentElement.style.paddingRight='0px';
+                pdb.parentElement.style.width='40%';
+
+                let descrp=pbody.lastElementChild;
+                descrp.style.marginTop='5px';
+                descrp.style.borderTop='2px solid '+abcolor;
+                descrp.style.paddingTop='2px';
             }
 
-            // page inventaire
+            //--- page inventaire
             function vStyle(){
             }
 
+            //--- pnj
+            function npcStyle(nbox){
+                let minispan=nbox.querySelectorAll('span.mini');
+                minispan.forEach(msp=>{msp.querySelector('br').remove()});
+            }
         }
 
         function pbStyle(panel){

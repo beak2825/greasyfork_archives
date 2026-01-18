@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         gying TMDB 助手
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  在标题下方新起一行展示 {tmdbid=id}，不影响原标题样式
 // @author       Gemini
 // @match        *://www.gying.net/mv/*
 // @match        *://www.gying.net/tv/*
+// @match        *://www.gying.net/ac/*
 // @connect      tmdb.org
 // @connect      api.tmdb.org
 // @grant        GM_xmlhttpRequest
