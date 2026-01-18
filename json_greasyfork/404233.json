@@ -1,0 +1,59 @@
+{
+  "id": 404233,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-27T21:05:45.000Z",
+  "code_updated_at": "2020-05-27T21:05:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 164505,
+      "name": "Upquark",
+      "created_at": "2017-12-25T18:44:05.000Z",
+      "url": "https://greasyfork.org/users/164505-upquark",
+      "scripts": [
+        {
+          "id": 404233,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-05-27T21:05:45.000Z",
+          "code_updated_at": "2020-05-27T21:05:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Toggle Archived Geocaches",
+          "description": "Adds a button to the Owned Caches page to toggle between hiding/showing archived caches",
+          "url": "https://greasyfork.org/scripts/404233-toggle-archived-geocaches",
+          "code_url": "https://update.greasyfork.org/scripts/404233/Toggle%20Archived%20Geocaches.user.js",
+          "code_size": 1437,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Toggle Archived Geocaches",
+  "description": "Adds a button to the Owned Caches page to toggle between hiding/showing archived caches",
+  "url": "https://greasyfork.org/scripts/404233-toggle-archived-geocaches",
+  "code_url": "https://update.greasyfork.org/scripts/404233/Toggle%20Archived%20Geocaches.user.js",
+  "code_size": 1437,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

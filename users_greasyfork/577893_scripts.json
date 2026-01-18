@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 405723,
+    "daily_installs": 0,
+    "total_installs": 502,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-20T10:34:18.000Z",
+    "code_updated_at": "2020-06-20T13:01:34.000Z",
+    "namespace": "http://elib.ecnudec.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 577893,
+        "name": "shining77",
+        "created_at": "2020-06-03T00:30:53.000Z",
+        "url": "https://greasyfork.org/users/577893-shining77"
+      }
+    ],
+    "name": "万方数据 根据论文信息整理出引用字符串",
+    "description": "万方数据 根据论文信息整理出引用字符串（暂时只有期刊），未解决页数的读取，需要自行去论文利查找填写。",
+    "url": "https://greasyfork.org/scripts/405723-%E4%B8%87%E6%96%B9%E6%95%B0%E6%8D%AE-%E6%A0%B9%E6%8D%AE%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF%E6%95%B4%E7%90%86%E5%87%BA%E5%BC%95%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2",
+    "code_url": "https://update.greasyfork.org/scripts/405723/%E4%B8%87%E6%96%B9%E6%95%B0%E6%8D%AE%20%E6%A0%B9%E6%8D%AE%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF%E6%95%B4%E7%90%86%E5%87%BA%E5%BC%95%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2.user.js",
+    "code_size": 2441,
+    "license": null,
+    "version": "0.14",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

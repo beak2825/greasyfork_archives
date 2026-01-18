@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408011,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-01T10:06:50.000Z",
+    "code_updated_at": "2020-08-01T10:06:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 290355,
+        "name": "MacrosL",
+        "created_at": "2019-04-08T17:09:08.000Z",
+        "url": "https://greasyfork.org/users/290355-macrosl"
+      }
+    ],
+    "name": "Likes Counter In Profile",
+    "description": "Likes",
+    "url": "https://greasyfork.org/scripts/408011-likes-counter-in-profile",
+    "code_url": "https://update.greasyfork.org/scripts/408011/Likes%20Counter%20In%20Profile.user.js",
+    "code_size": 1121,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

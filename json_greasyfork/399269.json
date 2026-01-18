@@ -1,0 +1,34 @@
+{
+  "id": 399269,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-02T04:20:09.000Z",
+  "code_updated_at": "2020-04-02T04:20:09.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 471939,
+      "name": "alreadyused",
+      "created_at": "2020-03-30T14:56:01.000Z",
+      "url": "https://greasyfork.org/users/471939-alreadyused",
+      "scripts": []
+    }
+  ],
+  "name": "ResearchTab",
+  "description": "Research Tab",
+  "url": "https://greasyfork.org/scripts/399269-researchtab",
+  "code_url": "https://update.greasyfork.org/scripts/399269/787101/ResearchTab.js",
+  "code_size": 47116,
+  "license": null,
+  "version": "0.0.1.20200402042009",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

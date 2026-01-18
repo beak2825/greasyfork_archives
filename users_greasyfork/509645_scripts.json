@@ -1,0 +1,101 @@
+[
+  {
+    "id": 401197,
+    "daily_installs": 0,
+    "total_installs": 407,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-17T09:39:23.000Z",
+    "code_updated_at": "2020-04-17T09:39:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 509645,
+        "name": "kougazhang",
+        "created_at": "2020-04-14T15:58:03.000Z",
+        "url": "https://greasyfork.org/users/509645-kougazhang"
+      }
+    ],
+    "name": "csdn 极简版",
+    "description": "csdn 页面极端简化版, 只显示正文.",
+    "url": "https://greasyfork.org/scripts/401197-csdn-%E6%9E%81%E7%AE%80%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/401197/csdn%20%E6%9E%81%E7%AE%80%E7%89%88.user.js",
+    "code_size": 1951,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 400791,
+    "daily_installs": 0,
+    "total_installs": 136,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-14T17:23:28.000Z",
+    "code_updated_at": "2020-04-15T06:19:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 509645,
+        "name": "kougazhang",
+        "created_at": "2020-04-14T15:58:03.000Z",
+        "url": "https://greasyfork.org/users/509645-kougazhang"
+      }
+    ],
+    "name": "demo open talk",
+    "description": "课件. 又拍云 open talk 公开课 油猴脚本 —— 只为更好的交互体验",
+    "url": "https://greasyfork.org/scripts/400791-demo-open-talk",
+    "code_url": "https://update.greasyfork.org/scripts/400791/demo%20open%20talk.user.js",
+    "code_size": 4533,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 400790,
+    "daily_installs": 2,
+    "total_installs": 4956,
+    "fan_score": "74.1",
+    "good_ratings": 11,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-14T16:58:53.000Z",
+    "code_updated_at": "2024-02-19T08:05:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 509645,
+        "name": "kougazhang",
+        "created_at": "2020-04-14T15:58:03.000Z",
+        "url": "https://greasyfork.org/users/509645-kougazhang"
+      }
+    ],
+    "name": "知乎浏览助手",
+    "description": "知乎浏览助手. 如果想报 bug, 可以通过知乎私信联系我, zhihu.com/people/kougazhang",
+    "url": "https://greasyfork.org/scripts/400790-%E7%9F%A5%E4%B9%8E%E6%B5%8F%E8%A7%88%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/400790/%E7%9F%A5%E4%B9%8E%E6%B5%8F%E8%A7%88%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 8984,
+    "license": null,
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

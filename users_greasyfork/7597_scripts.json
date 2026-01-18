@@ -1,0 +1,101 @@
+[
+  {
+    "id": 400929,
+    "daily_installs": 0,
+    "total_installs": 80,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-15T09:19:50.000Z",
+    "code_updated_at": "2020-05-14T01:26:31.000Z",
+    "namespace": "https://greasyfork.org/scripts/400929-yalb-unlocker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 7597,
+        "name": "Djamana",
+        "created_at": "2014-12-14T02:23:12.000Z",
+        "url": "https://greasyfork.org/users/7597-djamana"
+      }
+    ],
+    "name": "yalb Unlocker",
+    "description": "Enables yalb premium buttons",
+    "url": "https://greasyfork.org/scripts/400929-yalb-unlocker",
+    "code_url": "https://update.greasyfork.org/scripts/400929/yalb%20Unlocker.user.js",
+    "code_size": 14496,
+    "license": null,
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 400294,
+    "daily_installs": 0,
+    "total_installs": 380,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-10T19:21:02.000Z",
+    "code_updated_at": "2021-04-15T14:05:59.000Z",
+    "namespace": "https://greasyfork.org/scripts/396523-facebook-delete-fbclid-link",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 7597,
+        "name": "Djamana",
+        "created_at": "2014-12-14T02:23:12.000Z",
+        "url": "https://greasyfork.org/users/7597-djamana"
+      }
+    ],
+    "name": "Clean fbclid from Facebook links",
+    "description": "Removes the fbclid(= Facebook Click ID) parameter and Facebook redirect - (l.facebook.com?u=...) from all links in Facebook when scrolling.",
+    "url": "https://greasyfork.org/scripts/400294-clean-fbclid-from-facebook-links",
+    "code_url": "https://update.greasyfork.org/scripts/400294/Clean%20fbclid%20from%20Facebook%20links.user.js",
+    "code_size": 3460,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 393690,
+    "daily_installs": 0,
+    "total_installs": 264,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-14T00:34:06.000Z",
+    "code_updated_at": "2021-08-23T02:09:26.000Z",
+    "namespace": "https://greasyfork.org/de/users/7597-djamana",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 7597,
+        "name": "Djamana",
+        "created_at": "2014-12-14T02:23:12.000Z",
+        "url": "https://greasyfork.org/users/7597-djamana"
+      }
+    ],
+    "name": "Planet Romeo - Poor Men's Plus",
+    "description": "Restores blur out tiles on the Planet Romeo visitors tab for non-plus users",
+    "url": "https://greasyfork.org/scripts/393690-planet-romeo-poor-men-s-plus",
+    "code_url": "https://update.greasyfork.org/scripts/393690/Planet%20Romeo%20-%20Poor%20Men%27s%20Plus.user.js",
+    "code_size": 2482,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

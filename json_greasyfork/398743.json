@@ -1,0 +1,59 @@
+{
+  "id": 398743,
+  "daily_installs": 0,
+  "total_installs": 1301,
+  "fan_score": "21.9",
+  "good_ratings": 1,
+  "ok_ratings": 3,
+  "bad_ratings": 0,
+  "created_at": "2020-03-26T06:46:26.000Z",
+  "code_updated_at": "2020-04-05T03:45:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 469310,
+      "name": "Lucasark",
+      "created_at": "2020-03-26T06:44:13.000Z",
+      "url": "https://greasyfork.org/users/469310-lucasark",
+      "scripts": [
+        {
+          "id": 398743,
+          "daily_installs": 0,
+          "total_installs": 1301,
+          "fan_score": "21.9",
+          "good_ratings": 1,
+          "ok_ratings": 3,
+          "bad_ratings": 0,
+          "created_at": "2020-03-26T06:46:26.000Z",
+          "code_updated_at": "2020-04-05T03:45:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Responde Aí - Livros",
+          "description": "Script para ver o conteudo pago do Responde Aí!",
+          "url": "https://greasyfork.org/scripts/398743-responde-a%C3%AD-livros",
+          "code_url": "https://update.greasyfork.org/scripts/398743/Responde%20A%C3%AD%20-%20Livros.user.js",
+          "code_size": 1089,
+          "license": null,
+          "version": "0.2",
+          "locale": "pt-BR",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Responde Aí - Livros",
+  "description": "Script para ver o conteudo pago do Responde Aí!",
+  "url": "https://greasyfork.org/scripts/398743-responde-a%C3%AD-livros",
+  "code_url": "https://update.greasyfork.org/scripts/398743/Responde%20A%C3%AD%20-%20Livros.user.js",
+  "code_size": 1089,
+  "license": null,
+  "version": "0.2",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

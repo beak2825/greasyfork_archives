@@ -1,0 +1,34 @@
+{
+  "id": 403074,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-11T09:05:31.000Z",
+  "code_updated_at": "2020-07-21T13:13:20.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 515421,
+      "name": "Ambeta",
+      "created_at": "2020-04-16T06:06:48.000Z",
+      "url": "https://greasyfork.org/users/515421-ambeta",
+      "scripts": []
+    }
+  ],
+  "name": "哗啦啦 gitlab 增强工具",
+  "description": "优化哗啦啦 gitlab 的使用体验，包括 md 文档阅读器等",
+  "url": "https://greasyfork.org/scripts/403074-%E5%93%97%E5%95%A6%E5%95%A6-gitlab-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/403074/%E5%93%97%E5%95%A6%E5%95%A6%20gitlab%20%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 44065,
+  "license": null,
+  "version": "0.14",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

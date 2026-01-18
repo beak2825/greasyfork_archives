@@ -96,6 +96,39 @@
     "version": "0.1.2",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 399434,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-03T16:43:02.000Z",
+    "code_updated_at": "2020-04-03T16:43:02.000Z",
+    "namespace": "colorful_world",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 284056,
+        "name": "memset0",
+        "created_at": "2019-03-20T11:10:07.000Z",
+        "url": "https://greasyfork.org/users/284056-memset0"
+      }
+    ],
+    "name": "彩色页面",
+    "description": "对404公祭搞黑白页面的一些反制措施，如果影响到正常上网或者反对搞xszy的建议使用。",
+    "url": "https://greasyfork.org/scripts/399434-%E5%BD%A9%E8%89%B2%E9%A1%B5%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/399434/%E5%BD%A9%E8%89%B2%E9%A1%B5%E9%9D%A2.user.js",
+    "code_size": 567,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

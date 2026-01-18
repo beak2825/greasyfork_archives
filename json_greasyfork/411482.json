@@ -1,0 +1,34 @@
+{
+  "id": 411482,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-17T13:32:15.000Z",
+  "code_updated_at": "2020-11-15T14:40:32.000Z",
+  "namespace": "https://greasyfork.org/users/572366",
+  "support_url": "https://bit.ly/3d1kW48",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 682149,
+      "name": "Aldione",
+      "created_at": "2020-08-23T23:15:08.000Z",
+      "url": "https://greasyfork.org/users/682149-aldione",
+      "scripts": []
+    }
+  ],
+  "name": "AutoRoll V2.1",
+  "description": "AUTOROLL SCRIPT [AUG 2020] --Auto Roll --Status Console --Close ADS --Human Simulation --Play Multiply Game --Buy Lottery tickets --Buy 1000% Bonus --Buy RP Bonuses --NEW* AutoRoll with Low Balance paying RP --Slower in the night --Advance randomic times simulating humans --made by dany-veneno in 2018, published in 2020, extra functions added daily.",
+  "url": "https://greasyfork.org/scripts/411482-autoroll-v2-1",
+  "code_url": "https://update.greasyfork.org/scripts/411482/AutoRoll%20V21.user.js",
+  "code_size": 39247,
+  "license": "NTP License",
+  "version": "2.9.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

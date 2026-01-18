@@ -1,0 +1,35 @@
+[
+  {
+    "id": 409868,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-24T05:18:56.000Z",
+    "code_updated_at": "2020-08-26T05:44:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 361131,
+        "name": "CinGing",
+        "created_at": "2019-09-03T03:01:39.000Z",
+        "url": "https://greasyfork.org/users/361131-cinging"
+      }
+    ],
+    "name": "qidian",
+    "description": "起点，q开启换装，w关闭换装，a上一章，s下一章",
+    "url": "https://greasyfork.org/scripts/409868-qidian",
+    "code_url": "https://update.greasyfork.org/scripts/409868/qidian.user.js",
+    "code_size": 4681,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

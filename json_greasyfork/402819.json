@@ -1,0 +1,34 @@
+{
+  "id": 402819,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-07T13:17:21.000Z",
+  "code_updated_at": "2020-05-09T18:52:35.000Z",
+  "namespace": "https://greasyfork.org/users/395826",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 395826,
+      "name": "Лавр Ципорин",
+      "created_at": "2019-11-07T16:25:22.000Z",
+      "url": "https://greasyfork.org/users/395826-%D0%BB%D0%B0%D0%B2%D1%80-%D1%86%D0%B8%D0%BF%D0%BE%D1%80%D0%B8%D0%BD",
+      "scripts": []
+    }
+  ],
+  "name": "Временный  скрипт для теста",
+  "description": "....",
+  "url": "https://greasyfork.org/scripts/402819-%D0%B2%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D1%82%D0%B5%D1%81%D1%82%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/402819/%D0%92%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9%20%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D1%82%D0%B5%D1%81%D1%82%D0%B0.user.js",
+  "code_size": 32856,
+  "license": null,
+  "version": "0.2.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406326,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-01T09:49:00.000Z",
+    "code_updated_at": "2020-07-01T09:48:59.000Z",
+    "namespace": "http://github.com/heguro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662067,
+        "name": "heguro",
+        "created_at": "2020-07-01T08:32:30.000Z",
+        "url": "https://greasyfork.org/users/662067-heguro"
+      }
+    ],
+    "name": "Change toot visibility with Shift+Enter",
+    "description": "Shift+Enter でトゥートの公開範囲変更",
+    "url": "https://greasyfork.org/scripts/406326-change-toot-visibility-with-shift-enter",
+    "code_url": "https://update.greasyfork.org/scripts/406326/Change%20toot%20visibility%20with%20Shift%2BEnter.user.js",
+    "code_size": 1424,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

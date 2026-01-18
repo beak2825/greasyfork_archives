@@ -1,0 +1,34 @@
+{
+  "id": 407113,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-15T10:04:52.000Z",
+  "code_updated_at": "2020-07-15T10:04:52.000Z",
+  "namespace": "https://www.fanxingna.top",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 667034,
+      "name": "z feng",
+      "created_at": "2020-07-15T10:02:10.000Z",
+      "url": "https://greasyfork.org/users/667034-z-feng",
+      "scripts": []
+    }
+  ],
+  "name": "学习爱国播放量 刷刷刷！",
+  "description": "每小时保底10次 至多20次 完全随机 一天17小时",
+  "url": "https://greasyfork.org/scripts/407113-%E5%AD%A6%E4%B9%A0%E7%88%B1%E5%9B%BD%E6%92%AD%E6%94%BE%E9%87%8F-%E5%88%B7%E5%88%B7%E5%88%B7",
+  "code_url": "https://update.greasyfork.org/scripts/407113/%E5%AD%A6%E4%B9%A0%E7%88%B1%E5%9B%BD%E6%92%AD%E6%94%BE%E9%87%8F%20%E5%88%B7%E5%88%B7%E5%88%B7%EF%BC%81.user.js",
+  "code_size": 818,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

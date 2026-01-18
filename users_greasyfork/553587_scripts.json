@@ -31,5 +31,38 @@
     "locale": "cs",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 402817,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-07T12:43:15.000Z",
+    "code_updated_at": "2024-09-04T08:41:50.000Z",
+    "namespace": "https://greasyfork.org/users/553587",
+    "support_url": "https://github.com/cermakjn/idos-gcalendar-userscript/issues",
+    "contribution_url": "https://github.com/cermakjn/idos-gcalendar-userscript/pulls",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 553587,
+        "name": "Jan Cermak",
+        "created_at": "2020-05-07T11:40:10.000Z",
+        "url": "https://greasyfork.org/users/553587-jan-cermak"
+      }
+    ],
+    "name": "IDOS – Uložit spojení do Google Kalendáře",
+    "description": "Uloží spojení do Google kalendáře",
+    "url": "https://greasyfork.org/scripts/402817-idos-ulo%C5%BEit-spojen%C3%AD-do-google-kalend%C3%A1%C5%99e",
+    "code_url": "https://update.greasyfork.org/scripts/402817/IDOS%20%E2%80%93%20Ulo%C5%BEit%20spojen%C3%AD%20do%20Google%20Kalend%C3%A1%C5%99e.user.js",
+    "code_size": 7726,
+    "license": null,
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

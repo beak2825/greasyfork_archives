@@ -1,0 +1,35 @@
+[
+  {
+    "id": 409988,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-26T15:24:56.000Z",
+    "code_updated_at": "2020-08-26T15:24:56.000Z",
+    "namespace": "https://greasyfork.org/users/682830",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682830,
+        "name": "Kuba Ankiety",
+        "created_at": "2020-08-26T15:21:22.000Z",
+        "url": "https://greasyfork.org/users/682830-kuba-ankiety"
+      }
+    ],
+    "name": "Wysyłanie infa herosi",
+    "description": "Wykrywacz herosów",
+    "url": "https://greasyfork.org/scripts/409988-wysy%C5%82anie-infa-herosi",
+    "code_url": "https://update.greasyfork.org/scripts/409988/Wysy%C5%82anie%20infa%20herosi.user.js",
+    "code_size": 6387,
+    "license": null,
+    "version": "1.5",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

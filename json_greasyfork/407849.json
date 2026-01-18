@@ -1,0 +1,33 @@
+{
+  "id": 407849,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-28T14:04:07.000Z",
+  "code_updated_at": "2021-09-29T19:32:38.000Z",
+  "namespace": "COMDSPDSA",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 2771,
+      "name": "Dan Overlander",
+      "created_at": "2014-06-12T14:59:40.000Z",
+      "url": "https://greasyfork.org/users/2771-dan-overlander"
+    }
+  ],
+  "name": "Pivotal Tracker Mods",
+  "description": "Tweaks for Pivotal Tracker",
+  "url": "https://greasyfork.org/scripts/407849-pivotal-tracker-mods",
+  "code_url": "https://update.greasyfork.org/scripts/407849/Pivotal%20Tracker%20Mods.user.js",
+  "code_size": 21405,
+  "license": null,
+  "version": "3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

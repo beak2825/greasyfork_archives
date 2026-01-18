@@ -63,6 +63,39 @@
     "version": "0.0.1.20231218201344",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407743,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-26T00:21:53.000Z",
+    "code_updated_at": "2020-07-26T00:21:53.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 43385,
+        "name": "bhunji",
+        "created_at": "2016-05-12T15:22:50.000Z",
+        "url": "https://greasyfork.org/users/43385-bhunji"
+      }
+    ],
+    "name": "jquery-simple-websocket",
+    "description": "jquery simple websocket",
+    "url": "https://greasyfork.org/scripts/407743-jquery-simple-websocket",
+    "code_url": "https://update.greasyfork.org/scripts/407743/830687/jquery-simple-websocket.js",
+    "code_size": 13246,
+    "license": null,
+    "version": "0.0.1.20200726002153",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

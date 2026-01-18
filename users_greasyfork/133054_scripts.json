@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408927,
+    "daily_installs": 0,
+    "total_installs": 154,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-17T23:42:03.000Z",
+    "code_updated_at": "2020-08-17T23:42:02.000Z",
+    "namespace": "@@marcosvinicius.santosmarques",
+    "support_url": "https://github.com/tribalwarsbr100/Upador-Tribal-Wars/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 133054,
+        "name": "Marcos Vinicius Santos Marques",
+        "created_at": "2017-06-16T02:07:22.000Z",
+        "url": "https://greasyfork.org/users/133054-marcos-vinicius-santos-marques"
+      }
+    ],
+    "name": "Upador Fazenda + Pular P/ aldeia Anterior",
+    "description": "script construtor para game tribalwars, realiza upagem “Upar” dos edifícios do game, script realiza a atividade em formato inicial resolvendo as Quest do game, e após o término das Quest o script realiza upagem de acordo com perfil pré definido pelo autor do script. (mas pode ser modificado a alteração de como e feito a upagem, pelo próprio usuário.",
+    "url": "https://greasyfork.org/scripts/408927-upador-fazenda-pular-p-aldeia-anterior",
+    "code_url": "https://update.greasyfork.org/scripts/408927/Upador%20Fazenda%20%2B%20Pular%20P%20aldeia%20Anterior.user.js",
+    "code_size": 7948,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "0.0.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

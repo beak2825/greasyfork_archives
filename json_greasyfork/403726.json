@@ -1,0 +1,33 @@
+{
+  "id": 403726,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-19T09:23:17.000Z",
+  "code_updated_at": "2020-05-22T07:26:11.000Z",
+  "namespace": "https://space.bilibili.com/482343",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 6167,
+      "name": "古海沉舟（Eazou）",
+      "created_at": "2014-10-19T12:22:11.000Z",
+      "url": "https://greasyfork.org/users/6167-%E5%8F%A4%E6%B5%B7%E6%B2%89%E8%88%9F-eazou"
+    }
+  ],
+  "name": "twitter 自动取关（旧UI）",
+  "description": "twitter 自动取消关注 适用于旧UI",
+  "url": "https://greasyfork.org/scripts/403726-twitter-%E8%87%AA%E5%8A%A8%E5%8F%96%E5%85%B3-%E6%97%A7ui",
+  "code_url": "https://update.greasyfork.org/scripts/403726/twitter%20%E8%87%AA%E5%8A%A8%E5%8F%96%E5%85%B3%EF%BC%88%E6%97%A7UI%EF%BC%89.user.js",
+  "code_size": 6620,
+  "license": "超神越鬼",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

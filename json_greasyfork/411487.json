@@ -1,0 +1,33 @@
+{
+  "id": 411487,
+  "daily_installs": 0,
+  "total_installs": 78,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-17T16:09:08.000Z",
+  "code_updated_at": "2020-09-24T18:40:26.000Z",
+  "namespace": "-",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 238058,
+      "name": "LianSheng197",
+      "created_at": "2019-01-08T05:08:45.000Z",
+      "url": "https://greasyfork.org/users/238058-liansheng197"
+    }
+  ],
+  "name": "CyberCode Online Tools (Deprecated)",
+  "description": "Some auto and enhance tools in CyberCode Online.",
+  "url": "https://greasyfork.org/scripts/411487-cybercode-online-tools-deprecated",
+  "code_url": "https://update.greasyfork.org/scripts/411487/CyberCode%20Online%20Tools%20%28Deprecated%29.user.js",
+  "code_size": 14832,
+  "license": null,
+  "version": "0.1.2-prototype-core-seperated-parameters",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

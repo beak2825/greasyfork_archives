@@ -1,0 +1,200 @@
+[
+  {
+    "id": 401518,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-20T13:07:34.000Z",
+    "code_updated_at": "2020-04-20T19:00:02.000Z",
+    "namespace": "BestBuyRingFitCA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 526602,
+        "name": "IvyPug",
+        "created_at": "2020-04-20T12:50:09.000Z",
+        "url": "https://greasyfork.org/users/526602-ivypug"
+      }
+    ],
+    "name": "BestBuyRingFitCA",
+    "description": "Play a sound if Ring Fit Adventure is in stock on BestBuy. Script originally created by reddit user /u/Lawdie123 (https://www.reddit.com/r/RingFitAdventure/comments/g35n70/amazon_ukna_auto_alerter_faster_then_stock/)",
+    "url": "https://greasyfork.org/scripts/401518-bestbuyringfitca",
+    "code_url": "https://update.greasyfork.org/scripts/401518/BestBuyRingFitCA.user.js",
+    "code_size": 1183,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401517,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-20T12:57:01.000Z",
+    "code_updated_at": "2020-04-20T12:57:00.000Z",
+    "namespace": "LondonDrugsRingFitCA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 526602,
+        "name": "IvyPug",
+        "created_at": "2020-04-20T12:50:09.000Z",
+        "url": "https://greasyfork.org/users/526602-ivypug"
+      }
+    ],
+    "name": "LondonDrugsRingFitCA",
+    "description": "Play a sound if Ring Fit Adventure is in stock on London Drugs. Script originally created by reddit user /u/Lawdie123 (https://www.reddit.com/r/RingFitAdventure/comments/g35n70/amazon_ukna_auto_alerter_faster_then_stock/)",
+    "url": "https://greasyfork.org/scripts/401517-londondrugsringfitca",
+    "code_url": "https://update.greasyfork.org/scripts/401517/LondonDrugsRingFitCA.user.js",
+    "code_size": 1008,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401516,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-20T12:53:25.000Z",
+    "code_updated_at": "2020-04-20T12:53:25.000Z",
+    "namespace": "WalmartRingFitCA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 526602,
+        "name": "IvyPug",
+        "created_at": "2020-04-20T12:50:09.000Z",
+        "url": "https://greasyfork.org/users/526602-ivypug"
+      }
+    ],
+    "name": "WalmartRingFitCA",
+    "description": "Play a sound if Ring Fit Adventure is in stock on Walmart.ca. Script originally created by reddit user /u/Lawdie123 (https://www.reddit.com/r/RingFitAdventure/comments/g35n70/amazon_ukna_auto_alerter_faster_then_stock/)",
+    "url": "https://greasyfork.org/scripts/401516-walmartringfitca",
+    "code_url": "https://update.greasyfork.org/scripts/401516/WalmartRingFitCA.user.js",
+    "code_size": 1007,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401515,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-20T12:52:42.000Z",
+    "code_updated_at": "2020-04-20T12:52:42.000Z",
+    "namespace": "ToysRUsRingFitCA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 526602,
+        "name": "IvyPug",
+        "created_at": "2020-04-20T12:50:09.000Z",
+        "url": "https://greasyfork.org/users/526602-ivypug"
+      }
+    ],
+    "name": "ToysRUsRingFitCA",
+    "description": "Play a sound if Ring Fit Adventure is in stock on ToysRUs. Script originally created by reddit user /u/Lawdie123 (https://www.reddit.com/r/RingFitAdventure/comments/g35n70/amazon_ukna_auto_alerter_faster_then_stock/)",
+    "url": "https://greasyfork.org/scripts/401515-toysrusringfitca",
+    "code_url": "https://update.greasyfork.org/scripts/401515/ToysRUsRingFitCA.user.js",
+    "code_size": 959,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401514,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-20T12:52:22.000Z",
+    "code_updated_at": "2020-04-20T12:52:22.000Z",
+    "namespace": "TheSourceRingFitCA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 526602,
+        "name": "IvyPug",
+        "created_at": "2020-04-20T12:50:09.000Z",
+        "url": "https://greasyfork.org/users/526602-ivypug"
+      }
+    ],
+    "name": "TheSourceRingFitCA",
+    "description": "Play a sound if Ring Fit Adventure is in stock on TheSource. Script originally created by reddit user /u/Lawdie123 (https://www.reddit.com/r/RingFitAdventure/comments/g35n70/amazon_ukna_auto_alerter_faster_then_stock/)",
+    "url": "https://greasyfork.org/scripts/401514-thesourceringfitca",
+    "code_url": "https://update.greasyfork.org/scripts/401514/TheSourceRingFitCA.user.js",
+    "code_size": 1108,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401513,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-20T12:50:51.000Z",
+    "code_updated_at": "2020-04-20T15:46:33.000Z",
+    "namespace": "EBGamesRingFitCA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 526602,
+        "name": "IvyPug",
+        "created_at": "2020-04-20T12:50:09.000Z",
+        "url": "https://greasyfork.org/users/526602-ivypug"
+      }
+    ],
+    "name": "EBGamesRingFitCA",
+    "description": "Play a sound if Ring Fit Adventure is in stock on EBGames. Script originally created by reddit user /u/Lawdie123 (https://www.reddit.com/r/RingFitAdventure/comments/g35n70/amazon_ukna_auto_alerter_faster_then_stock/)",
+    "url": "https://greasyfork.org/scripts/401513-ebgamesringfitca",
+    "code_url": "https://update.greasyfork.org/scripts/401513/EBGamesRingFitCA.user.js",
+    "code_size": 1254,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

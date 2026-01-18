@@ -1,0 +1,33 @@
+{
+  "id": 399356,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-02T15:51:57.000Z",
+  "code_updated_at": "2020-04-02T15:51:57.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 447976,
+      "name": "涛之雨",
+      "created_at": "2020-02-21T10:11:34.000Z",
+      "url": "https://greasyfork.org/users/447976-%E6%B6%9B%E4%B9%8B%E9%9B%A8"
+    }
+  ],
+  "name": "DToast",
+  "description": "仿桌面通知",
+  "url": "https://greasyfork.org/scripts/399356-dtoast",
+  "code_url": "https://update.greasyfork.org/scripts/399356/1025166/DToast.js",
+  "code_size": 8578,
+  "license": null,
+  "version": "0.0.1.20200402155157",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 410234,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-31T20:34:11.000Z",
+  "code_updated_at": "2020-08-31T21:17:37.000Z",
+  "namespace": "https://greasyfork.org/users/183198",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 183198,
+      "name": "ArrowVulcan",
+      "created_at": "2018-05-02T17:29:43.000Z",
+      "url": "https://greasyfork.org/users/183198-arrowvulcan",
+      "scripts": []
+    }
+  ],
+  "name": "Youtube Deleted/Private videos",
+  "description": "Removes deleted or privated youtube videos from playlist.",
+  "url": "https://greasyfork.org/scripts/410234-youtube-deleted-private-videos",
+  "code_url": "https://update.greasyfork.org/scripts/410234/Youtube%20DeletedPrivate%20videos.user.js",
+  "code_size": 3138,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

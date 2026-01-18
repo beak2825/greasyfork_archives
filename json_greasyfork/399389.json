@@ -1,0 +1,59 @@
+{
+  "id": 399389,
+  "daily_installs": 0,
+  "total_installs": 300,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2020-04-03T04:02:24.000Z",
+  "code_updated_at": "2021-12-08T11:39:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 474018,
+      "name": "BryceGu",
+      "created_at": "2020-04-03T03:58:39.000Z",
+      "url": "https://greasyfork.org/users/474018-brycegu",
+      "scripts": [
+        {
+          "id": 399389,
+          "daily_installs": 0,
+          "total_installs": 300,
+          "fan_score": "31.0",
+          "good_ratings": 2,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2020-04-03T04:02:24.000Z",
+          "code_updated_at": "2021-12-08T11:39:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FKCSDN",
+          "description": "it's a script to blocked The CSDN website like https://www.csdn.net/  in most broswers  because the website is so disgusting",
+          "url": "https://greasyfork.org/scripts/399389-fkcsdn",
+          "code_url": "https://update.greasyfork.org/scripts/399389/FKCSDN.user.js",
+          "code_size": 8405,
+          "license": null,
+          "version": "2.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FKCSDN",
+  "description": "it's a script to blocked The CSDN website like https://www.csdn.net/  in most broswers  because the website is so disgusting",
+  "url": "https://greasyfork.org/scripts/399389-fkcsdn",
+  "code_url": "https://update.greasyfork.org/scripts/399389/FKCSDN.user.js",
+  "code_size": 8405,
+  "license": null,
+  "version": "2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

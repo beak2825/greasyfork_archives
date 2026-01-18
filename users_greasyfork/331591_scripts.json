@@ -327,6 +327,138 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 398291,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-20T08:24:38.000Z",
+    "code_updated_at": "2021-03-18T03:36:50.000Z",
+    "namespace": "https://github.com/HaleShaw",
+    "support_url": "https://github.com/HaleShaw/TM-Security/issues",
+    "contribution_url": "https://www.jianwudao.com/",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 331591,
+        "name": "HaleShaw",
+        "created_at": "2019-08-22T05:47:42.000Z",
+        "url": "https://greasyfork.org/users/331591-haleshaw"
+      }
+    ],
+    "name": "Security Dashboard",
+    "description": "Security Dashboard. Only for SAP internal using.",
+    "url": "https://greasyfork.org/scripts/398291-security-dashboard",
+    "code_url": "https://update.greasyfork.org/scripts/398291/Security%20Dashboard.user.js",
+    "code_size": 75740,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "3.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 398010,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-16T07:23:47.000Z",
+    "code_updated_at": "2020-03-16T09:04:48.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/331591",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 331591,
+        "name": "HaleShaw",
+        "created_at": "2019-08-22T05:47:42.000Z",
+        "url": "https://greasyfork.org/users/331591-haleshaw"
+      }
+    ],
+    "name": "CommonUtils",
+    "description": "通用工具",
+    "url": "https://greasyfork.org/scripts/398010-commonutils",
+    "code_url": "https://update.greasyfork.org/scripts/398010/781197/CommonUtils.js",
+    "code_size": 2470,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 398004,
+    "daily_installs": 0,
+    "total_installs": 590,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-16T05:25:22.000Z",
+    "code_updated_at": "2020-11-19T03:03:24.000Z",
+    "namespace": "https://github.com/HaleShaw",
+    "support_url": "https://github.com/HaleShaw/TM-GitHubMenu/issues",
+    "contribution_url": "https://www.jianwudao.com/",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 331591,
+        "name": "HaleShaw",
+        "created_at": "2019-08-22T05:47:42.000Z",
+        "url": "https://greasyfork.org/users/331591-haleshaw"
+      }
+    ],
+    "name": "GitHub菜单",
+    "description": "为GitHub头添加更多的菜单项，让你能够快速抵达你想要的页面。",
+    "url": "https://greasyfork.org/scripts/398004-github%E8%8F%9C%E5%8D%95",
+    "code_url": "https://update.greasyfork.org/scripts/398004/GitHub%E8%8F%9C%E5%8D%95.user.js",
+    "code_size": 8702,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397991,
+    "daily_installs": 0,
+    "total_installs": 250,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-16T01:36:34.000Z",
+    "code_updated_at": "2022-10-26T05:52:50.000Z",
+    "namespace": "https://github.com/HaleShaw",
+    "support_url": "https://github.com/HaleShaw/TM-ALGreasyFork/issues",
+    "contribution_url": "https://www.jianwudao.com/",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 331591,
+        "name": "HaleShaw",
+        "created_at": "2019-08-22T05:47:42.000Z",
+        "url": "https://greasyfork.org/users/331591-haleshaw"
+      }
+    ],
+    "name": "自动登录到GreasyFork",
+    "description": "通过GitHub自动登录到GreasyFork。",
+    "url": "https://greasyfork.org/scripts/397991-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E5%88%B0greasyfork",
+    "code_url": "https://update.greasyfork.org/scripts/397991/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E5%88%B0GreasyFork.user.js",
+    "code_size": 4614,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

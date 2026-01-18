@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411376,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-15T14:16:45.000Z",
+    "code_updated_at": "2020-09-15T14:16:45.000Z",
+    "namespace": "http://userstyles.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 687668,
+        "name": "Matthew Lutz",
+        "created_at": "2020-09-15T14:16:21.000Z",
+        "url": "https://greasyfork.org/users/687668-matthew-lutz"
+      }
+    ],
+    "name": "The One Ring on Roll20 (updated)",
+    "description": "This updates the original (https://userstyles.org/styles/100415/the-one-ring-on-roll20) after access details for the original userstyles account got lost. This version fixes reported issues with the original, and adds a custom font for the restyled version of the character sheet.",
+    "url": "https://greasyfork.org/scripts/411376-the-one-ring-on-roll20-updated",
+    "code_url": "https://update.greasyfork.org/scripts/411376/The%20One%20Ring%20on%20Roll20%20%28updated%29.user.js",
+    "code_size": 10827,
+    "license": null,
+    "version": "0.20181219165817",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

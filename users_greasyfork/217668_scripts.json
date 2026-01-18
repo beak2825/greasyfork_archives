@@ -1,0 +1,68 @@
+[
+  {
+    "id": 408377,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-07T21:39:44.000Z",
+    "code_updated_at": "2020-08-08T02:30:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 217668,
+        "name": "Wulfgang Lawson (Wulf715)",
+        "created_at": "2018-10-05T19:19:37.000Z",
+        "url": "https://greasyfork.org/users/217668-wulfgang-lawson-wulf715"
+      }
+    ],
+    "name": "Theta Classic Theme",
+    "description": "Turn THETA.tv into SLIVER",
+    "url": "https://greasyfork.org/scripts/408377-theta-classic-theme",
+    "code_url": "https://update.greasyfork.org/scripts/408377/Theta%20Classic%20Theme.user.js",
+    "code_size": 6982,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 399447,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-03T21:05:38.000Z",
+    "code_updated_at": "2020-04-03T21:05:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 217668,
+        "name": "Wulfgang Lawson (Wulf715)",
+        "created_at": "2018-10-05T19:19:37.000Z",
+        "url": "https://greasyfork.org/users/217668-wulfgang-lawson-wulf715"
+      }
+    ],
+    "name": "THETA Doct0r Theme",
+    "description": "Turn THETA.tv into a Doctor, Not a real one, But one with a PHD in badassery.",
+    "url": "https://greasyfork.org/scripts/399447-theta-doct0r-theme",
+    "code_url": "https://update.greasyfork.org/scripts/399447/THETA%20Doct0r%20Theme.user.js",
+    "code_size": 1874,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

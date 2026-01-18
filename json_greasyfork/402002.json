@@ -1,0 +1,34 @@
+{
+  "id": 402002,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-25T22:05:49.000Z",
+  "code_updated_at": "2020-04-25T22:05:49.000Z",
+  "namespace": "- yes",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 541597,
+      "name": "Tearaitoa Mokoroa",
+      "created_at": "2020-04-25T20:56:00.000Z",
+      "url": "https://greasyfork.org/users/541597-tearaitoa-mokoroa",
+      "scripts": []
+    }
+  ],
+  "name": "MooMoo.io | TJ's First Mod | 2020",
+  "description": "-【MOD MENU】 ➜ 〖 AUTO HEAL 〗 〖 MENU - ESC 〗 〖 INSTAKILL - R 〗 〖 SPIKE - V 〗 〖 MORE FPS 〗    〖 AUTO CLAN - 2 [Numpad] OR ▼ 〗 〖 AUTOCHAT - 8 [Numpad] OR ▲ 〗 〖 BOOST + SPIKE - G 〗 〖 WINDMILL - N 〗         〖 MACRO 【U CAN CHANGE A KEY FOR HAT MACRO】 〗 〖 PREMIUM MEAP 〗 〖 CIRCLE'O'WINDMILLS - O 〗 〖 INSTATRAPS / BOOSTPADS - I 〗 〖 CX INSTA - SPACEBAR 〗 〖 CIRCLE'O'SPIKES - ; 〗〖 BIG SHOP 〗 〖AUTOHAT - M 【Booster & monkey tail - grass | Winter cap & monkey tail - snow】〗",
+  "url": "https://greasyfork.org/scripts/402002-moomoo-io-tj-s-first-mod-2020",
+  "code_url": "https://update.greasyfork.org/scripts/402002/MooMooio%20%7C%20TJ%27s%20First%20Mod%20%7C%202020.user.js",
+  "code_size": 42874,
+  "license": null,
+  "version": "╳TJMOD1.0╳",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

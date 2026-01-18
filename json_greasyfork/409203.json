@@ -1,0 +1,33 @@
+{
+  "id": 409203,
+  "daily_installs": 0,
+  "total_installs": 4590,
+  "fan_score": "15.0",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2020-08-20T02:16:13.000Z",
+  "code_updated_at": "2020-08-20T02:18:59.000Z",
+  "namespace": "https://youtu.be/hAiM2XY2hzo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 522000,
+      "name": "Ginfio",
+      "created_at": "2020-04-19T02:53:52.000Z",
+      "url": "https://greasyfork.org/users/522000-ginfio"
+    }
+  ],
+  "name": "Made for Dragon Typer - Garage full of Wampus cars! (Nitro type)",
+  "description": "Made it for Dragon Typer. I'm sure he'll let you use it too. Use this to get garage full of Wampus cars on nitro type.",
+  "url": "https://greasyfork.org/scripts/409203-made-for-dragon-typer-garage-full-of-wampus-cars-nitro-type",
+  "code_url": "https://update.greasyfork.org/scripts/409203/Made%20for%20Dragon%20Typer%20-%20Garage%20full%20of%20Wampus%20cars%21%20%28Nitro%20type%29.user.js",
+  "code_size": 1520,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

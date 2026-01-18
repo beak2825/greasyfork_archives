@@ -63,6 +63,39 @@
     "version": "1.1",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407712,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-25T14:47:31.000Z",
+    "code_updated_at": "2021-06-08T05:30:53.000Z",
+    "namespace": "Tutu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668518,
+        "name": "double-tu",
+        "created_at": "2020-07-20T07:58:29.000Z",
+        "url": "https://greasyfork.org/users/668518-double-tu"
+      }
+    ],
+    "name": "TuTool",
+    "description": "可通过按键控制视频播放速度及音量,音量可放大数倍. 按键====>Q:正常音量, W:音量减少10%, E:音量增加10% ; Z:正常速度, X:速度减少10%, C:速度增加10% ; 对B站评论及Google进行了部分样式修改 ; 增加了自动识别填写验证码功能(可通过按钮或者快捷键ctrl+G 进行识别)",
+    "url": "https://greasyfork.org/scripts/407712-tutool",
+    "code_url": "https://update.greasyfork.org/scripts/407712/TuTool.user.js",
+    "code_size": 18691,
+    "license": null,
+    "version": "1.33",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

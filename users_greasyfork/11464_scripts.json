@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397293,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-04T09:14:42.000Z",
+    "code_updated_at": "2020-11-12T17:55:48.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 11464,
+        "name": "buki",
+        "created_at": "2015-05-17T03:50:06.000Z",
+        "url": "https://greasyfork.org/users/11464-buki"
+      }
+    ],
+    "name": "hko banner remover",
+    "description": "2/19/2020, 6:12:30 PM",
+    "url": "https://greasyfork.org/scripts/397293-hko-banner-remover",
+    "code_url": "https://update.greasyfork.org/scripts/397293/hko%20banner%20remover.user.js",
+    "code_size": 654,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

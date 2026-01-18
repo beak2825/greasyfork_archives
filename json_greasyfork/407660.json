@@ -1,0 +1,33 @@
+{
+  "id": 407660,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-24T12:07:10.000Z",
+  "code_updated_at": "2020-07-24T12:07:10.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 591565,
+      "name": "leo890724",
+      "created_at": "2020-06-14T11:05:45.000Z",
+      "url": "https://greasyfork.org/users/591565-leo890724"
+    }
+  ],
+  "name": "GM_configzhtw",
+  "description": "A lightweight, reusable, cross-browser graphical settings framework for inclusion in user scripts.",
+  "url": "https://greasyfork.org/scripts/407660-gm-configzhtw",
+  "code_url": "https://update.greasyfork.org/scripts/407660/830159/GM_configzhtw.js",
+  "code_size": 25483,
+  "license": "LGPL-3.0-or-later; https://raw.githubusercontent.com/sizzlemctwizzle/GM_config/master/LICENSE",
+  "version": "0.0.1.20200724120710",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

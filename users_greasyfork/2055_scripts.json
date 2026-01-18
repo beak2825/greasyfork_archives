@@ -96,6 +96,171 @@
     "version": "0.02",
     "locale": "ru",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 411369,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-15T11:28:03.000Z",
+    "code_updated_at": "2023-10-16T14:27:47.000Z",
+    "namespace": "Virtonomica",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2055,
+        "name": "Test01",
+        "created_at": "2014-05-23T09:05:17.000Z",
+        "url": "https://greasyfork.org/users/2055-test01"
+      }
+    ],
+    "name": "Virtonomica: Tecnology v2",
+    "description": "тестируем кеширования данных, получаемых через API",
+    "url": "https://greasyfork.org/scripts/411369-virtonomica-tecnology-v2",
+    "code_url": "https://update.greasyfork.org/scripts/411369/Virtonomica%3A%20Tecnology%20v2.user.js",
+    "code_size": 11092,
+    "license": "MIT License",
+    "version": "2.01",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 399111,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-31T20:45:34.000Z",
+    "code_updated_at": "2021-09-20T09:41:52.000Z",
+    "namespace": "Virtonomica",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2055,
+        "name": "Test01",
+        "created_at": "2014-05-23T09:05:17.000Z",
+        "url": "https://greasyfork.org/users/2055-test01"
+      }
+    ],
+    "name": "Virtonomica: Supply 2020",
+    "description": "Выставление снабжения для МЦ, ресторанов (старый дизайн)",
+    "url": "https://greasyfork.org/scripts/399111-virtonomica-supply-2020",
+    "code_url": "https://update.greasyfork.org/scripts/399111/Virtonomica%3A%20Supply%202020.user.js",
+    "code_size": 14658,
+    "license": null,
+    "version": "0.10",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 397687,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-10T21:54:17.000Z",
+    "code_updated_at": "2023-09-19T09:03:17.000Z",
+    "namespace": "Virtonomica",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2055,
+        "name": "Test01",
+        "created_at": "2014-05-23T09:05:17.000Z",
+        "url": "https://greasyfork.org/users/2055-test01"
+      }
+    ],
+    "name": "Virtonomica: Unit 2020",
+    "description": "пытаемся исправить новый дизайн подразделенией",
+    "url": "https://greasyfork.org/scripts/397687-virtonomica-unit-2020",
+    "code_url": "https://update.greasyfork.org/scripts/397687/Virtonomica%3A%20Unit%202020.user.js",
+    "code_size": 72163,
+    "license": "MIT License",
+    "version": "0.30",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 397261,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-03T13:43:05.000Z",
+    "code_updated_at": "2020-03-03T13:43:05.000Z",
+    "namespace": "virtonomica",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2055,
+        "name": "Test01",
+        "created_at": "2014-05-23T09:05:17.000Z",
+        "url": "https://greasyfork.org/users/2055-test01"
+      }
+    ],
+    "name": "Virtonomica: заказ всех товаров группы в магазин из выбранного склада",
+    "description": "Заказ всех товаров группы в магазин/ресторан/мед.центр/автомастерскую из выбранного склада. После посещения закладки \"сбыт\" на всех своих складах, в магазине на странице \"снабжение\" будет доступен массовый заказ товаров со своих складов.",
+    "url": "https://greasyfork.org/scripts/397261-virtonomica-%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7-%D0%B2%D1%81%D0%B5%D1%85-%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%BE%D0%B2-%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D1%8B-%D0%B2-%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD-%D0%B8%D0%B7-%D0%B2%D1%8B%D0%B1%D1%80%D0%B0%D0%BD%D0%BD%D0%BE%D0%B3%D0%BE-%D1%81%D0%BA%D0%BB%D0%B0%D0%B4%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/397261/Virtonomica%3A%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%20%D0%B2%D1%81%D0%B5%D1%85%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%BE%D0%B2%20%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D1%8B%20%D0%B2%20%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD%20%D0%B8%D0%B7%20%D0%B2%D1%8B%D0%B1%D1%80%D0%B0%D0%BD%D0%BD%D0%BE%D0%B3%D0%BE%20%D1%81%D0%BA%D0%BB%D0%B0%D0%B4%D0%B0.user.js",
+    "code_size": 17671,
+    "license": null,
+    "version": "2.8.fix1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 394177,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-25T10:43:41.000Z",
+    "code_updated_at": "2019-12-25T10:43:41.000Z",
+    "namespace": "https://greasyfork.org/users/2055",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2055,
+        "name": "Test01",
+        "created_at": "2014-05-23T09:05:17.000Z",
+        "url": "https://greasyfork.org/users/2055-test01"
+      }
+    ],
+    "name": "Virtonomica:Top page redisign",
+    "description": "Переделываем новый \"дизайн\" (конца 2019 года)",
+    "url": "https://greasyfork.org/scripts/394177-virtonomica-top-page-redisign",
+    "code_url": "https://update.greasyfork.org/scripts/394177/Virtonomica%3ATop%20page%20redisign.user.js",
+    "code_size": 6075,
+    "license": null,
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

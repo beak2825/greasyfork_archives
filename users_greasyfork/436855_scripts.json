@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 408061,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-02T11:58:14.000Z",
+    "code_updated_at": "2020-08-02T11:58:14.000Z",
+    "namespace": "minirock",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 436855,
+        "name": "oltodosel",
+        "created_at": "2020-01-20T00:23:15.000Z",
+        "url": "https://greasyfork.org/users/436855-oltodosel"
+      }
+    ],
+    "name": "Reddit - remove awards",
+    "description": "Removes awards from posts",
+    "url": "https://greasyfork.org/scripts/408061-reddit-remove-awards",
+    "code_url": "https://update.greasyfork.org/scripts/408061/Reddit%20-%20remove%20awards.user.js",
+    "code_size": 1244,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395615,
+    "daily_installs": 0,
+    "total_installs": 1273,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-01-24T12:58:35.000Z",
+    "code_updated_at": "2020-02-19T20:02:29.000Z",
+    "namespace": "minirock",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 436855,
+        "name": "oltodosel",
+        "created_at": "2020-01-20T00:23:15.000Z",
+        "url": "https://greasyfork.org/users/436855-oltodosel"
+      }
+    ],
+    "name": "Duolingo - autoStart next",
+    "description": "Automatically start next lesson/tips or story when in stories mode.",
+    "url": "https://greasyfork.org/scripts/395615-duolingo-autostart-next",
+    "code_url": "https://update.greasyfork.org/scripts/395615/Duolingo%20-%20autoStart%20next.user.js",
+    "code_size": 3584,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

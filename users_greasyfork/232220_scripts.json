@@ -64,5 +64,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 407801,
+    "daily_installs": 0,
+    "total_installs": 708,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-27T13:29:10.000Z",
+    "code_updated_at": "2020-12-19T09:11:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 232220,
+        "name": "Prof_Bum",
+        "created_at": "2018-12-12T21:04:32.000Z",
+        "url": "https://greasyfork.org/users/232220-prof-bum"
+      }
+    ],
+    "name": "fix Google image popup",
+    "description": "show images in popup instead of opening the source",
+    "url": "https://greasyfork.org/scripts/407801-fix-google-image-popup",
+    "code_url": "https://update.greasyfork.org/scripts/407801/fix%20Google%20image%20popup.user.js",
+    "code_size": 2944,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 404734,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-05T13:24:42.000Z",
+    "code_updated_at": "2020-06-05T13:24:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 232220,
+        "name": "Prof_Bum",
+        "created_at": "2018-12-12T21:04:32.000Z",
+        "url": "https://greasyfork.org/users/232220-prof-bum"
+      }
+    ],
+    "name": "Reddit: Bigger Arrows",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/404734-reddit-bigger-arrows",
+    "code_url": "https://update.greasyfork.org/scripts/404734/Reddit%3A%20Bigger%20Arrows.user.js",
+    "code_size": 1010,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 404497,
+    "daily_installs": 1,
+    "total_installs": 13705,
+    "fan_score": "65.5",
+    "good_ratings": 23,
+    "ok_ratings": 2,
+    "bad_ratings": 4,
+    "created_at": "2020-06-01T19:05:31.000Z",
+    "code_updated_at": "2025-02-10T22:27:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 232220,
+        "name": "Prof_Bum",
+        "created_at": "2018-12-12T21:04:32.000Z",
+        "url": "https://greasyfork.org/users/232220-prof-bum"
+      }
+    ],
+    "name": "Reddit Fix",
+    "description": "Hide subreddits, remove promoted links, see full image actually shows the full image, html5 video player, remove background effects, copy video adress",
+    "url": "https://greasyfork.org/scripts/404497-reddit-fix",
+    "code_url": "https://update.greasyfork.org/scripts/404497/Reddit%20Fix.user.js",
+    "code_size": 26750,
+    "license": null,
+    "version": "1.9.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398982,
+    "daily_installs": 0,
+    "total_installs": 148,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-30T06:07:26.000Z",
+    "code_updated_at": "2020-03-30T06:07:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 232220,
+        "name": "Prof_Bum",
+        "created_at": "2018-12-12T21:04:32.000Z",
+        "url": "https://greasyfork.org/users/232220-prof-bum"
+      }
+    ],
+    "name": "Always dark mode",
+    "description": "always dark, removes background and header ad",
+    "url": "https://greasyfork.org/scripts/398982-always-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/398982/Always%20dark%20mode.user.js",
+    "code_size": 1059,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397563,
+    "daily_installs": 0,
+    "total_installs": 158,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-08T20:07:27.000Z",
+    "code_updated_at": "2020-03-11T14:47:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 232220,
+        "name": "Prof_Bum",
+        "created_at": "2018-12-12T21:04:32.000Z",
+        "url": "https://greasyfork.org/users/232220-prof-bum"
+      }
+    ],
+    "name": "Open link in steam client",
+    "description": "Opens steamcommunity and steam store page in steam client when you right click while holding ctrl",
+    "url": "https://greasyfork.org/scripts/397563-open-link-in-steam-client",
+    "code_url": "https://update.greasyfork.org/scripts/397563/Open%20link%20in%20steam%20client.user.js",
+    "code_size": 1222,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395099,
+    "daily_installs": 0,
+    "total_installs": 190,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-13T12:10:43.000Z",
+    "code_updated_at": "2020-02-24T09:50:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 232220,
+        "name": "Prof_Bum",
+        "created_at": "2018-12-12T21:04:32.000Z",
+        "url": "https://greasyfork.org/users/232220-prof-bum"
+      }
+    ],
+    "name": "Do not display discord blocked messages + No emoji reaction popup",
+    "description": "I don't care about blocked messages... removes the emojis, removes the hover bacckground color",
+    "url": "https://greasyfork.org/scripts/395099-do-not-display-discord-blocked-messages-no-emoji-reaction-popup",
+    "code_url": "https://update.greasyfork.org/scripts/395099/Do%20not%20display%20discord%20blocked%20messages%20%2B%20No%20emoji%20reaction%20popup.user.js",
+    "code_size": 1307,
+    "license": null,
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

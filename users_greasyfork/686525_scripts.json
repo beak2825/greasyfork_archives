@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411172,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-10T12:10:56.000Z",
+    "code_updated_at": "2020-09-11T01:41:32.000Z",
+    "namespace": "https://greasyfork.org/users/686525-flexiston",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 686525,
+        "name": "Flexiston",
+        "created_at": "2020-09-10T11:04:17.000Z",
+        "url": "https://greasyfork.org/users/686525-flexiston"
+      }
+    ],
+    "name": "Power Mode Input 输入特效",
+    "description": "Activate power mode：网页内输入（如 input, textarea）内容时触发抖动/烟花特效，（！注意：可能有一些网站不会生效）原作者：https://github.com/disjukr，原作者 GitHub 仓库 https://github.com/disjukr/activate-power-mode",
+    "url": "https://greasyfork.org/scripts/411172-power-mode-input-%E8%BE%93%E5%85%A5%E7%89%B9%E6%95%88",
+    "code_url": "https://update.greasyfork.org/scripts/411172/Power%20Mode%20Input%20%E8%BE%93%E5%85%A5%E7%89%B9%E6%95%88.user.js",
+    "code_size": 17903,
+    "license": null,
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

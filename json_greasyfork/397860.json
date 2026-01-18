@@ -1,0 +1,33 @@
+{
+  "id": 397860,
+  "daily_installs": 0,
+  "total_installs": 2199,
+  "fan_score": "67.6",
+  "good_ratings": 8,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-13T20:12:00.000Z",
+  "code_updated_at": "2024-04-15T11:29:27.000Z",
+  "namespace": "https://greasyfork.org/zh-TW/users/393133-evan-tseng",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 393133,
+      "name": "Evan Tseng",
+      "created_at": "2019-10-29T17:06:24.000Z",
+      "url": "https://greasyfork.org/users/393133-evan-tseng"
+    }
+  ],
+  "name": "Shopping website (amazon, jd, ruten, shopee, taobao, tmall) -  keyboard navigation",
+  "description": "[a / ←] prev page, [d / →] next page. [s / ↓] parent . Used for the product-list, image-gallery, rate-page...",
+  "url": "https://greasyfork.org/scripts/397860-shopping-website-amazon-jd-ruten-shopee-taobao-tmall-keyboard-navigation",
+  "code_url": "https://update.greasyfork.org/scripts/397860/Shopping%20website%20%28amazon%2C%20jd%2C%20ruten%2C%20shopee%2C%20taobao%2C%20tmall%29%20-%20%20keyboard%20navigation.user.js",
+  "code_size": 17584,
+  "license": "MIT License",
+  "version": "0.5.28",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

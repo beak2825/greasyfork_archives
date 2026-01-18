@@ -1,0 +1,35 @@
+[
+  {
+    "id": 403150,
+    "daily_installs": 0,
+    "total_installs": 1879,
+    "fan_score": "29.9",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2020-05-12T13:33:15.000Z",
+    "code_updated_at": "2022-07-16T10:10:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 313736,
+        "name": "xuxi work",
+        "created_at": "2019-06-27T07:18:15.000Z",
+        "url": "https://greasyfork.org/users/313736-xuxi-work"
+      }
+    ],
+    "name": "BiliBili快捷键【视频倍速播放：加速(+号)和降速(-号)】/一键开关弹幕(小键盘数字0)/一键全屏(Alt)",
+    "description": "这个脚本是修改的R君的",
+    "url": "https://greasyfork.org/scripts/403150-bilibili%E5%BF%AB%E6%8D%B7%E9%94%AE-%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE-%E5%8A%A0%E9%80%9F-%E5%8F%B7-%E5%92%8C%E9%99%8D%E9%80%9F-%E5%8F%B7-%E4%B8%80%E9%94%AE%E5%BC%80%E5%85%B3%E5%BC%B9%E5%B9%95-%E5%B0%8F%E9%94%AE%E7%9B%98%E6%95%B0%E5%AD%970-%E4%B8%80%E9%94%AE%E5%85%A8%E5%B1%8F-alt",
+    "code_url": "https://update.greasyfork.org/scripts/403150/BiliBili%E5%BF%AB%E6%8D%B7%E9%94%AE%E3%80%90%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE%EF%BC%9A%E5%8A%A0%E9%80%9F%28%2B%E5%8F%B7%29%E5%92%8C%E9%99%8D%E9%80%9F%28-%E5%8F%B7%29%E3%80%91%E4%B8%80%E9%94%AE%E5%BC%80%E5%85%B3%E5%BC%B9%E5%B9%95%28%E5%B0%8F%E9%94%AE%E7%9B%98%E6%95%B0%E5%AD%970%29%E4%B8%80%E9%94%AE%E5%85%A8%E5%B1%8F%28Alt%29.user.js",
+    "code_size": 4543,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

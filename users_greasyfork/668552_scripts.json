@@ -195,6 +195,39 @@
     "version": "0.2",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 410071,
+    "daily_installs": 0,
+    "total_installs": 285,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-28T08:02:11.000Z",
+    "code_updated_at": "2021-06-10T05:15:05.000Z",
+    "namespace": "https://huqzc.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668552,
+        "name": "imhu6",
+        "created_at": "2020-07-20T09:35:20.000Z",
+        "url": "https://greasyfork.org/users/668552-imhu6"
+      }
+    ],
+    "name": "SM整合功能",
+    "description": "1.转正 2.积分记录功能 3.按键骑士 4.图片宽高限制",
+    "url": "https://greasyfork.org/scripts/410071-sm%E6%95%B4%E5%90%88%E5%8A%9F%E8%83%BD",
+    "code_url": "https://update.greasyfork.org/scripts/410071/SM%E6%95%B4%E5%90%88%E5%8A%9F%E8%83%BD.user.js",
+    "code_size": 30094,
+    "license": null,
+    "version": "3.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

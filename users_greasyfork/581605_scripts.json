@@ -163,5 +163,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 404814,
+    "daily_installs": 0,
+    "total_installs": 97,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-06T11:12:48.000Z",
+    "code_updated_at": "2021-03-05T06:36:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 581605,
+        "name": "8992scripts",
+        "created_at": "2020-06-06T10:35:30.000Z",
+        "url": "https://greasyfork.org/users/581605-8992scripts"
+      }
+    ],
+    "name": "Melvor CB only completion log",
+    "description": "Completion log for combat only restricted accounts",
+    "url": "https://greasyfork.org/scripts/404814-melvor-cb-only-completion-log",
+    "code_url": "https://update.greasyfork.org/scripts/404814/Melvor%20CB%20only%20completion%20log.user.js",
+    "code_size": 17096,
+    "license": null,
+    "version": "1.5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411142,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-10T06:14:18.000Z",
+    "code_updated_at": "2021-10-13T14:48:11.000Z",
+    "namespace": "http://www.example.url/to/your-web-site/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 686445,
+        "name": "Nick Isom",
+        "created_at": "2020-09-10T06:09:42.000Z",
+        "url": "https://greasyfork.org/users/686445-nick-isom"
+      }
+    ],
+    "name": "I hate reading ! and .",
+    "description": "Put a good description in here",
+    "url": "https://greasyfork.org/scripts/411142-i-hate-reading-and",
+    "code_url": "https://update.greasyfork.org/scripts/411142/I%20hate%20reading%20%21%20and%20.user.js",
+    "code_size": 5449,
+    "license": "Creative Commons Attribution License",
+    "version": "0.99993",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

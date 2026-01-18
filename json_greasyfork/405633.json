@@ -1,0 +1,59 @@
+{
+  "id": 405633,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-18T11:42:53.000Z",
+  "code_updated_at": "2020-08-18T01:49:10.000Z",
+  "namespace": "https://greasyfork.org/users/584389",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 584389,
+      "name": "chess99",
+      "created_at": "2020-06-11T05:42:46.000Z",
+      "url": "https://greasyfork.org/users/584389-chess99",
+      "scripts": [
+        {
+          "id": 405633,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-18T11:42:53.000Z",
+          "code_updated_at": "2020-08-18T01:49:10.000Z",
+          "namespace": "https://greasyfork.org/users/584389",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "fuck off tdsourcetag v1.5",
+          "description": "an improved version of https://greasyfork.org/zh-CN/scripts/392201",
+          "url": "https://greasyfork.org/scripts/405633-off-tdsourcetag-v1-5",
+          "code_url": "https://update.greasyfork.org/scripts/405633/fuck%20off%20tdsourcetag%20v15.user.js",
+          "code_size": 879,
+          "license": null,
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "fuck off tdsourcetag v1.5",
+  "description": "an improved version of https://greasyfork.org/zh-CN/scripts/392201",
+  "url": "https://greasyfork.org/scripts/405633-off-tdsourcetag-v1-5",
+  "code_url": "https://update.greasyfork.org/scripts/405633/fuck%20off%20tdsourcetag%20v15.user.js",
+  "code_size": 879,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

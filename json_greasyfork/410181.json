@@ -1,0 +1,59 @@
+{
+  "id": 410181,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-30T03:51:40.000Z",
+  "code_updated_at": "2021-05-25T04:42:07.000Z",
+  "namespace": "https://github.com/Plaer1/SteamQueKeyboardShortcuts/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 63092,
+      "name": "Æliott",
+      "created_at": "2016-08-30T04:34:30.000Z",
+      "url": "https://greasyfork.org/users/63092-%C3%A6liott",
+      "scripts": [
+        {
+          "id": 410181,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-30T03:51:40.000Z",
+          "code_updated_at": "2021-05-25T04:42:07.000Z",
+          "namespace": "https://github.com/Plaer1/SteamQueKeyboardShortcuts/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Steam que via keyboard.",
+          "description": "lets you navigate you steam queue via keybaord, specifically the arrow keys",
+          "url": "https://greasyfork.org/scripts/410181-steam-que-via-keyboard",
+          "code_url": "https://update.greasyfork.org/scripts/410181/Steam%20que%20via%20keyboard.user.js",
+          "code_size": 11038,
+          "license": null,
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Steam que via keyboard.",
+  "description": "lets you navigate you steam queue via keybaord, specifically the arrow keys",
+  "url": "https://greasyfork.org/scripts/410181-steam-que-via-keyboard",
+  "code_url": "https://update.greasyfork.org/scripts/410181/Steam%20que%20via%20keyboard.user.js",
+  "code_size": 11038,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

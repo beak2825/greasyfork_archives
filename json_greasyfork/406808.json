@@ -1,0 +1,34 @@
+{
+  "id": 406808,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-10T12:21:44.000Z",
+  "code_updated_at": "2020-07-23T07:55:54.000Z",
+  "namespace": "https://greasyfork.org/users/126569",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 126569,
+      "name": "Johan Badenhorst",
+      "created_at": "2017-05-24T00:36:33.000Z",
+      "url": "https://greasyfork.org/users/126569-johan-badenhorst",
+      "scripts": []
+    }
+  ],
+  "name": "Disable Hyperlink Auditing (johanb)",
+  "description": "A simple script that removes hyperlink auditing from all websites.",
+  "url": "https://greasyfork.org/scripts/406808-disable-hyperlink-auditing-johanb",
+  "code_url": "https://update.greasyfork.org/scripts/406808/Disable%20Hyperlink%20Auditing%20%28johanb%29.user.js",
+  "code_size": 654,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

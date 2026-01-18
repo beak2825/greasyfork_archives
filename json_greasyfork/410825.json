@@ -1,0 +1,33 @@
+{
+  "id": 410825,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-04T18:19:16.000Z",
+  "code_updated_at": "2020-09-04T18:19:16.000Z",
+  "namespace": "https://greasyfork.org/users/281093",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 281093,
+      "name": "faux",
+      "created_at": "2019-03-15T17:19:41.000Z",
+      "url": "https://greasyfork.org/users/281093-faux"
+    }
+  ],
+  "name": "Load Avatar",
+  "description": "8/20/2020, 2:49:30 PM",
+  "url": "https://greasyfork.org/scripts/410825-load-avatar",
+  "code_url": "https://update.greasyfork.org/scripts/410825/Load%20Avatar.user.js",
+  "code_size": 1411,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 400916,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-15T07:54:30.000Z",
+    "code_updated_at": "2020-04-15T07:54:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 512734,
+        "name": "Torsten",
+        "created_at": "2020-04-15T07:50:45.000Z",
+        "url": "https://greasyfork.org/users/512734-torsten"
+      }
+    ],
+    "name": "TOTM Debug =1",
+    "description": "enabling totmdebug without adding the parameter",
+    "url": "https://greasyfork.org/scripts/400916-totm-debug-1",
+    "code_url": "https://update.greasyfork.org/scripts/400916/TOTM%20Debug%20%3D1.user.js",
+    "code_size": 333,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

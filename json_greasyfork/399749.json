@@ -1,0 +1,34 @@
+{
+  "id": 399749,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-06T09:32:47.000Z",
+  "code_updated_at": "2020-04-06T13:56:39.000Z",
+  "namespace": "https://www.twitter.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 7881,
+      "name": "markadmin",
+      "created_at": "2014-12-25T15:17:20.000Z",
+      "url": "https://greasyfork.org/users/7881-markadmin",
+      "scripts": []
+    }
+  ],
+  "name": "Twitter Meta and Ad Buster",
+  "description": "Remove tweets talking about tweets",
+  "url": "https://greasyfork.org/scripts/399749-twitter-meta-and-ad-buster",
+  "code_url": "https://update.greasyfork.org/scripts/399749/Twitter%20Meta%20and%20Ad%20Buster.user.js",
+  "code_size": 2243,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

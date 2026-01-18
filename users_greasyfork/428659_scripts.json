@@ -129,6 +129,105 @@
     "version": "0.0.1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 405019,
+    "daily_installs": 3,
+    "total_installs": 1206,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-09T14:29:50.000Z",
+    "code_updated_at": "2020-06-12T14:25:55.000Z",
+    "namespace": "el_professor_takeoff",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428659,
+        "name": "El Profesor",
+        "created_at": "2019-12-26T10:17:19.000Z",
+        "url": "https://greasyfork.org/users/428659-el-profesor"
+      }
+    ],
+    "name": "Ready for Take off",
+    "description": "Make foreign stock available on travel page",
+    "url": "https://greasyfork.org/scripts/405019-ready-for-take-off",
+    "code_url": "https://update.greasyfork.org/scripts/405019/Ready%20for%20Take%20off.user.js",
+    "code_size": 14613,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 399515,
+    "daily_installs": 0,
+    "total_installs": 120,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-04T07:33:05.000Z",
+    "code_updated_at": "2020-05-03T10:11:17.000Z",
+    "namespace": "el_professor_italian",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428659,
+        "name": "El Profesor",
+        "created_at": "2019-12-26T10:17:19.000Z",
+        "url": "https://greasyfork.org/users/428659-el-profesor"
+      }
+    ],
+    "name": "Italian Lotto",
+    "description": "Make it easy to join and view if you won the Italian Lotto",
+    "url": "https://greasyfork.org/scripts/399515-italian-lotto",
+    "code_url": "https://update.greasyfork.org/scripts/399515/Italian%20Lotto.user.js",
+    "code_size": 7697,
+    "license": null,
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 394240,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-26T10:22:04.000Z",
+    "code_updated_at": "2020-03-08T11:55:46.000Z",
+    "namespace": "elprofesor.nomoredude",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428659,
+        "name": "El Profesor",
+        "created_at": "2019-12-26T10:17:19.000Z",
+        "url": "https://greasyfork.org/users/428659-el-profesor"
+      }
+    ],
+    "name": "No more Dude",
+    "description": "No more annoying posts from dude",
+    "url": "https://greasyfork.org/scripts/394240-no-more-dude",
+    "code_url": "https://update.greasyfork.org/scripts/394240/No%20more%20Dude.user.js",
+    "code_size": 927,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

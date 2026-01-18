@@ -97,5 +97,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 401581,
+    "daily_installs": 0,
+    "total_installs": 343,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-21T05:06:10.000Z",
+    "code_updated_at": "2020-05-29T01:31:12.000Z",
+    "namespace": "https://github.com/SublimeCT/greasy_monkey_scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155232,
+        "name": "SublimeCT",
+        "created_at": "2017-10-07T06:56:35.000Z",
+        "url": "https://greasyfork.org/users/155232-sublimect"
+      }
+    ],
+    "name": "swagger-toolkit",
+    "description": "Swagger 站点工具脚本 💪 | 保存浏览历史 🕘 | 显示收藏夹 ⭐️ | 点击 path 快速定位 🎯 | 快速复制 API path 🔗",
+    "url": "https://greasyfork.org/scripts/401581-swagger-toolkit",
+    "code_url": "https://update.greasyfork.org/scripts/401581/swagger-toolkit.user.js",
+    "code_size": 19338,
+    "license": null,
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397188,
+    "daily_installs": 0,
+    "total_installs": 1630,
+    "fan_score": "74.7",
+    "good_ratings": 14,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-03-02T06:14:35.000Z",
+    "code_updated_at": "2020-03-26T12:05:13.000Z",
+    "namespace": "https://twitter.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155232,
+        "name": "SublimeCT",
+        "created_at": "2017-10-07T06:56:35.000Z",
+        "url": "https://greasyfork.org/users/155232-sublimect"
+      }
+    ],
+    "name": "推特工具箱 | twitter toolkit",
+    "description": "鼠标🖱放到用户ID(.e.g @author)上时显示用户的注册时间 - 显示更多信息以便识别网络水军",
+    "url": "https://greasyfork.org/scripts/397188-%E6%8E%A8%E7%89%B9%E5%B7%A5%E5%85%B7%E7%AE%B1-twitter-toolkit",
+    "code_url": "https://update.greasyfork.org/scripts/397188/%E6%8E%A8%E7%89%B9%E5%B7%A5%E5%85%B7%E7%AE%B1%20%7C%20twitter%20toolkit.user.js",
+    "code_size": 5275,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396615,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-19T12:54:12.000Z",
+    "code_updated_at": "2020-02-19T12:54:11.000Z",
+    "namespace": "https://pub.dev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155232,
+        "name": "SublimeCT",
+        "created_at": "2017-10-07T06:56:35.000Z",
+        "url": "https://greasyfork.org/users/155232-sublimect"
+      }
+    ],
+    "name": "flutter packages site toolkit script",
+    "description": "1. copy dependencies info cash as: \"dio: ^1.2.3\"; ~~2. open package page by search string~~",
+    "url": "https://greasyfork.org/scripts/396615-flutter-packages-site-toolkit-script",
+    "code_url": "https://update.greasyfork.org/scripts/396615/flutter%20packages%20site%20toolkit%20script.user.js",
+    "code_size": 3761,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396106,
+    "daily_installs": 0,
+    "total_installs": 147,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-06T05:29:26.000Z",
+    "code_updated_at": "2020-02-06T05:29:25.000Z",
+    "namespace": "https://speed.qq.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155232,
+        "name": "SublimeCT",
+        "created_at": "2017-10-07T06:56:35.000Z",
+        "url": "https://greasyfork.org/users/155232-sublimect"
+      }
+    ],
+    "name": "QQ飞车官方论坛视频处理工具 - 自动识别视频并以 <iframe> 方式加载",
+    "description": "视频播放方式改为 <iframe> 加载, 避免 chomre 及 firefox 需要手动开启 flash 权限的情况(现在所有浏览器厂商普遍表示将在未来淘汰 flash, 包括 adobe); 通过加速的方式跳过片头广告",
+    "url": "https://greasyfork.org/scripts/396106-qq%E9%A3%9E%E8%BD%A6%E5%AE%98%E6%96%B9%E8%AE%BA%E5%9D%9B%E8%A7%86%E9%A2%91%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7-%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E8%A7%86%E9%A2%91%E5%B9%B6%E4%BB%A5-iframe-%E6%96%B9%E5%BC%8F%E5%8A%A0%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/396106/QQ%E9%A3%9E%E8%BD%A6%E5%AE%98%E6%96%B9%E8%AE%BA%E5%9D%9B%E8%A7%86%E9%A2%91%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7%20-%20%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E8%A7%86%E9%A2%91%E5%B9%B6%E4%BB%A5%20%3Ciframe%3E%20%E6%96%B9%E5%BC%8F%E5%8A%A0%E8%BD%BD.user.js",
+    "code_size": 9015,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

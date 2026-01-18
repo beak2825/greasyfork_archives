@@ -1,0 +1,33 @@
+{
+  "id": 410233,
+  "daily_installs": 0,
+  "total_installs": 58,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-31T20:19:33.000Z",
+  "code_updated_at": "2020-09-01T11:31:01.000Z",
+  "namespace": "XcomeX",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 2929,
+      "name": "XcomeX",
+      "created_at": "2014-06-20T20:31:06.000Z",
+      "url": "https://greasyfork.org/users/2929-xcomex"
+    }
+  ],
+  "name": "Youtube Default SpeedUp Playback Rate",
+  "description": "Set default playback rate to 2x. And disable annotations. Based on Jason Miller source.",
+  "url": "https://greasyfork.org/scripts/410233-youtube-default-speedup-playback-rate",
+  "code_url": "https://update.greasyfork.org/scripts/410233/Youtube%20Default%20SpeedUp%20Playback%20Rate.user.js",
+  "code_size": 2917,
+  "license": "Copyleft (Ɔ) GPLv3",
+  "version": "2.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

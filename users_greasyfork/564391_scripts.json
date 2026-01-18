@@ -1,0 +1,35 @@
+[
+  {
+    "id": 403867,
+    "daily_installs": 0,
+    "total_installs": 93,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-21T18:48:34.000Z",
+    "code_updated_at": "2020-05-21T18:48:34.000Z",
+    "namespace": "https://github.com/maliayas",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 564391,
+        "name": "Ali Ayas",
+        "created_at": "2020-05-18T02:05:16.000Z",
+        "url": "https://greasyfork.org/users/564391-ali-ayas"
+      }
+    ],
+    "name": "GitHub Network Ninja",
+    "description": "Full-viewport graph with searchable commit list on \"GitHub repo network\" pages.",
+    "url": "https://greasyfork.org/scripts/403867-github-network-ninja",
+    "code_url": "https://update.greasyfork.org/scripts/403867/GitHub%20Network%20Ninja.user.js",
+    "code_size": 17121,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

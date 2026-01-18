@@ -97,5 +97,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 398973,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-30T02:36:07.000Z",
+    "code_updated_at": "2021-10-06T22:49:02.000Z",
+    "namespace": "io.github.ni554n",
+    "support_url": "https://github.com/ni554n/userscripts/issues",
+    "contribution_url": "https://paypal.me/ni554n",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413267,
+        "name": "Nissan Ahmed",
+        "created_at": "2019-12-07T22:42:42.000Z",
+        "url": "https://greasyfork.org/users/413267-nissan-ahmed"
+      }
+    ],
+    "name": "1hack Hide COUPONS on Homepage",
+    "description": "[Archived] (Use Account Settings > Notifications > Tags > Muted) Hides [COUPON] & [COUPONS] tagged topics on the onehack.us homepage.",
+    "url": "https://greasyfork.org/scripts/398973-1hack-hide-coupons-on-homepage",
+    "code_url": "https://update.greasyfork.org/scripts/398973/1hack%20Hide%20COUPONS%20on%20Homepage.user.js",
+    "code_size": 3136,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398908,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-29T01:33:22.000Z",
+    "code_updated_at": "2021-10-06T23:02:33.000Z",
+    "namespace": "io.github.ni554n",
+    "support_url": "https://github.com/ni554n/userscripts/issues",
+    "contribution_url": "https://paypal.me/ni554n",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413267,
+        "name": "Nissan Ahmed",
+        "created_at": "2019-12-07T22:42:42.000Z",
+        "url": "https://greasyfork.org/users/413267-nissan-ahmed"
+      }
+    ],
+    "name": "RapidMoviez 1080p Release Link Filter",
+    "description": "Keeps only the 1080p links on release page by filtering out the other links.",
+    "url": "https://greasyfork.org/scripts/398908-rapidmoviez-1080p-release-link-filter",
+    "code_url": "https://update.greasyfork.org/scripts/398908/RapidMoviez%201080p%20Release%20Link%20Filter.user.js",
+    "code_size": 984,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398906,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-28T23:53:30.000Z",
+    "code_updated_at": "2021-10-06T23:04:49.000Z",
+    "namespace": "io.github.ni554n",
+    "support_url": "https://github.com/ni554n/userscripts/issues",
+    "contribution_url": "https://paypal.me/ni554n",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413267,
+        "name": "Nissan Ahmed",
+        "created_at": "2019-12-07T22:42:42.000Z",
+        "url": "https://greasyfork.org/users/413267-nissan-ahmed"
+      }
+    ],
+    "name": "RapidMoviez Scrollable Popular Movies and TV Shows Section",
+    "description": "Changes the grid style of \"Popular Movies and TV Shows\" section of RapidMoviez to a scrollable list mimicking the \"Latest Episodes\" section.",
+    "url": "https://greasyfork.org/scripts/398906-rapidmoviez-scrollable-popular-movies-and-tv-shows-section",
+    "code_url": "https://update.greasyfork.org/scripts/398906/RapidMoviez%20Scrollable%20Popular%20Movies%20and%20TV%20Shows%20Section.user.js",
+    "code_size": 2258,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398548,
+    "daily_installs": 0,
+    "total_installs": 297,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-24T01:00:50.000Z",
+    "code_updated_at": "2020-04-06T01:02:48.000Z",
+    "namespace": "io.github.ni554n",
+    "support_url": "https://github.com/ni554n/userscripts/issues",
+    "contribution_url": "https://paypal.me/ni554n",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413267,
+        "name": "Nissan Ahmed",
+        "created_at": "2019-12-07T22:42:42.000Z",
+        "url": "https://greasyfork.org/users/413267-nissan-ahmed"
+      }
+    ],
+    "name": "Video Speed Control with Keyboard",
+    "description": "Controls any HTML5 video playback speed by pressing shortcut keys. See source code comment for the shortcut keymap.",
+    "url": "https://greasyfork.org/scripts/398548-video-speed-control-with-keyboard",
+    "code_url": "https://update.greasyfork.org/scripts/398548/Video%20Speed%20Control%20with%20Keyboard.user.js",
+    "code_size": 2849,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

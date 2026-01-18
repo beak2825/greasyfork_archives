@@ -1,0 +1,34 @@
+{
+  "id": 397850,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-13T15:45:34.000Z",
+  "code_updated_at": "2020-07-26T14:06:42.000Z",
+  "namespace": "https://www.baidu.com",
+  "support_url": "https://www.baidu.com",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 458713,
+      "name": "realicing",
+      "created_at": "2020-03-13T15:36:35.000Z",
+      "url": "https://greasyfork.org/users/458713-realicing",
+      "scripts": []
+    }
+  ],
+  "name": "周瑜打黄盖",
+  "description": "在爱奇艺等网页播放界面添加单独的小窗播放视频",
+  "url": "https://greasyfork.org/scripts/397850-%E5%91%A8%E7%91%9C%E6%89%93%E9%BB%84%E7%9B%96",
+  "code_url": "https://update.greasyfork.org/scripts/397850/%E5%91%A8%E7%91%9C%E6%89%93%E9%BB%84%E7%9B%96.user.js",
+  "code_size": 6006,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

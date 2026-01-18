@@ -1,0 +1,35 @@
+[
+  {
+    "id": 399827,
+    "daily_installs": 16,
+    "total_installs": 32328,
+    "fan_score": "90.9",
+    "good_ratings": 118,
+    "ok_ratings": 2,
+    "bad_ratings": 4,
+    "created_at": "2020-04-07T08:37:04.000Z",
+    "code_updated_at": "2025-11-13T02:43:44.000Z",
+    "namespace": "https://github.com/yuhaofe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 476560,
+        "name": "yuhaofe",
+        "created_at": "2020-04-07T08:33:43.000Z",
+        "url": "https://greasyfork.org/users/476560-yuhaofe"
+      }
+    ],
+    "name": "Video Quality Fixer for X (Twitter)",
+    "description": "Force highest quality playback for X (Twitter) videos.",
+    "url": "https://greasyfork.org/scripts/399827-video-quality-fixer-for-x-twitter",
+    "code_url": "https://update.greasyfork.org/scripts/399827/Video%20Quality%20Fixer%20for%20X%20%28Twitter%29.user.js",
+    "code_size": 7940,
+    "license": null,
+    "version": "0.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

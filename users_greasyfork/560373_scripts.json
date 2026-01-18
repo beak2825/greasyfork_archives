@@ -1,0 +1,35 @@
+[
+  {
+    "id": 403181,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-12T23:00:03.000Z",
+    "code_updated_at": "2020-06-21T00:40:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 560373,
+        "name": "Darkrael",
+        "created_at": "2020-05-12T22:47:21.000Z",
+        "url": "https://greasyfork.org/users/560373-darkrael"
+      }
+    ],
+    "name": "BeastSaber better song preview",
+    "description": "Allowes you to adjust volume and scrub through BeastSaber song preview (the \"Listen to the song in your browser\" button)",
+    "url": "https://greasyfork.org/scripts/403181-beastsaber-better-song-preview",
+    "code_url": "https://update.greasyfork.org/scripts/403181/BeastSaber%20better%20song%20preview.user.js",
+    "code_size": 4169,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

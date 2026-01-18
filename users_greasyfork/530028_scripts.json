@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401580,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-21T05:03:12.000Z",
+    "code_updated_at": "2020-04-21T20:22:27.000Z",
+    "namespace": "(o˘◡˘o)",
+    "support_url": "https://gitee.com/ecruos/oo",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 530028,
+        "name": "小王0598",
+        "created_at": "2020-04-21T04:56:35.000Z",
+        "url": "https://greasyfork.org/users/530028-%E5%B0%8F%E7%8E%8B0598"
+      }
+    ],
+    "name": "小王影视",
+    "description": "原网页解析 VIP",
+    "url": "https://greasyfork.org/scripts/401580-%E5%B0%8F%E7%8E%8B%E5%BD%B1%E8%A7%86",
+    "code_url": "https://update.greasyfork.org/scripts/401580/%E5%B0%8F%E7%8E%8B%E5%BD%B1%E8%A7%86.user.js",
+    "code_size": 96760,
+    "license": "GPL License",
+    "version": "1.1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

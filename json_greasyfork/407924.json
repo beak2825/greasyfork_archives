@@ -1,0 +1,34 @@
+{
+  "id": 407924,
+  "daily_installs": 0,
+  "total_installs": 248,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-30T06:24:15.000Z",
+  "code_updated_at": "2020-08-03T01:46:16.000Z",
+  "namespace": "https://www.zhaidh.cn",
+  "support_url": "https://www.zhaidh.cn",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670918,
+      "name": "东风",
+      "created_at": "2020-07-28T06:23:43.000Z",
+      "url": "https://greasyfork.org/users/670918-%E4%B8%9C%E9%A3%8E",
+      "scripts": []
+    }
+  ],
+  "name": "小黄工具箱测试",
+  "description": "生意参谋指数转换，数据分析，数据导出；淘宝客查询",
+  "url": "https://greasyfork.org/scripts/407924-%E5%B0%8F%E9%BB%84%E5%B7%A5%E5%85%B7%E7%AE%B1%E6%B5%8B%E8%AF%95",
+  "code_url": "https://update.greasyfork.org/scripts/407924/%E5%B0%8F%E9%BB%84%E5%B7%A5%E5%85%B7%E7%AE%B1%E6%B5%8B%E8%AF%95.user.js",
+  "code_size": 1663,
+  "license": null,
+  "version": "1.011.03",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 397259,
+    "daily_installs": 0,
+    "total_installs": 151,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-03T13:13:35.000Z",
+    "code_updated_at": "2020-10-13T06:52:23.000Z",
+    "namespace": "https://greasyfork.org/users/20921",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 20921,
+        "name": "roshanca",
+        "created_at": "2015-11-24T14:28:49.000Z",
+        "url": "https://greasyfork.org/users/20921-roshanca"
+      }
+    ],
+    "name": "Reomve ZhiHu Link Redirect",
+    "description": "去除知乎链接的重定向",
+    "url": "https://greasyfork.org/scripts/397259-reomve-zhihu-link-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/397259/Reomve%20ZhiHu%20Link%20Redirect.user.js",
+    "code_size": 931,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -31,5 +31,38 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 405272,
+    "daily_installs": 0,
+    "total_installs": 95,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-13T13:16:52.000Z",
+    "code_updated_at": "2020-06-13T13:24:43.000Z",
+    "namespace": "https://greasyfork.org/ja/scripts/405272",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 44942,
+        "name": "midori",
+        "created_at": "2016-05-22T07:13:52.000Z",
+        "url": "https://greasyfork.org/users/44942-midori"
+      }
+    ],
+    "name": "ABEMA NextProgramInfo Blocker",
+    "description": "ABEMAビデオで次のエピソードへ勝手に移動するのをブロックします",
+    "url": "https://greasyfork.org/scripts/405272-abema-nextprograminfo-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/405272/ABEMA%20NextProgramInfo%20Blocker.user.js",
+    "code_size": 1508,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

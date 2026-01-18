@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411777,
+    "daily_installs": 0,
+    "total_installs": 146,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-23T00:34:09.000Z",
+    "code_updated_at": "2020-10-12T03:38:58.000Z",
+    "namespace": "null",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 689766,
+        "name": "TylerWDoesStuff",
+        "created_at": "2020-09-23T00:29:12.000Z",
+        "url": "https://greasyfork.org/users/689766-tylerwdoesstuff"
+      }
+    ],
+    "name": "Hybrid YouTube Download Extension",
+    "description": "Creates links to both youtube320 and BitDownloader.",
+    "url": "https://greasyfork.org/scripts/411777-hybrid-youtube-download-extension",
+    "code_url": "https://update.greasyfork.org/scripts/411777/Hybrid%20YouTube%20Download%20Extension.user.js",
+    "code_size": 8758,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "0.1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 406020,
+    "daily_installs": 3,
+    "total_installs": 9083,
+    "fan_score": "37.6",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-06-25T07:21:28.000Z",
+    "code_updated_at": "2020-06-25T07:21:28.000Z",
+    "namespace": "xyenon.bid",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 522796,
+        "name": "XYenon",
+        "created_at": "2020-04-19T18:00:12.000Z",
+        "url": "https://greasyfork.org/users/522796-xyenon"
+      }
+    ],
+    "name": "百度文库自动继续阅读",
+    "description": "自动点击百度文库的「还剩 x 页未读，继续阅读」",
+    "url": "https://greasyfork.org/scripts/406020-%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93%E8%87%AA%E5%8A%A8%E7%BB%A7%E7%BB%AD%E9%98%85%E8%AF%BB",
+    "code_url": "https://update.greasyfork.org/scripts/406020/%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93%E8%87%AA%E5%8A%A8%E7%BB%A7%E7%BB%AD%E9%98%85%E8%AF%BB.user.js",
+    "code_size": 457,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 401521,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-20T13:56:58.000Z",
+    "code_updated_at": "2020-06-18T05:05:49.000Z",
+    "namespace": "xyenon.bid",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 522796,
+        "name": "XYenon",
+        "created_at": "2020-04-19T18:00:12.000Z",
+        "url": "https://greasyfork.org/users/522796-xyenon"
+      }
+    ],
+    "name": "哈工程古董链接替换",
+    "description": "替换哈工程官网只能用 IE 打开的链接",
+    "url": "https://greasyfork.org/scripts/401521-%E5%93%88%E5%B7%A5%E7%A8%8B%E5%8F%A4%E8%91%A3%E9%93%BE%E6%8E%A5%E6%9B%BF%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/401521/%E5%93%88%E5%B7%A5%E7%A8%8B%E5%8F%A4%E8%91%A3%E9%93%BE%E6%8E%A5%E6%9B%BF%E6%8D%A2.user.js",
+    "code_size": 920,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

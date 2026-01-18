@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 399388,
+    "daily_installs": 0,
+    "total_installs": 981,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-03T03:59:07.000Z",
+    "code_updated_at": "2020-04-03T03:59:07.000Z",
+    "namespace": "https://greasyfork.org/users/198348",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 198348,
+        "name": "Phung Ngoc Nguyen",
+        "created_at": "2018-07-25T12:47:35.000Z",
+        "url": "https://greasyfork.org/users/198348-phung-ngoc-nguyen"
+      }
+    ],
+    "name": "TM Set routine and show bonus in \"compare players\" page",
+    "description": "Adds the routine-bonus on skills in the \"compare players\" page. You can also select the routine from which to calculate the bonus (e.g. when the player gains routine through the sharing system)",
+    "url": "https://greasyfork.org/scripts/399388-tm-set-routine-and-show-bonus-in-compare-players-page",
+    "code_url": "https://update.greasyfork.org/scripts/399388/TM%20Set%20routine%20and%20show%20bonus%20in%20%22compare%20players%22%20page.user.js",
+    "code_size": 10447,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

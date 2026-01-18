@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398429,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-22T08:04:12.000Z",
+    "code_updated_at": "2020-03-22T08:11:41.000Z",
+    "namespace": "AAAAAAAA.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3488,
+        "name": "ducktrshessami",
+        "created_at": "2014-07-14T22:55:48.000Z",
+        "url": "https://greasyfork.org/users/3488-ducktrshessami"
+      }
+    ],
+    "name": "Hide Messenger Active Status",
+    "description": "I'm a mess",
+    "url": "https://greasyfork.org/scripts/398429-hide-messenger-active-status",
+    "code_url": "https://update.greasyfork.org/scripts/398429/Hide%20Messenger%20Active%20Status.user.js",
+    "code_size": 1140,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

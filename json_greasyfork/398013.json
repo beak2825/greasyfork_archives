@@ -1,0 +1,59 @@
+{
+  "id": 398013,
+  "daily_installs": 0,
+  "total_installs": 2143,
+  "fan_score": "70.1",
+  "good_ratings": 9,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-16T08:03:33.000Z",
+  "code_updated_at": "2020-04-07T09:16:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 459990,
+      "name": "siaall C",
+      "created_at": "2020-03-16T07:54:07.000Z",
+      "url": "https://greasyfork.org/users/459990-siaall-c",
+      "scripts": [
+        {
+          "id": 398013,
+          "daily_installs": 0,
+          "total_installs": 2143,
+          "fan_score": "70.1",
+          "good_ratings": 9,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-16T08:03:33.000Z",
+          "code_updated_at": "2020-04-07T09:16:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "辣女神免翻页看图",
+          "description": "省去翻页~辣女神连续看图脚本",
+          "url": "https://greasyfork.org/scripts/398013-%E8%BE%A3%E5%A5%B3%E7%A5%9E%E5%85%8D%E7%BF%BB%E9%A1%B5%E7%9C%8B%E5%9B%BE",
+          "code_url": "https://update.greasyfork.org/scripts/398013/%E8%BE%A3%E5%A5%B3%E7%A5%9E%E5%85%8D%E7%BF%BB%E9%A1%B5%E7%9C%8B%E5%9B%BE.user.js",
+          "code_size": 2917,
+          "license": null,
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "辣女神免翻页看图",
+  "description": "省去翻页~辣女神连续看图脚本",
+  "url": "https://greasyfork.org/scripts/398013-%E8%BE%A3%E5%A5%B3%E7%A5%9E%E5%85%8D%E7%BF%BB%E9%A1%B5%E7%9C%8B%E5%9B%BE",
+  "code_url": "https://update.greasyfork.org/scripts/398013/%E8%BE%A3%E5%A5%B3%E7%A5%9E%E5%85%8D%E7%BF%BB%E9%A1%B5%E7%9C%8B%E5%9B%BE.user.js",
+  "code_size": 2917,
+  "license": null,
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

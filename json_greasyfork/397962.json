@@ -1,0 +1,33 @@
+{
+  "id": 397962,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-15T13:35:11.000Z",
+  "code_updated_at": "2020-03-15T13:35:11.000Z",
+  "namespace": "com.seaders",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 459561,
+      "name": "seaders",
+      "created_at": "2020-03-15T12:02:39.000Z",
+      "url": "https://greasyfork.org/users/459561-seaders"
+    }
+  ],
+  "name": "Reformat transfermarkt player",
+  "description": "try to make things look a little better / how I want them to look",
+  "url": "https://greasyfork.org/scripts/397962-reformat-transfermarkt-player",
+  "code_url": "https://update.greasyfork.org/scripts/397962/Reformat%20transfermarkt%20player.user.js",
+  "code_size": 3225,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

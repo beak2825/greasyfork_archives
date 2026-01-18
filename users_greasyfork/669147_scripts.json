@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 407546,
+    "daily_installs": 0,
+    "total_installs": 360,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-07-22T07:55:28.000Z",
+    "code_updated_at": "2020-07-22T07:55:28.000Z",
+    "namespace": "http://www.chenjingtalk.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 669147,
+        "name": "Vi Clair",
+        "created_at": "2020-07-22T07:54:51.000Z",
+        "url": "https://greasyfork.org/users/669147-vi-clair"
+      }
+    ],
+    "name": "腾讯文档外链自动跳转",
+    "description": "解决腾讯文档外链中间页的问题",
+    "url": "https://greasyfork.org/scripts/407546-%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E5%A4%96%E9%93%BE%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/407546/%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E5%A4%96%E9%93%BE%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 665,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

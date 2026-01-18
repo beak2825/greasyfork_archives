@@ -1,0 +1,59 @@
+{
+  "id": 402075,
+  "daily_installs": 0,
+  "total_installs": 156,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-27T00:48:20.000Z",
+  "code_updated_at": "2020-08-21T06:46:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 542200,
+      "name": "BingLee1994",
+      "created_at": "2020-04-27T00:37:14.000Z",
+      "url": "https://greasyfork.org/users/542200-binglee1994",
+      "scripts": [
+        {
+          "id": 402075,
+          "daily_installs": 0,
+          "total_installs": 156,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-27T00:48:20.000Z",
+          "code_updated_at": "2020-08-21T06:46:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网易云课堂全屏",
+          "description": "网易云课堂视频播放页使用网页全屏播放，方便观看",
+          "url": "https://greasyfork.org/scripts/402075-%E7%BD%91%E6%98%93%E4%BA%91%E8%AF%BE%E5%A0%82%E5%85%A8%E5%B1%8F",
+          "code_url": "https://update.greasyfork.org/scripts/402075/%E7%BD%91%E6%98%93%E4%BA%91%E8%AF%BE%E5%A0%82%E5%85%A8%E5%B1%8F.user.js",
+          "code_size": 5333,
+          "license": null,
+          "version": "0.21",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网易云课堂全屏",
+  "description": "网易云课堂视频播放页使用网页全屏播放，方便观看",
+  "url": "https://greasyfork.org/scripts/402075-%E7%BD%91%E6%98%93%E4%BA%91%E8%AF%BE%E5%A0%82%E5%85%A8%E5%B1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/402075/%E7%BD%91%E6%98%93%E4%BA%91%E8%AF%BE%E5%A0%82%E5%85%A8%E5%B1%8F.user.js",
+  "code_size": 5333,
+  "license": null,
+  "version": "0.21",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

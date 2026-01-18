@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398046,
+    "daily_installs": 1,
+    "total_installs": 862,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-16T20:50:09.000Z",
+    "code_updated_at": "2021-10-16T15:20:47.000Z",
+    "namespace": "https://greasyfork.org/users/18375",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18375,
+        "name": "Deathwing",
+        "created_at": "2015-10-19T19:58:45.000Z",
+        "url": "https://greasyfork.org/users/18375-deathwing"
+      }
+    ],
+    "name": "Anime Website (Custom) Buttons Plus",
+    "description": "A script that adds buttons on Anime Planet, MAL, Kitsu, Anilist and aniDB for searching various sites.",
+    "url": "https://greasyfork.org/scripts/398046-anime-website-custom-buttons-plus",
+    "code_url": "https://update.greasyfork.org/scripts/398046/Anime%20Website%20%28Custom%29%20Buttons%20Plus.user.js",
+    "code_size": 33440,
+    "license": null,
+    "version": "2.820",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

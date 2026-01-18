@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411953,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-25T13:51:52.000Z",
+    "code_updated_at": "2022-01-25T10:57:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 210993,
+        "name": "小龙虾蓝色",
+        "created_at": "2018-09-07T09:06:17.000Z",
+        "url": "https://greasyfork.org/users/210993-%E5%B0%8F%E9%BE%99%E8%99%BE%E8%93%9D%E8%89%B2"
+      }
+    ],
+    "name": "iCopy5",
+    "description": "一键复制iCafe信息，支持生成gitMsg，支持多选，支持预览",
+    "url": "https://greasyfork.org/scripts/411953-icopy5",
+    "code_url": "https://update.greasyfork.org/scripts/411953/iCopy5.user.js",
+    "code_size": 6493,
+    "license": "MIT License",
+    "version": "5.4.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

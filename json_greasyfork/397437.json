@@ -1,0 +1,33 @@
+{
+  "id": 397437,
+  "daily_installs": 0,
+  "total_installs": 209,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-06T17:01:18.000Z",
+  "code_updated_at": "2020-05-01T08:50:45.000Z",
+  "namespace": "12377.cn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 454749,
+      "name": "NoWhyToCopy",
+      "created_at": "2020-03-06T03:25:58.000Z",
+      "url": "https://greasyfork.org/users/454749-nowhytocopy"
+    }
+  ],
+  "name": "快捷举报黄赌毒不良页面 (12377.cn)",
+  "description": "快速举报黄、赌、毒、有害网页",
+  "url": "https://greasyfork.org/scripts/397437-%E5%BF%AB%E6%8D%B7%E4%B8%BE%E6%8A%A5%E9%BB%84%E8%B5%8C%E6%AF%92%E4%B8%8D%E8%89%AF%E9%A1%B5%E9%9D%A2-12377-cn",
+  "code_url": "https://update.greasyfork.org/scripts/397437/%E5%BF%AB%E6%8D%B7%E4%B8%BE%E6%8A%A5%E9%BB%84%E8%B5%8C%E6%AF%92%E4%B8%8D%E8%89%AF%E9%A1%B5%E9%9D%A2%20%2812377cn%29.user.js",
+  "code_size": 6736,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

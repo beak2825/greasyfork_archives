@@ -1,0 +1,59 @@
+{
+  "id": 401666,
+  "daily_installs": 0,
+  "total_installs": 141,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-21T21:55:22.000Z",
+  "code_updated_at": "2020-05-12T03:15:41.000Z",
+  "namespace": "http://skyscrapercity.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 533329,
+      "name": "jawik80",
+      "created_at": "2020-04-21T21:07:33.000Z",
+      "url": "https://greasyfork.org/users/533329-jawik80",
+      "scripts": [
+        {
+          "id": 401666,
+          "daily_installs": 0,
+          "total_installs": 141,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-21T21:55:22.000Z",
+          "code_updated_at": "2020-05-12T03:15:41.000Z",
+          "namespace": "http://skyscrapercity.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SSC Utility v1.3",
+          "description": "Changes: unknown",
+          "url": "https://greasyfork.org/scripts/401666-ssc-utility-v1-3",
+          "code_url": "https://update.greasyfork.org/scripts/401666/SSC%20Utility%20v13.user.js",
+          "code_size": 23896,
+          "license": null,
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SSC Utility v1.3",
+  "description": "Changes: unknown",
+  "url": "https://greasyfork.org/scripts/401666-ssc-utility-v1-3",
+  "code_url": "https://update.greasyfork.org/scripts/401666/SSC%20Utility%20v13.user.js",
+  "code_size": 23896,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

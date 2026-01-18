@@ -955,5 +955,203 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 408550,
+    "daily_installs": 0,
+    "total_installs": 192,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-10T16:20:10.000Z",
+    "code_updated_at": "2021-12-05T15:02:58.000Z",
+    "namespace": "ckylin-bilibili-animated-showfullinfo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 357937,
+        "name": "CKylinMC",
+        "created_at": "2019-09-01T14:00:43.000Z",
+        "url": "https://greasyfork.org/users/357937-ckylinmc"
+      }
+    ],
+    "name": "哔哩哔哩-平滑展开视频信息",
+    "description": "平滑展开视频信息",
+    "url": "https://greasyfork.org/scripts/408550-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-%E5%B9%B3%E6%BB%91%E5%B1%95%E5%BC%80%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF",
+    "code_url": "https://update.greasyfork.org/scripts/408550/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-%E5%B9%B3%E6%BB%91%E5%B1%95%E5%BC%80%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF.user.js",
+    "code_size": 1397,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408186,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-04T15:38:14.000Z",
+    "code_updated_at": "2021-07-07T12:53:24.000Z",
+    "namespace": "ckylin-bilibili-comments-filter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 357937,
+        "name": "CKylinMC",
+        "created_at": "2019-09-01T14:00:43.000Z",
+        "url": "https://greasyfork.org/users/357937-ckylinmc"
+      }
+    ],
+    "name": "哔哩哔哩-评论过滤",
+    "description": "过滤指定用户或关键词",
+    "url": "https://greasyfork.org/scripts/408186-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-%E8%AF%84%E8%AE%BA%E8%BF%87%E6%BB%A4",
+    "code_url": "https://update.greasyfork.org/scripts/408186/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-%E8%AF%84%E8%AE%BA%E8%BF%87%E6%BB%A4.user.js",
+    "code_size": 4689,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 408044,
+    "daily_installs": 0,
+    "total_installs": 244,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-02T05:20:47.000Z",
+    "code_updated_at": "2021-06-28T12:50:40.000Z",
+    "namespace": "ckylin-style-bilibiliplayerblur",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 357937,
+        "name": "CKylinMC",
+        "created_at": "2019-09-01T14:00:43.000Z",
+        "url": "https://greasyfork.org/users/357937-ckylinmc"
+      }
+    ],
+    "name": "哔哩哔哩播放器模糊效果",
+    "description": "为哔哩哔哩播放器添加模糊效果",
+    "url": "https://greasyfork.org/scripts/408044-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%92%AD%E6%94%BE%E5%99%A8%E6%A8%A1%E7%B3%8A%E6%95%88%E6%9E%9C",
+    "code_url": "https://update.greasyfork.org/scripts/408044/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%92%AD%E6%94%BE%E5%99%A8%E6%A8%A1%E7%B3%8A%E6%95%88%E6%9E%9C.user.css",
+    "code_size": 1457,
+    "license": "GPLv3",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405344,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-15T04:01:23.000Z",
+    "code_updated_at": "2020-08-08T04:50:13.000Z",
+    "namespace": "blbljsloader.ckylin.site",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 357937,
+        "name": "CKylinMC",
+        "created_at": "2019-09-01T14:00:43.000Z",
+        "url": "https://greasyfork.org/users/357937-ckylinmc"
+      }
+    ],
+    "name": "CKAutoLoader",
+    "description": "[已弃用] CKAutoLoader用于在哔哩哔哩播放器页面延后加载脚本，参考了Pakku弹幕插件的加载方式。",
+    "url": "https://greasyfork.org/scripts/405344-ckautoloader",
+    "code_url": "https://update.greasyfork.org/scripts/405344/1027351/CKAutoLoader.js",
+    "code_size": 4039,
+    "license": "GPLv3 License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 398655,
+    "daily_installs": 0,
+    "total_installs": 1558,
+    "fan_score": "75.1",
+    "good_ratings": 19,
+    "ok_ratings": 3,
+    "bad_ratings": 0,
+    "created_at": "2020-03-25T02:43:00.000Z",
+    "code_updated_at": "2024-01-25T03:13:09.000Z",
+    "namespace": "ckylin-bilibili-display-video-id",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 357937,
+        "name": "CKylinMC",
+        "created_at": "2019-09-01T14:00:43.000Z",
+        "url": "https://greasyfork.org/users/357937-ckylinmc"
+      }
+    ],
+    "name": "哔哩哔哩自定义视频信息条",
+    "description": "完全自定义你的视频标题下方信息栏，排序，增加，删除！",
+    "url": "https://greasyfork.org/scripts/398655-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF%E6%9D%A1",
+    "code_url": "https://update.greasyfork.org/scripts/398655/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF%E6%9D%A1.user.js",
+    "code_size": 127681,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.19.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398500,
+    "daily_installs": 0,
+    "total_installs": 409,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-23T09:08:59.000Z",
+    "code_updated_at": "2021-07-07T12:49:53.000Z",
+    "namespace": "ckylin-bilibili-show-links-target",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 357937,
+        "name": "CKylinMC",
+        "created_at": "2019-09-01T14:00:43.000Z",
+        "url": "https://greasyfork.org/users/357937-ckylinmc"
+      }
+    ],
+    "name": "哔哩哔哩站内链接信息显示 BilibiliLinksInfos",
+    "description": "替换bilibili页面的视频链接为视频名，专栏链接为专栏文章名,音频链接为音频名",
+    "url": "https://greasyfork.org/scripts/398500-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%AB%99%E5%86%85%E9%93%BE%E6%8E%A5%E4%BF%A1%E6%81%AF%E6%98%BE%E7%A4%BA-bilibililinksinfos",
+    "code_url": "https://update.greasyfork.org/scripts/398500/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%AB%99%E5%86%85%E9%93%BE%E6%8E%A5%E4%BF%A1%E6%81%AF%E6%98%BE%E7%A4%BA%20BilibiliLinksInfos.user.js",
+    "code_size": 16473,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

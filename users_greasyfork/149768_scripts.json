@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408612,
+    "daily_installs": 0,
+    "total_installs": 87,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-11T20:20:02.000Z",
+    "code_updated_at": "2020-09-15T17:49:30.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149768,
+        "name": "lawl",
+        "created_at": "2017-08-20T00:30:54.000Z",
+        "url": "https://greasyfork.org/users/149768-lawl"
+      }
+    ],
+    "name": "Unblock Brave from archive.is",
+    "description": "a pointless cat and mouse game",
+    "url": "https://greasyfork.org/scripts/408612-unblock-brave-from-archive-is",
+    "code_url": "https://update.greasyfork.org/scripts/408612/Unblock%20Brave%20from%20archiveis.user.js",
+    "code_size": 3193,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

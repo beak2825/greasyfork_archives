@@ -1,0 +1,34 @@
+{
+  "id": 410947,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-07T08:56:57.000Z",
+  "code_updated_at": "2023-07-14T03:01:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 685668,
+      "name": "xincici",
+      "created_at": "2020-09-07T08:51:09.000Z",
+      "url": "https://greasyfork.org/users/685668-xincici",
+      "scripts": []
+    }
+  ],
+  "name": "uac-userscript",
+  "description": "just an useful tool for uac",
+  "url": "https://greasyfork.org/scripts/410947-uac-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/410947/uac-userscript.user.js",
+  "code_size": 7807,
+  "license": "MIT License",
+  "version": "0.3.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

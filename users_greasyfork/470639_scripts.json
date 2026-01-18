@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398869,
+    "daily_installs": 0,
+    "total_installs": 1524,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-03-28T12:54:55.000Z",
+    "code_updated_at": "2020-03-28T13:46:21.000Z",
+    "namespace": "https://greasyfork.org/en/users/470639",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470639,
+        "name": "MonSteR Gaming",
+        "created_at": "2020-03-28T12:47:12.000Z",
+        "url": "https://greasyfork.org/users/470639-monster-gaming"
+      }
+    ],
+    "name": "Freebitco.in Multiply your bitcoins every 3 days free 2020",
+    "description": "Best Proven Script for multiplying your balance every 3 days",
+    "url": "https://greasyfork.org/scripts/398869-freebitco-in-multiply-your-bitcoins-every-3-days-free-2020",
+    "code_url": "https://update.greasyfork.org/scripts/398869/Freebitcoin%20Multiply%20your%20bitcoins%20every%203%20days%20free%202020.user.js",
+    "code_size": 3039,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

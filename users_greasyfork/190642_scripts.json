@@ -126,5 +126,168 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 409911,
+    "daily_installs": 0,
+    "total_installs": 447,
+    "fan_score": "20.8",
+    "good_ratings": 1,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2020-08-24T17:27:31.000Z",
+    "code_updated_at": "2025-02-15T01:39:50.000Z",
+    "namespace": "https://greasyfork.org/en/users/673666-fourloop",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 673666,
+        "name": "fourLoop",
+        "created_at": "2020-08-05T21:42:57.000Z",
+        "url": "https://greasyfork.org/users/673666-fourloop",
+        "scripts": [
+          {
+            "id": 409911,
+            "daily_installs": 0,
+            "total_installs": 447,
+            "fan_score": "20.8",
+            "good_ratings": 1,
+            "ok_ratings": 2,
+            "bad_ratings": 0,
+            "created_at": "2020-08-24T17:27:31.000Z",
+            "code_updated_at": "2025-02-15T01:39:50.000Z",
+            "namespace": "https://greasyfork.org/en/users/673666-fourloop",
+            "support_url": null,
+            "contribution_url": null,
+            "contribution_amount": null,
+            "name": "WME Closure Helper",
+            "description": "A script to help out with WME closure efforts! :D",
+            "url": "https://greasyfork.org/scripts/409911-wme-closure-helper",
+            "code_url": "https://update.greasyfork.org/scripts/409911/WME%20Closure%20Helper.user.js",
+            "code_size": 92252,
+            "license": null,
+            "version": "2025.02.14.01",
+            "locale": "en",
+            "deleted": false
+          }
+        ]
+      },
+      {
+        "id": 190642,
+        "name": "jm6087",
+        "created_at": "2018-06-11T21:13:30.000Z",
+        "url": "https://greasyfork.org/users/190642-jm6087"
+      }
+    ],
+    "name": "WME Closure Helper",
+    "description": "A script to help out with WME closure efforts! :D",
+    "url": "https://greasyfork.org/scripts/409911-wme-closure-helper",
+    "code_url": "https://update.greasyfork.org/scripts/409911/WME%20Closure%20Helper.user.js",
+    "code_size": 92252,
+    "license": null,
+    "version": "2025.02.14.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408572,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-10T23:59:12.000Z",
+    "code_updated_at": "2025-02-15T02:37:46.000Z",
+    "namespace": "https://greasyfork.org/en/users/673666-fourloop",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 673666,
+        "name": "fourLoop",
+        "created_at": "2020-08-05T21:42:57.000Z",
+        "url": "https://greasyfork.org/users/673666-fourloop",
+        "scripts": [
+          {
+            "id": 409911,
+            "daily_installs": 0,
+            "total_installs": 447,
+            "fan_score": "20.8",
+            "good_ratings": 1,
+            "ok_ratings": 2,
+            "bad_ratings": 0,
+            "created_at": "2020-08-24T17:27:31.000Z",
+            "code_updated_at": "2025-02-15T01:39:50.000Z",
+            "namespace": "https://greasyfork.org/en/users/673666-fourloop",
+            "support_url": null,
+            "contribution_url": null,
+            "contribution_amount": null,
+            "name": "WME Closure Helper",
+            "description": "A script to help out with WME closure efforts! :D",
+            "url": "https://greasyfork.org/scripts/409911-wme-closure-helper",
+            "code_url": "https://update.greasyfork.org/scripts/409911/WME%20Closure%20Helper.user.js",
+            "code_size": 92252,
+            "license": null,
+            "version": "2025.02.14.01",
+            "locale": "en",
+            "deleted": false
+          }
+        ]
+      },
+      {
+        "id": 190642,
+        "name": "jm6087",
+        "created_at": "2018-06-11T21:13:30.000Z",
+        "url": "https://greasyfork.org/users/190642-jm6087"
+      }
+    ],
+    "name": "WME Closure Helper - Beta",
+    "description": "A script to help out with WME closure efforts! :D",
+    "url": "https://greasyfork.org/scripts/408572-wme-closure-helper-beta",
+    "code_url": "https://update.greasyfork.org/scripts/408572/WME%20Closure%20Helper%20-%20Beta.user.js",
+    "code_size": 92258,
+    "license": null,
+    "version": "ß 2025.02.14.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 405808,
+    "daily_installs": 0,
+    "total_installs": 155,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-21T14:46:43.000Z",
+    "code_updated_at": "2023-09-26T23:59:20.000Z",
+    "namespace": "https://github.com/jm6087",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 190642,
+        "name": "jm6087",
+        "created_at": "2018-06-11T21:13:30.000Z",
+        "url": "https://greasyfork.org/users/190642-jm6087"
+      }
+    ],
+    "name": "WME RRC AutoLock",
+    "description": "Locks RRCs and Cameras to set level instead of autolock to rank of editor",
+    "url": "https://greasyfork.org/scripts/405808-wme-rrc-autolock",
+    "code_url": "https://update.greasyfork.org/scripts/405808/WME%20RRC%20AutoLock.user.js",
+    "code_size": 52403,
+    "license": null,
+    "version": "2023.09.26.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

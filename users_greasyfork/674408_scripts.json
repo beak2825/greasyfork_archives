@@ -1,0 +1,68 @@
+[
+  {
+    "id": 408530,
+    "daily_installs": 0,
+    "total_installs": 2578,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-10T09:26:33.000Z",
+    "code_updated_at": "2020-08-14T04:00:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 674408,
+        "name": "Tuff Plus",
+        "created_at": "2020-08-08T06:02:02.000Z",
+        "url": "https://greasyfork.org/users/674408-tuff-plus"
+      }
+    ],
+    "name": "阿里巴巴国际站引流关键词批量下载",
+    "description": "引流关键词导出越来越不完整，最多只可以导出500个关键词，这能忍？为了突破阿里国际站限制，此脚本可以把网页上看到的所有数据全部下载下来，结果会用内容可以全部复制的textarea覆盖重写当前页面。初级版本存在瑕疵，但可以剪切入excel做进一步的修正，如分列处理。",
+    "url": "https://greasyfork.org/scripts/408530-%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%9B%BD%E9%99%85%E7%AB%99%E5%BC%95%E6%B5%81%E5%85%B3%E9%94%AE%E8%AF%8D%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/408530/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%9B%BD%E9%99%85%E7%AB%99%E5%BC%95%E6%B5%81%E5%85%B3%E9%94%AE%E8%AF%8D%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 2982,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408397,
+    "daily_installs": 0,
+    "total_installs": 3029,
+    "fan_score": "30.3",
+    "good_ratings": 3,
+    "ok_ratings": 3,
+    "bad_ratings": 1,
+    "created_at": "2020-08-08T06:12:25.000Z",
+    "code_updated_at": "2020-09-03T03:56:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 674408,
+        "name": "Tuff Plus",
+        "created_at": "2020-08-08T06:02:02.000Z",
+        "url": "https://greasyfork.org/users/674408-tuff-plus"
+      }
+    ],
+    "name": "阿里巴巴国际站批量下载访客详情数据",
+    "description": "在访客详情页面，批量营销按钮后面插入一个下载按钮，点击可以从头开始记录每位访客所有的有效数据和关键词（所见即所得），最终输出成csv表格和JSON文件自动下载。（因为输出CSV文件会存在暂时无法解决的乱码问题，所以只能保存成JSON格式的文件）文件请看本页面的描述点击链接或自己找方法自行转换成excel表格。",
+    "url": "https://greasyfork.org/scripts/408397-%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%9B%BD%E9%99%85%E7%AB%99%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E8%AE%BF%E5%AE%A2%E8%AF%A6%E6%83%85%E6%95%B0%E6%8D%AE",
+    "code_url": "https://update.greasyfork.org/scripts/408397/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%9B%BD%E9%99%85%E7%AB%99%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E8%AE%BF%E5%AE%A2%E8%AF%A6%E6%83%85%E6%95%B0%E6%8D%AE.user.js",
+    "code_size": 5519,
+    "license": null,
+    "version": "2.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

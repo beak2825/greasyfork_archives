@@ -1,0 +1,34 @@
+{
+  "id": 399792,
+  "daily_installs": 0,
+  "total_installs": 242,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-06T21:21:29.000Z",
+  "code_updated_at": "2020-04-06T21:21:29.000Z",
+  "namespace": "http://www.google.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 476231,
+      "name": "Phil Successful",
+      "created_at": "2020-04-06T21:17:58.000Z",
+      "url": "https://greasyfork.org/users/476231-phil-successful",
+      "scripts": []
+    }
+  ],
+  "name": "FB Auto Like Unlimited",
+  "description": "Facebook Auto Like Unlimited 2019 Auto Like, unlike and Automatically Post Comments on Facebook Status, Auto Comments, Photos, group posts, page posts, group posts, lists, page feeds, events, timeline photos unlimited times...",
+  "url": "https://greasyfork.org/scripts/399792-fb-auto-like-unlimited",
+  "code_url": "https://update.greasyfork.org/scripts/399792/FB%20Auto%20Like%20Unlimited.user.js",
+  "code_size": 735307,
+  "license": null,
+  "version": "31.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

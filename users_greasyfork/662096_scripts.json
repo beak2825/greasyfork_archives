@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406328,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-01T10:53:13.000Z",
+    "code_updated_at": "2020-07-01T11:04:55.000Z",
+    "namespace": "https://greasyfork.org/users/662096",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662096,
+        "name": "itz",
+        "created_at": "2020-07-01T09:26:26.000Z",
+        "url": "https://greasyfork.org/users/662096-itz"
+      }
+    ],
+    "name": "Sima-land.ru Popup Original Image Viewer/Downloader (modified version of MPIV)",
+    "description": "показывает при наведении мышью на фото товара оригинальное фото товара без наложения названия сайта, с возможностью сохранения фото в файл нажатием клавиши \"d\" на клавиатуре, или открытием фото в отдельной новой вкладке клавишей \"t\"",
+    "url": "https://greasyfork.org/scripts/406328-sima-land-ru-popup-original-image-viewer-downloader-modified-version-of-mpiv",
+    "code_url": "https://update.greasyfork.org/scripts/406328/Sima-landru%20Popup%20Original%20Image%20ViewerDownloader%20%28modified%20version%20of%20MPIV%29.user.js",
+    "code_size": 39994,
+    "license": null,
+    "version": "01.07.2020 alpha",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

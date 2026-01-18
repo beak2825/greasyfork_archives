@@ -1,0 +1,59 @@
+{
+  "id": 400518,
+  "daily_installs": 0,
+  "total_installs": 201,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-12T13:30:55.000Z",
+  "code_updated_at": "2021-01-29T12:23:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 505358,
+      "name": "aqzhyi",
+      "created_at": "2020-04-12T13:03:04.000Z",
+      "url": "https://greasyfork.org/users/505358-aqzhyi",
+      "scripts": [
+        {
+          "id": 400518,
+          "daily_installs": 0,
+          "total_installs": 201,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-12T13:30:55.000Z",
+          "code_updated_at": "2021-01-29T12:23:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "eToro Better UI 當沖外掛",
+          "description": "本套件不提供「自動程式交易」的功能，本套件的核心思想是在盡可能不破壞 eToro 的介面上，介入提升用戶體驗。因此你仍然應該由自己作主下單交易。100% 開源程式碼，免費安裝並使用。",
+          "url": "https://greasyfork.org/scripts/400518-etoro-better-ui-%E7%95%B6%E6%B2%96%E5%A4%96%E6%8E%9B",
+          "code_url": "https://update.greasyfork.org/scripts/400518/eToro%20Better%20UI%20%E7%95%B6%E6%B2%96%E5%A4%96%E6%8E%9B.user.js",
+          "code_size": 3769,
+          "license": null,
+          "version": "0.39.0",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "eToro Better UI 當沖外掛",
+  "description": "本套件不提供「自動程式交易」的功能，本套件的核心思想是在盡可能不破壞 eToro 的介面上，介入提升用戶體驗。因此你仍然應該由自己作主下單交易。100% 開源程式碼，免費安裝並使用。",
+  "url": "https://greasyfork.org/scripts/400518-etoro-better-ui-%E7%95%B6%E6%B2%96%E5%A4%96%E6%8E%9B",
+  "code_url": "https://update.greasyfork.org/scripts/400518/eToro%20Better%20UI%20%E7%95%B6%E6%B2%96%E5%A4%96%E6%8E%9B.user.js",
+  "code_size": 3769,
+  "license": null,
+  "version": "0.39.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

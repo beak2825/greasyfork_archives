@@ -1,0 +1,68 @@
+[
+  {
+    "id": 405338,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-14T23:57:05.000Z",
+    "code_updated_at": "2020-06-20T21:44:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 581920,
+        "name": "Gybi Gybi",
+        "created_at": "2020-06-07T04:47:34.000Z",
+        "url": "https://greasyfork.org/users/581920-gybi-gybi"
+      }
+    ],
+    "name": "PangziForwarder",
+    "description": "Keyboard Control at PangziTV.com",
+    "url": "https://greasyfork.org/scripts/405338-pangziforwarder",
+    "code_url": "https://update.greasyfork.org/scripts/405338/PangziForwarder.user.js",
+    "code_size": 1660,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 404854,
+    "daily_installs": 0,
+    "total_installs": 74,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-07T04:48:51.000Z",
+    "code_updated_at": "2020-11-27T21:12:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 581920,
+        "name": "Gybi Gybi",
+        "created_at": "2020-06-07T04:47:34.000Z",
+        "url": "https://greasyfork.org/users/581920-gybi-gybi"
+      }
+    ],
+    "name": "DoubanRating",
+    "description": "在胖子/多瑙上显示豆瓣分数.",
+    "url": "https://greasyfork.org/scripts/404854-doubanrating",
+    "code_url": "https://update.greasyfork.org/scripts/404854/DoubanRating.user.js",
+    "code_size": 3724,
+    "license": null,
+    "version": "0.6.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

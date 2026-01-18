@@ -163,5 +163,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 410831,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-04T20:12:12.000Z",
+    "code_updated_at": "2020-09-04T20:12:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682411,
+        "name": "ooorz",
+        "created_at": "2020-08-25T00:22:59.000Z",
+        "url": "https://greasyfork.org/users/682411-ooorz"
+      }
+    ],
+    "name": "Invis Toggle Script",
+    "description": "a",
+    "url": "https://greasyfork.org/scripts/410831-invis-toggle-script",
+    "code_url": "https://update.greasyfork.org/scripts/410831/Invis%20Toggle%20Script.user.js",
+    "code_size": 1140,
+    "license": null,
+    "version": "0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 410731,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-03T08:19:27.000Z",
+    "code_updated_at": "2020-09-03T08:19:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682411,
+        "name": "ooorz",
+        "created_at": "2020-08-25T00:22:59.000Z",
+        "url": "https://greasyfork.org/users/682411-ooorz"
+      }
+    ],
+    "name": "Jstris Unofficial Matchmaking",
+    "description": "adds fast but unofficial matchmaking to jstris (still in development)",
+    "url": "https://greasyfork.org/scripts/410731-jstris-unofficial-matchmaking",
+    "code_url": "https://update.greasyfork.org/scripts/410731/Jstris%20Unofficial%20Matchmaking.user.js",
+    "code_size": 4334,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 409916,
+    "daily_installs": 0,
+    "total_installs": 192,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-25T00:29:43.000Z",
+    "code_updated_at": "2022-05-05T07:35:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682411,
+        "name": "ooorz",
+        "created_at": "2020-08-25T00:22:59.000Z",
+        "url": "https://greasyfork.org/users/682411-ooorz"
+      }
+    ],
+    "name": "Ultra PPB Script",
+    "description": "Shows ultra ppb and sorta accurate projected score, modified from Oki's cheese pace script",
+    "url": "https://greasyfork.org/scripts/409916-ultra-ppb-script",
+    "code_url": "https://update.greasyfork.org/scripts/409916/Ultra%20PPB%20Script.user.js",
+    "code_size": 2162,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

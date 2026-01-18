@@ -1,0 +1,33 @@
+{
+  "id": 399000,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-30T09:59:26.000Z",
+  "code_updated_at": "2021-05-29T14:08:17.000Z",
+  "namespace": "https://www.reddit.com/user/RobotOilInc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 2755,
+      "name": "RobotOilInc",
+      "created_at": "2014-06-11T20:10:21.000Z",
+      "url": "https://greasyfork.org/users/2755-robotoilinc"
+    }
+  ],
+  "name": "Weidian Search - Exporter",
+  "description": "Quickly export a Weidian search result to Markdown table",
+  "url": "https://greasyfork.org/scripts/399000-weidian-search-exporter",
+  "code_url": "https://update.greasyfork.org/scripts/399000/Weidian%20Search%20-%20Exporter.user.js",
+  "code_size": 6990,
+  "license": null,
+  "version": "0.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

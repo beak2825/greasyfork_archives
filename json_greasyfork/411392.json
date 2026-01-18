@@ -1,0 +1,59 @@
+{
+  "id": 411392,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-15T20:16:22.000Z",
+  "code_updated_at": "2020-10-01T16:30:00.000Z",
+  "namespace": "T Kanal",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 615115,
+      "name": "T Kanal",
+      "created_at": "2020-06-20T14:44:43.000Z",
+      "url": "https://greasyfork.org/users/615115-t-kanal",
+      "scripts": [
+        {
+          "id": 405737,
+          "daily_installs": 0,
+          "total_installs": 962,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-20T14:57:54.000Z",
+          "code_updated_at": "2023-08-02T02:33:54.000Z",
+          "namespace": "T-Kanal",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pennergame smileys 2020 & Servertime",
+          "description": "Erweiterter BB-Code Editor mit Vorschaufunktion Smylies 2020 + Genaue Serverzeit",
+          "url": "https://greasyfork.org/scripts/405737-pennergame-smileys-2020-servertime",
+          "code_url": "https://update.greasyfork.org/scripts/405737/Pennergame%20smileys%202020%20%20Servertime.user.js",
+          "code_size": 53789,
+          "license": null,
+          "version": "3.6.5",
+          "locale": "de",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Highscore Anzeige aus letzten HS Stand mit WB anzeige",
+  "description": "Highscore Anzeige aus letzten Hs stand + Genaue Server zeit + Wb auslesen + Geld",
+  "url": "https://greasyfork.org/scripts/411392-highscore-anzeige-aus-letzten-hs-stand-mit-wb-anzeige",
+  "code_url": "https://update.greasyfork.org/scripts/411392/Highscore%20Anzeige%20aus%20letzten%20HS%20Stand%20mit%20WB%20anzeige.user.js",
+  "code_size": 12078,
+  "license": null,
+  "version": "1.8.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

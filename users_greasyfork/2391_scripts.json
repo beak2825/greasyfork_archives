@@ -97,5 +97,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 407773,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-26T17:23:00.000Z",
+    "code_updated_at": "2020-12-08T21:58:25.000Z",
+    "namespace": "https://greasyfork.org/users/2391",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2391,
+        "name": "Twister-UK",
+        "created_at": "2014-06-01T20:56:02.000Z",
+        "url": "https://greasyfork.org/users/2391-twister-uk"
+      }
+    ],
+    "name": "ManifestCSV",
+    "description": "Convert Hermes manifest to CSV",
+    "url": "https://greasyfork.org/scripts/407773-manifestcsv",
+    "code_url": "https://update.greasyfork.org/scripts/407773/ManifestCSV.user.js",
+    "code_size": 6038,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395577,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-23T15:00:57.000Z",
+    "code_updated_at": "2022-01-17T23:50:50.000Z",
+    "namespace": "http://greasemonkey.chizzum.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2391,
+        "name": "Twister-UK",
+        "created_at": "2014-06-01T20:56:02.000Z",
+        "url": "https://greasyfork.org/users/2391-twister-uk"
+      }
+    ],
+    "name": "WME Map Comments Chronological Conversation Corrector (WMC4)",
+    "description": "Quick hacky fix to restore chronological ordering to map comment conversations",
+    "url": "https://greasyfork.org/scripts/395577-wme-map-comments-chronological-conversation-corrector-wmc4",
+    "code_url": "https://update.greasyfork.org/scripts/395577/WME%20Map%20Comments%20Chronological%20Conversation%20Corrector%20%28WMC4%29.user.js",
+    "code_size": 4958,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

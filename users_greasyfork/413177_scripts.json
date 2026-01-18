@@ -63,6 +63,72 @@
     "version": "2.4",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 400112,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-08T23:10:36.000Z",
+    "code_updated_at": "2020-04-09T01:02:30.000Z",
+    "namespace": "https://greasyfork.org/en/users/232363-tsitu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413177,
+        "name": "Relaia",
+        "created_at": "2019-12-07T13:13:07.000Z",
+        "url": "https://greasyfork.org/users/413177-relaia"
+      }
+    ],
+    "name": "MouseHunt - Favorite Setups (fix)",
+    "description": "Unlimited custom favorite trap setups!",
+    "url": "https://greasyfork.org/scripts/400112-mousehunt-favorite-setups-fix",
+    "code_url": "https://update.greasyfork.org/scripts/400112/MouseHunt%20-%20Favorite%20Setups%20%28fix%29.user.js",
+    "code_size": 17015,
+    "license": null,
+    "version": "0.3.2.1 (beta)",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393436,
+    "daily_installs": 0,
+    "total_installs": 2975,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2019-12-07T13:15:16.000Z",
+    "code_updated_at": "2020-11-02T09:31:38.000Z",
+    "namespace": "https://greasyfork.org/users/413177",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 413177,
+        "name": "Relaia",
+        "created_at": "2019-12-07T13:13:07.000Z",
+        "url": "https://greasyfork.org/users/413177-relaia"
+      }
+    ],
+    "name": "MouseHunt - Valour Rift Simulator",
+    "description": "Click the Boss icon beside the floor progress bar to simulate your run!",
+    "url": "https://greasyfork.org/scripts/393436-mousehunt-valour-rift-simulator",
+    "code_url": "https://update.greasyfork.org/scripts/393436/MouseHunt%20-%20Valour%20Rift%20Simulator.user.js",
+    "code_size": 20243,
+    "license": null,
+    "version": "1.23",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

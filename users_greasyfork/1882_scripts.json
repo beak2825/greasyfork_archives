@@ -30,6 +30,39 @@
     "version": "3.65.03",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 408233,
+    "daily_installs": 1,
+    "total_installs": 421,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-05T11:14:11.000Z",
+    "code_updated_at": "2024-08-21T11:34:55.000Z",
+    "namespace": "GameAdjustmentsKoC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1882,
+        "name": "CreamCheese",
+        "created_at": "2014-05-21T20:50:32.000Z",
+        "url": "https://greasyfork.org/users/1882-creamcheese"
+      }
+    ],
+    "name": "Extra KOC Adjustments",
+    "description": "Adjusting some KOC things to make it easier to play",
+    "url": "https://greasyfork.org/scripts/408233-extra-koc-adjustments",
+    "code_url": "https://update.greasyfork.org/scripts/408233/Extra%20KOC%20Adjustments.user.js",
+    "code_size": 3602,
+    "license": "Creative Commons Attribution 4.0 International",
+    "version": "2.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

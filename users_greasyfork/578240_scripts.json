@@ -1,0 +1,68 @@
+[
+  {
+    "id": 404586,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-03T05:56:25.000Z",
+    "code_updated_at": "2020-06-03T05:56:48.000Z",
+    "namespace": "https://greasyfork.org/nl/scripts/404586-rabbitmq-move-and-delete-on-top",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 578240,
+        "name": "Niels Schroyen",
+        "created_at": "2020-06-03T05:28:07.000Z",
+        "url": "https://greasyfork.org/users/578240-niels-schroyen"
+      }
+    ],
+    "name": "RabbitMQ Move and Delete on top",
+    "description": "Put Move and delete on top of an error queue page for easy access",
+    "url": "https://greasyfork.org/scripts/404586-rabbitmq-move-and-delete-on-top",
+    "code_url": "https://update.greasyfork.org/scripts/404586/RabbitMQ%20Move%20and%20Delete%20on%20top.user.js",
+    "code_size": 1172,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 404585,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-03T05:29:56.000Z",
+    "code_updated_at": "2020-06-03T05:59:32.000Z",
+    "namespace": "https://greasyfork.org/nl/scripts/404585-rabbitmq-auto-destination-queue-for-errorqueues",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 578240,
+        "name": "Niels Schroyen",
+        "created_at": "2020-06-03T05:28:07.000Z",
+        "url": "https://greasyfork.org/users/578240-niels-schroyen"
+      }
+    ],
+    "name": "RabbitMQ Auto Destination queue for errorqueues",
+    "description": "Fills in the destination queue for an errorqueue",
+    "url": "https://greasyfork.org/scripts/404585-rabbitmq-auto-destination-queue-for-errorqueues",
+    "code_url": "https://update.greasyfork.org/scripts/404585/RabbitMQ%20Auto%20Destination%20queue%20for%20errorqueues.user.js",
+    "code_size": 1331,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

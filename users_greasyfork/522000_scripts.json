@@ -361,5 +361,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 410968,
+    "daily_installs": 0,
+    "total_installs": 3597,
+    "fan_score": "6.1",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2020-09-07T21:39:35.000Z",
+    "code_updated_at": "2020-09-07T21:49:36.000Z",
+    "namespace": "https://www.youtube.com/watch?v=X5Kby6s86dE&t=6s",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 522000,
+        "name": "Ginfio",
+        "created_at": "2020-04-19T02:53:52.000Z",
+        "url": "https://greasyfork.org/users/522000-ginfio"
+      }
+    ],
+    "name": "Nitro Type winner.",
+    "description": "Nitro",
+    "url": "https://greasyfork.org/scripts/410968-nitro-type-winner",
+    "code_url": "https://update.greasyfork.org/scripts/410968/Nitro%20Type%20winner.user.js",
+    "code_size": 444,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406723,
+    "daily_installs": 0,
+    "total_installs": 901,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-07-08T17:21:18.000Z",
+    "code_updated_at": "2020-07-09T03:23:54.000Z",
+    "namespace": "https://youtu.be/jHMrsPJm8xM",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 522000,
+        "name": "Ginfio",
+        "created_at": "2020-04-19T02:53:52.000Z",
+        "url": "https://greasyfork.org/users/522000-ginfio"
+      }
+    ],
+    "name": "Nitro Type \"invite all friends\" button.",
+    "description": "When you want to invite friends to a race on nitro type, you have to click on each checkmark to invite all of them. But with this script, it'll check all the checkmarks for you. So the only thing you have to do is click on the \"Invite friends(x)\" button.",
+    "url": "https://greasyfork.org/scripts/406723-nitro-type-invite-all-friends-button",
+    "code_url": "https://update.greasyfork.org/scripts/406723/Nitro%20Type%20%22invite%20all%20friends%22%20button.user.js",
+    "code_size": 1715,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405099,
+    "daily_installs": 0,
+    "total_installs": 408,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-11T02:28:49.000Z",
+    "code_updated_at": "2020-06-13T01:05:54.000Z",
+    "namespace": "https://www.youtube.com/channel/UCOQMOlaQ6GxltRHA_mwGVvQ",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 522000,
+        "name": "Ginfio",
+        "created_at": "2020-04-19T02:53:52.000Z",
+        "url": "https://greasyfork.org/users/522000-ginfio"
+      }
+    ],
+    "name": "Nitro Type \"Updates\" navigation button",
+    "description": "There's a new nitro type page, the \"Updates\" page. However it doesn't have \"Updates\" on the navigation to go to that page. You can use this script so you can access the \"Updates\" page easily like any other nitro type pages.",
+    "url": "https://greasyfork.org/scripts/405099-nitro-type-updates-navigation-button",
+    "code_url": "https://update.greasyfork.org/scripts/405099/Nitro%20Type%20%22Updates%22%20navigation%20button.user.js",
+    "code_size": 991,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 404895,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-08T00:24:21.000Z",
+    "code_updated_at": "2020-06-08T00:25:09.000Z",
+    "namespace": "https://greasyfork.org/users/522000",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 522000,
+        "name": "Ginfio",
+        "created_at": "2020-04-19T02:53:52.000Z",
+        "url": "https://greasyfork.org/users/522000-ginfio"
+      }
+    ],
+    "name": "_YOUR_SCRIPT_NAME",
+    "description": "Wow this is it and you cand ot it",
+    "url": "https://greasyfork.org/scripts/404895-your-script-name",
+    "code_url": "https://update.greasyfork.org/scripts/404895/_YOUR_SCRIPT_NAME.user.js",
+    "code_size": 564,
+    "license": null,
+    "version": "0.0.1.20200608002509",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401861,
+    "daily_installs": 3,
+    "total_installs": 41149,
+    "fan_score": "50.3",
+    "good_ratings": 21,
+    "ok_ratings": 6,
+    "bad_ratings": 9,
+    "created_at": "2020-04-24T03:21:59.000Z",
+    "code_updated_at": "2020-05-01T01:55:19.000Z",
+    "namespace": "https://www.youtube.com/c/Ginfio",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 522000,
+        "name": "Ginfio",
+        "created_at": "2020-04-19T02:53:52.000Z",
+        "url": "https://greasyfork.org/users/522000-ginfio"
+      }
+    ],
+    "name": "Nitro Type Car Hack _ Literally get ALL the cars",
+    "description": "Literally get all the nitro type cars. Unfortunately though, we aren't able to sell / or use the cars on race.",
+    "url": "https://greasyfork.org/scripts/401861-nitro-type-car-hack-literally-get-all-the-cars",
+    "code_url": "https://update.greasyfork.org/scripts/401861/Nitro%20Type%20Car%20Hack%20_%20Literally%20get%20ALL%20the%20cars.user.js",
+    "code_size": 6901,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

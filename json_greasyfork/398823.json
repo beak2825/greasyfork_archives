@@ -1,0 +1,59 @@
+{
+  "id": 398823,
+  "daily_installs": 0,
+  "total_installs": 646,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2020-03-27T17:38:32.000Z",
+  "code_updated_at": "2020-03-27T17:40:03.000Z",
+  "namespace": "AnarchyHS",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 470178,
+      "name": "AnarchyHS",
+      "created_at": "2020-03-27T17:26:30.000Z",
+      "url": "https://greasyfork.org/users/470178-anarchyhs",
+      "scripts": [
+        {
+          "id": 398823,
+          "daily_installs": 0,
+          "total_installs": 646,
+          "fan_score": "31.0",
+          "good_ratings": 2,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2020-03-27T17:38:32.000Z",
+          "code_updated_at": "2020-03-27T17:40:03.000Z",
+          "namespace": "AnarchyHS",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Freebitco.in best script to play Multiply odd 1.5 win chance 63% (NOT FOR LOW BALANCE)",
+          "description": "Play with higher chance , READ FIRST",
+          "url": "https://greasyfork.org/scripts/398823-freebitco-in-best-script-to-play-multiply-odd-1-5-win-chance-63-not-for-low-balance",
+          "code_url": "https://update.greasyfork.org/scripts/398823/Freebitcoin%20best%20script%20to%20play%20Multiply%20odd%2015%20win%20chance%2063%25%20%28NOT%20FOR%20LOW%20BALANCE%29.user.js",
+          "code_size": 4411,
+          "license": null,
+          "version": "0.0.1.20200327174003",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Freebitco.in best script to play Multiply odd 1.5 win chance 63% (NOT FOR LOW BALANCE)",
+  "description": "Play with higher chance , READ FIRST",
+  "url": "https://greasyfork.org/scripts/398823-freebitco-in-best-script-to-play-multiply-odd-1-5-win-chance-63-not-for-low-balance",
+  "code_url": "https://update.greasyfork.org/scripts/398823/Freebitcoin%20best%20script%20to%20play%20Multiply%20odd%2015%20win%20chance%2063%25%20%28NOT%20FOR%20LOW%20BALANCE%29.user.js",
+  "code_size": 4411,
+  "license": null,
+  "version": "0.0.1.20200327174003",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 409809,
+    "daily_installs": 0,
+    "total_installs": 45130,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-08-23T01:16:28.000Z",
+    "code_updated_at": "2023-08-13T10:58:54.000Z",
+    "namespace": "https://www.bingdou.vip",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 681907,
+        "name": "yellowside",
+        "created_at": "2020-08-23T01:03:11.000Z",
+        "url": "https://greasyfork.org/users/681907-yellowside"
+      }
+    ],
+    "name": "【冰豆云播】免费在线观看VIP视频，支持爱奇艺，优酷，乐视tv，腾讯视频，土豆，芒果TV，搜狐视频，Acfun，bilibili，PPTV，华数TV等主流影视平台",
+    "description": "只专注于一个功能，简洁干净，在视频播放页左侧点击VIP按钮，跳转到新页面即可免费在线观看vip视频",
+    "url": "https://greasyfork.org/scripts/409809-%E5%86%B0%E8%B1%86%E4%BA%91%E6%92%AD-%E5%85%8D%E8%B4%B9%E5%9C%A8%E7%BA%BF%E8%A7%82%E7%9C%8Bvip%E8%A7%86%E9%A2%91-%E6%94%AF%E6%8C%81%E7%88%B1%E5%A5%87%E8%89%BA-%E4%BC%98%E9%85%B7-%E4%B9%90%E8%A7%86tv-%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91-%E5%9C%9F%E8%B1%86-%E8%8A%92%E6%9E%9Ctv-%E6%90%9C%E7%8B%90%E8%A7%86%E9%A2%91-acfun-bilibili-pptv-%E5%8D%8E%E6%95%B0tv%E7%AD%89%E4%B8%BB%E6%B5%81%E5%BD%B1%E8%A7%86%E5%B9%B3%E5%8F%B0",
+    "code_url": "https://update.greasyfork.org/scripts/409809/%E3%80%90%E5%86%B0%E8%B1%86%E4%BA%91%E6%92%AD%E3%80%91%E5%85%8D%E8%B4%B9%E5%9C%A8%E7%BA%BF%E8%A7%82%E7%9C%8BVIP%E8%A7%86%E9%A2%91%EF%BC%8C%E6%94%AF%E6%8C%81%E7%88%B1%E5%A5%87%E8%89%BA%EF%BC%8C%E4%BC%98%E9%85%B7%EF%BC%8C%E4%B9%90%E8%A7%86tv%EF%BC%8C%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%EF%BC%8C%E5%9C%9F%E8%B1%86%EF%BC%8C%E8%8A%92%E6%9E%9CTV%EF%BC%8C%E6%90%9C%E7%8B%90%E8%A7%86%E9%A2%91%EF%BC%8CAcfun%EF%BC%8Cbilibili%EF%BC%8CPPTV%EF%BC%8C%E5%8D%8E%E6%95%B0TV%E7%AD%89%E4%B8%BB%E6%B5%81%E5%BD%B1%E8%A7%86%E5%B9%B3%E5%8F%B0.user.js",
+    "code_size": 1989,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

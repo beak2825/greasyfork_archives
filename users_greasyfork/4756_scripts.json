@@ -30,6 +30,72 @@
     "version": "0.2",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 405992,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-24T16:00:03.000Z",
+    "code_updated_at": "2020-06-24T16:00:02.000Z",
+    "namespace": "https://greasyfork.org/users/4756",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4756,
+        "name": "Michael Cimino",
+        "created_at": "2014-08-26T14:09:40.000Z",
+        "url": "https://greasyfork.org/users/4756-michael-cimino"
+      }
+    ],
+    "name": "Coursera Peer Admin Helper",
+    "description": "When browsing the Course Manager > Peer Review Submissions",
+    "url": "https://greasyfork.org/scripts/405992-coursera-peer-admin-helper",
+    "code_url": "https://update.greasyfork.org/scripts/405992/Coursera%20Peer%20Admin%20Helper.user.js",
+    "code_size": 6251,
+    "license": null,
+    "version": "0.1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396942,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-26T15:46:28.000Z",
+    "code_updated_at": "2020-08-18T18:33:33.000Z",
+    "namespace": "https://greasyfork.org/users/4756",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4756,
+        "name": "Michael Cimino",
+        "created_at": "2014-08-26T14:09:40.000Z",
+        "url": "https://greasyfork.org/users/4756-michael-cimino"
+      }
+    ],
+    "name": "Coursera Forum Peer Review Helper",
+    "description": "When browsing the Coursera forum, looks for each peer review link, then tries to mark if it's ungraded, graded, or deleted.",
+    "url": "https://greasyfork.org/scripts/396942-coursera-forum-peer-review-helper",
+    "code_url": "https://update.greasyfork.org/scripts/396942/Coursera%20Forum%20Peer%20Review%20Helper.user.js",
+    "code_size": 63807,
+    "license": null,
+    "version": "0.4.4",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

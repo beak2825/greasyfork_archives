@@ -1,0 +1,35 @@
+[
+  {
+    "id": 403877,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-21T22:09:56.000Z",
+    "code_updated_at": "2020-05-21T22:09:56.000Z",
+    "namespace": "RedditPopFilter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570201,
+        "name": "zachmu",
+        "created_at": "2020-05-21T22:02:02.000Z",
+        "url": "https://greasyfork.org/users/570201-zachmu"
+      }
+    ],
+    "name": "Subreddit filter",
+    "description": "Filter the reddit popular page of terrible subreddits",
+    "url": "https://greasyfork.org/scripts/403877-subreddit-filter",
+    "code_url": "https://update.greasyfork.org/scripts/403877/Subreddit%20filter.user.js",
+    "code_size": 2547,
+    "license": "Apache 2.0",
+    "version": "0.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

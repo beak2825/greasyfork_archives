@@ -1,0 +1,59 @@
+{
+  "id": 400140,
+  "daily_installs": 0,
+  "total_installs": 156,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-09T07:48:53.000Z",
+  "code_updated_at": "2020-04-09T07:58:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 397367,
+      "name": "4L00",
+      "created_at": "2019-11-12T23:45:51.000Z",
+      "url": "https://greasyfork.org/users/397367-4l00",
+      "scripts": [
+        {
+          "id": 400140,
+          "daily_installs": 0,
+          "total_installs": 156,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-09T07:48:53.000Z",
+          "code_updated_at": "2020-04-09T07:58:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Stream IMDB",
+          "description": "try to take over the Streaming world! This script will add few buttons on IMDB page from where on you can stream the movie if it is in the database.",
+          "url": "https://greasyfork.org/scripts/400140-stream-imdb",
+          "code_url": "https://update.greasyfork.org/scripts/400140/Stream%20IMDB.user.js",
+          "code_size": 2257,
+          "license": null,
+          "version": "0.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Stream IMDB",
+  "description": "try to take over the Streaming world! This script will add few buttons on IMDB page from where on you can stream the movie if it is in the database.",
+  "url": "https://greasyfork.org/scripts/400140-stream-imdb",
+  "code_url": "https://update.greasyfork.org/scripts/400140/Stream%20IMDB.user.js",
+  "code_size": 2257,
+  "license": null,
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

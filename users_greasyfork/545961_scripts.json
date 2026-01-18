@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 402239,
+    "daily_installs": 0,
+    "total_installs": 4917,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-28T23:44:40.000Z",
+    "code_updated_at": "2020-11-12T19:02:55.000Z",
+    "namespace": "http://tampermonkey.net/*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 545961,
+        "name": "Drapinqs",
+        "created_at": "2020-04-28T23:28:20.000Z",
+        "url": "https://greasyfork.org/users/545961-drapinqs"
+      }
+    ],
+    "name": "BETTER GOTA (No Lag, Smooth) ~ Drapinqs [V2]",
+    "description": "Lag Fix, Cleaner UI, Smoother Gameplay. Script Tested with Donut Extension ~ WARNING: THIS SCRIPT DOES NOT WORK ON LEGACY CLIENT",
+    "url": "https://greasyfork.org/scripts/402239-better-gota-no-lag-smooth-drapinqs-v2",
+    "code_url": "https://update.greasyfork.org/scripts/402239/BETTER%20GOTA%20%28No%20Lag%2C%20Smooth%29%20~%20Drapinqs%20%5BV2%5D.user.js",
+    "code_size": 9585,
+    "license": null,
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

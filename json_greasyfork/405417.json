@@ -1,0 +1,34 @@
+{
+  "id": 405417,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-06-16T02:51:55.000Z",
+  "code_updated_at": "2023-08-21T16:40:24.000Z",
+  "namespace": "https://greasyfork.org/users/592542",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 592542,
+      "name": "okonomichiyaki",
+      "created_at": "2020-06-14T22:31:39.000Z",
+      "url": "https://greasyfork.org/users/592542-okonomichiyaki",
+      "scripts": []
+    }
+  ],
+  "name": "ogs 8-bit style",
+  "description": "8-bit style on OGS, based on Hayauchi super igo",
+  "url": "https://greasyfork.org/scripts/405417-ogs-8-bit-style",
+  "code_url": "https://update.greasyfork.org/scripts/405417/ogs%208-bit%20style.user.js",
+  "code_size": 4281,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

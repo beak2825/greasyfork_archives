@@ -1,0 +1,33 @@
+{
+  "id": 406537,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-05T17:11:40.000Z",
+  "code_updated_at": "2020-09-22T13:30:49.000Z",
+  "namespace": "http://dealz.rrr.de/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 75209,
+      "name": "KayM",
+      "created_at": "2016-10-22T18:52:32.000Z",
+      "url": "https://greasyfork.org/users/75209-kaym"
+    }
+  ],
+  "name": "My Ref on Amazon (auch über MD)",
+  "description": "Unterstütze einen Ref deiner Wahl",
+  "url": "https://greasyfork.org/scripts/406537-my-ref-on-amazon-auch-%C3%BCber-md",
+  "code_url": "https://update.greasyfork.org/scripts/406537/My%20Ref%20on%20Amazon%20%28auch%20%C3%BCber%20MD%29.user.js",
+  "code_size": 5137,
+  "license": null,
+  "version": "20.09.222",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

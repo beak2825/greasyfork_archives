@@ -1,0 +1,68 @@
+[
+  {
+    "id": 410067,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-28T07:18:17.000Z",
+    "code_updated_at": "2020-09-24T20:26:11.000Z",
+    "namespace": "https://github.com/Prid13/Revert-StackExchange-Formatting",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397997,
+        "name": "Prid13",
+        "created_at": "2019-11-14T22:41:44.000Z",
+        "url": "https://greasyfork.org/users/397997-prid13"
+      }
+    ],
+    "name": "Revert StackExchange Formatting",
+    "description": "Brings back the old line-height, colors, padding, borders, etc. of StackExchange websites like StackOverflow, SuperUser, ServerFault, etc.",
+    "url": "https://greasyfork.org/scripts/410067-revert-stackexchange-formatting",
+    "code_url": "https://update.greasyfork.org/scripts/410067/Revert%20StackExchange%20Formatting.user.js",
+    "code_size": 4725,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396223,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-02-09T03:02:36.000Z",
+    "code_updated_at": "2023-07-23T01:07:27.000Z",
+    "namespace": "https://github.com/Prid13",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397997,
+        "name": "Prid13",
+        "created_at": "2019-11-14T22:41:44.000Z",
+        "url": "https://greasyfork.org/users/397997-prid13"
+      }
+    ],
+    "name": "Google Images without text",
+    "description": "Remove title and description from below images on Google Images for a cleaner and simpler look, or if you prefer the look of Bing and DuckDuckGo but love Google too much. (Enhanced for chrome extension, Google Images Restored)",
+    "url": "https://greasyfork.org/scripts/396223-google-images-without-text",
+    "code_url": "https://update.greasyfork.org/scripts/396223/Google%20Images%20without%20text.user.js",
+    "code_size": 3642,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 405321,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-14T12:46:11.000Z",
+  "code_updated_at": "2020-06-28T17:15:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 591684,
+      "name": "Krosis",
+      "created_at": "2020-06-14T12:34:08.000Z",
+      "url": "https://greasyfork.org/users/591684-krosis",
+      "scripts": [
+        {
+          "id": 405321,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-14T12:46:11.000Z",
+          "code_updated_at": "2020-06-28T17:15:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Melvor Notification Ding",
+          "description": "Plays a ding sound when a notification is displayed for farming or slayer.",
+          "url": "https://greasyfork.org/scripts/405321-melvor-notification-ding",
+          "code_url": "https://update.greasyfork.org/scripts/405321/Melvor%20Notification%20Ding.user.js",
+          "code_size": 1184,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Melvor Notification Ding",
+  "description": "Plays a ding sound when a notification is displayed for farming or slayer.",
+  "url": "https://greasyfork.org/scripts/405321-melvor-notification-ding",
+  "code_url": "https://update.greasyfork.org/scripts/405321/Melvor%20Notification%20Ding.user.js",
+  "code_size": 1184,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

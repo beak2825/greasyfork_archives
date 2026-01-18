@@ -1,0 +1,34 @@
+{
+  "id": 398998,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-30T09:46:15.000Z",
+  "code_updated_at": "2020-04-09T07:54:25.000Z",
+  "namespace": "http://github.com/nixklai/BbC-Playback",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 471771,
+      "name": "nixklai",
+      "created_at": "2020-03-30T09:42:55.000Z",
+      "url": "https://greasyfork.org/users/471771-nixklai",
+      "scripts": []
+    }
+  ],
+  "name": "Blackboard Collaborate Playback Downloader",
+  "description": "Enable playback download in Blackboard Collaborate",
+  "url": "https://greasyfork.org/scripts/398998-blackboard-collaborate-playback-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/398998/Blackboard%20Collaborate%20Playback%20Downloader.user.js",
+  "code_size": 5457,
+  "license": null,
+  "version": "0.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

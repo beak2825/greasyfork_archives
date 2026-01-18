@@ -1,0 +1,34 @@
+{
+  "id": 399354,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-02T15:48:52.000Z",
+  "code_updated_at": "2020-04-25T18:49:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 473804,
+      "name": "MadMattax",
+      "created_at": "2020-04-02T15:46:58.000Z",
+      "url": "https://greasyfork.org/users/473804-madmattax",
+      "scripts": []
+    }
+  ],
+  "name": "Amazon Prime Now Checker",
+  "description": "Amazon Prime Now delivery checker",
+  "url": "https://greasyfork.org/scripts/399354-amazon-prime-now-checker",
+  "code_url": "https://update.greasyfork.org/scripts/399354/Amazon%20Prime%20Now%20Checker.user.js",
+  "code_size": 14573,
+  "license": null,
+  "version": "0.8.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 400269,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-10T13:19:49.000Z",
+    "code_updated_at": "2020-04-10T13:19:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 500550,
+        "name": "mgabor3141",
+        "created_at": "2020-04-10T13:11:43.000Z",
+        "url": "https://greasyfork.org/users/500550-mgabor3141"
+      }
+    ],
+    "name": "Slag (Kréta segédprogram)",
+    "description": "Fantom jegyek hozzáadása átlagszámítás céljából",
+    "url": "https://greasyfork.org/scripts/400269-slag-kr%C3%A9ta-seg%C3%A9dprogram",
+    "code_url": "https://update.greasyfork.org/scripts/400269/Slag%20%28Kr%C3%A9ta%20seg%C3%A9dprogram%29.user.js",
+    "code_size": 3219,
+    "license": null,
+    "version": "0.1",
+    "locale": "hu",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 410053,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-27T20:47:23.000Z",
+  "code_updated_at": "2020-09-03T04:39:37.000Z",
+  "namespace": "https://greasyfork.org/users/65414",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 65414,
+      "name": "rubyruby",
+      "created_at": "2016-09-11T00:18:23.000Z",
+      "url": "https://greasyfork.org/users/65414-rubyruby",
+      "scripts": []
+    }
+  ],
+  "name": "Temp Drafts Pagination Fix",
+  "description": "Temporary fix for missing drafted posts when not using endless scrolling.",
+  "url": "https://greasyfork.org/scripts/410053-temp-drafts-pagination-fix",
+  "code_url": "https://update.greasyfork.org/scripts/410053/Temp%20Drafts%20Pagination%20Fix.user.js",
+  "code_size": 1451,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

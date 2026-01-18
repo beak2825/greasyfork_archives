@@ -1,0 +1,34 @@
+{
+  "id": 407365,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-19T01:17:56.000Z",
+  "code_updated_at": "2020-07-29T06:21:22.000Z",
+  "namespace": "https://withkoji.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 668071,
+      "name": "Sean Thielen",
+      "created_at": "2020-07-19T01:17:34.000Z",
+      "url": "https://greasyfork.org/users/668071-sean-thielen",
+      "scripts": []
+    }
+  ],
+  "name": "Koji Button (Reddit)",
+  "description": "Adds a Koji Button to supported websites",
+  "url": "https://greasyfork.org/scripts/407365-koji-button-reddit",
+  "code_url": "https://update.greasyfork.org/scripts/407365/Koji%20Button%20%28Reddit%29.user.js",
+  "code_size": 5691,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

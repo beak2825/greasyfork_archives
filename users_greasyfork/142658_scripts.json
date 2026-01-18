@@ -1,0 +1,68 @@
+[
+  {
+    "id": 409786,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-22T14:18:49.000Z",
+    "code_updated_at": "2021-10-31T01:11:44.000Z",
+    "namespace": "https://kitsun.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 142658,
+        "name": "seanblue",
+        "created_at": "2017-07-22T00:46:08.000Z",
+        "url": "https://greasyfork.org/users/142658-seanblue"
+      }
+    ],
+    "name": "Kitsun Open JPod101 Audio",
+    "description": "Open JPod101 audio for the word being edited in a new tab.",
+    "url": "https://greasyfork.org/scripts/409786-kitsun-open-jpod101-audio",
+    "code_url": "https://update.greasyfork.org/scripts/409786/Kitsun%20Open%20JPod101%20Audio.user.js",
+    "code_size": 1546,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 409748,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-22T13:23:47.000Z",
+    "code_updated_at": "2021-03-20T00:10:32.000Z",
+    "namespace": "https://kitsun.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 142658,
+        "name": "seanblue",
+        "created_at": "2017-07-22T00:46:08.000Z",
+        "url": "https://greasyfork.org/users/142658-seanblue"
+      }
+    ],
+    "name": "Kitsun Highlight Word in Sentence",
+    "description": "Wrap the selected word in HTML to \"highlight\" it in the sentence.",
+    "url": "https://greasyfork.org/scripts/409748-kitsun-highlight-word-in-sentence",
+    "code_url": "https://update.greasyfork.org/scripts/409748/Kitsun%20Highlight%20Word%20in%20Sentence.user.js",
+    "code_size": 1359,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

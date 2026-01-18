@@ -1,0 +1,59 @@
+{
+  "id": 407242,
+  "daily_installs": 0,
+  "total_installs": 56,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-17T06:52:24.000Z",
+  "code_updated_at": "2020-07-17T07:25:31.000Z",
+  "namespace": "https://github.com/modochear/Mirror-image-of-page/",
+  "support_url": "https://github.com/modochear/Mirror-image-of-page/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 667567,
+      "name": "modochear",
+      "created_at": "2020-07-17T06:10:24.000Z",
+      "url": "https://greasyfork.org/users/667567-modochear",
+      "scripts": [
+        {
+          "id": 407242,
+          "daily_installs": 0,
+          "total_installs": 56,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-17T06:52:24.000Z",
+          "code_updated_at": "2020-07-17T07:25:31.000Z",
+          "namespace": "https://github.com/modochear/Mirror-image-of-page/",
+          "support_url": "https://github.com/modochear/Mirror-image-of-page/",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "镜像网站",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/407242-%E9%95%9C%E5%83%8F%E7%BD%91%E7%AB%99",
+          "code_url": "https://update.greasyfork.org/scripts/407242/%E9%95%9C%E5%83%8F%E7%BD%91%E7%AB%99.user.js",
+          "code_size": 815,
+          "license": null,
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "镜像网站",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/407242-%E9%95%9C%E5%83%8F%E7%BD%91%E7%AB%99",
+  "code_url": "https://update.greasyfork.org/scripts/407242/%E9%95%9C%E5%83%8F%E7%BD%91%E7%AB%99.user.js",
+  "code_size": 815,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

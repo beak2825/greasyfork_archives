@@ -1,0 +1,34 @@
+{
+  "id": 401316,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-18T11:01:07.000Z",
+  "code_updated_at": "2020-04-18T11:03:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 521391,
+      "name": "1105104205",
+      "created_at": "2020-04-18T10:45:37.000Z",
+      "url": "https://greasyfork.org/users/521391-1105104205",
+      "scripts": []
+    }
+  ],
+  "name": "隱藏教學平台上 非本學期的作業",
+  "description": "作者：Shawn Chuang EE",
+  "url": "https://greasyfork.org/scripts/401316-%E9%9A%B1%E8%97%8F%E6%95%99%E5%AD%B8%E5%B9%B3%E5%8F%B0%E4%B8%8A-%E9%9D%9E%E6%9C%AC%E5%AD%B8%E6%9C%9F%E7%9A%84%E4%BD%9C%E6%A5%AD",
+  "code_url": "https://update.greasyfork.org/scripts/401316/%E9%9A%B1%E8%97%8F%E6%95%99%E5%AD%B8%E5%B9%B3%E5%8F%B0%E4%B8%8A%20%E9%9D%9E%E6%9C%AC%E5%AD%B8%E6%9C%9F%E7%9A%84%E4%BD%9C%E6%A5%AD.user.js",
+  "code_size": 1718,
+  "license": null,
+  "version": "1.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

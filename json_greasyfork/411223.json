@@ -1,0 +1,59 @@
+{
+  "id": 411223,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-11T17:07:27.000Z",
+  "code_updated_at": "2020-09-12T03:52:36.000Z",
+  "namespace": "ppcross.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 686567,
+      "name": "imhsz",
+      "created_at": "2020-09-10T14:30:43.000Z",
+      "url": "https://greasyfork.org/users/686567-imhsz",
+      "scripts": [
+        {
+          "id": 415748,
+          "daily_installs": 0,
+          "total_installs": 1027,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-11-08T14:29:59.000Z",
+          "code_updated_at": "2020-11-08T14:29:58.000Z",
+          "namespace": "PPBrowser",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "视频增强",
+          "description": "视频增强,原作者: Nihility",
+          "url": "https://greasyfork.org/scripts/415748-%E8%A7%86%E9%A2%91%E5%A2%9E%E5%BC%BA",
+          "code_url": "https://update.greasyfork.org/scripts/415748/%E8%A7%86%E9%A2%91%E5%A2%9E%E5%BC%BA.user.js",
+          "code_size": 21132,
+          "license": null,
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "amazon asin prices",
+  "description": "amazon price history",
+  "url": "https://greasyfork.org/scripts/411223-amazon-asin-prices",
+  "code_url": "https://update.greasyfork.org/scripts/411223/amazon%20asin%20prices.user.js",
+  "code_size": 13446,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

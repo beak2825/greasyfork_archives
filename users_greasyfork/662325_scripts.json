@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406361,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-02T02:29:22.000Z",
+    "code_updated_at": "2020-07-02T02:29:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662325,
+        "name": "sakurasoso",
+        "created_at": "2020-07-02T02:27:11.000Z",
+        "url": "https://greasyfork.org/users/662325-sakurasoso"
+      }
+    ],
+    "name": "Yobot合刀辅助计算器",
+    "description": "辅助计算合刀",
+    "url": "https://greasyfork.org/scripts/406361-yobot%E5%90%88%E5%88%80%E8%BE%85%E5%8A%A9%E8%AE%A1%E7%AE%97%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/406361/Yobot%E5%90%88%E5%88%80%E8%BE%85%E5%8A%A9%E8%AE%A1%E7%AE%97%E5%99%A8.user.js",
+    "code_size": 7160,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

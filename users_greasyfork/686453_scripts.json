@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411158,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-10T07:05:38.000Z",
+    "code_updated_at": "2020-09-10T07:05:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 686453,
+        "name": "riuice",
+        "created_at": "2020-09-10T06:43:36.000Z",
+        "url": "https://greasyfork.org/users/686453-riuice"
+      }
+    ],
+    "name": "点晴免费OA办公系统自动登录",
+    "description": "点晴免费OA办公系统 首次需正常输入登录用户及密码，下次打开则自动使用上次登录账户",
+    "url": "https://greasyfork.org/scripts/411158-%E7%82%B9%E6%99%B4%E5%85%8D%E8%B4%B9oa%E5%8A%9E%E5%85%AC%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/411158/%E7%82%B9%E6%99%B4%E5%85%8D%E8%B4%B9OA%E5%8A%9E%E5%85%AC%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 4544,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

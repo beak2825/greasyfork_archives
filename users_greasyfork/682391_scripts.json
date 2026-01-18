@@ -1,0 +1,68 @@
+[
+  {
+    "id": 409994,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-26T18:00:32.000Z",
+    "code_updated_at": "2020-08-26T18:01:40.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/409994-mini-youtube-window",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682391,
+        "name": "Kenji Wang",
+        "created_at": "2020-08-24T20:44:01.000Z",
+        "url": "https://greasyfork.org/users/682391-kenji-wang"
+      }
+    ],
+    "name": "Mini Youtube Window",
+    "description": "Opens A tiny window for background music",
+    "url": "https://greasyfork.org/scripts/409994-mini-youtube-window",
+    "code_url": "https://update.greasyfork.org/scripts/409994/Mini%20Youtube%20Window.user.js",
+    "code_size": 1282,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 409921,
+    "daily_installs": 0,
+    "total_installs": 669,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-25T01:21:44.000Z",
+    "code_updated_at": "2020-08-25T01:21:43.000Z",
+    "namespace": "https://orteil.dashnet.org/cookieclicker/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 682391,
+        "name": "Kenji Wang",
+        "created_at": "2020-08-24T20:44:01.000Z",
+        "url": "https://greasyfork.org/users/682391-kenji-wang"
+      }
+    ],
+    "name": "Cookie Clicker Auto Clicker",
+    "description": "Merriam Webster Search on Right Click",
+    "url": "https://greasyfork.org/scripts/409921-cookie-clicker-auto-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/409921/Cookie%20Clicker%20Auto%20Clicker.user.js",
+    "code_size": 538,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

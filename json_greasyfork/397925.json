@@ -1,0 +1,33 @@
+{
+  "id": 397925,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-14T21:57:29.000Z",
+  "code_updated_at": "2020-03-14T22:09:36.000Z",
+  "namespace": "https://coub.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 392577,
+      "name": "pcroland",
+      "created_at": "2019-10-27T18:35:29.000Z",
+      "url": "https://greasyfork.org/users/392577-pcroland"
+    }
+  ],
+  "name": "Unbeliever shitpost remover on coub.com",
+  "description": "Removes shitposts by Unbeliever on coub.com",
+  "url": "https://greasyfork.org/scripts/397925-unbeliever-post-remover-on-coub-com",
+  "code_url": "https://update.greasyfork.org/scripts/397925/Unbeliever%20shitpost%20remover%20on%20coubcom.user.js",
+  "code_size": 687,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

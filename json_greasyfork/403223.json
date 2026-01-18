@@ -1,0 +1,59 @@
+{
+  "id": 403223,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-13T09:58:51.000Z",
+  "code_updated_at": "2020-05-13T09:58:50.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 561412,
+      "name": "ludengke95",
+      "created_at": "2020-05-13T09:47:34.000Z",
+      "url": "https://greasyfork.org/users/561412-ludengke95",
+      "scripts": [
+        {
+          "id": 403223,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-05-13T09:58:51.000Z",
+          "code_updated_at": "2020-05-13T09:58:50.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "屏蔽所有网站的ctrl+s操作 close_ctrl_s",
+          "description": "2020/5/13 下午5:28:13",
+          "url": "https://greasyfork.org/scripts/403223-%E5%B1%8F%E8%94%BD%E6%89%80%E6%9C%89%E7%BD%91%E7%AB%99%E7%9A%84ctrl-s%E6%93%8D%E4%BD%9C-close-ctrl-s",
+          "code_url": "https://update.greasyfork.org/scripts/403223/%E5%B1%8F%E8%94%BD%E6%89%80%E6%9C%89%E7%BD%91%E7%AB%99%E7%9A%84ctrl%2Bs%E6%93%8D%E4%BD%9C%20close_ctrl_s.user.js",
+          "code_size": 545,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "屏蔽所有网站的ctrl+s操作 close_ctrl_s",
+  "description": "2020/5/13 下午5:28:13",
+  "url": "https://greasyfork.org/scripts/403223-%E5%B1%8F%E8%94%BD%E6%89%80%E6%9C%89%E7%BD%91%E7%AB%99%E7%9A%84ctrl-s%E6%93%8D%E4%BD%9C-close-ctrl-s",
+  "code_url": "https://update.greasyfork.org/scripts/403223/%E5%B1%8F%E8%94%BD%E6%89%80%E6%9C%89%E7%BD%91%E7%AB%99%E7%9A%84ctrl%2Bs%E6%93%8D%E4%BD%9C%20close_ctrl_s.user.js",
+  "code_size": 545,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

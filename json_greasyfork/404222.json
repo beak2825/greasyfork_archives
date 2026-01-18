@@ -1,0 +1,34 @@
+{
+  "id": 404222,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-27T16:22:52.000Z",
+  "code_updated_at": "2020-05-27T16:22:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 323666,
+      "name": "rei.troia",
+      "created_at": "2019-08-05T12:59:40.000Z",
+      "url": "https://greasyfork.org/users/323666-rei-troia",
+      "scripts": []
+    }
+  ],
+  "name": "ver dentro da base",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/404222-ver-dentro-da-base",
+  "code_url": "https://update.greasyfork.org/scripts/404222/ver%20dentro%20da%20base.user.js",
+  "code_size": 980,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

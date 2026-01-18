@@ -1,0 +1,35 @@
+[
+  {
+    "id": 404175,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-27T02:24:59.000Z",
+    "code_updated_at": "2020-05-27T05:19:23.000Z",
+    "namespace": "https://mmis1000.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3059,
+        "name": "mmis1000",
+        "created_at": "2014-06-26T13:16:15.000Z",
+        "url": "https://greasyfork.org/users/3059-mmis1000"
+      }
+    ],
+    "name": "NUEIP Optimization",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/404175-nueip-optimization",
+    "code_url": "https://update.greasyfork.org/scripts/404175/NUEIP%20Optimization.user.js",
+    "code_size": 1949,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

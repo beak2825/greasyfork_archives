@@ -1,0 +1,33 @@
+{
+  "id": 397724,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-11T08:57:59.000Z",
+  "code_updated_at": "2021-05-22T03:02:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 319515,
+      "name": "medAndro",
+      "created_at": "2019-07-21T21:43:59.000Z",
+      "url": "https://greasyfork.org/users/319515-medandro"
+    }
+  ],
+  "name": "NetFunnel 뚫기",
+  "description": "NetFunnel 뚫어지는진 모르겠지만 암튼 켜두셈",
+  "url": "https://greasyfork.org/scripts/397724-netfunnel-%EB%9A%AB%EA%B8%B0",
+  "code_url": "https://update.greasyfork.org/scripts/397724/NetFunnel%20%EB%9A%AB%EA%B8%B0.user.js",
+  "code_size": 529,
+  "license": null,
+  "version": "0.4",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

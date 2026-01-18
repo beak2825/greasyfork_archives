@@ -1,0 +1,33 @@
+{
+  "id": 403788,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-20T09:48:14.000Z",
+  "code_updated_at": "2022-06-16T00:44:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 158353,
+      "name": "鈴宮華緋",
+      "created_at": "2017-11-07T02:04:52.000Z",
+      "url": "https://greasyfork.org/users/158353-%E9%88%B4%E5%AE%AE%E8%8F%AF%E7%B7%8B"
+    }
+  ],
+  "name": "一键删除baidu知道全部提问",
+  "description": "baidu知道删除全部提问",
+  "url": "https://greasyfork.org/scripts/403788-%E4%B8%80%E9%94%AE%E5%88%A0%E9%99%A4baidu%E7%9F%A5%E9%81%93%E5%85%A8%E9%83%A8%E6%8F%90%E9%97%AE",
+  "code_url": "https://update.greasyfork.org/scripts/403788/%E4%B8%80%E9%94%AE%E5%88%A0%E9%99%A4baidu%E7%9F%A5%E9%81%93%E5%85%A8%E9%83%A8%E6%8F%90%E9%97%AE.user.js",
+  "code_size": 3606,
+  "license": null,
+  "version": "0.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 402954,
+  "daily_installs": 0,
+  "total_installs": 62,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-09T14:49:45.000Z",
+  "code_updated_at": "2020-05-10T02:55:09.000Z",
+  "namespace": "almaceleste",
+  "support_url": "https://github.com/almaceleste/userstyles/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 174037,
+      "name": "almaceleste",
+      "created_at": "2018-03-09T10:21:53.000Z",
+      "url": "https://greasyfork.org/users/174037-almaceleste"
+    }
+  ],
+  "name": "Youtube Controls Highlighting",
+  "description": "highlights the controls of the youtube player to the preferred color on hover",
+  "url": "https://greasyfork.org/scripts/402954-youtube-controls-highlighting",
+  "code_url": "https://update.greasyfork.org/scripts/402954/Youtube%20Controls%20Highlighting.user.css",
+  "code_size": 1574,
+  "license": "AGPL-3.0-or-later; http://www.gnu.org/licenses/agpl.txt",
+  "version": "0.3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

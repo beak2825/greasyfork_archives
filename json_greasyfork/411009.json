@@ -1,0 +1,34 @@
+{
+  "id": 411009,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-08T08:19:35.000Z",
+  "code_updated_at": "2020-09-08T08:19:35.000Z",
+  "namespace": "https://fansy.cloud/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 685887,
+      "name": "fansy",
+      "created_at": "2020-09-08T08:16:51.000Z",
+      "url": "https://greasyfork.org/users/685887-fansy",
+      "scripts": []
+    }
+  ],
+  "name": "简书链接跳转修正",
+  "description": "阻止简书点击链接进入跳转中间页面",
+  "url": "https://greasyfork.org/scripts/411009-%E7%AE%80%E4%B9%A6%E9%93%BE%E6%8E%A5%E8%B7%B3%E8%BD%AC%E4%BF%AE%E6%AD%A3",
+  "code_url": "https://update.greasyfork.org/scripts/411009/%E7%AE%80%E4%B9%A6%E9%93%BE%E6%8E%A5%E8%B7%B3%E8%BD%AC%E4%BF%AE%E6%AD%A3.user.js",
+  "code_size": 1472,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 409959,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-25T20:55:32.000Z",
+  "code_updated_at": "2020-08-27T12:17:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 331474,
+      "name": "drive jscript",
+      "created_at": "2019-08-21T17:16:28.000Z",
+      "url": "https://greasyfork.org/users/331474-drive-jscript",
+      "scripts": []
+    }
+  ],
+  "name": "Ce-M",
+  "description": "Valores CE",
+  "url": "https://greasyfork.org/scripts/409959-ce-m",
+  "code_url": "https://update.greasyfork.org/scripts/409959/Ce-M.user.js",
+  "code_size": 4331,
+  "license": null,
+  "version": "0.3",
+  "locale": "pt-PT",
+  "deleted": false,
+  "visibility": "public"
+}

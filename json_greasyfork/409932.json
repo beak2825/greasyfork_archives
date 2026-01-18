@@ -1,0 +1,59 @@
+{
+  "id": 409932,
+  "daily_installs": 0,
+  "total_installs": 56,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-25T10:57:47.000Z",
+  "code_updated_at": "2020-08-25T11:14:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 682497,
+      "name": "rcocco",
+      "created_at": "2020-08-25T10:44:06.000Z",
+      "url": "https://greasyfork.org/users/682497-rcocco",
+      "scripts": [
+        {
+          "id": 409932,
+          "daily_installs": 0,
+          "total_installs": 56,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-25T10:57:47.000Z",
+          "code_updated_at": "2020-08-25T11:14:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "修复Discuz下一页滚动",
+          "description": "Discuz论坛在Chromium新版本下，点击下一页会滚动到最下面，导致难以识别刚才看到哪个帖子，这个脚本用来恢复以前的行为：点击下一页后不滚动。",
+          "url": "https://greasyfork.org/scripts/409932-%E4%BF%AE%E5%A4%8Ddiscuz%E4%B8%8B%E4%B8%80%E9%A1%B5%E6%BB%9A%E5%8A%A8",
+          "code_url": "https://update.greasyfork.org/scripts/409932/%E4%BF%AE%E5%A4%8DDiscuz%E4%B8%8B%E4%B8%80%E9%A1%B5%E6%BB%9A%E5%8A%A8.user.js",
+          "code_size": 1230,
+          "license": null,
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "修复Discuz下一页滚动",
+  "description": "Discuz论坛在Chromium新版本下，点击下一页会滚动到最下面，导致难以识别刚才看到哪个帖子，这个脚本用来恢复以前的行为：点击下一页后不滚动。",
+  "url": "https://greasyfork.org/scripts/409932-%E4%BF%AE%E5%A4%8Ddiscuz%E4%B8%8B%E4%B8%80%E9%A1%B5%E6%BB%9A%E5%8A%A8",
+  "code_url": "https://update.greasyfork.org/scripts/409932/%E4%BF%AE%E5%A4%8DDiscuz%E4%B8%8B%E4%B8%80%E9%A1%B5%E6%BB%9A%E5%8A%A8.user.js",
+  "code_size": 1230,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

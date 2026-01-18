@@ -1,0 +1,35 @@
+[
+  {
+    "id": 404276,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-28T16:42:17.000Z",
+    "code_updated_at": "2023-02-07T00:34:13.000Z",
+    "namespace": "https://github.com/DJScias",
+    "support_url": "https://github.com/DJScias/Icy-Veins-Leveling-Slider-Reminder/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 574053,
+        "name": "DJScias",
+        "created_at": "2020-05-28T16:25:33.000Z",
+        "url": "https://greasyfork.org/users/574053-djscias"
+      }
+    ],
+    "name": "Icy Veins Leveling Slider Reminder",
+    "description": "Remembers the last selected level on the Icy Veins Leveling Guide sliders",
+    "url": "https://greasyfork.org/scripts/404276-icy-veins-leveling-slider-reminder",
+    "code_url": "https://update.greasyfork.org/scripts/404276/Icy%20Veins%20Leveling%20Slider%20Reminder.user.js",
+    "code_size": 3232,
+    "license": "GPLv3",
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

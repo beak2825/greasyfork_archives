@@ -1,0 +1,59 @@
+{
+  "id": 402080,
+  "daily_installs": 0,
+  "total_installs": 1245,
+  "fan_score": "30.1",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-04-27T03:01:47.000Z",
+  "code_updated_at": "2020-04-27T03:01:47.000Z",
+  "namespace": "https://greasyfork.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 542272,
+      "name": "rexena",
+      "created_at": "2020-04-27T02:42:25.000Z",
+      "url": "https://greasyfork.org/users/542272-rexena",
+      "scripts": [
+        {
+          "id": 402080,
+          "daily_installs": 0,
+          "total_installs": 1245,
+          "fan_score": "30.1",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-04-27T03:01:47.000Z",
+          "code_updated_at": "2020-04-27T03:01:47.000Z",
+          "namespace": "https://greasyfork.org",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ThePirateBay Javascript Bypass",
+          "description": "Replicates the minimum needed Javascript to make ThePirateBay work without running the on-site JS. Avoid the ads and popups. Made in response to the site no longer working with JS disabled.",
+          "url": "https://greasyfork.org/scripts/402080-thepiratebay-javascript-bypass",
+          "code_url": "https://update.greasyfork.org/scripts/402080/ThePirateBay%20Javascript%20Bypass.user.js",
+          "code_size": 34657,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ThePirateBay Javascript Bypass",
+  "description": "Replicates the minimum needed Javascript to make ThePirateBay work without running the on-site JS. Avoid the ads and popups. Made in response to the site no longer working with JS disabled.",
+  "url": "https://greasyfork.org/scripts/402080-thepiratebay-javascript-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/402080/ThePirateBay%20Javascript%20Bypass.user.js",
+  "code_size": 34657,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

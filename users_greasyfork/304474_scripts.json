@@ -493,5 +493,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411092,
+    "daily_installs": 0,
+    "total_installs": 376,
+    "fan_score": "70.1",
+    "good_ratings": 9,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-09T13:21:27.000Z",
+    "code_updated_at": "2022-07-06T09:56:20.000Z",
+    "namespace": "laster2800",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 304474,
+        "name": "Laster2800 Liang",
+        "created_at": "2019-05-24T16:59:55.000Z",
+        "url": "https://greasyfork.org/users/304474-laster2800-liang"
+      }
+    ],
+    "name": "B站防剧透进度条@Deprecated",
+    "description": "看比赛、看番总是被进度条剧透？装上这个脚本再也不用担心这些问题了",
+    "url": "https://greasyfork.org/scripts/411092-b%E7%AB%99%E9%98%B2%E5%89%A7%E9%80%8F%E8%BF%9B%E5%BA%A6%E6%9D%A1-deprecated",
+    "code_url": "https://update.greasyfork.org/scripts/411092/B%E7%AB%99%E9%98%B2%E5%89%A7%E9%80%8F%E8%BF%9B%E5%BA%A6%E6%9D%A1%40Deprecated.user.js",
+    "code_size": 79417,
+    "license": "GNU Lesser General Public License v3.0 only",
+    "version": "2.5.12@Deprecated.20220706",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 409641,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-21T05:55:12.000Z",
+    "code_updated_at": "2024-08-26T16:33:05.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 304474,
+        "name": "Laster2800 Liang",
+        "created_at": "2019-05-24T16:59:55.000Z",
+        "url": "https://greasyfork.org/users/304474-laster2800-liang"
+      }
+    ],
+    "name": "UserscriptAPI",
+    "description": "My API for userscripts.",
+    "url": "https://greasyfork.org/scripts/409641-userscriptapi",
+    "code_url": "https://update.greasyfork.org/scripts/409641/1435266/UserscriptAPI.js",
+    "code_size": 13607,
+    "license": null,
+    "version": "0.0.1.20240826163305",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 395575,
+    "daily_installs": 0,
+    "total_installs": 6672,
+    "fan_score": "90.8",
+    "good_ratings": 47,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-01-23T12:06:29.000Z",
+    "code_updated_at": "2024-08-26T16:51:50.000Z",
+    "namespace": "laster2800",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 304474,
+        "name": "Laster2800 Liang",
+        "created_at": "2019-05-24T16:59:55.000Z",
+        "url": "https://greasyfork.org/users/304474-laster2800-liang"
+      }
+    ],
+    "name": "B站封面获取",
+    "description": "获取B站各播放页及直播间封面，支持手动及实时预览等多种模式，支持点击下载、封面预览、快速复制，可高度自定义",
+    "url": "https://greasyfork.org/scripts/395575-b%E7%AB%99%E5%B0%81%E9%9D%A2%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/395575/B%E7%AB%99%E5%B0%81%E9%9D%A2%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 43496,
+    "license": "GNU Lesser General Public License v3.0 only",
+    "version": "5.10.7.20240827",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395456,
+    "daily_installs": 1,
+    "total_installs": 3870,
+    "fan_score": "93.5",
+    "good_ratings": 82,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-01-20T08:44:22.000Z",
+    "code_updated_at": "2024-08-26T16:51:36.000Z",
+    "namespace": "laster2800",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 304474,
+        "name": "Laster2800 Liang",
+        "created_at": "2019-05-24T16:59:55.000Z",
+        "url": "https://greasyfork.org/users/304474-laster2800-liang"
+      }
+    ],
+    "name": "B站稍后再看功能增强",
+    "description": "与稍后再看功能相关，一切你能想到和想不到的功能",
+    "url": "https://greasyfork.org/scripts/395456-b%E7%AB%99%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/395456/B%E7%AB%99%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 315721,
+    "license": "GNU Lesser General Public License v3.0 only",
+    "version": "4.37.4.20240827",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

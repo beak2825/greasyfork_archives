@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411124,
+    "daily_installs": 0,
+    "total_installs": 104,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-10T01:48:34.000Z",
+    "code_updated_at": "2020-09-16T00:31:46.000Z",
+    "namespace": "cloudkitty",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 686394,
+        "name": "w568w",
+        "created_at": "2020-09-10T01:41:47.000Z",
+        "url": "https://greasyfork.org/users/686394-w568w"
+      }
+    ],
+    "name": "复旦选课辅助脚本",
+    "description": "可以隐藏一些不会选的课程，仅适用于复旦选课页面！",
+    "url": "https://greasyfork.org/scripts/411124-%E5%A4%8D%E6%97%A6%E9%80%89%E8%AF%BE%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/411124/%E5%A4%8D%E6%97%A6%E9%80%89%E8%AF%BE%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 4071,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

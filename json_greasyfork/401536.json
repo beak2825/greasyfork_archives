@@ -1,0 +1,59 @@
+{
+  "id": 401536,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-20T16:36:46.000Z",
+  "code_updated_at": "2021-08-20T11:54:37.000Z",
+  "namespace": "https://github.com/yskoht/github-show-filename-list",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 527884,
+      "name": "yskoht",
+      "created_at": "2020-04-20T16:33:16.000Z",
+      "url": "https://greasyfork.org/users/527884-yskoht",
+      "scripts": [
+        {
+          "id": 401536,
+          "daily_installs": 0,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-20T16:36:46.000Z",
+          "code_updated_at": "2021-08-20T11:54:37.000Z",
+          "namespace": "https://github.com/yskoht/github-show-filename-list",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GitHub Show Filename List",
+          "description": "Show filename list on \"Files changed\" tab in GitHub",
+          "url": "https://greasyfork.org/scripts/401536-github-show-filename-list",
+          "code_url": "https://update.greasyfork.org/scripts/401536/GitHub%20Show%20Filename%20List.user.js",
+          "code_size": 4675,
+          "license": null,
+          "version": "0.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GitHub Show Filename List",
+  "description": "Show filename list on \"Files changed\" tab in GitHub",
+  "url": "https://greasyfork.org/scripts/401536-github-show-filename-list",
+  "code_url": "https://update.greasyfork.org/scripts/401536/GitHub%20Show%20Filename%20List.user.js",
+  "code_size": 4675,
+  "license": null,
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

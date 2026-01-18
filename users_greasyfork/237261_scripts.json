@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405179,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-12T05:25:51.000Z",
+    "code_updated_at": "2020-06-12T05:25:51.000Z",
+    "namespace": "https://greasyfork.org/users/237261",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 237261,
+        "name": "jsomedon",
+        "created_at": "2019-01-04T17:40:38.000Z",
+        "url": "https://greasyfork.org/users/237261-jsomedon"
+      }
+    ],
+    "name": "sneaky_read.js",
+    "description": "Read your favorite ebook at work, with less chance to get fired.",
+    "url": "https://greasyfork.org/scripts/405179-sneaky-read-js",
+    "code_url": "https://update.greasyfork.org/scripts/405179/sneaky_readjs.user.js",
+    "code_size": 3716,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

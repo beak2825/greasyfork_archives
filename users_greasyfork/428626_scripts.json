@@ -163,5 +163,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 402843,
+    "daily_installs": 0,
+    "total_installs": 364,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-07T18:19:56.000Z",
+    "code_updated_at": "2020-11-12T17:34:10.000Z",
+    "namespace": "Nameless",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428626,
+        "name": "kd",
+        "created_at": "2019-12-26T09:03:20.000Z",
+        "url": "https://greasyfork.org/users/428626-kd"
+      }
+    ],
+    "name": "Tumblr Backup - Tumblr 2 Tumbex",
+    "description": "Archived Tumblr Blogs",
+    "url": "https://greasyfork.org/scripts/402843-tumblr-backup-tumblr-2-tumbex",
+    "code_url": "https://update.greasyfork.org/scripts/402843/Tumblr%20Backup%20-%20Tumblr%202%20Tumbex.user.js",
+    "code_size": 661,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 394242,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-26T10:37:04.000Z",
+    "code_updated_at": "2019-12-26T10:37:03.000Z",
+    "namespace": "Amazon",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428626,
+        "name": "kd",
+        "created_at": "2019-12-26T09:03:20.000Z",
+        "url": "https://greasyfork.org/users/428626-kd"
+      }
+    ],
+    "name": "Amazon No BS",
+    "description": "Hides Unnecessary Stuff",
+    "url": "https://greasyfork.org/scripts/394242-amazon-no-bs",
+    "code_url": "https://update.greasyfork.org/scripts/394242/Amazon%20No%20BS.user.js",
+    "code_size": 1524,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 394238,
+    "daily_installs": 1,
+    "total_installs": 1390,
+    "fan_score": "50.7",
+    "good_ratings": 7,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2019-12-26T09:39:24.000Z",
+    "code_updated_at": "2022-12-14T05:23:59.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428626,
+        "name": "kd",
+        "created_at": "2019-12-26T09:03:20.000Z",
+        "url": "https://greasyfork.org/users/428626-kd"
+      }
+    ],
+    "name": "ISBN 2 LibGen",
+    "description": "This script replaces ISBN numbers with hyperlinks which opens LibGen search results",
+    "url": "https://greasyfork.org/scripts/394238-isbn-2-libgen",
+    "code_url": "https://update.greasyfork.org/scripts/394238/ISBN%202%20LibGen.user.js",
+    "code_size": 2200,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 402360,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-30T18:17:30.000Z",
+  "code_updated_at": "2020-04-30T18:17:30.000Z",
+  "namespace": "http://steamcommunity.com/groups/Cannonknights",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 547326,
+      "name": "thefriendlyguy",
+      "created_at": "2020-04-30T18:15:49.000Z",
+      "url": "https://greasyfork.org/users/547326-thefriendlyguy",
+      "scripts": []
+    }
+  ],
+  "name": "Scrap.tf Raffle AutoEnter",
+  "description": "Auto-enters raffles",
+  "url": "https://greasyfork.org/scripts/402360-scrap-tf-raffle-autoenter",
+  "code_url": "https://update.greasyfork.org/scripts/402360/Scraptf%20Raffle%20AutoEnter.user.js",
+  "code_size": 2251,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

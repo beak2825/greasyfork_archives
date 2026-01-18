@@ -229,5 +229,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 406870,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-11T14:16:57.000Z",
+    "code_updated_at": "2022-08-01T13:35:24.000Z",
+    "namespace": "Giveaway-Left-Check",
+    "support_url": "https://github.com/HCLonely/user.js/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 133492,
+        "name": "HCLonely",
+        "created_at": "2017-06-17T12:14:06.000Z",
+        "url": "https://greasyfork.org/users/133492-hclonely"
+      }
+    ],
+    "name": "Giveaway Left Check",
+    "description": "检测其乐论坛福利放送版块的赠key剩余数量/时间",
+    "url": "https://greasyfork.org/scripts/406870-giveaway-left-check",
+    "code_url": "https://update.greasyfork.org/scripts/406870/Giveaway%20Left%20Check.user.js",
+    "code_size": 23998,
+    "license": null,
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405171,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-12T03:16:51.000Z",
+    "code_updated_at": "2024-10-21T01:03:16.000Z",
+    "namespace": "gog-game-library-check",
+    "support_url": "https://github.com/HCLonely/Game-library-check/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 133492,
+        "name": "HCLonely",
+        "created_at": "2017-06-17T12:14:06.000Z",
+        "url": "https://greasyfork.org/users/133492-hclonely"
+      }
+    ],
+    "name": "游戏库检测-gog",
+    "description": "检测gog游戏是否已拥有。",
+    "url": "https://greasyfork.org/scripts/405171-%E6%B8%B8%E6%88%8F%E5%BA%93%E6%A3%80%E6%B5%8B-gog",
+    "code_url": "https://update.greasyfork.org/scripts/405171/%E6%B8%B8%E6%88%8F%E5%BA%93%E6%A3%80%E6%B5%8B-gog.user.js",
+    "code_size": 8224,
+    "license": "MIT License",
+    "version": "1.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 404924,
+    "daily_installs": 0,
+    "total_installs": 702,
+    "fan_score": "78.5",
+    "good_ratings": 14,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-08T06:05:54.000Z",
+    "code_updated_at": "2022-08-01T14:14:48.000Z",
+    "namespace": "itch-game-library-check",
+    "support_url": "https://github.com/HCLonely/Game-library-check/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 133492,
+        "name": "HCLonely",
+        "created_at": "2017-06-17T12:14:06.000Z",
+        "url": "https://greasyfork.org/users/133492-hclonely"
+      }
+    ],
+    "name": "游戏库检测-itch",
+    "description": "检测itch.io游戏是否已拥有。",
+    "url": "https://greasyfork.org/scripts/404924-%E6%B8%B8%E6%88%8F%E5%BA%93%E6%A3%80%E6%B5%8B-itch",
+    "code_url": "https://update.greasyfork.org/scripts/404924/%E6%B8%B8%E6%88%8F%E5%BA%93%E6%A3%80%E6%B5%8B-itch.user.js",
+    "code_size": 16398,
+    "license": "MIT License",
+    "version": "1.1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395098,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-13T11:07:06.000Z",
+    "code_updated_at": "2020-01-13T11:07:05.000Z",
+    "namespace": "auto task",
+    "support_url": "https://steamcn.com/t455167-1-1",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 133492,
+        "name": "HCLonely",
+        "created_at": "2017-06-17T12:14:06.000Z",
+        "url": "https://greasyfork.org/users/133492-hclonely"
+      }
+    ],
+    "name": "自动任务",
+    "description": "自动完成并验证赠key网站任务",
+    "url": "https://greasyfork.org/scripts/395098-%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1",
+    "code_url": "https://update.greasyfork.org/scripts/395098/%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1.user.js",
+    "code_size": 101869,
+    "license": null,
+    "version": "1.7.10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

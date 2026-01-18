@@ -1,0 +1,33 @@
+{
+  "id": 408439,
+  "daily_installs": 0,
+  "total_installs": 748,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-09T01:40:25.000Z",
+  "code_updated_at": "2023-11-30T04:55:32.000Z",
+  "namespace": "betterbuttonstomal2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670188,
+      "name": "hacker09",
+      "created_at": "2020-07-25T20:51:35.000Z",
+      "url": "https://greasyfork.org/users/670188-hacker09"
+    }
+  ],
+  "name": "Better Buttons to Change The Status Of Animes/Mangas And To Add Scores",
+  "description": "Makes easier and faster to select any status/score by enlarging the removing the dropdown selection of those options. Delete any entry from your list, or score + add the whole anime Franchise to your anime list with a single click.",
+  "url": "https://greasyfork.org/scripts/408439-better-buttons-to-change-the-status-of-animes-mangas-and-to-add-scores",
+  "code_url": "https://update.greasyfork.org/scripts/408439/Better%20Buttons%20to%20Change%20The%20Status%20Of%20AnimesMangas%20And%20To%20Add%20Scores.user.js",
+  "code_size": 7732,
+  "license": null,
+  "version": "24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

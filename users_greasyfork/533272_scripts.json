@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401659,
+    "daily_installs": 0,
+    "total_installs": 1014,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-21T19:23:01.000Z",
+    "code_updated_at": "2020-05-11T10:01:54.000Z",
+    "namespace": "vkDownloadAuto",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 533272,
+        "name": "Lemonjuice",
+        "created_at": "2020-04-21T18:15:48.000Z",
+        "url": "https://greasyfork.org/users/533272-lemonjuice"
+      }
+    ],
+    "name": "Local Vk Downloader",
+    "description": "Get Vk raw link without external service.",
+    "url": "https://greasyfork.org/scripts/401659-local-vk-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/401659/Local%20Vk%20Downloader.user.js",
+    "code_size": 14728,
+    "license": null,
+    "version": "4.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

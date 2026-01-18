@@ -1,0 +1,35 @@
+[
+  {
+    "id": 404441,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-31T17:05:29.000Z",
+    "code_updated_at": "2020-05-31T17:30:06.000Z",
+    "namespace": "wykop.pl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 576262,
+        "name": "mirek123",
+        "created_at": "2020-05-31T15:14:03.000Z",
+        "url": "https://greasyfork.org/users/576262-mirek123"
+      }
+    ],
+    "name": "Ukryj wykop (aka WykopSeen)",
+    "description": "Dodaje guzik 'X' przy każdym wykopie do ukrywania. Przywracasz guzikiem 'POKAŻ'",
+    "url": "https://greasyfork.org/scripts/404441-ukryj-wykop-aka-wykopseen",
+    "code_url": "https://update.greasyfork.org/scripts/404441/Ukryj%20wykop%20%28aka%20WykopSeen%29.user.js",
+    "code_size": 4271,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

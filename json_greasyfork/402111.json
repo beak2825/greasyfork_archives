@@ -1,0 +1,34 @@
+{
+  "id": 402111,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-27T09:51:10.000Z",
+  "code_updated_at": "2020-05-18T10:53:11.000Z",
+  "namespace": "https://www.nfmovies.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 542548,
+      "name": "zu1k",
+      "created_at": "2020-04-27T09:49:56.000Z",
+      "url": "https://greasyfork.org/users/542548-zu1k",
+      "scripts": []
+    }
+  ],
+  "name": "奈菲影视去广告",
+  "description": "去广告，看得爽",
+  "url": "https://greasyfork.org/scripts/402111-%E5%A5%88%E8%8F%B2%E5%BD%B1%E8%A7%86%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/402111/%E5%A5%88%E8%8F%B2%E5%BD%B1%E8%A7%86%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 2731,
+  "license": null,
+  "version": "0.6.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

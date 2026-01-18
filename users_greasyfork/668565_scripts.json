@@ -162,6 +162,72 @@
     "version": "1.3",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407574,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-22T22:47:24.000Z",
+    "code_updated_at": "2020-07-29T13:00:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668565,
+        "name": "KS-Swifty",
+        "created_at": "2020-07-20T10:06:03.000Z",
+        "url": "https://greasyfork.org/users/668565-ks-swifty"
+      }
+    ],
+    "name": "Easy Equipment Remove/Replace",
+    "description": "Easy Saving/Restoring of equipment configs for all your social needs",
+    "url": "https://greasyfork.org/scripts/407574-easy-equipment-remove-replace",
+    "code_url": "https://update.greasyfork.org/scripts/407574/Easy%20Equipment%20RemoveReplace.user.js",
+    "code_size": 4956,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407436,
+    "daily_installs": 0,
+    "total_installs": 322,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-20T10:09:48.000Z",
+    "code_updated_at": "2022-03-16T00:26:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668565,
+        "name": "KS-Swifty",
+        "created_at": "2020-07-20T10:06:03.000Z",
+        "url": "https://greasyfork.org/users/668565-ks-swifty"
+      }
+    ],
+    "name": "GGn Quick Crafter",
+    "description": "Craft multiple items easier",
+    "url": "https://greasyfork.org/scripts/407436-ggn-quick-crafter",
+    "code_url": "https://update.greasyfork.org/scripts/407436/GGn%20Quick%20Crafter.user.js",
+    "code_size": 54617,
+    "license": null,
+    "version": "2.2.2.k33",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

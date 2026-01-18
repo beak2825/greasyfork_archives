@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 406024,
+    "daily_installs": 0,
+    "total_installs": 1964,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-25T08:52:52.000Z",
+    "code_updated_at": "2020-06-27T10:04:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 650927,
+        "name": "小小士兵",
+        "created_at": "2020-06-25T08:47:52.000Z",
+        "url": "https://greasyfork.org/users/650927-%E5%B0%8F%E5%B0%8F%E5%A3%AB%E5%85%B5"
+      }
+    ],
+    "name": "党课脚本",
+    "description": "自动播放，结束后自动返回",
+    "url": "https://greasyfork.org/scripts/406024-%E5%85%9A%E8%AF%BE%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/406024/%E5%85%9A%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 2203,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

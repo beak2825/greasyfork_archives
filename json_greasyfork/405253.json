@@ -1,0 +1,34 @@
+{
+  "id": 405253,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-13T08:10:52.000Z",
+  "code_updated_at": "2021-01-11T10:50:17.000Z",
+  "namespace": "https://www.vw.idv.tw/Gbook_Role.asp?title=%E8%A8%B1%E7%91%9E",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 588498,
+      "name": "許瑞",
+      "created_at": "2020-06-13T07:17:08.000Z",
+      "url": "https://greasyfork.org/users/588498-%E8%A8%B1%E7%91%9E",
+      "scripts": []
+    }
+  ],
+  "name": "江湖直播去廣告",
+  "description": "進入江湖直播的時候，下方廣告自動消失，從而看到更廣的畫面。（1.1更新：新增天眼選單恢復為原始排序。）",
+  "url": "https://greasyfork.org/scripts/405253-%E6%B1%9F%E6%B9%96%E7%9B%B4%E6%92%AD%E5%8E%BB%E5%BB%A3%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/405253/%E6%B1%9F%E6%B9%96%E7%9B%B4%E6%92%AD%E5%8E%BB%E5%BB%A3%E5%91%8A.user.js",
+  "code_size": 1271,
+  "license": null,
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

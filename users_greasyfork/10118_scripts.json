@@ -493,5 +493,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 401339,
+    "daily_installs": 1,
+    "total_installs": 5688,
+    "fan_score": "45.1",
+    "good_ratings": 11,
+    "ok_ratings": 7,
+    "bad_ratings": 4,
+    "created_at": "2020-04-18T19:56:37.000Z",
+    "code_updated_at": "2023-08-06T00:27:45.000Z",
+    "namespace": "https://greasyfork.org/en/users/10118-drhouse",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10118,
+        "name": "drhouse",
+        "created_at": "2015-04-01T10:43:46.000Z",
+        "url": "https://greasyfork.org/users/10118-drhouse"
+      }
+    ],
+    "name": "(9anime) AniWave Bingewatcher+",
+    "description": "Auto-fullscreen, skip intros, jump to next episode, 9anime on Vidstream and MyCloud videos (Auto-1080p in configuration panel)",
+    "url": "https://greasyfork.org/scripts/401339-9anime-aniwave-bingewatcher",
+    "code_url": "https://update.greasyfork.org/scripts/401339/%289anime%29%20AniWave%20Bingewatcher%2B.user.js",
+    "code_size": 11395,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "6.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 393514,
+    "daily_installs": 0,
+    "total_installs": 466,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-09T10:54:07.000Z",
+    "code_updated_at": "2023-06-22T09:52:18.000Z",
+    "namespace": "https://greasyfork.org/en/users/10118-drhouse",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10118,
+        "name": "drhouse",
+        "created_at": "2015-04-01T10:43:46.000Z",
+        "url": "https://greasyfork.org/users/10118-drhouse"
+      }
+    ],
+    "name": "[Hadzy] Youtube Comment Analytics",
+    "description": "Hadzy - The best youtube comment picker and great tool to search for all comments, open it with 'Activate' menu button",
+    "url": "https://greasyfork.org/scripts/393514-hadzy-youtube-comment-analytics",
+    "code_url": "https://update.greasyfork.org/scripts/393514/%5BHadzy%5D%20Youtube%20Comment%20Analytics.user.js",
+    "code_size": 2415,
+    "license": null,
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

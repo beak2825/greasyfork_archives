@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398356,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-21T05:12:28.000Z",
+    "code_updated_at": "2020-03-28T12:30:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 464268,
+        "name": "guanwu",
+        "created_at": "2020-03-20T15:59:49.000Z",
+        "url": "https://greasyfork.org/users/464268-guanwu"
+      }
+    ],
+    "name": "C语言练习平台",
+    "description": "description",
+    "url": "https://greasyfork.org/scripts/398356-c%E8%AF%AD%E8%A8%80%E7%BB%83%E4%B9%A0%E5%B9%B3%E5%8F%B0",
+    "code_url": "https://update.greasyfork.org/scripts/398356/C%E8%AF%AD%E8%A8%80%E7%BB%83%E4%B9%A0%E5%B9%B3%E5%8F%B0.user.js",
+    "code_size": 2364,
+    "license": "GPL version 3",
+    "version": "1.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

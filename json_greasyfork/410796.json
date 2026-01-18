@@ -1,0 +1,33 @@
+{
+  "id": 410796,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-04T06:45:31.000Z",
+  "code_updated_at": "2020-09-04T06:45:30.000Z",
+  "namespace": "mailto:azuzula.cz@gmail.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 600258,
+      "name": "Zuzana “Azuzula” Nyiri",
+      "created_at": "2020-06-17T19:47:06.000Z",
+      "url": "https://greasyfork.org/users/600258-zuzana-azuzula-nyiri"
+    }
+  ],
+  "name": "Shoptet \"přesun tlačítka #1\"",
+  "description": "Přesune tlačítko, pro přidání produktu do objednávky, nahoru.",
+  "url": "https://greasyfork.org/scripts/410796-shoptet-p%C5%99esun-tla%C4%8D%C3%ADtka-1",
+  "code_url": "https://update.greasyfork.org/scripts/410796/Shoptet%20%22p%C5%99esun%20tla%C4%8D%C3%ADtka%201%22.user.js",
+  "code_size": 505,
+  "license": null,
+  "version": "0.1",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

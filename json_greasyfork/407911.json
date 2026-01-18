@@ -1,0 +1,59 @@
+{
+  "id": 407911,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-29T23:23:35.000Z",
+  "code_updated_at": "2020-07-29T23:23:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 44653,
+      "name": "Stenlan",
+      "created_at": "2016-05-20T13:32:40.000Z",
+      "url": "https://greasyfork.org/users/44653-stenlan",
+      "scripts": [
+        {
+          "id": 37739,
+          "daily_installs": 0,
+          "total_installs": 202,
+          "fan_score": "20.8",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2018-01-23T15:49:46.000Z",
+          "code_updated_at": "2018-01-23T16:03:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google Images Blocklist",
+          "description": "Blocks domains from showing up on google images search results",
+          "url": "https://greasyfork.org/scripts/37739-google-images-blocklist",
+          "code_url": "https://update.greasyfork.org/scripts/37739/Google%20Images%20Blocklist.user.js",
+          "code_size": 13153,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BaB view currency",
+  "description": "Displays euro currency on top of bustabit",
+  "url": "https://greasyfork.org/scripts/407911-bab-view-currency",
+  "code_url": "https://update.greasyfork.org/scripts/407911/BaB%20view%20currency.user.js",
+  "code_size": 3135,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

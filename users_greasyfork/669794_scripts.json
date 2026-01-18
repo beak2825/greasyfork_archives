@@ -1,0 +1,35 @@
+[
+  {
+    "id": 407649,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-24T09:22:45.000Z",
+    "code_updated_at": "2020-08-06T08:09:28.000Z",
+    "namespace": "http://ikari.loforo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 669794,
+        "name": "ikari-pl",
+        "created_at": "2020-07-24T09:14:34.000Z",
+        "url": "https://greasyfork.org/users/669794-ikari-pl"
+      }
+    ],
+    "name": "Loforo Plus",
+    "description": "adds j/k scroll to loforo",
+    "url": "https://greasyfork.org/scripts/407649-loforo-plus",
+    "code_url": "https://update.greasyfork.org/scripts/407649/Loforo%20Plus.user.js",
+    "code_size": 3122,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

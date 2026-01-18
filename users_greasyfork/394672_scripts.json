@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398264,
+    "daily_installs": 0,
+    "total_installs": 7759,
+    "fan_score": "43.4",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 3,
+    "created_at": "2020-03-19T23:16:03.000Z",
+    "code_updated_at": "2020-03-19T23:16:03.000Z",
+    "namespace": "https://greasyfork.org/users/394672",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394672,
+        "name": "PoseidonCoder",
+        "created_at": "2019-11-04T04:17:54.000Z",
+        "url": "https://greasyfork.org/users/394672-poseidoncoder"
+      }
+    ],
+    "name": "Dogeminer Inifinite Money Hack!",
+    "description": "This is a hack that will let you have almost an infinite ammount of dogecoin. Not only that but, you get about 9,999,999,999 doge coin per click.",
+    "url": "https://greasyfork.org/scripts/398264-dogeminer-inifinite-money-hack",
+    "code_url": "https://update.greasyfork.org/scripts/398264/Dogeminer%20Inifinite%20Money%20Hack%21.user.js",
+    "code_size": 2271,
+    "license": "AGPL",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

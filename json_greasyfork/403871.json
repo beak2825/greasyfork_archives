@@ -1,0 +1,34 @@
+{
+  "id": 403871,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-21T20:33:41.000Z",
+  "code_updated_at": "2020-05-21T20:33:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 570165,
+      "name": "Matthieu Gay-Bellile",
+      "created_at": "2020-05-21T18:41:59.000Z",
+      "url": "https://greasyfork.org/users/570165-matthieu-gay-bellile",
+      "scripts": []
+    }
+  ],
+  "name": "Airbnb Fenced Yard Filter",
+  "description": "Filter Airbnb results for fenced yards",
+  "url": "https://greasyfork.org/scripts/403871-airbnb-fenced-yard-filter",
+  "code_url": "https://update.greasyfork.org/scripts/403871/Airbnb%20Fenced%20Yard%20Filter.user.js",
+  "code_size": 1989,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

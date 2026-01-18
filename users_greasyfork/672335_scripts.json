@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408018,
+    "daily_installs": 0,
+    "total_installs": 4216,
+    "fan_score": "64.2",
+    "good_ratings": 11,
+    "ok_ratings": 3,
+    "bad_ratings": 0,
+    "created_at": "2020-08-01T12:01:57.000Z",
+    "code_updated_at": "2020-10-19T07:21:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 672335,
+        "name": "miao_pa_si",
+        "created_at": "2020-08-01T11:25:07.000Z",
+        "url": "https://greasyfork.org/users/672335-miao-pa-si"
+      }
+    ],
+    "name": "奥鹏答案获取",
+    "description": "实现在问题上显示答案!",
+    "url": "https://greasyfork.org/scripts/408018-%E5%A5%A5%E9%B9%8F%E7%AD%94%E6%A1%88%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/408018/%E5%A5%A5%E9%B9%8F%E7%AD%94%E6%A1%88%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 4663,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

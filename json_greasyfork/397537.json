@@ -1,0 +1,33 @@
+{
+  "id": 397537,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-08T12:46:06.000Z",
+  "code_updated_at": "2020-03-08T12:46:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 100678,
+      "name": "俞方（Huatutor）",
+      "created_at": "2017-02-07T11:57:18.000Z",
+      "url": "https://greasyfork.org/users/100678-%E4%BF%9E%E6%96%B9-huatutor"
+    }
+  ],
+  "name": "侠客传说",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/397537-%E4%BE%A0%E5%AE%A2%E4%BC%A0%E8%AF%B4",
+  "code_url": "https://update.greasyfork.org/scripts/397537/%E4%BE%A0%E5%AE%A2%E4%BC%A0%E8%AF%B4.user.js",
+  "code_size": 3561,
+  "license": null,
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

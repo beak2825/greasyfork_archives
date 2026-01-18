@@ -163,5 +163,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 406588,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-06T10:15:43.000Z",
+    "code_updated_at": "2021-11-19T07:02:40.000Z",
+    "namespace": "https://github.com/insin/greasemonkey/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 33961,
+        "name": "insin",
+        "created_at": "2016-03-18T03:51:45.000Z",
+        "url": "https://greasyfork.org/users/33961-insin"
+      }
+    ],
+    "name": "Cook'd and Bomb'd Ignore Topics",
+    "description": "Ignore topics and forums, and other topic list tweaks",
+    "url": "https://greasyfork.org/scripts/406588-cook-d-and-bomb-d-ignore-topics",
+    "code_url": "https://update.greasyfork.org/scripts/406588/Cook%27d%20and%20Bomb%27d%20Ignore%20Topics.user.js",
+    "code_size": 7295,
+    "license": null,
+    "version": "11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 399404,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-04-03T10:27:12.000Z",
+    "code_updated_at": "2020-09-01T03:36:37.000Z",
+    "namespace": "https://github.com/insin/greasemonkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 33961,
+        "name": "insin",
+        "created_at": "2016-03-18T03:51:45.000Z",
+        "url": "https://greasyfork.org/users/33961-insin"
+      }
+    ],
+    "name": "Scroll Theater Mode Video",
+    "description": "Automatically scrolls to the top of the video if it's in theater mode",
+    "url": "https://greasyfork.org/scripts/399404-scroll-theater-mode-video",
+    "code_url": "https://update.greasyfork.org/scripts/399404/Scroll%20Theater%20Mode%20Video.user.js",
+    "code_size": 2763,
+    "license": null,
+    "version": "4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

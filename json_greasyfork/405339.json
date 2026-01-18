@@ -1,0 +1,33 @@
+{
+  "id": 405339,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-15T00:00:01.000Z",
+  "code_updated_at": "2020-06-15T00:00:00.000Z",
+  "namespace": "https://greasyfork.org/users/297030",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 585161,
+      "name": "waki285",
+      "created_at": "2020-06-11T23:36:48.000Z",
+      "url": "https://greasyfork.org/users/585161-waki285"
+    }
+  ],
+  "name": "5連投(Feederチャット)",
+  "description": "任意文字列を任意間隔で5連投してくれるスクリプトを追加します。",
+  "url": "https://greasyfork.org/scripts/405339-5%E9%80%A3%E6%8A%95-feeder%E3%83%81%E3%83%A3%E3%83%83%E3%83%88",
+  "code_url": "https://update.greasyfork.org/scripts/405339/5%E9%80%A3%E6%8A%95%28Feeder%E3%83%81%E3%83%A3%E3%83%83%E3%83%88%29.user.js",
+  "code_size": 3814,
+  "license": null,
+  "version": "4.3",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

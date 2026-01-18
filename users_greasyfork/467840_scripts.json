@@ -295,5 +295,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 398544,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-23T20:22:05.000Z",
+    "code_updated_at": "2020-03-24T02:44:28.000Z",
+    "namespace": "mailto:refracta@koreatech.ac.kr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 467840,
+        "name": "refracta",
+        "created_at": "2020-03-23T20:04:56.000Z",
+        "url": "https://greasyfork.org/users/467840-refracta"
+      }
+    ],
+    "name": "한국기술교육대학교 온라인 강의 플레이어 단축키 패치",
+    "description": "한국기술교육대학교 온라인 강의 플레이어에 키보드 단축키를 추가합니다.",
+    "url": "https://greasyfork.org/scripts/398544-%ED%95%9C%EA%B5%AD%EA%B8%B0%EC%88%A0%EA%B5%90%EC%9C%A1%EB%8C%80%ED%95%99%EA%B5%90-%EC%98%A8%EB%9D%BC%EC%9D%B8-%EA%B0%95%EC%9D%98-%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4-%EB%8B%A8%EC%B6%95%ED%82%A4-%ED%8C%A8%EC%B9%98",
+    "code_url": "https://update.greasyfork.org/scripts/398544/%ED%95%9C%EA%B5%AD%EA%B8%B0%EC%88%A0%EA%B5%90%EC%9C%A1%EB%8C%80%ED%95%99%EA%B5%90%20%EC%98%A8%EB%9D%BC%EC%9D%B8%20%EA%B0%95%EC%9D%98%20%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EB%8B%A8%EC%B6%95%ED%82%A4%20%ED%8C%A8%EC%B9%98.user.js",
+    "code_size": 7622,
+    "license": null,
+    "version": "0.5",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

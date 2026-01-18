@@ -1,0 +1,35 @@
+[
+  {
+    "id": 403475,
+    "daily_installs": 0,
+    "total_installs": 802,
+    "fan_score": "30.1",
+    "good_ratings": 2,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2020-05-16T17:03:16.000Z",
+    "code_updated_at": "2024-05-18T08:59:59.000Z",
+    "namespace": "https://greasyfork.org/users/563852",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 563852,
+        "name": "Mysteria",
+        "created_at": "2020-05-16T16:44:13.000Z",
+        "url": "https://greasyfork.org/users/563852-mysteria"
+      }
+    ],
+    "name": "Travian Kingdoms Tools",
+    "description": "Travian Kingdoms Tools: Search for valleys and oases",
+    "url": "https://greasyfork.org/scripts/403475-travian-kingdoms-tools",
+    "code_url": "https://update.greasyfork.org/scripts/403475/Travian%20Kingdoms%20Tools.user.js",
+    "code_size": 16468,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

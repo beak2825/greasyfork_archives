@@ -1,0 +1,34 @@
+{
+  "id": 408170,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-04T12:23:39.000Z",
+  "code_updated_at": "2024-10-10T13:23:05.000Z",
+  "namespace": "Text_quality_inspection_assistant",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 427707,
+      "name": "zhousanfu",
+      "created_at": "2019-12-24T00:29:36.000Z",
+      "url": "https://greasyfork.org/users/427707-zhousanfu",
+      "scripts": []
+    }
+  ],
+  "name": "Text quality inspection assistant",
+  "description": "Text_quality_inspection_assistant",
+  "url": "https://greasyfork.org/scripts/408170-text-quality-inspection-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/408170/Text%20quality%20inspection%20assistant.user.js",
+  "code_size": 15803,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

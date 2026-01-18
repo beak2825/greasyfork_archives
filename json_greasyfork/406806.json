@@ -1,0 +1,59 @@
+{
+  "id": 406806,
+  "daily_installs": 0,
+  "total_installs": 90,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-10T11:29:31.000Z",
+  "code_updated_at": "2020-07-13T07:12:29.000Z",
+  "namespace": "https://github.com/AdlerED",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 665461,
+      "name": "Tomiaocat",
+      "created_at": "2020-07-10T11:25:11.000Z",
+      "url": "https://greasyfork.org/users/665461-tomiaocat",
+      "scripts": [
+        {
+          "id": 406806,
+          "daily_installs": 0,
+          "total_installs": 90,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-10T11:29:31.000Z",
+          "code_updated_at": "2020-07-13T07:12:29.000Z",
+          "namespace": "https://github.com/AdlerED",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HacPai聊天室抢红包",
+          "description": "https://hacpai.com/cr  和我一起抢红包吧！！！！！",
+          "url": "https://greasyfork.org/scripts/406806-hacpai%E8%81%8A%E5%A4%A9%E5%AE%A4%E6%8A%A2%E7%BA%A2%E5%8C%85",
+          "code_url": "https://update.greasyfork.org/scripts/406806/HacPai%E8%81%8A%E5%A4%A9%E5%AE%A4%E6%8A%A2%E7%BA%A2%E5%8C%85.user.js",
+          "code_size": 830,
+          "license": null,
+          "version": "1.0.13",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HacPai聊天室抢红包",
+  "description": "https://hacpai.com/cr  和我一起抢红包吧！！！！！",
+  "url": "https://greasyfork.org/scripts/406806-hacpai%E8%81%8A%E5%A4%A9%E5%AE%A4%E6%8A%A2%E7%BA%A2%E5%8C%85",
+  "code_url": "https://update.greasyfork.org/scripts/406806/HacPai%E8%81%8A%E5%A4%A9%E5%AE%A4%E6%8A%A2%E7%BA%A2%E5%8C%85.user.js",
+  "code_size": 830,
+  "license": null,
+  "version": "1.0.13",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

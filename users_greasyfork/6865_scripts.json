@@ -229,5 +229,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 398415,
+    "daily_installs": 0,
+    "total_installs": 221,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-22T02:24:16.000Z",
+    "code_updated_at": "2023-05-29T11:30:00.000Z",
+    "namespace": "wdssmq.com",
+    "support_url": null,
+    "contribution_url": "https://github.com/wdssmq#%E4%BA%8C%E7%BB%B4%E7%A0%81",
+    "contribution_amount": "5.93",
+    "users": [
+      {
+        "id": 6865,
+        "name": "wdssmq",
+        "created_at": "2014-11-15T05:00:20.000Z",
+        "url": "https://greasyfork.org/users/6865-wdssmq"
+      }
+    ],
+    "name": "「bilibili」水水自用 | B 币领取提醒、播放进度更新至网址等；",
+    "description": "B 币领取提醒、稍后再看列表导出为 *.url 等",
+    "url": "https://greasyfork.org/scripts/398415-bilibili-%E6%B0%B4%E6%B0%B4%E8%87%AA%E7%94%A8-b-%E5%B8%81%E9%A2%86%E5%8F%96%E6%8F%90%E9%86%92-%E6%92%AD%E6%94%BE%E8%BF%9B%E5%BA%A6%E6%9B%B4%E6%96%B0%E8%87%B3%E7%BD%91%E5%9D%80%E7%AD%89",
+    "code_url": "https://update.greasyfork.org/scripts/398415/%E3%80%8Cbilibili%E3%80%8D%E6%B0%B4%E6%B0%B4%E8%87%AA%E7%94%A8%20%7C%20B%20%E5%B8%81%E9%A2%86%E5%8F%96%E6%8F%90%E9%86%92%E3%80%81%E6%92%AD%E6%94%BE%E8%BF%9B%E5%BA%A6%E6%9B%B4%E6%96%B0%E8%87%B3%E7%BD%91%E5%9D%80%E7%AD%89%EF%BC%9B.user.js",
+    "code_size": 18517,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

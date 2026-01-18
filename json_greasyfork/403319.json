@@ -1,0 +1,34 @@
+{
+  "id": 403319,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-14T13:21:45.000Z",
+  "code_updated_at": "2020-05-14T13:21:44.000Z",
+  "namespace": "https://github.com/tars0x9752/atcoder-simplify",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 562724,
+      "name": "tars0x9752",
+      "created_at": "2020-05-14T13:13:28.000Z",
+      "url": "https://greasyfork.org/users/562724-tars0x9752",
+      "scripts": []
+    }
+  ],
+  "name": "AtCoder Simplify",
+  "description": "AtCoder Simplify の UserScript です",
+  "url": "https://greasyfork.org/scripts/403319-atcoder-simplify",
+  "code_url": "https://update.greasyfork.org/scripts/403319/AtCoder%20Simplify.user.js",
+  "code_size": 7795,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

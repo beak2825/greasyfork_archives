@@ -1,0 +1,68 @@
+[
+  {
+    "id": 408319,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-07T00:28:56.000Z",
+    "code_updated_at": "2020-08-07T00:28:56.000Z",
+    "namespace": "https://greasyfork.org/users/673982",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 673982,
+        "name": "zhengqunkoo",
+        "created_at": "2020-08-07T00:15:28.000Z",
+        "url": "https://greasyfork.org/users/673982-zhengqunkoo"
+      }
+    ],
+    "name": "wiktionaryForwarder",
+    "description": "Click on first link under a specific section. Avoids cyclic forwarding by keeping a history of visited locations, which expires after two seconds.",
+    "url": "https://greasyfork.org/scripts/408319-wiktionaryforwarder",
+    "code_url": "https://update.greasyfork.org/scripts/408319/wiktionaryForwarder.user.js",
+    "code_size": 1361,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408318,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-07T00:24:35.000Z",
+    "code_updated_at": "2020-08-07T00:24:35.000Z",
+    "namespace": "https://greasyfork.org/users/673982",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 673982,
+        "name": "zhengqunkoo",
+        "created_at": "2020-08-07T00:15:28.000Z",
+        "url": "https://greasyfork.org/users/673982-zhengqunkoo"
+      }
+    ],
+    "name": "center-content",
+    "description": "Center content through flexbox",
+    "url": "https://greasyfork.org/scripts/408318-center-content",
+    "code_url": "https://update.greasyfork.org/scripts/408318/center-content.user.css",
+    "code_size": 427,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

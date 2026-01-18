@@ -1,0 +1,59 @@
+{
+  "id": 405617,
+  "daily_installs": 0,
+  "total_installs": 79,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-18T06:27:12.000Z",
+  "code_updated_at": "2021-01-14T08:01:45.000Z",
+  "namespace": "HHU",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 600425,
+      "name": "plusmultiply0",
+      "created_at": "2020-06-18T04:17:25.000Z",
+      "url": "https://greasyfork.org/users/600425-plusmultiply0",
+      "scripts": [
+        {
+          "id": 405617,
+          "daily_installs": 0,
+          "total_installs": 79,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-18T06:27:12.000Z",
+          "code_updated_at": "2021-01-14T08:01:45.000Z",
+          "namespace": "HHU",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "河海大学教务系统--辅助评教脚本",
+          "description": "在教师评教页面显示十个按钮，根据需要（上方按钮随机选择，下方按钮为全相同选项）即可一键全选并填充简单的评语",
+          "url": "https://greasyfork.org/scripts/405617-%E6%B2%B3%E6%B5%B7%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F-%E8%BE%85%E5%8A%A9%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/405617/%E6%B2%B3%E6%B5%B7%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F--%E8%BE%85%E5%8A%A9%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 5023,
+          "license": "MIT License",
+          "version": "2.02",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "河海大学教务系统--辅助评教脚本",
+  "description": "在教师评教页面显示十个按钮，根据需要（上方按钮随机选择，下方按钮为全相同选项）即可一键全选并填充简单的评语",
+  "url": "https://greasyfork.org/scripts/405617-%E6%B2%B3%E6%B5%B7%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F-%E8%BE%85%E5%8A%A9%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/405617/%E6%B2%B3%E6%B5%B7%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F--%E8%BE%85%E5%8A%A9%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 5023,
+  "license": "MIT License",
+  "version": "2.02",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

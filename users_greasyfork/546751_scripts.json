@@ -1,0 +1,35 @@
+[
+  {
+    "id": 402288,
+    "daily_installs": 0,
+    "total_installs": 123,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-29T17:18:40.000Z",
+    "code_updated_at": "2020-08-06T04:43:02.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/402288",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 546751,
+        "name": "NICKICE",
+        "created_at": "2020-04-29T17:17:05.000Z",
+        "url": "https://greasyfork.org/users/546751-nickice"
+      }
+    ],
+    "name": "bilibili视频页自动展开弹幕列表、移除部分视频推荐广告信息",
+    "description": "bilibili视频页自动展开弹幕列表、移除部分推荐广告信息",
+    "url": "https://greasyfork.org/scripts/402288-bilibili%E8%A7%86%E9%A2%91%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E5%BC%B9%E5%B9%95%E5%88%97%E8%A1%A8-%E7%A7%BB%E9%99%A4%E9%83%A8%E5%88%86%E8%A7%86%E9%A2%91%E6%8E%A8%E8%8D%90%E5%B9%BF%E5%91%8A%E4%BF%A1%E6%81%AF",
+    "code_url": "https://update.greasyfork.org/scripts/402288/bilibili%E8%A7%86%E9%A2%91%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E5%BC%B9%E5%B9%95%E5%88%97%E8%A1%A8%E3%80%81%E7%A7%BB%E9%99%A4%E9%83%A8%E5%88%86%E8%A7%86%E9%A2%91%E6%8E%A8%E8%8D%90%E5%B9%BF%E5%91%8A%E4%BF%A1%E6%81%AF.user.js",
+    "code_size": 1186,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

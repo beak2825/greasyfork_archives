@@ -328,5 +328,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 408289,
+    "daily_installs": 0,
+    "total_installs": 70,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-06T06:34:54.000Z",
+    "code_updated_at": "2021-12-23T12:52:12.000Z",
+    "namespace": "https://www.forclass.tk/script?3",
+    "support_url": null,
+    "contribution_url": "https://www.houtarchat.ml/donate.html",
+    "contribution_amount": "5 RMB",
+    "users": [
+      {
+        "id": 614734,
+        "name": "Houtar Lyu",
+        "created_at": "2020-06-20T12:46:20.000Z",
+        "url": "https://greasyfork.org/users/614734-houtar-lyu"
+      }
+    ],
+    "name": "Crack Forclass 3",
+    "description": "这同样适用于 Forclass,Sunclass,271BAY,Zhizhiniao",
+    "url": "https://greasyfork.org/scripts/408289-crack-forclass-3",
+    "code_url": "https://update.greasyfork.org/scripts/408289/Crack%20Forclass%203.user.js",
+    "code_size": 3958,
+    "license": "GNU General Public License",
+    "version": "1.4.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407302,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-18T08:42:57.000Z",
+    "code_updated_at": "2020-07-20T05:09:23.000Z",
+    "namespace": "https://via-app.crack-forclass.houtarchat.ml/",
+    "support_url": null,
+    "contribution_url": "https://www.houtarchat.ml/donate.html",
+    "contribution_amount": "5 RMB",
+    "users": [
+      {
+        "id": 614734,
+        "name": "Houtar Lyu",
+        "created_at": "2020-06-20T12:46:20.000Z",
+        "url": "https://greasyfork.org/users/614734-houtar-lyu"
+      }
+    ],
+    "name": "Crack Forclass For Via",
+    "description": "适用于Via浏览器及Alook浏览器。",
+    "url": "https://greasyfork.org/scripts/407302-crack-forclass-for-via",
+    "code_url": "https://update.greasyfork.org/scripts/407302/Crack%20Forclass%20For%20Via.user.js",
+    "code_size": 1358,
+    "license": "GNU General Public License",
+    "version": "1.5.5",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405731,
+    "daily_installs": 0,
+    "total_installs": 97,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-20T13:27:24.000Z",
+    "code_updated_at": "2021-12-23T12:51:40.000Z",
+    "namespace": "https://www.forclass.tk/script",
+    "support_url": null,
+    "contribution_url": "https://www.houtarchat.ml/donate.html",
+    "contribution_amount": "5 RMB",
+    "users": [
+      {
+        "id": 614734,
+        "name": "Houtar Lyu",
+        "created_at": "2020-06-20T12:46:20.000Z",
+        "url": "https://greasyfork.org/users/614734-houtar-lyu"
+      }
+    ],
+    "name": "Crack Forclass",
+    "description": "这同样适用于 Forclass,Sunclass,271BAY,Zhizhiniao",
+    "url": "https://greasyfork.org/scripts/405731-crack-forclass",
+    "code_url": "https://update.greasyfork.org/scripts/405731/Crack%20Forclass.user.js",
+    "code_size": 9103,
+    "license": "GNU General Public License",
+    "version": "3.7.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

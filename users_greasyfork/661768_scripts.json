@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406298,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-30T12:00:28.000Z",
+    "code_updated_at": "2021-09-11T19:19:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 661768,
+        "name": "DeaDTrickS",
+        "created_at": "2020-06-30T11:56:45.000Z",
+        "url": "https://greasyfork.org/users/661768-deadtricks"
+      }
+    ],
+    "name": "balls",
+    "description": "Everything for boll games!",
+    "url": "https://greasyfork.org/scripts/406298-balls",
+    "code_url": "https://update.greasyfork.org/scripts/406298/balls.user.js",
+    "code_size": 2440,
+    "license": null,
+    "version": "✓",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

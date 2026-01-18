@@ -1,0 +1,47 @@
+[
+  {
+    "id": 398045,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-16T20:42:37.000Z",
+    "code_updated_at": "2021-06-04T12:58:30.000Z",
+    "namespace": "https://219design.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453560,
+        "name": "Sean Moore",
+        "created_at": "2020-03-03T22:52:53.000Z",
+        "url": "https://greasyfork.org/users/453560-sean-moore"
+      },
+      {
+        "id": 468466,
+        "name": "Kelly Heller",
+        "created_at": "2020-03-24T19:30:03.000Z",
+        "url": "https://greasyfork.org/users/468466-kelly-heller"
+      },
+      {
+        "id": 682602,
+        "name": "Dravid Joseph",
+        "created_at": "2020-08-25T21:56:23.000Z",
+        "url": "https://greasyfork.org/users/682602-dravid-joseph"
+      }
+    ],
+    "name": "Heya",
+    "description": "Connect with coworkers through Heya",
+    "url": "https://greasyfork.org/scripts/398045-heya",
+    "code_url": "https://update.greasyfork.org/scripts/398045/Heya.user.js",
+    "code_size": 2710,
+    "license": null,
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

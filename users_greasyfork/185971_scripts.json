@@ -1,0 +1,35 @@
+[
+  {
+    "id": 400766,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-14T11:08:48.000Z",
+    "code_updated_at": "2020-09-27T09:10:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 185971,
+        "name": "ZOFFY",
+        "created_at": "2018-05-15T13:56:33.000Z",
+        "url": "https://greasyfork.org/users/185971-zoffy"
+      }
+    ],
+    "name": "屏蔽知乎私信提醒",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/400766-%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E7%A7%81%E4%BF%A1%E6%8F%90%E9%86%92",
+    "code_url": "https://update.greasyfork.org/scripts/400766/%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E7%A7%81%E4%BF%A1%E6%8F%90%E9%86%92.user.js",
+    "code_size": 2031,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 405759,
+    "daily_installs": 0,
+    "total_installs": 148,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-21T00:31:00.000Z",
+    "code_updated_at": "2020-06-21T00:31:00.000Z",
+    "namespace": "JeffersonScher",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 197,
+        "name": "Jefferson Scher",
+        "created_at": "2014-04-14T05:23:47.000Z",
+        "url": "https://greasyfork.org/users/197-jefferson-scher"
+      }
+    ],
+    "name": "Mycroft Patch for Firefox 78",
+    "description": "Modify page function to use supported features only. Tampermonkey or Violentmonkey. v1.0 2020-06-20",
+    "url": "https://greasyfork.org/scripts/405759-mycroft-patch-for-firefox-78",
+    "code_url": "https://update.greasyfork.org/scripts/405759/Mycroft%20Patch%20for%20Firefox%2078.user.js",
+    "code_size": 2464,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397217,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-02T16:02:24.000Z",
+    "code_updated_at": "2020-03-02T18:24:13.000Z",
+    "namespace": "JeffersonScher",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 197,
+        "name": "Jefferson Scher",
+        "created_at": "2014-04-14T05:23:47.000Z",
+        "url": "https://greasyfork.org/users/197-jefferson-scher"
+      }
+    ],
+    "name": "Load .gsheet link from local file",
+    "description": "Discover Google Docs link in .gsheet file and navigate to it. 2020-03-02.",
+    "url": "https://greasyfork.org/scripts/397217-load-gsheet-link-from-local-file",
+    "code_url": "https://update.greasyfork.org/scripts/397217/Load%20gsheet%20link%20from%20local%20file.user.js",
+    "code_size": 1541,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

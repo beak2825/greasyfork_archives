@@ -1,0 +1,68 @@
+[
+  {
+    "id": 403977,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-23T08:59:50.000Z",
+    "code_updated_at": "2020-05-23T10:20:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449419,
+        "name": "adamsteinPosting",
+        "created_at": "2020-02-24T20:18:25.000Z",
+        "url": "https://greasyfork.org/users/449419-adamsteinposting"
+      }
+    ],
+    "name": "Coronabuddy",
+    "description": "Best blocker.",
+    "url": "https://greasyfork.org/scripts/403977-coronabuddy",
+    "code_url": "https://update.greasyfork.org/scripts/403977/Coronabuddy.user.js",
+    "code_size": 4719,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396851,
+    "daily_installs": 0,
+    "total_installs": 156,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-24T20:19:31.000Z",
+    "code_updated_at": "2020-02-27T13:41:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449419,
+        "name": "adamsteinPosting",
+        "created_at": "2020-02-24T20:18:25.000Z",
+        "url": "https://greasyfork.org/users/449419-adamsteinposting"
+      }
+    ],
+    "name": "Coincidence Pupper",
+    "description": "Sniffs out coincidences.",
+    "url": "https://greasyfork.org/scripts/396851-coincidence-pupper",
+    "code_url": "https://update.greasyfork.org/scripts/396851/Coincidence%20Pupper.user.js",
+    "code_size": 337116,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 404599,
+    "daily_installs": 0,
+    "total_installs": 6950,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-03T09:23:22.000Z",
+    "code_updated_at": "2022-06-10T08:58:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 559197,
+        "name": "Aisen",
+        "created_at": "2020-05-11T12:13:09.000Z",
+        "url": "https://greasyfork.org/users/559197-aisen"
+      }
+    ],
+    "name": "高校考试网(gaoxiaokaoshi.com)建立本地题库自动测试",
+    "description": "我的九尾狐奶奶呀，毛概每次测试都不及格，算了还是用笨办法吧。获取答案通过历史测试的试题解析，或者多做我的考试里面的无限次数测试来增加答案。支持我的考试，我的课程，成绩分析，题库练习，试卷分析。暂不更新了，等要用的时候再说吧。用谷歌浏览器！用谷歌浏览器！用谷歌浏览器！其他浏览器会有bug，不保证能正确运行。",
+    "url": "https://greasyfork.org/scripts/404599-%E9%AB%98%E6%A0%A1%E8%80%83%E8%AF%95%E7%BD%91-gaoxiaokaoshi-com-%E5%BB%BA%E7%AB%8B%E6%9C%AC%E5%9C%B0%E9%A2%98%E5%BA%93%E8%87%AA%E5%8A%A8%E6%B5%8B%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/404599/%E9%AB%98%E6%A0%A1%E8%80%83%E8%AF%95%E7%BD%91%28gaoxiaokaoshicom%29%E5%BB%BA%E7%AB%8B%E6%9C%AC%E5%9C%B0%E9%A2%98%E5%BA%93%E8%87%AA%E5%8A%A8%E6%B5%8B%E8%AF%95.user.js",
+    "code_size": 19934,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

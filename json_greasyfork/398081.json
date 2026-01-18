@@ -1,0 +1,33 @@
+{
+  "id": 398081,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-17T11:23:11.000Z",
+  "code_updated_at": "2022-06-20T03:18:52.000Z",
+  "namespace": "https://www.gznotes.com/manual/helpDoc/bdTjLatestOpt.php",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 459570,
+      "name": "DanielTing",
+      "created_at": "2020-03-15T12:20:39.000Z",
+      "url": "https://greasyfork.org/users/459570-danielting"
+    }
+  ],
+  "name": "百度统计实时访客增强优化 - GzNotes.com",
+  "description": "优化、增强百度统计页面表格的功能和用户体验，方便用户直观观察数据、统计和查询。",
+  "url": "https://greasyfork.org/scripts/398081-%E7%99%BE%E5%BA%A6%E7%BB%9F%E8%AE%A1%E5%AE%9E%E6%97%B6%E8%AE%BF%E5%AE%A2%E5%A2%9E%E5%BC%BA%E4%BC%98%E5%8C%96-gznotes-com",
+  "code_url": "https://update.greasyfork.org/scripts/398081/%E7%99%BE%E5%BA%A6%E7%BB%9F%E8%AE%A1%E5%AE%9E%E6%97%B6%E8%AE%BF%E5%AE%A2%E5%A2%9E%E5%BC%BA%E4%BC%98%E5%8C%96%20-%20GzNotescom.user.js",
+  "code_size": 8348,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

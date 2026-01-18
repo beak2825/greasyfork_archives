@@ -1,0 +1,59 @@
+{
+  "id": 409952,
+  "daily_installs": 0,
+  "total_installs": 5505,
+  "fan_score": "61.0",
+  "good_ratings": 6,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-25T15:57:45.000Z",
+  "code_updated_at": "2020-08-25T15:57:45.000Z",
+  "namespace": "www.ishare1.cn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 567864,
+      "name": "sunjian286",
+      "created_at": "2020-05-20T06:23:56.000Z",
+      "url": "https://greasyfork.org/users/567864-sunjian286",
+      "scripts": [
+        {
+          "id": 409952,
+          "daily_installs": 0,
+          "total_installs": 5505,
+          "fan_score": "61.0",
+          "good_ratings": 6,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-25T15:57:45.000Z",
+          "code_updated_at": "2020-08-25T15:57:45.000Z",
+          "namespace": "www.ishare1.cn",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "【免费电子书下载】将爱分享网站(www.ishare1.cn)隐藏的PDF电子书下载链接显示出来",
+          "description": "安装本插件后，可以将爱分享网站(www.ishare1.cn)隐藏的PDF电子书下载链接显示出来",
+          "url": "https://greasyfork.org/scripts/409952-%E5%85%8D%E8%B4%B9%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD-%E5%B0%86%E7%88%B1%E5%88%86%E4%BA%AB%E7%BD%91%E7%AB%99-www-ishare1-cn-%E9%9A%90%E8%97%8F%E7%9A%84pdf%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%87%BA%E6%9D%A5",
+          "code_url": "https://update.greasyfork.org/scripts/409952/%E3%80%90%E5%85%8D%E8%B4%B9%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD%E3%80%91%E5%B0%86%E7%88%B1%E5%88%86%E4%BA%AB%E7%BD%91%E7%AB%99%28wwwishare1cn%29%E9%9A%90%E8%97%8F%E7%9A%84PDF%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%87%BA%E6%9D%A5.user.js",
+          "code_size": 2260,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "【免费电子书下载】将爱分享网站(www.ishare1.cn)隐藏的PDF电子书下载链接显示出来",
+  "description": "安装本插件后，可以将爱分享网站(www.ishare1.cn)隐藏的PDF电子书下载链接显示出来",
+  "url": "https://greasyfork.org/scripts/409952-%E5%85%8D%E8%B4%B9%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD-%E5%B0%86%E7%88%B1%E5%88%86%E4%BA%AB%E7%BD%91%E7%AB%99-www-ishare1-cn-%E9%9A%90%E8%97%8F%E7%9A%84pdf%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%87%BA%E6%9D%A5",
+  "code_url": "https://update.greasyfork.org/scripts/409952/%E3%80%90%E5%85%8D%E8%B4%B9%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD%E3%80%91%E5%B0%86%E7%88%B1%E5%88%86%E4%BA%AB%E7%BD%91%E7%AB%99%28wwwishare1cn%29%E9%9A%90%E8%97%8F%E7%9A%84PDF%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%87%BA%E6%9D%A5.user.js",
+  "code_size": 2260,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

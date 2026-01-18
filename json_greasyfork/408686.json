@@ -1,0 +1,59 @@
+{
+  "id": 408686,
+  "daily_installs": 0,
+  "total_installs": 531,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-13T09:16:10.000Z",
+  "code_updated_at": "2020-08-13T09:16:09.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 454489,
+      "name": "XiaoGuYa",
+      "created_at": "2020-03-05T12:07:01.000Z",
+      "url": "https://greasyfork.org/users/454489-xiaoguya",
+      "scripts": [
+        {
+          "id": 408686,
+          "daily_installs": 0,
+          "total_installs": 531,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-13T09:16:10.000Z",
+          "code_updated_at": "2020-08-13T09:16:09.000Z",
+          "namespace": "https://greasyfork.org/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "酒肴解析",
+          "description": "次数是无限的，但精力是有限的。",
+          "url": "https://greasyfork.org/scripts/408686-%E9%85%92%E8%82%B4%E8%A7%A3%E6%9E%90",
+          "code_url": "https://update.greasyfork.org/scripts/408686/%E9%85%92%E8%82%B4%E8%A7%A3%E6%9E%90.user.js",
+          "code_size": 4663,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "酒肴解析",
+  "description": "次数是无限的，但精力是有限的。",
+  "url": "https://greasyfork.org/scripts/408686-%E9%85%92%E8%82%B4%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/408686/%E9%85%92%E8%82%B4%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 4663,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

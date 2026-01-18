@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408115,
+    "daily_installs": 0,
+    "total_installs": 3417,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-03T09:42:49.000Z",
+    "code_updated_at": "2023-11-25T02:22:58.000Z",
+    "namespace": "https://www.jingtaozhushou.com/plugin?from=monkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 238458,
+        "name": "京淘助手",
+        "created_at": "2019-01-10T02:49:29.000Z",
+        "url": "https://greasyfork.org/users/238458-%E4%BA%AC%E6%B7%98%E5%8A%A9%E6%89%8B"
+      }
+    ],
+    "name": "京淘购物助手【京东版】",
+    "description": "京淘购物助手【京东版】是京淘助手简版，支持查询京东佣金比例、隐藏联盟券、真实库存、企业帐号价格、微信端和手Q端价格查询等；更多功能持续开发中，要使用完整版，请到官网下载！官方交流和反馈QQ群：633824817  问题反馈：https://www.jingtaozhushou.com/feedback?from=monkey",
+    "url": "https://greasyfork.org/scripts/408115-%E4%BA%AC%E6%B7%98%E8%B4%AD%E7%89%A9%E5%8A%A9%E6%89%8B-%E4%BA%AC%E4%B8%9C%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/408115/%E4%BA%AC%E6%B7%98%E8%B4%AD%E7%89%A9%E5%8A%A9%E6%89%8B%E3%80%90%E4%BA%AC%E4%B8%9C%E7%89%88%E3%80%91.user.js",
+    "code_size": 16647,
+    "license": null,
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

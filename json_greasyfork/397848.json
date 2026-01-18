@@ -1,0 +1,59 @@
+{
+  "id": 397848,
+  "daily_installs": 22,
+  "total_installs": 46597,
+  "fan_score": "95.7",
+  "good_ratings": 212,
+  "ok_ratings": 7,
+  "bad_ratings": 0,
+  "created_at": "2020-03-13T14:19:42.000Z",
+  "code_updated_at": "2026-01-15T11:13:12.000Z",
+  "namespace": "https://github.com/MapoMagpie/comic-looms",
+  "support_url": "https://github.com/MapoMagpie/comic-looms",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 63244,
+      "name": "ZsyjkQinBai",
+      "created_at": "2016-08-31T04:29:00.000Z",
+      "url": "https://greasyfork.org/users/63244-zsyjkqinbai",
+      "scripts": [
+        {
+          "id": 397848,
+          "daily_installs": 22,
+          "total_installs": 46597,
+          "fan_score": "95.7",
+          "good_ratings": 212,
+          "ok_ratings": 7,
+          "bad_ratings": 0,
+          "created_at": "2020-03-13T14:19:42.000Z",
+          "code_updated_at": "2026-01-15T11:13:12.000Z",
+          "namespace": "https://github.com/MapoMagpie/comic-looms",
+          "support_url": "https://github.com/MapoMagpie/comic-looms",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Comic Looms",
+          "description": "Manga Viewer + Downloader, Focus on experience and low load on the site. Support you in finding the site you are searching for.",
+          "url": "https://greasyfork.org/scripts/397848-comic-looms",
+          "code_url": "https://update.greasyfork.org/scripts/397848/Comic%20Looms.user.js",
+          "code_size": 659154,
+          "license": "MIT License",
+          "version": "4.14.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Comic Looms",
+  "description": "Manga Viewer + Downloader, Focus on experience and low load on the site. Support you in finding the site you are searching for.",
+  "url": "https://greasyfork.org/scripts/397848-comic-looms",
+  "code_url": "https://update.greasyfork.org/scripts/397848/Comic%20Looms.user.js",
+  "code_size": 659154,
+  "license": "MIT License",
+  "version": "4.14.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

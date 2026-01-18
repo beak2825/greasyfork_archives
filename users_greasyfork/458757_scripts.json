@@ -130,5 +130,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 397854,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-13T18:44:04.000Z",
+    "code_updated_at": "2021-11-18T15:24:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 458757,
+        "name": "PairZhu",
+        "created_at": "2020-03-13T18:19:21.000Z",
+        "url": "https://greasyfork.org/users/458757-pairzhu"
+      }
+    ],
+    "name": "南工大计算机教学管理系统作业提交助手",
+    "description": "优化南工大计算机教学管理系统是作业提交功能",
+    "url": "https://greasyfork.org/scripts/397854-%E5%8D%97%E5%B7%A5%E5%A4%A7%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%95%99%E5%AD%A6%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E4%BD%9C%E4%B8%9A%E6%8F%90%E4%BA%A4%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/397854/%E5%8D%97%E5%B7%A5%E5%A4%A7%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%95%99%E5%AD%A6%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E4%BD%9C%E4%B8%9A%E6%8F%90%E4%BA%A4%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 9212,
+    "license": "MIT License",
+    "version": "2.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

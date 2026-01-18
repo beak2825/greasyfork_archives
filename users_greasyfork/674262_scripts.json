@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408371,
+    "daily_installs": 0,
+    "total_installs": 709,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-07T16:37:55.000Z",
+    "code_updated_at": "2020-08-14T09:59:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 674262,
+        "name": "Tamce",
+        "created_at": "2020-08-07T16:33:29.000Z",
+        "url": "https://greasyfork.org/users/674262-tamce"
+      }
+    ],
+    "name": "禁止 Leetcode 跳转中文站",
+    "description": "通过屏蔽英文版 leetcode 中文站相关的资源加载，从而禁止其自动跳转中文站点，并同时屏蔽中文站提示广告。",
+    "url": "https://greasyfork.org/scripts/408371-%E7%A6%81%E6%AD%A2-leetcode-%E8%B7%B3%E8%BD%AC%E4%B8%AD%E6%96%87%E7%AB%99",
+    "code_url": "https://update.greasyfork.org/scripts/408371/%E7%A6%81%E6%AD%A2%20Leetcode%20%E8%B7%B3%E8%BD%AC%E4%B8%AD%E6%96%87%E7%AB%99.user.js",
+    "code_size": 518,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

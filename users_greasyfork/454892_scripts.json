@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397406,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-06T08:26:32.000Z",
+    "code_updated_at": "2020-03-06T13:25:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 454892,
+        "name": "Simon Stratmann",
+        "created_at": "2020-03-06T08:02:39.000Z",
+        "url": "https://greasyfork.org/users/454892-simon-stratmann"
+      }
+    ],
+    "name": "Linkify gitlab",
+    "description": "Adds links to reports in gitlab pipeline views. See https://greasyfork.org/de/scripts/397406-linkify-gitlab",
+    "url": "https://greasyfork.org/scripts/397406-linkify-gitlab",
+    "code_url": "https://update.greasyfork.org/scripts/397406/Linkify%20gitlab.user.js",
+    "code_size": 3424,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

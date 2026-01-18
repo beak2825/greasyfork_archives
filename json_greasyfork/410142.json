@@ -1,0 +1,34 @@
+{
+  "id": 410142,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-29T03:24:36.000Z",
+  "code_updated_at": "2020-08-31T00:33:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 374660,
+      "name": "csg329",
+      "created_at": "2019-09-22T11:38:45.000Z",
+      "url": "https://greasyfork.org/users/374660-csg329",
+      "scripts": []
+    }
+  ],
+  "name": "百度自定义",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/410142-%E7%99%BE%E5%BA%A6%E8%87%AA%E5%AE%9A%E4%B9%89",
+  "code_url": "https://update.greasyfork.org/scripts/410142/%E7%99%BE%E5%BA%A6%E8%87%AA%E5%AE%9A%E4%B9%89.user.js",
+  "code_size": 2712,
+  "license": null,
+  "version": "0.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

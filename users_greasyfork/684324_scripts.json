@@ -1,0 +1,35 @@
+[
+  {
+    "id": 410435,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-01T11:06:53.000Z",
+    "code_updated_at": "2020-09-01T11:06:53.000Z",
+    "namespace": "https://greasyfork.org/users/684324",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 684324,
+        "name": "57r31",
+        "created_at": "2020-09-01T11:04:45.000Z",
+        "url": "https://greasyfork.org/users/684324-57r31"
+      }
+    ],
+    "name": "valetudo joystick control",
+    "description": "control your vacuum cleaner with joystick!",
+    "url": "https://greasyfork.org/scripts/410435-valetudo-joystick-control",
+    "code_url": "https://update.greasyfork.org/scripts/410435/valetudo%20joystick%20control.user.js",
+    "code_size": 809,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

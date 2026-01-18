@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411527,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-18T18:13:58.000Z",
+    "code_updated_at": "2020-09-18T18:13:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 688717,
+        "name": "disksing",
+        "created_at": "2020-09-18T18:11:33.000Z",
+        "url": "https://greasyfork.org/users/688717-disksing"
+      }
+    ],
+    "name": "WeiboURL",
+    "description": "新浪微博短链接自动跳转",
+    "url": "https://greasyfork.org/scripts/411527-weibourl",
+    "code_url": "https://update.greasyfork.org/scripts/411527/WeiboURL.user.js",
+    "code_size": 652,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 400532,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-12T19:41:34.000Z",
+  "code_updated_at": "2023-06-11T21:12:40.000Z",
+  "namespace": "https://windowsfreak.de",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 505969,
+      "name": "Windowsfreak",
+      "created_at": "2020-04-12T19:40:05.000Z",
+      "url": "https://greasyfork.org/users/505969-windowsfreak"
+    }
+  ],
+  "name": "Deutsche Bank Auto-Login",
+  "description": "Help Google Chrome and Mozilla Firefox auto-save account information. Supports multiple credentials.",
+  "url": "https://greasyfork.org/scripts/400532-deutsche-bank-auto-login",
+  "code_url": "https://update.greasyfork.org/scripts/400532/Deutsche%20Bank%20Auto-Login.user.js",
+  "code_size": 5430,
+  "license": "MIT; https://opensource.org/licenses/MIT",
+  "version": "2.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

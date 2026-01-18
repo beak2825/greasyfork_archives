@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411352,
+    "daily_installs": 0,
+    "total_installs": 223,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-15T03:01:32.000Z",
+    "code_updated_at": "2020-09-15T03:01:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 287900,
+        "name": "yuyu yu",
+        "created_at": "2019-04-01T02:48:13.000Z",
+        "url": "https://greasyfork.org/users/287900-yuyu-yu"
+      }
+    ],
+    "name": "阅读加宽",
+    "description": "阅读加宽，尽量避免水平的滚动条；适用于 知乎、思否、stackoverflow、掘进、简书",
+    "url": "https://greasyfork.org/scripts/411352-%E9%98%85%E8%AF%BB%E5%8A%A0%E5%AE%BD",
+    "code_url": "https://update.greasyfork.org/scripts/411352/%E9%98%85%E8%AF%BB%E5%8A%A0%E5%AE%BD.user.js",
+    "code_size": 2093,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

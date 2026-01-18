@@ -1,0 +1,59 @@
+{
+  "id": 402315,
+  "daily_installs": 0,
+  "total_installs": 29255,
+  "fan_score": "94.3",
+  "good_ratings": 63,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-30T07:32:51.000Z",
+  "code_updated_at": "2020-04-30T07:52:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 547059,
+      "name": "woshiwawawa",
+      "created_at": "2020-04-30T07:27:49.000Z",
+      "url": "https://greasyfork.org/users/547059-woshiwawawa",
+      "scripts": [
+        {
+          "id": 402315,
+          "daily_installs": 0,
+          "total_installs": 29255,
+          "fan_score": "94.3",
+          "good_ratings": 63,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-30T07:32:51.000Z",
+          "code_updated_at": "2020-04-30T07:52:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "吾爱破解之识别百度网盘链接并自动填写密码",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/402315-%E5%90%BE%E7%88%B1%E7%A0%B4%E8%A7%A3%E4%B9%8B%E8%AF%86%E5%88%AB%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%93%BE%E6%8E%A5%E5%B9%B6%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E5%AF%86%E7%A0%81",
+          "code_url": "https://update.greasyfork.org/scripts/402315/%E5%90%BE%E7%88%B1%E7%A0%B4%E8%A7%A3%E4%B9%8B%E8%AF%86%E5%88%AB%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%93%BE%E6%8E%A5%E5%B9%B6%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E5%AF%86%E7%A0%81.user.js",
+          "code_size": 1976,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "吾爱破解之识别百度网盘链接并自动填写密码",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/402315-%E5%90%BE%E7%88%B1%E7%A0%B4%E8%A7%A3%E4%B9%8B%E8%AF%86%E5%88%AB%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%93%BE%E6%8E%A5%E5%B9%B6%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E5%AF%86%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/402315/%E5%90%BE%E7%88%B1%E7%A0%B4%E8%A7%A3%E4%B9%8B%E8%AF%86%E5%88%AB%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%93%BE%E6%8E%A5%E5%B9%B6%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E5%AF%86%E7%A0%81.user.js",
+  "code_size": 1976,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

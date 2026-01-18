@@ -1,0 +1,34 @@
+{
+  "id": 408043,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-02T04:53:55.000Z",
+  "code_updated_at": "2020-08-02T04:53:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 456116,
+      "name": "liswt",
+      "created_at": "2020-03-08T23:57:00.000Z",
+      "url": "https://greasyfork.org/users/456116-liswt",
+      "scripts": []
+    }
+  ],
+  "name": "评论js",
+  "description": "要用脚本打败脚本",
+  "url": "https://greasyfork.org/scripts/408043-%E8%AF%84%E8%AE%BAjs",
+  "code_url": "https://update.greasyfork.org/scripts/408043/%E8%AF%84%E8%AE%BAjs.user.js",
+  "code_size": 1605,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

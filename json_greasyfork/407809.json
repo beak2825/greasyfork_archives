@@ -1,0 +1,59 @@
+{
+  "id": 407809,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-27T18:45:36.000Z",
+  "code_updated_at": "2020-07-31T17:27:24.000Z",
+  "namespace": "landgrab_enh_mouseovers",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670767,
+      "name": "Joe Wilkinson",
+      "created_at": "2020-07-27T16:41:49.000Z",
+      "url": "https://greasyfork.org/users/670767-joe-wilkinson",
+      "scripts": [
+        {
+          "id": 407809,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-27T18:45:36.000Z",
+          "code_updated_at": "2020-07-31T17:27:24.000Z",
+          "namespace": "landgrab_enh_mouseovers",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LandGrab: enhanced mouseovers",
+          "description": "Enhances LandGrab's mouse-over functionality",
+          "url": "https://greasyfork.org/scripts/407809-landgrab-enhanced-mouseovers",
+          "code_url": "https://update.greasyfork.org/scripts/407809/LandGrab%3A%20enhanced%20mouseovers.user.js",
+          "code_size": 4868,
+          "license": null,
+          "version": "1.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LandGrab: enhanced mouseovers",
+  "description": "Enhances LandGrab's mouse-over functionality",
+  "url": "https://greasyfork.org/scripts/407809-landgrab-enhanced-mouseovers",
+  "code_url": "https://update.greasyfork.org/scripts/407809/LandGrab%3A%20enhanced%20mouseovers.user.js",
+  "code_size": 4868,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411246,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-12T07:20:44.000Z",
+    "code_updated_at": "2020-09-12T13:30:56.000Z",
+    "namespace": "https://limxw.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 105739,
+        "name": "WingLim",
+        "created_at": "2017-02-26T02:55:54.000Z",
+        "url": "https://greasyfork.org/users/105739-winglim"
+      }
+    ],
+    "name": "iCity 网页版小助手",
+    "description": "优化网页版 iCity 日记体验",
+    "url": "https://greasyfork.org/scripts/411246-icity-%E7%BD%91%E9%A1%B5%E7%89%88%E5%B0%8F%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/411246/iCity%20%E7%BD%91%E9%A1%B5%E7%89%88%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 2471,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

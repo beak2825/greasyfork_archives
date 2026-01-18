@@ -1,0 +1,59 @@
+{
+  "id": 406570,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-06T04:02:57.000Z",
+  "code_updated_at": "2020-07-06T04:02:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 663812,
+      "name": "Amarok1217",
+      "created_at": "2020-07-06T03:52:44.000Z",
+      "url": "https://greasyfork.org/users/663812-amarok1217",
+      "scripts": [
+        {
+          "id": 406570,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-06T04:02:57.000Z",
+          "code_updated_at": "2020-07-06T04:02:57.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AutoFill for Lanhu",
+          "description": "自用，自动填充蓝湖验证码",
+          "url": "https://greasyfork.org/scripts/406570-autofill-for-lanhu",
+          "code_url": "https://update.greasyfork.org/scripts/406570/AutoFill%20for%20Lanhu.user.js",
+          "code_size": 1107,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AutoFill for Lanhu",
+  "description": "自用，自动填充蓝湖验证码",
+  "url": "https://greasyfork.org/scripts/406570-autofill-for-lanhu",
+  "code_url": "https://update.greasyfork.org/scripts/406570/AutoFill%20for%20Lanhu.user.js",
+  "code_size": 1107,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

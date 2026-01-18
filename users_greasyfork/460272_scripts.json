@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398036,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-16T16:14:48.000Z",
+    "code_updated_at": "2020-03-17T15:38:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 460272,
+        "name": "QueueHung",
+        "created_at": "2020-03-16T16:13:30.000Z",
+        "url": "https://greasyfork.org/users/460272-queuehung"
+      }
+    ],
+    "name": "make Shao-wei's website darker",
+    "description": "make Shao-wei's website darker. Don't use bright blue to hurt our eyes.",
+    "url": "https://greasyfork.org/scripts/398036-make-shao-wei-s-website-darker",
+    "code_url": "https://update.greasyfork.org/scripts/398036/make%20Shao-wei%27s%20website%20darker.user.js",
+    "code_size": 2464,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 399018,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-30T15:45:25.000Z",
+  "code_updated_at": "2020-03-30T15:45:24.000Z",
+  "namespace": "nap",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 471939,
+      "name": "alreadyused",
+      "created_at": "2020-03-30T14:56:01.000Z",
+      "url": "https://greasyfork.org/users/471939-alreadyused",
+      "scripts": []
+    }
+  ],
+  "name": "Ne0 Auto Port",
+  "description": "Ne0's Auto Port for those who need to get out of a tight jam!",
+  "url": "https://greasyfork.org/scripts/399018-ne0-auto-port",
+  "code_url": "https://update.greasyfork.org/scripts/399018/Ne0%20Auto%20Port.user.js",
+  "code_size": 43940,
+  "license": null,
+  "version": "3.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

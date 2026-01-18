@@ -1,0 +1,59 @@
+{
+  "id": 398571,
+  "daily_installs": 0,
+  "total_installs": 488,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-24T06:00:13.000Z",
+  "code_updated_at": "2020-03-25T16:33:06.000Z",
+  "namespace": "https://konge.pw/",
+  "support_url": "https://github.com/zkonge/bv2av/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 468078,
+      "name": "zkonge",
+      "created_at": "2020-03-24T05:58:13.000Z",
+      "url": "https://greasyfork.org/users/468078-zkonge",
+      "scripts": [
+        {
+          "id": 398571,
+          "daily_installs": 0,
+          "total_installs": 488,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-24T06:00:13.000Z",
+          "code_updated_at": "2020-03-25T16:33:06.000Z",
+          "namespace": "https://konge.pw/",
+          "support_url": "https://github.com/zkonge/bv2av/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili BV2AV",
+          "description": "使用 AV 号替换 Bilibili 视频地址中的 BV 号。直接解码 BV，无刷新，保留所有URL原始参数（分P正常工作）。",
+          "url": "https://greasyfork.org/scripts/398571-bilibili-bv2av",
+          "code_url": "https://update.greasyfork.org/scripts/398571/Bilibili%20BV2AV.user.js",
+          "code_size": 1378,
+          "license": null,
+          "version": "0.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili BV2AV",
+  "description": "使用 AV 号替换 Bilibili 视频地址中的 BV 号。直接解码 BV，无刷新，保留所有URL原始参数（分P正常工作）。",
+  "url": "https://greasyfork.org/scripts/398571-bilibili-bv2av",
+  "code_url": "https://update.greasyfork.org/scripts/398571/Bilibili%20BV2AV.user.js",
+  "code_size": 1378,
+  "license": null,
+  "version": "0.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

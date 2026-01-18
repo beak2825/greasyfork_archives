@@ -1,0 +1,34 @@
+{
+  "id": 411515,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-18T09:43:27.000Z",
+  "code_updated_at": "2020-09-18T09:43:26.000Z",
+  "namespace": "qinshaoyou",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 436352,
+      "name": "Haolei Qin",
+      "created_at": "2020-01-18T03:35:44.000Z",
+      "url": "https://greasyfork.org/users/436352-haolei-qin",
+      "scripts": []
+    }
+  ],
+  "name": "爬取谷歌搜索(不用的时候禁用掉)",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/411515-%E7%88%AC%E5%8F%96%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2-%E4%B8%8D%E7%94%A8%E7%9A%84%E6%97%B6%E5%80%99%E7%A6%81%E7%94%A8%E6%8E%89",
+  "code_url": "https://update.greasyfork.org/scripts/411515/%E7%88%AC%E5%8F%96%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%28%E4%B8%8D%E7%94%A8%E7%9A%84%E6%97%B6%E5%80%99%E7%A6%81%E7%94%A8%E6%8E%89%29.user.js",
+  "code_size": 5792,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

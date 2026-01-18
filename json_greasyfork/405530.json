@@ -1,0 +1,34 @@
+{
+  "id": 405530,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-16T13:53:30.000Z",
+  "code_updated_at": "2021-04-11T22:19:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 415739,
+      "name": "garleba",
+      "created_at": "2019-12-10T16:06:06.000Z",
+      "url": "https://greasyfork.org/users/415739-garleba",
+      "scripts": []
+    }
+  ],
+  "name": "Inversa - Movimientos",
+  "description": "Mejoras en la página de movimientos de Inversa.es",
+  "url": "https://greasyfork.org/scripts/405530-inversa-movimientos",
+  "code_url": "https://update.greasyfork.org/scripts/405530/Inversa%20-%20Movimientos.user.js",
+  "code_size": 62288,
+  "license": null,
+  "version": "0.4.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

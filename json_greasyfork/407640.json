@@ -1,0 +1,33 @@
+{
+  "id": 407640,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-24T06:02:12.000Z",
+  "code_updated_at": "2020-07-24T06:02:12.000Z",
+  "namespace": "JeffersonScher",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 197,
+      "name": "Jefferson Scher",
+      "created_at": "2014-04-14T05:23:47.000Z",
+      "url": "https://greasyfork.org/users/197-jefferson-scher"
+    }
+  ],
+  "name": "SwissCows Un-target Web Result Links to Open in Same Tab",
+  "description": "Strip target=\"_blank\" from results links (2020-07-23)",
+  "url": "https://greasyfork.org/scripts/407640-swisscows-un-target-web-result-links-to-open-in-same-tab",
+  "code_url": "https://update.greasyfork.org/scripts/407640/SwissCows%20Un-target%20Web%20Result%20Links%20to%20Open%20in%20Same%20Tab.user.js",
+  "code_size": 1202,
+  "license": "BSD 3-clause",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

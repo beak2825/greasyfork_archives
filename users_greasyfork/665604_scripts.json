@@ -724,5 +724,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411975,
+    "daily_installs": 0,
+    "total_installs": 164,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-25T19:33:43.000Z",
+    "code_updated_at": "2021-01-10T15:21:12.000Z",
+    "namespace": "com.anwinity.dh3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665604,
+        "name": "Anwinity",
+        "created_at": "2020-07-11T00:15:39.000Z",
+        "url": "https://greasyfork.org/users/665604-anwinity"
+      }
+    ],
+    "name": "DH3 Slap Chop",
+    "description": "One-Click eat-all and cook-all buttons for fish and food.",
+    "url": "https://greasyfork.org/scripts/411975-dh3-slap-chop",
+    "code_url": "https://update.greasyfork.org/scripts/411975/DH3%20Slap%20Chop.user.js",
+    "code_size": 49305,
+    "license": null,
+    "version": "1.0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 409991,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-26T16:18:50.000Z",
+    "code_updated_at": "2020-08-26T18:03:00.000Z",
+    "namespace": "com.anwinity.dh3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665604,
+        "name": "Anwinity",
+        "created_at": "2020-07-11T00:15:39.000Z",
+        "url": "https://greasyfork.org/users/665604-anwinity"
+      }
+    ],
+    "name": "DH3 Brighter Kills",
+    "description": "Just makes the \"xx kills\" text in monster log actually legible.",
+    "url": "https://greasyfork.org/scripts/409991-dh3-brighter-kills",
+    "code_url": "https://update.greasyfork.org/scripts/409991/DH3%20Brighter%20Kills.user.js",
+    "code_size": 1598,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406843,
+    "daily_installs": 0,
+    "total_installs": 267,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-11T04:07:07.000Z",
+    "code_updated_at": "2021-01-10T15:20:25.000Z",
+    "namespace": "com.anwinity.dh3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665604,
+        "name": "Anwinity",
+        "created_at": "2020-07-11T00:15:39.000Z",
+        "url": "https://greasyfork.org/users/665604-anwinity"
+      }
+    ],
+    "name": "DH3 Tools One Click",
+    "description": "Open Anwinity's DH3 Tools and load data automatically. This works by passing a url parameter with all of your stats and tool information.",
+    "url": "https://greasyfork.org/scripts/406843-dh3-tools-one-click",
+    "code_url": "https://update.greasyfork.org/scripts/406843/DH3%20Tools%20One%20Click.user.js",
+    "code_size": 4447,
+    "license": null,
+    "version": "1.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406837,
+    "daily_installs": 0,
+    "total_installs": 202,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-11T01:37:07.000Z",
+    "code_updated_at": "2021-01-10T15:20:44.000Z",
+    "namespace": "com.anwinity.dh3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665604,
+        "name": "Anwinity",
+        "created_at": "2020-07-11T00:15:39.000Z",
+        "url": "https://greasyfork.org/users/665604-anwinity"
+      }
+    ],
+    "name": "DH3 VarViewer",
+    "description": "Easy way to view var_ values in DH3",
+    "url": "https://greasyfork.org/scripts/406837-dh3-varviewer",
+    "code_url": "https://update.greasyfork.org/scripts/406837/DH3%20VarViewer.user.js",
+    "code_size": 3978,
+    "license": null,
+    "version": "1.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

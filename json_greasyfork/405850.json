@@ -1,0 +1,59 @@
+{
+  "id": 405850,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-22T07:12:27.000Z",
+  "code_updated_at": "2020-06-22T07:32:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 128218,
+      "name": "402449590",
+      "created_at": "2017-05-30T13:22:02.000Z",
+      "url": "https://greasyfork.org/users/128218-402449590",
+      "scripts": [
+        {
+          "id": 450418,
+          "daily_installs": 0,
+          "total_installs": 2082,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2022-08-29T16:29:28.000Z",
+          "code_updated_at": "2022-08-29T16:30:58.000Z",
+          "namespace": "https://gitee.com/Kaiter-Plus/TampermonkeyScript/tree/master/Translate/Translate_only_chinese.js",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页翻译——翻译为中文((替换镜像链接，免代理流畅使用))",
+          "description": "给每个非中文的网页右下角（可以调整到左下角）添加一个google翻译图标，该版本为中文翻译版本，只把外语翻译为中文",
+          "url": "https://greasyfork.org/scripts/450418-%E7%BD%91%E9%A1%B5%E7%BF%BB%E8%AF%91-%E7%BF%BB%E8%AF%91%E4%B8%BA%E4%B8%AD%E6%96%87-%E6%9B%BF%E6%8D%A2%E9%95%9C%E5%83%8F%E9%93%BE%E6%8E%A5-%E5%85%8D%E4%BB%A3%E7%90%86%E6%B5%81%E7%95%85%E4%BD%BF%E7%94%A8",
+          "code_url": "https://update.greasyfork.org/scripts/450418/%E7%BD%91%E9%A1%B5%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%94%E7%BF%BB%E8%AF%91%E4%B8%BA%E4%B8%AD%E6%96%87%28%28%E6%9B%BF%E6%8D%A2%E9%95%9C%E5%83%8F%E9%93%BE%E6%8E%A5%EF%BC%8C%E5%85%8D%E4%BB%A3%E7%90%86%E6%B5%81%E7%95%85%E4%BD%BF%E7%94%A8%29%29.user.js",
+          "code_size": 34545,
+          "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+          "version": "0.24",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Evolve(进化)自动采集",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/405850-evolve-%E8%BF%9B%E5%8C%96-%E8%87%AA%E5%8A%A8%E9%87%87%E9%9B%86",
+  "code_url": "https://update.greasyfork.org/scripts/405850/Evolve%28%E8%BF%9B%E5%8C%96%29%E8%87%AA%E5%8A%A8%E9%87%87%E9%9B%86.user.js",
+  "code_size": 900,
+  "license": null,
+  "version": "0.12",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

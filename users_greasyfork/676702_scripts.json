@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408878,
+    "daily_installs": 0,
+    "total_installs": 182,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-16T13:20:16.000Z",
+    "code_updated_at": "2020-08-16T13:20:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 676702,
+        "name": "Rabbit-Hu",
+        "created_at": "2020-08-16T12:49:21.000Z",
+        "url": "https://greasyfork.org/users/676702-rabbit-hu"
+      }
+    ],
+    "name": "Xuetangx Caption Crawler",
+    "description": "Download Xuetangx Captions",
+    "url": "https://greasyfork.org/scripts/408878-xuetangx-caption-crawler",
+    "code_url": "https://update.greasyfork.org/scripts/408878/Xuetangx%20Caption%20Crawler.user.js",
+    "code_size": 4715,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

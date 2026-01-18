@@ -1,0 +1,33 @@
+{
+  "id": 404309,
+  "daily_installs": 0,
+  "total_installs": 2175,
+  "fan_score": "49.1",
+  "good_ratings": 12,
+  "ok_ratings": 2,
+  "bad_ratings": 4,
+  "created_at": "2020-05-29T06:27:50.000Z",
+  "code_updated_at": "2021-10-27T13:25:46.000Z",
+  "namespace": "https://openuserjs.org/users/burn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 47243,
+      "name": "liquorburn",
+      "created_at": "2016-06-04T07:37:35.000Z",
+      "url": "https://greasyfork.org/users/47243-liquorburn"
+    }
+  ],
+  "name": "Facebook Hide Ads (a.k.a. sponsored posts)",
+  "description": "Removes ads (a.k.a. sponsored posts) from feed and sidebar",
+  "url": "https://greasyfork.org/scripts/404309-facebook-hide-ads-a-k-a-sponsored-posts",
+  "code_url": "https://update.greasyfork.org/scripts/404309/Facebook%20Hide%20Ads%20%28aka%20sponsored%20posts%29.user.js",
+  "code_size": 6219,
+  "license": "MIT License",
+  "version": "0.5.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

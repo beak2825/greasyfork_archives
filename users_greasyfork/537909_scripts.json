@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401780,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-23T03:50:33.000Z",
+    "code_updated_at": "2020-04-23T03:50:32.000Z",
+    "namespace": "ccjr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 537909,
+        "name": "ccjr",
+        "created_at": "2020-04-23T03:47:51.000Z",
+        "url": "https://greasyfork.org/users/537909-ccjr"
+      }
+    ],
+    "name": "自动保存翻译记录",
+    "description": "我在尝试观看纯英字幕来提高我的英文，步骤是:单词->翻译->逐条记入笔记。那我为什么不让我的观赏体验再优化一下呢?现在的步骤:单词->翻译->在结束时一次全部记入笔记",
+    "url": "https://greasyfork.org/scripts/401780-%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98%E7%BF%BB%E8%AF%91%E8%AE%B0%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/401780/%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98%E7%BF%BB%E8%AF%91%E8%AE%B0%E5%BD%95.user.js",
+    "code_size": 2526,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

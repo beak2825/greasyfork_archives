@@ -1,0 +1,34 @@
+{
+  "id": 404452,
+  "daily_installs": 0,
+  "total_installs": 71,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-31T23:13:41.000Z",
+  "code_updated_at": "2020-05-31T23:13:41.000Z",
+  "namespace": "https://greasyfork.org/users/576416",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 576416,
+      "name": "janet yellen",
+      "created_at": "2020-05-31T23:12:12.000Z",
+      "url": "https://greasyfork.org/users/576416-janet-yellen",
+      "scripts": []
+    }
+  ],
+  "name": "Sticky Snowball Purchaser",
+  "description": "Auto-buys Sticky Snowballs every 30-35 minutes",
+  "url": "https://greasyfork.org/scripts/404452-sticky-snowball-purchaser",
+  "code_url": "https://update.greasyfork.org/scripts/404452/Sticky%20Snowball%20Purchaser.user.js",
+  "code_size": 2347,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

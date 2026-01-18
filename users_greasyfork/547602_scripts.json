@@ -1,0 +1,35 @@
+[
+  {
+    "id": 402410,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-01T10:39:28.000Z",
+    "code_updated_at": "2020-05-01T10:52:13.000Z",
+    "namespace": "github.com/alejandrosc/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 547602,
+        "name": "alejandrosc",
+        "created_at": "2020-05-01T09:46:41.000Z",
+        "url": "https://greasyfork.org/users/547602-alejandrosc"
+      }
+    ],
+    "name": "Github tabs to Space",
+    "description": "tabs to space",
+    "url": "https://greasyfork.org/scripts/402410-github-tabs-to-space",
+    "code_url": "https://update.greasyfork.org/scripts/402410/Github%20tabs%20to%20Space.user.js",
+    "code_size": 941,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

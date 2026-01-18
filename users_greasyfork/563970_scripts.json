@@ -1,0 +1,35 @@
+[
+  {
+    "id": 403494,
+    "daily_installs": 0,
+    "total_installs": 15072,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-05-17T02:38:07.000Z",
+    "code_updated_at": "2020-05-17T02:38:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 563970,
+        "name": "Monster58",
+        "created_at": "2020-05-17T02:29:07.000Z",
+        "url": "https://greasyfork.org/users/563970-monster58"
+      }
+    ],
+    "name": "泛雅网络教学刷课倍速播放自动播放下一节",
+    "description": "泛雅网络教学刷课倍速播放自动播放下一节，点开某一节课后点击上方16倍速播放视频按钮进入连续16倍速播放视频。",
+    "url": "https://greasyfork.org/scripts/403494-%E6%B3%9B%E9%9B%85%E7%BD%91%E7%BB%9C%E6%95%99%E5%AD%A6%E5%88%B7%E8%AF%BE%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%B8%8B%E4%B8%80%E8%8A%82",
+    "code_url": "https://update.greasyfork.org/scripts/403494/%E6%B3%9B%E9%9B%85%E7%BD%91%E7%BB%9C%E6%95%99%E5%AD%A6%E5%88%B7%E8%AF%BE%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%B8%8B%E4%B8%80%E8%8A%82.user.js",
+    "code_size": 3259,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

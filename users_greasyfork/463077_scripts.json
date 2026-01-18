@@ -1,0 +1,35 @@
+[
+  {
+    "id": 402422,
+    "daily_installs": 0,
+    "total_installs": 436,
+    "fan_score": "37.6",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-05-01T16:23:03.000Z",
+    "code_updated_at": "2022-11-15T15:28:41.000Z",
+    "namespace": "Билайн скрипт НОЯБРЬ!",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 463077,
+        "name": "Билайнчик",
+        "created_at": "2020-03-20T09:27:23.000Z",
+        "url": "https://greasyfork.org/users/463077-%D0%B1%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD%D1%87%D0%B8%D0%BA"
+      }
+    ],
+    "name": "Билайн Рабочий НОЯБРЬ!",
+    "description": "Билайн Рабочий НОЯБРЬ",
+    "url": "https://greasyfork.org/scripts/402422-%D0%B1%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD-%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B8%D0%B9-%D0%BD%D0%BE%D1%8F%D0%B1%D1%80%D1%8C",
+    "code_url": "https://update.greasyfork.org/scripts/402422/%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD%20%D0%A0%D0%B0%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D0%9D%D0%9E%D0%AF%D0%91%D0%A0%D0%AC%21.user.js",
+    "code_size": 11732,
+    "license": null,
+    "version": "14.5 | 14.5",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

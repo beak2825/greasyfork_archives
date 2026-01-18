@@ -1,0 +1,34 @@
+{
+  "id": 407837,
+  "daily_installs": 0,
+  "total_installs": 632,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-28T06:46:25.000Z",
+  "code_updated_at": "2020-07-28T09:47:21.000Z",
+  "namespace": "https://www.baidu.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 666243,
+      "name": "xiejialong",
+      "created_at": "2020-07-13T01:29:47.000Z",
+      "url": "https://greasyfork.org/users/666243-xiejialong",
+      "scripts": []
+    }
+  ],
+  "name": "专技天下刷课脚本-常德",
+  "description": "一个 专技天下刷课 的小脚本  by XieJiaLong",
+  "url": "https://greasyfork.org/scripts/407837-%E4%B8%93%E6%8A%80%E5%A4%A9%E4%B8%8B%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC-%E5%B8%B8%E5%BE%B7",
+  "code_url": "https://update.greasyfork.org/scripts/407837/%E4%B8%93%E6%8A%80%E5%A4%A9%E4%B8%8B%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC-%E5%B8%B8%E5%BE%B7.user.js",
+  "code_size": 2089,
+  "license": null,
+  "version": "2020年7月28日 17:47:10",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

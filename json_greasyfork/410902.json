@@ -1,0 +1,59 @@
+{
+  "id": 410902,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-06T10:07:29.000Z",
+  "code_updated_at": "2020-09-06T10:09:57.000Z",
+  "namespace": "https://github.com/rrockwel",
+  "support_url": null,
+  "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=richardtylerrockwell@gmail.com&item_name=Greasy+Fork+donation",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 685171,
+      "name": "rrockwel",
+      "created_at": "2020-09-05T01:14:26.000Z",
+      "url": "https://greasyfork.org/users/685171-rrockwel",
+      "scripts": [
+        {
+          "id": 410902,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-09-06T10:07:29.000Z",
+          "code_updated_at": "2020-09-06T10:09:57.000Z",
+          "namespace": "https://github.com/rrockwel",
+          "support_url": null,
+          "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=richardtylerrockwell@gmail.com&item_name=Greasy+Fork+donation",
+          "contribution_amount": null,
+          "name": "Mturk Compare Image MMSP",
+          "description": "Allow Selection of right or left image with \"a\" and \"d\" keys, as well as autoclick \"submit\" after last picture is chosen.",
+          "url": "https://greasyfork.org/scripts/410902-mturk-compare-image-mmsp",
+          "code_url": "https://update.greasyfork.org/scripts/410902/Mturk%20Compare%20Image%20MMSP.user.js",
+          "code_size": 1268,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mturk Compare Image MMSP",
+  "description": "Allow Selection of right or left image with \"a\" and \"d\" keys, as well as autoclick \"submit\" after last picture is chosen.",
+  "url": "https://greasyfork.org/scripts/410902-mturk-compare-image-mmsp",
+  "code_url": "https://update.greasyfork.org/scripts/410902/Mturk%20Compare%20Image%20MMSP.user.js",
+  "code_size": 1268,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

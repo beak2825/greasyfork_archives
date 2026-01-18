@@ -1,0 +1,68 @@
+[
+  {
+    "id": 410904,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-06T10:25:36.000Z",
+    "code_updated_at": "2020-09-06T10:25:36.000Z",
+    "namespace": "https://greasyfork.org/users/507373",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 507373,
+        "name": "AuroraKy",
+        "created_at": "2020-04-14T09:55:06.000Z",
+        "url": "https://greasyfork.org/users/507373-auroraky"
+      }
+    ],
+    "name": "Open all but 1",
+    "description": "Adds a button with the functionality to open all but 1 of an item.",
+    "url": "https://greasyfork.org/scripts/410904-open-all-but-1",
+    "code_url": "https://update.greasyfork.org/scripts/410904/Open%20all%20but%201.user.js",
+    "code_size": 2437,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 400763,
+    "daily_installs": 0,
+    "total_installs": 74,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-14T10:25:00.000Z",
+    "code_updated_at": "2020-04-14T10:48:35.000Z",
+    "namespace": "https://greasyfork.org/users/507373",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 507373,
+        "name": "AuroraKy",
+        "created_at": "2020-04-14T09:55:06.000Z",
+        "url": "https://greasyfork.org/users/507373-auroraky"
+      }
+    ],
+    "name": "Show ore Amount in Mining Tab",
+    "description": "Shows the amount of ore in the bank over the image of the ore",
+    "url": "https://greasyfork.org/scripts/400763-show-ore-amount-in-mining-tab",
+    "code_url": "https://update.greasyfork.org/scripts/400763/Show%20ore%20Amount%20in%20Mining%20Tab.user.js",
+    "code_size": 4016,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411749,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-22T13:01:46.000Z",
+    "code_updated_at": "2020-09-23T01:04:36.000Z",
+    "namespace": "https://KrazyKirby99999.github.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 54529,
+        "name": "KrazyKirby99999",
+        "created_at": "2016-07-12T17:27:34.000Z",
+        "url": "https://greasyfork.org/users/54529-krazykirby99999"
+      }
+    ],
+    "name": "Change Reddit Logo to Red-Orange",
+    "description": "Change Reddit Logo to original color",
+    "url": "https://greasyfork.org/scripts/411749-change-reddit-logo-to-red-orange",
+    "code_url": "https://update.greasyfork.org/scripts/411749/Change%20Reddit%20Logo%20to%20Red-Orange.user.js",
+    "code_size": 638,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

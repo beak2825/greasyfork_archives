@@ -1,0 +1,34 @@
+{
+  "id": 398931,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-29T10:55:02.000Z",
+  "code_updated_at": "2020-05-29T06:53:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 452678,
+      "name": "MirukuTEA",
+      "created_at": "2020-03-02T04:49:10.000Z",
+      "url": "https://greasyfork.org/users/452678-mirukutea",
+      "scripts": []
+    }
+  ],
+  "name": "卡特推踩通知開關",
+  "description": "自行切換卡特的推踩通知發送",
+  "url": "https://greasyfork.org/scripts/398931-%E5%8D%A1%E7%89%B9%E6%8E%A8%E8%B8%A9%E9%80%9A%E7%9F%A5%E9%96%8B%E9%97%9C",
+  "code_url": "https://update.greasyfork.org/scripts/398931/%E5%8D%A1%E7%89%B9%E6%8E%A8%E8%B8%A9%E9%80%9A%E7%9F%A5%E9%96%8B%E9%97%9C.user.js",
+  "code_size": 652,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

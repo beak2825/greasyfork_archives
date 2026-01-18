@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397821,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-13T04:02:27.000Z",
+    "code_updated_at": "2022-06-16T03:03:35.000Z",
+    "namespace": "http://www.incopat.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 458338,
+        "name": "𝓕𝓻𝓪𝓷𝓴_𝓛𝓲𝓷",
+        "created_at": "2020-03-13T03:58:58.000Z",
+        "url": "https://greasyfork.org/users/458338-%F0%9D%93%95%F0%9D%93%BB%F0%9D%93%AA%F0%9D%93%B7%F0%9D%93%B4-%F0%9D%93%9B%F0%9D%93%B2%F0%9D%93%B7"
+      }
+    ],
+    "name": "incopat占满全屏",
+    "description": "去除incoPat检索结果页面、IPC分类查询页面两侧的空白，有效利用宽屏显示器",
+    "url": "https://greasyfork.org/scripts/397821-incopat%E5%8D%A0%E6%BB%A1%E5%85%A8%E5%B1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/397821/incopat%E5%8D%A0%E6%BB%A1%E5%85%A8%E5%B1%8F.user.js",
+    "code_size": 536,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

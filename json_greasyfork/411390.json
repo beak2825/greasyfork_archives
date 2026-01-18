@@ -1,0 +1,59 @@
+{
+  "id": 411390,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-15T18:55:27.000Z",
+  "code_updated_at": "2020-09-18T04:26:14.000Z",
+  "namespace": "https://greasyfork.org/users/687714",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 687714,
+      "name": "Chang Lan",
+      "created_at": "2020-09-15T18:36:51.000Z",
+      "url": "https://greasyfork.org/users/687714-chang-lan",
+      "scripts": [
+        {
+          "id": 411390,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-09-15T18:55:27.000Z",
+          "code_updated_at": "2020-09-18T04:26:14.000Z",
+          "namespace": "https://greasyfork.org/users/687714",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "King County eRealProperty Enhancements",
+          "description": "Enhance the display on King County eRealProperty dashboards",
+          "url": "https://greasyfork.org/scripts/411390-king-county-erealproperty-enhancements",
+          "code_url": "https://update.greasyfork.org/scripts/411390/King%20County%20eRealProperty%20Enhancements.user.js",
+          "code_size": 2507,
+          "license": "MIT License",
+          "version": "1.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "King County eRealProperty Enhancements",
+  "description": "Enhance the display on King County eRealProperty dashboards",
+  "url": "https://greasyfork.org/scripts/411390-king-county-erealproperty-enhancements",
+  "code_url": "https://update.greasyfork.org/scripts/411390/King%20County%20eRealProperty%20Enhancements.user.js",
+  "code_size": 2507,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

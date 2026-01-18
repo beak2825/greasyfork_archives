@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397660,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-10T11:02:20.000Z",
+    "code_updated_at": "2020-03-13T08:31:01.000Z",
+    "namespace": "https://greasyfork.org/users/385669",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385669,
+        "name": "Schmand",
+        "created_at": "2019-10-10T12:37:35.000Z",
+        "url": "https://greasyfork.org/users/385669-schmand"
+      }
+    ],
+    "name": "UPS Versandinfos kopieren (CM)",
+    "description": "Fügt einen Knopf hinzu, der die Versandinfos kopiert.",
+    "url": "https://greasyfork.org/scripts/397660-ups-versandinfos-kopieren-cm",
+    "code_url": "https://update.greasyfork.org/scripts/397660/UPS%20Versandinfos%20kopieren%20%28CM%29.user.js",
+    "code_size": 11596,
+    "license": null,
+    "version": "1.7.1",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

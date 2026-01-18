@@ -1,0 +1,68 @@
+[
+  {
+    "id": 400686,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-14T02:30:58.000Z",
+    "code_updated_at": "2020-04-16T03:03:53.000Z",
+    "namespace": "xrmicah",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 474651,
+        "name": "MicahRamirez",
+        "created_at": "2020-04-04T05:26:46.000Z",
+        "url": "https://greasyfork.org/users/474651-micahramirez"
+      }
+    ],
+    "name": "WaniKani SRS Indicator TEST",
+    "description": "Show current item's srs level",
+    "url": "https://greasyfork.org/scripts/400686-wanikani-srs-indicator-test",
+    "code_url": "https://update.greasyfork.org/scripts/400686/WaniKani%20SRS%20Indicator%20TEST.user.js",
+    "code_size": 8042,
+    "license": null,
+    "version": "0.1.40",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 399479,
+    "daily_installs": 0,
+    "total_installs": 78,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-04T05:59:28.000Z",
+    "code_updated_at": "2020-04-16T03:45:17.000Z",
+    "namespace": "xrmicah",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 474651,
+        "name": "MicahRamirez",
+        "created_at": "2020-04-04T05:26:46.000Z",
+        "url": "https://greasyfork.org/users/474651-micahramirez"
+      }
+    ],
+    "name": "WaniKani SRS Indicator",
+    "description": "Show current item's srs level",
+    "url": "https://greasyfork.org/scripts/399479-wanikani-srs-indicator",
+    "code_url": "https://update.greasyfork.org/scripts/399479/WaniKani%20SRS%20Indicator.user.js",
+    "code_size": 8036,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

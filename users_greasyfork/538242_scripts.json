@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 401792,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-23T06:44:04.000Z",
+    "code_updated_at": "2020-04-23T06:44:04.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 538242,
+        "name": "lempamo",
+        "created_at": "2020-04-23T06:42:27.000Z",
+        "url": "https://greasyfork.org/users/538242-lempamo"
+      }
+    ],
+    "name": "Bandcamp Price Grabber",
+    "description": "4/23/2020, 1:25:40 AM",
+    "url": "https://greasyfork.org/scripts/401792-bandcamp-price-grabber",
+    "code_url": "https://update.greasyfork.org/scripts/401792/Bandcamp%20Price%20Grabber.user.js",
+    "code_size": 716,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

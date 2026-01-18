@@ -1,0 +1,34 @@
+{
+  "id": 402886,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-08T11:52:31.000Z",
+  "code_updated_at": "2020-05-08T11:52:30.000Z",
+  "namespace": "https://forum.tribalwars.net/index.php?threads/another-scavenging-script.283655/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 522609,
+      "name": "henriquemac",
+      "created_at": "2020-04-19T13:24:45.000Z",
+      "url": "https://greasyfork.org/users/522609-henriquemac",
+      "scripts": []
+    }
+  ],
+  "name": "Scavenger",
+  "description": "scavenge by cheesesaurus https://github.com/cheesasaurus/twcheese",
+  "url": "https://greasyfork.org/scripts/402886-scavenger",
+  "code_url": "https://update.greasyfork.org/scripts/402886/Scavenger.user.js",
+  "code_size": 559,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

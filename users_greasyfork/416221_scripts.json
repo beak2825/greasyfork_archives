@@ -1,0 +1,167 @@
+[
+  {
+    "id": 411791,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-23T05:12:46.000Z",
+    "code_updated_at": "2020-09-25T04:20:32.000Z",
+    "namespace": "http://git.coreop.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 416221,
+        "name": "Shawn Zhang",
+        "created_at": "2019-12-11T12:17:02.000Z",
+        "url": "https://greasyfork.org/users/416221-shawn-zhang"
+      }
+    ],
+    "name": "GitLabBranchCreator",
+    "description": "nice tool",
+    "url": "https://greasyfork.org/scripts/411791-gitlabbranchcreator",
+    "code_url": "https://update.greasyfork.org/scripts/411791/GitLabBranchCreator.user.js",
+    "code_size": 908,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 403334,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-14T14:48:45.000Z",
+    "code_updated_at": "2023-12-08T09:24:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 416221,
+        "name": "Shawn Zhang",
+        "created_at": "2019-12-11T12:17:02.000Z",
+        "url": "https://greasyfork.org/users/416221-shawn-zhang"
+      }
+    ],
+    "name": "gameCodeMapping Delete button",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/403334-gamecodemapping-delete-button",
+    "code_url": "https://update.greasyfork.org/scripts/403334/gameCodeMapping%20Delete%20button.user.js",
+    "code_size": 1657,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 403093,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-11T16:11:41.000Z",
+    "code_updated_at": "2021-05-23T15:30:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 416221,
+        "name": "Shawn Zhang",
+        "created_at": "2019-12-11T12:17:02.000Z",
+        "url": "https://greasyfork.org/users/416221-shawn-zhang"
+      }
+    ],
+    "name": "TsGitQuickLaunch",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/403093-tsgitquicklaunch",
+    "code_url": "https://update.greasyfork.org/scripts/403093/TsGitQuickLaunch.user.js",
+    "code_size": 2291,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393586,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-11T13:56:38.000Z",
+    "code_updated_at": "2019-12-11T13:56:38.000Z",
+    "namespace": "http://XX.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 416221,
+        "name": "Shawn Zhang",
+        "created_at": "2019-12-11T12:17:02.000Z",
+        "url": "https://greasyfork.org/users/416221-shawn-zhang"
+      }
+    ],
+    "name": "ArtemisQuickSelectorForSb",
+    "description": "quick select artemis db",
+    "url": "https://greasyfork.org/scripts/393586-artemisquickselectorforsb",
+    "code_url": "https://update.greasyfork.org/scripts/393586/ArtemisQuickSelectorForSb.user.js",
+    "code_size": 1787,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393585,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-11T13:45:12.000Z",
+    "code_updated_at": "2020-02-02T06:55:28.000Z",
+    "namespace": "http://XX.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 416221,
+        "name": "Shawn Zhang",
+        "created_at": "2019-12-11T12:17:02.000Z",
+        "url": "https://greasyfork.org/users/416221-shawn-zhang"
+      }
+    ],
+    "name": "ArtemisQuickSelectorForSb",
+    "description": "quick select artemis db",
+    "url": "https://greasyfork.org/scripts/393585-artemisquickselectorforsb",
+    "code_url": "https://update.greasyfork.org/scripts/393585/ArtemisQuickSelectorForSb.user.js",
+    "code_size": 2791,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

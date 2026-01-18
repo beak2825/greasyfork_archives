@@ -1,0 +1,34 @@
+{
+  "id": 406815,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-10T16:13:12.000Z",
+  "code_updated_at": "2020-07-14T15:50:07.000Z",
+  "namespace": "sakuya",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 665525,
+      "name": "sakuya",
+      "created_at": "2020-07-10T16:10:22.000Z",
+      "url": "https://greasyfork.org/users/665525-sakuya",
+      "scripts": []
+    }
+  ],
+  "name": "msecdisplay",
+  "description": "Twitterのツイート時刻を常にミリ秒まで表示",
+  "url": "https://greasyfork.org/scripts/406815-msecdisplay",
+  "code_url": "https://update.greasyfork.org/scripts/406815/msecdisplay.user.js",
+  "code_size": 1134,
+  "license": null,
+  "version": "1.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

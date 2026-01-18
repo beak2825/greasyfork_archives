@@ -1,0 +1,34 @@
+{
+  "id": 402688,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-05T19:57:14.000Z",
+  "code_updated_at": "2021-01-10T21:10:29.000Z",
+  "namespace": "https://greasyfork.org/en/users/466691-jadson-tavares",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 466691,
+      "name": "Jadson Tavares",
+      "created_at": "2020-03-21T20:14:14.000Z",
+      "url": "https://greasyfork.org/users/466691-jadson-tavares",
+      "scripts": []
+    }
+  ],
+  "name": "BitFun.co (Pescador de Cripto)",
+  "description": "Auto Claim.",
+  "url": "https://greasyfork.org/scripts/402688-bitfun-co-pescador-de-cripto",
+  "code_url": "https://update.greasyfork.org/scripts/402688/BitFunco%20%28Pescador%20de%20Cripto%29.user.js",
+  "code_size": 4376,
+  "license": null,
+  "version": "2.2",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

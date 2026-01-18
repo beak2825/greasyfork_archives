@@ -1,0 +1,33 @@
+{
+  "id": 405600,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-17T21:30:51.000Z",
+  "code_updated_at": "2020-06-17T22:24:34.000Z",
+  "namespace": "https://greasyfork.org/users/291327",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 291327,
+      "name": "Piotr Sikora",
+      "created_at": "2019-04-11T22:44:19.000Z",
+      "url": "https://greasyfork.org/users/291327-piotr-sikora"
+    }
+  ],
+  "name": "Super asystent farmera v2",
+  "description": "pomaga farmić",
+  "url": "https://greasyfork.org/scripts/405600-super-asystent-farmera-v2",
+  "code_url": "https://update.greasyfork.org/scripts/405600/Super%20asystent%20farmera%20v2.user.js",
+  "code_size": 3862,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

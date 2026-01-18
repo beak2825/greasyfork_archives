@@ -1,0 +1,35 @@
+[
+  {
+    "id": 399050,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-31T07:29:45.000Z",
+    "code_updated_at": "2020-04-02T16:04:06.000Z",
+    "namespace": "2196760287@qq.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 446617,
+        "name": "AI_童话",
+        "created_at": "2020-02-18T09:51:51.000Z",
+        "url": "https://greasyfork.org/users/446617-ai-%E7%AB%A5%E8%AF%9D"
+      }
+    ],
+    "name": "icve-helper",
+    "description": "icve-funs",
+    "url": "https://greasyfork.org/scripts/399050-icve-helper",
+    "code_url": "https://update.greasyfork.org/scripts/399050/787355/icve-helper.js",
+    "code_size": 19223,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

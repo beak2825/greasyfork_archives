@@ -558,6 +558,237 @@
     "version": "1.0.4",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407679,
+    "daily_installs": 0,
+    "total_installs": 129,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-24T19:32:25.000Z",
+    "code_updated_at": "2023-09-06T22:42:53.000Z",
+    "namespace": "https://greasyfork.org/en/users/124677-pabli",
+    "support_url": "https://github.com/pabli24/CloudFlareError/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "CloudFlare Error - Dark Mode & Hide IP",
+    "description": "Hides your IP, Ray ID, server location and adds dark mode to the CloudFlare Error Message",
+    "url": "https://greasyfork.org/scripts/407679-cloudflare-error-dark-mode-hide-ip",
+    "code_url": "https://update.greasyfork.org/scripts/407679/CloudFlare%20Error%20-%20Dark%20Mode%20%20Hide%20IP.user.css",
+    "code_size": 4339,
+    "license": "Creative Commons Attribution Share Alike 4.0 International",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406760,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-09T12:05:21.000Z",
+    "code_updated_at": "2023-12-07T03:18:02.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": "https://github.com/pabli24/bab.la-dark/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "bab.la - Dark Theme",
+    "description": "Dark Theme for bab.la online dictionary",
+    "url": "https://greasyfork.org/scripts/406760-bab-la-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/406760/babla%20-%20Dark%20Theme.user.css",
+    "code_size": 8562,
+    "license": null,
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397873,
+    "daily_installs": 0,
+    "total_installs": 312,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-14T01:33:49.000Z",
+    "code_updated_at": "2023-04-19T17:54:57.000Z",
+    "namespace": "https://greasyfork.org/en/users/124677-pabli",
+    "support_url": "https://github.com/pabli24/CurseForge-Dark/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "Legacy.CurseForge.com - Dark Theme",
+    "description": "Dark Theme for Legacy curseforge.com website",
+    "url": "https://greasyfork.org/scripts/397873-legacy-curseforge-com-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/397873/LegacyCurseForgecom%20-%20Dark%20Theme.user.css",
+    "code_size": 12949,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395180,
+    "daily_installs": 0,
+    "total_installs": 477,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-14T22:36:54.000Z",
+    "code_updated_at": "2025-06-12T00:36:27.000Z",
+    "namespace": "https://greasyfork.org/en/users/124677-pabli",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "GreasyFork - Dark Theme",
+    "description": "Customizable Dark theme For GreasyFork.org",
+    "url": "https://greasyfork.org/scripts/395180-greasyfork-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/395180/GreasyFork%20-%20Dark%20Theme.user.css",
+    "code_size": 53786,
+    "license": "Creative Commons Attribution Share Alike 4.0 International",
+    "version": "1.2.17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395042,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-12T02:48:45.000Z",
+    "code_updated_at": "2024-05-25T05:16:43.000Z",
+    "namespace": "https://greasyfork.org/pl/users/124677-pabli",
+    "support_url": "https://github.com/pabli24/Sekurak-Dark/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "sekurak.pl - ciemny wygląd",
+    "description": "Zmienia kolor portalu na ciemny",
+    "url": "https://greasyfork.org/scripts/395042-sekurak-pl-ciemny-wygl%C4%85d",
+    "code_url": "https://update.greasyfork.org/scripts/395042/sekurakpl%20-%20ciemny%20wygl%C4%85d.user.css",
+    "code_size": 5906,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "1.2.1",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395041,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-12T02:40:57.000Z",
+    "code_updated_at": "2022-03-21T06:49:57.000Z",
+    "namespace": "https://greasyfork.org/pl/users/124677-pabli",
+    "support_url": "https://github.com/pabli24/instalki-dark/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "instalki.pl - Ciemny Wygląd",
+    "description": "Zmienia wygląd strony na ciemny",
+    "url": "https://greasyfork.org/scripts/395041-instalki-pl-ciemny-wygl%C4%85d",
+    "code_url": "https://update.greasyfork.org/scripts/395041/instalkipl%20-%20Ciemny%20Wygl%C4%85d.user.css",
+    "code_size": 9119,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "1.0.2",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 394908,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-10T00:00:18.000Z",
+    "code_updated_at": "2023-11-25T15:54:21.000Z",
+    "namespace": "https://greasyfork.org/pl/users/124677-pabli",
+    "support_url": "https://github.com/pabli24/xda-dark/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "XDA-Developers Dark Theme",
+    "description": "Customizable theme",
+    "url": "https://greasyfork.org/scripts/394908-xda-developers-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/394908/XDA-Developers%20Dark%20Theme.user.css",
+    "code_size": 24155,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

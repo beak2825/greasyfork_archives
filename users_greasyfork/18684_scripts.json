@@ -163,5 +163,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411481,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-17T13:27:38.000Z",
+    "code_updated_at": "2020-09-17T13:27:38.000Z",
+    "namespace": "https://www.tomputtemans.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "Sprimont points",
+    "description": "Show markers on the map",
+    "url": "https://greasyfork.org/scripts/411481-sprimont-points",
+    "code_url": "https://update.greasyfork.org/scripts/411481/Sprimont%20points.user.js",
+    "code_size": 12750,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408195,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-04T19:01:17.000Z",
+    "code_updated_at": "2020-08-04T19:33:30.000Z",
+    "namespace": "http://www.tomputtemans.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "Waze Reporting Tool: remove required flag for subcategory",
+    "description": "Because Waze is requiring you to fill in a disabled field, it is not possible to submit alerts for types without subcategories. This script should fix that.",
+    "url": "https://greasyfork.org/scripts/408195-waze-reporting-tool-remove-required-flag-for-subcategory",
+    "code_url": "https://update.greasyfork.org/scripts/408195/Waze%20Reporting%20Tool%3A%20remove%20required%20flag%20for%20subcategory.user.js",
+    "code_size": 778,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405917,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-23T11:37:57.000Z",
+    "code_updated_at": "2021-09-01T08:10:24.000Z",
+    "namespace": "http://www.tomputtemans.com/",
+    "support_url": "https://github.com/Glodenox/wme-om/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "WME Wegcategoriën Vlaanderen",
+    "description": "Toont kaart met wegcategoriën in Vlaanderen op basis van het wegenregister",
+    "url": "https://greasyfork.org/scripts/405917-wme-wegcategori%C3%ABn-vlaanderen",
+    "code_url": "https://update.greasyfork.org/scripts/405917/WME%20Wegcategori%C3%ABn%20Vlaanderen.user.js",
+    "code_size": 10121,
+    "license": null,
+    "version": "0.2",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 403179,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-12T22:06:47.000Z",
+  "code_updated_at": "2020-05-12T22:06:47.000Z",
+  "namespace": "https://greasyfork.org/en/users/200321-realisticerror",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 200321,
+      "name": "RealisticError",
+      "created_at": "2018-08-01T23:27:03.000Z",
+      "url": "https://greasyfork.org/users/200321-realisticerror",
+      "scripts": []
+    }
+  ],
+  "name": "Marapets Guess the Flag Autoplayer",
+  "description": "Automates the Marapets game - Guess the Flag",
+  "url": "https://greasyfork.org/scripts/403179-marapets-guess-the-flag-autoplayer",
+  "code_url": "https://update.greasyfork.org/scripts/403179/Marapets%20Guess%20the%20Flag%20Autoplayer.user.js",
+  "code_size": 1529,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

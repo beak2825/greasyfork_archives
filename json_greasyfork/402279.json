@@ -1,0 +1,59 @@
+{
+  "id": 402279,
+  "daily_installs": 2,
+  "total_installs": 48502,
+  "fan_score": "91.0",
+  "good_ratings": 124,
+  "ok_ratings": 7,
+  "bad_ratings": 2,
+  "created_at": "2020-04-29T15:00:29.000Z",
+  "code_updated_at": "2022-03-14T12:09:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 546694,
+      "name": "Francis_FY",
+      "created_at": "2020-04-29T14:55:36.000Z",
+      "url": "https://greasyfork.org/users/546694-francis-fy",
+      "scripts": [
+        {
+          "id": 402279,
+          "daily_installs": 2,
+          "total_installs": 48502,
+          "fan_score": "91.0",
+          "good_ratings": 124,
+          "ok_ratings": 7,
+          "bad_ratings": 2,
+          "created_at": "2020-04-29T15:00:29.000Z",
+          "code_updated_at": "2022-03-14T12:09:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "虎牙Plus",
+          "description": "虎牙自动领取任务经验、开宝箱，复制直播流链接，简化页面，去广告, 夜间模式，自动进入剧场模式, 我的订阅页面视频预览",
+          "url": "https://greasyfork.org/scripts/402279-%E8%99%8E%E7%89%99plus",
+          "code_url": "https://update.greasyfork.org/scripts/402279/%E8%99%8E%E7%89%99Plus.user.js",
+          "code_size": 59653,
+          "license": "MIT License",
+          "version": "1.0.39",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "虎牙Plus",
+  "description": "虎牙自动领取任务经验、开宝箱，复制直播流链接，简化页面，去广告, 夜间模式，自动进入剧场模式, 我的订阅页面视频预览",
+  "url": "https://greasyfork.org/scripts/402279-%E8%99%8E%E7%89%99plus",
+  "code_url": "https://update.greasyfork.org/scripts/402279/%E8%99%8E%E7%89%99Plus.user.js",
+  "code_size": 59653,
+  "license": "MIT License",
+  "version": "1.0.39",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

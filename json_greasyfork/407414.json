@@ -1,0 +1,33 @@
+{
+  "id": 407414,
+  "daily_installs": 1,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-19T22:38:23.000Z",
+  "code_updated_at": "2020-07-19T22:38:23.000Z",
+  "namespace": "topicbltotalblacklist",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 668378,
+      "name": "Aurore",
+      "created_at": "2020-07-19T22:35:21.000Z",
+      "url": "https://greasyfork.org/users/668378-aurore"
+    }
+  ],
+  "name": "Topic BL + Total Blacklist",
+  "description": "Efface les topics et messages en se basant sur quelques mots-clés + Cache les topics et messages des pseudos blacklistés depuis l'installation de ce script",
+  "url": "https://greasyfork.org/scripts/407414-topic-bl-total-blacklist",
+  "code_url": "https://update.greasyfork.org/scripts/407414/Topic%20BL%20%2B%20Total%20Blacklist.user.js",
+  "code_size": 21708,
+  "license": null,
+  "version": "1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 408016,
+    "daily_installs": 1,
+    "total_installs": 1450,
+    "fan_score": "30.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-08-01T11:28:22.000Z",
+    "code_updated_at": "2024-04-21T11:18:43.000Z",
+    "namespace": "https://greasyfork.org/users/175598",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175598,
+        "name": "N.Y.Boyu",
+        "created_at": "2018-03-20T04:21:07.000Z",
+        "url": "https://greasyfork.org/users/175598-n-y-boyu"
+      }
+    ],
+    "name": "Youtube Ad Auto Skipper",
+    "description": "Automatically click Ad Skip button on Youtube",
+    "url": "https://greasyfork.org/scripts/408016-youtube-ad-auto-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/408016/Youtube%20Ad%20Auto%20Skipper.user.js",
+    "code_size": 1939,
+    "license": "MIT License",
+    "version": "3.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

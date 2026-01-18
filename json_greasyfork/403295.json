@@ -1,0 +1,59 @@
+{
+  "id": 403295,
+  "daily_installs": 0,
+  "total_installs": 10701,
+  "fan_score": "38.7",
+  "good_ratings": 8,
+  "ok_ratings": 3,
+  "bad_ratings": 4,
+  "created_at": "2020-05-14T07:03:08.000Z",
+  "code_updated_at": "2025-11-18T07:04:08.000Z",
+  "namespace": "https://github.com/zhou-jian-qq/yunxuetang",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 562467,
+      "name": "zhou__jianlei",
+      "created_at": "2020-05-14T06:45:22.000Z",
+      "url": "https://greasyfork.org/users/562467-zhou-jianlei",
+      "scripts": [
+        {
+          "id": 403295,
+          "daily_installs": 0,
+          "total_installs": 10701,
+          "fan_score": "38.7",
+          "good_ratings": 8,
+          "ok_ratings": 3,
+          "bad_ratings": 4,
+          "created_at": "2020-05-14T07:03:08.000Z",
+          "code_updated_at": "2025-11-18T07:04:08.000Z",
+          "namespace": "https://github.com/zhou-jian-qq/yunxuetang",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "云学堂全自动刷视频 yunxuetang.cn",
+          "description": "云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试",
+          "url": "https://greasyfork.org/scripts/403295-%E4%BA%91%E5%AD%A6%E5%A0%82%E5%85%A8%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91-yunxuetang-cn",
+          "code_url": "https://update.greasyfork.org/scripts/403295/%E4%BA%91%E5%AD%A6%E5%A0%82%E5%85%A8%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91%20yunxuetangcn.user.js",
+          "code_size": 20545,
+          "license": "MIT License",
+          "version": "0.16.19",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "云学堂全自动刷视频 yunxuetang.cn",
+  "description": "云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试",
+  "url": "https://greasyfork.org/scripts/403295-%E4%BA%91%E5%AD%A6%E5%A0%82%E5%85%A8%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91-yunxuetang-cn",
+  "code_url": "https://update.greasyfork.org/scripts/403295/%E4%BA%91%E5%AD%A6%E5%A0%82%E5%85%A8%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91%20yunxuetangcn.user.js",
+  "code_size": 20545,
+  "license": "MIT License",
+  "version": "0.16.19",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

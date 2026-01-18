@@ -492,6 +492,105 @@
     "version": "0.1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 404024,
+    "daily_installs": 0,
+    "total_installs": 221,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-24T10:50:08.000Z",
+    "code_updated_at": "2021-01-08T14:36:19.000Z",
+    "namespace": "InGame",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 6386,
+        "name": "SirBaconTheWizard",
+        "created_at": "2014-10-28T10:39:00.000Z",
+        "url": "https://greasyfork.org/users/6386-sirbaconthewizard"
+      }
+    ],
+    "name": "DC - Bullets_alert_fixed",
+    "description": "Play song while gun charger is low on fight",
+    "url": "https://greasyfork.org/scripts/404024-dc-bullets-alert-fixed",
+    "code_url": "https://update.greasyfork.org/scripts/404024/DC%20-%20Bullets_alert_fixed.user.js",
+    "code_size": 3116,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 394725,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-06T11:00:34.000Z",
+    "code_updated_at": "2020-01-06T11:00:33.000Z",
+    "namespace": "https://greasyfork.org/users/6386",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 6386,
+        "name": "SirBaconTheWizard",
+        "created_at": "2014-10-28T10:39:00.000Z",
+        "url": "https://greasyfork.org/users/6386-sirbaconthewizard"
+      }
+    ],
+    "name": "Black Net Connector",
+    "description": "Partage vos informations MIDA au réseau BlackNet",
+    "url": "https://greasyfork.org/scripts/394725-black-net-connector",
+    "code_url": "https://update.greasyfork.org/scripts/394725/Black%20Net%20Connector.user.js",
+    "code_size": 1756,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393221,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-02T22:19:35.000Z",
+    "code_updated_at": "2019-12-25T00:13:10.000Z",
+    "namespace": "https://greasyfork.org/users/6386",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 6386,
+        "name": "SirBaconTheWizard",
+        "created_at": "2014-10-28T10:39:00.000Z",
+        "url": "https://greasyfork.org/users/6386-sirbaconthewizard"
+      }
+    ],
+    "name": "BlackNetAntiHack",
+    "description": "Partage vos informations MIDA au réseau BlackNet",
+    "url": "https://greasyfork.org/scripts/393221-blacknetantihack",
+    "code_url": "https://update.greasyfork.org/scripts/393221/BlackNetAntiHack.user.js",
+    "code_size": 4832,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "fr",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

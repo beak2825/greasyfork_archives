@@ -262,5 +262,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 406279,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-30T04:16:48.000Z",
+    "code_updated_at": "2020-06-30T04:16:48.000Z",
+    "namespace": "https://greasyfork.org/en/users/217495-eric-toombs",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 217495,
+        "name": "Eric Toombs",
+        "created_at": "2018-10-04T22:11:11.000Z",
+        "url": "https://greasyfork.org/users/217495-eric-toombs"
+      }
+    ],
+    "name": "realworldhaskell-width",
+    "description": "Resizes the Real World Haskell website to fit the browser window, no matter the window width.",
+    "url": "https://greasyfork.org/scripts/406279-realworldhaskell-width",
+    "code_url": "https://update.greasyfork.org/scripts/406279/realworldhaskell-width.user.js",
+    "code_size": 454,
+    "license": null,
+    "version": "0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 404838,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-06T20:48:44.000Z",
+    "code_updated_at": "2023-04-14T00:47:30.000Z",
+    "namespace": "https://greasyfork.org/en/users/217495-eric-toombs",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 217495,
+        "name": "Eric Toombs",
+        "created_at": "2018-10-04T22:11:11.000Z",
+        "url": "https://greasyfork.org/users/217495-eric-toombs"
+      }
+    ],
+    "name": "stackoverflow-toggle-sidebar",
+    "description": "Uses a keyboard shortcut to toggle the left sidebar in stackoverflow.",
+    "url": "https://greasyfork.org/scripts/404838-stackoverflow-toggle-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/404838/stackoverflow-toggle-sidebar.user.js",
+    "code_size": 869,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 404693,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-04T18:08:59.000Z",
+    "code_updated_at": "2020-07-03T06:23:58.000Z",
+    "namespace": "https://greasyfork.org/users/217495-eric-toombs",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 217495,
+        "name": "Eric Toombs",
+        "created_at": "2018-10-04T22:11:11.000Z",
+        "url": "https://greasyfork.org/users/217495-eric-toombs"
+      }
+    ],
+    "name": "githubwidth",
+    "description": "resizes github repos for smaller window widths.",
+    "url": "https://greasyfork.org/scripts/404693-githubwidth",
+    "code_url": "https://update.greasyfork.org/scripts/404693/githubwidth.user.js",
+    "code_size": 1125,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

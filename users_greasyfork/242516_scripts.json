@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411073,
+    "daily_installs": 0,
+    "total_installs": 105,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-09T03:11:19.000Z",
+    "code_updated_at": "2020-09-09T03:11:19.000Z",
+    "namespace": "https://47.rs/zhihu/login-modal",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 242516,
+        "name": "equt",
+        "created_at": "2019-01-27T15:14:46.000Z",
+        "url": "https://greasyfork.org/users/242516-equt"
+      }
+    ],
+    "name": "Disable Zhihu Login Modal Window",
+    "description": "Propagate the scroll event globally to block the script from running.",
+    "url": "https://greasyfork.org/scripts/411073-disable-zhihu-login-modal-window",
+    "code_url": "https://update.greasyfork.org/scripts/411073/Disable%20Zhihu%20Login%20Modal%20Window.user.js",
+    "code_size": 670,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

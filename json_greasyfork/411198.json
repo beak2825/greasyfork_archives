@@ -1,0 +1,59 @@
+{
+  "id": 411198,
+  "daily_installs": 0,
+  "total_installs": 53,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-09-11T05:08:59.000Z",
+  "code_updated_at": "2020-09-14T14:13:28.000Z",
+  "namespace": "dndbeyond-fixed-sidebar",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 686669,
+      "name": "Ustice",
+      "created_at": "2020-09-11T04:52:38.000Z",
+      "url": "https://greasyfork.org/users/686669-ustice",
+      "scripts": [
+        {
+          "id": 411198,
+          "daily_installs": 0,
+          "total_installs": 53,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-09-11T05:08:59.000Z",
+          "code_updated_at": "2020-09-14T14:13:28.000Z",
+          "namespace": "dndbeyond-fixed-sidebar",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "D&D Beyond fixed sidebar",
+          "description": "This script sets the sidebar fixed to the left side, and opens the profile upon launch.",
+          "url": "https://greasyfork.org/scripts/411198-d-d-beyond-fixed-sidebar",
+          "code_url": "https://update.greasyfork.org/scripts/411198/DD%20Beyond%20fixed%20sidebar.user.js",
+          "code_size": 2738,
+          "license": null,
+          "version": "3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "D&D Beyond fixed sidebar",
+  "description": "This script sets the sidebar fixed to the left side, and opens the profile upon launch.",
+  "url": "https://greasyfork.org/scripts/411198-d-d-beyond-fixed-sidebar",
+  "code_url": "https://update.greasyfork.org/scripts/411198/DD%20Beyond%20fixed%20sidebar.user.js",
+  "code_size": 2738,
+  "license": null,
+  "version": "3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 397369,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-05T18:23:16.000Z",
+    "code_updated_at": "2020-03-05T18:23:16.000Z",
+    "namespace": "gollyjer.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 20353,
+        "name": "GollyJer",
+        "created_at": "2015-11-17T16:19:42.000Z",
+        "url": "https://greasyfork.org/users/20353-gollyjer"
+      }
+    ],
+    "name": "GollyJer's Wistia Fresh Urls",
+    "description": "Clean tracking parameters from urls (better for bookmarking).",
+    "url": "https://greasyfork.org/scripts/397369-gollyjer-s-wistia-fresh-urls",
+    "code_url": "https://update.greasyfork.org/scripts/397369/GollyJer%27s%20Wistia%20Fresh%20Urls.user.js",
+    "code_size": 7154,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

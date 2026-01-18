@@ -1,0 +1,34 @@
+{
+  "id": 407811,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-27T19:45:32.000Z",
+  "code_updated_at": "2020-07-27T19:45:32.000Z",
+  "namespace": "chitanda",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 132348,
+      "name": "Akari Takanashi",
+      "created_at": "2017-06-13T15:32:35.000Z",
+      "url": "https://greasyfork.org/users/132348-akari-takanashi",
+      "scripts": []
+    }
+  ],
+  "name": "bgm角色排序辅助",
+  "description": "自动给角色关联页面的角色添加递增排序序号，方便调整中间某几个特定角色排序",
+  "url": "https://greasyfork.org/scripts/407811-bgm%E8%A7%92%E8%89%B2%E6%8E%92%E5%BA%8F%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/407811/bgm%E8%A7%92%E8%89%B2%E6%8E%92%E5%BA%8F%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 780,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

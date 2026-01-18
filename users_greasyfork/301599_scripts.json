@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 408448,
+    "daily_installs": 0,
+    "total_installs": 511,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-09T05:21:00.000Z",
+    "code_updated_at": "2024-04-25T02:06:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 301599,
+        "name": "oscardoudou",
+        "created_at": "2019-05-13T20:13:12.000Z",
+        "url": "https://greasyfork.org/users/301599-oscardoudou"
+      }
+    ],
+    "name": "番组计划(bangumi)目录页多标签筛选",
+    "description": "filter space separated tags in comment box on bangumi index page",
+    "url": "https://greasyfork.org/scripts/408448-%E7%95%AA%E7%BB%84%E8%AE%A1%E5%88%92-bangumi-%E7%9B%AE%E5%BD%95%E9%A1%B5%E5%A4%9A%E6%A0%87%E7%AD%BE%E7%AD%9B%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/408448/%E7%95%AA%E7%BB%84%E8%AE%A1%E5%88%92%28bangumi%29%E7%9B%AE%E5%BD%95%E9%A1%B5%E5%A4%9A%E6%A0%87%E7%AD%BE%E7%AD%9B%E9%80%89.user.js",
+    "code_size": 11566,
+    "license": null,
+    "version": "0.1.3.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

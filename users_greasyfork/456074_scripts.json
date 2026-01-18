@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397559,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-08T18:36:25.000Z",
+    "code_updated_at": "2020-03-08T18:36:25.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 456074,
+        "name": "Адиль Асханбеков",
+        "created_at": "2020-03-08T18:35:39.000Z",
+        "url": "https://greasyfork.org/users/456074-%D0%B0%D0%B4%D0%B8%D0%BB%D1%8C-%D0%B0%D1%81%D1%85%D0%B0%D0%BD%D0%B1%D0%B5%D0%BA%D0%BE%D0%B2"
+      }
+    ],
+    "name": "MooMoo.io {HA$ Mod} 2020",
+    "description": "2шипа и 1буст(или ловушка)-G,Fps,Изменение шапок в зависимости от части карты,Много мельниц-O,Ловушка или буст-F,Лавушка или буст-F,Шипы вокруг себя-ж,Большой магазин,Особая карта,мельница-NШип-V,Авто клан стрелка вниз ▼,Авто сообщение стрелка вверх ▲,Инста килл(удар 2 орудиями)-R,С лева вверху дискорд сервер HA$,Esc можешь менять шапки",
+    "url": "https://greasyfork.org/scripts/397559-moomoo-io-ha-mod-2020",
+    "code_url": "https://update.greasyfork.org/scripts/397559/MooMooio%20%7BHA%24%20Mod%7D%202020.user.js",
+    "code_size": 41474,
+    "license": null,
+    "version": "╳HA$ Mod 0.3╳",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

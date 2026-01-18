@@ -1,0 +1,34 @@
+{
+  "id": 399799,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-06T23:04:14.000Z",
+  "code_updated_at": "2020-04-08T13:11:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 476242,
+      "name": "ivylab",
+      "created_at": "2020-04-06T22:45:18.000Z",
+      "url": "https://greasyfork.org/users/476242-ivylab",
+      "scripts": []
+    }
+  ],
+  "name": "DB9 Better Torrent Detail Page Info Columns",
+  "description": "Adds uploader, upload date, and file count columns on torrent detail pages.",
+  "url": "https://greasyfork.org/scripts/399799-db9-better-torrent-detail-page-info-columns",
+  "code_url": "https://update.greasyfork.org/scripts/399799/DB9%20Better%20Torrent%20Detail%20Page%20Info%20Columns.user.js",
+  "code_size": 4518,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

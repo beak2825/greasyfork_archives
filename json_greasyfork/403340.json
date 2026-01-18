@@ -1,0 +1,33 @@
+{
+  "id": 403340,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-14T19:14:58.000Z",
+  "code_updated_at": "2020-05-14T19:14:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 552235,
+      "name": "MrOne",
+      "created_at": "2020-05-05T11:58:47.000Z",
+      "url": "https://greasyfork.org/users/552235-mrone"
+    }
+  ],
+  "name": "IMDb QoL",
+  "description": "QoL at IMDb",
+  "url": "https://greasyfork.org/scripts/403340-imdb-qol",
+  "code_url": "https://update.greasyfork.org/scripts/403340/IMDb%20QoL.user.js",
+  "code_size": 4289,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

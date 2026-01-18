@@ -1,0 +1,33 @@
+{
+  "id": 402283,
+  "daily_installs": 0,
+  "total_installs": 491,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-29T15:44:28.000Z",
+  "code_updated_at": "2020-04-29T15:44:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 546718,
+      "name": "coolzilj",
+      "created_at": "2020-04-29T15:41:02.000Z",
+      "url": "https://greasyfork.org/users/546718-coolzilj"
+    }
+  ],
+  "name": "Add magnet to 115",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/402283-add-magnet-to-115",
+  "code_url": "https://update.greasyfork.org/scripts/402283/Add%20magnet%20to%20115.user.js",
+  "code_size": 2102,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

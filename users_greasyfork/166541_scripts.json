@@ -229,5 +229,203 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 409906,
+    "daily_installs": 0,
+    "total_installs": 110,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-24T15:20:25.000Z",
+    "code_updated_at": "2021-04-14T09:15:40.000Z",
+    "namespace": "https://greasyfork.org/users/166541",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 166541,
+        "name": "xmdhs",
+        "created_at": "2018-01-13T10:11:29.000Z",
+        "url": "https://greasyfork.org/users/166541-xmdhs"
+      }
+    ],
+    "name": "获取版块最新帖子",
+    "description": "获取版块最新帖子。",
+    "url": "https://greasyfork.org/scripts/409906-%E8%8E%B7%E5%8F%96%E7%89%88%E5%9D%97%E6%9C%80%E6%96%B0%E5%B8%96%E5%AD%90",
+    "code_url": "https://update.greasyfork.org/scripts/409906/%E8%8E%B7%E5%8F%96%E7%89%88%E5%9D%97%E6%9C%80%E6%96%B0%E5%B8%96%E5%AD%90.user.js",
+    "code_size": 5003,
+    "license": null,
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396927,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-26T05:36:10.000Z",
+    "code_updated_at": "2022-06-03T07:18:33.000Z",
+    "namespace": "https://greasyfork.org/users/166541",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 166541,
+        "name": "xmdhs",
+        "created_at": "2018-01-13T10:11:29.000Z",
+        "url": "https://greasyfork.org/users/166541-xmdhs"
+      }
+    ],
+    "name": "显示上一个帖子",
+    "description": "显示警告次数。",
+    "url": "https://greasyfork.org/scripts/396927-%E6%98%BE%E7%A4%BA%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%B8%96%E5%AD%90",
+    "code_url": "https://update.greasyfork.org/scripts/396927/%E6%98%BE%E7%A4%BA%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%B8%96%E5%AD%90.user.js",
+    "code_size": 3411,
+    "license": null,
+    "version": "0.9.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396815,
+    "daily_installs": 0,
+    "total_installs": 201,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-24T06:52:03.000Z",
+    "code_updated_at": "2022-07-22T08:19:12.000Z",
+    "namespace": "xmdhs",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 166541,
+        "name": "xmdhs",
+        "created_at": "2018-01-13T10:11:29.000Z",
+        "url": "https://greasyfork.org/users/166541-xmdhs"
+      }
+    ],
+    "name": "查看小黑屋是被谁封禁的",
+    "description": "查看小黑屋是被谁封禁的。",
+    "url": "https://greasyfork.org/scripts/396815-%E6%9F%A5%E7%9C%8B%E5%B0%8F%E9%BB%91%E5%B1%8B%E6%98%AF%E8%A2%AB%E8%B0%81%E5%B0%81%E7%A6%81%E7%9A%84",
+    "code_url": "https://update.greasyfork.org/scripts/396815/%E6%9F%A5%E7%9C%8B%E5%B0%8F%E9%BB%91%E5%B1%8B%E6%98%AF%E8%A2%AB%E8%B0%81%E5%B0%81%E7%A6%81%E7%9A%84.user.js",
+    "code_size": 2885,
+    "license": null,
+    "version": "0.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396608,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-19T07:32:51.000Z",
+    "code_updated_at": "2020-02-20T13:40:04.000Z",
+    "namespace": "https://greasyfork.org/users/166541",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 166541,
+        "name": "xmdhs",
+        "created_at": "2018-01-13T10:11:29.000Z",
+        "url": "https://greasyfork.org/users/166541-xmdhs"
+      }
+    ],
+    "name": "显示警告次数",
+    "description": "显示警告次数。",
+    "url": "https://greasyfork.org/scripts/396608-%E6%98%BE%E7%A4%BA%E8%AD%A6%E5%91%8A%E6%AC%A1%E6%95%B0",
+    "code_url": "https://update.greasyfork.org/scripts/396608/%E6%98%BE%E7%A4%BA%E8%AD%A6%E5%91%8A%E6%AC%A1%E6%95%B0.user.js",
+    "code_size": 1549,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396573,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-18T11:32:17.000Z",
+    "code_updated_at": "2020-02-20T14:55:48.000Z",
+    "namespace": "https://greasyfork.org/users/166541",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 166541,
+        "name": "xmdhs",
+        "created_at": "2018-01-13T10:11:29.000Z",
+        "url": "https://greasyfork.org/users/166541-xmdhs"
+      }
+    ],
+    "name": "头衔更改",
+    "description": "discuz头衔随时间变化",
+    "url": "https://greasyfork.org/scripts/396573-%E5%A4%B4%E8%A1%94%E6%9B%B4%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/396573/%E5%A4%B4%E8%A1%94%E6%9B%B4%E6%94%B9.user.js",
+    "code_size": 1637,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396500,
+    "daily_installs": 0,
+    "total_installs": 904,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-16T06:50:40.000Z",
+    "code_updated_at": "2022-08-24T07:07:04.000Z",
+    "namespace": "https://greasyfork.org/users/166541",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 166541,
+        "name": "xmdhs",
+        "created_at": "2018-01-13T10:11:29.000Z",
+        "url": "https://greasyfork.org/users/166541-xmdhs"
+      }
+    ],
+    "name": "mcbbs 自动领取任务",
+    "description": "自动领取任务。",
+    "url": "https://greasyfork.org/scripts/396500-mcbbs-%E8%87%AA%E5%8A%A8%E9%A2%86%E5%8F%96%E4%BB%BB%E5%8A%A1",
+    "code_url": "https://update.greasyfork.org/scripts/396500/mcbbs%20%E8%87%AA%E5%8A%A8%E9%A2%86%E5%8F%96%E4%BB%BB%E5%8A%A1.user.js",
+    "code_size": 1097,
+    "license": null,
+    "version": "0.9.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

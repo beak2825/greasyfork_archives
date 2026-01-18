@@ -1,0 +1,33 @@
+{
+  "id": 406501,
+  "daily_installs": 3,
+  "total_installs": 6409,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-05T04:19:19.000Z",
+  "code_updated_at": "2023-01-08T18:10:07.000Z",
+  "namespace": "ORIGINAL CLIENT",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 663482,
+      "name": "jpabon",
+      "created_at": "2020-07-05T04:06:29.000Z",
+      "url": "https://greasyfork.org/users/663482-jpabon"
+    }
+  ],
+  "name": "𝗛𝗔𝗥𝗗𝗖𝗢𝗥𝗘 BEST MTSL CS:GO CLICKER MOD MENU v3.2 | INFINITE ROULETTE COINS, INFINITE MONEY, UNLOCK ALL",
+  "description": "MTSL CSGO CLICKER CLASSIC MOD MENU HACK/CHEAT, UNLOCK ALL ITEMS, MONEY EDITOR, ETC",
+  "url": "https://greasyfork.org/scripts/406501-%F0%9D%97%9B%F0%9D%97%94%F0%9D%97%A5%F0%9D%97%97%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A5%F0%9D%97%98-best-mtsl-cs-go-clicker-mod-menu-v3-2-infinite-roulette-coins-infinite-money-unlock-all",
+  "code_url": "https://update.greasyfork.org/scripts/406501/%F0%9D%97%9B%F0%9D%97%94%F0%9D%97%A5%F0%9D%97%97%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A5%F0%9D%97%98%20BEST%20MTSL%20CS%3AGO%20CLICKER%20MOD%20MENU%20v32%20%7C%20INFINITE%20ROULETTE%20COINS%2C%20INFINITE%20MONEY%2C%20UNLOCK%20ALL.user.js",
+  "code_size": 226304,
+  "license": "MIT License",
+  "version": "v3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

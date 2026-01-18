@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401608,
+    "daily_installs": 0,
+    "total_installs": 790,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-21T09:56:35.000Z",
+    "code_updated_at": "2020-04-21T10:01:08.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/401608-b%E7%AB%99%E7%9B%B4%E6%92%AD%E8%87%AA%E5%8A%A8%E5%8F%91%E5%BC%B9%E5%B9%95",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 531353,
+        "name": "zhengen123",
+        "created_at": "2020-04-21T09:48:07.000Z",
+        "url": "https://greasyfork.org/users/531353-zhengen123"
+      }
+    ],
+    "name": "B站(bilibili哔哩哔哩)直播自动发弹幕",
+    "description": "哔哩哔哩自动发送弹幕",
+    "url": "https://greasyfork.org/scripts/401608-b%E7%AB%99-bilibili%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-%E7%9B%B4%E6%92%AD%E8%87%AA%E5%8A%A8%E5%8F%91%E5%BC%B9%E5%B9%95",
+    "code_url": "https://update.greasyfork.org/scripts/401608/B%E7%AB%99%28bilibili%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%29%E7%9B%B4%E6%92%AD%E8%87%AA%E5%8A%A8%E5%8F%91%E5%BC%B9%E5%B9%95.user.js",
+    "code_size": 1247,
+    "license": null,
+    "version": "0.21",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

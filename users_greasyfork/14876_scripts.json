@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401209,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-17T13:46:39.000Z",
+    "code_updated_at": "2020-04-17T13:46:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 14876,
+        "name": "Martin Datsev",
+        "created_at": "2015-09-02T19:41:40.000Z",
+        "url": "https://greasyfork.org/users/14876-martin-datsev"
+      }
+    ],
+    "name": "Bind right click to tab",
+    "description": "Bind right click to tab ez",
+    "url": "https://greasyfork.org/scripts/401209-bind-right-click-to-tab",
+    "code_url": "https://update.greasyfork.org/scripts/401209/Bind%20right%20click%20to%20tab.user.js",
+    "code_size": 457,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

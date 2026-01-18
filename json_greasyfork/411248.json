@@ -1,0 +1,34 @@
+{
+  "id": 411248,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-12T08:41:35.000Z",
+  "code_updated_at": "2021-05-01T05:37:22.000Z",
+  "namespace": "Bend",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 158457,
+      "name": "Polllypecker",
+      "created_at": "2017-11-08T01:53:48.000Z",
+      "url": "https://greasyfork.org/users/158457-polllypecker",
+      "scripts": []
+    }
+  ],
+  "name": "New Userscript",
+  "description": "Ease",
+  "url": "https://greasyfork.org/scripts/411248-new-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/411248/New%20Userscript.user.js",
+  "code_size": 33432,
+  "license": null,
+  "version": "4.54",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

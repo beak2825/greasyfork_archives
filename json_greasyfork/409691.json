@@ -1,0 +1,59 @@
+{
+  "id": 409691,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-21T22:19:59.000Z",
+  "code_updated_at": "2020-08-21T22:22:51.000Z",
+  "namespace": "https://www.kickstarter.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 681616,
+      "name": "Michael Romanovsky",
+      "created_at": "2020-08-21T22:19:15.000Z",
+      "url": "https://greasyfork.org/users/681616-michael-romanovsky",
+      "scripts": [
+        {
+          "id": 409691,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-21T22:19:59.000Z",
+          "code_updated_at": "2020-08-21T22:22:51.000Z",
+          "namespace": "https://www.kickstarter.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kickstarter -- fix logo.",
+          "description": "Kickstarter -- hide site making political point by manipulating data to fit its narrative.",
+          "url": "https://greasyfork.org/scripts/409691-kickstarter-fix-logo",
+          "code_url": "https://update.greasyfork.org/scripts/409691/Kickstarter%20--%20fix%20logo.user.js",
+          "code_size": 877,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kickstarter -- fix logo.",
+  "description": "Kickstarter -- hide site making political point by manipulating data to fit its narrative.",
+  "url": "https://greasyfork.org/scripts/409691-kickstarter-fix-logo",
+  "code_url": "https://update.greasyfork.org/scripts/409691/Kickstarter%20--%20fix%20logo.user.js",
+  "code_size": 877,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

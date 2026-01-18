@@ -1,0 +1,34 @@
+{
+  "id": 404681,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-04T12:17:23.000Z",
+  "code_updated_at": "2020-06-04T12:17:23.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 576658,
+      "name": "c1664548958",
+      "created_at": "2020-06-01T08:35:24.000Z",
+      "url": "https://greasyfork.org/users/576658-c1664548958",
+      "scripts": []
+    }
+  ],
+  "name": "科泥鸡挖矿产专业",
+  "description": "2020/5/8 上午9:11:21",
+  "url": "https://greasyfork.org/scripts/404681-%E7%A7%91%E6%B3%A5%E9%B8%A1%E6%8C%96%E7%9F%BF%E4%BA%A7%E4%B8%93%E4%B8%9A",
+  "code_url": "https://update.greasyfork.org/scripts/404681/%E7%A7%91%E6%B3%A5%E9%B8%A1%E6%8C%96%E7%9F%BF%E4%BA%A7%E4%B8%93%E4%B8%9A.user.js",
+  "code_size": 8297,
+  "license": null,
+  "version": "5.31",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

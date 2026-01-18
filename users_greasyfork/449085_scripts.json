@@ -1,0 +1,134 @@
+[
+  {
+    "id": 404781,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-06T02:51:59.000Z",
+    "code_updated_at": "2020-07-05T15:57:45.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449085,
+        "name": "tuchgg",
+        "created_at": "2020-02-24T04:37:42.000Z",
+        "url": "https://greasyfork.org/users/449085-tuchgg"
+      }
+    ],
+    "name": "ICVE 考试助手引用库",
+    "description": "动态替换在线用户查询接口",
+    "url": "https://greasyfork.org/scripts/404781-icve-%E8%80%83%E8%AF%95%E5%8A%A9%E6%89%8B%E5%BC%95%E7%94%A8%E5%BA%93",
+    "code_url": "https://update.greasyfork.org/scripts/404781/823531/ICVE%20%E8%80%83%E8%AF%95%E5%8A%A9%E6%89%8B%E5%BC%95%E7%94%A8%E5%BA%93.js",
+    "code_size": 6323,
+    "license": null,
+    "version": "0.0.1.20200705155745",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 404677,
+    "daily_installs": 0,
+    "total_installs": 58332,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-04T11:11:12.000Z",
+    "code_updated_at": "2021-03-12T08:36:53.000Z",
+    "namespace": "https://greasyfork.org/users/449085",
+    "support_url": "https://tuchg.github.io",
+    "contribution_url": "https://greasyfork.org/users/449085",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449085,
+        "name": "tuchgg",
+        "created_at": "2020-02-24T04:37:42.000Z",
+        "url": "https://greasyfork.org/users/449085-tuchgg"
+      }
+    ],
+    "name": "智慧职教资源库|学习中心 --网课助手 (青版)",
+    "description": "小巧强大的智慧职教自动学习辅助脚本,中文化自定义各项参数",
+    "url": "https://greasyfork.org/scripts/404677-%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E8%B5%84%E6%BA%90%E5%BA%93-%E5%AD%A6%E4%B9%A0%E4%B8%AD%E5%BF%83-%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B-%E9%9D%92%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/404677/%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%E8%B5%84%E6%BA%90%E5%BA%93%7C%E5%AD%A6%E4%B9%A0%E4%B8%AD%E5%BF%83%20--%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B%20%28%E9%9D%92%E7%89%88%29.user.js",
+    "code_size": 10101,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 404676,
+    "daily_installs": 0,
+    "total_installs": 159378,
+    "fan_score": "71.9",
+    "good_ratings": 17,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2020-06-04T11:02:51.000Z",
+    "code_updated_at": "2021-03-12T08:37:34.000Z",
+    "namespace": "https://greasyfork.org/users/449085",
+    "support_url": "https://tuchg.github.io",
+    "contribution_url": "https://greasyfork.org/users/449085",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449085,
+        "name": "tuchgg",
+        "created_at": "2020-02-24T04:37:42.000Z",
+        "url": "https://greasyfork.org/users/449085-tuchgg"
+      }
+    ],
+    "name": "智慧职教MOOC学院 --网课助手 (蓝版)",
+    "description": "智慧职教简易自动学习脚本,解除Ctrl+C限制,自动评论/讨论",
+    "url": "https://greasyfork.org/scripts/404676-%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99mooc%E5%AD%A6%E9%99%A2-%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B-%E8%93%9D%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/404676/%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99MOOC%E5%AD%A6%E9%99%A2%20--%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B%20%28%E8%93%9D%E7%89%88%29.user.js",
+    "code_size": 8740,
+    "license": "GPL",
+    "version": "1.08",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396813,
+    "daily_installs": 0,
+    "total_installs": 340161,
+    "fan_score": "88.5",
+    "good_ratings": 160,
+    "ok_ratings": 19,
+    "bad_ratings": 3,
+    "created_at": "2020-02-24T05:47:13.000Z",
+    "code_updated_at": "2021-03-12T08:25:42.000Z",
+    "namespace": "https://greasyfork.org/users/449085",
+    "support_url": "https://github.com/tuchg",
+    "contribution_url": "https://greasyfork.org/users/449085",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449085,
+        "name": "tuchgg",
+        "created_at": "2020-02-24T04:37:42.000Z",
+        "url": "https://greasyfork.org/users/449085-tuchgg"
+      }
+    ],
+    "name": "云课堂|职教云|Icve --网课兼考试助手 (绿版v3)",
+    "description": "职教云学习效率提升助手小脚本，中文化高度可定制参数，自动课件，课件一目十行，保险模式，解除Ctrl+C限制，下载课件，自动四项评论，课堂智能跟帖讨论，支持自动答题(作业，测验，考试)，搜题填题，软件定制",
+    "url": "https://greasyfork.org/scripts/396813-%E4%BA%91%E8%AF%BE%E5%A0%82-%E8%81%8C%E6%95%99%E4%BA%91-icve-%E7%BD%91%E8%AF%BE%E5%85%BC%E8%80%83%E8%AF%95%E5%8A%A9%E6%89%8B-%E7%BB%BF%E7%89%88v3",
+    "code_url": "https://update.greasyfork.org/scripts/396813/%E4%BA%91%E8%AF%BE%E5%A0%82%7C%E8%81%8C%E6%95%99%E4%BA%91%7CIcve%20--%E7%BD%91%E8%AF%BE%E5%85%BC%E8%80%83%E8%AF%95%E5%8A%A9%E6%89%8B%20%28%E7%BB%BF%E7%89%88v3%29.user.js",
+    "code_size": 44941,
+    "license": "MIT License",
+    "version": "3.6.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

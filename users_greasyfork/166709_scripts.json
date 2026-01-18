@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406001,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-24T22:24:07.000Z",
+    "code_updated_at": "2020-06-28T22:37:28.000Z",
+    "namespace": "https://github.com/alexwh",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 166709,
+        "name": "alexwh",
+        "created_at": "2018-01-14T16:25:14.000Z",
+        "url": "https://greasyfork.org/users/166709-alexwh"
+      }
+    ],
+    "name": "Hide Tweetdeck Interacted Tweets",
+    "description": "Remove posts from tweetdeck timelines that have already been liked/retweeted",
+    "url": "https://greasyfork.org/scripts/406001-hide-tweetdeck-interacted-tweets",
+    "code_url": "https://update.greasyfork.org/scripts/406001/Hide%20Tweetdeck%20Interacted%20Tweets.user.js",
+    "code_size": 1965,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 399432,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-03T16:22:39.000Z",
+    "code_updated_at": "2020-04-03T16:22:38.000Z",
+    "namespace": "https://www.gznotes.com/manual/helpDoc/ckFreq.php",
+    "support_url": "https://www.gznotes.com/manual/helpDoc/ckFreq.php",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 459570,
+        "name": "DanielTing",
+        "created_at": "2020-03-15T12:20:39.000Z",
+        "url": "https://greasyfork.org/users/459570-danielting"
+      }
+    ],
+    "name": "ckFreq-关键词密度词频统计-GzNotes.com",
+    "description": "自动统计页面关键词次数和频率，部分关键词取自meta keywords，部分来自自定规则。",
+    "url": "https://greasyfork.org/scripts/399432-ckfreq-%E5%85%B3%E9%94%AE%E8%AF%8D%E5%AF%86%E5%BA%A6%E8%AF%8D%E9%A2%91%E7%BB%9F%E8%AE%A1-gznotes-com",
+    "code_url": "https://update.greasyfork.org/scripts/399432/ckFreq-%E5%85%B3%E9%94%AE%E8%AF%8D%E5%AF%86%E5%BA%A6%E8%AF%8D%E9%A2%91%E7%BB%9F%E8%AE%A1-GzNotescom.user.js",
+    "code_size": 3168,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 399010,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-30T13:23:10.000Z",
+    "code_updated_at": "2020-03-30T13:23:09.000Z",
+    "namespace": "https://www.gznotes.com/manual/helpDoc/SRSign.php",
+    "support_url": "https://www.gznotes.com/manual/helpDoc/SRSign.php",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 459570,
+        "name": "DanielTing",
+        "created_at": "2020-03-15T12:20:39.000Z",
+        "url": "https://greasyfork.org/users/459570-danielting"
+      }
+    ],
+    "name": "SRSign-根据数据标注搜索结果并标标记排名-GzNotes.com",
+    "description": "根据所设域名或词条标注搜索引擎的结果和排名，支持多域名/词组 (Search Results Sign)",
+    "url": "https://greasyfork.org/scripts/399010-srsign-%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E5%B9%B6%E6%A0%87%E6%A0%87%E8%AE%B0%E6%8E%92%E5%90%8D-gznotes-com",
+    "code_url": "https://update.greasyfork.org/scripts/399010/SRSign-%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E5%B9%B6%E6%A0%87%E6%A0%87%E8%AE%B0%E6%8E%92%E5%90%8D-GzNotescom.user.js",
+    "code_size": 4320,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

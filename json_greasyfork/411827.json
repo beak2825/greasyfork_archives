@@ -1,0 +1,33 @@
+{
+  "id": 411827,
+  "daily_installs": 0,
+  "total_installs": 2088,
+  "fan_score": "61.0",
+  "good_ratings": 6,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-23T15:27:32.000Z",
+  "code_updated_at": "2024-09-24T10:05:05.000Z",
+  "namespace": "https://github.com/Autapomorph/userscripts",
+  "support_url": "https://github.com/Autapomorph/userscripts/discussions",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 689919,
+      "name": "Autapomorph",
+      "created_at": "2020-09-23T14:58:50.000Z",
+      "url": "https://greasyfork.org/users/689919-autapomorph"
+    }
+  ],
+  "name": "Avoid Yandex Turbo",
+  "description": "Redirect directly to target page avoiding Yandex Turbo",
+  "url": "https://greasyfork.org/scripts/411827-avoid-yandex-turbo",
+  "code_url": "https://update.greasyfork.org/scripts/411827/Avoid%20Yandex%20Turbo.user.js",
+  "code_size": 4760,
+  "license": "MIT License",
+  "version": "3.5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

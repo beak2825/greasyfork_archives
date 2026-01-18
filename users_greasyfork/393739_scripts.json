@@ -228,6 +228,39 @@
     "version": "1.4",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 409694,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-22T02:29:55.000Z",
+    "code_updated_at": "2020-08-22T02:29:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 393739,
+        "name": "Jojoooooo",
+        "created_at": "2019-10-31T20:27:54.000Z",
+        "url": "https://greasyfork.org/users/393739-jojoooooo"
+      }
+    ],
+    "name": "Black cam removal",
+    "description": "Fuck black cams",
+    "url": "https://greasyfork.org/scripts/409694-black-cam-removal",
+    "code_url": "https://update.greasyfork.org/scripts/409694/Black%20cam%20removal.user.js",
+    "code_size": 1714,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 409974,
+    "daily_installs": 0,
+    "total_installs": 812,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-26T08:30:24.000Z",
+    "code_updated_at": "2020-11-07T11:25:25.000Z",
+    "namespace": "com.wsmud",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 235233,
+        "name": "suqing",
+        "created_at": "2018-12-26T13:03:31.000Z",
+        "url": "https://greasyfork.org/users/235233-suqing"
+      }
+    ],
+    "name": "wsmud_login",
+    "description": "武神传说登录插件",
+    "url": "https://greasyfork.org/scripts/409974-wsmud-login",
+    "code_url": "https://update.greasyfork.org/scripts/409974/wsmud_login.user.js",
+    "code_size": 8386,
+    "license": null,
+    "version": "0.0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

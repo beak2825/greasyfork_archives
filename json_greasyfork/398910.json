@@ -1,0 +1,34 @@
+{
+  "id": 398910,
+  "daily_installs": 0,
+  "total_installs": 251,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-29T02:14:35.000Z",
+  "code_updated_at": "2021-08-05T17:49:48.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 394023,
+      "name": "lucianjp",
+      "created_at": "2019-11-01T19:35:18.000Z",
+      "url": "https://greasyfork.org/users/394023-lucianjp",
+      "scripts": []
+    }
+  ],
+  "name": "GGn Steam Language BBCode quick copy",
+  "description": "Allows you to copy the steam languages in a BBCode fashion",
+  "url": "https://greasyfork.org/scripts/398910-ggn-steam-language-bbcode-quick-copy",
+  "code_url": "https://update.greasyfork.org/scripts/398910/GGn%20Steam%20Language%20BBCode%20quick%20copy.user.js",
+  "code_size": 4632,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

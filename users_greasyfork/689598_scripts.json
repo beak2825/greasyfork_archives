@@ -1,0 +1,35 @@
+[
+  {
+    "id": 411724,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-22T08:03:09.000Z",
+    "code_updated_at": "2020-09-22T11:33:48.000Z",
+    "namespace": "https://github.com/axipo/v2exUnread",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 689598,
+        "name": "axipo",
+        "created_at": "2020-09-22T07:48:50.000Z",
+        "url": "https://greasyfork.org/users/689598-axipo"
+      }
+    ],
+    "name": "v2ex unread",
+    "description": "add unread mark for **visited** post of v2ex.com",
+    "url": "https://greasyfork.org/scripts/411724-v2ex-unread",
+    "code_url": "https://update.greasyfork.org/scripts/411724/v2ex%20unread.user.js",
+    "code_size": 2152,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

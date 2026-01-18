@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397367,
+    "daily_installs": 0,
+    "total_installs": 83,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-05T17:47:40.000Z",
+    "code_updated_at": "2020-03-05T17:47:39.000Z",
+    "namespace": "adnmb",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 454615,
+        "name": "owtotwo",
+        "created_at": "2020-03-05T17:29:55.000Z",
+        "url": "https://greasyfork.org/users/454615-owtotwo"
+      }
+    ],
+    "name": "修复A岛网页版GIF缩略图闪烁问题",
+    "description": "A岛网页版的GIF图在未放大时会出现图片损坏情况，无法正确显示，此脚本可修复此情况。",
+    "url": "https://greasyfork.org/scripts/397367-%E4%BF%AE%E5%A4%8Da%E5%B2%9B%E7%BD%91%E9%A1%B5%E7%89%88gif%E7%BC%A9%E7%95%A5%E5%9B%BE%E9%97%AA%E7%83%81%E9%97%AE%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/397367/%E4%BF%AE%E5%A4%8DA%E5%B2%9B%E7%BD%91%E9%A1%B5%E7%89%88GIF%E7%BC%A9%E7%95%A5%E5%9B%BE%E9%97%AA%E7%83%81%E9%97%AE%E9%A2%98.user.js",
+    "code_size": 1529,
+    "license": "GPL License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

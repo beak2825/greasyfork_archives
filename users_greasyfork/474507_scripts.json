@@ -130,5 +130,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 399706,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-06T08:58:46.000Z",
+    "code_updated_at": "2021-11-23T07:06:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 474507,
+        "name": "dogcraft",
+        "created_at": "2020-04-04T00:06:41.000Z",
+        "url": "https://greasyfork.org/users/474507-dogcraft"
+      }
+    ],
+    "name": "星海论坛(bbs.dippstar.com)签名档图片一键隐藏",
+    "description": "一个简单的单一功能脚本，可以将星海论坛(bbs.dippstar.com)签名档图片一键隐藏。",
+    "url": "https://greasyfork.org/scripts/399706-%E6%98%9F%E6%B5%B7%E8%AE%BA%E5%9D%9B-bbs-dippstar-com-%E7%AD%BE%E5%90%8D%E6%A1%A3%E5%9B%BE%E7%89%87%E4%B8%80%E9%94%AE%E9%9A%90%E8%97%8F",
+    "code_url": "https://update.greasyfork.org/scripts/399706/%E6%98%9F%E6%B5%B7%E8%AE%BA%E5%9D%9B%28bbsdippstarcom%29%E7%AD%BE%E5%90%8D%E6%A1%A3%E5%9B%BE%E7%89%87%E4%B8%80%E9%94%AE%E9%9A%90%E8%97%8F.user.js",
+    "code_size": 3179,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 402310,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-30T06:34:12.000Z",
+  "code_updated_at": "2020-04-30T06:35:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 547032,
+      "name": "OwlsAreAirCats",
+      "created_at": "2020-04-30T06:32:15.000Z",
+      "url": "https://greasyfork.org/users/547032-owlsareaircats",
+      "scripts": []
+    }
+  ],
+  "name": "Transparent Play Button Ilias",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/402310-transparent-play-button-ilias",
+  "code_url": "https://update.greasyfork.org/scripts/402310/Transparent%20Play%20Button%20Ilias.user.js",
+  "code_size": 568,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

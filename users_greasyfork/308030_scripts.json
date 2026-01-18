@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401865,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-24T03:35:05.000Z",
+    "code_updated_at": "2020-04-24T03:35:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 308030,
+        "name": "miniJoy",
+        "created_at": "2019-06-08T15:25:04.000Z",
+        "url": "https://greasyfork.org/users/308030-minijoy"
+      }
+    ],
+    "name": "Google Translate Remove Line break",
+    "description": "Remove Line break",
+    "url": "https://greasyfork.org/scripts/401865-google-translate-remove-line-break",
+    "code_url": "https://update.greasyfork.org/scripts/401865/Google%20Translate%20Remove%20Line%20break.user.js",
+    "code_size": 634,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

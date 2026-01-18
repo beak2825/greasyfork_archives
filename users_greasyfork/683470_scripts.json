@@ -1,0 +1,35 @@
+[
+  {
+    "id": 410110,
+    "daily_installs": 0,
+    "total_installs": 351,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-28T13:45:27.000Z",
+    "code_updated_at": "2020-08-28T14:13:44.000Z",
+    "namespace": "https://schiavo.me",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 683470,
+        "name": "julianschiavo",
+        "created_at": "2020-08-28T13:43:01.000Z",
+        "url": "https://greasyfork.org/users/683470-julianschiavo"
+      }
+    ],
+    "name": "Repubblica \"Rep\" Aesthetic Paywall Bypass",
+    "description": "Unhides the \"paywalled\" articles on Rep",
+    "url": "https://greasyfork.org/scripts/410110-repubblica-rep-aesthetic-paywall-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/410110/Repubblica%20%22Rep%22%20Aesthetic%20Paywall%20Bypass.user.js",
+    "code_size": 2578,
+    "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

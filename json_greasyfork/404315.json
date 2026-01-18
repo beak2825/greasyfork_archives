@@ -1,0 +1,59 @@
+{
+  "id": 404315,
+  "daily_installs": 0,
+  "total_installs": 1040,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-05-29T07:05:16.000Z",
+  "code_updated_at": "2020-06-07T10:35:20.000Z",
+  "namespace": "https://github.com/qq943260285",
+  "support_url": "https://github.com/qq943260285/tampermonkey-recruitment-tool.git",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 574354,
+      "name": "undefine3",
+      "created_at": "2020-05-29T06:55:56.000Z",
+      "url": "https://greasyfork.org/users/574354-undefine3",
+      "scripts": [
+        {
+          "id": 404315,
+          "daily_installs": 0,
+          "total_installs": 1040,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-05-29T07:05:16.000Z",
+          "code_updated_at": "2020-06-07T10:35:20.000Z",
+          "namespace": "https://github.com/qq943260285",
+          "support_url": "https://github.com/qq943260285/tampermonkey-recruitment-tool.git",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "高级求职助手/招聘网站助手（boss直聘修复版）",
+          "description": "1.快捷添加企业黑名单；2.支持正则表达式黑名单；3.支持前程无忧、智联招聘、BOSS直聘、拉钩网、猎聘网、百度百聘、58同城;4.各大网站黑名单数据连通。",
+          "url": "https://greasyfork.org/scripts/404315-%E9%AB%98%E7%BA%A7%E6%B1%82%E8%81%8C%E5%8A%A9%E6%89%8B-%E6%8B%9B%E8%81%98%E7%BD%91%E7%AB%99%E5%8A%A9%E6%89%8B-boss%E7%9B%B4%E8%81%98%E4%BF%AE%E5%A4%8D%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/404315/%E9%AB%98%E7%BA%A7%E6%B1%82%E8%81%8C%E5%8A%A9%E6%89%8B%E6%8B%9B%E8%81%98%E7%BD%91%E7%AB%99%E5%8A%A9%E6%89%8B%EF%BC%88boss%E7%9B%B4%E8%81%98%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%89.user.js",
+          "code_size": 26558,
+          "license": "GNU General Public License v3.0 only",
+          "version": "2.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "高级求职助手/招聘网站助手（boss直聘修复版）",
+  "description": "1.快捷添加企业黑名单；2.支持正则表达式黑名单；3.支持前程无忧、智联招聘、BOSS直聘、拉钩网、猎聘网、百度百聘、58同城;4.各大网站黑名单数据连通。",
+  "url": "https://greasyfork.org/scripts/404315-%E9%AB%98%E7%BA%A7%E6%B1%82%E8%81%8C%E5%8A%A9%E6%89%8B-%E6%8B%9B%E8%81%98%E7%BD%91%E7%AB%99%E5%8A%A9%E6%89%8B-boss%E7%9B%B4%E8%81%98%E4%BF%AE%E5%A4%8D%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/404315/%E9%AB%98%E7%BA%A7%E6%B1%82%E8%81%8C%E5%8A%A9%E6%89%8B%E6%8B%9B%E8%81%98%E7%BD%91%E7%AB%99%E5%8A%A9%E6%89%8B%EF%BC%88boss%E7%9B%B4%E8%81%98%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%89.user.js",
+  "code_size": 26558,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

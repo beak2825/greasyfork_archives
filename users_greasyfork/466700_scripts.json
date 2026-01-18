@@ -1,0 +1,68 @@
+[
+  {
+    "id": 405254,
+    "daily_installs": 0,
+    "total_installs": 159,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-13T08:14:08.000Z",
+    "code_updated_at": "2021-10-08T08:00:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 466700,
+        "name": "shitianshiwa",
+        "created_at": "2020-03-21T20:45:06.000Z",
+        "url": "https://greasyfork.org/users/466700-ianshiwa"
+      }
+    ],
+    "name": "修复yandex手机浏览器上PC版百度贴吧bug",
+    "description": "用来在yandex手机浏览器激活百度贴吧电脑端网页发贴文本编辑器的(注意运行环境限定)。这里也提示下，这个浏览器上的贴吧置顶贴折叠后无法再展开（因为展开折叠按钮点不到，在显示界面外，可以清除浏览器数据恢复原样。这里修改了置顶展开按钮样式来显示按钮)。激活的原理？不清楚！但发主题贴的文本编辑器点标题文本框可以达到激活显示效果，不过贴子里的文本编辑器是没有标题文本框的，所以加一个没有任何作用的文本框以供点击。备注:即使点了文本框，文本编辑器可能一时半会也出不了。。！(猜测是yandex手机浏览器加载网页是动态的，文本编辑器因未知原因显示不出来,而查看问题网页的源代码发现少了文本编辑器的html代码)   这个javascript脚本需要使用浏览器脚本管理器(例如tampermonkey)或浏览器开发者工具，github上搜FirefoxBar可以了解更多(http://team.firefoxcn.net/)  2019-7-24",
+    "url": "https://greasyfork.org/scripts/405254-%E4%BF%AE%E5%A4%8Dyandex%E6%89%8B%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8Apc%E7%89%88%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7bug",
+    "code_url": "https://update.greasyfork.org/scripts/405254/%E4%BF%AE%E5%A4%8Dyandex%E6%89%8B%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8APC%E7%89%88%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7bug.user.js",
+    "code_size": 7849,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.31",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398403,
+    "daily_installs": 0,
+    "total_installs": 329,
+    "fan_score": "64.6",
+    "good_ratings": 7,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-21T20:58:38.000Z",
+    "code_updated_at": "2022-04-07T13:31:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 466700,
+        "name": "shitianshiwa",
+        "created_at": "2020-03-21T20:45:06.000Z",
+        "url": "https://greasyfork.org/users/466700-ianshiwa"
+      }
+    ],
+    "name": "贴吧主页顶部显示楼层列表",
+    "description": "让电脑端贴吧使用起来更便利点.增加了顶部楼层列表，跳转按钮",
+    "url": "https://greasyfork.org/scripts/398403-%E8%B4%B4%E5%90%A7%E4%B8%BB%E9%A1%B5%E9%A1%B6%E9%83%A8%E6%98%BE%E7%A4%BA%E6%A5%BC%E5%B1%82%E5%88%97%E8%A1%A8",
+    "code_url": "https://update.greasyfork.org/scripts/398403/%E8%B4%B4%E5%90%A7%E4%B8%BB%E9%A1%B5%E9%A1%B6%E9%83%A8%E6%98%BE%E7%A4%BA%E6%A5%BC%E5%B1%82%E5%88%97%E8%A1%A8.user.js",
+    "code_size": 20444,
+    "license": "MIT License",
+    "version": "0.6.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

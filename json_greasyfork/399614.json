@@ -1,0 +1,34 @@
+{
+  "id": 399614,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-05T13:19:01.000Z",
+  "code_updated_at": "2020-04-05T13:19:01.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 475475,
+      "name": "gfkorange",
+      "created_at": "2020-04-05T12:03:46.000Z",
+      "url": "https://greasyfork.org/users/475475-gfkorange",
+      "scripts": []
+    }
+  ],
+  "name": "tampermonkey_utils",
+  "description": "For Tampermonkey info",
+  "url": "https://greasyfork.org/scripts/399614-tampermonkey-utils",
+  "code_url": "https://update.greasyfork.org/scripts/399614/788382/tampermonkey_utils.js",
+  "code_size": 683,
+  "license": null,
+  "version": "0.0.1.20200405131901",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

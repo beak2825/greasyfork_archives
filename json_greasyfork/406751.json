@@ -1,0 +1,34 @@
+{
+  "id": 406751,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-09T07:55:13.000Z",
+  "code_updated_at": "2020-07-09T08:35:59.000Z",
+  "namespace": "*://diep.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 663909,
+      "name": "Дмитрий Белогородов",
+      "created_at": "2020-07-06T08:58:53.000Z",
+      "url": "https://greasyfork.org/users/663909-%D0%B4%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9-%D0%B1%D0%B5%D0%BB%D0%BE%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%BE%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "Test Script",
+  "description": "Repeated bullets. Correspond to Penta, spread shot, octopus, tri-angel, streamliner",
+  "url": "https://greasyfork.org/scripts/406751-test-script",
+  "code_url": "https://update.greasyfork.org/scripts/406751/Test%20Script.user.js",
+  "code_size": 7749,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

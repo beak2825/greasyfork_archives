@@ -1,0 +1,59 @@
+{
+  "id": 401885,
+  "daily_installs": 0,
+  "total_installs": 78,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2020-04-24T09:04:33.000Z",
+  "code_updated_at": "2020-04-27T09:36:39.000Z",
+  "namespace": "liu12",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 540181,
+      "name": "liu12",
+      "created_at": "2020-04-24T08:45:29.000Z",
+      "url": "https://greasyfork.org/users/540181-liu12",
+      "scripts": [
+        {
+          "id": 401885,
+          "daily_installs": 0,
+          "total_installs": 78,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2020-04-24T09:04:33.000Z",
+          "code_updated_at": "2020-04-27T09:36:39.000Z",
+          "namespace": "liu12",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动生成亚马逊账单报告",
+          "description": "每月自动操作一次，替代用户点击生成亚马逊账单报告",
+          "url": "https://greasyfork.org/scripts/401885-%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E4%BA%9A%E9%A9%AC%E9%80%8A%E8%B4%A6%E5%8D%95%E6%8A%A5%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/401885/%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E4%BA%9A%E9%A9%AC%E9%80%8A%E8%B4%A6%E5%8D%95%E6%8A%A5%E5%91%8A.user.js",
+          "code_size": 18573,
+          "license": null,
+          "version": "0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动生成亚马逊账单报告",
+  "description": "每月自动操作一次，替代用户点击生成亚马逊账单报告",
+  "url": "https://greasyfork.org/scripts/401885-%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E4%BA%9A%E9%A9%AC%E9%80%8A%E8%B4%A6%E5%8D%95%E6%8A%A5%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/401885/%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E4%BA%9A%E9%A9%AC%E9%80%8A%E8%B4%A6%E5%8D%95%E6%8A%A5%E5%91%8A.user.js",
+  "code_size": 18573,
+  "license": null,
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

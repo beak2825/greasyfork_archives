@@ -1,0 +1,59 @@
+{
+  "id": 410673,
+  "daily_installs": 0,
+  "total_installs": 171,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-02T17:15:06.000Z",
+  "code_updated_at": "2020-09-25T01:25:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 684696,
+      "name": "huaguoguo",
+      "created_at": "2020-09-02T16:56:28.000Z",
+      "url": "https://greasyfork.org/users/684696-huaguoguo",
+      "scripts": [
+        {
+          "id": 410673,
+          "daily_installs": 0,
+          "total_installs": 171,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-09-02T17:15:06.000Z",
+          "code_updated_at": "2020-09-25T01:25:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "天龙畅易阁扫描角色脚本",
+          "description": "扫描稀有道具，坐骑，时装，珍兽",
+          "url": "https://greasyfork.org/scripts/410673-%E5%A4%A9%E9%BE%99%E7%95%85%E6%98%93%E9%98%81%E6%89%AB%E6%8F%8F%E8%A7%92%E8%89%B2%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/410673/%E5%A4%A9%E9%BE%99%E7%95%85%E6%98%93%E9%98%81%E6%89%AB%E6%8F%8F%E8%A7%92%E8%89%B2%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 7250,
+          "license": null,
+          "version": "0.2.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "天龙畅易阁扫描角色脚本",
+  "description": "扫描稀有道具，坐骑，时装，珍兽",
+  "url": "https://greasyfork.org/scripts/410673-%E5%A4%A9%E9%BE%99%E7%95%85%E6%98%93%E9%98%81%E6%89%AB%E6%8F%8F%E8%A7%92%E8%89%B2%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/410673/%E5%A4%A9%E9%BE%99%E7%95%85%E6%98%93%E9%98%81%E6%89%AB%E6%8F%8F%E8%A7%92%E8%89%B2%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 7250,
+  "license": null,
+  "version": "0.2.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

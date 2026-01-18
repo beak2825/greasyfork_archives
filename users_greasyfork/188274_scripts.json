@@ -97,5 +97,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 408506,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-09T22:07:44.000Z",
+    "code_updated_at": "2020-08-09T22:24:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 188274,
+        "name": "DaveIT",
+        "created_at": "2018-05-29T08:13:34.000Z",
+        "url": "https://greasyfork.org/users/188274-daveit"
+      }
+    ],
+    "name": "Dante Auto Task Checker",
+    "description": "Script auto refreshes Dante page after posting a task and inform if it's failed or completed.",
+    "url": "https://greasyfork.org/scripts/408506-dante-auto-task-checker",
+    "code_url": "https://update.greasyfork.org/scripts/408506/Dante%20Auto%20Task%20Checker.user.js",
+    "code_size": 1661,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407291,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-18T00:35:24.000Z",
+    "code_updated_at": "2020-07-18T00:35:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 188274,
+        "name": "DaveIT",
+        "created_at": "2018-05-29T08:13:34.000Z",
+        "url": "https://greasyfork.org/users/188274-daveit"
+      }
+    ],
+    "name": "PlayPuls Player Switcher Beta",
+    "description": "The script replaces the original playpuls.pl player with the classic HTML5 player.",
+    "url": "https://greasyfork.org/scripts/407291-playpuls-player-switcher-beta",
+    "code_url": "https://update.greasyfork.org/scripts/407291/PlayPuls%20Player%20Switcher%20Beta.user.js",
+    "code_size": 1076,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

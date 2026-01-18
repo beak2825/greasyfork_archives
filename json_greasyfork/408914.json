@@ -1,0 +1,59 @@
+{
+  "id": 408914,
+  "daily_installs": 0,
+  "total_installs": 95,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-17T14:16:52.000Z",
+  "code_updated_at": "2020-08-21T06:10:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 679108,
+      "name": "Ctrl-T",
+      "created_at": "2020-08-17T14:04:55.000Z",
+      "url": "https://greasyfork.org/users/679108-ctrl-t",
+      "scripts": [
+        {
+          "id": 408914,
+          "daily_installs": 0,
+          "total_installs": 95,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-17T14:16:52.000Z",
+          "code_updated_at": "2020-08-21T06:10:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gitmind批量导出文件为pdf",
+          "description": "在Gitmind目录页一键导出当前目录下文件为pdf",
+          "url": "https://greasyfork.org/scripts/408914-gitmind%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E6%96%87%E4%BB%B6%E4%B8%BApdf",
+          "code_url": "https://update.greasyfork.org/scripts/408914/Gitmind%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E6%96%87%E4%BB%B6%E4%B8%BApdf.user.js",
+          "code_size": 5496,
+          "license": null,
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gitmind批量导出文件为pdf",
+  "description": "在Gitmind目录页一键导出当前目录下文件为pdf",
+  "url": "https://greasyfork.org/scripts/408914-gitmind%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E6%96%87%E4%BB%B6%E4%B8%BApdf",
+  "code_url": "https://update.greasyfork.org/scripts/408914/Gitmind%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E6%96%87%E4%BB%B6%E4%B8%BApdf.user.js",
+  "code_size": 5496,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

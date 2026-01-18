@@ -1,0 +1,33 @@
+{
+  "id": 406607,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-06T15:38:00.000Z",
+  "code_updated_at": "2020-07-06T15:38:00.000Z",
+  "namespace": "soledadchao",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 460698,
+      "name": "soledadchao",
+      "created_at": "2020-03-17T09:05:52.000Z",
+      "url": "https://greasyfork.org/users/460698-soledadchao"
+    }
+  ],
+  "name": "百度网盘搜索助手",
+  "description": "百度网盘下载！",
+  "url": "https://greasyfork.org/scripts/406607-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/406607/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 1317,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

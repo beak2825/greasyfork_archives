@@ -756,6 +756,171 @@
     "version": "0.3",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 410653,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-02T12:34:15.000Z",
+    "code_updated_at": "2020-09-02T15:35:30.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/410653-homepagechanger",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449752,
+        "name": "Kolt Piton",
+        "created_at": "2020-02-25T11:25:58.000Z",
+        "url": "https://greasyfork.org/users/449752-kolt-piton"
+      }
+    ],
+    "name": "HomePageChanger",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/410653-homepagechanger",
+    "code_url": "https://update.greasyfork.org/scripts/410653/HomePageChanger.user.js",
+    "code_size": 54462,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407688,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-25T00:07:16.000Z",
+    "code_updated_at": "2020-07-25T07:14:26.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/407688-clansmithguild",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449752,
+        "name": "Kolt Piton",
+        "created_at": "2020-02-25T11:25:58.000Z",
+        "url": "https://greasyfork.org/users/449752-kolt-piton"
+      }
+    ],
+    "name": "ClanSmithGuild",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/407688-clansmithguild",
+    "code_url": "https://update.greasyfork.org/scripts/407688/ClanSmithGuild.user.js",
+    "code_size": 2910,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 404157,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-26T20:53:25.000Z",
+    "code_updated_at": "2020-05-27T16:53:30.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/404157-super-ua",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449752,
+        "name": "Kolt Piton",
+        "created_at": "2020-02-25T11:25:58.000Z",
+        "url": "https://greasyfork.org/users/449752-kolt-piton"
+      }
+    ],
+    "name": "Super_UA",
+    "description": "based on Gradient's common filler",
+    "url": "https://greasyfork.org/scripts/404157-super-ua",
+    "code_url": "https://update.greasyfork.org/scripts/404157/Super_UA.user.js",
+    "code_size": 17939,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396987,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-27T11:56:20.000Z",
+    "code_updated_at": "2020-02-27T12:36:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449752,
+        "name": "Kolt Piton",
+        "created_at": "2020-02-25T11:25:58.000Z",
+        "url": "https://greasyfork.org/users/449752-kolt-piton"
+      }
+    ],
+    "name": "ClanHelper",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/396987-clanhelper",
+    "code_url": "https://update.greasyfork.org/scripts/396987/ClanHelper.user.js",
+    "code_size": 176704,
+    "license": null,
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396872,
+    "daily_installs": 0,
+    "total_installs": 369,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-25T11:29:45.000Z",
+    "code_updated_at": "2021-08-08T14:59:45.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/396872-claneventhelper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449752,
+        "name": "Kolt Piton",
+        "created_at": "2020-02-25T11:25:58.000Z",
+        "url": "https://greasyfork.org/users/449752-kolt-piton"
+      }
+    ],
+    "name": "ClanEventHelper",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/396872-claneventhelper",
+    "code_url": "https://update.greasyfork.org/scripts/396872/ClanEventHelper.user.js",
+    "code_size": 16256,
+    "license": null,
+    "version": "3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

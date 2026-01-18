@@ -1,0 +1,59 @@
+{
+  "id": 404064,
+  "daily_installs": 0,
+  "total_installs": 62,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-25T03:27:22.000Z",
+  "code_updated_at": "2020-05-25T03:27:22.000Z",
+  "namespace": "1286476669@qq.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 571863,
+      "name": "guangan bai",
+      "created_at": "2020-05-25T03:06:54.000Z",
+      "url": "https://greasyfork.org/users/571863-guangan-bai",
+      "scripts": [
+        {
+          "id": 404064,
+          "daily_installs": 0,
+          "total_installs": 62,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-05-25T03:27:22.000Z",
+          "code_updated_at": "2020-05-25T03:27:22.000Z",
+          "namespace": "1286476669@qq.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "csdn去除多余工具栏",
+          "description": "csdn去除创作中心弹出框登陆注册评论工具栏、自动展开、免登陆",
+          "url": "https://greasyfork.org/scripts/404064-csdn%E5%8E%BB%E9%99%A4%E5%A4%9A%E4%BD%99%E5%B7%A5%E5%85%B7%E6%A0%8F",
+          "code_url": "https://update.greasyfork.org/scripts/404064/csdn%E5%8E%BB%E9%99%A4%E5%A4%9A%E4%BD%99%E5%B7%A5%E5%85%B7%E6%A0%8F.user.js",
+          "code_size": 1197,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "csdn去除多余工具栏",
+  "description": "csdn去除创作中心弹出框登陆注册评论工具栏、自动展开、免登陆",
+  "url": "https://greasyfork.org/scripts/404064-csdn%E5%8E%BB%E9%99%A4%E5%A4%9A%E4%BD%99%E5%B7%A5%E5%85%B7%E6%A0%8F",
+  "code_url": "https://update.greasyfork.org/scripts/404064/csdn%E5%8E%BB%E9%99%A4%E5%A4%9A%E4%BD%99%E5%B7%A5%E5%85%B7%E6%A0%8F.user.js",
+  "code_size": 1197,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

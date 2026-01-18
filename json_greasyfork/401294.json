@@ -1,0 +1,34 @@
+{
+  "id": 401294,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-18T05:23:15.000Z",
+  "code_updated_at": "2020-05-06T01:30:43.000Z",
+  "namespace": "fear.math@gmail.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 7809,
+      "name": "Dylan Day",
+      "created_at": "2014-12-22T07:13:55.000Z",
+      "url": "https://greasyfork.org/users/7809-dylan-day",
+      "scripts": []
+    }
+  ],
+  "name": "Pardus Y-Hole Jumper",
+  "description": "Allows you to pre-select a destination for y-holes and jump with one keypress to avoid sniping.",
+  "url": "https://greasyfork.org/scripts/401294-pardus-y-hole-jumper",
+  "code_url": "https://update.greasyfork.org/scripts/401294/Pardus%20Y-Hole%20Jumper.user.js",
+  "code_size": 5498,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

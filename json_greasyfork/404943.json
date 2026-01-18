@@ -1,0 +1,33 @@
+{
+  "id": 404943,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-08T11:48:26.000Z",
+  "code_updated_at": "2020-06-08T11:48:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 38856,
+      "name": "MadDAD",
+      "created_at": "2016-04-15T10:38:52.000Z",
+      "url": "https://greasyfork.org/users/38856-maddad"
+    }
+  ],
+  "name": "Forumhouse Style Wide",
+  "description": "Увеличивает область веток форума на всю ширину экрана",
+  "url": "https://greasyfork.org/scripts/404943-forumhouse-style-wide",
+  "code_url": "https://update.greasyfork.org/scripts/404943/Forumhouse%20Style%20Wide.user.js",
+  "code_size": 492,
+  "license": null,
+  "version": "0.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 402694,
+  "daily_installs": 0,
+  "total_installs": 80,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-05T22:34:13.000Z",
+  "code_updated_at": "2020-05-22T02:45:40.000Z",
+  "namespace": "http://userscripts.xcom-alliance.info/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 7809,
+      "name": "Dylan Day",
+      "created_at": "2014-12-22T07:13:55.000Z",
+      "url": "https://greasyfork.org/users/7809-dylan-day",
+      "scripts": []
+    }
+  ],
+  "name": "Pardus Quickset Ambush",
+  "description": "Quickly set up an ambush from the navigation screen using a pre-set Quick List",
+  "url": "https://greasyfork.org/scripts/402694-pardus-quickset-ambush",
+  "code_url": "https://update.greasyfork.org/scripts/402694/Pardus%20Quickset%20Ambush.user.js",
+  "code_size": 32044,
+  "license": null,
+  "version": "1.7.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

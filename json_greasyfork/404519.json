@@ -1,0 +1,34 @@
+{
+  "id": 404519,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-02T04:43:53.000Z",
+  "code_updated_at": "2020-06-02T04:57:21.000Z",
+  "namespace": "https://wx.forwines.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 230266,
+      "name": "adminjsb",
+      "created_at": "2018-12-04T02:58:42.000Z",
+      "url": "https://greasyfork.org/users/230266-adminjsb",
+      "scripts": []
+    }
+  ],
+  "name": "安居客58同城去广告",
+  "description": "安居客,58同城去除无用广告",
+  "url": "https://greasyfork.org/scripts/404519-%E5%AE%89%E5%B1%85%E5%AE%A258%E5%90%8C%E5%9F%8E%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/404519/%E5%AE%89%E5%B1%85%E5%AE%A258%E5%90%8C%E5%9F%8E%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 1805,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

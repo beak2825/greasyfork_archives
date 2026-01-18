@@ -1,0 +1,59 @@
+{
+  "id": 400421,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-11T23:54:24.000Z",
+  "code_updated_at": "2023-06-14T18:21:18.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 318922,
+      "name": "mikhaildyd",
+      "created_at": "2019-07-19T12:25:45.000Z",
+      "url": "https://greasyfork.org/users/318922-mikhaildyd",
+      "scripts": [
+        {
+          "id": 387641,
+          "daily_installs": 0,
+          "total_installs": 1285,
+          "fan_score": "51.7",
+          "good_ratings": 5,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2019-07-19T16:37:48.000Z",
+          "code_updated_at": "2024-04-20T02:07:03.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "New twitter improvements",
+          "description": "Improves new version of twitter a little bit",
+          "url": "https://greasyfork.org/scripts/387641-new-twitter-improvements",
+          "code_url": "https://update.greasyfork.org/scripts/387641/New%20twitter%20improvements.user.js",
+          "code_size": 6782,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "0.22",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "save images",
+  "description": "25.02.2020, 16:42:23",
+  "url": "https://greasyfork.org/scripts/400421-save-images",
+  "code_url": "https://update.greasyfork.org/scripts/400421/save%20images.user.js",
+  "code_size": 2751,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

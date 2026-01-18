@@ -1,0 +1,34 @@
+{
+  "id": 406758,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-09T11:40:53.000Z",
+  "code_updated_at": "2020-07-09T11:40:53.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/404138-rust-workshop-skin-id-collector",
+  "support_url": null,
+  "contribution_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=danerjones@gmail.com&item_name=Rust+Workshop+Skin+ID+Collector",
+  "contribution_amount": "$1",
+  "users": [
+    {
+      "id": 664747,
+      "name": "sasjafor",
+      "created_at": "2020-07-08T12:13:06.000Z",
+      "url": "https://greasyfork.org/users/664747-sasjafor",
+      "scripts": []
+    }
+  ],
+  "name": "Rust Workshop Skin ID Collector",
+  "description": "Get the Rust Skin ID for use in the skins uMod. To use, just visit the rust skin workshop page in yopur browser then press the NumLk plus key and the in game command to add the skin will magically be in the clipboard.",
+  "url": "https://greasyfork.org/scripts/406758-rust-workshop-skin-id-collector",
+  "code_url": "https://update.greasyfork.org/scripts/406758/Rust%20Workshop%20Skin%20ID%20Collector.user.js",
+  "code_size": 32538,
+  "license": "MIT License",
+  "version": "0.2.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

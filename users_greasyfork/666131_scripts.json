@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406929,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-12T14:22:10.000Z",
+    "code_updated_at": "2020-07-14T15:56:17.000Z",
+    "namespace": "【天猫、淘宝】猫淘宝隐藏优惠券领取,在想怎么找淘宝隐藏优惠券?在这里",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666131,
+        "name": "gamemt",
+        "created_at": "2020-07-12T13:26:25.000Z",
+        "url": "https://greasyfork.org/users/666131-gamemt"
+      }
+    ],
+    "name": "【天猫、淘宝】猫淘宝隐藏优惠券领取,使用简单不多打扰",
+    "description": "简单不打扰，一个按钮轻松查询,有优惠券可立即领取购物省30%以上。",
+    "url": "https://greasyfork.org/scripts/406929-%E5%A4%A9%E7%8C%AB-%E6%B7%98%E5%AE%9D-%E7%8C%AB%E6%B7%98%E5%AE%9D%E9%9A%90%E8%97%8F%E4%BC%98%E6%83%A0%E5%88%B8%E9%A2%86%E5%8F%96-%E4%BD%BF%E7%94%A8%E7%AE%80%E5%8D%95%E4%B8%8D%E5%A4%9A%E6%89%93%E6%89%B0",
+    "code_url": "https://update.greasyfork.org/scripts/406929/%E3%80%90%E5%A4%A9%E7%8C%AB%E3%80%81%E6%B7%98%E5%AE%9D%E3%80%91%E7%8C%AB%E6%B7%98%E5%AE%9D%E9%9A%90%E8%97%8F%E4%BC%98%E6%83%A0%E5%88%B8%E9%A2%86%E5%8F%96%2C%E4%BD%BF%E7%94%A8%E7%AE%80%E5%8D%95%E4%B8%8D%E5%A4%9A%E6%89%93%E6%89%B0.user.js",
+    "code_size": 2234,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

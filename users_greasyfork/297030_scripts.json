@@ -393,6 +393,204 @@
     "version": "1.0.3",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 408364,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-07T14:24:39.000Z",
+    "code_updated_at": "2020-08-07T14:24:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 297030,
+        "name": "sqrtox",
+        "created_at": "2019-05-01T14:00:23.000Z",
+        "url": "https://greasyfork.org/users/297030-sqrtox"
+      }
+    ],
+    "name": "時報(Feederチャット)",
+    "description": "1時間ごとに時報が投稿されます。",
+    "url": "https://greasyfork.org/scripts/408364-%E6%99%82%E5%A0%B1-feeder%E3%83%81%E3%83%A3%E3%83%83%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/408364/%E6%99%82%E5%A0%B1%28Feeder%E3%83%81%E3%83%A3%E3%83%83%E3%83%88%29.user.js",
+    "code_size": 2054,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405313,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-14T07:40:15.000Z",
+    "code_updated_at": "2020-06-14T07:40:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 297030,
+        "name": "sqrtox",
+        "created_at": "2019-05-01T14:00:23.000Z",
+        "url": "https://greasyfork.org/users/297030-sqrtox"
+      }
+    ],
+    "name": "自由帳カスタムデザイン(Feederチャット)",
+    "description": "Feederチャットの自由帳のデザインをカスタムできるスクリプトです。",
+    "url": "https://greasyfork.org/scripts/405313-%E8%87%AA%E7%94%B1%E5%B8%B3%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3-feeder%E3%83%81%E3%83%A3%E3%83%83%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/405313/%E8%87%AA%E7%94%B1%E5%B8%B3%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%28Feeder%E3%83%81%E3%83%A3%E3%83%83%E3%83%88%29.user.js",
+    "code_size": 2328,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405302,
+    "daily_installs": 0,
+    "total_installs": 193,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-14T02:42:51.000Z",
+    "code_updated_at": "2020-06-14T02:42:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 297030,
+        "name": "sqrtox",
+        "created_at": "2019-05-01T14:00:23.000Z",
+        "url": "https://greasyfork.org/users/297030-sqrtox"
+      }
+    ],
+    "name": "[BETA]Cookie Editor EX",
+    "description": "サイト内のCookieを編集できるようになるスクリプトです。",
+    "url": "https://greasyfork.org/scripts/405302-beta-cookie-editor-ex",
+    "code_url": "https://update.greasyfork.org/scripts/405302/%5BBETA%5DCookie%20Editor%20EX.user.js",
+    "code_size": 7192,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 403988,
+    "daily_installs": 1,
+    "total_installs": 641,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-23T15:08:31.000Z",
+    "code_updated_at": "2020-05-23T17:20:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 297030,
+        "name": "sqrtox",
+        "created_at": "2019-05-01T14:00:23.000Z",
+        "url": "https://greasyfork.org/users/297030-sqrtox"
+      }
+    ],
+    "name": "Cookie Editor",
+    "description": "サイト内のCookieを編集できるようになるスクリプトです。",
+    "url": "https://greasyfork.org/scripts/403988-cookie-editor",
+    "code_url": "https://update.greasyfork.org/scripts/403988/Cookie%20Editor.user.js",
+    "code_size": 5828,
+    "license": null,
+    "version": "0.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 402585,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-04T03:03:54.000Z",
+    "code_updated_at": "2020-06-12T22:05:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 297030,
+        "name": "sqrtox",
+        "created_at": "2019-05-01T14:00:23.000Z",
+        "url": "https://greasyfork.org/users/297030-sqrtox"
+      }
+    ],
+    "name": "自由帳定期作成(Feederチャット)",
+    "description": "Feederチャットの自由帳を定期的に作り続けるスクリプトです。",
+    "url": "https://greasyfork.org/scripts/402585-%E8%87%AA%E7%94%B1%E5%B8%B3%E5%AE%9A%E6%9C%9F%E4%BD%9C%E6%88%90-feeder%E3%83%81%E3%83%A3%E3%83%83%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/402585/%E8%87%AA%E7%94%B1%E5%B8%B3%E5%AE%9A%E6%9C%9F%E4%BD%9C%E6%88%90%28Feeder%E3%83%81%E3%83%A3%E3%83%83%E3%83%88%29.user.js",
+    "code_size": 5569,
+    "license": null,
+    "version": "0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 401927,
+    "daily_installs": 0,
+    "total_installs": 114,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-04-25T01:57:42.000Z",
+    "code_updated_at": "2020-08-01T17:42:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 297030,
+        "name": "sqrtox",
+        "created_at": "2019-05-01T14:00:23.000Z",
+        "url": "https://greasyfork.org/users/297030-sqrtox"
+      }
+    ],
+    "name": "カスタムくん",
+    "description": "入力欄に改行で区切って文字列を入力して「実行」ボタンをクリックすると文字列の中からランダムで一つ投稿してくれます。",
+    "url": "https://greasyfork.org/scripts/401927-%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%81%8F%E3%82%93",
+    "code_url": "https://update.greasyfork.org/scripts/401927/%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%81%8F%E3%82%93.user.js",
+    "code_size": 2599,
+    "license": null,
+    "version": "0.7",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

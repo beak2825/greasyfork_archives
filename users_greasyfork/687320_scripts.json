@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411319,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-14T05:47:21.000Z",
+    "code_updated_at": "2020-09-15T05:23:31.000Z",
+    "namespace": "PAEz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 687320,
+        "name": "PAEz",
+        "created_at": "2020-09-14T05:38:49.000Z",
+        "url": "https://greasyfork.org/users/687320-paez"
+      }
+    ],
+    "name": "OzBargain [Live Action] Change title on new items",
+    "description": "Change title on new items so that when the page is Pinned the tab will get that little glow notification",
+    "url": "https://greasyfork.org/scripts/411319-ozbargain-live-action-change-title-on-new-items",
+    "code_url": "https://update.greasyfork.org/scripts/411319/OzBargain%20%5BLive%20Action%5D%20Change%20title%20on%20new%20items.user.js",
+    "code_size": 2089,
+    "license": null,
+    "version": "0.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

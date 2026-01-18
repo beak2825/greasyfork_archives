@@ -64,5 +64,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 406317,
+    "daily_installs": 0,
+    "total_installs": 625,
+    "fan_score": "70.1",
+    "good_ratings": 9,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-01T04:41:46.000Z",
+    "code_updated_at": "2022-01-28T14:41:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://keylol.com/t615154-1-1",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448262,
+        "name": "wsz987",
+        "created_at": "2020-02-22T05:44:16.000Z",
+        "url": "https://greasyfork.org/users/448262-wsz987"
+      }
+    ],
+    "name": "steam商店便捷按钮",
+    "description": "steam商店页面添加点数商店,市场和截图页面跳转按钮,steam页面/社区导航栏添加网页key激活跳转",
+    "url": "https://greasyfork.org/scripts/406317-steam%E5%95%86%E5%BA%97%E4%BE%BF%E6%8D%B7%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/406317/steam%E5%95%86%E5%BA%97%E4%BE%BF%E6%8D%B7%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 2508,
+    "license": null,
+    "version": "0.23",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 401805,
+    "daily_installs": 0,
+    "total_installs": 681,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-23T10:31:15.000Z",
+    "code_updated_at": "2021-03-15T16:38:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://keylol.com/t587145-1-1",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448262,
+        "name": "wsz987",
+        "created_at": "2020-02-22T05:44:16.000Z",
+        "url": "https://greasyfork.org/users/448262-wsz987"
+      }
+    ],
+    "name": "keylol有卡/中文/包类游戏标记(带自定义面板)",
+    "description": "keylol论坛标记有卡/中文游戏 自定义面板 嗨皮喜加一 包类标记 帖子游戏链接转化游戏名",
+    "url": "https://greasyfork.org/scripts/401805-keylol%E6%9C%89%E5%8D%A1-%E4%B8%AD%E6%96%87-%E5%8C%85%E7%B1%BB%E6%B8%B8%E6%88%8F%E6%A0%87%E8%AE%B0-%E5%B8%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9D%A2%E6%9D%BF",
+    "code_url": "https://update.greasyfork.org/scripts/401805/keylol%E6%9C%89%E5%8D%A1%E4%B8%AD%E6%96%87%E5%8C%85%E7%B1%BB%E6%B8%B8%E6%88%8F%E6%A0%87%E8%AE%B0%28%E5%B8%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9D%A2%E6%9D%BF%29.user.js",
+    "code_size": 9372,
+    "license": null,
+    "version": "0.22",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 399176,
+    "daily_installs": 0,
+    "total_installs": 22015,
+    "fan_score": "82.8",
+    "good_ratings": 28,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-04-01T06:18:12.000Z",
+    "code_updated_at": "2022-11-18T12:54:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://keylol.com/t577669-1-1",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448262,
+        "name": "wsz987",
+        "created_at": "2020-02-22T05:44:16.000Z",
+        "url": "https://greasyfork.org/users/448262-wsz987"
+      }
+    ],
+    "name": "[buff/c5game/igxe]饰品比例筛选脚本",
+    "description": "支持[buff/c5game/igxe]饰品比例筛选,支持多种筛选规则",
+    "url": "https://greasyfork.org/scripts/399176-buff-c5game-igxe-%E9%A5%B0%E5%93%81%E6%AF%94%E4%BE%8B%E7%AD%9B%E9%80%89%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/399176/%5Bbuffc5gameigxe%5D%E9%A5%B0%E5%93%81%E6%AF%94%E4%BE%8B%E7%AD%9B%E9%80%89%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 21513,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396721,
+    "daily_installs": 0,
+    "total_installs": 725,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-22T06:03:58.000Z",
+    "code_updated_at": "2020-03-25T12:27:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://keylol.com/t563920-1-1",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448262,
+        "name": "wsz987",
+        "created_at": "2020-02-22T05:44:16.000Z",
+        "url": "https://greasyfork.org/users/448262-wsz987"
+      }
+    ],
+    "name": "steam库质量净化",
+    "description": "此页面https://steamcommunity.com/my/games/?tab=all查看库游戏的质量 游戏全语言总评 及快捷移除功能!(警告!)",
+    "url": "https://greasyfork.org/scripts/396721-steam%E5%BA%93%E8%B4%A8%E9%87%8F%E5%87%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/396721/steam%E5%BA%93%E8%B4%A8%E9%87%8F%E5%87%80%E5%8C%96.user.js",
+    "code_size": 3701,
+    "license": null,
+    "version": "0.81",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

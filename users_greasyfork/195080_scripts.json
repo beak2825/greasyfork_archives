@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405073,
+    "daily_installs": 0,
+    "total_installs": 1513,
+    "fan_score": "50.9",
+    "good_ratings": 8,
+    "ok_ratings": 3,
+    "bad_ratings": 1,
+    "created_at": "2020-06-10T13:14:34.000Z",
+    "code_updated_at": "2023-02-20T02:45:05.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 195080,
+        "name": "jxm",
+        "created_at": "2018-07-07T13:37:03.000Z",
+        "url": "https://greasyfork.org/users/195080-jxm"
+      }
+    ],
+    "name": "Wide new reddit | Userscript",
+    "description": "Make new reddit layout fill screen width. 10/06/2020, 22:31:07",
+    "url": "https://greasyfork.org/scripts/405073-wide-new-reddit-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/405073/Wide%20new%20reddit%20%7C%20Userscript.user.js",
+    "code_size": 874,
+    "license": "GPL-3.0-or-later; http://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

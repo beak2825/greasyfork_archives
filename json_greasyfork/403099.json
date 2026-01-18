@@ -1,0 +1,59 @@
+{
+  "id": 403099,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-05-11T17:41:31.000Z",
+  "code_updated_at": "2020-05-11T19:18:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 559337,
+      "name": "Jhefferson Henrique",
+      "created_at": "2020-05-11T17:32:11.000Z",
+      "url": "https://greasyfork.org/users/559337-jhefferson-henrique",
+      "scripts": [
+        {
+          "id": 403099,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-05-11T17:41:31.000Z",
+          "code_updated_at": "2020-05-11T19:18:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "O menino que roubava livros",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/403099-o-menino-que-roubava-livros",
+          "code_url": "https://update.greasyfork.org/scripts/403099/O%20menino%20que%20roubava%20livros.user.js",
+          "code_size": 3211,
+          "license": null,
+          "version": "2.0.2",
+          "locale": "pt",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "O menino que roubava livros",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/403099-o-menino-que-roubava-livros",
+  "code_url": "https://update.greasyfork.org/scripts/403099/O%20menino%20que%20roubava%20livros.user.js",
+  "code_size": 3211,
+  "license": null,
+  "version": "2.0.2",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

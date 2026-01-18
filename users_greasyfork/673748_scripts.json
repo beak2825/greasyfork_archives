@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408278,
+    "daily_installs": 0,
+    "total_installs": 4517,
+    "fan_score": "57.1",
+    "good_ratings": 9,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2020-08-06T04:36:18.000Z",
+    "code_updated_at": "2020-10-13T05:15:55.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/673748-xsan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 673748,
+        "name": "xsan",
+        "created_at": "2020-08-06T04:29:46.000Z",
+        "url": "https://greasyfork.org/users/673748-xsan"
+      }
+    ],
+    "name": "PubMedy",
+    "description": "显示Pubmed中IF；选中doi搜索sci-hub下载文档; 谷歌学术中显示IF。",
+    "url": "https://greasyfork.org/scripts/408278-pubmedy",
+    "code_url": "https://update.greasyfork.org/scripts/408278/PubMedy.user.js",
+    "code_size": 181191,
+    "license": null,
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

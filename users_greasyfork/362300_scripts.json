@@ -64,5 +64,104 @@
     "locale": "fr",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 407906,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-29T17:55:04.000Z",
+    "code_updated_at": "2020-07-29T18:09:25.000Z",
+    "namespace": "bip",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 362300,
+        "name": "Joshua Fleuri",
+        "created_at": "2019-09-03T19:53:31.000Z",
+        "url": "https://greasyfork.org/users/362300-joshua-fleuri"
+      }
+    ],
+    "name": "Fix interface DC responsive 29/07/2020",
+    "description": "Enjoy full responsive DC.",
+    "url": "https://greasyfork.org/scripts/407906-fix-interface-dc-responsive-29-07-2020",
+    "code_url": "https://update.greasyfork.org/scripts/407906/Fix%20interface%20DC%20responsive%2029072020.user.css",
+    "code_size": 838,
+    "license": "The Unlicense",
+    "version": "1.0.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396095,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-05T15:56:56.000Z",
+    "code_updated_at": "2020-02-05T15:56:55.000Z",
+    "namespace": "CyberTown",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 362300,
+        "name": "Joshua Fleuri",
+        "created_at": "2019-09-03T19:53:31.000Z",
+        "url": "https://greasyfork.org/users/362300-joshua-fleuri"
+      }
+    ],
+    "name": "[CT] Change color of target",
+    "description": "Change the color of the target in the chat",
+    "url": "https://greasyfork.org/scripts/396095-ct-change-color-of-target",
+    "code_url": "https://update.greasyfork.org/scripts/396095/%5BCT%5D%20Change%20color%20of%20target.user.js",
+    "code_size": 1677,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396093,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-05T15:41:48.000Z",
+    "code_updated_at": "2020-02-05T15:47:31.000Z",
+    "namespace": "CyberTown",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 362300,
+        "name": "Joshua Fleuri",
+        "created_at": "2019-09-03T19:53:31.000Z",
+        "url": "https://greasyfork.org/users/362300-joshua-fleuri"
+      }
+    ],
+    "name": "[CT] Sound notification when a new log appears",
+    "description": "Plays a sound when you get a new log.",
+    "url": "https://greasyfork.org/scripts/396093-ct-sound-notification-when-a-new-log-appears",
+    "code_url": "https://update.greasyfork.org/scripts/396093/%5BCT%5D%20Sound%20notification%20when%20a%20new%20log%20appears.user.js",
+    "code_size": 1471,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

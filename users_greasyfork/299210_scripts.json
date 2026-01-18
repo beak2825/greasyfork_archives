@@ -1,0 +1,101 @@
+[
+  {
+    "id": 405242,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-13T04:19:01.000Z",
+    "code_updated_at": "2020-06-21T10:24:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 299210,
+        "name": "SentenceDot",
+        "created_at": "2019-05-08T07:24:43.000Z",
+        "url": "https://greasyfork.org/users/299210-sentencedot"
+      }
+    ],
+    "name": "Mykirito Auto Click",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/405242-mykirito-auto-click",
+    "code_url": "https://update.greasyfork.org/scripts/405242/Mykirito%20Auto%20Click.user.js",
+    "code_size": 2517,
+    "license": null,
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 395698,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-27T08:52:51.000Z",
+    "code_updated_at": "2020-01-29T16:45:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 299210,
+        "name": "SentenceDot",
+        "created_at": "2019-05-08T07:24:43.000Z",
+        "url": "https://greasyfork.org/users/299210-sentencedot"
+      }
+    ],
+    "name": "LineStore Download Sticker",
+    "description": "find strickers URL on LineStore quickly",
+    "url": "https://greasyfork.org/scripts/395698-linestore-download-sticker",
+    "code_url": "https://update.greasyfork.org/scripts/395698/LineStore%20Download%20Sticker.user.js",
+    "code_size": 2094,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393054,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-28T16:28:41.000Z",
+    "code_updated_at": "2019-11-28T16:35:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 299210,
+        "name": "SentenceDot",
+        "created_at": "2019-05-08T07:24:43.000Z",
+        "url": "https://greasyfork.org/users/299210-sentencedot"
+      }
+    ],
+    "name": "7-ELEVEN 登錄發票抽",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/393054-7-eleven-%E7%99%BB%E9%8C%84%E7%99%BC%E7%A5%A8%E6%8A%BD",
+    "code_url": "https://update.greasyfork.org/scripts/393054/7-ELEVEN%20%E7%99%BB%E9%8C%84%E7%99%BC%E7%A5%A8%E6%8A%BD.user.js",
+    "code_size": 3020,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

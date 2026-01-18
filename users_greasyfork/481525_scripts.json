@@ -1,0 +1,35 @@
+[
+  {
+    "id": 400100,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-08T15:30:41.000Z",
+    "code_updated_at": "2020-04-08T15:32:40.000Z",
+    "namespace": "scarlet-laevateinn.ml",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 481525,
+        "name": "Scarlet_Climax",
+        "created_at": "2020-04-08T15:18:15.000Z",
+        "url": "https://greasyfork.org/users/481525-scarlet-climax"
+      }
+    ],
+    "name": "zoom.us加速",
+    "description": "把表单里的zoom.us转成zoom.com.cn",
+    "url": "https://greasyfork.org/scripts/400100-zoom-us%E5%8A%A0%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/400100/zoomus%E5%8A%A0%E9%80%9F.user.js",
+    "code_size": 487,
+    "license": null,
+    "version": "0.11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

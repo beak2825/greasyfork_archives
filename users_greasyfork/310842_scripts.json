@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 404694,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-04T18:41:58.000Z",
+    "code_updated_at": "2020-06-30T16:42:46.000Z",
+    "namespace": "Fractalism",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 310842,
+        "name": "FractaIism",
+        "created_at": "2019-06-19T07:39:50.000Z",
+        "url": "https://greasyfork.org/users/310842-fractaiism"
+      }
+    ],
+    "name": "IoTTalk Delete Device",
+    "description": "Delete multiple devices in IoTTalk using regular expressions",
+    "url": "https://greasyfork.org/scripts/404694-iottalk-delete-device",
+    "code_url": "https://update.greasyfork.org/scripts/404694/IoTTalk%20Delete%20Device.user.js",
+    "code_size": 9788,
+    "license": null,
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 393885,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-18T04:17:41.000Z",
+    "code_updated_at": "2021-06-20T01:49:32.000Z",
+    "namespace": "https://github.com/FractaIism/TamperMonkey-UserScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 310842,
+        "name": "FractaIism",
+        "created_at": "2019-06-19T07:39:50.000Z",
+        "url": "https://greasyfork.org/users/310842-fractaiism"
+      }
+    ],
+    "name": "NYCU Course Questionnaires",
+    "description": "Autofill course questionnaires",
+    "url": "https://greasyfork.org/scripts/393885-nycu-course-questionnaires",
+    "code_url": "https://update.greasyfork.org/scripts/393885/NYCU%20Course%20Questionnaires.user.js",
+    "code_size": 6417,
+    "license": null,
+    "version": "1.2.2",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

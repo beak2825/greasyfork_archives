@@ -1,0 +1,59 @@
+{
+  "id": 402046,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-26T10:58:12.000Z",
+  "code_updated_at": "2020-08-18T17:07:30.000Z",
+  "namespace": "https://osu.ppy.sh",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 541945,
+      "name": "Vlad Palamarchuk",
+      "created_at": "2020-04-26T10:40:05.000Z",
+      "url": "https://greasyfork.org/users/541945-vlad-palamarchuk",
+      "scripts": [
+        {
+          "id": 474369,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-09-01T16:55:49.000Z",
+          "code_updated_at": "2023-09-01T16:55:49.000Z",
+          "namespace": "https://greasyfork.org/users/541945",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Sticker Size",
+          "description": "01.09.2023, 19:52:16",
+          "url": "https://greasyfork.org/scripts/474369-sticker-size",
+          "code_url": "https://update.greasyfork.org/scripts/474369/Sticker%20Size.user.js",
+          "code_size": 380,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "osuplus by seneaL",
+  "description": "show pp, selected mods ranking, friends ranking and other stuff",
+  "url": "https://greasyfork.org/scripts/402046-osuplus-by-seneal",
+  "code_url": "https://update.greasyfork.org/scripts/402046/osuplus%20by%20seneaL.user.js",
+  "code_size": 330138,
+  "license": null,
+  "version": "0.7.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

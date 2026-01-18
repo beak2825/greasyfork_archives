@@ -1,0 +1,33 @@
+{
+  "id": 408641,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-12T14:25:25.000Z",
+  "code_updated_at": "2021-06-15T15:58:23.000Z",
+  "namespace": "https://greasyfork.org/users/170904",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 170904,
+      "name": "eroko",
+      "created_at": "2018-02-16T06:52:00.000Z",
+      "url": "https://greasyfork.org/users/170904-eroko"
+    }
+  ],
+  "name": "manhuaDB Show All Imgs",
+  "description": "This script will load full chapter in one page. Default speed is 4s per page. Only for manhuaDB.",
+  "url": "https://greasyfork.org/scripts/408641-manhuadb-show-all-imgs",
+  "code_url": "https://update.greasyfork.org/scripts/408641/manhuaDB%20Show%20All%20Imgs.user.js",
+  "code_size": 922,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,41 @@
+{
+  "id": 404423,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-31T13:39:57.000Z",
+  "code_updated_at": "2021-05-23T18:00:51.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/404423-%E5%BA%86%E4%B8%B0tale",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 576210,
+      "name": "风扇滑翔翼",
+      "created_at": "2020-05-31T13:37:36.000Z",
+      "url": "https://greasyfork.org/users/576210-%E9%A3%8E%E6%89%87%E6%BB%91%E7%BF%94%E7%BF%BC",
+      "scripts": []
+    },
+    {
+      "id": 576220,
+      "name": "Light Ascend",
+      "created_at": "2020-05-31T13:59:48.000Z",
+      "url": "https://greasyfork.org/users/576220-light-ascend",
+      "scripts": []
+    }
+  ],
+  "name": "XiTale",
+  "description": "Let the Qingfeng Newspeak get into the doors of thousands.",
+  "url": "https://greasyfork.org/scripts/404423-xitale",
+  "code_url": "https://update.greasyfork.org/scripts/404423/XiTale.user.js",
+  "code_size": 6247,
+  "license": null,
+  "version": "0.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 411591,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-20T02:49:09.000Z",
+  "code_updated_at": "2020-09-20T16:35:27.000Z",
+  "namespace": "irctc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 283563,
+      "name": "VANDNA SINGH",
+      "created_at": "2019-03-19T14:39:30.000Z",
+      "url": "https://greasyfork.org/users/283563-vandna-singh",
+      "scripts": []
+    }
+  ],
+  "name": "irctcMultiPay",
+  "description": "irctc",
+  "url": "https://greasyfork.org/scripts/411591-irctcmultipay",
+  "code_url": "https://update.greasyfork.org/scripts/411591/irctcMultiPay.user.js",
+  "code_size": 3483,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 397564,
+  "daily_installs": 0,
+  "total_installs": 549,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-08T20:09:04.000Z",
+  "code_updated_at": "2020-03-13T13:04:17.000Z",
+  "namespace": "https://greasyfork.org/users/456082",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 456082,
+      "name": "Les noix de coco",
+      "created_at": "2020-03-08T19:44:13.000Z",
+      "url": "https://greasyfork.org/users/456082-les-noix-de-coco",
+      "scripts": [
+        {
+          "id": 397564,
+          "daily_installs": 0,
+          "total_installs": 549,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-08T20:09:04.000Z",
+          "code_updated_at": "2020-03-13T13:04:17.000Z",
+          "namespace": "https://greasyfork.org/users/456082",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Dumb Youtube lowest quality chooser",
+          "description": "Auto select the lowest available quality of videos (more eco-friendly, and you can still manually select a higher resolution when needed)",
+          "url": "https://greasyfork.org/scripts/397564-dumb-youtube-lowest-quality-chooser",
+          "code_url": "https://update.greasyfork.org/scripts/397564/Dumb%20Youtube%20lowest%20quality%20chooser.user.js",
+          "code_size": 3146,
+          "license": null,
+          "version": "2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Dumb Youtube lowest quality chooser",
+  "description": "Auto select the lowest available quality of videos (more eco-friendly, and you can still manually select a higher resolution when needed)",
+  "url": "https://greasyfork.org/scripts/397564-dumb-youtube-lowest-quality-chooser",
+  "code_url": "https://update.greasyfork.org/scripts/397564/Dumb%20Youtube%20lowest%20quality%20chooser.user.js",
+  "code_size": 3146,
+  "license": null,
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

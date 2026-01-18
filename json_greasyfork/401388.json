@@ -1,0 +1,59 @@
+{
+  "id": 401388,
+  "daily_installs": 0,
+  "total_installs": 74,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-19T10:28:26.000Z",
+  "code_updated_at": "2020-04-19T10:28:26.000Z",
+  "namespace": "NintendoSwitchAmazonUS",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 520134,
+      "name": "Dawdie",
+      "created_at": "2020-04-17T16:33:03.000Z",
+      "url": "https://greasyfork.org/users/520134-dawdie",
+      "scripts": [
+        {
+          "id": 401320,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-18T12:16:14.000Z",
+          "code_updated_at": "2020-04-18T12:16:13.000Z",
+          "namespace": "NintendoRingFitUK",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NintendoRingFitUK",
+          "description": "Play a sound if Ring Fit Adventure is in stock",
+          "url": "https://greasyfork.org/scripts/401320-nintendoringfituk",
+          "code_url": "https://update.greasyfork.org/scripts/401320/NintendoRingFitUK.user.js",
+          "code_size": 829,
+          "license": null,
+          "version": "3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NintendoSwitchAmazonUS",
+  "description": "Play a sound if Ring Fit Adventure is in stock",
+  "url": "https://greasyfork.org/scripts/401388-nintendoswitchamazonus",
+  "code_url": "https://update.greasyfork.org/scripts/401388/NintendoSwitchAmazonUS.user.js",
+  "code_size": 919,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

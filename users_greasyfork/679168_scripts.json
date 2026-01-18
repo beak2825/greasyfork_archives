@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408926,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-08-17T23:38:43.000Z",
+    "code_updated_at": "2020-08-17T23:38:43.000Z",
+    "namespace": "http://twitter.com/kokkiemouse",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 679168,
+        "name": "kokkiemouse",
+        "created_at": "2020-08-17T23:37:25.000Z",
+        "url": "https://greasyfork.org/users/679168-kokkiemouse"
+      }
+    ],
+    "name": "Twitter DM Remover",
+    "description": "Twitter DM Remove",
+    "url": "https://greasyfork.org/scripts/408926-twitter-dm-remover",
+    "code_url": "https://update.greasyfork.org/scripts/408926/Twitter%20DM%20Remover.user.js",
+    "code_size": 707,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

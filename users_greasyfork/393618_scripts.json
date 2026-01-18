@@ -1,0 +1,35 @@
+[
+  {
+    "id": 400805,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-14T21:23:22.000Z",
+    "code_updated_at": "2025-07-06T12:30:10.000Z",
+    "namespace": "https://raw.githubusercontent.com/adelobosko/xn--80ac9aeh6f.xn--p1ai/master/script.js",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 393618,
+        "name": "adelobosko",
+        "created_at": "2019-10-31T09:44:19.000Z",
+        "url": "https://greasyfork.org/users/393618-adelobosko"
+      }
+    ],
+    "name": "ранобэ.рф trello integration (add comment of current page into a card)",
+    "description": "ранобэ.рф trello integration (add comment (current page of novel) into a card)",
+    "url": "https://greasyfork.org/scripts/400805-%D1%80%D0%B0%D0%BD%D0%BE%D0%B1%D1%8D-%D1%80%D1%84-trello-integration-add-comment-of-current-page-into-a-card",
+    "code_url": "https://update.greasyfork.org/scripts/400805/%D1%80%D0%B0%D0%BD%D0%BE%D0%B1%D1%8D%D1%80%D1%84%20trello%20integration%20%28add%20comment%20of%20current%20page%20into%20a%20card%29.user.js",
+    "code_size": 17930,
+    "license": null,
+    "version": "1.3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

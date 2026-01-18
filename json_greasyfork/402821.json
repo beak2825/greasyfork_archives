@@ -1,0 +1,33 @@
+{
+  "id": 402821,
+  "daily_installs": 0,
+  "total_installs": 125,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-07T13:50:33.000Z",
+  "code_updated_at": "2020-06-02T16:22:26.000Z",
+  "namespace": "https://greasyfork.org/users/553660",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 553660,
+      "name": "MrMustache",
+      "created_at": "2020-05-07T13:41:23.000Z",
+      "url": "https://greasyfork.org/users/553660-mrmustache"
+    }
+  ],
+  "name": "Webtoons navigator",
+  "description": "Function for navigating chapters in webtoon reader using left and right arrow button and hearting the chapter using the 'h' (for Heart) button.",
+  "url": "https://greasyfork.org/scripts/402821-webtoons-navigator",
+  "code_url": "https://update.greasyfork.org/scripts/402821/Webtoons%20navigator.user.js",
+  "code_size": 1133,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

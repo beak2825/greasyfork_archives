@@ -1,0 +1,33 @@
+{
+  "id": 400573,
+  "daily_installs": 0,
+  "total_installs": 91,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-13T06:29:37.000Z",
+  "code_updated_at": "2020-04-20T16:29:35.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 197274,
+      "name": "M C KRISH",
+      "created_at": "2018-07-20T17:13:25.000Z",
+      "url": "https://greasyfork.org/users/197274-m-c-krish"
+    }
+  ],
+  "name": "Tampermonkey File",
+  "description": "A page-monitoring web app for Mturk (Mechanical Turk) designed to make turking more efficient. Easily monitor mturk search pages and requesters and Auto-Accept the HITs you missed.",
+  "url": "https://greasyfork.org/scripts/400573-tampermonkey-file",
+  "code_url": "https://update.greasyfork.org/scripts/400573/Tampermonkey%20File.user.js",
+  "code_size": 1272,
+  "license": null,
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

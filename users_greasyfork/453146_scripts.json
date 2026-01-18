@@ -97,5 +97,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 398008,
+    "daily_installs": 0,
+    "total_installs": 5320,
+    "fan_score": "76.4",
+    "good_ratings": 18,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2020-03-16T06:35:18.000Z",
+    "code_updated_at": "2020-03-18T02:26:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453146,
+        "name": "xianfei",
+        "created_at": "2020-03-03T02:22:54.000Z",
+        "url": "https://greasyfork.org/users/453146-xianfei"
+      }
+    ],
+    "name": "腾讯课堂自动签到 Plus",
+    "description": "基于SDchao的改编  加入系统级通知和网页签到状态指示功能  合并了去除xxx正在观看的弹幕",
+    "url": "https://greasyfork.org/scripts/398008-%E8%85%BE%E8%AE%AF%E8%AF%BE%E5%A0%82%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0-plus",
+    "code_url": "https://update.greasyfork.org/scripts/398008/%E8%85%BE%E8%AE%AF%E8%AF%BE%E5%A0%82%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0%20Plus.user.js",
+    "code_size": 3228,
+    "license": null,
+    "version": "1.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397227,
+    "daily_installs": 0,
+    "total_installs": 362,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-03T02:24:12.000Z",
+    "code_updated_at": "2020-03-03T02:26:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453146,
+        "name": "xianfei",
+        "created_at": "2020-03-03T02:22:54.000Z",
+        "url": "https://greasyfork.org/users/453146-xianfei"
+      }
+    ],
+    "name": "课堂派 - 去弹幕",
+    "description": "去除课堂派浮动弹幕",
+    "url": "https://greasyfork.org/scripts/397227-%E8%AF%BE%E5%A0%82%E6%B4%BE-%E5%8E%BB%E5%BC%B9%E5%B9%95",
+    "code_url": "https://update.greasyfork.org/scripts/397227/%E8%AF%BE%E5%A0%82%E6%B4%BE%20-%20%E5%8E%BB%E5%BC%B9%E5%B9%95.user.js",
+    "code_size": 443,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

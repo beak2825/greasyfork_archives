@@ -1,0 +1,33 @@
+{
+  "id": 398540,
+  "daily_installs": 2,
+  "total_installs": 8609,
+  "fan_score": "44.5",
+  "good_ratings": 22,
+  "ok_ratings": 6,
+  "bad_ratings": 14,
+  "created_at": "2020-03-23T18:58:21.000Z",
+  "code_updated_at": "2025-04-04T08:07:37.000Z",
+  "namespace": "https://www.eolstudy.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 420785,
+      "name": "Eol",
+      "created_at": "2019-12-15T18:46:59.000Z",
+      "url": "https://greasyfork.org/users/420785-eol"
+    }
+  ],
+  "name": "Twitter Block With Love",
+  "description": "Block or mute all the Twitter users who like or repost a specific post(Tweet), with love.",
+  "url": "https://greasyfork.org/scripts/398540-twitter-block-with-love",
+  "code_url": "https://update.greasyfork.org/scripts/398540/Twitter%20Block%20With%20Love.user.js",
+  "code_size": 38942,
+  "license": "MIT License",
+  "version": "2025.04.04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

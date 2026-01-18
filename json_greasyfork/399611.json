@@ -1,0 +1,59 @@
+{
+  "id": 399611,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-05T12:21:54.000Z",
+  "code_updated_at": "2020-04-05T12:21:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 475485,
+      "name": "roblabla",
+      "created_at": "2020-04-05T12:18:49.000Z",
+      "url": "https://greasyfork.org/users/475485-roblabla",
+      "scripts": [
+        {
+          "id": 399611,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-05T12:21:54.000Z",
+          "code_updated_at": "2020-04-05T12:21:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fenced code in old reddit",
+          "description": "Turns fenced code into code blocks in old reddit.",
+          "url": "https://greasyfork.org/scripts/399611-fenced-code-in-old-reddit",
+          "code_url": "https://update.greasyfork.org/scripts/399611/Fenced%20code%20in%20old%20reddit.user.js",
+          "code_size": 2030,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fenced code in old reddit",
+  "description": "Turns fenced code into code blocks in old reddit.",
+  "url": "https://greasyfork.org/scripts/399611-fenced-code-in-old-reddit",
+  "code_url": "https://update.greasyfork.org/scripts/399611/Fenced%20code%20in%20old%20reddit.user.js",
+  "code_size": 2030,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

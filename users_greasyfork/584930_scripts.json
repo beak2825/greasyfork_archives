@@ -1,0 +1,68 @@
+[
+  {
+    "id": 405120,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-11T12:00:43.000Z",
+    "code_updated_at": "2024-08-25T20:21:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 584930,
+        "name": "Therrom",
+        "created_at": "2020-06-11T11:56:20.000Z",
+        "url": "https://greasyfork.org/users/584930-therrom"
+      }
+    ],
+    "name": "Domino Tracker Notification",
+    "description": "Get notified when the pizza tracker updates!",
+    "url": "https://greasyfork.org/scripts/405120-domino-tracker-notification",
+    "code_url": "https://update.greasyfork.org/scripts/405120/Domino%20Tracker%20Notification.user.js",
+    "code_size": 2126,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405119,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-11T11:58:26.000Z",
+    "code_updated_at": "2020-06-11T11:58:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 584930,
+        "name": "Therrom",
+        "created_at": "2020-06-11T11:56:20.000Z",
+        "url": "https://greasyfork.org/users/584930-therrom"
+      }
+    ],
+    "name": "Skip Netflix and Prime",
+    "description": "Skip Netflix Intro/Next and Amazon Ad/Intro/Next",
+    "url": "https://greasyfork.org/scripts/405119-skip-netflix-and-prime",
+    "code_url": "https://update.greasyfork.org/scripts/405119/Skip%20Netflix%20and%20Prime.user.js",
+    "code_size": 15680,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

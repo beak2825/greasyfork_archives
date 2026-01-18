@@ -1,0 +1,33 @@
+{
+  "id": 398131,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-18T03:14:03.000Z",
+  "code_updated_at": "2020-03-18T03:14:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 461162,
+      "name": "link89",
+      "created_at": "2020-03-18T03:11:11.000Z",
+      "url": "https://greasyfork.org/users/461162-link89"
+    }
+  ],
+  "name": "Jenkins Pipeline Failed Steps Only",
+  "description": "Show only failed steps in Jenkins.",
+  "url": "https://greasyfork.org/scripts/398131-jenkins-pipeline-failed-steps-only",
+  "code_url": "https://update.greasyfork.org/scripts/398131/Jenkins%20Pipeline%20Failed%20Steps%20Only.user.js",
+  "code_size": 817,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

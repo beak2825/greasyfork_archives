@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411039,
+    "daily_installs": 0,
+    "total_installs": 184,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-08T18:53:58.000Z",
+    "code_updated_at": "2020-09-17T16:50:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666831,
+        "name": "Juanvi czd",
+        "created_at": "2020-07-14T20:57:22.000Z",
+        "url": "https://greasyfork.org/users/666831-juanvi-czd"
+      }
+    ],
+    "name": "Crowdestor Investments Single View",
+    "description": "Basic script for displaying all payments schedules, delays and updates in Crowdestor investments page",
+    "url": "https://greasyfork.org/scripts/411039-crowdestor-investments-single-view",
+    "code_url": "https://update.greasyfork.org/scripts/411039/Crowdestor%20Investments%20Single%20View.user.js",
+    "code_size": 12319,
+    "license": null,
+    "version": "0.14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407172,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-16T12:10:09.000Z",
+    "code_updated_at": "2020-07-20T18:01:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 666831,
+        "name": "Juanvi czd",
+        "created_at": "2020-07-14T20:57:22.000Z",
+        "url": "https://greasyfork.org/users/666831-juanvi-czd"
+      }
+    ],
+    "name": "Opciones+ en Yahoo Finance",
+    "description": "Calculadora de rentabilidad anualizada (TAE) y seguridad (precio-strike/precio) para calls y puts en Yahoo Finance. También informa de eventos coporativos anteriores al vencimiento",
+    "url": "https://greasyfork.org/scripts/407172-opciones-en-yahoo-finance",
+    "code_url": "https://update.greasyfork.org/scripts/407172/Opciones%2B%20en%20Yahoo%20Finance.user.js",
+    "code_size": 7164,
+    "license": null,
+    "version": "0.31",
+    "locale": "ca",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

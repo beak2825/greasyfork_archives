@@ -1,0 +1,35 @@
+[
+  {
+    "id": 399456,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-04T00:22:46.000Z",
+    "code_updated_at": "2020-04-04T00:22:46.000Z",
+    "namespace": "Casino, Google Play",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374664,
+        "name": "BaNru",
+        "created_at": "2019-09-22T11:50:36.000Z",
+        "url": "https://greasyfork.org/users/374664-banru"
+      }
+    ],
+    "name": "Google Play Casino Abuse",
+    "description": "Жалоба на казино в Google Play",
+    "url": "https://greasyfork.org/scripts/399456-google-play-casino-abuse",
+    "code_url": "https://update.greasyfork.org/scripts/399456/Google%20Play%20Casino%20Abuse.user.js",
+    "code_size": 3213,
+    "license": null,
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

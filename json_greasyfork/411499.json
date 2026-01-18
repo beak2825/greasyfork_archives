@@ -1,0 +1,34 @@
+{
+  "id": 411499,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-18T02:12:17.000Z",
+  "code_updated_at": "2020-09-18T02:12:17.000Z",
+  "namespace": "test1.9.2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 687922,
+      "name": "dingdingtao",
+      "created_at": "2020-09-16T10:46:47.000Z",
+      "url": "https://greasyfork.org/users/687922-dingdingtao",
+      "scripts": []
+    }
+  ],
+  "name": "test1.9.2",
+  "description": "审核过程的错误提示, Error tips during the review process",
+  "url": "https://greasyfork.org/scripts/411499-test1-9-2",
+  "code_url": "https://update.greasyfork.org/scripts/411499/test192.user.js",
+  "code_size": 4376,
+  "license": null,
+  "version": "1.9.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

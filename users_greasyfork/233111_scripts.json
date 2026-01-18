@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398274,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-20T02:56:10.000Z",
+    "code_updated_at": "2020-03-20T02:56:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 233111,
+        "name": "wdearzh",
+        "created_at": "2018-12-17T03:07:28.000Z",
+        "url": "https://greasyfork.org/users/233111-wdearzh"
+      }
+    ],
+    "name": "加载JS并添加点击事件",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/398274-%E5%8A%A0%E8%BD%BDjs%E5%B9%B6%E6%B7%BB%E5%8A%A0%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/398274/%E5%8A%A0%E8%BD%BDJS%E5%B9%B6%E6%B7%BB%E5%8A%A0%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6.user.js",
+    "code_size": 1258,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

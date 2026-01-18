@@ -1,0 +1,101 @@
+[
+  {
+    "id": 398665,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-25T05:16:09.000Z",
+    "code_updated_at": "2020-03-25T05:16:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 189581,
+        "name": "NEOTSO",
+        "created_at": "2018-06-05T08:14:51.000Z",
+        "url": "https://greasyfork.org/users/189581-neotso"
+      }
+    ],
+    "name": "block baidu search news",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/398665-block-baidu-search-news",
+    "code_url": "https://update.greasyfork.org/scripts/398665/block%20baidu%20search%20news.user.js",
+    "code_size": 430,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396665,
+    "daily_installs": 0,
+    "total_installs": 7206,
+    "fan_score": "75.7",
+    "good_ratings": 12,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-20T10:19:14.000Z",
+    "code_updated_at": "2020-02-20T10:19:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 189581,
+        "name": "NEOTSO",
+        "created_at": "2018-06-05T08:14:51.000Z",
+        "url": "https://greasyfork.org/users/189581-neotso"
+      }
+    ],
+    "name": "草榴社区手机版 redirect t66y to mobile url",
+    "description": "在PC上重定向草榴社区链接到手机版",
+    "url": "https://greasyfork.org/scripts/396665-%E8%8D%89%E6%A6%B4%E7%A4%BE%E5%8C%BA%E6%89%8B%E6%9C%BA%E7%89%88-redirect-t66y-to-mobile-url",
+    "code_url": "https://update.greasyfork.org/scripts/396665/%E8%8D%89%E6%A6%B4%E7%A4%BE%E5%8C%BA%E6%89%8B%E6%9C%BA%E7%89%88%20redirect%20t66y%20to%20mobile%20url.user.js",
+    "code_size": 518,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395835,
+    "daily_installs": 0,
+    "total_installs": 280,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-30T12:53:26.000Z",
+    "code_updated_at": "2020-12-12T03:03:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 189581,
+        "name": "NEOTSO",
+        "created_at": "2018-06-05T08:14:51.000Z",
+        "url": "https://greasyfork.org/users/189581-neotso"
+      }
+    ],
+    "name": "印象笔记网页版禁用保存网页功能 disable page saving function for evernote/yingxiangbiji",
+    "description": "印象笔记网页版禁用保存网页功能",
+    "url": "https://greasyfork.org/scripts/395835-%E5%8D%B0%E8%B1%A1%E7%AC%94%E8%AE%B0%E7%BD%91%E9%A1%B5%E7%89%88%E7%A6%81%E7%94%A8%E4%BF%9D%E5%AD%98%E7%BD%91%E9%A1%B5%E5%8A%9F%E8%83%BD-disable-page-saving-function-for-evernote-yingxiangbiji",
+    "code_url": "https://update.greasyfork.org/scripts/395835/%E5%8D%B0%E8%B1%A1%E7%AC%94%E8%AE%B0%E7%BD%91%E9%A1%B5%E7%89%88%E7%A6%81%E7%94%A8%E4%BF%9D%E5%AD%98%E7%BD%91%E9%A1%B5%E5%8A%9F%E8%83%BD%20disable%20page%20saving%20function%20for%20evernoteyingxiangbiji.user.js",
+    "code_size": 927,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

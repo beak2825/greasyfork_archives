@@ -1,0 +1,101 @@
+[
+  {
+    "id": 408685,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-13T08:40:28.000Z",
+    "code_updated_at": "2021-03-29T08:50:15.000Z",
+    "namespace": "http://cosoleto.free.fr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 237715,
+        "name": "Francesco Cosoleto",
+        "created_at": "2019-01-06T15:11:02.000Z",
+        "url": "https://greasyfork.org/users/237715-francesco-cosoleto"
+      }
+    ],
+    "name": "Timvision Enhanced - Parte 2",
+    "description": "Modifiche varie per migliorare l'interazione su timvision.it",
+    "url": "https://greasyfork.org/scripts/408685-timvision-enhanced-parte-2",
+    "code_url": "https://update.greasyfork.org/scripts/408685/Timvision%20Enhanced%20-%20Parte%202.user.js",
+    "code_size": 2834,
+    "license": null,
+    "version": "0.4",
+    "locale": "it",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408090,
+    "daily_installs": 0,
+    "total_installs": 125,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-02T23:29:56.000Z",
+    "code_updated_at": "2024-10-07T21:14:01.000Z",
+    "namespace": "http://cosoleto.free.fr/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 237715,
+        "name": "Francesco Cosoleto",
+        "created_at": "2019-01-06T15:11:02.000Z",
+        "url": "https://greasyfork.org/users/237715-francesco-cosoleto"
+      }
+    ],
+    "name": "Repubblica - Disabilita il refresh della pagina",
+    "description": "Disabilita il refresh automatico della home page di repubblica.it",
+    "url": "https://greasyfork.org/scripts/408090-repubblica-disabilita-il-refresh-della-pagina",
+    "code_url": "https://update.greasyfork.org/scripts/408090/Repubblica%20-%20Disabilita%20il%20refresh%20della%20pagina.user.js",
+    "code_size": 1062,
+    "license": null,
+    "version": "0.2",
+    "locale": "it",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407742,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-25T23:42:41.000Z",
+    "code_updated_at": "2023-12-03T12:54:26.000Z",
+    "namespace": "http://cosoleto.free.fr/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 237715,
+        "name": "Francesco Cosoleto",
+        "created_at": "2019-01-06T15:11:02.000Z",
+        "url": "https://greasyfork.org/users/237715-francesco-cosoleto"
+      }
+    ],
+    "name": "Repubblica - Sintesi vocale",
+    "description": "Aggiunge la sintesi vocale agli articoli di repubblica.it",
+    "url": "https://greasyfork.org/scripts/407742-repubblica-sintesi-vocale",
+    "code_url": "https://update.greasyfork.org/scripts/407742/Repubblica%20-%20Sintesi%20vocale.user.js",
+    "code_size": 6725,
+    "license": null,
+    "version": "1.8",
+    "locale": "it",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

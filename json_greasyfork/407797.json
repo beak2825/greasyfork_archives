@@ -1,0 +1,34 @@
+{
+  "id": 407797,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-27T10:07:08.000Z",
+  "code_updated_at": "2024-05-04T03:45:20.000Z",
+  "namespace": "http://tkb.agilean.cn:9000/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670644,
+      "name": "ninesunsabiu",
+      "created_at": "2020-07-27T08:48:48.000Z",
+      "url": "https://greasyfork.org/users/670644-ninesunsabiu",
+      "scripts": []
+    }
+  ],
+  "name": "知微日报填写",
+  "description": "如果你觉得每天要想昨天/上周做了啥很麻烦的话，不妨试试这个自动读取你上一个工作日的卡片操作记录, 并以点亮中的卡作为今日工作的卡",
+  "url": "https://greasyfork.org/scripts/407797-%E7%9F%A5%E5%BE%AE%E6%97%A5%E6%8A%A5%E5%A1%AB%E5%86%99",
+  "code_url": "https://update.greasyfork.org/scripts/407797/%E7%9F%A5%E5%BE%AE%E6%97%A5%E6%8A%A5%E5%A1%AB%E5%86%99.user.js",
+  "code_size": 8108,
+  "license": "MIT License",
+  "version": "0.7.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

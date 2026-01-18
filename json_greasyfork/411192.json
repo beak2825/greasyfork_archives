@@ -1,0 +1,59 @@
+{
+  "id": 411192,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-11T01:15:55.000Z",
+  "code_updated_at": "2020-09-11T01:16:34.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/411192",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670836,
+      "name": "mustssr",
+      "created_at": "2020-07-28T01:18:42.000Z",
+      "url": "https://greasyfork.org/users/670836-mustssr",
+      "scripts": [
+        {
+          "id": 411190,
+          "daily_installs": 0,
+          "total_installs": 105,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-09-11T00:52:57.000Z",
+          "code_updated_at": "2020-09-11T01:08:52.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/411190",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "动漫花园仿极影补丁(改)",
+          "description": "配合动漫花园仿极影样式使用 //添加支持dmhy.anoneko.com、dmhy.org、www.dmhy.org",
+          "url": "https://greasyfork.org/scripts/411190-%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E4%BB%BF%E6%9E%81%E5%BD%B1%E8%A1%A5%E4%B8%81-%E6%94%B9",
+          "code_url": "https://update.greasyfork.org/scripts/411190/%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E4%BB%BF%E6%9E%81%E5%BD%B1%E8%A1%A5%E4%B8%81%28%E6%94%B9%29.user.js",
+          "code_size": 851,
+          "license": null,
+          "version": "1.2.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "dmhy-torrent-auto-rename",
+  "description": "auto rename torrent for dmhy",
+  "url": "https://greasyfork.org/scripts/411192-dmhy-torrent-auto-rename",
+  "code_url": "https://update.greasyfork.org/scripts/411192/dmhy-torrent-auto-rename.user.js",
+  "code_size": 1666,
+  "license": "GPL version 3",
+  "version": "0.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

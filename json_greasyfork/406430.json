@@ -1,0 +1,33 @@
+{
+  "id": 406430,
+  "daily_installs": 0,
+  "total_installs": 1168,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2020-07-03T16:05:50.000Z",
+  "code_updated_at": "2020-07-03T16:05:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 662990,
+      "name": "LeeShaoYu",
+      "created_at": "2020-07-03T16:03:47.000Z",
+      "url": "https://greasyfork.org/users/662990-leeshaoyu"
+    }
+  ],
+  "name": "百度净化",
+  "description": "百度净化，去热搜，右侧广告，关联推广",
+  "url": "https://greasyfork.org/scripts/406430-%E7%99%BE%E5%BA%A6%E5%87%80%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/406430/%E7%99%BE%E5%BA%A6%E5%87%80%E5%8C%96.user.js",
+  "code_size": 811,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

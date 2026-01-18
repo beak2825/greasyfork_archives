@@ -1,0 +1,68 @@
+[
+  {
+    "id": 403410,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-15T15:49:47.000Z",
+    "code_updated_at": "2020-05-16T02:13:18.000Z",
+    "namespace": "https://greasyfork.org/en/users/560174-adir-avisar",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 560174,
+        "name": "Adir Avisar",
+        "created_at": "2020-05-12T20:13:45.000Z",
+        "url": "https://greasyfork.org/users/560174-adir-avisar"
+      }
+    ],
+    "name": "Praetorian Fill And Spare",
+    "description": "Auto fill 300 in the market or send the spare amount in the trade routes",
+    "url": "https://greasyfork.org/scripts/403410-praetorian-fill-and-spare",
+    "code_url": "https://update.greasyfork.org/scripts/403410/Praetorian%20Fill%20And%20Spare.user.js",
+    "code_size": 4019,
+    "license": null,
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 403177,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-12T21:08:32.000Z",
+    "code_updated_at": "2020-05-12T21:08:31.000Z",
+    "namespace": "https://greasyfork.org/en/users/560174-adir-avisar",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 560174,
+        "name": "Adir Avisar",
+        "created_at": "2020-05-12T20:13:45.000Z",
+        "url": "https://greasyfork.org/users/560174-adir-avisar"
+      }
+    ],
+    "name": "(Personal) Wave Builder",
+    "description": "Wave builder for Travian Legends and Travian Codex Victoria",
+    "url": "https://greasyfork.org/scripts/403177-personal-wave-builder",
+    "code_url": "https://update.greasyfork.org/scripts/403177/%28Personal%29%20Wave%20Builder.user.js",
+    "code_size": 14238,
+    "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

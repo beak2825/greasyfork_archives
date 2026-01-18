@@ -1,0 +1,33 @@
+{
+  "id": 403057,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-11T03:38:40.000Z",
+  "code_updated_at": "2020-05-11T03:38:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 558697,
+      "name": "SONES117",
+      "created_at": "2020-05-11T03:15:01.000Z",
+      "url": "https://greasyfork.org/users/558697-sones117"
+    }
+  ],
+  "name": "屏蔽百度云",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/403057-%E5%B1%8F%E8%94%BD%E7%99%BE%E5%BA%A6%E4%BA%91",
+  "code_url": "https://update.greasyfork.org/scripts/403057/%E5%B1%8F%E8%94%BD%E7%99%BE%E5%BA%A6%E4%BA%91.user.js",
+  "code_size": 540,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

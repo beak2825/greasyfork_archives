@@ -1,0 +1,59 @@
+{
+  "id": 406466,
+  "daily_installs": 0,
+  "total_installs": 1218,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-04T12:44:25.000Z",
+  "code_updated_at": "2020-07-04T12:44:25.000Z",
+  "namespace": "https://greasyfork.org/en/users/663305-nekross",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 663305,
+      "name": "NeKross",
+      "created_at": "2020-07-04T12:36:33.000Z",
+      "url": "https://greasyfork.org/users/663305-nekross",
+      "scripts": [
+        {
+          "id": 406466,
+          "daily_installs": 0,
+          "total_installs": 1218,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-04T12:44:25.000Z",
+          "code_updated_at": "2020-07-04T12:44:25.000Z",
+          "namespace": "https://greasyfork.org/en/users/663305-nekross",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MooMoo.io NeKross' HUD",
+          "description": "NeKross' Private HUD (No Hack)",
+          "url": "https://greasyfork.org/scripts/406466-moomoo-io-nekross-hud",
+          "code_url": "https://update.greasyfork.org/scripts/406466/MooMooio%20NeKross%27%20HUD.user.js",
+          "code_size": 10873,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MooMoo.io NeKross' HUD",
+  "description": "NeKross' Private HUD (No Hack)",
+  "url": "https://greasyfork.org/scripts/406466-moomoo-io-nekross-hud",
+  "code_url": "https://update.greasyfork.org/scripts/406466/MooMooio%20NeKross%27%20HUD.user.js",
+  "code_size": 10873,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

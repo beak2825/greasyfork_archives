@@ -1,0 +1,34 @@
+{
+  "id": 410044,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-27T17:12:20.000Z",
+  "code_updated_at": "2020-08-27T17:12:20.000Z",
+  "namespace": "Updated by Coco",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 683245,
+      "name": "AdriftLocket",
+      "created_at": "2020-08-27T17:10:16.000Z",
+      "url": "https://greasyfork.org/users/683245-adriftlocket",
+      "scripts": []
+    }
+  ],
+  "name": "Space Hair Sniper",
+  "description": "Automatically purchases an item for a set price or less.",
+  "url": "https://greasyfork.org/scripts/410044-space-hair-sniper",
+  "code_url": "https://update.greasyfork.org/scripts/410044/841849/Space%20Hair%20Sniper.js",
+  "code_size": 973,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

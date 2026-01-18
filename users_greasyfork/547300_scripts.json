@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 402909,
+    "daily_installs": 0,
+    "total_installs": 3650,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-08T17:44:08.000Z",
+    "code_updated_at": "2021-02-15T21:01:39.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 547300,
+        "name": "Barkin _MADD",
+        "created_at": "2020-04-30T17:01:08.000Z",
+        "url": "https://greasyfork.org/users/547300-barkin-madd"
+      }
+    ],
+    "name": "PA UC Autochatter",
+    "description": "~ Updated February 2021 ~",
+    "url": "https://greasyfork.org/scripts/402909-pa-uc-autochatter",
+    "code_url": "https://update.greasyfork.org/scripts/402909/PA%20UC%20Autochatter.user.js",
+    "code_size": 7069,
+    "license": null,
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

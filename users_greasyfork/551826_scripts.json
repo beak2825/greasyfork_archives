@@ -1,0 +1,35 @@
+[
+  {
+    "id": 402627,
+    "daily_installs": 0,
+    "total_installs": 536,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-05-04T19:44:48.000Z",
+    "code_updated_at": "2020-05-04T20:00:03.000Z",
+    "namespace": "https://greasyfork.org/users/551826",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 551826,
+        "name": "jpklingel",
+        "created_at": "2020-05-04T19:37:30.000Z",
+        "url": "https://greasyfork.org/users/551826-jpklingel"
+      }
+    ],
+    "name": "Grepolis town-disappear finder",
+    "description": "Find nearby towns that will disappear soon",
+    "url": "https://greasyfork.org/scripts/402627-grepolis-town-disappear-finder",
+    "code_url": "https://update.greasyfork.org/scripts/402627/Grepolis%20town-disappear%20finder.user.js",
+    "code_size": 1635,
+    "license": null,
+    "version": "2020.05.05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

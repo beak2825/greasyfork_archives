@@ -1,0 +1,68 @@
+[
+  {
+    "id": 407813,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-27T20:06:16.000Z",
+    "code_updated_at": "2020-07-27T20:06:16.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 587168,
+        "name": "Dreamz",
+        "created_at": "2020-06-12T19:00:30.000Z",
+        "url": "https://greasyfork.org/users/587168-dreamz"
+      }
+    ],
+    "name": "Surviv.io Counters",
+    "description": "An ingame counter overlay to view connection stats and in-game health stats.",
+    "url": "https://greasyfork.org/scripts/407813-surviv-io-counters",
+    "code_url": "https://update.greasyfork.org/scripts/407813/Survivio%20Counters.user.js",
+    "code_size": 5047,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 405353,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-15T05:17:03.000Z",
+    "code_updated_at": "2020-06-15T05:17:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 587168,
+        "name": "Dreamz",
+        "created_at": "2020-06-12T19:00:30.000Z",
+        "url": "https://greasyfork.org/users/587168-dreamz"
+      }
+    ],
+    "name": "Show HP bar",
+    "description": "HP bar",
+    "url": "https://greasyfork.org/scripts/405353-show-hp-bar",
+    "code_url": "https://update.greasyfork.org/scripts/405353/Show%20HP%20bar.user.js",
+    "code_size": 19891,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406401,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-02T19:24:01.000Z",
+    "code_updated_at": "2020-12-18T20:43:25.000Z",
+    "namespace": "https://github.com/WidgetMidget/scripts-and-userstyles",
+    "support_url": "https://github.com/WidgetMidget/scripts-and-userstyles/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 310518,
+        "name": "WidgetMidget",
+        "created_at": "2019-06-18T01:13:11.000Z",
+        "url": "https://greasyfork.org/users/310518-widgetmidget"
+      }
+    ],
+    "name": "[WM] Accesskey Navigation for Animekisa.tv",
+    "description": "Ctrl + Arrow Key navigation.",
+    "url": "https://greasyfork.org/scripts/406401-wm-accesskey-navigation-for-animekisa-tv",
+    "code_url": "https://update.greasyfork.org/scripts/406401/%5BWM%5D%20Accesskey%20Navigation%20for%20Animekisatv.user.js",
+    "code_size": 1293,
+    "license": null,
+    "version": "1.1.31",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

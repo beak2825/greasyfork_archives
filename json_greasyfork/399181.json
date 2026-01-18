@@ -1,0 +1,59 @@
+{
+  "id": 399181,
+  "daily_installs": 0,
+  "total_installs": 1440,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-04-01T07:55:54.000Z",
+  "code_updated_at": "2020-04-02T07:40:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 472949,
+      "name": "zhiying chai",
+      "created_at": "2020-04-01T07:53:59.000Z",
+      "url": "https://greasyfork.org/users/472949-zhiying-chai",
+      "scripts": [
+        {
+          "id": 399181,
+          "daily_installs": 0,
+          "total_installs": 1440,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-04-01T07:55:54.000Z",
+          "code_updated_at": "2020-04-02T07:40:01.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "超星视频下载",
+          "description": "将所观看的超星视频下载",
+          "url": "https://greasyfork.org/scripts/399181-%E8%B6%85%E6%98%9F%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+          "code_url": "https://update.greasyfork.org/scripts/399181/%E8%B6%85%E6%98%9F%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+          "code_size": 13306,
+          "license": null,
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "超星视频下载",
+  "description": "将所观看的超星视频下载",
+  "url": "https://greasyfork.org/scripts/399181-%E8%B6%85%E6%98%9F%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/399181/%E8%B6%85%E6%98%9F%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 13306,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

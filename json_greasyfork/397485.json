@@ -1,0 +1,59 @@
+{
+  "id": 397485,
+  "daily_installs": 0,
+  "total_installs": 144,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-07T13:37:57.000Z",
+  "code_updated_at": "2020-05-22T07:51:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 455546,
+      "name": "BJennWare",
+      "created_at": "2020-03-07T13:35:10.000Z",
+      "url": "https://greasyfork.org/users/455546-bjennware",
+      "scripts": [
+        {
+          "id": 397485,
+          "daily_installs": 0,
+          "total_installs": 144,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-07T13:37:57.000Z",
+          "code_updated_at": "2020-05-22T07:51:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wanikani: Integrated Dashboard Overhaul",
+          "description": "Integrates multiple user scripts into one neat package and add some stylings to the dashboard",
+          "url": "https://greasyfork.org/scripts/397485-wanikani-integrated-dashboard-overhaul",
+          "code_url": "https://update.greasyfork.org/scripts/397485/Wanikani%3A%20Integrated%20Dashboard%20Overhaul.user.js",
+          "code_size": 11877,
+          "license": "MIT; http://opensource.org/licenses/MIT",
+          "version": "0.1.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wanikani: Integrated Dashboard Overhaul",
+  "description": "Integrates multiple user scripts into one neat package and add some stylings to the dashboard",
+  "url": "https://greasyfork.org/scripts/397485-wanikani-integrated-dashboard-overhaul",
+  "code_url": "https://update.greasyfork.org/scripts/397485/Wanikani%3A%20Integrated%20Dashboard%20Overhaul.user.js",
+  "code_size": 11877,
+  "license": "MIT; http://opensource.org/licenses/MIT",
+  "version": "0.1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

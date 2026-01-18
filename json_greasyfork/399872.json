@@ -1,0 +1,34 @@
+{
+  "id": 399872,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-07T21:11:59.000Z",
+  "code_updated_at": "2020-04-07T21:22:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 476242,
+      "name": "ivylab",
+      "created_at": "2020-04-06T22:45:18.000Z",
+      "url": "https://greasyfork.org/users/476242-ivylab",
+      "scripts": []
+    }
+  ],
+  "name": "DB9 Better Torrent Detail Page Info Columns (BassStage Stylesheet Version)",
+  "description": "Adds uploader, upload date, and file count columns on torrent detail pages.",
+  "url": "https://greasyfork.org/scripts/399872-db9-better-torrent-detail-page-info-columns-bassstage-stylesheet-version",
+  "code_url": "https://update.greasyfork.org/scripts/399872/DB9%20Better%20Torrent%20Detail%20Page%20Info%20Columns%20%28BassStage%20Stylesheet%20Version%29.user.js",
+  "code_size": 5200,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

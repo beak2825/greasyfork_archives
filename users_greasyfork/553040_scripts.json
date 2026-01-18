@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 402744,
+    "daily_installs": 3,
+    "total_installs": 12532,
+    "fan_score": "87.0",
+    "good_ratings": 32,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-05-06T13:00:30.000Z",
+    "code_updated_at": "2020-05-07T03:01:49.000Z",
+    "namespace": "maintenance_code_huahuacat",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 553040,
+        "name": "huahuacat",
+        "created_at": "2020-05-06T11:45:45.000Z",
+        "url": "https://greasyfork.org/users/553040-huahuacat"
+      }
+    ],
+    "name": "破解VIP会员视频集合【更新维护版】",
+    "description": "一键破解[爱奇艺|腾讯|优酷||乐视|芒果|AB站|音悦台]等VIP或会员视频，普通视频去广告快速播放。解析接口贵精不贵多，每一个都精心测试挑选，绝对够用。详细方法看说明和图片。支持[Tampermonkey | Violentmonkey | Greasymonkey 4.0+][只想做一个纯纯的视频解析脚本][原作者为黄盐，此版本为日常更新维护版]【个人以为这是最好用的VIP视频解析脚本了】",
+    "url": "https://greasyfork.org/scripts/402744-%E7%A0%B4%E8%A7%A3vip%E4%BC%9A%E5%91%98%E8%A7%86%E9%A2%91%E9%9B%86%E5%90%88-%E6%9B%B4%E6%96%B0%E7%BB%B4%E6%8A%A4%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/402744/%E7%A0%B4%E8%A7%A3VIP%E4%BC%9A%E5%91%98%E8%A7%86%E9%A2%91%E9%9B%86%E5%90%88%E3%80%90%E6%9B%B4%E6%96%B0%E7%BB%B4%E6%8A%A4%E7%89%88%E3%80%91.user.js",
+    "code_size": 26676,
+    "license": null,
+    "version": "4.2.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

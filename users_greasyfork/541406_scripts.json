@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 402653,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-05T09:36:02.000Z",
+    "code_updated_at": "2020-05-05T09:36:02.000Z",
+    "namespace": "https://shadowverse-portal.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 541406,
+        "name": "Toka MK",
+        "created_at": "2020-04-25T10:16:25.000Z",
+        "url": "https://greasyfork.org/users/541406-toka-mk"
+      }
+    ],
+    "name": "Shadowverse Portal Deck Builder to Decklist",
+    "description": "Add a button to take you from deck builder page to decklist without saving",
+    "url": "https://greasyfork.org/scripts/402653-shadowverse-portal-deck-builder-to-decklist",
+    "code_url": "https://update.greasyfork.org/scripts/402653/Shadowverse%20Portal%20Deck%20Builder%20to%20Decklist.user.js",
+    "code_size": 983,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 402543,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-03T12:45:29.000Z",
+    "code_updated_at": "2020-05-03T13:07:27.000Z",
+    "namespace": "https://shadowverse-portal.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 541406,
+        "name": "Toka MK",
+        "created_at": "2020-04-25T10:16:25.000Z",
+        "url": "https://greasyfork.org/users/541406-toka-mk"
+      }
+    ],
+    "name": "Shadowverse Portal Auto Language Changer",
+    "description": "Automatically change language on Shadowverse Portal",
+    "url": "https://greasyfork.org/scripts/402543-shadowverse-portal-auto-language-changer",
+    "code_url": "https://update.greasyfork.org/scripts/402543/Shadowverse%20Portal%20Auto%20Language%20Changer.user.js",
+    "code_size": 581,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 401955,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-25T10:18:02.000Z",
+    "code_updated_at": "2020-04-27T12:46:38.000Z",
+    "namespace": "https://adnmb2.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 541406,
+        "name": "Toka MK",
+        "created_at": "2020-04-25T10:16:25.000Z",
+        "url": "https://greasyfork.org/users/541406-toka-mk"
+      }
+    ],
+    "name": "Remove Brainless",
+    "description": "Remove blank quotations from adnmb",
+    "url": "https://greasyfork.org/scripts/401955-remove-brainless",
+    "code_url": "https://update.greasyfork.org/scripts/401955/Remove%20Brainless.user.js",
+    "code_size": 698,
+    "license": null,
+    "version": "0.2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

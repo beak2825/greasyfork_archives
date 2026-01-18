@@ -63,6 +63,39 @@
     "version": "0.1",
     "locale": "et",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 404530,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-02T09:09:12.000Z",
+    "code_updated_at": "2020-06-02T09:09:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 23836,
+        "name": "CRG Loadren",
+        "created_at": "2015-12-19T16:34:22.000Z",
+        "url": "https://greasyfork.org/users/23836-crg-loadren"
+      }
+    ],
+    "name": "CCTL Corrector",
+    "description": "Corrige les CCTLs qui ne l'ont pas été",
+    "url": "https://greasyfork.org/scripts/404530-cctl-corrector",
+    "code_url": "https://update.greasyfork.org/scripts/404530/CCTL%20Corrector.user.js",
+    "code_size": 3321,
+    "license": null,
+    "version": "0.1",
+    "locale": "fr",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

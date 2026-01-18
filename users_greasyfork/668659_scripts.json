@@ -229,5 +229,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411393,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-15T20:21:50.000Z",
+    "code_updated_at": "2022-03-10T06:24:28.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668659,
+        "name": "DenverCoder1",
+        "created_at": "2020-07-20T15:52:21.000Z",
+        "url": "https://greasyfork.org/users/668659-denvercoder1"
+      }
+    ],
+    "name": "English Lev Net",
+    "description": "Redirect to English version of Lev Net",
+    "url": "https://greasyfork.org/scripts/411393-english-lev-net",
+    "code_url": "https://update.greasyfork.org/scripts/411393/English%20Lev%20Net.user.js",
+    "code_size": 1015,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407525,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-21T18:08:59.000Z",
+    "code_updated_at": "2020-08-05T21:04:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668659,
+        "name": "DenverCoder1",
+        "created_at": "2020-07-20T15:52:21.000Z",
+        "url": "https://greasyfork.org/users/668659-denvercoder1"
+      }
+    ],
+    "name": "LaTeX Unicode Shortcuts",
+    "description": "Highlight text then press [ALT+X] to convert LaTeX commands to their unicode equivalent (ex. \\pi → π)",
+    "url": "https://greasyfork.org/scripts/407525-latex-unicode-shortcuts",
+    "code_url": "https://update.greasyfork.org/scripts/407525/LaTeX%20Unicode%20Shortcuts.user.js",
+    "code_size": 9745,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407466,
+    "daily_installs": 1,
+    "total_installs": 10754,
+    "fan_score": "62.5",
+    "good_ratings": 26,
+    "ok_ratings": 3,
+    "bad_ratings": 6,
+    "created_at": "2020-07-20T19:52:40.000Z",
+    "code_updated_at": "2023-06-25T06:33:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668659,
+        "name": "DenverCoder1",
+        "created_at": "2020-07-20T15:52:21.000Z",
+        "url": "https://greasyfork.org/users/668659-denvercoder1"
+      }
+    ],
+    "name": "Unedit and Undelete for Reddit",
+    "description": "Creates the option next to edited and deleted Reddit comments/posts to show the original comment from before it was edited",
+    "url": "https://greasyfork.org/scripts/407466-unedit-and-undelete-for-reddit",
+    "code_url": "https://update.greasyfork.org/scripts/407466/Unedit%20and%20Undelete%20for%20Reddit.user.js",
+    "code_size": 62763,
+    "license": "MIT License",
+    "version": "3.17.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407459,
+    "daily_installs": 0,
+    "total_installs": 12070,
+    "fan_score": "39.4",
+    "good_ratings": 17,
+    "ok_ratings": 3,
+    "bad_ratings": 13,
+    "created_at": "2020-07-20T18:19:19.000Z",
+    "code_updated_at": "2022-05-04T20:29:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668659,
+        "name": "DenverCoder1",
+        "created_at": "2020-07-20T15:52:21.000Z",
+        "url": "https://greasyfork.org/users/668659-denvercoder1"
+      }
+    ],
+    "name": "[PATCHED] Symbolab Pro",
+    "description": "Symbolab Pro for free - unlock full steps and verify solutions",
+    "url": "https://greasyfork.org/scripts/407459-patched-symbolab-pro",
+    "code_url": "https://update.greasyfork.org/scripts/407459/%5BPATCHED%5D%20Symbolab%20Pro.user.js",
+    "code_size": 7147,
+    "license": "MIT License",
+    "version": "1.4.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407457,
+    "daily_installs": 0,
+    "total_installs": 503,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-20T18:11:46.000Z",
+    "code_updated_at": "2023-01-08T17:57:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668659,
+        "name": "DenverCoder1",
+        "created_at": "2020-07-20T15:52:21.000Z",
+        "url": "https://greasyfork.org/users/668659-denvercoder1"
+      }
+    ],
+    "name": "Youtube Playlist Duration Calculator",
+    "description": "Calculate the duration of a playlist and display it next to the number of videos",
+    "url": "https://greasyfork.org/scripts/407457-youtube-playlist-duration-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/407457/Youtube%20Playlist%20Duration%20Calculator.user.js",
+    "code_size": 3791,
+    "license": "MIT License",
+    "version": "1.1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407455,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-20T17:58:48.000Z",
+    "code_updated_at": "2020-07-20T17:58:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668659,
+        "name": "DenverCoder1",
+        "created_at": "2020-07-20T15:52:21.000Z",
+        "url": "https://greasyfork.org/users/668659-denvercoder1"
+      }
+    ],
+    "name": "Unedit for Reddit",
+    "description": "Creates the option next to edited Reddit comments to show the original comment from before it was edited",
+    "url": "https://greasyfork.org/scripts/407455-unedit-for-reddit",
+    "code_url": "https://update.greasyfork.org/scripts/407455/Unedit%20for%20Reddit.user.js",
+    "code_size": 5848,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
   }
 ]

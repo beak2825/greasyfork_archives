@@ -1,0 +1,33 @@
+{
+  "id": 404473,
+  "daily_installs": 0,
+  "total_installs": 101,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-01T08:55:17.000Z",
+  "code_updated_at": "2020-06-01T08:55:17.000Z",
+  "namespace": "https://greasyfork.org/users/576674",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 576674,
+      "name": "Raycursive",
+      "created_at": "2020-06-01T08:53:26.000Z",
+      "url": "https://greasyfork.org/users/576674-raycursive"
+    }
+  ],
+  "name": "ff14angler-cracker",
+  "description": "bypass adblock checking for ff14-angler",
+  "url": "https://greasyfork.org/scripts/404473-ff14angler-cracker",
+  "code_url": "https://update.greasyfork.org/scripts/404473/ff14angler-cracker.user.js",
+  "code_size": 387,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

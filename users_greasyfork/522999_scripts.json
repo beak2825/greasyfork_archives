@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401462,
+    "daily_installs": 0,
+    "total_installs": 699,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-20T02:11:14.000Z",
+    "code_updated_at": "2020-04-25T11:03:34.000Z",
+    "namespace": "blade",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 522999,
+        "name": "UBlade",
+        "created_at": "2020-04-20T01:48:45.000Z",
+        "url": "https://greasyfork.org/users/522999-ublade"
+      }
+    ],
+    "name": "百度首页简洁版（最新可用）（支持手机）",
+    "description": "动画隐去搜索框下方的新闻&导航区域（PC），享受丝滑体验！手机直接跳转百度简洁版",
+    "url": "https://greasyfork.org/scripts/401462-%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E7%AE%80%E6%B4%81%E7%89%88-%E6%9C%80%E6%96%B0%E5%8F%AF%E7%94%A8-%E6%94%AF%E6%8C%81%E6%89%8B%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/401462/%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E7%AE%80%E6%B4%81%E7%89%88%EF%BC%88%E6%9C%80%E6%96%B0%E5%8F%AF%E7%94%A8%EF%BC%89%EF%BC%88%E6%94%AF%E6%8C%81%E6%89%8B%E6%9C%BA%EF%BC%89.user.js",
+    "code_size": 8891,
+    "license": null,
+    "version": "0.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

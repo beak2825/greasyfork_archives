@@ -1,0 +1,68 @@
+[
+  {
+    "id": 408936,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-18T02:16:47.000Z",
+    "code_updated_at": "2020-08-18T02:16:47.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 189582,
+        "name": "Diyacom",
+        "created_at": "2018-06-05T08:20:16.000Z",
+        "url": "https://greasyfork.org/users/189582-diyacom"
+      }
+    ],
+    "name": "Virtonomica:Diyacom_Sale",
+    "description": "Модификация страницы \"Сбыт\"",
+    "url": "https://greasyfork.org/scripts/408936-virtonomica-diyacom-sale",
+    "code_url": "https://update.greasyfork.org/scripts/408936/Virtonomica%3ADiyacom_Sale.user.js",
+    "code_size": 4273,
+    "license": null,
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408050,
+    "daily_installs": 0,
+    "total_installs": 99,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-02T06:33:10.000Z",
+    "code_updated_at": "2020-12-07T16:01:32.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 189582,
+        "name": "Diyacom",
+        "created_at": "2018-06-05T08:20:16.000Z",
+        "url": "https://greasyfork.org/users/189582-diyacom"
+      }
+    ],
+    "name": "Virtonomica:Diyacom_Supply",
+    "description": "Модификация страницы \"Снабжение\"",
+    "url": "https://greasyfork.org/scripts/408050-virtonomica-diyacom-supply",
+    "code_url": "https://update.greasyfork.org/scripts/408050/Virtonomica%3ADiyacom_Supply.user.js",
+    "code_size": 6896,
+    "license": null,
+    "version": "1.7",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

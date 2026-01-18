@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 399632,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-05T23:55:31.000Z",
+    "code_updated_at": "2020-04-05T23:55:31.000Z",
+    "namespace": "https://sleazyfork.org/en/users/96703-justrunmyscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 96703,
+        "name": "justrunmyscripts",
+        "created_at": "2017-01-21T23:27:38.000Z",
+        "url": "https://greasyfork.org/users/96703-justrunmyscripts"
+      }
+    ],
+    "name": "Belfry filtering buttons",
+    "description": "adds some filtering buttons to the belfry comic listing",
+    "url": "https://greasyfork.org/scripts/399632-belfry-filtering-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/399632/Belfry%20filtering%20buttons.user.js",
+    "code_size": 1445,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

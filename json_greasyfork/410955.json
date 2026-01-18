@@ -1,0 +1,59 @@
+{
+  "id": 410955,
+  "daily_installs": 0,
+  "total_installs": 117,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-07T14:45:55.000Z",
+  "code_updated_at": "2020-09-07T15:42:18.000Z",
+  "namespace": "https://www.scut.edu.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 685740,
+      "name": "Younan Zhang",
+      "created_at": "2020-09-07T14:40:37.000Z",
+      "url": "https://greasyfork.org/users/685740-younan-zhang",
+      "scripts": [
+        {
+          "id": 410955,
+          "daily_installs": 0,
+          "total_installs": 117,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-09-07T14:45:55.000Z",
+          "code_updated_at": "2020-09-07T15:42:18.000Z",
+          "namespace": "https://www.scut.edu.cn/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SCUT library helper",
+          "description": "我家图书馆还蛮大的。不来约一发吗？看累了就直接睡觉，没问题的（安心感）",
+          "url": "https://greasyfork.org/scripts/410955-scut-library-helper",
+          "code_url": "https://update.greasyfork.org/scripts/410955/SCUT%20library%20helper.user.js",
+          "code_size": 807,
+          "license": null,
+          "version": "0.11",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SCUT library helper",
+  "description": "我家图书馆还蛮大的。不来约一发吗？看累了就直接睡觉，没问题的（安心感）",
+  "url": "https://greasyfork.org/scripts/410955-scut-library-helper",
+  "code_url": "https://update.greasyfork.org/scripts/410955/SCUT%20library%20helper.user.js",
+  "code_size": 807,
+  "license": null,
+  "version": "0.11",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

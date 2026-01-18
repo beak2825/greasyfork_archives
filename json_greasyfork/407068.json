@@ -1,0 +1,34 @@
+{
+  "id": 407068,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-14T23:42:30.000Z",
+  "code_updated_at": "2020-07-14T23:42:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 661054,
+      "name": "seanyu0",
+      "created_at": "2020-06-28T23:01:19.000Z",
+      "url": "https://greasyfork.org/users/661054-seanyu0",
+      "scripts": []
+    }
+  ],
+  "name": "Kugou Live Show Assistant",
+  "description": "Assistant for Kugou Live Show",
+  "url": "https://greasyfork.org/scripts/407068-kugou-live-show-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/407068/Kugou%20Live%20Show%20Assistant.user.js",
+  "code_size": 17064,
+  "license": null,
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

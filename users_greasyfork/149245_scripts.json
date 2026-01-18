@@ -130,5 +130,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 408771,
+    "daily_installs": 0,
+    "total_installs": 245,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-15T04:20:44.000Z",
+    "code_updated_at": "2025-04-09T23:12:36.000Z",
+    "namespace": "ew0345",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149245,
+        "name": "Elijah Wales",
+        "created_at": "2017-08-15T16:30:46.000Z",
+        "url": "https://greasyfork.org/users/149245-elijah-wales"
+      }
+    ],
+    "name": "MangaNato (Formerly Manganelo) Scripts (Next/Prev Chapter & Image Resize)",
+    "description": "Allows L/R arrow key navigation between chapters, reize chapter images using / key & allows for adding manga to be automatically resize with ].",
+    "url": "https://greasyfork.org/scripts/408771-manganato-formerly-manganelo-scripts-next-prev-chapter-image-resize",
+    "code_url": "https://update.greasyfork.org/scripts/408771/MangaNato%20%28Formerly%20Manganelo%29%20Scripts%20%28NextPrev%20Chapter%20%20Image%20Resize%29.user.js",
+    "code_size": 5179,
+    "license": null,
+    "version": "1.5.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 403167,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-12T16:44:03.000Z",
+    "code_updated_at": "2020-05-12T16:44:19.000Z",
+    "namespace": "ew0345",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149245,
+        "name": "Elijah Wales",
+        "created_at": "2017-08-15T16:30:46.000Z",
+        "url": "https://greasyfork.org/users/149245-elijah-wales"
+      }
+    ],
+    "name": "Unlimited Novel Failures Dark Theme",
+    "description": "A dark theme for Unlimited Novel Failures",
+    "url": "https://greasyfork.org/scripts/403167-unlimited-novel-failures-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/403167/Unlimited%20Novel%20Failures%20Dark%20Theme.user.css",
+    "code_size": 593,
+    "license": "CC BY-NC Creative Commons Attribution-NonCommerical",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 403130,
+    "daily_installs": 2,
+    "total_installs": 168,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-12T08:04:57.000Z",
+    "code_updated_at": "2021-10-03T15:49:08.000Z",
+    "namespace": "ew0345",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 149245,
+        "name": "Elijah Wales",
+        "created_at": "2017-08-15T16:30:46.000Z",
+        "url": "https://greasyfork.org/users/149245-elijah-wales"
+      }
+    ],
+    "name": "Webnovel - Dark Theme",
+    "description": "A dark theme for Webnovel/Qidian International",
+    "url": "https://greasyfork.org/scripts/403130-webnovel-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/403130/Webnovel%20-%20Dark%20Theme.user.css",
+    "code_size": 15034,
+    "license": null,
+    "version": "1.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

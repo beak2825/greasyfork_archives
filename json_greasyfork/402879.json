@@ -1,0 +1,59 @@
+{
+  "id": 402879,
+  "daily_installs": 0,
+  "total_installs": 66,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-08T08:58:23.000Z",
+  "code_updated_at": "2020-05-08T09:12:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 555427,
+      "name": "ganhao Ye",
+      "created_at": "2020-05-08T08:46:09.000Z",
+      "url": "https://greasyfork.org/users/555427-ganhao-ye",
+      "scripts": [
+        {
+          "id": 402879,
+          "daily_installs": 0,
+          "total_installs": 66,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-05-08T08:58:23.000Z",
+          "code_updated_at": "2020-05-08T09:12:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "arXiv paper homepage tranverse",
+          "description": "在arixv的pdf和abstract反复横跳 Generate a button to trans between arixv homepage and pdf",
+          "url": "https://greasyfork.org/scripts/402879-arxiv-paper-homepage-tranverse",
+          "code_url": "https://update.greasyfork.org/scripts/402879/arXiv%20paper%20homepage%20tranverse.user.js",
+          "code_size": 1413,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "arXiv paper homepage tranverse",
+  "description": "在arixv的pdf和abstract反复横跳 Generate a button to trans between arixv homepage and pdf",
+  "url": "https://greasyfork.org/scripts/402879-arxiv-paper-homepage-tranverse",
+  "code_url": "https://update.greasyfork.org/scripts/402879/arXiv%20paper%20homepage%20tranverse.user.js",
+  "code_size": 1413,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

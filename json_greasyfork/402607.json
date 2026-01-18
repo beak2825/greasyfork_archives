@@ -1,0 +1,34 @@
+{
+  "id": 402607,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-04T11:27:35.000Z",
+  "code_updated_at": "2020-05-09T21:17:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 521385,
+      "name": "Sarovar Vihar",
+      "created_at": "2020-04-18T10:37:42.000Z",
+      "url": "https://greasyfork.org/users/521385-sarovar-vihar",
+      "scripts": []
+    }
+  ],
+  "name": "Sticky snowball autobuyer",
+  "description": "Buys a sticky snowball every 30-36mins",
+  "url": "https://greasyfork.org/scripts/402607-sticky-snowball-autobuyer",
+  "code_url": "https://update.greasyfork.org/scripts/402607/Sticky%20snowball%20autobuyer.user.js",
+  "code_size": 4406,
+  "license": null,
+  "version": "0.6.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

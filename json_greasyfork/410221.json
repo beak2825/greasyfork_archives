@@ -1,0 +1,59 @@
+{
+  "id": 410221,
+  "daily_installs": 1,
+  "total_installs": 1018,
+  "fan_score": "56.6",
+  "good_ratings": 5,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-31T13:42:26.000Z",
+  "code_updated_at": "2020-09-01T15:22:44.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/410221",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 683771,
+      "name": "makersky",
+      "created_at": "2020-08-30T01:35:26.000Z",
+      "url": "https://greasyfork.org/users/683771-makersky",
+      "scripts": [
+        {
+          "id": 410221,
+          "daily_installs": 1,
+          "total_installs": 1018,
+          "fan_score": "56.6",
+          "good_ratings": 5,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-31T13:42:26.000Z",
+          "code_updated_at": "2020-09-01T15:22:44.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/410221",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "【知乎优化助手】屏蔽知乎广告、其他功能优化",
+          "description": "这个脚本，能屏蔽掉知乎网页版的时间线上的部分广告，和网页版右侧的广告。这个脚本短期内我会继续更新，优化网页版知乎，增加更多的辅助功能，让大家更高效的使用知乎。联系方式：微博：@创客星辰，微信：makersky1688，邮箱：makersky1688@163.com",
+          "url": "https://greasyfork.org/scripts/410221-%E7%9F%A5%E4%B9%8E%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B-%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E5%B9%BF%E5%91%8A-%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD%E4%BC%98%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/410221/%E3%80%90%E7%9F%A5%E4%B9%8E%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B%E3%80%91%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E5%B9%BF%E5%91%8A%E3%80%81%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD%E4%BC%98%E5%8C%96.user.js",
+          "code_size": 1185,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "【知乎优化助手】屏蔽知乎广告、其他功能优化",
+  "description": "这个脚本，能屏蔽掉知乎网页版的时间线上的部分广告，和网页版右侧的广告。这个脚本短期内我会继续更新，优化网页版知乎，增加更多的辅助功能，让大家更高效的使用知乎。联系方式：微博：@创客星辰，微信：makersky1688，邮箱：makersky1688@163.com",
+  "url": "https://greasyfork.org/scripts/410221-%E7%9F%A5%E4%B9%8E%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B-%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E5%B9%BF%E5%91%8A-%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/410221/%E3%80%90%E7%9F%A5%E4%B9%8E%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B%E3%80%91%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E5%B9%BF%E5%91%8A%E3%80%81%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 1185,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

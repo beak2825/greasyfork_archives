@@ -1,0 +1,59 @@
+{
+  "id": 406371,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-02T04:56:53.000Z",
+  "code_updated_at": "2020-07-06T04:56:15.000Z",
+  "namespace": "https://typing-tube.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 661920,
+      "name": "涼",
+      "created_at": "2020-07-01T01:09:28.000Z",
+      "url": "https://greasyfork.org/users/661920-%E6%B6%BC",
+      "scripts": [
+        {
+          "id": 406371,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-02T04:56:53.000Z",
+          "code_updated_at": "2020-07-06T04:56:15.000Z",
+          "namespace": "https://typing-tube.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Typing Tube MOD official debug",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/406371-typing-tube-mod-official-debug",
+          "code_url": "https://update.greasyfork.org/scripts/406371/Typing%20Tube%20MOD%20official%20debug.user.js",
+          "code_size": 248309,
+          "license": null,
+          "version": "23.2.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Typing Tube MOD official debug",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/406371-typing-tube-mod-official-debug",
+  "code_url": "https://update.greasyfork.org/scripts/406371/Typing%20Tube%20MOD%20official%20debug.user.js",
+  "code_size": 248309,
+  "license": null,
+  "version": "23.2.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 411095,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-09T14:36:32.000Z",
+  "code_updated_at": "2020-09-09T14:36:31.000Z",
+  "namespace": "https://greasyfork.org/users/686309-flandre-x",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 686309,
+      "name": "Flandre-X",
+      "created_at": "2020-09-09T14:33:22.000Z",
+      "url": "https://greasyfork.org/users/686309-flandre-x",
+      "scripts": [
+        {
+          "id": 411095,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-09-09T14:36:32.000Z",
+          "code_updated_at": "2020-09-09T14:36:31.000Z",
+          "namespace": "https://greasyfork.org/users/686309-flandre-x",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pluralsight True Continuous Play",
+          "description": "Auto play next module after the end of the current module.",
+          "url": "https://greasyfork.org/scripts/411095-pluralsight-true-continuous-play",
+          "code_url": "https://update.greasyfork.org/scripts/411095/Pluralsight%20True%20Continuous%20Play.user.js",
+          "code_size": 534,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pluralsight True Continuous Play",
+  "description": "Auto play next module after the end of the current module.",
+  "url": "https://greasyfork.org/scripts/411095-pluralsight-true-continuous-play",
+  "code_url": "https://update.greasyfork.org/scripts/411095/Pluralsight%20True%20Continuous%20Play.user.js",
+  "code_size": 534,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

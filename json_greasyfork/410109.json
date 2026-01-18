@@ -1,0 +1,59 @@
+{
+  "id": 410109,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-28T13:11:27.000Z",
+  "code_updated_at": "2020-08-28T13:11:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 683463,
+      "name": "كريم محمد",
+      "created_at": "2020-08-28T13:10:00.000Z",
+      "url": "https://greasyfork.org/users/683463-%D9%83%D8%B1%D9%8A%D9%85-%D9%85%D8%AD%D9%85%D8%AF",
+      "scripts": [
+        {
+          "id": 410109,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-28T13:11:27.000Z",
+          "code_updated_at": "2020-08-28T13:11:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kareem hagag",
+          "description": "remove the login restriction in wuxiaworld novel chapters",
+          "url": "https://greasyfork.org/scripts/410109-kareem-hagag",
+          "code_url": "https://update.greasyfork.org/scripts/410109/Kareem%20hagag.user.js",
+          "code_size": 699,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kareem hagag",
+  "description": "remove the login restriction in wuxiaworld novel chapters",
+  "url": "https://greasyfork.org/scripts/410109-kareem-hagag",
+  "code_url": "https://update.greasyfork.org/scripts/410109/Kareem%20hagag.user.js",
+  "code_size": 699,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398313,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-20T13:05:36.000Z",
+    "code_updated_at": "2020-03-20T13:05:36.000Z",
+    "namespace": "rokdd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 463755,
+        "name": "rokondo",
+        "created_at": "2020-03-20T13:04:40.000Z",
+        "url": "https://greasyfork.org/users/463755-rokondo"
+      }
+    ],
+    "name": "Logviewer",
+    "description": "Scroll down, reload and notify at changes",
+    "url": "https://greasyfork.org/scripts/398313-logviewer",
+    "code_url": "https://update.greasyfork.org/scripts/398313/Logviewer.user.js",
+    "code_size": 4376,
+    "license": "CC-BY-NC-SA-4.0; https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+    "version": "005",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

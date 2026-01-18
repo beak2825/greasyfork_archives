@@ -1,0 +1,59 @@
+{
+  "id": 411085,
+  "daily_installs": 0,
+  "total_installs": 47568,
+  "fan_score": "81.6",
+  "good_ratings": 68,
+  "ok_ratings": 3,
+  "bad_ratings": 6,
+  "created_at": "2020-09-09T09:57:49.000Z",
+  "code_updated_at": "2021-10-20T12:12:16.000Z",
+  "namespace": "cyzlizhe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 450952,
+      "name": "cyzlizhe",
+      "created_at": "2020-02-28T00:22:08.000Z",
+      "url": "https://greasyfork.org/users/450952-cyzlizhe",
+      "scripts": [
+        {
+          "id": 411085,
+          "daily_installs": 0,
+          "total_installs": 47568,
+          "fan_score": "81.6",
+          "good_ratings": 68,
+          "ok_ratings": 3,
+          "bad_ratings": 6,
+          "created_at": "2020-09-09T09:57:49.000Z",
+          "code_updated_at": "2021-10-20T12:12:16.000Z",
+          "namespace": "cyzlizhe",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "【省一省】双11超级红包!优惠券+返现+抢购秒杀助手--任意网站抢购、秒杀、抢券等，支持淘宝、天猫、京东、唯品会、考拉海购领券，配合APP扫码下单后即可获得返现!!!。",
+          "description": "【抢购秒杀助手】任意网站抢购、秒杀、抢券等，支持自建秒杀方案、从论坛导入秒杀方案，非常灵活。【领券+返现】在淘宝、天猫、京东、唯品会、考拉海购的‘商品搜索页’和‘商品详情页’上显示优惠券及返现，功能简单，显示直观，在商品详情页通过「花前省一省」APP扫码，直接在APP进入商品、领券及获得返现。",
+          "url": "https://greasyfork.org/scripts/411085-%E7%9C%81%E4%B8%80%E7%9C%81-%E5%8F%8C11%E8%B6%85%E7%BA%A7%E7%BA%A2%E5%8C%85-%E4%BC%98%E6%83%A0%E5%88%B8-%E8%BF%94%E7%8E%B0-%E6%8A%A2%E8%B4%AD%E7%A7%92%E6%9D%80%E5%8A%A9%E6%89%8B-%E4%BB%BB%E6%84%8F%E7%BD%91%E7%AB%99%E6%8A%A2%E8%B4%AD-%E7%A7%92%E6%9D%80-%E6%8A%A2%E5%88%B8%E7%AD%89-%E6%94%AF%E6%8C%81%E6%B7%98%E5%AE%9D-%E5%A4%A9%E7%8C%AB-%E4%BA%AC%E4%B8%9C-%E5%94%AF%E5%93%81%E4%BC%9A-%E8%80%83%E6%8B%89%E6%B5%B7%E8%B4%AD%E9%A2%86%E5%88%B8-%E9%85%8D%E5%90%88app%E6%89%AB%E7%A0%81%E4%B8%8B%E5%8D%95%E5%90%8E%E5%8D%B3%E5%8F%AF%E8%8E%B7%E5%BE%97%E8%BF%94%E7%8E%B0",
+          "code_url": "https://update.greasyfork.org/scripts/411085/%E3%80%90%E7%9C%81%E4%B8%80%E7%9C%81%E3%80%91%E5%8F%8C11%E8%B6%85%E7%BA%A7%E7%BA%A2%E5%8C%85%21%E4%BC%98%E6%83%A0%E5%88%B8%2B%E8%BF%94%E7%8E%B0%2B%E6%8A%A2%E8%B4%AD%E7%A7%92%E6%9D%80%E5%8A%A9%E6%89%8B--%E4%BB%BB%E6%84%8F%E7%BD%91%E7%AB%99%E6%8A%A2%E8%B4%AD%E3%80%81%E7%A7%92%E6%9D%80%E3%80%81%E6%8A%A2%E5%88%B8%E7%AD%89%EF%BC%8C%E6%94%AF%E6%8C%81%E6%B7%98%E5%AE%9D%E3%80%81%E5%A4%A9%E7%8C%AB%E3%80%81%E4%BA%AC%E4%B8%9C%E3%80%81%E5%94%AF%E5%93%81%E4%BC%9A%E3%80%81%E8%80%83%E6%8B%89%E6%B5%B7%E8%B4%AD%E9%A2%86%E5%88%B8%EF%BC%8C%E9%85%8D%E5%90%88APP%E6%89%AB%E7%A0%81%E4%B8%8B%E5%8D%95%E5%90%8E%E5%8D%B3%E5%8F%AF%E8%8E%B7%E5%BE%97%E8%BF%94%E7%8E%B0%21%21%21%E3%80%82.user.js",
+          "code_size": 170050,
+          "license": null,
+          "version": "5.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "【省一省】双11超级红包!优惠券+返现+抢购秒杀助手--任意网站抢购、秒杀、抢券等，支持淘宝、天猫、京东、唯品会、考拉海购领券，配合APP扫码下单后即可获得返现!!!。",
+  "description": "【抢购秒杀助手】任意网站抢购、秒杀、抢券等，支持自建秒杀方案、从论坛导入秒杀方案，非常灵活。【领券+返现】在淘宝、天猫、京东、唯品会、考拉海购的‘商品搜索页’和‘商品详情页’上显示优惠券及返现，功能简单，显示直观，在商品详情页通过「花前省一省」APP扫码，直接在APP进入商品、领券及获得返现。",
+  "url": "https://greasyfork.org/scripts/411085-%E7%9C%81%E4%B8%80%E7%9C%81-%E5%8F%8C11%E8%B6%85%E7%BA%A7%E7%BA%A2%E5%8C%85-%E4%BC%98%E6%83%A0%E5%88%B8-%E8%BF%94%E7%8E%B0-%E6%8A%A2%E8%B4%AD%E7%A7%92%E6%9D%80%E5%8A%A9%E6%89%8B-%E4%BB%BB%E6%84%8F%E7%BD%91%E7%AB%99%E6%8A%A2%E8%B4%AD-%E7%A7%92%E6%9D%80-%E6%8A%A2%E5%88%B8%E7%AD%89-%E6%94%AF%E6%8C%81%E6%B7%98%E5%AE%9D-%E5%A4%A9%E7%8C%AB-%E4%BA%AC%E4%B8%9C-%E5%94%AF%E5%93%81%E4%BC%9A-%E8%80%83%E6%8B%89%E6%B5%B7%E8%B4%AD%E9%A2%86%E5%88%B8-%E9%85%8D%E5%90%88app%E6%89%AB%E7%A0%81%E4%B8%8B%E5%8D%95%E5%90%8E%E5%8D%B3%E5%8F%AF%E8%8E%B7%E5%BE%97%E8%BF%94%E7%8E%B0",
+  "code_url": "https://update.greasyfork.org/scripts/411085/%E3%80%90%E7%9C%81%E4%B8%80%E7%9C%81%E3%80%91%E5%8F%8C11%E8%B6%85%E7%BA%A7%E7%BA%A2%E5%8C%85%21%E4%BC%98%E6%83%A0%E5%88%B8%2B%E8%BF%94%E7%8E%B0%2B%E6%8A%A2%E8%B4%AD%E7%A7%92%E6%9D%80%E5%8A%A9%E6%89%8B--%E4%BB%BB%E6%84%8F%E7%BD%91%E7%AB%99%E6%8A%A2%E8%B4%AD%E3%80%81%E7%A7%92%E6%9D%80%E3%80%81%E6%8A%A2%E5%88%B8%E7%AD%89%EF%BC%8C%E6%94%AF%E6%8C%81%E6%B7%98%E5%AE%9D%E3%80%81%E5%A4%A9%E7%8C%AB%E3%80%81%E4%BA%AC%E4%B8%9C%E3%80%81%E5%94%AF%E5%93%81%E4%BC%9A%E3%80%81%E8%80%83%E6%8B%89%E6%B5%B7%E8%B4%AD%E9%A2%86%E5%88%B8%EF%BC%8C%E9%85%8D%E5%90%88APP%E6%89%AB%E7%A0%81%E4%B8%8B%E5%8D%95%E5%90%8E%E5%8D%B3%E5%8F%AF%E8%8E%B7%E5%BE%97%E8%BF%94%E7%8E%B0%21%21%21%E3%80%82.user.js",
+  "code_size": 170050,
+  "license": null,
+  "version": "5.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

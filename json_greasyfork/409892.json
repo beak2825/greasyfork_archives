@@ -1,0 +1,59 @@
+{
+  "id": 409892,
+  "daily_installs": 0,
+  "total_installs": 758,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-24T12:49:30.000Z",
+  "code_updated_at": "2020-08-25T03:55:18.000Z",
+  "namespace": "Life is easier",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 682318,
+      "name": "微醺小熊",
+      "created_at": "2020-08-24T12:44:53.000Z",
+      "url": "https://greasyfork.org/users/682318-%E5%BE%AE%E9%86%BA%E5%B0%8F%E7%86%8A",
+      "scripts": [
+        {
+          "id": 409892,
+          "daily_installs": 0,
+          "total_installs": 758,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-24T12:49:30.000Z",
+          "code_updated_at": "2020-08-25T03:55:18.000Z",
+          "namespace": "Life is easier",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "获取Google验证码",
+          "description": "在需要google验证码的网站，你还要拿起手机打开app查看验证码？这个脚本的目的就是跳过看手机的流程",
+          "url": "https://greasyfork.org/scripts/409892-%E8%8E%B7%E5%8F%96google%E9%AA%8C%E8%AF%81%E7%A0%81",
+          "code_url": "https://update.greasyfork.org/scripts/409892/%E8%8E%B7%E5%8F%96Google%E9%AA%8C%E8%AF%81%E7%A0%81.user.js",
+          "code_size": 8748,
+          "license": null,
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "获取Google验证码",
+  "description": "在需要google验证码的网站，你还要拿起手机打开app查看验证码？这个脚本的目的就是跳过看手机的流程",
+  "url": "https://greasyfork.org/scripts/409892-%E8%8E%B7%E5%8F%96google%E9%AA%8C%E8%AF%81%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/409892/%E8%8E%B7%E5%8F%96Google%E9%AA%8C%E8%AF%81%E7%A0%81.user.js",
+  "code_size": 8748,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1087,5 +1087,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 407568,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-22T18:56:03.000Z",
+    "code_updated_at": "2020-08-10T11:38:56.000Z",
+    "namespace": "StephenP",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104167,
+        "name": "StephenP",
+        "created_at": "2017-02-20T02:10:26.000Z",
+        "url": "https://greasyfork.org/users/104167-stephenp"
+      }
+    ],
+    "name": "See people who visited/liked your profile on Meetic for free",
+    "description": "See the profile of the people who visited or liked your profile on Meetic without having a premium account.",
+    "url": "https://greasyfork.org/scripts/407568-see-people-who-visited-liked-your-profile-on-meetic-for-free",
+    "code_url": "https://update.greasyfork.org/scripts/407568/See%20people%20who%20visitedliked%20your%20profile%20on%20Meetic%20for%20free.user.js",
+    "code_size": 6421,
+    "license": null,
+    "version": "1.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 403754,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-19T19:33:36.000Z",
+    "code_updated_at": "2020-05-19T19:33:35.000Z",
+    "namespace": "StephenP",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104167,
+        "name": "StephenP",
+        "created_at": "2017-02-20T02:10:26.000Z",
+        "url": "https://greasyfork.org/users/104167-stephenp"
+      }
+    ],
+    "name": "Select and copy lyrics from music.oricon.co.jp",
+    "description": "Allows lyrics selection and copy on music.oricon.co.jp",
+    "url": "https://greasyfork.org/scripts/403754-select-and-copy-lyrics-from-music-oricon-co-jp",
+    "code_url": "https://update.greasyfork.org/scripts/403754/Select%20and%20copy%20lyrics%20from%20musicoriconcojp.user.js",
+    "code_size": 725,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 403170,
+    "daily_installs": 9,
+    "total_installs": 15357,
+    "fan_score": "52.4",
+    "good_ratings": 17,
+    "ok_ratings": 2,
+    "bad_ratings": 6,
+    "created_at": "2020-05-12T18:07:07.000Z",
+    "code_updated_at": "2025-07-25T00:37:32.000Z",
+    "namespace": "StephenP",
+    "support_url": null,
+    "contribution_url": "https://buymeacoffee.com/stephenp_greasyfork",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104167,
+        "name": "StephenP",
+        "created_at": "2017-02-20T02:10:26.000Z",
+        "url": "https://greasyfork.org/users/104167-stephenp"
+      }
+    ],
+    "name": "Bypass FileCrypt",
+    "description": "Bypass FileCrypt and get the original link!",
+    "url": "https://greasyfork.org/scripts/403170-bypass-filecrypt",
+    "code_url": "https://update.greasyfork.org/scripts/403170/Bypass%20FileCrypt.user.js",
+    "code_size": 9067,
+    "license": null,
+    "version": "1.4.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395497,
+    "daily_installs": 2,
+    "total_installs": 99216,
+    "fan_score": "73.3",
+    "good_ratings": 74,
+    "ok_ratings": 16,
+    "bad_ratings": 10,
+    "created_at": "2020-01-21T12:57:19.000Z",
+    "code_updated_at": "2024-12-01T21:57:12.000Z",
+    "namespace": "StephenP",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104167,
+        "name": "StephenP",
+        "created_at": "2017-02-20T02:10:26.000Z",
+        "url": "https://greasyfork.org/users/104167-stephenp"
+      }
+    ],
+    "name": "Login reminder popup remover (developement ceased - not up to date)",
+    "description": "Removes the nagging login popups and banners from mobile and desktop versions of Facebook, Instagram, Reddit, Twitter, Quora, VK, Pinterest, Tumblr, Twitch and from the mobile versions of Youtube and TikTok.",
+    "url": "https://greasyfork.org/scripts/395497-login-reminder-popup-remover-developement-ceased-not-up-to-date",
+    "code_url": "https://update.greasyfork.org/scripts/395497/Login%20reminder%20popup%20remover%20%28developement%20ceased%20-%20not%20up%20to%20date%29.user.js",
+    "code_size": 39488,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "2.7.21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

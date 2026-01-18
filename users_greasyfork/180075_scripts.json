@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 402917,
+    "daily_installs": 0,
+    "total_installs": 53,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-08T23:22:20.000Z",
+    "code_updated_at": "2025-05-08T22:45:23.000Z",
+    "namespace": "cengique@users.sf.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 180075,
+        "name": "Cengiz Gunay",
+        "created_at": "2018-04-14T20:57:23.000Z",
+        "url": "https://greasyfork.org/users/180075-cengiz-gunay"
+      }
+    ],
+    "name": "BrightSpace Grade View",
+    "description": "Improve speed and accessibility of BrightSpace (Desire2Learn) gradebook interface",
+    "url": "https://greasyfork.org/scripts/402917-brightspace-grade-view",
+    "code_url": "https://update.greasyfork.org/scripts/402917/BrightSpace%20Grade%20View.user.js",
+    "code_size": 3589,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

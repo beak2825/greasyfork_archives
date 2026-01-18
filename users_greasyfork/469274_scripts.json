@@ -1,0 +1,101 @@
+[
+  {
+    "id": 399642,
+    "daily_installs": 0,
+    "total_installs": 176,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-06T03:01:15.000Z",
+    "code_updated_at": "2020-04-06T03:01:14.000Z",
+    "namespace": "https://greasyfork.org/en/users/469274-gamefan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469274,
+        "name": "gamefan",
+        "created_at": "2020-03-26T05:44:14.000Z",
+        "url": "https://greasyfork.org/users/469274-gamefan"
+      }
+    ],
+    "name": "Remove Bonus Bitcoin Faucet AD",
+    "description": "Remove Bonus Bitcoin Faucet 99% AD. If 100% Remove, Bonus Bitcoin Faucet cannot claim. Welcome to donate BTC(BITCOIN CORE):3QWDyXufVNjn6vKcqGMMoYjM4NZ3yFsfem",
+    "url": "https://greasyfork.org/scripts/399642-remove-bonus-bitcoin-faucet-ad",
+    "code_url": "https://update.greasyfork.org/scripts/399642/Remove%20Bonus%20Bitcoin%20Faucet%20AD.user.js",
+    "code_size": 1193,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 399124,
+    "daily_installs": 0,
+    "total_installs": 130,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-01T01:58:42.000Z",
+    "code_updated_at": "2020-04-01T01:58:41.000Z",
+    "namespace": "https://greasyfork.org/en/users/469274-gamefan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469274,
+        "name": "gamefan",
+        "created_at": "2020-03-26T05:44:14.000Z",
+        "url": "https://greasyfork.org/users/469274-gamefan"
+      }
+    ],
+    "name": "Remove Bitfun Faucet AD",
+    "description": "Remove Bitfun Faucet 99% AD. If 100% Remove, Bitfun Faucet cannot claim. Welcome to donate BTC(BITCOIN CORE):3QWDyXufVNjn6vKcqGMMoYjM4NZ3yFsfem",
+    "url": "https://greasyfork.org/scripts/399124-remove-bitfun-faucet-ad",
+    "code_url": "https://update.greasyfork.org/scripts/399124/Remove%20Bitfun%20Faucet%20AD.user.js",
+    "code_size": 1799,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398742,
+    "daily_installs": 0,
+    "total_installs": 390,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-26T06:43:32.000Z",
+    "code_updated_at": "2020-03-31T13:31:25.000Z",
+    "namespace": "https://greasyfork.org/en/users/469274-gamefan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469274,
+        "name": "gamefan",
+        "created_at": "2020-03-26T05:44:14.000Z",
+        "url": "https://greasyfork.org/users/469274-gamefan"
+      }
+    ],
+    "name": "Remove Moon Faucet AD",
+    "description": "Remove Moon Faucet 99% AD. If 100% Remove, Moon Faucet cannot claim. Welcome to donate BTC(BITCOIN CORE):3QWDyXufVNjn6vKcqGMMoYjM4NZ3yFsfem",
+    "url": "https://greasyfork.org/scripts/398742-remove-moon-faucet-ad",
+    "code_url": "https://update.greasyfork.org/scripts/398742/Remove%20Moon%20Faucet%20AD.user.js",
+    "code_size": 3719,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

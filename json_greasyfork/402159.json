@@ -1,0 +1,59 @@
+{
+  "id": 402159,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-27T23:57:22.000Z",
+  "code_updated_at": "2020-04-27T23:57:21.000Z",
+  "namespace": "https://www.theforum365.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 543833,
+      "name": "Zod",
+      "created_at": "2020-04-27T23:55:01.000Z",
+      "url": "https://greasyfork.org/users/543833-zod",
+      "scripts": [
+        {
+          "id": 402159,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-27T23:57:22.000Z",
+          "code_updated_at": "2020-04-27T23:57:21.000Z",
+          "namespace": "https://www.theforum365.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Forum365 Image Resizer",
+          "description": "Image Resizer for new F365 Forum",
+          "url": "https://greasyfork.org/scripts/402159-forum365-image-resizer",
+          "code_url": "https://update.greasyfork.org/scripts/402159/Forum365%20Image%20Resizer.user.js",
+          "code_size": 1970,
+          "license": null,
+          "version": "0.0.1.20150629150231",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Forum365 Image Resizer",
+  "description": "Image Resizer for new F365 Forum",
+  "url": "https://greasyfork.org/scripts/402159-forum365-image-resizer",
+  "code_url": "https://update.greasyfork.org/scripts/402159/Forum365%20Image%20Resizer.user.js",
+  "code_size": 1970,
+  "license": null,
+  "version": "0.0.1.20150629150231",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

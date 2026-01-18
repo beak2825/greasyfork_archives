@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401305,
+    "daily_installs": 0,
+    "total_installs": 245,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-18T07:59:43.000Z",
+    "code_updated_at": "2020-04-18T07:59:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 521191,
+        "name": "nonetype",
+        "created_at": "2020-04-18T07:40:56.000Z",
+        "url": "https://greasyfork.org/users/521191-nonetype"
+      }
+    ],
+    "name": "牛客网 竞赛题目 显示通过百分比",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/401305-%E7%89%9B%E5%AE%A2%E7%BD%91-%E7%AB%9E%E8%B5%9B%E9%A2%98%E7%9B%AE-%E6%98%BE%E7%A4%BA%E9%80%9A%E8%BF%87%E7%99%BE%E5%88%86%E6%AF%94",
+    "code_url": "https://update.greasyfork.org/scripts/401305/%E7%89%9B%E5%AE%A2%E7%BD%91%20%E7%AB%9E%E8%B5%9B%E9%A2%98%E7%9B%AE%20%E6%98%BE%E7%A4%BA%E9%80%9A%E8%BF%87%E7%99%BE%E5%88%86%E6%AF%94.user.js",
+    "code_size": 1076,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

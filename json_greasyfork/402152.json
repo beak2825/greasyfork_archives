@@ -1,0 +1,33 @@
+{
+  "id": 402152,
+  "daily_installs": 0,
+  "total_installs": 258,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-27T19:39:34.000Z",
+  "code_updated_at": "2020-04-29T21:45:14.000Z",
+  "namespace": "http://github.com/dearrrfish",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 63203,
+      "name": "dearrrfish",
+      "created_at": "2016-08-30T21:32:01.000Z",
+      "url": "https://greasyfork.org/users/63203-dearrrfish"
+    }
+  ],
+  "name": "Spotify Web Sidebar Toggler",
+  "description": "Adds the ability to toggle the main sidebar on Spotify Web using a keyboard shortcut (ctrl + alt + B), original code from https://github.com/dumptyd/slack-sidebar-toggler",
+  "url": "https://greasyfork.org/scripts/402152-spotify-web-sidebar-toggler",
+  "code_url": "https://update.greasyfork.org/scripts/402152/Spotify%20Web%20Sidebar%20Toggler.user.js",
+  "code_size": 3937,
+  "license": null,
+  "version": "1.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

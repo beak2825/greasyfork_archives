@@ -1,0 +1,33 @@
+{
+  "id": 397511,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-08T01:53:14.000Z",
+  "code_updated_at": "2020-03-08T01:53:13.000Z",
+  "namespace": "https://greasyfork.org/en/users/53803",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 53803,
+      "name": "Philistine11",
+      "created_at": "2016-07-08T14:08:22.000Z",
+      "url": "https://greasyfork.org/users/53803-philistine11"
+    }
+  ],
+  "name": "CBC Schedule Tracker",
+  "description": "Shows the time until each section of a lesson",
+  "url": "https://greasyfork.org/scripts/397511-cbc-schedule-tracker",
+  "code_url": "https://update.greasyfork.org/scripts/397511/CBC%20Schedule%20Tracker.user.js",
+  "code_size": 2095,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

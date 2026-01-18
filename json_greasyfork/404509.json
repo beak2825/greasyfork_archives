@@ -1,0 +1,59 @@
+{
+  "id": 404509,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-02T02:01:17.000Z",
+  "code_updated_at": "2020-06-02T02:01:17.000Z",
+  "namespace": "https://greenlightgo.org/gmscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 68839,
+      "name": "domstoppable",
+      "created_at": "2016-09-26T15:36:29.000Z",
+      "url": "https://greasyfork.org/users/68839-domstoppable",
+      "scripts": [
+        {
+          "id": 404509,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-02T02:01:17.000Z",
+          "code_updated_at": "2020-06-02T02:01:17.000Z",
+          "namespace": "https://greenlightgo.org/gmscripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Unreal Engine Wiki Link Fixer",
+          "description": "Changes links from wiki.unrealengine.com/ to ue4community.wiki/Legacy/",
+          "url": "https://greasyfork.org/scripts/404509-unreal-engine-wiki-link-fixer",
+          "code_url": "https://update.greasyfork.org/scripts/404509/Unreal%20Engine%20Wiki%20Link%20Fixer.user.js",
+          "code_size": 725,
+          "license": null,
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Unreal Engine Wiki Link Fixer",
+  "description": "Changes links from wiki.unrealengine.com/ to ue4community.wiki/Legacy/",
+  "url": "https://greasyfork.org/scripts/404509-unreal-engine-wiki-link-fixer",
+  "code_url": "https://update.greasyfork.org/scripts/404509/Unreal%20Engine%20Wiki%20Link%20Fixer.user.js",
+  "code_size": 725,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

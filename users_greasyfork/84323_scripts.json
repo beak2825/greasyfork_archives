@@ -196,5 +196,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 409855,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-24T01:04:33.000Z",
+    "code_updated_at": "2020-08-24T01:04:33.000Z",
+    "namespace": "https://github.com/Hunlongyu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 84323,
+        "name": "Hunlongyu",
+        "created_at": "2016-12-02T04:43:37.000Z",
+        "url": "https://greasyfork.org/users/84323-hunlongyu"
+      }
+    ],
+    "name": "『净网卫士』 apowersoft 图片压缩",
+    "description": "对 apowersoft 图片批量压缩网站，进行精简。",
+    "url": "https://greasyfork.org/scripts/409855-%E5%87%80%E7%BD%91%E5%8D%AB%E5%A3%AB-apowersoft-%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9",
+    "code_url": "https://update.greasyfork.org/scripts/409855/%E3%80%8E%E5%87%80%E7%BD%91%E5%8D%AB%E5%A3%AB%E3%80%8F%20apowersoft%20%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9.user.js",
+    "code_size": 1339,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408945,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-18T13:58:19.000Z",
+    "code_updated_at": "2020-08-18T13:58:18.000Z",
+    "namespace": "https://github.com/Hunlongyu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 84323,
+        "name": "Hunlongyu",
+        "created_at": "2016-12-02T04:43:37.000Z",
+        "url": "https://greasyfork.org/users/84323-hunlongyu"
+      }
+    ],
+    "name": "『净网卫士』 Docsmall 图片压缩",
+    "description": "对 docsmall 图片批量压缩网站，进行精简。",
+    "url": "https://greasyfork.org/scripts/408945-%E5%87%80%E7%BD%91%E5%8D%AB%E5%A3%AB-docsmall-%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9",
+    "code_url": "https://update.greasyfork.org/scripts/408945/%E3%80%8E%E5%87%80%E7%BD%91%E5%8D%AB%E5%A3%AB%E3%80%8F%20Docsmall%20%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9.user.js",
+    "code_size": 1303,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

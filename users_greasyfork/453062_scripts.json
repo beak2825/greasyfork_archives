@@ -63,6 +63,39 @@
     "version": "0.3",
     "locale": "cs",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 399371,
+    "daily_installs": 1,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-02T21:13:44.000Z",
+    "code_updated_at": "2020-04-02T21:13:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453062,
+        "name": "Darxeal",
+        "created_at": "2020-03-02T20:04:12.000Z",
+        "url": "https://greasyfork.org/users/453062-darxeal"
+      }
+    ],
+    "name": "Ražba2",
+    "description": "Automaticky razí mince v Panském Dvoře",
+    "url": "https://greasyfork.org/scripts/399371-ra%C5%BEba2",
+    "code_url": "https://update.greasyfork.org/scripts/399371/Ra%C5%BEba2.user.js",
+    "code_size": 1556,
+    "license": null,
+    "version": "0.1",
+    "locale": "cs",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

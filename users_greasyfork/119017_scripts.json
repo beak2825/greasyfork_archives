@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398051,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-16T23:09:10.000Z",
+    "code_updated_at": "2020-04-08T20:45:27.000Z",
+    "namespace": "https://www.wanikani.com/users/Nekosuki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 119017,
+        "name": "Nekosuki",
+        "created_at": "2017-04-24T16:05:07.000Z",
+        "url": "https://greasyfork.org/users/119017-nekosuki"
+      }
+    ],
+    "name": "WaniKani Review Button Auto Enable and Hover Details",
+    "description": "Show when next review will become available on hover and automatically enable review button",
+    "url": "https://greasyfork.org/scripts/398051-wanikani-review-button-auto-enable-and-hover-details",
+    "code_url": "https://update.greasyfork.org/scripts/398051/WaniKani%20Review%20Button%20Auto%20Enable%20and%20Hover%20Details.user.js",
+    "code_size": 7847,
+    "license": null,
+    "version": "1.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

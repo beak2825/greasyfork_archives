@@ -1,0 +1,33 @@
+{
+  "id": 406138,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-27T05:17:59.000Z",
+  "code_updated_at": "2020-06-27T06:01:52.000Z",
+  "namespace": "https://greasyfork.org/users/653328",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 653328,
+      "name": "moro7n",
+      "created_at": "2020-06-27T05:06:08.000Z",
+      "url": "https://greasyfork.org/users/653328-moro7n"
+    }
+  ],
+  "name": "日本語に翻訳",
+  "description": "ワンタップで日本語に翻訳",
+  "url": "https://greasyfork.org/scripts/406138-%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%81%AB%E7%BF%BB%E8%A8%B3",
+  "code_url": "https://update.greasyfork.org/scripts/406138/%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%81%AB%E7%BF%BB%E8%A8%B3.user.js",
+  "code_size": 1156,
+  "license": null,
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

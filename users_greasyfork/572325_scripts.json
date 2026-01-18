@@ -1,0 +1,35 @@
+[
+  {
+    "id": 404106,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-25T21:59:59.000Z",
+    "code_updated_at": "2020-05-25T21:59:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 572325,
+        "name": "Mateusz Kowszyn",
+        "created_at": "2020-05-25T21:56:39.000Z",
+        "url": "https://greasyfork.org/users/572325-mateusz-kowszyn"
+      }
+    ],
+    "name": "9gag Rank",
+    "description": "Script to show ranks on 9 gag based on days of first registration (idea  of icons are from 9gag user @reannukeeves",
+    "url": "https://greasyfork.org/scripts/404106-9gag-rank",
+    "code_url": "https://update.greasyfork.org/scripts/404106/9gag%20Rank.user.js",
+    "code_size": 5651,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

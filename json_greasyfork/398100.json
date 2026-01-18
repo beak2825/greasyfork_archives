@@ -1,0 +1,34 @@
+{
+  "id": 398100,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-17T16:19:55.000Z",
+  "code_updated_at": "2020-03-18T06:10:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 460698,
+      "name": "soledadchao",
+      "created_at": "2020-03-17T09:05:52.000Z",
+      "url": "https://greasyfork.org/users/460698-soledadchao",
+      "scripts": []
+    }
+  ],
+  "name": "New Userscript",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/398100-new-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/398100/New%20Userscript.user.js",
+  "code_size": 427,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

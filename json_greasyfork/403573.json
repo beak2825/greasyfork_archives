@@ -1,0 +1,34 @@
+{
+  "id": 403573,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-18T01:34:18.000Z",
+  "code_updated_at": "2020-05-18T01:34:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/taoyuancun123/modifyText/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 137652,
+      "name": "Spring Cheng",
+      "created_at": "2017-07-02T15:51:18.000Z",
+      "url": "https://greasyfork.org/users/137652-spring-cheng",
+      "scripts": []
+    }
+  ],
+  "name": "微博",
+  "description": "在右键菜单中添加微博搜索，选中文字后，右键搜索即可",
+  "url": "https://greasyfork.org/scripts/403573-%E5%BE%AE%E5%8D%9A",
+  "code_url": "https://update.greasyfork.org/scripts/403573/%E5%BE%AE%E5%8D%9A.user.js",
+  "code_size": 4646,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

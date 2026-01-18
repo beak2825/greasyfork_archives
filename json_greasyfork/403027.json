@@ -1,0 +1,33 @@
+{
+  "id": 403027,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-10T16:17:54.000Z",
+  "code_updated_at": "2020-05-12T20:02:48.000Z",
+  "namespace": "https://lelinhtinh.github.io",
+  "support_url": "https://github.com/lelinhtinh/Userscript/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 2590,
+      "name": "lelinhtinh",
+      "created_at": "2014-06-07T18:49:30.000Z",
+      "url": "https://greasyfork.org/users/2590-lelinhtinh"
+    }
+  ],
+  "name": "Mother's Day 2020",
+  "description": "Download Mother’s Day card, created by Google Doodle.",
+  "url": "https://greasyfork.org/scripts/403027-mother-s-day-2020",
+  "code_url": "https://update.greasyfork.org/scripts/403027/Mother%27s%20Day%202020.user.js",
+  "code_size": 5728,
+  "license": "MIT; https://baivong.mit-license.org/license.txt",
+  "version": "1.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

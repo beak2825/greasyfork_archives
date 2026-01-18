@@ -1,0 +1,34 @@
+{
+  "id": 399878,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-08T01:02:35.000Z",
+  "code_updated_at": "2020-06-19T05:28:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 476907,
+      "name": "Chris Xue",
+      "created_at": "2020-04-08T00:52:39.000Z",
+      "url": "https://greasyfork.org/users/476907-chris-xue",
+      "scripts": []
+    }
+  ],
+  "name": "steamprices.com half price",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/399878-steamprices-com-half-price",
+  "code_url": "https://update.greasyfork.org/scripts/399878/steampricescom%20half%20price.user.js",
+  "code_size": 919,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

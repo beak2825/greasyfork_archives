@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 406912,
+    "daily_installs": 0,
+    "total_installs": 470,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-12T07:26:50.000Z",
+    "code_updated_at": "2023-01-18T06:43:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 304696,
+        "name": "ruanimal",
+        "created_at": "2019-05-25T13:31:29.000Z",
+        "url": "https://greasyfork.org/users/304696-ruanimal"
+      }
+    ],
+    "name": "GBT小组游戏空间种子列表下载",
+    "description": "GBT小组游戏空间种子列表下载。点击'开始下载'下载种子列表，根据文件列表的多少， 等待几十秒到几分钟不等。",
+    "url": "https://greasyfork.org/scripts/406912-gbt%E5%B0%8F%E7%BB%84%E6%B8%B8%E6%88%8F%E7%A9%BA%E9%97%B4%E7%A7%8D%E5%AD%90%E5%88%97%E8%A1%A8%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/406912/GBT%E5%B0%8F%E7%BB%84%E6%B8%B8%E6%88%8F%E7%A9%BA%E9%97%B4%E7%A7%8D%E5%AD%90%E5%88%97%E8%A1%A8%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 1769,
+    "license": null,
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

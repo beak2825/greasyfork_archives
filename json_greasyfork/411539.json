@@ -1,0 +1,34 @@
+{
+  "id": 411539,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-19T00:45:11.000Z",
+  "code_updated_at": "2020-09-19T00:45:11.000Z",
+  "namespace": "https://greasyfork.org/users/315177",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 315177,
+      "name": "hele",
+      "created_at": "2019-07-03T15:27:08.000Z",
+      "url": "https://greasyfork.org/users/315177-hele",
+      "scripts": []
+    }
+  ],
+  "name": "视频解析",
+  "description": "视频",
+  "url": "https://greasyfork.org/scripts/411539-%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/411539/%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 4564,
+  "license": "GPL License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

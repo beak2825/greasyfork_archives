@@ -1,0 +1,59 @@
+{
+  "id": 407816,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-27T23:34:49.000Z",
+  "code_updated_at": "2020-07-27T23:34:48.000Z",
+  "namespace": "https://mangadex.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670821,
+      "name": "Xnot",
+      "created_at": "2020-07-27T23:32:35.000Z",
+      "url": "https://greasyfork.org/users/670821-xnot",
+      "scripts": [
+        {
+          "id": 407816,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-27T23:34:49.000Z",
+          "code_updated_at": "2020-07-27T23:34:48.000Z",
+          "namespace": "https://mangadex.org/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Enhanced subconscious debiaser for MangaDex",
+          "description": "removes the bias present in the user's subconscious while attempting to pick a manga to read",
+          "url": "https://greasyfork.org/scripts/407816-enhanced-subconscious-debiaser-for-mangadex",
+          "code_url": "https://update.greasyfork.org/scripts/407816/Enhanced%20subconscious%20debiaser%20for%20MangaDex.user.js",
+          "code_size": 825,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Enhanced subconscious debiaser for MangaDex",
+  "description": "removes the bias present in the user's subconscious while attempting to pick a manga to read",
+  "url": "https://greasyfork.org/scripts/407816-enhanced-subconscious-debiaser-for-mangadex",
+  "code_url": "https://update.greasyfork.org/scripts/407816/Enhanced%20subconscious%20debiaser%20for%20MangaDex.user.js",
+  "code_size": 825,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

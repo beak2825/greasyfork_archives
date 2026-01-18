@@ -1,0 +1,34 @@
+{
+  "id": 402523,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-03T04:29:28.000Z",
+  "code_updated_at": "2020-05-03T12:19:57.000Z",
+  "namespace": "http://xscfw.hebust.edu.cn/survey/login",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 546918,
+      "name": "xx572959496",
+      "created_at": "2020-04-30T02:45:37.000Z",
+      "url": "https://greasyfork.org/users/546918-xx572959496",
+      "scripts": []
+    }
+  ],
+  "name": "河北科技大学体温自动填写",
+  "description": "河北科技大学理工学院体温自动填写 2S后自动提交 默认早上午间体温 在36.0-36.9之间 仅供内部交流使用",
+  "url": "https://greasyfork.org/scripts/402523-%E6%B2%B3%E5%8C%97%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E4%BD%93%E6%B8%A9%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99",
+  "code_url": "https://update.greasyfork.org/scripts/402523/%E6%B2%B3%E5%8C%97%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E4%BD%93%E6%B8%A9%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99.user.js",
+  "code_size": 1592,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

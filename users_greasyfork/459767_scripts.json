@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398397,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-21T17:57:18.000Z",
+    "code_updated_at": "2020-03-21T17:57:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 459767,
+        "name": "M4lkuth",
+        "created_at": "2020-03-15T23:02:25.000Z",
+        "url": "https://greasyfork.org/users/459767-m4lkuth"
+      }
+    ],
+    "name": "AutoResolution Youtube",
+    "description": "Set Video Quality / Resolution static",
+    "url": "https://greasyfork.org/scripts/398397-autoresolution-youtube",
+    "code_url": "https://update.greasyfork.org/scripts/398397/AutoResolution%20Youtube.user.js",
+    "code_size": 1564,
+    "license": null,
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

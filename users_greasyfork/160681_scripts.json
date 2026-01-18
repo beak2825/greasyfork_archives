@@ -1,0 +1,35 @@
+[
+  {
+    "id": 409727,
+    "daily_installs": 0,
+    "total_installs": 5673,
+    "fan_score": "78.5",
+    "good_ratings": 14,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-22T07:20:30.000Z",
+    "code_updated_at": "2020-08-22T07:52:38.000Z",
+    "namespace": "https://github.com/ultranity/Userscript-Plus--",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 160681,
+        "name": "ultranity",
+        "created_at": "2017-11-24T20:27:49.000Z",
+        "url": "https://greasyfork.org/users/160681-ultranity"
+      }
+    ],
+    "name": "Userscript+-- : Show Site All UserJS num 显示适用的UserJS脚本数及跳转",
+    "description": "在脚本菜单显示适用于当前网站的油猴脚本数及跳转 Show the num of all Tampermonkey scripts for the current site.",
+    "url": "https://greasyfork.org/scripts/409727-userscript-show-site-all-userjs-num-%E6%98%BE%E7%A4%BA%E9%80%82%E7%94%A8%E7%9A%84userjs%E8%84%9A%E6%9C%AC%E6%95%B0%E5%8F%8A%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/409727/Userscript%2B--%20%3A%20Show%20Site%20All%20UserJS%20num%20%E6%98%BE%E7%A4%BA%E9%80%82%E7%94%A8%E7%9A%84UserJS%E8%84%9A%E6%9C%AC%E6%95%B0%E5%8F%8A%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 2454,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

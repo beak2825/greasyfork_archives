@@ -1,0 +1,59 @@
+{
+  "id": 402930,
+  "daily_installs": 0,
+  "total_installs": 2293,
+  "fan_score": "56.6",
+  "good_ratings": 5,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-09T03:09:05.000Z",
+  "code_updated_at": "2020-05-09T03:50:03.000Z",
+  "namespace": "com.fly",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 557224,
+      "name": "fengliyang",
+      "created_at": "2020-05-09T03:05:23.000Z",
+      "url": "https://greasyfork.org/users/557224-fengliyang",
+      "scripts": [
+        {
+          "id": 402930,
+          "daily_installs": 0,
+          "total_installs": 2293,
+          "fan_score": "56.6",
+          "good_ratings": 5,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-05-09T03:09:05.000Z",
+          "code_updated_at": "2020-05-09T03:50:03.000Z",
+          "namespace": "com.fly",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "云学堂视频不暂停",
+          "description": "现在只能做到打开一个视频之后，超过五分钟不会自动暂停",
+          "url": "https://greasyfork.org/scripts/402930-%E4%BA%91%E5%AD%A6%E5%A0%82%E8%A7%86%E9%A2%91%E4%B8%8D%E6%9A%82%E5%81%9C",
+          "code_url": "https://update.greasyfork.org/scripts/402930/%E4%BA%91%E5%AD%A6%E5%A0%82%E8%A7%86%E9%A2%91%E4%B8%8D%E6%9A%82%E5%81%9C.user.js",
+          "code_size": 653,
+          "license": null,
+          "version": "0.2111",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "云学堂视频不暂停",
+  "description": "现在只能做到打开一个视频之后，超过五分钟不会自动暂停",
+  "url": "https://greasyfork.org/scripts/402930-%E4%BA%91%E5%AD%A6%E5%A0%82%E8%A7%86%E9%A2%91%E4%B8%8D%E6%9A%82%E5%81%9C",
+  "code_url": "https://update.greasyfork.org/scripts/402930/%E4%BA%91%E5%AD%A6%E5%A0%82%E8%A7%86%E9%A2%91%E4%B8%8D%E6%9A%82%E5%81%9C.user.js",
+  "code_size": 653,
+  "license": null,
+  "version": "0.2111",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

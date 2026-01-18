@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401892,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-24T11:29:13.000Z",
+    "code_updated_at": "2020-04-24T11:29:12.000Z",
+    "namespace": "duxiu.ssno.search",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 540615,
+        "name": "中原一点红",
+        "created_at": "2020-04-24T11:08:11.000Z",
+        "url": "https://greasyfork.org/users/540615-%E4%B8%AD%E5%8E%9F%E4%B8%80%E7%82%B9%E7%BA%A2"
+      }
+    ],
+    "name": "一点红",
+    "description": "直接显示图书唯一编码ss号，增加存货查询按钮，一键获取图书方便快捷。",
+    "url": "https://greasyfork.org/scripts/401892-%E4%B8%80%E7%82%B9%E7%BA%A2",
+    "code_url": "https://update.greasyfork.org/scripts/401892/%E4%B8%80%E7%82%B9%E7%BA%A2.user.js",
+    "code_size": 21355,
+    "license": null,
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

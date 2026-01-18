@@ -1,0 +1,59 @@
+{
+  "id": 397328,
+  "daily_installs": 0,
+  "total_installs": 18847,
+  "fan_score": "43.6",
+  "good_ratings": 5,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-03-05T01:50:04.000Z",
+  "code_updated_at": "2020-03-05T01:50:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 451654,
+      "name": "wwwqqmsn",
+      "created_at": "2020-02-29T05:02:11.000Z",
+      "url": "https://greasyfork.org/users/451654-wwwqqmsn",
+      "scripts": [
+        {
+          "id": 397328,
+          "daily_installs": 0,
+          "total_installs": 18847,
+          "fan_score": "43.6",
+          "good_ratings": 5,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-03-05T01:50:04.000Z",
+          "code_updated_at": "2020-03-05T01:50:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动判超星作业为100分",
+          "description": "自动填充超星批改作业中的分值100，并提交下一份",
+          "url": "https://greasyfork.org/scripts/397328-%E8%87%AA%E5%8A%A8%E5%88%A4%E8%B6%85%E6%98%9F%E4%BD%9C%E4%B8%9A%E4%B8%BA100%E5%88%86",
+          "code_url": "https://update.greasyfork.org/scripts/397328/%E8%87%AA%E5%8A%A8%E5%88%A4%E8%B6%85%E6%98%9F%E4%BD%9C%E4%B8%9A%E4%B8%BA100%E5%88%86.user.js",
+          "code_size": 654,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动判超星作业为100分",
+  "description": "自动填充超星批改作业中的分值100，并提交下一份",
+  "url": "https://greasyfork.org/scripts/397328-%E8%87%AA%E5%8A%A8%E5%88%A4%E8%B6%85%E6%98%9F%E4%BD%9C%E4%B8%9A%E4%B8%BA100%E5%88%86",
+  "code_url": "https://update.greasyfork.org/scripts/397328/%E8%87%AA%E5%8A%A8%E5%88%A4%E8%B6%85%E6%98%9F%E4%BD%9C%E4%B8%9A%E4%B8%BA100%E5%88%86.user.js",
+  "code_size": 654,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

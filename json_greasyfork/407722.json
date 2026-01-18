@@ -1,0 +1,34 @@
+{
+  "id": 407722,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-25T19:08:56.000Z",
+  "code_updated_at": "2020-07-25T19:13:16.000Z",
+  "namespace": "https://greasyfork.org/users/126569",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 126569,
+      "name": "Johan Badenhorst",
+      "created_at": "2017-05-24T00:36:33.000Z",
+      "url": "https://greasyfork.org/users/126569-johan-badenhorst",
+      "scripts": []
+    }
+  ],
+  "name": "Hide Google Search Ads (johanb)",
+  "description": "hide the search ads",
+  "url": "https://greasyfork.org/scripts/407722-hide-google-search-ads-johanb",
+  "code_url": "https://update.greasyfork.org/scripts/407722/Hide%20Google%20Search%20Ads%20%28johanb%29.user.js",
+  "code_size": 516,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

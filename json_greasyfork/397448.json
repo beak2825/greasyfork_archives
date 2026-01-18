@@ -1,0 +1,33 @@
+{
+  "id": 397448,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-06T19:17:57.000Z",
+  "code_updated_at": "2020-03-06T19:17:56.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 263417,
+      "name": "jeryqwq",
+      "created_at": "2019-03-12T05:28:04.000Z",
+      "url": "https://greasyfork.org/users/263417-jeryqwq"
+    }
+  ],
+  "name": "Happy Learing Rubbish！！！",
+  "description": "2020/3/7 上午12:24:49",
+  "url": "https://greasyfork.org/scripts/397448-happy-learing-rubbish",
+  "code_url": "https://update.greasyfork.org/scripts/397448/Happy%20Learing%20Rubbish%EF%BC%81%EF%BC%81%EF%BC%81.user.js",
+  "code_size": 3463,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

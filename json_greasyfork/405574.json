@@ -1,0 +1,59 @@
+{
+  "id": 405574,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-17T11:41:02.000Z",
+  "code_updated_at": "2020-06-17T11:41:02.000Z",
+  "namespace": "http://www.thdong.top/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 597785,
+      "name": "M Y",
+      "created_at": "2020-06-17T04:49:34.000Z",
+      "url": "https://greasyfork.org/users/597785-m-y",
+      "scripts": [
+        {
+          "id": 405574,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-17T11:41:02.000Z",
+          "code_updated_at": "2020-06-17T11:41:02.000Z",
+          "namespace": "http://www.thdong.top/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "漂亮weibo",
+          "description": "移除weibo烦人的界面元素",
+          "url": "https://greasyfork.org/scripts/405574-%E6%BC%82%E4%BA%AEweibo",
+          "code_url": "https://update.greasyfork.org/scripts/405574/%E6%BC%82%E4%BA%AEweibo.user.js",
+          "code_size": 4467,
+          "license": null,
+          "version": "1.0",
+          "locale": "de",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "漂亮weibo",
+  "description": "移除weibo烦人的界面元素",
+  "url": "https://greasyfork.org/scripts/405574-%E6%BC%82%E4%BA%AEweibo",
+  "code_url": "https://update.greasyfork.org/scripts/405574/%E6%BC%82%E4%BA%AEweibo.user.js",
+  "code_size": 4467,
+  "license": null,
+  "version": "1.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

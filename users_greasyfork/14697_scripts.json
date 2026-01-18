@@ -30,6 +30,39 @@
     "version": "0.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407135,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-15T19:20:01.000Z",
+    "code_updated_at": "2020-07-15T22:41:46.000Z",
+    "namespace": "https://wolvan.at/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 14697,
+        "name": "Wolvan",
+        "created_at": "2015-08-28T15:03:35.000Z",
+        "url": "https://greasyfork.org/users/14697-wolvan"
+      }
+    ],
+    "name": "pIcartoRC",
+    "description": "Add an IRC chat to picarto channels",
+    "url": "https://greasyfork.org/scripts/407135-picartorc",
+    "code_url": "https://update.greasyfork.org/scripts/407135/pIcartoRC.user.js",
+    "code_size": 2288,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

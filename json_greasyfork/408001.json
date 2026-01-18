@@ -1,0 +1,34 @@
+{
+  "id": 408001,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-01T05:12:48.000Z",
+  "code_updated_at": "2020-08-01T05:12:48.000Z",
+  "namespace": "https://greasyfork.org/users/163167",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 197274,
+      "name": "M C KRISH",
+      "created_at": "2018-07-20T17:13:25.000Z",
+      "url": "https://greasyfork.org/users/197274-m-c-krish",
+      "scripts": []
+    }
+  ],
+  "name": "HIT Forker",
+  "description": "Monitors mturk.com for HITs",
+  "url": "https://greasyfork.org/scripts/408001-hit-forker",
+  "code_url": "https://update.greasyfork.org/scripts/408001/HIT%20Forker.user.js",
+  "code_size": 3710,
+  "license": null,
+  "version": "13.9.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

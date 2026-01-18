@@ -1,0 +1,34 @@
+{
+  "id": 407779,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-26T19:08:25.000Z",
+  "code_updated_at": "2020-07-26T19:08:25.000Z",
+  "namespace": "http://userscripts-mirror.org/users/69068",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 8813,
+      "name": "nascent",
+      "created_at": "2015-02-02T09:53:00.000Z",
+      "url": "https://greasyfork.org/users/8813-nascent",
+      "scripts": []
+    }
+  ],
+  "name": "IMDb Movie Link Enhancer",
+  "description": "Highlights movie titles and adds your ratings for movies you've seen (voted for).",
+  "url": "https://greasyfork.org/scripts/407779-imdb-movie-link-enhancer",
+  "code_url": "https://update.greasyfork.org/scripts/407779/IMDb%20Movie%20Link%20Enhancer.user.js",
+  "code_size": 25925,
+  "license": null,
+  "version": "0.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

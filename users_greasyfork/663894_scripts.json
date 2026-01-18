@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406582,
+    "daily_installs": 1,
+    "total_installs": 1468,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-06T08:30:31.000Z",
+    "code_updated_at": "2020-07-06T08:30:31.000Z",
+    "namespace": "https://greasyfork.org/users/663894",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 663894,
+        "name": "Hippppo",
+        "created_at": "2020-07-06T08:26:37.000Z",
+        "url": "https://greasyfork.org/users/663894-hippppo"
+      }
+    ],
+    "name": "TM Trader's Calculator",
+    "description": "Calculates sell-to-bank price, max price, and TI before birthday (if the player had the birthday during the season)",
+    "url": "https://greasyfork.org/scripts/406582-tm-trader-s-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/406582/TM%20Trader%27s%20Calculator.user.js",
+    "code_size": 29475,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

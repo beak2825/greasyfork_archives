@@ -1,0 +1,34 @@
+{
+  "id": 398751,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-26T09:37:27.000Z",
+  "code_updated_at": "2020-03-26T09:37:26.000Z",
+  "namespace": "[url=mailto:thisisaspider@qq.com]thisisaspider@qq.com[/url]",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 469405,
+      "name": "神楽ゆあ",
+      "created_at": "2020-03-26T09:27:30.000Z",
+      "url": "https://greasyfork.org/users/469405-%E7%A5%9E%E6%A5%BD%E3%82%86%E3%81%82",
+      "scripts": []
+    }
+  ],
+  "name": "twitter自定义翻译",
+  "description": "通过审核元素替换推特内容。替换Translate按钮为Replace。点击推特内容可以直接编辑文本。点击回复者头像可以删除回复",
+  "url": "https://greasyfork.org/scripts/398751-twitter%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BF%BB%E8%AF%91",
+  "code_url": "https://update.greasyfork.org/scripts/398751/twitter%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BF%BB%E8%AF%91.user.js",
+  "code_size": 4934,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

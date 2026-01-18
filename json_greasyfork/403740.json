@@ -1,0 +1,33 @@
+{
+  "id": 403740,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-19T13:51:40.000Z",
+  "code_updated_at": "2020-05-19T13:51:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 566328,
+      "name": "Sam Arrow",
+      "created_at": "2020-05-19T13:50:00.000Z",
+      "url": "https://greasyfork.org/users/566328-sam-arrow"
+    }
+  ],
+  "name": "input表单全选",
+  "description": "启用后你的网页上的所有input表单都会全选,很方便",
+  "url": "https://greasyfork.org/scripts/403740-input%E8%A1%A8%E5%8D%95%E5%85%A8%E9%80%89",
+  "code_url": "https://update.greasyfork.org/scripts/403740/input%E8%A1%A8%E5%8D%95%E5%85%A8%E9%80%89.user.js",
+  "code_size": 564,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

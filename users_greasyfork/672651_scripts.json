@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408074,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-02T14:52:33.000Z",
+    "code_updated_at": "2020-08-02T14:53:25.000Z",
+    "namespace": "http://wigroup.vn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 672651,
+        "name": "trungkientf",
+        "created_at": "2020-08-02T14:31:19.000Z",
+        "url": "https://greasyfork.org/users/672651-trungkientf"
+      }
+    ],
+    "name": "Wi - Cân đối kế toán VND",
+    "description": "Show BCTC",
+    "url": "https://greasyfork.org/scripts/408074-wi-c%C3%A2n-%C4%91%E1%BB%91i-k%E1%BA%BF-to%C3%A1n-vnd",
+    "code_url": "https://update.greasyfork.org/scripts/408074/Wi%20-%20C%C3%A2n%20%C4%91%E1%BB%91i%20k%E1%BA%BF%20to%C3%A1n%20VND.user.js",
+    "code_size": 631,
+    "license": null,
+    "version": "0.2",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

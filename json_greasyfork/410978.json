@@ -1,0 +1,33 @@
+{
+  "id": 410978,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-08T00:35:00.000Z",
+  "code_updated_at": "2021-01-10T21:27:13.000Z",
+  "namespace": "https://pescadordecripto.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 466691,
+      "name": "Jadson Tavares",
+      "created_at": "2020-03-21T20:14:14.000Z",
+      "url": "https://greasyfork.org/users/466691-jadson-tavares"
+    }
+  ],
+  "name": "FreeEthereum.com (Pescador de Cripto)",
+  "description": "Auto Roll",
+  "url": "https://greasyfork.org/scripts/410978-freeethereum-com-pescador-de-cripto",
+  "code_url": "https://update.greasyfork.org/scripts/410978/FreeEthereumcom%20%28Pescador%20de%20Cripto%29.user.js",
+  "code_size": 3649,
+  "license": null,
+  "version": "0.9",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

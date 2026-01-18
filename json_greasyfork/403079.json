@@ -1,0 +1,33 @@
+{
+  "id": 403079,
+  "daily_installs": 0,
+  "total_installs": 24583,
+  "fan_score": "67.9",
+  "good_ratings": 10,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2020-05-11T12:28:02.000Z",
+  "code_updated_at": "2022-06-10T08:58:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 559197,
+      "name": "Aisen",
+      "created_at": "2020-05-11T12:13:09.000Z",
+      "url": "https://greasyfork.org/users/559197-aisen"
+    }
+  ],
+  "name": "NeumoocStar,neumooc,东软慕课,东软学院,自动完成视频+课后作业",
+  "description": "东软慕课+课后作业,借鉴了NeumoocBBQ，答案理论上都有。用谷歌浏览器！用谷歌浏览器！用谷歌浏览器！其他浏览器会有bug，不保证能正确运行。",
+  "url": "https://greasyfork.org/scripts/403079-neumoocstar-neumooc-%E4%B8%9C%E8%BD%AF%E6%85%95%E8%AF%BE-%E4%B8%9C%E8%BD%AF%E5%AD%A6%E9%99%A2-%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90%E8%A7%86%E9%A2%91-%E8%AF%BE%E5%90%8E%E4%BD%9C%E4%B8%9A",
+  "code_url": "https://update.greasyfork.org/scripts/403079/NeumoocStar%2Cneumooc%2C%E4%B8%9C%E8%BD%AF%E6%85%95%E8%AF%BE%2C%E4%B8%9C%E8%BD%AF%E5%AD%A6%E9%99%A2%2C%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90%E8%A7%86%E9%A2%91%2B%E8%AF%BE%E5%90%8E%E4%BD%9C%E4%B8%9A.user.js",
+  "code_size": 11627,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

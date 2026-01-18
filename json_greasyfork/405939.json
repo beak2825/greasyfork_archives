@@ -1,0 +1,33 @@
+{
+  "id": 405939,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-23T20:02:14.000Z",
+  "code_updated_at": "2020-06-23T20:02:14.000Z",
+  "namespace": "1N07",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 13303,
+      "name": "1N07",
+      "created_at": "2015-07-14T19:54:54.000Z",
+      "url": "https://greasyfork.org/users/13303-1n07"
+    }
+  ],
+  "name": "Addic7ed - Dark theme",
+  "description": "Dark theme for Addic7ed.com",
+  "url": "https://greasyfork.org/scripts/405939-addic7ed-dark-theme",
+  "code_url": "https://update.greasyfork.org/scripts/405939/Addic7ed%20-%20Dark%20theme.user.css",
+  "code_size": 2566,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 409097,
+    "daily_installs": 0,
+    "total_installs": 109,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-19T15:38:18.000Z",
+    "code_updated_at": "2020-08-19T15:38:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 192708,
+        "name": "sl00p",
+        "created_at": "2018-06-23T04:05:38.000Z",
+        "url": "https://greasyfork.org/users/192708-sl00p"
+      }
+    ],
+    "name": "IT 之家手机版优化显示",
+    "description": "显示客户端类型",
+    "url": "https://greasyfork.org/scripts/409097-it-%E4%B9%8B%E5%AE%B6%E6%89%8B%E6%9C%BA%E7%89%88%E4%BC%98%E5%8C%96%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/409097/IT%20%E4%B9%8B%E5%AE%B6%E6%89%8B%E6%9C%BA%E7%89%88%E4%BC%98%E5%8C%96%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 699,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397521,
+    "daily_installs": 1,
+    "total_installs": 1804,
+    "fan_score": "57.1",
+    "good_ratings": 9,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2020-03-08T04:42:52.000Z",
+    "code_updated_at": "2023-06-25T02:09:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 192708,
+        "name": "sl00p",
+        "created_at": "2018-06-23T04:05:38.000Z",
+        "url": "https://greasyfork.org/users/192708-sl00p"
+      }
+    ],
+    "name": "手机版移除知乎 App 下载",
+    "description": "移除知乎 App 下载，自动取消下载提示",
+    "url": "https://greasyfork.org/scripts/397521-%E6%89%8B%E6%9C%BA%E7%89%88%E7%A7%BB%E9%99%A4%E7%9F%A5%E4%B9%8E-app-%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/397521/%E6%89%8B%E6%9C%BA%E7%89%88%E7%A7%BB%E9%99%A4%E7%9F%A5%E4%B9%8E%20App%20%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 2738,
+    "license": "MIT License",
+    "version": "0.3.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

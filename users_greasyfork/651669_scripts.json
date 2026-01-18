@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406078,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-26T09:32:38.000Z",
+    "code_updated_at": "2020-06-26T11:03:49.000Z",
+    "namespace": "Akropol",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 651669,
+        "name": "Владимир Запорожец",
+        "created_at": "2020-06-26T09:22:08.000Z",
+        "url": "https://greasyfork.org/users/651669-%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80-%D0%B7%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D0%B5%D1%86"
+      }
+    ],
+    "name": "hwmp_post_art",
+    "description": "Передача артов толпой",
+    "url": "https://greasyfork.org/scripts/406078-hwmp-post-art",
+    "code_url": "https://update.greasyfork.org/scripts/406078/hwmp_post_art.user.js",
+    "code_size": 24826,
+    "license": null,
+    "version": "0.16",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

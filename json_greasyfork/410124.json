@@ -1,0 +1,34 @@
+{
+  "id": 410124,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-28T18:13:31.000Z",
+  "code_updated_at": "2020-08-28T18:13:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 683255,
+      "name": "WOLF-131",
+      "created_at": "2020-08-27T19:14:49.000Z",
+      "url": "https://greasyfork.org/users/683255-wolf-131",
+      "scripts": []
+    }
+  ],
+  "name": "SimplyOne Autoinsert",
+  "description": "auto insert css & js into SimplyOne",
+  "url": "https://greasyfork.org/scripts/410124-simplyone-autoinsert",
+  "code_url": "https://update.greasyfork.org/scripts/410124/SimplyOne%20Autoinsert.user.js",
+  "code_size": 1029,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

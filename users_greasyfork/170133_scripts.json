@@ -1,0 +1,68 @@
+[
+  {
+    "id": 402420,
+    "daily_installs": 0,
+    "total_installs": 133,
+    "fan_score": "2.7",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2020-05-01T16:03:53.000Z",
+    "code_updated_at": "2020-05-03T03:07:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 170133,
+        "name": "TychoJarvis",
+        "created_at": "2018-02-10T02:57:43.000Z",
+        "url": "https://greasyfork.org/users/170133-tychojarvis"
+      }
+    ],
+    "name": "lexiangvideo",
+    "description": "自动学习腾讯乐享的视频及文档",
+    "url": "https://greasyfork.org/scripts/402420-lexiangvideo",
+    "code_url": "https://update.greasyfork.org/scripts/402420/lexiangvideo.user.js",
+    "code_size": 1868,
+    "license": null,
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 400620,
+    "daily_installs": 0,
+    "total_installs": 80,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-13T12:22:26.000Z",
+    "code_updated_at": "2020-04-13T12:22:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 170133,
+        "name": "TychoJarvis",
+        "created_at": "2018-02-10T02:57:43.000Z",
+        "url": "https://greasyfork.org/users/170133-tychojarvis"
+      }
+    ],
+    "name": "cme_91huayi_auto_exam",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/400620-cme-91huayi-auto-exam",
+    "code_url": "https://update.greasyfork.org/scripts/400620/cme_91huayi_auto_exam.user.js",
+    "code_size": 14287,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

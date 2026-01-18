@@ -196,5 +196,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411949,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-25T10:48:12.000Z",
+    "code_updated_at": "2020-09-25T10:56:50.000Z",
+    "namespace": "http://www.lkong.net/home.php?mod=space&uid=516696",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "优书网发现页面删除过多内容",
+    "description": "因为优书网发现页是无限往下加载的模式，刷着刷着很容易就会导致缓存过多，所以就有了这么一个清理页面的脚本……已跳过的内容会被删除。多于30条内容就会删除，在完成删除前请勿向下滚动页面，否则会多刷多删。",
+    "url": "https://greasyfork.org/scripts/411949-%E4%BC%98%E4%B9%A6%E7%BD%91%E5%8F%91%E7%8E%B0%E9%A1%B5%E9%9D%A2%E5%88%A0%E9%99%A4%E8%BF%87%E5%A4%9A%E5%86%85%E5%AE%B9",
+    "code_url": "https://update.greasyfork.org/scripts/411949/%E4%BC%98%E4%B9%A6%E7%BD%91%E5%8F%91%E7%8E%B0%E9%A1%B5%E9%9D%A2%E5%88%A0%E9%99%A4%E8%BF%87%E5%A4%9A%E5%86%85%E5%AE%B9.user.js",
+    "code_size": 1687,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 402472,
+    "daily_installs": 0,
+    "total_installs": 313,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-02T12:53:27.000Z",
+    "code_updated_at": "2020-10-29T03:10:00.000Z",
+    "namespace": "http://www.lkong.net/home.php?mod=space&uid=516696",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "起点中文网作者、作家、大神替换成枪手",
+    "description": "大家都是起点请来的无工资枪手，就不要自称什么作者了。",
+    "url": "https://greasyfork.org/scripts/402472-%E8%B5%B7%E7%82%B9%E4%B8%AD%E6%96%87%E7%BD%91%E4%BD%9C%E8%80%85-%E4%BD%9C%E5%AE%B6-%E5%A4%A7%E7%A5%9E%E6%9B%BF%E6%8D%A2%E6%88%90%E6%9E%AA%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/402472/%E8%B5%B7%E7%82%B9%E4%B8%AD%E6%96%87%E7%BD%91%E4%BD%9C%E8%80%85%E3%80%81%E4%BD%9C%E5%AE%B6%E3%80%81%E5%A4%A7%E7%A5%9E%E6%9B%BF%E6%8D%A2%E6%88%90%E6%9E%AA%E6%89%8B.user.js",
+    "code_size": 1209,
+    "license": null,
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 392986,
+    "daily_installs": 0,
+    "total_installs": 248,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-27T09:13:14.000Z",
+    "code_updated_at": "2019-11-27T10:19:16.000Z",
+    "namespace": "https://greasyfork.org/users/76579",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "Discuz!论坛字体大小调整",
+    "description": "调整了主题标题、具体页正文的字体大小和行距，看着更顺眼一点。",
+    "url": "https://greasyfork.org/scripts/392986-discuz-%E8%AE%BA%E5%9D%9B%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/392986/Discuz%21%E8%AE%BA%E5%9D%9B%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 949,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 392740,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-21T14:45:05.000Z",
+    "code_updated_at": "2019-11-21T15:21:39.000Z",
+    "namespace": "https://greasyfork.org/users/76579",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76579,
+        "name": "仙圣",
+        "created_at": "2016-10-29T08:55:20.000Z",
+        "url": "https://greasyfork.org/users/76579-%E4%BB%99%E5%9C%A3"
+      }
+    ],
+    "name": "龙的天空论坛备注用户",
+    "description": "仅支持旧版龙空，但大家可以修改为任何一个Discuz!论坛……备注名不建议太长，太长会显示不完全。",
+    "url": "https://greasyfork.org/scripts/392740-%E9%BE%99%E7%9A%84%E5%A4%A9%E7%A9%BA%E8%AE%BA%E5%9D%9B%E5%A4%87%E6%B3%A8%E7%94%A8%E6%88%B7",
+    "code_url": "https://update.greasyfork.org/scripts/392740/%E9%BE%99%E7%9A%84%E5%A4%A9%E7%A9%BA%E8%AE%BA%E5%9D%9B%E5%A4%87%E6%B3%A8%E7%94%A8%E6%88%B7.user.js",
+    "code_size": 1276,
+    "license": null,
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 402026,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-26T07:26:10.000Z",
+    "code_updated_at": "2021-08-30T03:11:19.000Z",
+    "namespace": "https://github.com/xPixv/Humble-Bundle-Current-Country-Spy",
+    "support_url": "https://github.com/xPixv/Humble-Bundle-Current-Country-Spy/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 68289,
+        "name": "qwe2968",
+        "created_at": "2016-09-24T12:43:43.000Z",
+        "url": "https://greasyfork.org/users/68289-qwe2968"
+      }
+    ],
+    "name": "Humble Bundle Current Country Spy",
+    "description": "Show current Humble Bundle country in navbar.",
+    "url": "https://greasyfork.org/scripts/402026-humble-bundle-current-country-spy",
+    "code_url": "https://update.greasyfork.org/scripts/402026/Humble%20Bundle%20Current%20Country%20Spy.user.js",
+    "code_size": 1910,
+    "license": null,
+    "version": "1.1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

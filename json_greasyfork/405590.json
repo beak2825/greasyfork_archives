@@ -1,0 +1,34 @@
+{
+  "id": 405590,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-17T13:46:53.000Z",
+  "code_updated_at": "2020-06-17T13:46:53.000Z",
+  "namespace": "moe.jixun.dupan.galacg",
+  "support_url": "https://github.com/JixunMoe/dupan-helper/issues",
+  "contribution_url": "https://jixun.moe/donate",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 103645,
+      "name": "siu441",
+      "created_at": "2017-02-18T07:31:45.000Z",
+      "url": "https://greasyfork.org/users/103645-siu441",
+      "scripts": []
+    }
+  ],
+  "name": "度盘分享助手",
+  "description": "简易功能增强, 方便分享用",
+  "url": "https://greasyfork.org/scripts/405590-%E5%BA%A6%E7%9B%98%E5%88%86%E4%BA%AB%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/405590/%E5%BA%A6%E7%9B%98%E5%88%86%E4%BA%AB%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 37835,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

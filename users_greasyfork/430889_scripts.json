@@ -64,5 +64,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 399193,
+    "daily_installs": 0,
+    "total_installs": 460,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-01T11:47:42.000Z",
+    "code_updated_at": "2020-04-01T11:47:41.000Z",
+    "namespace": "https://www.reddit.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 430889,
+        "name": "KaKi87",
+        "created_at": "2020-01-01T20:15:52.000Z",
+        "url": "https://greasyfork.org/users/430889-kaki87"
+      }
+    ],
+    "name": "Reddit force local search",
+    "description": "Force search in subreddit by default",
+    "url": "https://greasyfork.org/scripts/399193-reddit-force-local-search",
+    "code_url": "https://update.greasyfork.org/scripts/399193/Reddit%20force%20local%20search.user.js",
+    "code_size": 1172,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396682,
+    "daily_installs": 0,
+    "total_installs": 238,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-02-20T18:35:35.000Z",
+    "code_updated_at": "2020-12-30T18:27:24.000Z",
+    "namespace": "https://git.kaki87.net/KaKi87/userscripts/src/branch/master/GoogleSearchCloudFlareDetector",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 430889,
+        "name": "KaKi87",
+        "created_at": "2020-01-01T20:15:52.000Z",
+        "url": "https://greasyfork.org/users/430889-kaki87"
+      }
+    ],
+    "name": "Google Search CloudFlare detector",
+    "description": "Tag Google Search results pointing to CloudFlare-protected websites",
+    "url": "https://greasyfork.org/scripts/396682-google-search-cloudflare-detector",
+    "code_url": "https://update.greasyfork.org/scripts/396682/Google%20Search%20CloudFlare%20detector.user.js",
+    "code_size": 2182,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 394508,
+    "daily_installs": 0,
+    "total_installs": 572,
+    "fan_score": "15.0",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2020-01-01T21:09:28.000Z",
+    "code_updated_at": "2020-11-15T14:20:14.000Z",
+    "namespace": "https://git.kaki87.net/KaKi87/userscripts/src/branch/master/YGGTorrentInfiniteSession",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 430889,
+        "name": "KaKi87",
+        "created_at": "2020-01-01T20:15:52.000Z",
+        "url": "https://greasyfork.org/users/430889-kaki87"
+      }
+    ],
+    "name": "YGGTorrent infinite session",
+    "description": "Stay signed in for real",
+    "url": "https://greasyfork.org/scripts/394508-yggtorrent-infinite-session",
+    "code_url": "https://update.greasyfork.org/scripts/394508/YGGTorrent%20infinite%20session.user.js",
+    "code_size": 4075,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398905,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-28T23:34:53.000Z",
+    "code_updated_at": "2020-03-28T23:40:56.000Z",
+    "namespace": "Scamlife",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470864,
+        "name": "Scamlife",
+        "created_at": "2020-03-28T23:33:12.000Z",
+        "url": "https://greasyfork.org/users/470864-scamlife"
+      }
+    ],
+    "name": "Faction Profile Onliners Only",
+    "description": "Hides offline members from faction page",
+    "url": "https://greasyfork.org/scripts/398905-faction-profile-onliners-only",
+    "code_url": "https://update.greasyfork.org/scripts/398905/Faction%20Profile%20Onliners%20Only.user.js",
+    "code_size": 521,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

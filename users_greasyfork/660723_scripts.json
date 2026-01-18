@@ -1,0 +1,101 @@
+[
+  {
+    "id": 407991,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-31T16:10:30.000Z",
+    "code_updated_at": "2020-07-31T16:10:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 660723,
+        "name": "helios tnak",
+        "created_at": "2020-06-28T03:26:48.000Z",
+        "url": "https://greasyfork.org/users/660723-helios-tnak"
+      }
+    ],
+    "name": "Magic Pro Tools TTS",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/407991-magic-pro-tools-tts",
+    "code_url": "https://update.greasyfork.org/scripts/407991/Magic%20Pro%20Tools%20TTS.user.js",
+    "code_size": 9785,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406285,
+    "daily_installs": 0,
+    "total_installs": 259,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-30T06:46:00.000Z",
+    "code_updated_at": "2020-07-03T16:55:04.000Z",
+    "namespace": "http://www.iyingdi.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 660723,
+        "name": "helios tnak",
+        "created_at": "2020-06-28T03:26:48.000Z",
+        "url": "https://greasyfork.org/users/660723-helios-tnak"
+      }
+    ],
+    "name": "桌游模拟器营地牌表导出工具",
+    "description": "在营地牌表页添加导出为桌游模拟器存档的按钮",
+    "url": "https://greasyfork.org/scripts/406285-%E6%A1%8C%E6%B8%B8%E6%A8%A1%E6%8B%9F%E5%99%A8%E8%90%A5%E5%9C%B0%E7%89%8C%E8%A1%A8%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/406285/%E6%A1%8C%E6%B8%B8%E6%A8%A1%E6%8B%9F%E5%99%A8%E8%90%A5%E5%9C%B0%E7%89%8C%E8%A1%A8%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 6438,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406188,
+    "daily_installs": 0,
+    "total_installs": 198,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-28T03:29:39.000Z",
+    "code_updated_at": "2020-07-03T02:46:00.000Z",
+    "namespace": "http://scryfall.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 660723,
+        "name": "helios tnak",
+        "created_at": "2020-06-28T03:26:48.000Z",
+        "url": "https://greasyfork.org/users/660723-helios-tnak"
+      }
+    ],
+    "name": "Scryfall TTS Save Generator",
+    "description": "Generate Tabletop Simulator save json from Scryfall",
+    "url": "https://greasyfork.org/scripts/406188-scryfall-tts-save-generator",
+    "code_url": "https://update.greasyfork.org/scripts/406188/Scryfall%20TTS%20Save%20Generator.user.js",
+    "code_size": 7956,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

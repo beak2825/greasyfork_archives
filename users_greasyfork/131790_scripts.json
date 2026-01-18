@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406064,
+    "daily_installs": 0,
+    "total_installs": 104,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-25T21:39:23.000Z",
+    "code_updated_at": "2020-06-25T21:39:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 131790,
+        "name": "armyofda12mnkeys",
+        "created_at": "2017-06-11T16:50:07.000Z",
+        "url": "https://greasyfork.org/users/131790-armyofda12mnkeys"
+      }
+    ],
+    "name": "Yahoo Finance - Remove Ads in News section below Portfolio Section",
+    "description": "removes the ads that are sprinkled the news section below your portfolio items (note: i wait 10seconds before removing since that is more reliable)",
+    "url": "https://greasyfork.org/scripts/406064-yahoo-finance-remove-ads-in-news-section-below-portfolio-section",
+    "code_url": "https://update.greasyfork.org/scripts/406064/Yahoo%20Finance%20-%20Remove%20Ads%20in%20News%20section%20below%20Portfolio%20Section.user.js",
+    "code_size": 1090,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

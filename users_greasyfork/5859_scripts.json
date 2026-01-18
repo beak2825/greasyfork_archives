@@ -261,6 +261,39 @@
     "version": "1.1.2",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 409955,
+    "daily_installs": 0,
+    "total_installs": 112,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-25T17:48:31.000Z",
+    "code_updated_at": "2023-05-15T05:57:42.000Z",
+    "namespace": "rfindley",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5859,
+        "name": "Robin Findley",
+        "created_at": "2014-10-06T18:44:24.000Z",
+        "url": "https://greasyfork.org/users/5859-robin-findley"
+      }
+    ],
+    "name": "Wanikani Item List Filter (for Self-Study Quiz)",
+    "description": "Select specific items (for Self-Study Quiz)",
+    "url": "https://greasyfork.org/scripts/409955-wanikani-item-list-filter-for-self-study-quiz",
+    "code_url": "https://update.greasyfork.org/scripts/409955/Wanikani%20Item%20List%20Filter%20%28for%20Self-Study%20Quiz%29.user.js",
+    "code_size": 4947,
+    "license": "MIT; http://opensource.org/licenses/MIT",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

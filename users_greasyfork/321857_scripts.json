@@ -624,6 +624,237 @@
     "version": "1.04",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 411630,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-21T02:05:05.000Z",
+    "code_updated_at": "2025-04-03T15:43:25.000Z",
+    "namespace": "https://greasyfork.org/users/321857-anakunda",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 321857,
+        "name": "Anakunda",
+        "created_at": "2019-07-29T18:28:12.000Z",
+        "url": "https://greasyfork.org/users/321857-anakunda"
+      }
+    ],
+    "name": "[RED] Cover Inspector",
+    "description": "Easify & speed-up finding, lookup and updating of invalid, missing or non optimal album covers on site",
+    "url": "https://greasyfork.org/scripts/411630-red-cover-inspector",
+    "code_url": "https://update.greasyfork.org/scripts/411630/%5BRED%5D%20Cover%20Inspector.user.js",
+    "code_size": 177910,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.15.14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406321,
+    "daily_installs": 0,
+    "total_installs": 197,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-07-01T05:36:00.000Z",
+    "code_updated_at": "2024-08-31T09:40:32.000Z",
+    "namespace": "https://greasyfork.org/users/321857-anakunda",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 321857,
+        "name": "Anakunda",
+        "created_at": "2019-07-29T18:28:12.000Z",
+        "url": "https://greasyfork.org/users/321857-anakunda"
+      }
+    ],
+    "name": "Qobuz - Copy album info",
+    "description": "Copy release metadata to foobar2000 parseable format (Context → Properties → Tools → Automatically fill values...)",
+    "url": "https://greasyfork.org/scripts/406321-qobuz-copy-album-info",
+    "code_url": "https://update.greasyfork.org/scripts/406321/Qobuz%20-%20Copy%20album%20info.user.js",
+    "code_size": 39613,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.21.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406218,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-28T16:25:09.000Z",
+    "code_updated_at": "2022-11-25T16:06:28.000Z",
+    "namespace": "https://greasyfork.org/users/321857-anakunda",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 321857,
+        "name": "Anakunda",
+        "created_at": "2019-07-29T18:28:12.000Z",
+        "url": "https://greasyfork.org/users/321857-anakunda"
+      }
+    ],
+    "name": "[GMT] Collage Extensions",
+    "description": "Direct browsing from torrent pages; quick groups removal, custom quick Add To Collage form",
+    "url": "https://greasyfork.org/scripts/406218-gmt-collage-extensions",
+    "code_url": "https://update.greasyfork.org/scripts/406218/%5BGMT%5D%20Collage%20Extensions.user.js",
+    "code_size": 49788,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.25.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 401743,
+    "daily_installs": 0,
+    "total_installs": 1273,
+    "fan_score": "70.2",
+    "good_ratings": 14,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-04-22T14:50:03.000Z",
+    "code_updated_at": "2024-11-24T19:19:39.000Z",
+    "namespace": "https://greasyfork.org/users/321857-anakunda",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 321857,
+        "name": "Anakunda",
+        "created_at": "2019-07-29T18:28:12.000Z",
+        "url": "https://greasyfork.org/users/321857-anakunda"
+      }
+    ],
+    "name": "Image Host Helper",
+    "description": "Directly upload local / rehost remote images or galleries to whatever supported image host by dropping/pasting them to target field",
+    "url": "https://greasyfork.org/scripts/401743-image-host-helper",
+    "code_url": "https://update.greasyfork.org/scripts/401743/Image%20Host%20Helper.user.js",
+    "code_size": 152600,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.91.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396618,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-19T14:35:14.000Z",
+    "code_updated_at": "2020-02-20T07:24:29.000Z",
+    "namespace": "https://greasyfork.org/users/321857-anakunda",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 321857,
+        "name": "Anakunda",
+        "created_at": "2019-07-29T18:28:12.000Z",
+        "url": "https://greasyfork.org/users/321857-anakunda"
+      }
+    ],
+    "name": "Gazelle API links",
+    "description": "Show link for viewing current page as JSON (where available)",
+    "url": "https://greasyfork.org/scripts/396618-gazelle-api-links",
+    "code_url": "https://update.greasyfork.org/scripts/396618/Gazelle%20API%20links.user.js",
+    "code_size": 5699,
+    "license": null,
+    "version": "1.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396473,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-15T14:42:08.000Z",
+    "code_updated_at": "2021-01-06T10:27:45.000Z",
+    "namespace": "https://greasyfork.org/users/321857-anakunda",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 321857,
+        "name": "Anakunda",
+        "created_at": "2019-07-29T18:28:12.000Z",
+        "url": "https://greasyfork.org/users/321857-anakunda"
+      }
+    ],
+    "name": "[GreasyFork] highlight stats changes in own scripts",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/396473-greasyfork-highlight-stats-changes-in-own-scripts",
+    "code_url": "https://update.greasyfork.org/scripts/396473/%5BGreasyFork%5D%20highlight%20stats%20changes%20in%20own%20scripts.user.js",
+    "code_size": 9018,
+    "license": null,
+    "version": "1.05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393469,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-08T07:36:41.000Z",
+    "code_updated_at": "2024-11-24T19:19:07.000Z",
+    "namespace": "https://greasyfork.org/users/321857-anakunda",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 321857,
+        "name": "Anakunda",
+        "created_at": "2019-07-29T18:28:12.000Z",
+        "url": "https://greasyfork.org/users/321857-anakunda"
+      }
+    ],
+    "name": "[RED/OPS] FL link in notifications/better.php",
+    "description": "yes",
+    "url": "https://greasyfork.org/scripts/393469-red-ops-fl-link-in-notifications-better-php",
+    "code_url": "https://update.greasyfork.org/scripts/393469/%5BREDOPS%5D%20FL%20link%20in%20notificationsbetterphp.user.js",
+    "code_size": 2629,
+    "license": null,
+    "version": "1.05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

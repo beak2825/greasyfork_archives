@@ -1,0 +1,59 @@
+{
+  "id": 406517,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-05T11:21:23.000Z",
+  "code_updated_at": "2020-07-05T11:21:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 662898,
+      "name": "siniiitsa",
+      "created_at": "2020-07-03T10:49:02.000Z",
+      "url": "https://greasyfork.org/users/662898-siniiitsa",
+      "scripts": [
+        {
+          "id": 406517,
+          "daily_installs": 0,
+          "total_installs": 28,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-05T11:21:23.000Z",
+          "code_updated_at": "2020-07-05T11:21:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Blind typing targets panel",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/406517-blind-typing-targets-panel",
+          "code_url": "https://update.greasyfork.org/scripts/406517/Blind%20typing%20targets%20panel.user.js",
+          "code_size": 3599,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Blind typing targets panel",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/406517-blind-typing-targets-panel",
+  "code_url": "https://update.greasyfork.org/scripts/406517/Blind%20typing%20targets%20panel.user.js",
+  "code_size": 3599,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

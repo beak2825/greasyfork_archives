@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 407650,
+    "daily_installs": 0,
+    "total_installs": 1260,
+    "fan_score": "56.5",
+    "good_ratings": 7,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2020-07-24T09:43:50.000Z",
+    "code_updated_at": "2020-10-08T03:58:49.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668107,
+        "name": "shiroikoi",
+        "created_at": "2020-07-19T03:35:37.000Z",
+        "url": "https://greasyfork.org/users/668107-shiroikoi"
+      }
+    ],
+    "name": "bilidl",
+    "description": "download bilibili DASH videos as fast as possible",
+    "url": "https://greasyfork.org/scripts/407650-bilidl",
+    "code_url": "https://update.greasyfork.org/scripts/407650/bilidl.user.js",
+    "code_size": 8168,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

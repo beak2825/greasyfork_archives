@@ -1,0 +1,34 @@
+{
+  "id": 410868,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-05T14:45:06.000Z",
+  "code_updated_at": "2020-09-05T14:45:06.000Z",
+  "namespace": "gdcytube",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 685316,
+      "name": "trancecarl",
+      "created_at": "2020-09-05T14:42:43.000Z",
+      "url": "https://greasyfork.org/users/685316-trancecarl",
+      "scripts": []
+    }
+  ],
+  "name": "Google Drive Video Player for TERD!!!!",
+  "description": "Play Google Drive videos on CyTube",
+  "url": "https://greasyfork.org/scripts/410868-google-drive-video-player-for-terd",
+  "code_url": "https://update.greasyfork.org/scripts/410868/Google%20Drive%20Video%20Player%20for%20TERD%21%21%21%21.user.js",
+  "code_size": 8094,
+  "license": null,
+  "version": "1.7.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

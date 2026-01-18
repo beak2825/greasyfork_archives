@@ -988,5 +988,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 409893,
+    "daily_installs": 2,
+    "total_installs": 3104,
+    "fan_score": "43.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-08-24T12:53:41.000Z",
+    "code_updated_at": "2026-01-16T14:00:08.000Z",
+    "namespace": "youtube.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8,
+        "name": "decembre",
+        "created_at": "2014-02-20T05:38:50.000Z",
+        "url": "https://greasyfork.org/users/8-decembre"
+      }
+    ],
+    "name": "Youtube WideScreen (New Design Polymer) [USw] v.71",
+    "description": "For a Wide Screen and the YouTube New Design",
+    "url": "https://greasyfork.org/scripts/409893-youtube-widescreen-new-design-polymer-usw-v-71",
+    "code_url": "https://update.greasyfork.org/scripts/409893/Youtube%20WideScreen%20%28New%20Design%20Polymer%29%20%5BUSw%5D%20v71.user.css",
+    "code_size": 445763,
+    "license": "The Unlicense",
+    "version": "71000.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 409674,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-21T14:07:49.000Z",
+    "code_updated_at": "2020-08-21T14:07:48.000Z",
+    "namespace": "decembre",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8,
+        "name": "decembre",
+        "created_at": "2014-02-20T05:38:50.000Z",
+        "url": "https://greasyfork.org/users/8-decembre"
+      }
+    ],
+    "name": "Add missing FAVICON (ico) - AFP Factuel",
+    "description": "Add missing favicon for AFP Factuel  [from \"CH CrowdSource-OneSpace Favicon\" : http://www.mturkgrind.com/threads/clickhappiers-userscripts-and-modifications.23532/page-6]",
+    "url": "https://greasyfork.org/scripts/409674-add-missing-favicon-ico-afp-factuel",
+    "code_url": "https://update.greasyfork.org/scripts/409674/Add%20missing%20FAVICON%20%28ico%29%20-%20AFP%20Factuel.user.js",
+    "code_size": 2478,
+    "license": null,
+    "version": "1.00",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

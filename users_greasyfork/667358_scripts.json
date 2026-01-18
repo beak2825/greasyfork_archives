@@ -1,0 +1,68 @@
+[
+  {
+    "id": 407249,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-17T08:56:23.000Z",
+    "code_updated_at": "2020-07-21T08:59:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667358,
+        "name": "greasyforkv5.0.1",
+        "created_at": "2020-07-16T10:25:55.000Z",
+        "url": "https://greasyfork.org/users/667358-greasyforkv5-0-1"
+      }
+    ],
+    "name": "Bj职业技能学习视频Auto学习脚本(自动快进发布版)",
+    "description": "声明:本脚本仅供学习和研究参考使用,请勿用于其它非法用途.使用本脚本所造成的任何影响,由用户自己负责!",
+    "url": "https://greasyfork.org/scripts/407249-bj%E8%81%8C%E4%B8%9A%E6%8A%80%E8%83%BD%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91auto%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC-%E8%87%AA%E5%8A%A8%E5%BF%AB%E8%BF%9B%E5%8F%91%E5%B8%83%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/407249/Bj%E8%81%8C%E4%B8%9A%E6%8A%80%E8%83%BD%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91Auto%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC%28%E8%87%AA%E5%8A%A8%E5%BF%AB%E8%BF%9B%E5%8F%91%E5%B8%83%E7%89%88%29.user.js",
+    "code_size": 9716,
+    "license": null,
+    "version": "0.03",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 407243,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-17T07:18:04.000Z",
+    "code_updated_at": "2020-07-28T06:33:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667358,
+        "name": "greasyforkv5.0.1",
+        "created_at": "2020-07-16T10:25:55.000Z",
+        "url": "https://greasyfork.org/users/667358-greasyforkv5-0-1"
+      }
+    ],
+    "name": "Bj职业技能学习视频Auto学习脚本",
+    "description": "声明:本脚本仅供学习和研究参考使用,请勿用于其它非法用途.使用本脚本所造成的任何影响,由用户自己负责!",
+    "url": "https://greasyfork.org/scripts/407243-bj%E8%81%8C%E4%B8%9A%E6%8A%80%E8%83%BD%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91auto%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/407243/Bj%E8%81%8C%E4%B8%9A%E6%8A%80%E8%83%BD%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91Auto%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 7781,
+    "license": null,
+    "version": "0.24",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

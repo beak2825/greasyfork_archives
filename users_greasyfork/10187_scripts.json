@@ -1,0 +1,35 @@
+[
+  {
+    "id": 404744,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-05T18:40:26.000Z",
+    "code_updated_at": "2020-06-05T18:50:25.000Z",
+    "namespace": "https://greasyfork.org/users/45389",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10187,
+        "name": "ggrane",
+        "created_at": "2015-04-04T03:52:00.000Z",
+        "url": "https://greasyfork.org/users/10187-ggrane"
+      }
+    ],
+    "name": "WME GIS Map TEST",
+    "description": "Open Arcgis test map in another window, at the same location as the WME map.  Keeps the location of the GIS map synced to WME.",
+    "url": "https://greasyfork.org/scripts/404744-wme-gis-map-test",
+    "code_url": "https://update.greasyfork.org/scripts/404744/WME%20GIS%20Map%20TEST.user.js",
+    "code_size": 31619,
+    "license": "GNU GPLv3",
+    "version": "0.5.002",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

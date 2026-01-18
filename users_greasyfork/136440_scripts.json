@@ -1,0 +1,35 @@
+[
+  {
+    "id": 402912,
+    "daily_installs": 0,
+    "total_installs": 144,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-08T20:27:43.000Z",
+    "code_updated_at": "2021-05-01T20:14:33.000Z",
+    "namespace": "https://PowerSheet.ai",
+    "support_url": "https://PowerSheet.ai/Free-NoCode-App-BI-Excel-Blockchain",
+    "contribution_url": "https://PowerSheet.ai/Free-NoCode-App-BI-Excel-Blockchain",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 136440,
+        "name": "PowerSheet.ai 🆓 No-Code App, Collab, Bot Platform",
+        "created_at": "2017-06-28T09:43:00.000Z",
+        "url": "https://greasyfork.org/users/136440-powersheet-ai-no-code-app-collab-bot-platform"
+      }
+    ],
+    "name": "Power IMDB：Trakt.tv & YouTube Trailers (Powered by PowerSheet.ai - Free No-Code Creation Platform)",
+    "description": "\"YouTube Trailer\" & \"View on Trakt.tv\" on IMDB navbar for TV & movie rating, watchlist & progress. — Powered by👉🆓 PowerSheet.ai |  The free 1st intelligent universal no-code/low-code platform | Collaborative creation, modeling, planning, analytics & web extensions | Sign up now free @ https://PowerSheet.ai",
+    "url": "https://greasyfork.org/scripts/402912-power-imdb-trakt-tv-youtube-trailers-powered-by-powersheet-ai-free-no-code-creation-platform",
+    "code_url": "https://update.greasyfork.org/scripts/402912/Power%20IMDB%EF%BC%9ATrakttv%20%20YouTube%20Trailers%20%28Powered%20by%20PowerSheetai%20-%20Free%20No-Code%20Creation%20Platform%29.user.js",
+    "code_size": 16225,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "2.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

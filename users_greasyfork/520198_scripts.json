@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401227,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-17T21:40:45.000Z",
+    "code_updated_at": "2020-04-17T21:40:45.000Z",
+    "namespace": "sneaky.youtube",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 520198,
+        "name": "E G1",
+        "created_at": "2020-04-17T18:49:49.000Z",
+        "url": "https://greasyfork.org/users/520198-e-g1"
+      }
+    ],
+    "name": "Remove Big Brother Blurbs",
+    "description": "remove-google-youtube-big-brother-censorship-fact-checker-garbage-blurb",
+    "url": "https://greasyfork.org/scripts/401227-remove-big-brother-blurbs",
+    "code_url": "https://update.greasyfork.org/scripts/401227/Remove%20Big%20Brother%20Blurbs.user.js",
+    "code_size": 637,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

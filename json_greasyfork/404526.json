@@ -1,0 +1,33 @@
+{
+  "id": 404526,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-02T07:08:58.000Z",
+  "code_updated_at": "2020-06-02T07:40:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 234817,
+      "name": "AlienZ",
+      "created_at": "2018-12-24T21:54:17.000Z",
+      "url": "https://greasyfork.org/users/234817-alienz"
+    }
+  ],
+  "name": "AtoZ Weapon Stat Helper",
+  "description": "Checks the stats of weapons and notifies of highest/lowest values",
+  "url": "https://greasyfork.org/scripts/404526-atoz-weapon-stat-helper",
+  "code_url": "https://update.greasyfork.org/scripts/404526/AtoZ%20Weapon%20Stat%20Helper.user.js",
+  "code_size": 2985,
+  "license": null,
+  "version": "1.0.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

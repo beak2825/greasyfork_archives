@@ -1,0 +1,59 @@
+{
+  "id": 407828,
+  "daily_installs": 0,
+  "total_installs": 281,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-28T02:52:51.000Z",
+  "code_updated_at": "2020-09-23T02:54:44.000Z",
+  "namespace": "https://greasyfork.org/users/243830",
+  "support_url": "https://www.xiaoyulive.top/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 243830,
+      "name": "quanzaiyu",
+      "created_at": "2019-02-01T13:54:05.000Z",
+      "url": "https://greasyfork.org/users/243830-quanzaiyu",
+      "scripts": [
+        {
+          "id": 407828,
+          "daily_installs": 0,
+          "total_installs": 281,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-07-28T02:52:51.000Z",
+          "code_updated_at": "2020-09-23T02:54:44.000Z",
+          "namespace": "https://greasyfork.org/users/243830",
+          "support_url": "https://www.xiaoyulive.top/",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Github导航栏扩展（添加Discover, Trending, Topics）",
+          "description": "导航栏增加Discover, Trending, Topics",
+          "url": "https://greasyfork.org/scripts/407828-github%E5%AF%BC%E8%88%AA%E6%A0%8F%E6%89%A9%E5%B1%95-%E6%B7%BB%E5%8A%A0discover-trending-topics",
+          "code_url": "https://update.greasyfork.org/scripts/407828/Github%E5%AF%BC%E8%88%AA%E6%A0%8F%E6%89%A9%E5%B1%95%EF%BC%88%E6%B7%BB%E5%8A%A0Discover%2C%20Trending%2C%20Topics%EF%BC%89.user.js",
+          "code_size": 2065,
+          "license": null,
+          "version": "1.0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Github导航栏扩展（添加Discover, Trending, Topics）",
+  "description": "导航栏增加Discover, Trending, Topics",
+  "url": "https://greasyfork.org/scripts/407828-github%E5%AF%BC%E8%88%AA%E6%A0%8F%E6%89%A9%E5%B1%95-%E6%B7%BB%E5%8A%A0discover-trending-topics",
+  "code_url": "https://update.greasyfork.org/scripts/407828/Github%E5%AF%BC%E8%88%AA%E6%A0%8F%E6%89%A9%E5%B1%95%EF%BC%88%E6%B7%BB%E5%8A%A0Discover%2C%20Trending%2C%20Topics%EF%BC%89.user.js",
+  "code_size": 2065,
+  "license": null,
+  "version": "1.0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

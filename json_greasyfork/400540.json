@@ -1,0 +1,59 @@
+{
+  "id": 400540,
+  "daily_installs": 0,
+  "total_installs": 1341,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-12T21:14:11.000Z",
+  "code_updated_at": "2020-04-12T21:14:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 505985,
+      "name": "Phuk Yu",
+      "created_at": "2020-04-12T21:13:08.000Z",
+      "url": "https://greasyfork.org/users/505985-phuk-yu",
+      "scripts": [
+        {
+          "id": 400540,
+          "daily_installs": 0,
+          "total_installs": 1341,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-12T21:14:11.000Z",
+          "code_updated_at": "2020-04-12T21:14:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ValorantDropFarmer",
+          "description": "Farm twitch drops automatically from your browser",
+          "url": "https://greasyfork.org/scripts/400540-valorantdropfarmer",
+          "code_url": "https://update.greasyfork.org/scripts/400540/ValorantDropFarmer.user.js",
+          "code_size": 7787,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ValorantDropFarmer",
+  "description": "Farm twitch drops automatically from your browser",
+  "url": "https://greasyfork.org/scripts/400540-valorantdropfarmer",
+  "code_url": "https://update.greasyfork.org/scripts/400540/ValorantDropFarmer.user.js",
+  "code_size": 7787,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

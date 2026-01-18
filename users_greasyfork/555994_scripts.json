@@ -63,6 +63,39 @@
     "version": "0.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 402905,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-08T16:30:05.000Z",
+    "code_updated_at": "2020-05-08T16:30:05.000Z",
+    "namespace": ".",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 555994,
+        "name": "lilPeenk",
+        "created_at": "2020-05-08T15:39:15.000Z",
+        "url": "https://greasyfork.org/users/555994-lilpeenk"
+      }
+    ],
+    "name": "BLACK CAMS",
+    "description": "BLACK CAM FIX",
+    "url": "https://greasyfork.org/scripts/402905-black-cams",
+    "code_url": "https://update.greasyfork.org/scripts/402905/BLACK%20CAMS.user.js",
+    "code_size": 2759,
+    "license": null,
+    "version": "1.1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

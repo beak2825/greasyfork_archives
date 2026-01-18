@@ -1,0 +1,34 @@
+{
+  "id": 407548,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-22T08:13:13.000Z",
+  "code_updated_at": "2020-07-22T08:13:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 669151,
+      "name": "yx48930",
+      "created_at": "2020-07-22T08:06:28.000Z",
+      "url": "https://greasyfork.org/users/669151-yx48930",
+      "scripts": []
+    }
+  ],
+  "name": "Neusoft",
+  "description": "点击",
+  "url": "https://greasyfork.org/scripts/407548-neusoft",
+  "code_url": "https://update.greasyfork.org/scripts/407548/Neusoft.user.js",
+  "code_size": 1342,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

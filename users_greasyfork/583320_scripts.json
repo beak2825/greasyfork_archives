@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405030,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-09T16:02:33.000Z",
+    "code_updated_at": "2021-04-24T17:56:52.000Z",
+    "namespace": "https://stevecohen.fr/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583320,
+        "name": "Steve COHEN",
+        "created_at": "2020-06-09T16:01:38.000Z",
+        "url": "https://greasyfork.org/users/583320-steve-cohen"
+      }
+    ],
+    "name": "EzPlatform Tools",
+    "description": "Add some usefull tools for eZPlatform Admin Interface",
+    "url": "https://greasyfork.org/scripts/405030-ezplatform-tools",
+    "code_url": "https://update.greasyfork.org/scripts/405030/EzPlatform%20Tools.user.js",
+    "code_size": 15563,
+    "license": null,
+    "version": "0.6",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

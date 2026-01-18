@@ -1,0 +1,34 @@
+{
+  "id": 404810,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-06T09:46:41.000Z",
+  "code_updated_at": "2020-06-06T10:02:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 581567,
+      "name": "Patryk Kruszyński",
+      "created_at": "2020-06-06T09:11:18.000Z",
+      "url": "https://greasyfork.org/users/581567-patryk-kruszy%C5%84ski",
+      "scripts": []
+    }
+  ],
+  "name": "Account Creator for UFS.PT [o2.pl]",
+  "description": "Account Creator for UFS.PT",
+  "url": "https://greasyfork.org/scripts/404810-account-creator-for-ufs-pt-o2-pl",
+  "code_url": "https://update.greasyfork.org/scripts/404810/Account%20Creator%20for%20UFSPT%20%5Bo2pl%5D.user.js",
+  "code_size": 6435,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 401398,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-19T12:38:10.000Z",
+  "code_updated_at": "2020-06-27T10:34:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 511669,
+      "name": "zzz_bt",
+      "created_at": "2020-04-15T01:13:15.000Z",
+      "url": "https://greasyfork.org/users/511669-zzz-bt",
+      "scripts": [
+        {
+          "id": 401398,
+          "daily_installs": 0,
+          "total_installs": 45,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-19T12:38:10.000Z",
+          "code_updated_at": "2020-06-27T10:34:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ヒカマニ時間",
+          "description": "みなさんは毎日どのくらいの時間hikakin_mania見てますか？",
+          "url": "https://greasyfork.org/scripts/401398-%E3%83%92%E3%82%AB%E3%83%9E%E3%83%8B%E6%99%82%E9%96%93",
+          "code_url": "https://update.greasyfork.org/scripts/401398/%E3%83%92%E3%82%AB%E3%83%9E%E3%83%8B%E6%99%82%E9%96%93.user.js",
+          "code_size": 3584,
+          "license": null,
+          "version": "0.7.2",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ヒカマニ時間",
+  "description": "みなさんは毎日どのくらいの時間hikakin_mania見てますか？",
+  "url": "https://greasyfork.org/scripts/401398-%E3%83%92%E3%82%AB%E3%83%9E%E3%83%8B%E6%99%82%E9%96%93",
+  "code_url": "https://update.greasyfork.org/scripts/401398/%E3%83%92%E3%82%AB%E3%83%9E%E3%83%8B%E6%99%82%E9%96%93.user.js",
+  "code_size": 3584,
+  "license": null,
+  "version": "0.7.2",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

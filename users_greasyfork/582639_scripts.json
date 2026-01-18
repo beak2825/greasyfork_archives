@@ -1,0 +1,35 @@
+[
+  {
+    "id": 404941,
+    "daily_installs": 0,
+    "total_installs": 497,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-08T11:08:54.000Z",
+    "code_updated_at": "2020-06-08T11:08:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 582639,
+        "name": "caoxie",
+        "created_at": "2020-06-08T11:05:41.000Z",
+        "url": "https://greasyfork.org/users/582639-caoxie"
+      }
+    ],
+    "name": "BOSS直聘过滤脚本",
+    "description": "BOSS直聘过滤已谈过的boss",
+    "url": "https://greasyfork.org/scripts/404941-boss%E7%9B%B4%E8%81%98%E8%BF%87%E6%BB%A4%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/404941/BOSS%E7%9B%B4%E8%81%98%E8%BF%87%E6%BB%A4%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 1482,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

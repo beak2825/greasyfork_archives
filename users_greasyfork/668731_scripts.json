@@ -97,5 +97,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 407479,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-21T02:23:21.000Z",
+    "code_updated_at": "2020-07-21T02:24:16.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/407479-anti-twitter-breadvirus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 668731,
+        "name": "CroMarmot",
+        "created_at": "2020-07-21T01:19:09.000Z",
+        "url": "https://greasyfork.org/users/668731-cromarmot"
+      }
+    ],
+    "name": "anti-twitter-breadvirus",
+    "description": "anti #breadvirus",
+    "url": "https://greasyfork.org/scripts/407479-anti-twitter-breadvirus",
+    "code_url": "https://update.greasyfork.org/scripts/407479/anti-twitter-breadvirus.user.js",
+    "code_size": 1525,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

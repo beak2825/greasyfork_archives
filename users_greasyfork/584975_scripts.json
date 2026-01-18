@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405127,
+    "daily_installs": 0,
+    "total_installs": 129,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-11T13:16:48.000Z",
+    "code_updated_at": "2021-04-26T07:58:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 584975,
+        "name": "RecLusIve-F",
+        "created_at": "2020-06-11T13:08:35.000Z",
+        "url": "https://greasyfork.org/users/584975-reclusive-f"
+      }
+    ],
+    "name": "杭电选课助手",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/405127-%E6%9D%AD%E7%94%B5%E9%80%89%E8%AF%BE%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/405127/%E6%9D%AD%E7%94%B5%E9%80%89%E8%AF%BE%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 11978,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

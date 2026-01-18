@@ -1,0 +1,59 @@
+{
+  "id": 398510,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-23T11:19:04.000Z",
+  "code_updated_at": "2020-03-28T14:01:26.000Z",
+  "namespace": "https://github.com/y-oksaku/AtCoderLabelChanger",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 467648,
+      "name": "y-oksaku",
+      "created_at": "2020-03-23T11:12:41.000Z",
+      "url": "https://greasyfork.org/users/467648-y-oksaku",
+      "scripts": [
+        {
+          "id": 398510,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-23T11:19:04.000Z",
+          "code_updated_at": "2020-03-28T14:01:26.000Z",
+          "namespace": "https://github.com/y-oksaku/AtCoderLabelChanger",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AtCoderLabelChanger",
+          "description": "提出結果をまとめるスクリプト．ついでに色も変えます．",
+          "url": "https://greasyfork.org/scripts/398510-atcoderlabelchanger",
+          "code_url": "https://update.greasyfork.org/scripts/398510/AtCoderLabelChanger.user.js",
+          "code_size": 1995,
+          "license": "Creative Commons Zero v1.0 Universal",
+          "version": "1.2",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AtCoderLabelChanger",
+  "description": "提出結果をまとめるスクリプト．ついでに色も変えます．",
+  "url": "https://greasyfork.org/scripts/398510-atcoderlabelchanger",
+  "code_url": "https://update.greasyfork.org/scripts/398510/AtCoderLabelChanger.user.js",
+  "code_size": 1995,
+  "license": "Creative Commons Zero v1.0 Universal",
+  "version": "1.2",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

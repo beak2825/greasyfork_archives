@@ -1,0 +1,34 @@
+{
+  "id": 408900,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-17T06:53:51.000Z",
+  "code_updated_at": "2020-08-17T07:16:02.000Z",
+  "namespace": "https://greasyfork.org/users/676911",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 676911,
+      "name": "AirManH",
+      "created_at": "2020-08-17T06:44:50.000Z",
+      "url": "https://greasyfork.org/users/676911-airmanh",
+      "scripts": []
+    }
+  ],
+  "name": "air-douyu-lite",
+  "description": "douyu lite",
+  "url": "https://greasyfork.org/scripts/408900-air-douyu-lite",
+  "code_url": "https://update.greasyfork.org/scripts/408900/air-douyu-lite.user.js",
+  "code_size": 4236,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

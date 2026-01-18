@@ -1,0 +1,59 @@
+{
+  "id": 408786,
+  "daily_installs": 0,
+  "total_installs": 48,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-15T12:19:55.000Z",
+  "code_updated_at": "2020-08-15T12:23:16.000Z",
+  "namespace": "https://greasyfork.org/ru/users/237951-attention",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 237951,
+      "name": "Attention",
+      "created_at": "2019-01-07T14:48:06.000Z",
+      "url": "https://greasyfork.org/users/237951-attention",
+      "scripts": [
+        {
+          "id": 408786,
+          "daily_installs": 0,
+          "total_installs": 48,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-15T12:19:55.000Z",
+          "code_updated_at": "2020-08-15T12:23:16.000Z",
+          "namespace": "https://greasyfork.org/ru/users/237951-attention",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Unsubscribe from all steam curators",
+          "description": "Use this script you can unsubcribe easly from all steam curators.",
+          "url": "https://greasyfork.org/scripts/408786-unsubscribe-from-all-steam-curators",
+          "code_url": "https://update.greasyfork.org/scripts/408786/Unsubscribe%20from%20all%20steam%20curators.user.js",
+          "code_size": 2141,
+          "license": null,
+          "version": "0.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Unsubscribe from all steam curators",
+  "description": "Use this script you can unsubcribe easly from all steam curators.",
+  "url": "https://greasyfork.org/scripts/408786-unsubscribe-from-all-steam-curators",
+  "code_url": "https://update.greasyfork.org/scripts/408786/Unsubscribe%20from%20all%20steam%20curators.user.js",
+  "code_size": 2141,
+  "license": null,
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

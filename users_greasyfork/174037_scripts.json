@@ -1,0 +1,200 @@
+[
+  {
+    "id": 405317,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-14T09:07:33.000Z",
+    "code_updated_at": "2020-12-11T21:16:19.000Z",
+    "namespace": "almaceleste",
+    "support_url": "https://github.com/almaceleste/userstyles/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174037,
+        "name": "almaceleste",
+        "created_at": "2018-03-09T10:21:53.000Z",
+        "url": "https://greasyfork.org/users/174037-almaceleste"
+      }
+    ],
+    "name": "MI-R3G Padavan Tweaks",
+    "description": "fixes and improvements for MI-R3G router Padavan firmware",
+    "url": "https://greasyfork.org/scripts/405317-mi-r3g-padavan-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/405317/MI-R3G%20Padavan%20Tweaks.user.css",
+    "code_size": 11116,
+    "license": "AGPL-3.0-or-later; http://www.gnu.org/licenses/agpl.txt",
+    "version": "0.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 403416,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-15T19:59:07.000Z",
+    "code_updated_at": "2020-05-16T02:08:40.000Z",
+    "namespace": "almaceleste",
+    "support_url": "https://github.com/almaceleste/userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174037,
+        "name": "almaceleste",
+        "created_at": "2018-03-09T10:21:53.000Z",
+        "url": "https://greasyfork.org/users/174037-almaceleste"
+      }
+    ],
+    "name": "Watch Transition",
+    "description": "watches for a transition event and prints it to the console",
+    "url": "https://greasyfork.org/scripts/403416-watch-transition",
+    "code_url": "https://update.greasyfork.org/scripts/403416/Watch%20Transition.user.js",
+    "code_size": 13407,
+    "license": "AGPL-3.0-or-later; http://www.gnu.org/licenses/agpl",
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 402637,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-04T23:57:47.000Z",
+    "code_updated_at": "2020-11-24T09:47:51.000Z",
+    "namespace": "almaceleste",
+    "support_url": "https://github.com/almaceleste/userstyles/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174037,
+        "name": "almaceleste",
+        "created_at": "2018-03-09T10:21:53.000Z",
+        "url": "https://greasyfork.org/users/174037-almaceleste"
+      }
+    ],
+    "name": "MDN Editor (UI Tweaks)",
+    "description": "tweaks for the UI of the MDN Editor (https://wiki.developer.mozilla.org/*$edit)",
+    "url": "https://greasyfork.org/scripts/402637-mdn-editor-ui-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/402637/MDN%20Editor%20%28UI%20Tweaks%29.user.css",
+    "code_size": 2564,
+    "license": "AGPL-3.0-or-later; http://www.gnu.org/licenses/agpl.txt",
+    "version": "0.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 402636,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-04T23:57:46.000Z",
+    "code_updated_at": "2020-11-24T10:09:56.000Z",
+    "namespace": "almaceleste",
+    "support_url": "https://github.com/almaceleste/userstyles/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174037,
+        "name": "almaceleste",
+        "created_at": "2018-03-09T10:21:53.000Z",
+        "url": "https://greasyfork.org/users/174037-almaceleste"
+      }
+    ],
+    "name": "MDN Editor (Gray Toolbox)",
+    "description": "paints the MDN Editor right and left toolboxes and the comment tool to the gray color",
+    "url": "https://greasyfork.org/scripts/402636-mdn-editor-gray-toolbox",
+    "code_url": "https://update.greasyfork.org/scripts/402636/MDN%20Editor%20%28Gray%20Toolbox%29.user.css",
+    "code_size": 2171,
+    "license": "AGPL-3.0-or-later; http://www.gnu.org/licenses/agpl.txt",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 402635,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-04T23:57:45.000Z",
+    "code_updated_at": "2020-05-10T01:13:38.000Z",
+    "namespace": "almaceleste",
+    "support_url": "https://github.com/almaceleste/userstyles/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174037,
+        "name": "almaceleste",
+        "created_at": "2018-03-09T10:21:53.000Z",
+        "url": "https://greasyfork.org/users/174037-almaceleste"
+      }
+    ],
+    "name": "Youtube Progress Bar Highlighting",
+    "description": "highlights the progress bar of the youtube player on hover",
+    "url": "https://greasyfork.org/scripts/402635-youtube-progress-bar-highlighting",
+    "code_url": "https://update.greasyfork.org/scripts/402635/Youtube%20Progress%20Bar%20Highlighting.user.css",
+    "code_size": 1660,
+    "license": "AGPL-3.0-or-later; http://www.gnu.org/licenses/agpl.txt",
+    "version": "0.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 402634,
+    "daily_installs": 0,
+    "total_installs": 96,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-04T23:55:57.000Z",
+    "code_updated_at": "2020-12-11T22:52:58.000Z",
+    "namespace": "almaceleste",
+    "support_url": "https://github.com/almaceleste/userstyles/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174037,
+        "name": "almaceleste",
+        "created_at": "2018-03-09T10:21:53.000Z",
+        "url": "https://greasyfork.org/users/174037-almaceleste"
+      }
+    ],
+    "name": "Stylus Theme (Dark Side)",
+    "description": "Stylus dark theme, inspired by Randy W. Sims' Stylus Theme (Dark) <https://github.com/simsrw73/stylus-theme>",
+    "url": "https://greasyfork.org/scripts/402634-stylus-theme-dark-side",
+    "code_url": "https://update.greasyfork.org/scripts/402634/Stylus%20Theme%20%28Dark%20Side%29.user.css",
+    "code_size": 40033,
+    "license": "AGPL-3.0-or-later; http://www.gnu.org/licenses/agpl.txt",
+    "version": "0.5.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

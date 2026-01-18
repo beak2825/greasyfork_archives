@@ -1,0 +1,68 @@
+[
+  {
+    "id": 406352,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-01T18:49:19.000Z",
+    "code_updated_at": "2020-07-01T18:49:18.000Z",
+    "namespace": "http://localhost",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662239,
+        "name": "faouzi faouzi",
+        "created_at": "2020-07-01T18:38:25.000Z",
+        "url": "https://greasyfork.org/users/662239-faouzi-faouzi"
+      }
+    ],
+    "name": "DoodleGoneUpdated",
+    "description": "Replace the Google logo with a hosted image",
+    "url": "https://greasyfork.org/scripts/406352-doodlegoneupdated",
+    "code_url": "https://update.greasyfork.org/scripts/406352/DoodleGoneUpdated.user.js",
+    "code_size": 7126,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406349,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-01T18:43:40.000Z",
+    "code_updated_at": "2020-07-01T18:43:40.000Z",
+    "namespace": "http://localhost",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 662239,
+        "name": "faouzi faouzi",
+        "created_at": "2020-07-01T18:38:25.000Z",
+        "url": "https://greasyfork.org/users/662239-faouzi-faouzi"
+      }
+    ],
+    "name": "DoodleGoneUpdated",
+    "description": "Replace the Google logo with a hosted image",
+    "url": "https://greasyfork.org/scripts/406349-doodlegoneupdated",
+    "code_url": "https://update.greasyfork.org/scripts/406349/DoodleGoneUpdated.user.js",
+    "code_size": 896,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

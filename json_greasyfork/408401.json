@@ -1,0 +1,59 @@
+{
+  "id": 408401,
+  "daily_installs": 0,
+  "total_installs": 264,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-08T08:22:16.000Z",
+  "code_updated_at": "2021-06-06T12:26:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 674423,
+      "name": "冤犯",
+      "created_at": "2020-08-08T06:57:57.000Z",
+      "url": "https://greasyfork.org/users/674423-%E5%86%A4%E7%8A%AF",
+      "scripts": [
+        {
+          "id": 408401,
+          "daily_installs": 0,
+          "total_installs": 264,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-08T08:22:16.000Z",
+          "code_updated_at": "2021-06-06T12:26:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AcFun文章区漫画模式支持放大拖动",
+          "description": "漫画模式放大拖动(代码源于网络)",
+          "url": "https://greasyfork.org/scripts/408401-acfun%E6%96%87%E7%AB%A0%E5%8C%BA%E6%BC%AB%E7%94%BB%E6%A8%A1%E5%BC%8F%E6%94%AF%E6%8C%81%E6%94%BE%E5%A4%A7%E6%8B%96%E5%8A%A8",
+          "code_url": "https://update.greasyfork.org/scripts/408401/AcFun%E6%96%87%E7%AB%A0%E5%8C%BA%E6%BC%AB%E7%94%BB%E6%A8%A1%E5%BC%8F%E6%94%AF%E6%8C%81%E6%94%BE%E5%A4%A7%E6%8B%96%E5%8A%A8.user.js",
+          "code_size": 2319,
+          "license": null,
+          "version": "0.1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AcFun文章区漫画模式支持放大拖动",
+  "description": "漫画模式放大拖动(代码源于网络)",
+  "url": "https://greasyfork.org/scripts/408401-acfun%E6%96%87%E7%AB%A0%E5%8C%BA%E6%BC%AB%E7%94%BB%E6%A8%A1%E5%BC%8F%E6%94%AF%E6%8C%81%E6%94%BE%E5%A4%A7%E6%8B%96%E5%8A%A8",
+  "code_url": "https://update.greasyfork.org/scripts/408401/AcFun%E6%96%87%E7%AB%A0%E5%8C%BA%E6%BC%AB%E7%94%BB%E6%A8%A1%E5%BC%8F%E6%94%AF%E6%8C%81%E6%94%BE%E5%A4%A7%E6%8B%96%E5%8A%A8.user.js",
+  "code_size": 2319,
+  "license": null,
+  "version": "0.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 406659,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-07T21:32:29.000Z",
+  "code_updated_at": "2020-07-07T21:32:29.000Z",
+  "namespace": "Bot EatForSpeed by Mist",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 396113,
+      "name": "Mist161",
+      "created_at": "2019-11-08T13:23:19.000Z",
+      "url": "https://greasyfork.org/users/396113-mist161",
+      "scripts": []
+    }
+  ],
+  "name": "Bot EatForSpeed by Mist",
+  "description": "bot, macro",
+  "url": "https://greasyfork.org/scripts/406659-bot-eatforspeed-by-mist",
+  "code_url": "https://update.greasyfork.org/scripts/406659/Bot%20EatForSpeed%20by%20Mist.user.js",
+  "code_size": 660,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

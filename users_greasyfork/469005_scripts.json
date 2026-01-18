@@ -1,0 +1,35 @@
+[
+  {
+    "id": 398717,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-25T16:21:33.000Z",
+    "code_updated_at": "2020-03-25T17:09:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 469005,
+        "name": "xoomoon",
+        "created_at": "2020-03-25T16:18:45.000Z",
+        "url": "https://greasyfork.org/users/469005-xoomoon"
+      }
+    ],
+    "name": "学堂在线防止视频暂停播放（仅华工测试过）",
+    "description": "防止在切换页面时暂停视频播放",
+    "url": "https://greasyfork.org/scripts/398717-%E5%AD%A6%E5%A0%82%E5%9C%A8%E7%BA%BF%E9%98%B2%E6%AD%A2%E8%A7%86%E9%A2%91%E6%9A%82%E5%81%9C%E6%92%AD%E6%94%BE-%E4%BB%85%E5%8D%8E%E5%B7%A5%E6%B5%8B%E8%AF%95%E8%BF%87",
+    "code_url": "https://update.greasyfork.org/scripts/398717/%E5%AD%A6%E5%A0%82%E5%9C%A8%E7%BA%BF%E9%98%B2%E6%AD%A2%E8%A7%86%E9%A2%91%E6%9A%82%E5%81%9C%E6%92%AD%E6%94%BE%EF%BC%88%E4%BB%85%E5%8D%8E%E5%B7%A5%E6%B5%8B%E8%AF%95%E8%BF%87%EF%BC%89.user.js",
+    "code_size": 587,
+    "license": null,
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

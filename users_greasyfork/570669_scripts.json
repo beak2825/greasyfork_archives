@@ -1,0 +1,35 @@
+[
+  {
+    "id": 403933,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-22T14:19:27.000Z",
+    "code_updated_at": "2020-05-22T14:19:27.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570669,
+        "name": "pnppl",
+        "created_at": "2020-05-22T14:18:30.000Z",
+        "url": "https://greasyfork.org/users/570669-pnppl"
+      }
+    ],
+    "name": "Retro hyperlinks",
+    "description": "Make hyperlinks more visible. Guaranteed to make most pages uglier.",
+    "url": "https://greasyfork.org/scripts/403933-retro-hyperlinks",
+    "code_url": "https://update.greasyfork.org/scripts/403933/Retro%20hyperlinks.user.js",
+    "code_size": 1245,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -691,5 +691,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411363,
+    "daily_installs": 0,
+    "total_installs": 190,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-15T08:32:27.000Z",
+    "code_updated_at": "2020-09-15T08:54:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 671442,
+        "name": "eggplants",
+        "created_at": "2020-07-29T23:31:32.000Z",
+        "url": "https://greasyfork.org/users/671442-eggplants"
+      }
+    ],
+    "name": "Amazon Sponsored Item Remover",
+    "description": "Remove Sponcored items from search result page on Amazon",
+    "url": "https://greasyfork.org/scripts/411363-amazon-sponsored-item-remover",
+    "code_url": "https://update.greasyfork.org/scripts/411363/Amazon%20Sponsored%20Item%20Remover.user.js",
+    "code_size": 811,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 410929,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-06T21:43:15.000Z",
+    "code_updated_at": "2020-09-10T19:24:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 671442,
+        "name": "eggplants",
+        "created_at": "2020-07-29T23:31:32.000Z",
+        "url": "https://greasyfork.org/users/671442-eggplants"
+      }
+    ],
+    "name": "Futaba Ad Remover",
+    "description": "Remove Futabachannel ads",
+    "url": "https://greasyfork.org/scripts/410929-futaba-ad-remover",
+    "code_url": "https://update.greasyfork.org/scripts/410929/Futaba%20Ad%20Remover.user.js",
+    "code_size": 1410,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 410778,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-03T22:13:03.000Z",
+    "code_updated_at": "2020-09-04T11:12:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 671442,
+        "name": "eggplants",
+        "created_at": "2020-07-29T23:31:32.000Z",
+        "url": "https://greasyfork.org/users/671442-eggplants"
+      }
+    ],
+    "name": "YouTube Dislike  Concealer",
+    "description": "Hide the number of dislikes in YouTube",
+    "url": "https://greasyfork.org/scripts/410778-youtube-dislike-concealer",
+    "code_url": "https://update.greasyfork.org/scripts/410778/YouTube%20Dislike%20%20Concealer.user.js",
+    "code_size": 774,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 409688,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-21T21:37:45.000Z",
+    "code_updated_at": "2021-10-07T18:28:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 671442,
+        "name": "eggplants",
+        "created_at": "2020-07-29T23:31:32.000Z",
+        "url": "https://greasyfork.org/users/671442-eggplants"
+      }
+    ],
+    "name": "Add All-Good Buttons into YouTube",
+    "description": "[WIP][!!!NOT WORKING!!!]Add a button which push all good buttons of a video and comments at once",
+    "url": "https://greasyfork.org/scripts/409688-add-all-good-buttons-into-youtube",
+    "code_url": "https://update.greasyfork.org/scripts/409688/Add%20All-Good%20Buttons%20into%20YouTube.user.js",
+    "code_size": 1021,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408680,
+    "daily_installs": 0,
+    "total_installs": 3031,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-13T06:27:04.000Z",
+    "code_updated_at": "2020-10-06T22:20:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 671442,
+        "name": "eggplants",
+        "created_at": "2020-07-29T23:31:32.000Z",
+        "url": "https://greasyfork.org/users/671442-eggplants"
+      }
+    ],
+    "name": "YouTube Ad Remover",
+    "description": "Skip and remove YouTube ads without click",
+    "url": "https://greasyfork.org/scripts/408680-youtube-ad-remover",
+    "code_url": "https://update.greasyfork.org/scripts/408680/YouTube%20Ad%20Remover.user.js",
+    "code_size": 1683,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407912,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-29T23:41:03.000Z",
+    "code_updated_at": "2021-04-05T13:01:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 671442,
+        "name": "eggplants",
+        "created_at": "2020-07-29T23:31:32.000Z",
+        "url": "https://greasyfork.org/users/671442-eggplants"
+      }
+    ],
+    "name": "Twitter Rainbow Stream",
+    "description": "Make your Twetter Stream electrifying!",
+    "url": "https://greasyfork.org/scripts/407912-twitter-rainbow-stream",
+    "code_url": "https://update.greasyfork.org/scripts/407912/Twitter%20Rainbow%20Stream.user.js",
+    "code_size": 1154,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

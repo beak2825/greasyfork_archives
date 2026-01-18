@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 410752,
+    "daily_installs": 0,
+    "total_installs": 84,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-03T12:34:44.000Z",
+    "code_updated_at": "2020-09-03T18:15:33.000Z",
+    "namespace": "https://greasyfork.org/en/users/8981-buzz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8981,
+        "name": "buzz",
+        "created_at": "2015-02-09T00:28:53.000Z",
+        "url": "https://greasyfork.org/users/8981-buzz"
+      }
+    ],
+    "name": "Spiegel.de without JavaScript",
+    "description": "Enables HTML5 video and lazyloaded images with disabled JavaScript.",
+    "url": "https://greasyfork.org/scripts/410752-spiegel-de-without-javascript",
+    "code_url": "https://update.greasyfork.org/scripts/410752/Spiegelde%20without%20JavaScript.user.js",
+    "code_size": 3034,
+    "license": "GPLv2",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

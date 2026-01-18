@@ -1,0 +1,59 @@
+{
+  "id": 402539,
+  "daily_installs": 0,
+  "total_installs": 393,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 4,
+  "created_at": "2020-05-03T10:44:12.000Z",
+  "code_updated_at": "2021-05-24T11:10:37.000Z",
+  "namespace": "https://greasyfork.org/users/549792",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 549792,
+      "name": "George Tomyuk",
+      "created_at": "2020-05-03T09:47:56.000Z",
+      "url": "https://greasyfork.org/users/549792-george-tomyuk",
+      "scripts": [
+        {
+          "id": 402539,
+          "daily_installs": 0,
+          "total_installs": 393,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 4,
+          "created_at": "2020-05-03T10:44:12.000Z",
+          "code_updated_at": "2021-05-24T11:10:37.000Z",
+          "namespace": "https://greasyfork.org/users/549792",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gmail Dark Theme",
+          "description": "Dark theme for Gmail. Changing default dark theme, some backround colors and adding some borders",
+          "url": "https://greasyfork.org/scripts/402539-gmail-dark-theme",
+          "code_url": "https://update.greasyfork.org/scripts/402539/Gmail%20Dark%20Theme.user.js",
+          "code_size": 2046,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gmail Dark Theme",
+  "description": "Dark theme for Gmail. Changing default dark theme, some backround colors and adding some borders",
+  "url": "https://greasyfork.org/scripts/402539-gmail-dark-theme",
+  "code_url": "https://update.greasyfork.org/scripts/402539/Gmail%20Dark%20Theme.user.js",
+  "code_size": 2046,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

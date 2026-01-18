@@ -228,6 +228,72 @@
     "version": "1.00",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 410047,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-27T18:06:41.000Z",
+    "code_updated_at": "2020-08-27T23:59:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 95175,
+        "name": "JZersche",
+        "created_at": "2017-01-15T19:14:43.000Z",
+        "url": "https://greasyfork.org/users/95175-jzersche"
+      }
+    ],
+    "name": "FB Post Screenshot [JZers]",
+    "description": "Take Screenshots of Facebook Posts",
+    "url": "https://greasyfork.org/scripts/410047-fb-post-screenshot-jzers",
+    "code_url": "https://update.greasyfork.org/scripts/410047/FB%20Post%20Screenshot%20%5BJZers%5D.user.js",
+    "code_size": 3910,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 408525,
+    "daily_installs": 0,
+    "total_installs": 131,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-08-10T07:03:17.000Z",
+    "code_updated_at": "2020-08-11T22:31:25.000Z",
+    "namespace": "https://greasyfork.org/users/95175",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 95175,
+        "name": "JZersche",
+        "created_at": "2017-01-15T19:14:43.000Z",
+        "url": "https://greasyfork.org/users/95175-jzersche"
+      }
+    ],
+    "name": "FB: Post Tools & Statistics DEBUG",
+    "description": "Shows exact timestamps and post information on Facebook Posts.",
+    "url": "https://greasyfork.org/scripts/408525-fb-post-tools-statistics-debug",
+    "code_url": "https://update.greasyfork.org/scripts/408525/FB%3A%20Post%20Tools%20%20Statistics%20DEBUG.user.js",
+    "code_size": 24705,
+    "license": null,
+    "version": "0.0.1 DEBUG VERSION",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

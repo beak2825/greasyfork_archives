@@ -1,0 +1,34 @@
+{
+  "id": 403692,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-18T21:41:51.000Z",
+  "code_updated_at": "2020-05-18T21:41:51.000Z",
+  "namespace": "https://tildoshnaya.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 311985,
+      "name": "Андрей Балыбердин",
+      "created_at": "2019-06-23T08:36:49.000Z",
+      "url": "https://greasyfork.org/users/311985-%D0%B0%D0%BD%D0%B4%D1%80%D0%B5%D0%B9-%D0%B1%D0%B0%D0%BB%D1%8B%D0%B1%D0%B5%D1%80%D0%B4%D0%B8%D0%BD",
+      "scripts": []
+    }
+  ],
+  "name": "Zero dev",
+  "description": "description",
+  "url": "https://greasyfork.org/scripts/403692-zero-dev",
+  "code_url": "https://update.greasyfork.org/scripts/403692/Zero%20dev.user.js",
+  "code_size": 44404,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

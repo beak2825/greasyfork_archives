@@ -1449,6 +1449,171 @@
     "version": "0.2",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401299,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-18T06:59:11.000Z",
+    "code_updated_at": "2020-04-18T06:59:10.000Z",
+    "namespace": "https://greasyfork.org/en/users/145271-aybecee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 145271,
+        "name": "AyBeCee",
+        "created_at": "2017-07-31T10:18:54.000Z",
+        "url": "https://greasyfork.org/users/145271-aybecee"
+      }
+    ],
+    "name": "Bulk Assay Bloodlines",
+    "description": "Checks bloodlines in bulk",
+    "url": "https://greasyfork.org/scripts/401299-bulk-assay-bloodlines",
+    "code_url": "https://update.greasyfork.org/scripts/401299/Bulk%20Assay%20Bloodlines.user.js",
+    "code_size": 2285,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396148,
+    "daily_installs": 0,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-07T10:10:29.000Z",
+    "code_updated_at": "2020-10-25T03:29:54.000Z",
+    "namespace": "https://greasyfork.org/en/users/145271-aybecee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 145271,
+        "name": "AyBeCee",
+        "created_at": "2017-07-31T10:18:54.000Z",
+        "url": "https://greasyfork.org/users/145271-aybecee"
+      }
+    ],
+    "name": "Flight Rising: Auto Buyer",
+    "description": "Automatically refreshes until there's a cheap dragon to buy.",
+    "url": "https://greasyfork.org/scripts/396148-flight-rising-auto-buyer",
+    "code_url": "https://update.greasyfork.org/scripts/396148/Flight%20Rising%3A%20Auto%20Buyer.user.js",
+    "code_size": 7365,
+    "license": null,
+    "version": "0.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 395596,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-23T23:39:35.000Z",
+    "code_updated_at": "2020-01-23T23:39:35.000Z",
+    "namespace": "https://greasyfork.org/en/users/145271-aybecee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 145271,
+        "name": "AyBeCee",
+        "created_at": "2017-07-31T10:18:54.000Z",
+        "url": "https://greasyfork.org/users/145271-aybecee"
+      }
+    ],
+    "name": "Breeding Calendar",
+    "description": "Shows a list of when your dragons can breed on the sidebar, ordered chronologically.",
+    "url": "https://greasyfork.org/scripts/395596-breeding-calendar",
+    "code_url": "https://update.greasyfork.org/scripts/395596/Breeding%20Calendar.user.js",
+    "code_size": 2874,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 395560,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-23T00:12:30.000Z",
+    "code_updated_at": "2020-01-23T00:12:29.000Z",
+    "namespace": "https://greasyfork.org/en/users/145271-aybecee",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 145271,
+        "name": "AyBeCee",
+        "created_at": "2017-07-31T10:18:54.000Z",
+        "url": "https://greasyfork.org/users/145271-aybecee"
+      }
+    ],
+    "name": "Skip redirect",
+    "description": "Skips the redirecting page on Flight Rising",
+    "url": "https://greasyfork.org/scripts/395560-skip-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/395560/Skip%20redirect.user.js",
+    "code_size": 557,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 395072,
+    "daily_installs": 0,
+    "total_installs": 167,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-13T02:58:40.000Z",
+    "code_updated_at": "2020-06-07T05:30:15.000Z",
+    "namespace": "https://greasyfork.org/users/145271",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 145271,
+        "name": "AyBeCee",
+        "created_at": "2017-07-31T10:18:54.000Z",
+        "url": "https://greasyfork.org/users/145271-aybecee"
+      }
+    ],
+    "name": "Trivia Solver",
+    "description": "Automatically solves Trivia questions. Takes answers from https://www1.flightrising.com/forums/gde/1128248",
+    "url": "https://greasyfork.org/scripts/395072-trivia-solver",
+    "code_url": "https://update.greasyfork.org/scripts/395072/Trivia%20Solver.user.js",
+    "code_size": 60848,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 398711,
+  "daily_installs": 0,
+  "total_installs": 272,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-25T13:42:42.000Z",
+  "code_updated_at": "2020-04-15T08:32:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 468860,
+      "name": "Maxime B",
+      "created_at": "2020-03-25T11:27:21.000Z",
+      "url": "https://greasyfork.org/users/468860-maxime-b",
+      "scripts": [
+        {
+          "id": 398711,
+          "daily_installs": 0,
+          "total_installs": 272,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-25T13:42:42.000Z",
+          "code_updated_at": "2020-04-15T08:32:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Poe trade finer-search-options",
+          "description": "enables finer search options in Path of exile official trade site, allowing filtering in/out mods directly from the current search result list",
+          "url": "https://greasyfork.org/scripts/398711-poe-trade-finer-search-options",
+          "code_url": "https://update.greasyfork.org/scripts/398711/Poe%20trade%20finer-search-options.user.js",
+          "code_size": 16178,
+          "license": "MIT License",
+          "version": "1.1.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Poe trade finer-search-options",
+  "description": "enables finer search options in Path of exile official trade site, allowing filtering in/out mods directly from the current search result list",
+  "url": "https://greasyfork.org/scripts/398711-poe-trade-finer-search-options",
+  "code_url": "https://update.greasyfork.org/scripts/398711/Poe%20trade%20finer-search-options.user.js",
+  "code_size": 16178,
+  "license": "MIT License",
+  "version": "1.1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 400187,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-10T03:45:01.000Z",
+    "code_updated_at": "2020-04-19T16:24:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 498883,
+        "name": "Windzard",
+        "created_at": "2020-04-10T03:43:03.000Z",
+        "url": "https://greasyfork.org/users/498883-windzard"
+      }
+    ],
+    "name": "Minimal Live",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/400187-minimal-live",
+    "code_url": "https://update.greasyfork.org/scripts/400187/Minimal%20Live.user.js",
+    "code_size": 675,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

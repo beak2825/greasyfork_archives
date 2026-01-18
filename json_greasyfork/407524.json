@@ -1,0 +1,34 @@
+{
+  "id": 407524,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-21T17:55:30.000Z",
+  "code_updated_at": "2020-07-21T18:13:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 667293,
+      "name": "ivang7",
+      "created_at": "2020-07-16T07:02:10.000Z",
+      "url": "https://greasyfork.org/users/667293-ivang7",
+      "scripts": []
+    }
+  ],
+  "name": "AutoScrollAndFocusOnPreviousSuiteTestIt",
+  "description": "При переключении сьютов каждый раз запоминает активный сьют (по имени), при перезагрузке дерева (перемещение/ренейм) - скролит дерево вниз, ищет сьют по имени и активирует его. Если было переименование - по старому имени не найдет, просто проскролит вниз. Если несколько сьютов с одинаковым именем - будет выбирать первый по дереву.",
+  "url": "https://greasyfork.org/scripts/407524-autoscrollandfocusonprevioussuitetestit",
+  "code_url": "https://update.greasyfork.org/scripts/407524/AutoScrollAndFocusOnPreviousSuiteTestIt.user.js",
+  "code_size": 3432,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

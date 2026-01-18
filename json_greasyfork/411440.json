@@ -1,0 +1,34 @@
+{
+  "id": 411440,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-16T17:08:48.000Z",
+  "code_updated_at": "2020-09-16T17:08:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 675089,
+      "name": "사리",
+      "created_at": "2020-08-10T15:26:43.000Z",
+      "url": "https://greasyfork.org/users/675089-%EC%82%AC%EB%A6%AC",
+      "scripts": []
+    }
+  ],
+  "name": "이랜드몰 신한 2개 있을때 사용 밑에 01 , 02 수정",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/411440-%EC%9D%B4%EB%9E%9C%EB%93%9C%EB%AA%B0-%EC%8B%A0%ED%95%9C-2%EA%B0%9C-%EC%9E%88%EC%9D%84%EB%95%8C-%EC%82%AC%EC%9A%A9-%EB%B0%91%EC%97%90-01-02-%EC%88%98%EC%A0%95",
+  "code_url": "https://update.greasyfork.org/scripts/411440/%EC%9D%B4%EB%9E%9C%EB%93%9C%EB%AA%B0%20%EC%8B%A0%ED%95%9C%202%EA%B0%9C%20%EC%9E%88%EC%9D%84%EB%95%8C%20%EC%82%AC%EC%9A%A9%20%EB%B0%91%EC%97%90%2001%20%2C%2002%20%EC%88%98%EC%A0%95.user.js",
+  "code_size": 4297,
+  "license": null,
+  "version": "1.9",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

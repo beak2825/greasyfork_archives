@@ -1,0 +1,35 @@
+[
+  {
+    "id": 403980,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-23T10:35:41.000Z",
+    "code_updated_at": "2021-08-15T01:52:33.000Z",
+    "namespace": "Chia233",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 571084,
+        "name": "Chia233",
+        "created_at": "2020-05-23T10:32:01.000Z",
+        "url": "https://greasyfork.org/users/571084-chia233"
+      }
+    ],
+    "name": "Twitch - unnerf oddoneSiSenor",
+    "description": "Increases oddoneSiSenor size back to the original size (thicc AF) POGGERS",
+    "url": "https://greasyfork.org/scripts/403980-twitch-unnerf-oddonesisenor",
+    "code_url": "https://update.greasyfork.org/scripts/403980/Twitch%20-%20unnerf%20oddoneSiSenor.user.js",
+    "code_size": 1586,
+    "license": null,
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

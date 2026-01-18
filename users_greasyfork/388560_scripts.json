@@ -30,6 +30,105 @@
     "version": "2021.6.15.02",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 404684,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-04T12:34:14.000Z",
+    "code_updated_at": "2020-06-04T12:38:22.000Z",
+    "namespace": "https://jq.qq.com/?_wv=1027&k=5LDqRdJ",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388560,
+        "name": "等那璀璨星辰",
+        "created_at": "2019-10-19T09:19:45.000Z",
+        "url": "https://greasyfork.org/users/388560-%E7%AD%89%E9%82%A3%E7%92%80%E7%92%A8%E6%98%9F%E8%BE%B0"
+      }
+    ],
+    "name": "Web网页端斗鱼恢复飘屏弹幕",
+    "description": "可在特殊时期恢复飘屏弹幕",
+    "url": "https://greasyfork.org/scripts/404684-web%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%96%97%E9%B1%BC%E6%81%A2%E5%A4%8D%E9%A3%98%E5%B1%8F%E5%BC%B9%E5%B9%95",
+    "code_url": "https://update.greasyfork.org/scripts/404684/Web%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%96%97%E9%B1%BC%E6%81%A2%E5%A4%8D%E9%A3%98%E5%B1%8F%E5%BC%B9%E5%B9%95.user.js",
+    "code_size": 604,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 404682,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-04T12:21:33.000Z",
+    "code_updated_at": "2020-06-04T12:21:53.000Z",
+    "namespace": "https://jq.qq.com/?_wv=1027&k=5LDqRdJ",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388560,
+        "name": "等那璀璨星辰",
+        "created_at": "2019-10-19T09:19:45.000Z",
+        "url": "https://greasyfork.org/users/388560-%E7%AD%89%E9%82%A3%E7%92%80%E7%92%A8%E6%98%9F%E8%BE%B0"
+      }
+    ],
+    "name": "piaopingku",
+    "description": "douyu",
+    "url": "https://greasyfork.org/scripts/404682-piaopingku",
+    "code_url": "https://update.greasyfork.org/scripts/404682/812513/piaopingku.js",
+    "code_size": 2973,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401944,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-25T06:54:06.000Z",
+    "code_updated_at": "2020-11-12T07:49:13.000Z",
+    "namespace": "https://jq.qq.com/?_wv=1027&k=5LDqRdJ",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388560,
+        "name": "等那璀璨星辰",
+        "created_at": "2019-10-19T09:19:45.000Z",
+        "url": "https://greasyfork.org/users/388560-%E7%AD%89%E9%82%A3%E7%92%80%E7%92%A8%E6%98%9F%E8%BE%B0"
+      }
+    ],
+    "name": "斗鱼呆妹儿多功能插件",
+    "description": "插件具有以下功能： 1.查看真实人数/查看主播数据 已播时长 2.弹幕自动变色防检测循环发送  3.一键自动打卡续牌(给已有的粉丝牌每个赠送一根荧光棒)4.一键签到(直播间房间等级签到/车队签到/鱼吧签到/客户端签到) 5.一键领取鱼粮(宝箱/气泡/任务)  6.一键寻宝 7.一键清空背包 (可输入礼物ID选择批量送出指定数量的礼物) 8.屏蔽douyu广告  9.调节弹幕大小  10.自动更新  11.同屏画中画/多直播间小窗观看/可在斗鱼看多个平台直播(b站虎牙)  12.获取真实直播流地址  13.自动抢礼物红包  14.跳转随机火力全开房间  15.背包信息扩展 （打开背包可查看背包礼物总价值总亲密度、道具右上角黑色数字则表示礼物还剩几天过期）  16.简洁模式  17.夜间黑暗模式  18.弹幕栏可拉高拉低 可以看到更多弹幕 19.新增舔狗模式 20.新增幻神弹幕发言（仅自己可见） 21.关键词禁言 21.关键词回复 23. 自动谢礼物 24.自动抢宝箱 25.防止下播自动跳转 26.同步直播、倍速播放、回放功能 27.影院模式",
+    "url": "https://greasyfork.org/scripts/401944-%E6%96%97%E9%B1%BC%E5%91%86%E5%A6%B9%E5%84%BF%E5%A4%9A%E5%8A%9F%E8%83%BD%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/401944/%E6%96%97%E9%B1%BC%E5%91%86%E5%A6%B9%E5%84%BF%E5%A4%9A%E5%8A%9F%E8%83%BD%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 392898,
+    "license": null,
+    "version": "2020.11.12",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

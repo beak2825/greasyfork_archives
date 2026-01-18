@@ -163,5 +163,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 410798,
+    "daily_installs": 0,
+    "total_installs": 119,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-04T06:57:26.000Z",
+    "code_updated_at": "2022-11-10T13:47:23.000Z",
+    "namespace": "lednerg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 253,
+        "name": "lednerg",
+        "created_at": "2014-04-18T07:53:20.000Z",
+        "url": "https://greasyfork.org/users/253-lednerg"
+      }
+    ],
+    "name": "Controls for YouTube - Alternative Theme (OBSOLETE)",
+    "description": "This theme was for the Chrome extension \"Controls for YouTube\", but now it's included in the extension itself.",
+    "url": "https://greasyfork.org/scripts/410798-controls-for-youtube-alternative-theme-obsolete",
+    "code_url": "https://update.greasyfork.org/scripts/410798/Controls%20for%20YouTube%20-%20Alternative%20Theme%20%28OBSOLETE%29.user.css",
+    "code_size": 2696,
+    "license": "Creative Commons Zero v1.0 Universal",
+    "version": "20.9.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408875,
+    "daily_installs": 0,
+    "total_installs": 286,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-16T12:04:05.000Z",
+    "code_updated_at": "2020-08-16T12:04:04.000Z",
+    "namespace": "lednerg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 253,
+        "name": "lednerg",
+        "created_at": "2014-04-18T07:53:20.000Z",
+        "url": "https://greasyfork.org/users/253-lednerg"
+      }
+    ],
+    "name": "YouTube - Watch Later and Share Buttons Return",
+    "description": "Enables the Watch Later and Share buttons on the player when not in Fullscreen mode.",
+    "url": "https://greasyfork.org/scripts/408875-youtube-watch-later-and-share-buttons-return",
+    "code_url": "https://update.greasyfork.org/scripts/408875/YouTube%20-%20Watch%20Later%20and%20Share%20Buttons%20Return.user.css",
+    "code_size": 598,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "17.7.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408725,
+    "daily_installs": 1,
+    "total_installs": 1173,
+    "fan_score": "64.6",
+    "good_ratings": 7,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-14T09:07:38.000Z",
+    "code_updated_at": "2020-10-11T09:35:10.000Z",
+    "namespace": "lednerg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 253,
+        "name": "lednerg",
+        "created_at": "2014-04-18T07:53:20.000Z",
+        "url": "https://greasyfork.org/users/253-lednerg"
+      }
+    ],
+    "name": "YouTube - Hide End Cards (unless hovering)",
+    "description": "Hides those big links that sometimes show up over the endings of videos -- unless you hover over the player.",
+    "url": "https://greasyfork.org/scripts/408725-youtube-hide-end-cards-unless-hovering",
+    "code_url": "https://update.greasyfork.org/scripts/408725/YouTube%20-%20Hide%20End%20Cards%20%28unless%20hovering%29.user.css",
+    "code_size": 510,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "20.10.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407471,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-20T20:49:19.000Z",
+    "code_updated_at": "2022-11-10T13:52:04.000Z",
+    "namespace": "lednerg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 253,
+        "name": "lednerg",
+        "created_at": "2014-04-18T07:53:20.000Z",
+        "url": "https://greasyfork.org/users/253-lednerg"
+      }
+    ],
+    "name": "Twitter - Bring the Reply Counter Back (OBSOLETE)",
+    "description": "Shows an accurate count of replies, retweets, and likes for the currently selected tweet.",
+    "url": "https://greasyfork.org/scripts/407471-twitter-bring-the-reply-counter-back-obsolete",
+    "code_url": "https://update.greasyfork.org/scripts/407471/Twitter%20-%20Bring%20the%20Reply%20Counter%20Back%20%28OBSOLETE%29.user.css",
+    "code_size": 2693,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "20.7.32",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

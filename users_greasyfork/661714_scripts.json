@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406296,
+    "daily_installs": 0,
+    "total_installs": 156,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-30T10:00:09.000Z",
+    "code_updated_at": "2020-10-19T03:31:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 661714,
+        "name": "梁辰风",
+        "created_at": "2020-06-30T09:49:17.000Z",
+        "url": "https://greasyfork.org/users/661714-%E6%A2%81%E8%BE%B0%E9%A3%8E"
+      }
+    ],
+    "name": "Bilibili用户屏蔽",
+    "description": "block bilibili uploaders",
+    "url": "https://greasyfork.org/scripts/406296-bilibili%E7%94%A8%E6%88%B7%E5%B1%8F%E8%94%BD",
+    "code_url": "https://update.greasyfork.org/scripts/406296/Bilibili%E7%94%A8%E6%88%B7%E5%B1%8F%E8%94%BD.user.js",
+    "code_size": 1941,
+    "license": null,
+    "version": "0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

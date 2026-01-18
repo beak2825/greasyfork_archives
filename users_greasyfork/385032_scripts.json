@@ -729,6 +729,105 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407618,
+    "daily_installs": 0,
+    "total_installs": 125,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-23T18:00:46.000Z",
+    "code_updated_at": "2020-07-30T19:56:01.000Z",
+    "namespace": "eu.torned.ocpayday",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385032,
+        "name": "DeKleineKobini",
+        "created_at": "2019-10-08T16:09:23.000Z",
+        "url": "https://greasyfork.org/users/385032-dekleinekobini"
+      }
+    ],
+    "name": "TORN: OC Payday",
+    "description": "Easily do a payday after completing an oc.",
+    "url": "https://greasyfork.org/scripts/407618-torn-oc-payday",
+    "code_url": "https://update.greasyfork.org/scripts/407618/TORN%3A%20OC%20Payday.user.js",
+    "code_size": 2582,
+    "license": null,
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395668,
+    "daily_installs": 8,
+    "total_installs": 2904,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-26T00:11:03.000Z",
+    "code_updated_at": "2024-02-01T16:12:30.000Z",
+    "namespace": "dekleinekobini.missionrewardinformatiom",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385032,
+        "name": "DeKleineKobini",
+        "created_at": "2019-10-08T16:09:23.000Z",
+        "url": "https://greasyfork.org/users/385032-dekleinekobini"
+      }
+    ],
+    "name": "TORN: Mission Reward Information",
+    "description": "Give some information about mission rewards.",
+    "url": "https://greasyfork.org/scripts/395668-torn-mission-reward-information",
+    "code_url": "https://update.greasyfork.org/scripts/395668/TORN%3A%20Mission%20Reward%20Information.user.js",
+    "code_size": 17114,
+    "license": null,
+    "version": "2.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 393109,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-30T00:56:06.000Z",
+    "code_updated_at": "2019-11-30T00:56:05.000Z",
+    "namespace": "dekleinekobini.private.bazaarrepricing",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 385032,
+        "name": "DeKleineKobini",
+        "created_at": "2019-10-08T16:09:23.000Z",
+        "url": "https://greasyfork.org/users/385032-dekleinekobini"
+      }
+    ],
+    "name": "TORN: Bazaar Repricing",
+    "description": "Quickly edit bazaar prices.",
+    "url": "https://greasyfork.org/scripts/393109-torn-bazaar-repricing",
+    "code_url": "https://update.greasyfork.org/scripts/393109/TORN%3A%20Bazaar%20Repricing.user.js",
+    "code_size": 1697,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

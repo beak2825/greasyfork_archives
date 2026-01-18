@@ -1,0 +1,34 @@
+{
+  "id": 399019,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-30T17:27:37.000Z",
+  "code_updated_at": "2020-03-30T17:29:42.000Z",
+  "namespace": "https://greasyfork.org/en/users/5563-bloodymind",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 5563,
+      "name": "BloodyMind",
+      "created_at": "2014-09-23T17:29:00.000Z",
+      "url": "https://greasyfork.org/users/5563-bloodymind",
+      "scripts": []
+    }
+  ],
+  "name": "Bazaar filter",
+  "description": "Add filtring items in bazaar",
+  "url": "https://greasyfork.org/scripts/399019-bazaar-filter",
+  "code_url": "https://update.greasyfork.org/scripts/399019/Bazaar%20filter.user.js",
+  "code_size": 5846,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

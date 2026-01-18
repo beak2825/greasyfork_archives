@@ -228,6 +228,171 @@
     "version": "0.5",
     "locale": "ru",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 411952,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-25T12:35:54.000Z",
+    "code_updated_at": "2020-11-21T11:21:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 414651,
+        "name": "iku",
+        "created_at": "2019-12-09T10:45:38.000Z",
+        "url": "https://greasyfork.org/users/414651-iku"
+      }
+    ],
+    "name": "New admin",
+    "description": "Поиск по коду код ТСП/НПС/ИНН/МК/почта/транзакция/номер заявки/номер заявки у ТО(за счет ориг номера заявки)//код кассовой операции",
+    "url": "https://greasyfork.org/scripts/411952-new-admin",
+    "code_url": "https://update.greasyfork.org/scripts/411952/New%20admin.user.js",
+    "code_size": 67850,
+    "license": null,
+    "version": "0.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 408344,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-07T12:28:40.000Z",
+    "code_updated_at": "2020-12-15T11:08:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 414651,
+        "name": "iku",
+        "created_at": "2019-12-09T10:45:38.000Z",
+        "url": "https://greasyfork.org/users/414651-iku"
+      }
+    ],
+    "name": "GetINNinUR",
+    "description": "Уведомления для чата (откр окна, звук, нотиф)",
+    "url": "https://greasyfork.org/scripts/408344-getinninur",
+    "code_url": "https://update.greasyfork.org/scripts/408344/GetINNinUR.user.js",
+    "code_size": 12625,
+    "license": null,
+    "version": "0.9",
+    "locale": "sr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407442,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-20T14:44:10.000Z",
+    "code_updated_at": "2020-07-20T14:44:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 414651,
+        "name": "iku",
+        "created_at": "2019-12-09T10:45:38.000Z",
+        "url": "https://greasyfork.org/users/414651-iku"
+      }
+    ],
+    "name": "Autofill b2c options",
+    "description": "Заполняет поля согласно п.2 инструкции: https://confluence.ticketplan.info/pages/viewpage.action?pageId=6979711#",
+    "url": "https://greasyfork.org/scripts/407442-autofill-b2c-options",
+    "code_url": "https://update.greasyfork.org/scripts/407442/Autofill%20b2c%20options.user.js",
+    "code_size": 3224,
+    "license": null,
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 406873,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-11T15:00:46.000Z",
+    "code_updated_at": "2020-12-15T11:09:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 414651,
+        "name": "iku",
+        "created_at": "2019-12-09T10:45:38.000Z",
+        "url": "https://greasyfork.org/users/414651-iku"
+      }
+    ],
+    "name": "Скачать ЦБК",
+    "description": "Скачать договор ЦБК1",
+    "url": "https://greasyfork.org/scripts/406873-%D1%81%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-%D1%86%D0%B1%D0%BA",
+    "code_url": "https://update.greasyfork.org/scripts/406873/%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20%D0%A6%D0%91%D0%9A.user.js",
+    "code_size": 13085,
+    "license": null,
+    "version": "1.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 401813,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-23T12:52:14.000Z",
+    "code_updated_at": "2020-12-15T11:09:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 414651,
+        "name": "iku",
+        "created_at": "2019-12-09T10:45:38.000Z",
+        "url": "https://greasyfork.org/users/414651-iku"
+      }
+    ],
+    "name": "cashdeskoperationsOb",
+    "description": "Обработчик, форма для вставки. Добавляет данные строки из таблицы транзаксиса в: 1. Все поля подтверждения кассовой операции 2. Поиск по ррн в сверке 3. Поиск по сумме в кассовых операциях",
+    "url": "https://greasyfork.org/scripts/401813-cashdeskoperationsob",
+    "code_url": "https://update.greasyfork.org/scripts/401813/cashdeskoperationsOb.user.js",
+    "code_size": 21738,
+    "license": null,
+    "version": "0.57",
+    "locale": "nl",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

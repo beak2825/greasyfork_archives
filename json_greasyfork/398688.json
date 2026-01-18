@@ -1,0 +1,33 @@
+{
+  "id": 398688,
+  "daily_installs": 0,
+  "total_installs": 680,
+  "fan_score": "42.0",
+  "good_ratings": 8,
+  "ok_ratings": 3,
+  "bad_ratings": 3,
+  "created_at": "2020-03-25T09:40:50.000Z",
+  "code_updated_at": "2024-07-22T23:14:30.000Z",
+  "namespace": "greasyfork-namespace-url",
+  "support_url": "https://github.com/avallete/yt-playlists-delete-enhancer/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 70224,
+      "name": "avallete",
+      "created_at": "2016-09-30T21:34:59.000Z",
+      "url": "https://greasyfork.org/users/70224-avallete"
+    }
+  ],
+  "name": "yt-playlists-delete-enhancer",
+  "description": "Add a button to remove videos watched with more than X percent from watch later playlist.",
+  "url": "https://greasyfork.org/scripts/398688-yt-playlists-delete-enhancer",
+  "code_url": "https://update.greasyfork.org/scripts/398688/yt-playlists-delete-enhancer.user.js",
+  "code_size": 349697,
+  "license": "MIT License",
+  "version": "1.7.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

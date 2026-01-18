@@ -1,0 +1,59 @@
+{
+  "id": 405266,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-13T11:46:24.000Z",
+  "code_updated_at": "2020-06-13T11:46:24.000Z",
+  "namespace": "https://greasyfork.org/users/589124",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 589124,
+      "name": "SminkyBazzA",
+      "created_at": "2020-06-13T11:41:00.000Z",
+      "url": "https://greasyfork.org/users/589124-sminkybazza",
+      "scripts": [
+        {
+          "id": 405266,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-13T11:46:24.000Z",
+          "code_updated_at": "2020-06-13T11:46:24.000Z",
+          "namespace": "https://greasyfork.org/users/589124",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Rock Paper Shotgun (RPS) - Fix YouTube Videos",
+          "description": "A bodge to get rid of those grey squares, turns out you don't _need_ to enable tracking cookies. Who knew?!",
+          "url": "https://greasyfork.org/scripts/405266-rock-paper-shotgun-rps-fix-youtube-videos",
+          "code_url": "https://update.greasyfork.org/scripts/405266/Rock%20Paper%20Shotgun%20%28RPS%29%20-%20Fix%20YouTube%20Videos.user.js",
+          "code_size": 1400,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Rock Paper Shotgun (RPS) - Fix YouTube Videos",
+  "description": "A bodge to get rid of those grey squares, turns out you don't _need_ to enable tracking cookies. Who knew?!",
+  "url": "https://greasyfork.org/scripts/405266-rock-paper-shotgun-rps-fix-youtube-videos",
+  "code_url": "https://update.greasyfork.org/scripts/405266/Rock%20Paper%20Shotgun%20%28RPS%29%20-%20Fix%20YouTube%20Videos.user.js",
+  "code_size": 1400,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

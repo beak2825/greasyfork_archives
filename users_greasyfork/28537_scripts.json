@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 398542,
+    "daily_installs": 0,
+    "total_installs": 414,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-23T19:27:46.000Z",
+    "code_updated_at": "2020-11-09T12:09:16.000Z",
+    "namespace": "https://github.com/8qwe24657913",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28537,
+        "name": "8qwe24657913",
+        "created_at": "2016-01-27T16:03:04.000Z",
+        "url": "https://greasyfork.org/users/28537-8qwe24657913"
+      }
+    ],
+    "name": "bilibili 显示 av 号",
+    "description": "在视频播放页面显示视频的 av 号",
+    "url": "https://greasyfork.org/scripts/398542-bilibili-%E6%98%BE%E7%A4%BA-av-%E5%8F%B7",
+    "code_url": "https://update.greasyfork.org/scripts/398542/bilibili%20%E6%98%BE%E7%A4%BA%20av%20%E5%8F%B7.user.js",
+    "code_size": 3661,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

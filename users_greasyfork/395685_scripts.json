@@ -1,0 +1,68 @@
+[
+  {
+    "id": 404212,
+    "daily_installs": 0,
+    "total_installs": 533,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-27T13:59:46.000Z",
+    "code_updated_at": "2020-06-25T11:37:16.000Z",
+    "namespace": "https://greasyfork.org/users/395685",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395685,
+        "name": "CosmosisT",
+        "created_at": "2019-11-07T08:36:42.000Z",
+        "url": "https://greasyfork.org/users/395685-cosmosist"
+      }
+    ],
+    "name": "CosmosisT's Black Camera Fix Script",
+    "description": "Modified TinyChat - Best Scripts; prepare to be amazed.",
+    "url": "https://greasyfork.org/scripts/404212-cosmosist-s-black-camera-fix-script",
+    "code_url": "https://update.greasyfork.org/scripts/404212/CosmosisT%27s%20Black%20Camera%20Fix%20Script.user.js",
+    "code_size": 2989,
+    "license": "Copyright (C) 2019-2020 CosmosisT",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 402710,
+    "daily_installs": 0,
+    "total_installs": 240,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-06T08:31:19.000Z",
+    "code_updated_at": "2020-06-25T03:00:05.000Z",
+    "namespace": "https://greasyfork.org/users/395685",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395685,
+        "name": "CosmosisT",
+        "created_at": "2019-11-07T08:36:42.000Z",
+        "url": "https://greasyfork.org/users/395685-cosmosist"
+      }
+    ],
+    "name": "CosmosisT's Weed Theme v1.0.3 (CTS ADDON)",
+    "description": "Addon designed by CosmosisT, for use with CTS; enable and enjoy!",
+    "url": "https://greasyfork.org/scripts/402710-cosmosist-s-weed-theme-v1-0-3-cts-addon",
+    "code_url": "https://update.greasyfork.org/scripts/402710/CosmosisT%27s%20Weed%20Theme%20v103%20%28CTS%20ADDON%29.user.js",
+    "code_size": 14447,
+    "license": null,
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

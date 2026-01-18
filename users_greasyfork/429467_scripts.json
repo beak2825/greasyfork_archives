@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405629,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-18T10:33:42.000Z",
+    "code_updated_at": "2020-06-19T01:52:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 429467,
+        "name": "阿婆腳皮獸",
+        "created_at": "2019-12-28T22:33:26.000Z",
+        "url": "https://greasyfork.org/users/429467-%E9%98%BF%E5%A9%86%E8%85%B3%E7%9A%AE%E7%8D%B8"
+      }
+    ],
+    "name": "simpList 繁簡對照表",
+    "description": "簡體字過濾專用的JS陣列，跟繁體字共用的簡體字會逐漸從列表中移除，建議需要使用完整列表的人請至原始來源: 「https://github.com/mollykannn/translate-big5-gbk」取用。",
+    "url": "https://greasyfork.org/scripts/405629-simplist-%E7%B9%81%E7%B0%A1%E5%B0%8D%E7%85%A7%E8%A1%A8",
+    "code_url": "https://update.greasyfork.org/scripts/405629/817930/simpList%20%E7%B9%81%E7%B0%A1%E5%B0%8D%E7%85%A7%E8%A1%A8.js",
+    "code_size": 30925,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

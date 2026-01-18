@@ -168,6 +168,105 @@
     "version": "2.2",
     "locale": "he",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 411036,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-08T18:05:11.000Z",
+    "code_updated_at": "2020-10-29T23:35:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 577167,
+        "name": "RemixN1V",
+        "created_at": "2020-06-02T07:00:44.000Z",
+        "url": "https://greasyfork.org/users/577167-remixn1v"
+      }
+    ],
+    "name": "ExP+",
+    "description": "כי לפעמים צריך לגוון – חווית גלישה נעימה יותר ב־FxP.",
+    "url": "https://greasyfork.org/scripts/411036-exp",
+    "code_url": "https://update.greasyfork.org/scripts/411036/ExP%2B.user.js",
+    "code_size": 2658,
+    "license": null,
+    "version": "0.15",
+    "locale": "he",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 408957,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-08-18T15:27:44.000Z",
+    "code_updated_at": "2023-01-22T13:49:16.000Z",
+    "namespace": "https://hagaa.remixn.xyz/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 577167,
+        "name": "RemixN1V",
+        "created_at": "2020-06-02T07:00:44.000Z",
+        "url": "https://greasyfork.org/users/577167-remixn1v"
+      }
+    ],
+    "name": "הודעות להגהות",
+    "description": "מוסיף שלושה כפתורים חדשים לצד פרסום הודעה: הגהה בדרך, הגהה מוכנה והגהה מוכנה + הערות",
+    "url": "https://greasyfork.org/scripts/408957-%D7%94%D7%95%D7%93%D7%A2%D7%95%D7%AA-%D7%9C%D7%94%D7%92%D7%94%D7%95%D7%AA",
+    "code_url": "https://update.greasyfork.org/scripts/408957/%D7%94%D7%95%D7%93%D7%A2%D7%95%D7%AA%20%D7%9C%D7%94%D7%92%D7%94%D7%95%D7%AA.user.js",
+    "code_size": 10557,
+    "license": "MIT License",
+    "version": "0.24",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 404625,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-03T16:35:08.000Z",
+    "code_updated_at": "2020-07-05T15:33:24.000Z",
+    "namespace": "http://fxp.co.il",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 577167,
+        "name": "RemixN1V",
+        "created_at": "2020-06-02T07:00:44.000Z",
+        "url": "https://greasyfork.org/users/577167-remixn1v"
+      }
+    ],
+    "name": "גלאי קריטיים",
+    "description": "מדגיש אשכולות שעלולים להיות קריטיים בצבע אדום",
+    "url": "https://greasyfork.org/scripts/404625-%D7%92%D7%9C%D7%90%D7%99-%D7%A7%D7%A8%D7%99%D7%98%D7%99%D7%99%D7%9D",
+    "code_url": "https://update.greasyfork.org/scripts/404625/%D7%92%D7%9C%D7%90%D7%99%20%D7%A7%D7%A8%D7%99%D7%98%D7%99%D7%99%D7%9D.user.js",
+    "code_size": 1155,
+    "license": null,
+    "version": "0.11",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

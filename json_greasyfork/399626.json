@@ -1,0 +1,59 @@
+{
+  "id": 399626,
+  "daily_installs": 0,
+  "total_installs": 1617,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-05T17:37:03.000Z",
+  "code_updated_at": "2020-07-02T20:33:06.000Z",
+  "namespace": "https://www.roblox.com/",
+  "support_url": "https://twitter.com/messages/733710878399467520-733710878399467520",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 475615,
+      "name": "Kaiokeno",
+      "created_at": "2020-04-05T17:20:19.000Z",
+      "url": "https://greasyfork.org/users/475615-kaiokeno",
+      "scripts": [
+        {
+          "id": 399626,
+          "daily_installs": 0,
+          "total_installs": 1617,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-04-05T17:37:03.000Z",
+          "code_updated_at": "2020-07-02T20:33:06.000Z",
+          "namespace": "https://www.roblox.com/",
+          "support_url": "https://twitter.com/messages/733710878399467520-733710878399467520",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ROBLOX: Enable Game Filter",
+          "description": "Enable the 'Old-School' Game Filter, decent for finding the perfect game.",
+          "url": "https://greasyfork.org/scripts/399626-roblox-enable-game-filter",
+          "code_url": "https://update.greasyfork.org/scripts/399626/ROBLOX%3A%20Enable%20Game%20Filter.user.js",
+          "code_size": 1114,
+          "license": "MIT License",
+          "version": "0.0.12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ROBLOX: Enable Game Filter",
+  "description": "Enable the 'Old-School' Game Filter, decent for finding the perfect game.",
+  "url": "https://greasyfork.org/scripts/399626-roblox-enable-game-filter",
+  "code_url": "https://update.greasyfork.org/scripts/399626/ROBLOX%3A%20Enable%20Game%20Filter.user.js",
+  "code_size": 1114,
+  "license": "MIT License",
+  "version": "0.0.12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

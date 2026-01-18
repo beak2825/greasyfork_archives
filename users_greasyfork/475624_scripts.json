@@ -1,0 +1,35 @@
+[
+  {
+    "id": 399625,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-05T17:35:10.000Z",
+    "code_updated_at": "2020-04-05T17:36:10.000Z",
+    "namespace": "https://github.com/npfjcg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 475624,
+        "name": "yukishirataco",
+        "created_at": "2020-04-05T17:32:57.000Z",
+        "url": "https://greasyfork.org/users/475624-yukishirataco"
+      }
+    ],
+    "name": "疫情防控通自动填写与提交",
+    "description": "中国石油大学（华东）2019新型冠状病毒肺炎防控填报系统自动获取位置信息并提交",
+    "url": "https://greasyfork.org/scripts/399625-%E7%96%AB%E6%83%85%E9%98%B2%E6%8E%A7%E9%80%9A%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E4%B8%8E%E6%8F%90%E4%BA%A4",
+    "code_url": "https://update.greasyfork.org/scripts/399625/%E7%96%AB%E6%83%85%E9%98%B2%E6%8E%A7%E9%80%9A%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E4%B8%8E%E6%8F%90%E4%BA%A4.user.js",
+    "code_size": 918,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

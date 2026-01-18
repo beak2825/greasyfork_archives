@@ -1,0 +1,33 @@
+{
+  "id": 410157,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-29T11:25:29.000Z",
+  "code_updated_at": "2020-09-12T18:47:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 683653,
+      "name": "CheneyH",
+      "created_at": "2020-08-29T11:22:23.000Z",
+      "url": "https://greasyfork.org/users/683653-cheneyh"
+    }
+  ],
+  "name": "小鹅通自动发弹幕",
+  "description": "用来在小鹅通直播中实现自动发送弹幕",
+  "url": "https://greasyfork.org/scripts/410157-%E5%B0%8F%E9%B9%85%E9%80%9A%E8%87%AA%E5%8A%A8%E5%8F%91%E5%BC%B9%E5%B9%95",
+  "code_url": "https://update.greasyfork.org/scripts/410157/%E5%B0%8F%E9%B9%85%E9%80%9A%E8%87%AA%E5%8A%A8%E5%8F%91%E5%BC%B9%E5%B9%95.user.js",
+  "code_size": 2998,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

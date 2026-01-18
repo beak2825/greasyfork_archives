@@ -1,0 +1,33 @@
+{
+  "id": 397274,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-03T23:45:59.000Z",
+  "code_updated_at": "2021-09-11T14:07:19.000Z",
+  "namespace": "Virtonomica",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 2055,
+      "name": "Test01",
+      "created_at": "2014-05-23T09:05:17.000Z",
+      "url": "https://greasyfork.org/users/2055-test01"
+    }
+  ],
+  "name": "Virtonomica: Копирование магазинов...",
+  "description": "Копирование магазинов через API",
+  "url": "https://greasyfork.org/scripts/397274-virtonomica-%D0%BA%D0%BE%D0%BF%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD%D0%BE%D0%B2",
+  "code_url": "https://update.greasyfork.org/scripts/397274/Virtonomica%3A%20%D0%9A%D0%BE%D0%BF%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD%D0%BE%D0%B2.user.js",
+  "code_size": 13804,
+  "license": null,
+  "version": "0.14",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

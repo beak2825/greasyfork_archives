@@ -1,0 +1,59 @@
+{
+  "id": 408422,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-08T16:51:26.000Z",
+  "code_updated_at": "2020-08-08T17:13:26.000Z",
+  "namespace": "https://broadcasthe.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 674537,
+      "name": "Glorious",
+      "created_at": "2020-08-08T16:49:42.000Z",
+      "url": "https://greasyfork.org/users/674537-glorious",
+      "scripts": [
+        {
+          "id": 408422,
+          "daily_installs": 0,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-08T16:51:26.000Z",
+          "code_updated_at": "2020-08-08T17:13:26.000Z",
+          "namespace": "https://broadcasthe.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BTN Extension",
+          "description": "Minor alterations to the website and adding functionalities",
+          "url": "https://greasyfork.org/scripts/408422-btn-extension",
+          "code_url": "https://update.greasyfork.org/scripts/408422/BTN%20Extension.user.js",
+          "code_size": 15386,
+          "license": null,
+          "version": "0.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BTN Extension",
+  "description": "Minor alterations to the website and adding functionalities",
+  "url": "https://greasyfork.org/scripts/408422-btn-extension",
+  "code_url": "https://update.greasyfork.org/scripts/408422/BTN%20Extension.user.js",
+  "code_size": 15386,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

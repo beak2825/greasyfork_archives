@@ -1,0 +1,59 @@
+{
+  "id": 405091,
+  "daily_installs": 2,
+  "total_installs": 4455,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-10T20:14:00.000Z",
+  "code_updated_at": "2020-06-10T20:13:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 500704,
+      "name": "Shadow Mystic",
+      "created_at": "2020-04-10T20:00:03.000Z",
+      "url": "https://greasyfork.org/users/500704-shadow-mystic",
+      "scripts": [
+        {
+          "id": 405091,
+          "daily_installs": 2,
+          "total_installs": 4455,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-10T20:14:00.000Z",
+          "code_updated_at": "2020-06-10T20:13:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Robux Prank",
+          "description": "[UPDATE] 300k+ ROBUX appears on your screen as your total when logged into roblox.com/home",
+          "url": "https://greasyfork.org/scripts/405091-robux-prank",
+          "code_url": "https://update.greasyfork.org/scripts/405091/Robux%20Prank.user.js",
+          "code_size": 474,
+          "license": null,
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Robux Prank",
+  "description": "[UPDATE] 300k+ ROBUX appears on your screen as your total when logged into roblox.com/home",
+  "url": "https://greasyfork.org/scripts/405091-robux-prank",
+  "code_url": "https://update.greasyfork.org/scripts/405091/Robux%20Prank.user.js",
+  "code_size": 474,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 408930,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-18T01:07:20.000Z",
+    "code_updated_at": "2020-08-22T02:12:27.000Z",
+    "namespace": "https://github.com/tallesh/bga-puerto-rico",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 679173,
+        "name": "Talles",
+        "created_at": "2020-08-18T00:49:32.000Z",
+        "url": "https://greasyfork.org/users/679173-talles"
+      }
+    ],
+    "name": "BGA Puerto Rico helper",
+    "description": "Track victory points from all players",
+    "url": "https://greasyfork.org/scripts/408930-bga-puerto-rico-helper",
+    "code_url": "https://update.greasyfork.org/scripts/408930/BGA%20Puerto%20Rico%20helper.user.js",
+    "code_size": 10032,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

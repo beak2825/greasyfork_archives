@@ -1,0 +1,34 @@
+{
+  "id": 403180,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-12T22:32:50.000Z",
+  "code_updated_at": "2020-05-12T22:32:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 164350,
+      "name": "Steven Verespey",
+      "created_at": "2017-12-24T06:19:39.000Z",
+      "url": "https://greasyfork.org/users/164350-steven-verespey",
+      "scripts": []
+    }
+  ],
+  "name": "omegle chatbot",
+  "description": "getting people to add hannjohnson",
+  "url": "https://greasyfork.org/scripts/403180-omegle-chatbot",
+  "code_url": "https://update.greasyfork.org/scripts/403180/omegle%20chatbot.user.js",
+  "code_size": 10672,
+  "license": null,
+  "version": "6.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 407118,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-15T11:34:19.000Z",
+    "code_updated_at": "2020-07-16T09:54:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667058,
+        "name": "KarlosWins",
+        "created_at": "2020-07-15T11:32:56.000Z",
+        "url": "https://greasyfork.org/users/667058-karloswins"
+      }
+    ],
+    "name": "Hide MV User",
+    "description": "La tranquilidad es lo que mas se valora",
+    "url": "https://greasyfork.org/scripts/407118-hide-mv-user",
+    "code_url": "https://update.greasyfork.org/scripts/407118/Hide%20MV%20User.user.js",
+    "code_size": 1324,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

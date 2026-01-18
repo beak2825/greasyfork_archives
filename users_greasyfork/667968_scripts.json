@@ -2949,5 +2949,170 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 408791,
+    "daily_installs": 0,
+    "total_installs": 4455,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-15T13:25:11.000Z",
+    "code_updated_at": "2023-12-19T12:27:38.000Z",
+    "namespace": "http://tampermonkey.net/My Free MP3 Plus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "My Free MP3+",
+    "description": "解锁MyFreeMP3的QQ音乐、酷狗音乐、酷我音乐，过广告拦截器检测，所有下载全部转为页面内直链下载",
+    "url": "https://greasyfork.org/scripts/408791-my-free-mp3",
+    "code_url": "https://update.greasyfork.org/scripts/408791/My%20Free%20MP3%2B.user.js",
+    "code_size": 23135,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "0.2.6.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 408740,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-14T15:45:41.000Z",
+    "code_updated_at": "2020-08-14T15:45:40.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "恋爱游戏网4位数字验证码识别",
+    "description": "识别恋爱游戏网4位数字验证码",
+    "url": "https://greasyfork.org/scripts/408740-%E6%81%8B%E7%88%B1%E6%B8%B8%E6%88%8F%E7%BD%914%E4%BD%8D%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB",
+    "code_url": "https://update.greasyfork.org/scripts/408740/837253/%E6%81%8B%E7%88%B1%E6%B8%B8%E6%88%8F%E7%BD%914%E4%BD%8D%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB.js",
+    "code_size": 271138,
+    "license": null,
+    "version": "0.0.1.20200814154540",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 408735,
+    "daily_installs": 0,
+    "total_installs": 358,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-14T13:49:19.000Z",
+    "code_updated_at": "2021-02-11T12:41:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "恋爱游戏网自动水贴",
+    "description": "打开首页，自动访问游戏页面，自动填写评论内容，自动识别验证码，自动提交",
+    "url": "https://greasyfork.org/scripts/408735-%E6%81%8B%E7%88%B1%E6%B8%B8%E6%88%8F%E7%BD%91%E8%87%AA%E5%8A%A8%E6%B0%B4%E8%B4%B4",
+    "code_url": "https://update.greasyfork.org/scripts/408735/%E6%81%8B%E7%88%B1%E6%B8%B8%E6%88%8F%E7%BD%91%E8%87%AA%E5%8A%A8%E6%B0%B4%E8%B4%B4.user.js",
+    "code_size": 13885,
+    "license": null,
+    "version": "2021.02.11.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 408468,
+    "daily_installs": 0,
+    "total_installs": 504,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-09T12:54:06.000Z",
+    "code_updated_at": "2020-08-16T11:36:22.000Z",
+    "namespace": "http://tampermonkey.net/love_sign",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "恋爱游戏网自动签到",
+    "description": "打开恋爱游戏网首页/会员中心/百度首页后自动签到",
+    "url": "https://greasyfork.org/scripts/408468-%E6%81%8B%E7%88%B1%E6%B8%B8%E6%88%8F%E7%BD%91%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0",
+    "code_url": "https://update.greasyfork.org/scripts/408468/%E6%81%8B%E7%88%B1%E6%B8%B8%E6%88%8F%E7%BD%91%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0.user.js",
+    "code_size": 3978,
+    "license": null,
+    "version": "2020.08.16.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407319,
+    "daily_installs": 0,
+    "total_installs": 101,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-18T13:58:46.000Z",
+    "code_updated_at": "2020-10-31T04:54:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "快捷键粘贴当前时间文本",
+    "description": "使用键盘快捷键（windows[Ctrl+Alt+T]，其他系统[Ctrl+Shift+T]）快速粘贴当前时间文本到当前输入框当前光标位置",
+    "url": "https://greasyfork.org/scripts/407319-%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%B2%98%E8%B4%B4%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%E6%96%87%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/407319/%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%B2%98%E8%B4%B4%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%E6%96%87%E6%9C%AC.user.js",
+    "code_size": 4394,
+    "license": null,
+    "version": "2020.10.31.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

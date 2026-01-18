@@ -1,0 +1,59 @@
+{
+  "id": 406525,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-05T15:31:12.000Z",
+  "code_updated_at": "2020-07-05T15:31:12.000Z",
+  "namespace": "bnf:2001",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 56598,
+      "name": "Rob B.",
+      "created_at": "2016-07-24T10:33:26.000Z",
+      "url": "https://greasyfork.org/users/56598-rob-b",
+      "scripts": [
+        {
+          "id": 21629,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2016-07-24T10:42:44.000Z",
+          "code_updated_at": "2020-07-05T15:06:54.000Z",
+          "namespace": "bnf:2001",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Amo - Ulepszacz Tawerny",
+          "description": "Gadget pozwalający na wygodne zmiany w izbie/piwnicy na amorion.pl",
+          "url": "https://greasyfork.org/scripts/21629-amo-ulepszacz-tawerny",
+          "code_url": "https://update.greasyfork.org/scripts/21629/Amo%20-%20Ulepszacz%20Tawerny.user.js",
+          "code_size": 8908,
+          "license": null,
+          "version": "+6.03",
+          "locale": "pl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Amo - Cheater - Forest",
+  "description": "Cheaty na Amo. Korzystasz na własną odpowiedzialność",
+  "url": "https://greasyfork.org/scripts/406525-amo-cheater-forest",
+  "code_url": "https://update.greasyfork.org/scripts/406525/Amo%20-%20Cheater%20-%20Forest.user.js",
+  "code_size": 8180,
+  "license": null,
+  "version": "3.28-Forest",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

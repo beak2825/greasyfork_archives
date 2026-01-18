@@ -1,0 +1,33 @@
+{
+  "id": 408738,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-14T14:36:33.000Z",
+  "code_updated_at": "2020-08-24T06:10:43.000Z",
+  "namespace": "3156289387@qq.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 319894,
+      "name": "zenwuyi",
+      "created_at": "2019-07-23T08:10:16.000Z",
+      "url": "https://greasyfork.org/users/319894-zenwuyi"
+    }
+  ],
+  "name": "中国社会扶贫网|广西特色馆 增强工具",
+  "description": "目的：令工作更加便捷，完善官网不合理的部分：1、搜索栏追加商品ID直达功能，输入商品的ID，可以直达商品页面；2、添加三个二级目录到顶部导航，弥补商品页面进去了就出不来的麻烦；3、增加“预算清单”，该功能可以在不登陆帐号的情况下，输入单笔预算，策划要购买的商品，并计算预算，通过保存数据到Cookies，即使关闭浏览器下次访问仍可恢复记录。4、在列表页，默认每页100个商品；5、明显标出“非消费券”的商品；6、在商品页用蓝字显示商品ID。7、购物清单的导出导入。8、增加首页无须登陆即可访问“提货券”入口。9、完善导出清单功能，现在能供打印的清单。",
+  "url": "https://greasyfork.org/scripts/408738-%E4%B8%AD%E5%9B%BD%E7%A4%BE%E4%BC%9A%E6%89%B6%E8%B4%AB%E7%BD%91-%E5%B9%BF%E8%A5%BF%E7%89%B9%E8%89%B2%E9%A6%86-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/408738/%E4%B8%AD%E5%9B%BD%E7%A4%BE%E4%BC%9A%E6%89%B6%E8%B4%AB%E7%BD%91%7C%E5%B9%BF%E8%A5%BF%E7%89%B9%E8%89%B2%E9%A6%86%20%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 50053,
+  "license": "MIT License",
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

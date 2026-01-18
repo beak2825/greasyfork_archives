@@ -1,0 +1,59 @@
+{
+  "id": 406938,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-07-12T17:04:55.000Z",
+  "code_updated_at": "2020-08-21T18:07:00.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 666177,
+      "name": "exstrim401",
+      "created_at": "2020-07-12T17:02:07.000Z",
+      "url": "https://greasyfork.org/users/666177-exstrim401",
+      "scripts": [
+        {
+          "id": 406938,
+          "daily_installs": 0,
+          "total_installs": 46,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-07-12T17:04:55.000Z",
+          "code_updated_at": "2020-08-21T18:07:00.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "АнтиAdBlock - avasuka",
+          "description": "Этот скрипт позволяет играть на AvaSuka без рекламы",
+          "url": "https://greasyfork.org/scripts/406938-%D0%B0%D0%BD%D1%82%D0%B8adblock-avasuka",
+          "code_url": "https://update.greasyfork.org/scripts/406938/%D0%90%D0%BD%D1%82%D0%B8AdBlock%20-%20avasuka.user.js",
+          "code_size": 695,
+          "license": "MIT License",
+          "version": "1.5.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "АнтиAdBlock - avasuka",
+  "description": "Этот скрипт позволяет играть на AvaSuka без рекламы",
+  "url": "https://greasyfork.org/scripts/406938-%D0%B0%D0%BD%D1%82%D0%B8adblock-avasuka",
+  "code_url": "https://update.greasyfork.org/scripts/406938/%D0%90%D0%BD%D1%82%D0%B8AdBlock%20-%20avasuka.user.js",
+  "code_size": 695,
+  "license": "MIT License",
+  "version": "1.5.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

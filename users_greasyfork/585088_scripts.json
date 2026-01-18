@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405141,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-11T18:09:48.000Z",
+    "code_updated_at": "2020-06-11T18:09:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 585088,
+        "name": "Weston Sandland",
+        "created_at": "2020-06-11T18:06:44.000Z",
+        "url": "https://greasyfork.org/users/585088-weston-sandland"
+      }
+    ],
+    "name": "HEB Intern Clock Helper",
+    "description": "Autofill your Intern HEB Clock",
+    "url": "https://greasyfork.org/scripts/405141-heb-intern-clock-helper",
+    "code_url": "https://update.greasyfork.org/scripts/405141/HEB%20Intern%20Clock%20Helper.user.js",
+    "code_size": 1820,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

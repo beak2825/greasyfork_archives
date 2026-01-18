@@ -1,0 +1,33 @@
+{
+  "id": 400693,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-14T04:33:58.000Z",
+  "code_updated_at": "2020-04-14T04:39:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 48028,
+      "name": "himalay",
+      "created_at": "2016-06-09T01:39:11.000Z",
+      "url": "https://greasyfork.org/users/48028-himalay"
+    }
+  ],
+  "name": "AWS Cloudwatch Timeago",
+  "description": "Show timeago in AWS CloudWatch Last Event Time",
+  "url": "https://greasyfork.org/scripts/400693-aws-cloudwatch-timeago",
+  "code_url": "https://update.greasyfork.org/scripts/400693/AWS%20Cloudwatch%20Timeago.user.js",
+  "code_size": 1654,
+  "license": null,
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

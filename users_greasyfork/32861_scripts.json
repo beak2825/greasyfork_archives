@@ -1,0 +1,101 @@
+[
+  {
+    "id": 405136,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-11T16:55:14.000Z",
+    "code_updated_at": "2020-06-12T07:09:08.000Z",
+    "namespace": "Greasyfork-Admin-User-Panel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 32861,
+        "name": "mach6",
+        "created_at": "2016-03-08T00:31:52.000Z",
+        "url": "https://greasyfork.org/users/32861-mach6"
+      }
+    ],
+    "name": "Greasyfork-Admin-User-Panel",
+    "description": "Delete all comments of a user",
+    "url": "https://greasyfork.org/scripts/405136-greasyfork-admin-user-panel",
+    "code_url": "https://update.greasyfork.org/scripts/405136/Greasyfork-Admin-User-Panel.user.js",
+    "code_size": 2688,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 403708,
+    "daily_installs": 0,
+    "total_installs": 142,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-19T04:32:40.000Z",
+    "code_updated_at": "2020-06-11T15:58:20.000Z",
+    "namespace": "https://github.com/machsix",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 32861,
+        "name": "mach6",
+        "created_at": "2016-03-08T00:31:52.000Z",
+        "url": "https://greasyfork.org/users/32861-mach6"
+      }
+    ],
+    "name": "Google scholar open in new tab",
+    "description": "Middle click to open in new tab",
+    "url": "https://greasyfork.org/scripts/403708-google-scholar-open-in-new-tab",
+    "code_url": "https://update.greasyfork.org/scripts/403708/Google%20scholar%20open%20in%20new%20tab.user.js",
+    "code_size": 1096,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 400641,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-13T17:37:55.000Z",
+    "code_updated_at": "2020-08-22T08:40:11.000Z",
+    "namespace": "Greasyfork-Admin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 32861,
+        "name": "mach6",
+        "created_at": "2016-03-08T00:31:52.000Z",
+        "url": "https://greasyfork.org/users/32861-mach6"
+      }
+    ],
+    "name": "Greasyfork-Admin",
+    "description": "4/13/2020, 1:20:36 PM",
+    "url": "https://greasyfork.org/scripts/400641-greasyfork-admin",
+    "code_url": "https://update.greasyfork.org/scripts/400641/Greasyfork-Admin.user.js",
+    "code_size": 6990,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

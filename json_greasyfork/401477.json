@@ -1,0 +1,34 @@
+{
+  "id": 401477,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-20T06:29:51.000Z",
+  "code_updated_at": "2020-04-20T06:29:49.000Z",
+  "namespace": "https://5e.tools/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 522803,
+      "name": "Cyelis1224",
+      "created_at": "2020-04-19T18:30:08.000Z",
+      "url": "https://greasyfork.org/users/522803-cyelis1224",
+      "scripts": []
+    }
+  ],
+  "name": "betteR20-5etools-edit",
+  "description": "Enhance your Roll20 experience WITH 3D DICE!",
+  "url": "https://greasyfork.org/scripts/401477-better20-5etools-edit",
+  "code_url": "https://update.greasyfork.org/scripts/401477/betteR20-5etools-edit.user.js",
+  "code_size": 811696,
+  "license": "MIT (https://opensource.org/licenses/MIT)",
+  "version": "1.16.22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

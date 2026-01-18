@@ -1,0 +1,59 @@
+{
+  "id": 405142,
+  "daily_installs": 0,
+  "total_installs": 1078,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-11T18:10:51.000Z",
+  "code_updated_at": "2020-07-19T14:31:48.000Z",
+  "namespace": "https://greasyfork.org/users/585074",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 585074,
+      "name": "Tennosuke Tokoro",
+      "created_at": "2020-06-11T17:50:33.000Z",
+      "url": "https://greasyfork.org/users/585074-tennosuke-tokoro",
+      "scripts": [
+        {
+          "id": 405142,
+          "daily_installs": 0,
+          "total_installs": 1078,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-11T18:10:51.000Z",
+          "code_updated_at": "2020-07-19T14:31:48.000Z",
+          "namespace": "https://greasyfork.org/users/585074",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ニコニコ静画NGスクリプト",
+          "description": "ニコニコ静画でNGユーザの投稿を非表示にする",
+          "url": "https://greasyfork.org/scripts/405142-%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E9%9D%99%E7%94%BBng%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88",
+          "code_url": "https://update.greasyfork.org/scripts/405142/%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E9%9D%99%E7%94%BBNG%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88.user.js",
+          "code_size": 34928,
+          "license": "MIT License Copyright (c) 2020 Tennosuke Tokoro",
+          "version": "202007190",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ニコニコ静画NGスクリプト",
+  "description": "ニコニコ静画でNGユーザの投稿を非表示にする",
+  "url": "https://greasyfork.org/scripts/405142-%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E9%9D%99%E7%94%BBng%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88",
+  "code_url": "https://update.greasyfork.org/scripts/405142/%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E9%9D%99%E7%94%BBNG%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88.user.js",
+  "code_size": 34928,
+  "license": "MIT License Copyright (c) 2020 Tennosuke Tokoro",
+  "version": "202007190",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

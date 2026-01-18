@@ -1,0 +1,59 @@
+{
+  "id": 398386,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-21T13:05:55.000Z",
+  "code_updated_at": "2020-03-21T13:05:55.000Z",
+  "namespace": "http://www.looopings.nl/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 466523,
+      "name": "Jasperm",
+      "created_at": "2020-03-21T13:03:47.000Z",
+      "url": "https://greasyfork.org/users/466523-jasperm",
+      "scripts": [
+        {
+          "id": 398386,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-21T13:05:55.000Z",
+          "code_updated_at": "2020-03-21T13:05:55.000Z",
+          "namespace": "http://www.looopings.nl/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Loopings.nl Ad-wall",
+          "description": "Verbergen van de Ad-wall van looopings.nl",
+          "url": "https://greasyfork.org/scripts/398386-loopings-nl-ad-wall",
+          "code_url": "https://update.greasyfork.org/scripts/398386/Loopingsnl%20Ad-wall.user.js",
+          "code_size": 399,
+          "license": null,
+          "version": "0.0.1.20200321130555",
+          "locale": "nl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Loopings.nl Ad-wall",
+  "description": "Verbergen van de Ad-wall van looopings.nl",
+  "url": "https://greasyfork.org/scripts/398386-loopings-nl-ad-wall",
+  "code_url": "https://update.greasyfork.org/scripts/398386/Loopingsnl%20Ad-wall.user.js",
+  "code_size": 399,
+  "license": null,
+  "version": "0.0.1.20200321130555",
+  "locale": "nl",
+  "deleted": false,
+  "visibility": "public"
+}

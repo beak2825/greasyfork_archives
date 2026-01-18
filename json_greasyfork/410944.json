@@ -1,0 +1,59 @@
+{
+  "id": 410944,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-07T07:57:26.000Z",
+  "code_updated_at": "2020-09-07T08:10:47.000Z",
+  "namespace": "sunchaolive.github.io/pk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 685654,
+      "name": "SunchaoLive",
+      "created_at": "2020-09-07T07:55:22.000Z",
+      "url": "https://greasyfork.org/users/685654-sunchaolive",
+      "scripts": [
+        {
+          "id": 424884,
+          "daily_installs": 0,
+          "total_installs": 1353,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-04-12T02:31:40.000Z",
+          "code_updated_at": "2021-04-12T02:31:39.000Z",
+          "namespace": "sunchaolive.github.io",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "社交网站会员登录功能破解",
+          "description": "破解付费功能",
+          "url": "https://greasyfork.org/scripts/424884-%E7%A4%BE%E4%BA%A4%E7%BD%91%E7%AB%99%E4%BC%9A%E5%91%98%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD%E7%A0%B4%E8%A7%A3",
+          "code_url": "https://update.greasyfork.org/scripts/424884/%E7%A4%BE%E4%BA%A4%E7%BD%91%E7%AB%99%E4%BC%9A%E5%91%98%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD%E7%A0%B4%E8%A7%A3.user.js",
+          "code_size": 1237,
+          "license": null,
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "去你的辣鸡后台",
+  "description": "这后台我真吐了",
+  "url": "https://greasyfork.org/scripts/410944-%E5%8E%BB%E4%BD%A0%E7%9A%84%E8%BE%A3%E9%B8%A1%E5%90%8E%E5%8F%B0",
+  "code_url": "https://update.greasyfork.org/scripts/410944/%E5%8E%BB%E4%BD%A0%E7%9A%84%E8%BE%A3%E9%B8%A1%E5%90%8E%E5%8F%B0.user.js",
+  "code_size": 5111,
+  "license": null,
+  "version": "0.1.17",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405086,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-10T16:54:16.000Z",
+    "code_updated_at": "2020-06-10T16:57:07.000Z",
+    "namespace": "PCC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 583874,
+        "name": "Costin Vintilescu",
+        "created_at": "2020-06-10T16:49:28.000Z",
+        "url": "https://greasyfork.org/users/583874-costin-vintilescu"
+      }
+    ],
+    "name": "PCC New Diagnosis Rank Code Secondary",
+    "description": "Automatically changes the rank code to secondary in new diagnosis window",
+    "url": "https://greasyfork.org/scripts/405086-pcc-new-diagnosis-rank-code-secondary",
+    "code_url": "https://update.greasyfork.org/scripts/405086/PCC%20New%20Diagnosis%20Rank%20Code%20Secondary.user.js",
+    "code_size": 554,
+    "license": null,
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

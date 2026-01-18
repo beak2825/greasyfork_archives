@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397552,
+    "daily_installs": 0,
+    "total_installs": 174,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-08T15:40:49.000Z",
+    "code_updated_at": "2022-10-04T05:52:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 442816,
+        "name": "pulamu",
+        "created_at": "2020-02-08T16:25:49.000Z",
+        "url": "https://greasyfork.org/users/442816-pulamu"
+      }
+    ],
+    "name": "Chinese Hottie全量加載",
+    "description": "Chinese Hottie全量加載3",
+    "url": "https://greasyfork.org/scripts/397552-chinese-hottie%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BC%89",
+    "code_url": "https://update.greasyfork.org/scripts/397552/Chinese%20Hottie%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BC%89.user.js",
+    "code_size": 10223,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

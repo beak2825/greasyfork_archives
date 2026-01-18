@@ -262,5 +262,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411338,
+    "daily_installs": 0,
+    "total_installs": 463,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-14T16:46:11.000Z",
+    "code_updated_at": "2022-03-28T19:52:56.000Z",
+    "namespace": "RainSlide",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 147361,
+        "name": "Crystal-RainSlide",
+        "created_at": "2017-08-07T15:01:22.000Z",
+        "url": "https://greasyfork.org/users/147361-crystal-rainslide"
+      }
+    ],
+    "name": "知乎 - 阻止知乎在 Firefox Android 下自动跳转至 zhihu://",
+    "description": "刘看山啊，你知不知道，在没有安装你家客户端的情况下，用 Firefox Android 打开问答页面，会发生什么啊？",
+    "url": "https://greasyfork.org/scripts/411338-%E7%9F%A5%E4%B9%8E-%E9%98%BB%E6%AD%A2%E7%9F%A5%E4%B9%8E%E5%9C%A8-firefox-android-%E4%B8%8B%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E8%87%B3-zhihu",
+    "code_url": "https://update.greasyfork.org/scripts/411338/%E7%9F%A5%E4%B9%8E%20-%20%E9%98%BB%E6%AD%A2%E7%9F%A5%E4%B9%8E%E5%9C%A8%20Firefox%20Android%20%E4%B8%8B%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E8%87%B3%20zhihu%3A.user.js",
+    "code_size": 1400,
+    "license": "SQLite Blessing",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 407295,
+    "daily_installs": 0,
+    "total_installs": 453,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-18T02:51:19.000Z",
+    "code_updated_at": "2021-07-29T22:18:37.000Z",
+    "namespace": "Eruda",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 147361,
+        "name": "Crystal-RainSlide",
+        "created_at": "2017-08-07T15:01:22.000Z",
+        "url": "https://greasyfork.org/users/147361-crystal-rainslide"
+      }
+    ],
+    "name": "Eruda Loader",
+    "description": "Load and setup Eruda with DOM plugin",
+    "url": "https://greasyfork.org/scripts/407295-eruda-loader",
+    "code_url": "https://update.greasyfork.org/scripts/407295/Eruda%20Loader.user.js",
+    "code_size": 1922,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406217,
+    "daily_installs": 0,
+    "total_installs": 325,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-28T16:05:15.000Z",
+    "code_updated_at": "2023-10-30T10:49:43.000Z",
+    "namespace": "RainSlide",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 147361,
+        "name": "Crystal-RainSlide",
+        "created_at": "2017-08-07T15:01:22.000Z",
+        "url": "https://greasyfork.org/users/147361-crystal-rainslide"
+      }
+    ],
+    "name": "[Outdated] Get Into PC - Direct Download",
+    "description": "[Outdated] Extract the direct file download links from the redirecting pages.",
+    "url": "https://greasyfork.org/scripts/406217-outdated-get-into-pc-direct-download",
+    "code_url": "https://update.greasyfork.org/scripts/406217/%5BOutdated%5D%20Get%20Into%20PC%20-%20Direct%20Download.user.js",
+    "code_size": 4185,
+    "license": null,
+    "version": "1.0.20200629.outdated",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397672,
+    "daily_installs": 0,
+    "total_installs": 1090,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-10T14:51:59.000Z",
+    "code_updated_at": "2023-08-25T04:45:27.000Z",
+    "namespace": "RainSlide",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 147361,
+        "name": "Crystal-RainSlide",
+        "created_at": "2017-08-07T15:01:22.000Z",
+        "url": "https://greasyfork.org/users/147361-crystal-rainslide"
+      }
+    ],
+    "name": "知乎 - 强行启用暗色主题",
+    "description": "根据网页源代码，很久以前，知乎网页版就已经有了暗色主题。设置项都有了。但官方迟迟不开放使用。等不下去了，先这样了。现已支持切换主题。使用按钮切换主题后，如果页面显示有错误，刷新即可。",
+    "url": "https://greasyfork.org/scripts/397672-%E7%9F%A5%E4%B9%8E-%E5%BC%BA%E8%A1%8C%E5%90%AF%E7%94%A8%E6%9A%97%E8%89%B2%E4%B8%BB%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/397672/%E7%9F%A5%E4%B9%8E%20-%20%E5%BC%BA%E8%A1%8C%E5%90%AF%E7%94%A8%E6%9A%97%E8%89%B2%E4%B8%BB%E9%A2%98.user.js",
+    "code_size": 4163,
+    "license": "SQLite Blessing",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396440,
+    "daily_installs": 1,
+    "total_installs": 83,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-14T20:02:31.000Z",
+    "code_updated_at": "2026-01-18T06:18:39.000Z",
+    "namespace": "RainSlide",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 147361,
+        "name": "Crystal-RainSlide",
+        "created_at": "2017-08-07T15:01:22.000Z",
+        "url": "https://greasyfork.org/users/147361-crystal-rainslide"
+      }
+    ],
+    "name": "GreasyFork - jQuery Warning in the Code Tab with jQuery",
+    "description": "Match \"jquery\" in @require lines and show large jQuery warning when you are checking out the Code tab on Greasy Fork. Now written with jQuery 4.0.0 slim.",
+    "url": "https://greasyfork.org/scripts/396440-greasyfork-jquery-warning-in-the-code-tab-with-jquery",
+    "code_url": "https://update.greasyfork.org/scripts/396440/GreasyFork%20-%20jQuery%20Warning%20in%20the%20Code%20Tab%20with%20jQuery.user.js",
+    "code_size": 1310,
+    "license": "SQLite Blessing",
+    "version": "1.2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 392830,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-23T17:53:29.000Z",
+    "code_updated_at": "2022-03-09T04:45:10.000Z",
+    "namespace": "RainSlide",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 147361,
+        "name": "Crystal-RainSlide",
+        "created_at": "2017-08-07T15:01:22.000Z",
+        "url": "https://greasyfork.org/users/147361-crystal-rainslide"
+      }
+    ],
+    "name": "TC4Shell.com - Add Download Buttons for 7-Zip Plugins page",
+    "description": "Add download buttons to TC4Shell.com's 7-Zip plugins listing page, so one may download from the listing page directly, without opening plugin's page.",
+    "url": "https://greasyfork.org/scripts/392830-tc4shell-com-add-download-buttons-for-7-zip-plugins-page",
+    "code_url": "https://update.greasyfork.org/scripts/392830/TC4Shellcom%20-%20Add%20Download%20Buttons%20for%207-Zip%20Plugins%20page.user.js",
+    "code_size": 2457,
+    "license": "SQLite Blessing",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

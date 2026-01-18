@@ -328,5 +328,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 411260,
+    "daily_installs": 1,
+    "total_installs": 34436,
+    "fan_score": "92.8",
+    "good_ratings": 139,
+    "ok_ratings": 9,
+    "bad_ratings": 0,
+    "created_at": "2020-09-12T18:09:15.000Z",
+    "code_updated_at": "2024-12-16T13:52:25.000Z",
+    "namespace": "https://github.com/sakura-flutter/tampermonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 685328,
+        "name": "sakura-flutter",
+        "created_at": "2020-09-05T16:00:29.000Z",
+        "url": "https://greasyfork.org/users/685328-sakura-flutter"
+      }
+    ],
+    "name": "网页宽屏",
+    "description": "适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神",
+    "url": "https://greasyfork.org/scripts/411260-%E7%BD%91%E9%A1%B5%E5%AE%BD%E5%B1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/411260/%E7%BD%91%E9%A1%B5%E5%AE%BD%E5%B1%8F.user.js",
+    "code_size": 177511,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.15.16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 411093,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-09T13:43:42.000Z",
+    "code_updated_at": "2022-08-14T03:47:00.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 685328,
+        "name": "sakura-flutter",
+        "created_at": "2020-09-05T16:00:29.000Z",
+        "url": "https://greasyfork.org/users/685328-sakura-flutter"
+      }
+    ],
+    "name": "Toast",
+    "description": "Toast或Toast[type] 调用",
+    "url": "https://greasyfork.org/scripts/411093-toast",
+    "code_url": "https://update.greasyfork.org/scripts/411093/1081231/Toast.js",
+    "code_size": 5801,
+    "license": null,
+    "version": "0.0.1.20220814034700",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 411030,
+    "daily_installs": 0,
+    "total_installs": 245,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-09-08T15:06:51.000Z",
+    "code_updated_at": "2023-06-24T15:58:09.000Z",
+    "namespace": "https://github.com/sakura-flutter/tampermonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 685328,
+        "name": "sakura-flutter",
+        "created_at": "2020-09-05T16:00:29.000Z",
+        "url": "https://greasyfork.org/users/685328-sakura-flutter"
+      }
+    ],
+    "name": "蓝湖 工具箱",
+    "description": "自动填充填写过的产品密码(不是蓝湖账户)；快捷查看打开过的项目",
+    "url": "https://greasyfork.org/scripts/411030-%E8%93%9D%E6%B9%96-%E5%B7%A5%E5%85%B7%E7%AE%B1",
+    "code_url": "https://update.greasyfork.org/scripts/411030/%E8%93%9D%E6%B9%96%20%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js",
+    "code_size": 50062,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.12.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 410874,
+    "daily_installs": 2,
+    "total_installs": 7775,
+    "fan_score": "92.7",
+    "good_ratings": 72,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2020-09-05T16:20:16.000Z",
+    "code_updated_at": "2023-06-24T16:07:33.000Z",
+    "namespace": "https://github.com/sakura-flutter/tampermonkey-scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 685328,
+        "name": "sakura-flutter",
+        "created_at": "2020-09-05T16:00:29.000Z",
+        "url": "https://greasyfork.org/users/685328-sakura-flutter"
+      }
+    ],
+    "name": "百度贴吧签到",
+    "description": "网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~",
+    "url": "https://greasyfork.org/scripts/410874-%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%AD%BE%E5%88%B0",
+    "code_url": "https://update.greasyfork.org/scripts/410874/%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%AD%BE%E5%88%B0.user.js",
+    "code_size": 72242,
+    "license": "GNU General Public License v3.0 only",
+    "version": "3.4.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

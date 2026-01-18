@@ -30,6 +30,72 @@
     "version": "0.1",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 402996,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-10T08:53:15.000Z",
+    "code_updated_at": "2020-05-11T06:23:31.000Z",
+    "namespace": "http://www.baichuanweb.com/produce/index",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 546918,
+        "name": "xx572959496",
+        "created_at": "2020-04-30T02:45:37.000Z",
+        "url": "https://greasyfork.org/users/546918-xx572959496"
+      }
+    ],
+    "name": "百川任务平台抢题",
+    "description": "用于百度百川任务平台的抢题，由于各计算机性能不同，运行时间不准确。请自行运行测试。如有需要，修改代码中的setTimeout函数的时间参数，单位为ms。",
+    "url": "https://greasyfork.org/scripts/402996-%E7%99%BE%E5%B7%9D%E4%BB%BB%E5%8A%A1%E5%B9%B3%E5%8F%B0%E6%8A%A2%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/402996/%E7%99%BE%E5%B7%9D%E4%BB%BB%E5%8A%A1%E5%B9%B3%E5%8F%B0%E6%8A%A2%E9%A2%98.user.js",
+    "code_size": 3128,
+    "license": "none",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 402523,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-03T04:29:28.000Z",
+    "code_updated_at": "2020-05-03T12:19:57.000Z",
+    "namespace": "http://xscfw.hebust.edu.cn/survey/login",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 546918,
+        "name": "xx572959496",
+        "created_at": "2020-04-30T02:45:37.000Z",
+        "url": "https://greasyfork.org/users/546918-xx572959496"
+      }
+    ],
+    "name": "河北科技大学体温自动填写",
+    "description": "河北科技大学理工学院体温自动填写 2S后自动提交 默认早上午间体温 在36.0-36.9之间 仅供内部交流使用",
+    "url": "https://greasyfork.org/scripts/402523-%E6%B2%B3%E5%8C%97%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E4%BD%93%E6%B8%A9%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99",
+    "code_url": "https://update.greasyfork.org/scripts/402523/%E6%B2%B3%E5%8C%97%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E4%BD%93%E6%B8%A9%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99.user.js",
+    "code_size": 1592,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

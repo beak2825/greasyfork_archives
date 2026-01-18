@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397837,
+    "daily_installs": 0,
+    "total_installs": 2458,
+    "fan_score": "30.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-03-13T09:38:30.000Z",
+    "code_updated_at": "2024-12-10T12:59:07.000Z",
+    "namespace": "yoursatan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453897,
+        "name": "yoursatan",
+        "created_at": "2020-03-04T11:12:58.000Z",
+        "url": "https://greasyfork.org/users/453897-yoursatan"
+      }
+    ],
+    "name": "起点听书/www.qidian.com",
+    "description": "阅读界面右侧功能栏增加“听书”按钮、“语音”按钮。点击“听书”开始朗读：Esc-结束朗读；空格-暂定/继续；后台静默复制文章内容到剪贴板。点击“语音”按钮，打开设置页，可以调整语速。",
+    "url": "https://greasyfork.org/scripts/397837-%E8%B5%B7%E7%82%B9%E5%90%AC%E4%B9%A6-www-qidian-com",
+    "code_url": "https://update.greasyfork.org/scripts/397837/%E8%B5%B7%E7%82%B9%E5%90%AC%E4%B9%A6wwwqidiancom.user.js",
+    "code_size": 10142,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

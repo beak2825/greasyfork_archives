@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 409686,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-08-21T20:38:32.000Z",
+    "code_updated_at": "2020-08-21T20:38:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665866,
+        "name": "wiejow",
+        "created_at": "2020-07-11T15:45:28.000Z",
+        "url": "https://greasyfork.org/users/665866-wiejow"
+      }
+    ],
+    "name": "Forum Manjaro Fixed!",
+    "description": "bug report: https://forum.manjaro.org/t/remove-that-pesky-penguin/8399",
+    "url": "https://greasyfork.org/scripts/409686-forum-manjaro-fixed",
+    "code_url": "https://update.greasyfork.org/scripts/409686/Forum%20Manjaro%20Fixed%21.user.js",
+    "code_size": 550,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 406897,
+    "daily_installs": 0,
+    "total_installs": 435,
+    "fan_score": "15.0",
+    "good_ratings": 1,
+    "ok_ratings": 2,
+    "bad_ratings": 1,
+    "created_at": "2020-07-11T23:33:32.000Z",
+    "code_updated_at": "2023-06-07T14:50:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665866,
+        "name": "wiejow",
+        "created_at": "2020-07-11T15:45:28.000Z",
+        "url": "https://greasyfork.org/users/665866-wiejow"
+      }
+    ],
+    "name": "Youtube restore slim thumbnails",
+    "description": "Restore slim thumbnails on home and subs pages. Disable autoplay on unsub channel's home.",
+    "url": "https://greasyfork.org/scripts/406897-youtube-restore-slim-thumbnails",
+    "code_url": "https://update.greasyfork.org/scripts/406897/Youtube%20restore%20slim%20thumbnails.user.js",
+    "code_size": 9222,
+    "license": null,
+    "version": "0.4.6.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

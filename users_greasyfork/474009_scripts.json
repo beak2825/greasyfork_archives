@@ -1,0 +1,35 @@
+[
+  {
+    "id": 399832,
+    "daily_installs": 1,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-07T10:33:26.000Z",
+    "code_updated_at": "2020-04-07T10:33:26.000Z",
+    "namespace": "http://www.lliuliangjia.com:10000/",
+    "support_url": "http://www.lliuliangjia.com:10000/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 474009,
+        "name": "naihe19",
+        "created_at": "2020-04-03T03:50:17.000Z",
+        "url": "https://greasyfork.org/users/474009-naihe19"
+      }
+    ],
+    "name": "星柚助手-奈何",
+    "description": "杭州星柚--星柚综合业务平台 Chrome浏览器插件 对外系统扩展插件；",
+    "url": "https://greasyfork.org/scripts/399832-%E6%98%9F%E6%9F%9A%E5%8A%A9%E6%89%8B-%E5%A5%88%E4%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/399832/%E6%98%9F%E6%9F%9A%E5%8A%A9%E6%89%8B-%E5%A5%88%E4%BD%95.user.js",
+    "code_size": 28353,
+    "license": "MIT License",
+    "version": "20200403004",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

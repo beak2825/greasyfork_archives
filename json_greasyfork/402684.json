@@ -1,0 +1,34 @@
+{
+  "id": 402684,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-05T19:43:21.000Z",
+  "code_updated_at": "2020-05-05T19:43:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 552516,
+      "name": "MatheusFariasWest",
+      "created_at": "2020-05-05T19:04:39.000Z",
+      "url": "https://greasyfork.org/users/552516-matheusfariaswest",
+      "scripts": []
+    }
+  ],
+  "name": "Dossie Rodoviario",
+  "description": "Anexar Docs dossie Rodoviario WEST",
+  "url": "https://greasyfork.org/scripts/402684-dossie-rodoviario",
+  "code_url": "https://update.greasyfork.org/scripts/402684/Dossie%20Rodoviario.user.js",
+  "code_size": 13034,
+  "license": null,
+  "version": "0.1",
+  "locale": "nl",
+  "deleted": false,
+  "visibility": "public"
+}

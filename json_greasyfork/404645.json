@@ -1,0 +1,34 @@
+{
+  "id": 404645,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-04T00:07:03.000Z",
+  "code_updated_at": "2020-06-04T00:07:03.000Z",
+  "namespace": "https://greasyfork.org/users/580279",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 580279,
+      "name": "Taejoon Baek",
+      "created_at": "2020-06-03T23:52:56.000Z",
+      "url": "https://greasyfork.org/users/580279-taejoon-baek",
+      "scripts": []
+    }
+  ],
+  "name": "Clien Linkprice Paralyzer",
+  "description": "Paralyze Clien linkprice",
+  "url": "https://greasyfork.org/scripts/404645-clien-linkprice-paralyzer",
+  "code_url": "https://update.greasyfork.org/scripts/404645/Clien%20Linkprice%20Paralyzer.user.js",
+  "code_size": 724,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

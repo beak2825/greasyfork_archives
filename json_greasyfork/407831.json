@@ -1,0 +1,33 @@
+{
+  "id": 407831,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-28T03:38:25.000Z",
+  "code_updated_at": "2020-07-28T03:40:21.000Z",
+  "namespace": "motd-times.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670877,
+      "name": "uivil",
+      "created_at": "2020-07-28T03:33:05.000Z",
+      "url": "https://greasyfork.org/users/670877-uivil"
+    }
+  ],
+  "name": "MOTD video links",
+  "description": "Show video links in a popup (openable with mpv player)",
+  "url": "https://greasyfork.org/scripts/407831-motd-video-links",
+  "code_url": "https://update.greasyfork.org/scripts/407831/MOTD%20video%20links.user.js",
+  "code_size": 4126,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

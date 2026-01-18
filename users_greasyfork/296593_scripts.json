@@ -1,0 +1,35 @@
+[
+  {
+    "id": 406031,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-25T13:09:21.000Z",
+    "code_updated_at": "2020-06-25T13:09:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 296593,
+        "name": "ItsTheChickenMan",
+        "created_at": "2019-04-30T11:05:19.000Z",
+        "url": "https://greasyfork.org/users/296593-itsthechickenman"
+      }
+    ],
+    "name": "Krunker Bot Host",
+    "description": "Host bots on a server which stay still at spawn, good for farming",
+    "url": "https://greasyfork.org/scripts/406031-krunker-bot-host",
+    "code_url": "https://update.greasyfork.org/scripts/406031/Krunker%20Bot%20Host.user.js",
+    "code_size": 1626,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

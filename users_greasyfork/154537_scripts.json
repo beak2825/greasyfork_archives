@@ -1,0 +1,35 @@
+[
+  {
+    "id": 402953,
+    "daily_installs": 0,
+    "total_installs": 662,
+    "fan_score": "46.7",
+    "good_ratings": 6,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2020-05-09T14:34:18.000Z",
+    "code_updated_at": "2021-03-31T14:31:10.000Z",
+    "namespace": "jak0723",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 154537,
+        "name": "JAK0723",
+        "created_at": "2017-09-30T11:21:53.000Z",
+        "url": "https://greasyfork.org/users/154537-jak0723"
+      }
+    ],
+    "name": "View More Twitter Replies",
+    "description": "Automatically displays replies hidden behind buttons",
+    "url": "https://greasyfork.org/scripts/402953-view-more-twitter-replies",
+    "code_url": "https://update.greasyfork.org/scripts/402953/View%20More%20Twitter%20Replies.user.js",
+    "code_size": 4210,
+    "license": "MIT License",
+    "version": "1.3.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

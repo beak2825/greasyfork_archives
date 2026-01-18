@@ -1,0 +1,35 @@
+[
+  {
+    "id": 400947,
+    "daily_installs": 0,
+    "total_installs": 236,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-15T14:28:39.000Z",
+    "code_updated_at": "2020-04-15T14:28:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 513749,
+        "name": "jia599",
+        "created_at": "2020-04-15T14:12:12.000Z",
+        "url": "https://greasyfork.org/users/513749-jia599"
+      }
+    ],
+    "name": "hbpu 课程中心自动刷课",
+    "description": "看说明看说明",
+    "url": "https://greasyfork.org/scripts/400947-hbpu-%E8%AF%BE%E7%A8%8B%E4%B8%AD%E5%BF%83%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/400947/hbpu%20%E8%AF%BE%E7%A8%8B%E4%B8%AD%E5%BF%83%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE.user.js",
+    "code_size": 6340,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

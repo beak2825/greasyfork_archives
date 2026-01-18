@@ -97,5 +97,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 405830,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-21T22:45:30.000Z",
+    "code_updated_at": "2022-07-07T23:54:31.000Z",
+    "namespace": "https://greasyfork.org/users/433510",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433510,
+        "name": "lingyer",
+        "created_at": "2020-01-09T00:04:20.000Z",
+        "url": "https://greasyfork.org/users/433510-lingyer"
+      }
+    ],
+    "name": "河洛论坛自动农场",
+    "description": "限定河洛论坛专用，每日自动签到，自动领取红包任务，自动种植农场",
+    "url": "https://greasyfork.org/scripts/405830-%E6%B2%B3%E6%B4%9B%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E5%86%9C%E5%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/405830/%E6%B2%B3%E6%B4%9B%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E5%86%9C%E5%9C%BA.user.js",
+    "code_size": 37154,
+    "license": "GNU GPLv3",
+    "version": "0.10.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 398768,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-26T15:11:33.000Z",
+    "code_updated_at": "2021-03-28T00:10:05.000Z",
+    "namespace": "https://greasyfork.org/users/433510",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433510,
+        "name": "lingyer",
+        "created_at": "2020-01-09T00:04:20.000Z",
+        "url": "https://greasyfork.org/users/433510-lingyer"
+      }
+    ],
+    "name": "河洛论坛自动矿场",
+    "description": "限定河洛论坛专用，每日自动签到，自动领取红包任务，自动领取宝箱钥匙，自动收矿",
+    "url": "https://greasyfork.org/scripts/398768-%E6%B2%B3%E6%B4%9B%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E7%9F%BF%E5%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/398768/%E6%B2%B3%E6%B4%9B%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E7%9F%BF%E5%9C%BA.user.js",
+    "code_size": 7881,
+    "license": null,
+    "version": "0.5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 394996,
+    "daily_installs": 0,
+    "total_installs": 445,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-11T02:00:04.000Z",
+    "code_updated_at": "2020-01-11T02:00:03.000Z",
+    "namespace": "https://greasyfork.org/users/433510",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433510,
+        "name": "lingyer",
+        "created_at": "2020-01-09T00:04:20.000Z",
+        "url": "https://greasyfork.org/users/433510-lingyer"
+      }
+    ],
+    "name": "好书友论坛自动刷在线任务",
+    "description": "限定好书友论坛专用，自动签到，每2分钟自动刷新，自动领取在线奖励",
+    "url": "https://greasyfork.org/scripts/394996-%E5%A5%BD%E4%B9%A6%E5%8F%8B%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E5%88%B7%E5%9C%A8%E7%BA%BF%E4%BB%BB%E5%8A%A1",
+    "code_url": "https://update.greasyfork.org/scripts/394996/%E5%A5%BD%E4%B9%A6%E5%8F%8B%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E5%88%B7%E5%9C%A8%E7%BA%BF%E4%BB%BB%E5%8A%A1.user.js",
+    "code_size": 2369,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 394871,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-09T09:36:07.000Z",
+    "code_updated_at": "2022-02-20T01:52:06.000Z",
+    "namespace": "https://greasyfork.org/users/433510",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433510,
+        "name": "lingyer",
+        "created_at": "2020-01-09T00:04:20.000Z",
+        "url": "https://greasyfork.org/users/433510-lingyer"
+      }
+    ],
+    "name": "好书友论坛自动回复",
+    "description": "限定好书友论坛专用，每日自动签到，自动抽奖，自动领取在线奖励，在各区自动回复，在交流吧发帖，在线奖励全部领完则停止",
+    "url": "https://greasyfork.org/scripts/394871-%E5%A5%BD%E4%B9%A6%E5%8F%8B%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/394871/%E5%A5%BD%E4%B9%A6%E5%8F%8B%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D.user.js",
+    "code_size": 17149,
+    "license": null,
+    "version": "0.7.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

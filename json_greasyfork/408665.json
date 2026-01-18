@@ -1,0 +1,59 @@
+{
+  "id": 408665,
+  "daily_installs": 0,
+  "total_installs": 79,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-13T02:17:44.000Z",
+  "code_updated_at": "2020-08-13T02:22:30.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 675720,
+      "name": "Samuel Gilbert",
+      "created_at": "2020-08-13T02:14:44.000Z",
+      "url": "https://greasyfork.org/users/675720-samuel-gilbert",
+      "scripts": [
+        {
+          "id": 408665,
+          "daily_installs": 0,
+          "total_installs": 79,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-13T02:17:44.000Z",
+          "code_updated_at": "2020-08-13T02:22:30.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Better Follows Tab - mangadex",
+          "description": "Groups Manga, Adds Cover image, Adds button to hide read chapters",
+          "url": "https://greasyfork.org/scripts/408665-better-follows-tab-mangadex",
+          "code_url": "https://update.greasyfork.org/scripts/408665/Better%20Follows%20Tab%20-%20mangadex.user.js",
+          "code_size": 3177,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Better Follows Tab - mangadex",
+  "description": "Groups Manga, Adds Cover image, Adds button to hide read chapters",
+  "url": "https://greasyfork.org/scripts/408665-better-follows-tab-mangadex",
+  "code_url": "https://update.greasyfork.org/scripts/408665/Better%20Follows%20Tab%20-%20mangadex.user.js",
+  "code_size": 3177,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

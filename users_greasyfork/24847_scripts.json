@@ -130,5 +130,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 398945,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-29T14:37:24.000Z",
+    "code_updated_at": "2022-10-24T13:27:03.000Z",
+    "namespace": "https://github.com/Mottie",
+    "support_url": "https://github.com/Mottie/GitHub-userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24847,
+        "name": "Mottie",
+        "created_at": "2015-12-25T22:44:29.000Z",
+        "url": "https://greasyfork.org/users/24847-mottie"
+      }
+    ],
+    "name": "GitHub unknown license",
+    "description": "A userscript that adds \"unknown license\" message in repos with no license set",
+    "url": "https://greasyfork.org/scripts/398945-github-unknown-license",
+    "code_url": "https://update.greasyfork.org/scripts/398945/GitHub%20unknown%20license.user.js",
+    "code_size": 2056,
+    "license": "MIT License",
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398907,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-29T00:03:52.000Z",
+    "code_updated_at": "2022-10-24T13:26:46.000Z",
+    "namespace": "https://github.com/Mottie",
+    "support_url": "https://github.com/Mottie/GitHub-userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24847,
+        "name": "Mottie",
+        "created_at": "2015-12-25T22:44:29.000Z",
+        "url": "https://greasyfork.org/users/24847-mottie"
+      }
+    ],
+    "name": "GitHub Mentioned Links",
+    "description": "A userscript adds all mentioned links in the side bar",
+    "url": "https://greasyfork.org/scripts/398907-github-mentioned-links",
+    "code_url": "https://update.greasyfork.org/scripts/398907/GitHub%20Mentioned%20Links.user.js",
+    "code_size": 3898,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398272,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-20T02:06:57.000Z",
+    "code_updated_at": "2020-10-01T13:03:15.000Z",
+    "namespace": "https://github.com/Mottie",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 24847,
+        "name": "Mottie",
+        "created_at": "2015-12-25T22:44:29.000Z",
+        "url": "https://greasyfork.org/users/24847-mottie"
+      }
+    ],
+    "name": "GitHub Update Fork",
+    "description": "A userscript that adds a link to update your fork",
+    "url": "https://greasyfork.org/scripts/398272-github-update-fork",
+    "code_url": "https://update.greasyfork.org/scripts/398272/GitHub%20Update%20Fork.user.js",
+    "code_size": 2423,
+    "license": "MIT License",
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

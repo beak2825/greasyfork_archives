@@ -1,0 +1,59 @@
+{
+  "id": 403390,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-15T09:48:14.000Z",
+  "code_updated_at": "2020-06-26T10:09:47.000Z",
+  "namespace": "https://github.com/SerkZex/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 553601,
+      "name": "SerkZex",
+      "created_at": "2020-05-07T12:08:08.000Z",
+      "url": "https://greasyfork.org/users/553601-serkzex",
+      "scripts": [
+        {
+          "id": 403390,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-05-15T09:48:14.000Z",
+          "code_updated_at": "2020-06-26T10:09:47.000Z",
+          "namespace": "https://github.com/SerkZex/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gitlab Show Only UnResolved Threads",
+          "description": "This script hide commits and resolved threads, no longer scrolling into infinite when reviewing.",
+          "url": "https://greasyfork.org/scripts/403390-gitlab-show-only-unresolved-threads",
+          "code_url": "https://update.greasyfork.org/scripts/403390/Gitlab%20Show%20Only%20UnResolved%20Threads.user.js",
+          "code_size": 2957,
+          "license": "MIT License",
+          "version": "0.2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gitlab Show Only UnResolved Threads",
+  "description": "This script hide commits and resolved threads, no longer scrolling into infinite when reviewing.",
+  "url": "https://greasyfork.org/scripts/403390-gitlab-show-only-unresolved-threads",
+  "code_url": "https://update.greasyfork.org/scripts/403390/Gitlab%20Show%20Only%20UnResolved%20Threads.user.js",
+  "code_size": 2957,
+  "license": "MIT License",
+  "version": "0.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

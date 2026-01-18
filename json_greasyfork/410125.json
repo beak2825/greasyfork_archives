@@ -1,0 +1,59 @@
+{
+  "id": 410125,
+  "daily_installs": 0,
+  "total_installs": 999,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-28T18:39:45.000Z",
+  "code_updated_at": "2020-08-28T18:39:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 683513,
+      "name": "22dave22",
+      "created_at": "2020-08-28T18:35:41.000Z",
+      "url": "https://greasyfork.org/users/683513-22dave22",
+      "scripts": [
+        {
+          "id": 410125,
+          "daily_installs": 0,
+          "total_installs": 999,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-08-28T18:39:45.000Z",
+          "code_updated_at": "2020-08-28T18:39:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Transfer extras",
+          "description": "TI/XP Transfer List",
+          "url": "https://greasyfork.org/scripts/410125-transfer-extras",
+          "code_url": "https://update.greasyfork.org/scripts/410125/Transfer%20extras.user.js",
+          "code_size": 6052,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Transfer extras",
+  "description": "TI/XP Transfer List",
+  "url": "https://greasyfork.org/scripts/410125-transfer-extras",
+  "code_url": "https://update.greasyfork.org/scripts/410125/Transfer%20extras.user.js",
+  "code_size": 6052,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

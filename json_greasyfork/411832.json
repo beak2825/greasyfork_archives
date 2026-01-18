@@ -1,0 +1,59 @@
+{
+  "id": 411832,
+  "daily_installs": 0,
+  "total_installs": 148,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-09-23T16:26:45.000Z",
+  "code_updated_at": "2020-10-02T11:23:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 689939,
+      "name": "lehoangnb",
+      "created_at": "2020-09-23T16:16:01.000Z",
+      "url": "https://greasyfork.org/users/689939-lehoangnb",
+      "scripts": [
+        {
+          "id": 411832,
+          "daily_installs": 0,
+          "total_installs": 148,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-09-23T16:26:45.000Z",
+          "code_updated_at": "2020-10-02T11:23:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Facebook new theme font fix",
+          "description": "Facebook new theme font fix (Tested)",
+          "url": "https://greasyfork.org/scripts/411832-facebook-new-theme-font-fix",
+          "code_url": "https://update.greasyfork.org/scripts/411832/Facebook%20new%20theme%20font%20fix.user.js",
+          "code_size": 698,
+          "license": null,
+          "version": "1.1",
+          "locale": "vi",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Facebook new theme font fix",
+  "description": "Facebook new theme font fix (Tested)",
+  "url": "https://greasyfork.org/scripts/411832-facebook-new-theme-font-fix",
+  "code_url": "https://update.greasyfork.org/scripts/411832/Facebook%20new%20theme%20font%20fix.user.js",
+  "code_size": 698,
+  "license": null,
+  "version": "1.1",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

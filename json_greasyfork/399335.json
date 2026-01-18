@@ -1,0 +1,59 @@
+{
+  "id": 399335,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-02T12:45:16.000Z",
+  "code_updated_at": "2020-04-02T12:45:16.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 471907,
+      "name": "Twiries",
+      "created_at": "2020-03-30T13:31:54.000Z",
+      "url": "https://greasyfork.org/users/471907-twiries",
+      "scripts": [
+        {
+          "id": 399012,
+          "daily_installs": 4,
+          "total_installs": 43728,
+          "fan_score": "30.6",
+          "good_ratings": 7,
+          "ok_ratings": 3,
+          "bad_ratings": 6,
+          "created_at": "2020-03-30T13:36:56.000Z",
+          "code_updated_at": "2023-08-25T11:56:12.000Z",
+          "namespace": "PBP",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "KoC Power Bot Plus",
+          "description": "All-in-One Script for Kingdoms of Camelot",
+          "url": "https://greasyfork.org/scripts/399012-koc-power-bot-plus",
+          "code_url": "https://update.greasyfork.org/scripts/399012/KoC%20Power%20Bot%20Plus.user.js",
+          "code_size": 2002543,
+          "license": "Creative Commons Attribution 4.0 International",
+          "version": "3.65",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "kocbot_image_files",
+  "description": "kocbot image files",
+  "url": "https://greasyfork.org/scripts/399335-kocbot-image-files",
+  "code_url": "https://update.greasyfork.org/scripts/399335/787270/kocbot_image_files.js",
+  "code_size": 1219322,
+  "license": null,
+  "version": "0.0.1.20200402124516",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

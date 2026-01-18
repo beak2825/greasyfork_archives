@@ -1,0 +1,33 @@
+{
+  "id": 404609,
+  "daily_installs": 3,
+  "total_installs": 14543,
+  "fan_score": "73.1",
+  "good_ratings": 18,
+  "ok_ratings": 1,
+  "bad_ratings": 1,
+  "created_at": "2020-06-03T12:09:05.000Z",
+  "code_updated_at": "2020-06-06T01:31:29.000Z",
+  "namespace": "https://space.bilibili.com/6041757",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 578942,
+      "name": "pys078",
+      "created_at": "2020-06-03T11:50:50.000Z",
+      "url": "https://greasyfork.org/users/578942-pys078"
+    }
+  ],
+  "name": "Youtube生肉煮熟工具",
+  "description": "在Youtube视频下添加下载视频，以及下载字幕的按钮（原生字幕+机翻字幕）",
+  "url": "https://greasyfork.org/scripts/404609-youtube%E7%94%9F%E8%82%89%E7%85%AE%E7%86%9F%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/404609/Youtube%E7%94%9F%E8%82%89%E7%85%AE%E7%86%9F%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 7843,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

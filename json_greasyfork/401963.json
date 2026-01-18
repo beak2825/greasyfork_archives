@@ -1,0 +1,34 @@
+{
+  "id": 401963,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-04-25T11:59:27.000Z",
+  "code_updated_at": "2020-05-20T05:50:24.000Z",
+  "namespace": "https://www.lightnovel.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 235149,
+      "name": "Hugo0",
+      "created_at": "2018-12-26T08:17:25.000Z",
+      "url": "https://greasyfork.org/users/235149-hugo0",
+      "scripts": []
+    }
+  ],
+  "name": "LK增强",
+  "description": "对LK添加一些评分按钮 页面自动刷新 上传本地/粘贴图片到图床(vim-cn) 分页 回帖跳转的动能",
+  "url": "https://greasyfork.org/scripts/401963-lk%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/401963/LK%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 14783,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.35",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

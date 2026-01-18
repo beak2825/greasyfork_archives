@@ -756,6 +756,204 @@
     "version": "1.0.3",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 407429,
+    "daily_installs": 0,
+    "total_installs": 1461,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-07-20T07:24:33.000Z",
+    "code_updated_at": "2023-02-07T09:31:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 183333,
+        "name": "rui li 2",
+        "created_at": "2018-05-03T12:28:42.000Z",
+        "url": "https://greasyfork.org/users/183333-rui-li-2"
+      }
+    ],
+    "name": "咕咕镇样式优化",
+    "description": "战斗样式适配新的咕咕镇",
+    "url": "https://greasyfork.org/scripts/407429-%E5%92%95%E5%92%95%E9%95%87%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/407429/%E5%92%95%E5%92%95%E9%95%87%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 19367,
+    "license": null,
+    "version": "3.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 405683,
+    "daily_installs": 0,
+    "total_installs": 1068,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-19T11:09:04.000Z",
+    "code_updated_at": "2022-08-05T08:55:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 183333,
+        "name": "rui li 2",
+        "created_at": "2018-05-03T12:28:42.000Z",
+        "url": "https://greasyfork.org/users/183333-rui-li-2"
+      }
+    ],
+    "name": "初音的青葱Onedrive微云自动填充密码并点击[多网页版]",
+    "description": "网站变更",
+    "url": "https://greasyfork.org/scripts/405683-%E5%88%9D%E9%9F%B3%E7%9A%84%E9%9D%92%E8%91%B1onedrive%E5%BE%AE%E4%BA%91%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%AF%86%E7%A0%81%E5%B9%B6%E7%82%B9%E5%87%BB-%E5%A4%9A%E7%BD%91%E9%A1%B5%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/405683/%E5%88%9D%E9%9F%B3%E7%9A%84%E9%9D%92%E8%91%B1Onedrive%E5%BE%AE%E4%BA%91%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%AF%86%E7%A0%81%E5%B9%B6%E7%82%B9%E5%87%BB%5B%E5%A4%9A%E7%BD%91%E9%A1%B5%E7%89%88%5D.user.js",
+    "code_size": 5292,
+    "license": null,
+    "version": "2.4.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 399430,
+    "daily_installs": 0,
+    "total_installs": 568,
+    "fan_score": "51.7",
+    "good_ratings": 5,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-04-03T16:07:19.000Z",
+    "code_updated_at": "2020-04-04T05:09:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 183333,
+        "name": "rui li 2",
+        "created_at": "2018-05-03T12:28:42.000Z",
+        "url": "https://greasyfork.org/users/183333-rui-li-2"
+      }
+    ],
+    "name": "所有滤镜消除(消除网站变灰色)",
+    "description": "重置滤镜属性",
+    "url": "https://greasyfork.org/scripts/399430-%E6%89%80%E6%9C%89%E6%BB%A4%E9%95%9C%E6%B6%88%E9%99%A4-%E6%B6%88%E9%99%A4%E7%BD%91%E7%AB%99%E5%8F%98%E7%81%B0%E8%89%B2",
+    "code_url": "https://update.greasyfork.org/scripts/399430/%E6%89%80%E6%9C%89%E6%BB%A4%E9%95%9C%E6%B6%88%E9%99%A4%28%E6%B6%88%E9%99%A4%E7%BD%91%E7%AB%99%E5%8F%98%E7%81%B0%E8%89%B2%29.user.js",
+    "code_size": 607,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 398522,
+    "daily_installs": 0,
+    "total_installs": 806,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-23T14:23:28.000Z",
+    "code_updated_at": "2021-05-17T00:28:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 183333,
+        "name": "rui li 2",
+        "created_at": "2018-05-03T12:28:42.000Z",
+        "url": "https://greasyfork.org/users/183333-rui-li-2"
+      }
+    ],
+    "name": "p站样式调整",
+    "description": "整体调整css样式,页面布局,环境:Chrome全屏 电脑分辨率:1920*1080,进入https://www.pixiv.net/discovery页面会自动点击自动浏览",
+    "url": "https://greasyfork.org/scripts/398522-p%E7%AB%99%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/398522/p%E7%AB%99%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 4088,
+    "license": null,
+    "version": "0.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 397043,
+    "daily_installs": 0,
+    "total_installs": 430,
+    "fan_score": "51.7",
+    "good_ratings": 5,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-02-28T14:07:24.000Z",
+    "code_updated_at": "2025-01-31T08:09:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 183333,
+        "name": "rui li 2",
+        "created_at": "2018-05-03T12:28:42.000Z",
+        "url": "https://greasyfork.org/users/183333-rui-li-2"
+      }
+    ],
+    "name": "b站直播样式,粉丝牌子样式优化",
+    "description": "重置b站粉丝牌子的颜色样式，隐藏项目管理的任务",
+    "url": "https://greasyfork.org/scripts/397043-b%E7%AB%99%E7%9B%B4%E6%92%AD%E6%A0%B7%E5%BC%8F-%E7%B2%89%E4%B8%9D%E7%89%8C%E5%AD%90%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/397043/b%E7%AB%99%E7%9B%B4%E6%92%AD%E6%A0%B7%E5%BC%8F%2C%E7%B2%89%E4%B8%9D%E7%89%8C%E5%AD%90%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 8312,
+    "license": "MIT License",
+    "version": "1.3.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396302,
+    "daily_installs": 0,
+    "total_installs": 537,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-11T04:12:39.000Z",
+    "code_updated_at": "2023-05-28T03:21:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 183333,
+        "name": "rui li 2",
+        "created_at": "2018-05-03T12:28:42.000Z",
+        "url": "https://greasyfork.org/users/183333-rui-li-2"
+      }
+    ],
+    "name": "b站播放器样式优化",
+    "description": "浏览器分辨率为1920px极佳",
+    "url": "https://greasyfork.org/scripts/396302-b%E7%AB%99%E6%92%AD%E6%94%BE%E5%99%A8%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/396302/b%E7%AB%99%E6%92%AD%E6%94%BE%E5%99%A8%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 9609,
+    "license": "MIT License",
+    "version": "1.3.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405532,
+    "daily_installs": 0,
+    "total_installs": 885,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-06-16T14:53:17.000Z",
+    "code_updated_at": "2020-06-16T14:53:16.000Z",
+    "namespace": "Wertible@Greasyfork",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 596146,
+        "name": "Wertible",
+        "created_at": "2020-06-16T14:43:10.000Z",
+        "url": "https://greasyfork.org/users/596146-wertible"
+      }
+    ],
+    "name": "Itch.io Autoclaim",
+    "description": "Automatically claims all games from bundles into Itch.io libraries",
+    "url": "https://greasyfork.org/scripts/405532-itch-io-autoclaim",
+    "code_url": "https://update.greasyfork.org/scripts/405532/Itchio%20Autoclaim.user.js",
+    "code_size": 1168,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

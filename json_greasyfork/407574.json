@@ -1,0 +1,34 @@
+{
+  "id": 407574,
+  "daily_installs": 0,
+  "total_installs": 73,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-07-22T22:47:24.000Z",
+  "code_updated_at": "2020-07-29T13:00:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 668565,
+      "name": "KS-Swifty",
+      "created_at": "2020-07-20T10:06:03.000Z",
+      "url": "https://greasyfork.org/users/668565-ks-swifty",
+      "scripts": []
+    }
+  ],
+  "name": "Easy Equipment Remove/Replace",
+  "description": "Easy Saving/Restoring of equipment configs for all your social needs",
+  "url": "https://greasyfork.org/scripts/407574-easy-equipment-remove-replace",
+  "code_url": "https://update.greasyfork.org/scripts/407574/Easy%20Equipment%20RemoveReplace.user.js",
+  "code_size": 4956,
+  "license": null,
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

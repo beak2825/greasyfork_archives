@@ -1,0 +1,35 @@
+[
+  {
+    "id": 400420,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-11T23:24:45.000Z",
+    "code_updated_at": "2020-04-11T23:24:44.000Z",
+    "namespace": "VictorDate Script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 502990,
+        "name": "Victor Data",
+        "created_at": "2020-04-11T23:00:49.000Z",
+        "url": "https://greasyfork.org/users/502990-victor-data"
+      }
+    ],
+    "name": "PostLoadIMG - Kinoplay.me",
+    "description": "12/04/2020, 4:12:32 AM",
+    "url": "https://greasyfork.org/scripts/400420-postloadimg-kinoplay-me",
+    "code_url": "https://update.greasyfork.org/scripts/400420/PostLoadIMG%20-%20Kinoplayme.user.js",
+    "code_size": 671,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

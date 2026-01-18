@@ -1,0 +1,59 @@
+{
+  "id": 406142,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-06-27T09:19:38.000Z",
+  "code_updated_at": "2022-07-11T08:48:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 655565,
+      "name": "Mad-Devil",
+      "created_at": "2020-06-27T09:06:42.000Z",
+      "url": "https://greasyfork.org/users/655565-mad-devil",
+      "scripts": [
+        {
+          "id": 406142,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-06-27T09:19:38.000Z",
+          "code_updated_at": "2022-07-11T08:48:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BYR BBS User Blocker",
+          "description": "在北邮人论坛中屏蔽黑名单用户的发言",
+          "url": "https://greasyfork.org/scripts/406142-byr-bbs-user-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/406142/BYR%20BBS%20User%20Blocker.user.js",
+          "code_size": 3422,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BYR BBS User Blocker",
+  "description": "在北邮人论坛中屏蔽黑名单用户的发言",
+  "url": "https://greasyfork.org/scripts/406142-byr-bbs-user-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/406142/BYR%20BBS%20User%20Blocker.user.js",
+  "code_size": 3422,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

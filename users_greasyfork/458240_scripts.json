@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397861,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-13T20:29:49.000Z",
+    "code_updated_at": "2020-03-16T16:59:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 458240,
+        "name": "ny_yankees",
+        "created_at": "2020-03-13T00:34:56.000Z",
+        "url": "https://greasyfork.org/users/458240-ny-yankees"
+      }
+    ],
+    "name": "JVChat Anti Cigarette",
+    "description": "Quelques options en plus pour JVChat Premium",
+    "url": "https://greasyfork.org/scripts/397861-jvchat-anti-cigarette",
+    "code_url": "https://update.greasyfork.org/scripts/397861/JVChat%20Anti%20Cigarette.user.js",
+    "code_size": 5084,
+    "license": null,
+    "version": "0.1.11",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

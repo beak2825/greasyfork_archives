@@ -1,0 +1,34 @@
+{
+  "id": 402940,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-05-09T06:31:20.000Z",
+  "code_updated_at": "2020-05-09T06:31:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 547032,
+      "name": "OwlsAreAirCats",
+      "created_at": "2020-04-30T06:32:15.000Z",
+      "url": "https://greasyfork.org/users/547032-owlsareaircats",
+      "scripts": []
+    }
+  ],
+  "name": "Ilias Auto Login",
+  "description": "Klickt automatisch den \"Mit KIT-Account anmelden\" Button",
+  "url": "https://greasyfork.org/scripts/402940-ilias-auto-login",
+  "code_url": "https://update.greasyfork.org/scripts/402940/Ilias%20Auto%20Login.user.js",
+  "code_size": 392,
+  "license": null,
+  "version": "0.1",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 408591,
+  "daily_installs": 0,
+  "total_installs": 493,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-11T08:58:37.000Z",
+  "code_updated_at": "2020-09-28T06:13:27.000Z",
+  "namespace": "global_oss",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 427707,
+      "name": "zhousanfu",
+      "created_at": "2019-12-24T00:29:36.000Z",
+      "url": "https://greasyfork.org/users/427707-zhousanfu",
+      "scripts": []
+    }
+  ],
+  "name": "global_oss",
+  "description": "审核过程的错误提示, Error tips during the review process",
+  "url": "https://greasyfork.org/scripts/408591-global-oss",
+  "code_url": "https://update.greasyfork.org/scripts/408591/global_oss.user.js",
+  "code_size": 29621,
+  "license": null,
+  "version": "2.02",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

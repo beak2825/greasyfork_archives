@@ -1,0 +1,33 @@
+{
+  "id": 397337,
+  "daily_installs": 2,
+  "total_installs": 389802,
+  "fan_score": "68.7",
+  "good_ratings": 35,
+  "ok_ratings": 4,
+  "bad_ratings": 6,
+  "created_at": "2020-03-05T03:24:47.000Z",
+  "code_updated_at": "2020-03-08T12:20:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 454200,
+      "name": "Master-cai",
+      "created_at": "2020-03-05T03:15:56.000Z",
+      "url": "https://greasyfork.org/users/454200-master-cai"
+    }
+  ],
+  "name": "超星网课视频秒过",
+  "description": "本脚本用于超星学习通视频快速学习。",
+  "url": "https://greasyfork.org/scripts/397337-%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E8%A7%86%E9%A2%91%E7%A7%92%E8%BF%87",
+  "code_url": "https://update.greasyfork.org/scripts/397337/%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E8%A7%86%E9%A2%91%E7%A7%92%E8%BF%87.user.js",
+  "code_size": 2384,
+  "license": null,
+  "version": "0.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

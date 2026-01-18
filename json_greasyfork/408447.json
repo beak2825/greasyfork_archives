@@ -1,0 +1,33 @@
+{
+  "id": 408447,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-09T05:14:47.000Z",
+  "code_updated_at": "2020-08-09T05:14:46.000Z",
+  "namespace": "MDHider",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 674580,
+      "name": "MadHatter",
+      "created_at": "2020-08-08T23:37:34.000Z",
+      "url": "https://greasyfork.org/users/674580-madhatter"
+    }
+  ],
+  "name": "MangaDex Update Hider",
+  "description": "Allows the user to hide specific titles from the mangadex update page permanently by clicking the icon to the right of the title.",
+  "url": "https://greasyfork.org/scripts/408447-mangadex-update-hider",
+  "code_url": "https://update.greasyfork.org/scripts/408447/MangaDex%20Update%20Hider.user.js",
+  "code_size": 1923,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

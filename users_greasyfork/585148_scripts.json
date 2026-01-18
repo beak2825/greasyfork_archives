@@ -1,0 +1,35 @@
+[
+  {
+    "id": 405149,
+    "daily_installs": 0,
+    "total_installs": 154,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-06-11T22:14:54.000Z",
+    "code_updated_at": "2020-06-11T22:14:54.000Z",
+    "namespace": "jandan.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 585148,
+        "name": "Suzuhana",
+        "created_at": "2020-06-11T22:02:04.000Z",
+        "url": "https://greasyfork.org/users/585148-suzuhana"
+      }
+    ],
+    "name": "Jandan user blocker",
+    "description": "block Jandan users",
+    "url": "https://greasyfork.org/scripts/405149-jandan-user-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/405149/Jandan%20user%20blocker.user.js",
+    "code_size": 2426,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

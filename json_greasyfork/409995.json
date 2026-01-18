@@ -1,0 +1,33 @@
+{
+  "id": 409995,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-08-26T18:04:55.000Z",
+  "code_updated_at": "2020-10-29T03:59:46.000Z",
+  "namespace": "https://greasyfork.org/scripts/35466-mouseplus",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 682833,
+      "name": "ina8t1hekz",
+      "created_at": "2020-08-26T15:24:40.000Z",
+      "url": "https://greasyfork.org/users/682833-ina8t1hekz"
+    }
+  ],
+  "name": "MouseGestureAndDragPlus",
+  "description": "mouse gesture and drag script,supports ringt-key draw track functions and left-key drag functions.Drag target can be [Text] & [Links] & [Image]  Customizenable → Right click to draw ⇄(right,left) to setting",
+  "url": "https://greasyfork.org/scripts/409995-mousegestureanddragplus",
+  "code_url": "https://update.greasyfork.org/scripts/409995/MouseGestureAndDragPlus.user.js",
+  "code_size": 101408,
+  "license": null,
+  "version": "3.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

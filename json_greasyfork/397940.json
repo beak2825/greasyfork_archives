@@ -1,0 +1,59 @@
+{
+  "id": 397940,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-03-15T05:59:53.000Z",
+  "code_updated_at": "2020-03-15T05:59:53.000Z",
+  "namespace": "Lone",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 459403,
+      "name": "OTK",
+      "created_at": "2020-03-15T05:44:24.000Z",
+      "url": "https://greasyfork.org/users/459403-otk",
+      "scripts": [
+        {
+          "id": 397940,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-15T05:59:53.000Z",
+          "code_updated_at": "2020-03-15T05:59:53.000Z",
+          "namespace": "Lone",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide Employees (as of 11.03.20)",
+          "description": "Hides users that are part of a company.",
+          "url": "https://greasyfork.org/scripts/397940-hide-employees-as-of-11-03-20",
+          "code_url": "https://update.greasyfork.org/scripts/397940/Hide%20Employees%20%28as%20of%20110320%29.user.js",
+          "code_size": 1505,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide Employees (as of 11.03.20)",
+  "description": "Hides users that are part of a company.",
+  "url": "https://greasyfork.org/scripts/397940-hide-employees-as-of-11-03-20",
+  "code_url": "https://update.greasyfork.org/scripts/397940/Hide%20Employees%20%28as%20of%20110320%29.user.js",
+  "code_size": 1505,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

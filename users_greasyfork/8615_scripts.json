@@ -262,5 +262,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 404033,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-24T13:57:16.000Z",
+    "code_updated_at": "2020-05-24T13:57:15.000Z",
+    "namespace": "https://greasyfork.org/en/users/8615-joeytwiddle",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8615,
+        "name": "joeytwiddle",
+        "created_at": "2015-01-24T18:51:42.000Z",
+        "url": "https://greasyfork.org/users/8615-joeytwiddle"
+      }
+    ],
+    "name": "Twitter Favicon No Red Notifcation Dot",
+    "description": "Don't let Twitter put a red dot on its Favicon just because you got a little notification",
+    "url": "https://greasyfork.org/scripts/404033-twitter-favicon-no-red-notifcation-dot",
+    "code_url": "https://update.greasyfork.org/scripts/404033/Twitter%20Favicon%20No%20Red%20Notifcation%20Dot.user.js",
+    "code_size": 2012,
+    "license": "ISC License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 403742,
+    "daily_installs": 0,
+    "total_installs": 2336,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-19T14:17:29.000Z",
+    "code_updated_at": "2021-05-29T01:29:18.000Z",
+    "namespace": "https://github.com/Tampermonkey/tampermonkey/issues/904",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8615,
+        "name": "joeytwiddle",
+        "created_at": "2015-01-24T18:51:42.000Z",
+        "url": "https://greasyfork.org/users/8615-joeytwiddle"
+      }
+    ],
+    "name": "Tampermonkey Google Drive sync fix [adopted]",
+    "description": "Tampermonkey keeps asking us to select an account when we open the browser.  But this script by Jack'lul will do it for us!",
+    "url": "https://greasyfork.org/scripts/403742-tampermonkey-google-drive-sync-fix-adopted",
+    "code_url": "https://update.greasyfork.org/scripts/403742/Tampermonkey%20Google%20Drive%20sync%20fix%20%5Badopted%5D.user.js",
+    "code_size": 1977,
+    "license": "ISC License",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 403741,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-05-19T14:17:28.000Z",
+    "code_updated_at": "2020-05-24T13:55:02.000Z",
+    "namespace": "https://greasyfork.org/en/users/8615-joeytwiddle",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8615,
+        "name": "joeytwiddle",
+        "created_at": "2015-01-24T18:51:42.000Z",
+        "url": "https://greasyfork.org/users/8615-joeytwiddle"
+      }
+    ],
+    "name": "Dwitter Tweaks",
+    "description": "Tweak Dwitter with extreme dark theme",
+    "url": "https://greasyfork.org/scripts/403741-dwitter-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/403741/Dwitter%20Tweaks.user.js",
+    "code_size": 1902,
+    "license": "ISC License",
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 401907,
+    "daily_installs": 0,
+    "total_installs": 337,
+    "fan_score": "39.6",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-04-24T17:21:26.000Z",
+    "code_updated_at": "2022-03-12T02:31:05.000Z",
+    "namespace": "https://greasyfork.org/users/8615",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8615,
+        "name": "joeytwiddle",
+        "created_at": "2015-01-24T18:51:42.000Z",
+        "url": "https://greasyfork.org/users/8615-joeytwiddle"
+      }
+    ],
+    "name": "YouTube Popout Button [mashup]",
+    "description": "Provides a button to pop out the YouTube video in a separate window.",
+    "url": "https://greasyfork.org/scripts/401907-youtube-popout-button-mashup",
+    "code_url": "https://update.greasyfork.org/scripts/401907/YouTube%20Popout%20Button%20%5Bmashup%5D.user.js",
+    "code_size": 4464,
+    "license": "ISC License",
+    "version": "2.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 399820,
+    "daily_installs": 0,
+    "total_installs": 143,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-04-07T06:10:28.000Z",
+    "code_updated_at": "2025-09-18T22:13:21.000Z",
+    "namespace": "tumpio@sci.fi",
+    "support_url": "https://github.com/tumpio/gmscripts",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8615,
+        "name": "joeytwiddle",
+        "created_at": "2015-01-24T18:51:42.000Z",
+        "url": "https://greasyfork.org/users/8615-joeytwiddle"
+      }
+    ],
+    "name": "Scroll Everywhere",
+    "description": "Scroll entire page smoothly with long left-click and drag.",
+    "url": "https://greasyfork.org/scripts/399820-scroll-everywhere",
+    "code_url": "https://update.greasyfork.org/scripts/399820/Scroll%20Everywhere.user.js",
+    "code_size": 16462,
+    "license": "MIT License",
+    "version": "0.3q",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]
