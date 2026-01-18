@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397173,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-02T00:31:48.000Z",
+    "code_updated_at": "2020-03-02T00:31:47.000Z",
+    "namespace": "https://github.com/acshmily/f-ck-sangfor-hac",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 452567,
+        "name": "acshmily",
+        "created_at": "2020-03-02T00:27:54.000Z",
+        "url": "https://greasyfork.org/users/452567-acshmily"
+      }
+    ],
+    "name": "f-ck-sangfor-hac",
+    "description": "just you know why,本插件仅为个人学习测试使用，请在下载后24小时内删除，不得用于商业用途，否则后果自负",
+    "url": "https://greasyfork.org/scripts/397173-f-ck-sangfor-hac",
+    "code_url": "https://update.greasyfork.org/scripts/397173/f-ck-sangfor-hac.user.js",
+    "code_size": 4657,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

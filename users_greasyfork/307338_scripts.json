@@ -1,0 +1,35 @@
+[
+  {
+    "id": 394492,
+    "daily_installs": 5,
+    "total_installs": 136175,
+    "fan_score": "90.5",
+    "good_ratings": 98,
+    "ok_ratings": 4,
+    "bad_ratings": 2,
+    "created_at": "2020-01-01T03:38:08.000Z",
+    "code_updated_at": "2021-03-24T11:07:01.000Z",
+    "namespace": "http://timerd.ml",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 307338,
+        "name": "HOPETIME",
+        "created_at": "2019-06-05T15:17:07.000Z",
+        "url": "https://greasyfork.org/users/307338-hopetime"
+      }
+    ],
+    "name": "[timerd][网络电视] 腾讯、爱奇艺、芒果、优酷、乐视、B站、土豆、搜狐、1905等 VIP视频免费看(2021.03.24)更新",
+    "description": "腾讯、爱奇艺、芒果、优酷、乐视、B站、土豆、搜狐、1905等各大视频网站视频解析服务(有谷歌ads)",
+    "url": "https://greasyfork.org/scripts/394492-timerd-%E7%BD%91%E7%BB%9C%E7%94%B5%E8%A7%86-%E8%85%BE%E8%AE%AF-%E7%88%B1%E5%A5%87%E8%89%BA-%E8%8A%92%E6%9E%9C-%E4%BC%98%E9%85%B7-%E4%B9%90%E8%A7%86-b%E7%AB%99-%E5%9C%9F%E8%B1%86-%E6%90%9C%E7%8B%90-1905%E7%AD%89-vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%9C%8B-2021-03-24-%E6%9B%B4%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/394492/%5Btimerd%5D%5B%E7%BD%91%E7%BB%9C%E7%94%B5%E8%A7%86%5D%20%E8%85%BE%E8%AE%AF%E3%80%81%E7%88%B1%E5%A5%87%E8%89%BA%E3%80%81%E8%8A%92%E6%9E%9C%E3%80%81%E4%BC%98%E9%85%B7%E3%80%81%E4%B9%90%E8%A7%86%E3%80%81B%E7%AB%99%E3%80%81%E5%9C%9F%E8%B1%86%E3%80%81%E6%90%9C%E7%8B%90%E3%80%811905%E7%AD%89%20VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%9C%8B%2820210324%29%E6%9B%B4%E6%96%B0.user.js",
+    "code_size": 6559,
+    "license": "MIT2.0",
+    "version": "2021.03.24",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

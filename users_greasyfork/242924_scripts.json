@@ -1,0 +1,68 @@
+[
+  {
+    "id": 394427,
+    "daily_installs": 2,
+    "total_installs": 3908,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-30T08:31:23.000Z",
+    "code_updated_at": "2020-10-01T22:55:52.000Z",
+    "namespace": "http://mofiter.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 242924,
+        "name": "思奔无忧",
+        "created_at": "2019-01-28T20:57:04.000Z",
+        "url": "https://greasyfork.org/users/242924-%E6%80%9D%E5%A5%94%E6%97%A0%E5%BF%A7"
+      }
+    ],
+    "name": "视频新版_腾讯",
+    "description": "VIP视频新版_腾讯[内嵌版]",
+    "url": "https://greasyfork.org/scripts/394427-%E8%A7%86%E9%A2%91%E6%96%B0%E7%89%88-%E8%85%BE%E8%AE%AF",
+    "code_url": "https://update.greasyfork.org/scripts/394427/%E8%A7%86%E9%A2%91%E6%96%B0%E7%89%88_%E8%85%BE%E8%AE%AF.user.js",
+    "code_size": 9445,
+    "license": null,
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 394426,
+    "daily_installs": 0,
+    "total_installs": 4671,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2019-12-30T08:27:57.000Z",
+    "code_updated_at": "2020-10-01T22:56:17.000Z",
+    "namespace": "http://mofiter.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 242924,
+        "name": "思奔无忧",
+        "created_at": "2019-01-28T20:57:04.000Z",
+        "url": "https://greasyfork.org/users/242924-%E6%80%9D%E5%A5%94%E6%97%A0%E5%BF%A7"
+      }
+    ],
+    "name": "VIP视频新版_爱奇艺",
+    "description": "VIP视频新版_爱奇艺[内嵌版]",
+    "url": "https://greasyfork.org/scripts/394426-vip%E8%A7%86%E9%A2%91%E6%96%B0%E7%89%88-%E7%88%B1%E5%A5%87%E8%89%BA",
+    "code_url": "https://update.greasyfork.org/scripts/394426/VIP%E8%A7%86%E9%A2%91%E6%96%B0%E7%89%88_%E7%88%B1%E5%A5%87%E8%89%BA.user.js",
+    "code_size": 7310,
+    "license": null,
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

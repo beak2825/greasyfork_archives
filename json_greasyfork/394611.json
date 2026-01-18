@@ -1,0 +1,34 @@
+{
+  "id": 394611,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-04T06:57:56.000Z",
+  "code_updated_at": "2020-01-04T06:57:55.000Z",
+  "namespace": "http://blog.pxpoi.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 432187,
+      "name": "朝游北海",
+      "created_at": "2020-01-04T06:44:58.000Z",
+      "url": "https://greasyfork.org/users/432187-%E6%9C%9D%E6%B8%B8%E5%8C%97%E6%B5%B7",
+      "scripts": []
+    }
+  ],
+  "name": "LDU - 评教",
+  "description": "For LDU评教系统",
+  "url": "https://greasyfork.org/scripts/394611-ldu-%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/394611/LDU%20-%20%E8%AF%84%E6%95%99.user.js",
+  "code_size": 7073,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

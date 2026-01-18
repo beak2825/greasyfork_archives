@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393507,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-09T06:45:00.000Z",
+    "code_updated_at": "2019-12-09T06:45:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 414244,
+        "name": "auroraeffect",
+        "created_at": "2019-12-09T02:59:54.000Z",
+        "url": "https://greasyfork.org/users/414244-auroraeffect"
+      }
+    ],
+    "name": "阿里邮箱自动阅读邮件",
+    "description": "原理：根据邮件标题是否加粗找到未读邮件，然后模拟点击，并停留5秒（时间过短无法触发已读）",
+    "url": "https://greasyfork.org/scripts/393507-%E9%98%BF%E9%87%8C%E9%82%AE%E7%AE%B1%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB%E9%82%AE%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/393507/%E9%98%BF%E9%87%8C%E9%82%AE%E7%AE%B1%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB%E9%82%AE%E4%BB%B6.user.js",
+    "code_size": 1139,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

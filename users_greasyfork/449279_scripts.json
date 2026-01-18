@@ -63,6 +63,39 @@
     "version": "0.0.7",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396825,
+    "daily_installs": 0,
+    "total_installs": 6482,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-24T11:57:04.000Z",
+    "code_updated_at": "2020-02-24T11:57:04.000Z",
+    "namespace": "http://github.com/Xzonn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 449279,
+        "name": "Xzonn",
+        "created_at": "2020-02-24T11:55:40.000Z",
+        "url": "https://greasyfork.org/users/449279-xzonn"
+      }
+    ],
+    "name": "智慧树，二倍速",
+    "description": "打开智慧树的新大门",
+    "url": "https://greasyfork.org/scripts/396825-%E6%99%BA%E6%85%A7%E6%A0%91-%E4%BA%8C%E5%80%8D%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/396825/%E6%99%BA%E6%85%A7%E6%A0%91%EF%BC%8C%E4%BA%8C%E5%80%8D%E9%80%9F.user.js",
+    "code_size": 2618,
+    "license": null,
+    "version": "0.9.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

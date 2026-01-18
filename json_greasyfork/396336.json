@@ -1,0 +1,59 @@
+{
+  "id": 396336,
+  "daily_installs": 0,
+  "total_installs": 108,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-11T18:58:06.000Z",
+  "code_updated_at": "2020-02-20T09:02:30.000Z",
+  "namespace": "https://greasyfork.org/users/443935",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 443935,
+      "name": "hacker0limbo",
+      "created_at": "2020-02-11T16:09:30.000Z",
+      "url": "https://greasyfork.org/users/443935-hacker0limbo",
+      "scripts": [
+        {
+          "id": 396336,
+          "daily_installs": 0,
+          "total_installs": 108,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-11T18:58:06.000Z",
+          "code_updated_at": "2020-02-20T09:02:30.000Z",
+          "namespace": "https://greasyfork.org/users/443935",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "zhihu one",
+          "description": "知乎代码高亮",
+          "url": "https://greasyfork.org/scripts/396336-zhihu-one",
+          "code_url": "https://update.greasyfork.org/scripts/396336/zhihu%20one.user.js",
+          "code_size": 2954,
+          "license": null,
+          "version": "0.1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "zhihu one",
+  "description": "知乎代码高亮",
+  "url": "https://greasyfork.org/scripts/396336-zhihu-one",
+  "code_url": "https://update.greasyfork.org/scripts/396336/zhihu%20one.user.js",
+  "code_size": 2954,
+  "license": null,
+  "version": "0.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 392670,
+  "daily_installs": 0,
+  "total_installs": 566,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-20T02:47:49.000Z",
+  "code_updated_at": "2020-07-09T05:31:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 251884,
+      "name": "jinghong jiang",
+      "created_at": "2019-03-03T10:32:26.000Z",
+      "url": "https://greasyfork.org/users/251884-jinghong-jiang",
+      "scripts": [
+        {
+          "id": 392670,
+          "daily_installs": 0,
+          "total_installs": 566,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-20T02:47:49.000Z",
+          "code_updated_at": "2020-07-09T05:31:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "去除博客导流公众号",
+          "description": "去除openwrite“博客导流公众号”功能",
+          "url": "https://greasyfork.org/scripts/392670-%E5%8E%BB%E9%99%A4%E5%8D%9A%E5%AE%A2%E5%AF%BC%E6%B5%81%E5%85%AC%E4%BC%97%E5%8F%B7",
+          "code_url": "https://update.greasyfork.org/scripts/392670/%E5%8E%BB%E9%99%A4%E5%8D%9A%E5%AE%A2%E5%AF%BC%E6%B5%81%E5%85%AC%E4%BC%97%E5%8F%B7.user.js",
+          "code_size": 1052,
+          "license": null,
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "去除博客导流公众号",
+  "description": "去除openwrite“博客导流公众号”功能",
+  "url": "https://greasyfork.org/scripts/392670-%E5%8E%BB%E9%99%A4%E5%8D%9A%E5%AE%A2%E5%AF%BC%E6%B5%81%E5%85%AC%E4%BC%97%E5%8F%B7",
+  "code_url": "https://update.greasyfork.org/scripts/392670/%E5%8E%BB%E9%99%A4%E5%8D%9A%E5%AE%A2%E5%AF%BC%E6%B5%81%E5%85%AC%E4%BC%97%E5%8F%B7.user.js",
+  "code_size": 1052,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

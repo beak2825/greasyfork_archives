@@ -1,0 +1,34 @@
+{
+  "id": 395854,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-30T17:44:04.000Z",
+  "code_updated_at": "2025-10-31T10:14:19.000Z",
+  "namespace": "https://andrealazzarotto.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1313902,
+      "name": "G2Bfork",
+      "created_at": "2024-06-07T10:22:54.000Z",
+      "url": "https://greasyfork.org/users/1313902-g2bfork",
+      "scripts": []
+    }
+  ],
+  "name": "Fix campo Codice PIN",
+  "description": "Sistema i campi per il login sul sito Agenzia delle Entrate",
+  "url": "https://greasyfork.org/scripts/395854-fix-campo-codice-pin",
+  "code_url": "https://update.greasyfork.org/scripts/395854/Fix%20campo%20Codice%20PIN.user.js",
+  "code_size": 1843,
+  "license": null,
+  "version": "2025.10.31.2",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 394853,
+    "daily_installs": 1,
+    "total_installs": 5828,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-01-09T02:13:53.000Z",
+    "code_updated_at": "2020-01-09T03:05:44.000Z",
+    "namespace": "spade-squad.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433529,
+        "name": "Diep.ro.PianoYT youtube",
+        "created_at": "2020-01-09T02:07:57.000Z",
+        "url": "https://greasyfork.org/users/433529-diep-ro-pianoyt-youtube"
+      }
+    ],
+    "name": "diep.io Spade Script - Public",
+    "description": "Press TAB to show Server Selector.",
+    "url": "https://greasyfork.org/scripts/394853-diep-io-spade-script-public",
+    "code_url": "https://update.greasyfork.org/scripts/394853/diepio%20Spade%20Script%20-%20Public.user.js",
+    "code_size": 18581,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -30,6 +30,72 @@
     "version": "0.3",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 395503,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-21T14:35:06.000Z",
+    "code_updated_at": "2020-01-21T14:43:55.000Z",
+    "namespace": "https://greasyfork.org/users/305208",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 305208,
+        "name": "Tsukani",
+        "created_at": "2019-05-27T20:17:49.000Z",
+        "url": "https://greasyfork.org/users/305208-tsukani"
+      }
+    ],
+    "name": "We Heart It GIF Autoplay",
+    "description": "Autoplays gifs on We Heart It!",
+    "url": "https://greasyfork.org/scripts/395503-we-heart-it-gif-autoplay",
+    "code_url": "https://update.greasyfork.org/scripts/395503/We%20Heart%20It%20GIF%20Autoplay.user.js",
+    "code_size": 1006,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393851,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-17T14:58:29.000Z",
+    "code_updated_at": "2019-12-17T15:18:23.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/393851-gamesense-snow",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 305208,
+        "name": "Tsukani",
+        "created_at": "2019-05-27T20:17:49.000Z",
+        "url": "https://greasyfork.org/users/305208-tsukani"
+      }
+    ],
+    "name": "GameSense Snow",
+    "description": "Adds a snow overlay on GameSense.",
+    "url": "https://greasyfork.org/scripts/393851-gamesense-snow",
+    "code_url": "https://update.greasyfork.org/scripts/393851/GameSense%20Snow.user.js",
+    "code_size": 2326,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

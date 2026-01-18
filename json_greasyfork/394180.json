@@ -1,0 +1,59 @@
+{
+  "id": 394180,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-25T13:04:55.000Z",
+  "code_updated_at": "2019-12-25T13:47:53.000Z",
+  "namespace": "https://guru3d.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 428399,
+      "name": "RevoLand",
+      "created_at": "2019-12-25T13:01:51.000Z",
+      "url": "https://greasyfork.org/users/428399-revoland",
+      "scripts": [
+        {
+          "id": 394180,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-25T13:04:55.000Z",
+          "code_updated_at": "2019-12-25T13:47:53.000Z",
+          "namespace": "https://guru3d.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Guru3D Keyboard Shortcuts",
+          "description": "Use arrow keys to navigate through articles.",
+          "url": "https://greasyfork.org/scripts/394180-guru3d-keyboard-shortcuts",
+          "code_url": "https://update.greasyfork.org/scripts/394180/Guru3D%20Keyboard%20Shortcuts.user.js",
+          "code_size": 1167,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Guru3D Keyboard Shortcuts",
+  "description": "Use arrow keys to navigate through articles.",
+  "url": "https://greasyfork.org/scripts/394180-guru3d-keyboard-shortcuts",
+  "code_url": "https://update.greasyfork.org/scripts/394180/Guru3D%20Keyboard%20Shortcuts.user.js",
+  "code_size": 1167,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

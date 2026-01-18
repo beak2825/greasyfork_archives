@@ -1,0 +1,33 @@
+{
+  "id": 396626,
+  "daily_installs": 1,
+  "total_installs": 1240,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-19T16:07:38.000Z",
+  "code_updated_at": "2020-02-20T08:49:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 447226,
+      "name": "David Hodge",
+      "created_at": "2020-02-19T15:38:20.000Z",
+      "url": "https://greasyfork.org/users/447226-david-hodge"
+    }
+  ],
+  "name": "Nvidia geforce now browse games",
+  "description": "Instead of using a searchbox, now you can browse the list on the page - a feature nvidia removed",
+  "url": "https://greasyfork.org/scripts/396626-nvidia-geforce-now-browse-games",
+  "code_url": "https://update.greasyfork.org/scripts/396626/Nvidia%20geforce%20now%20browse%20games.user.js",
+  "code_size": 1787,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

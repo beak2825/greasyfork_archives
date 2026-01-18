@@ -1,0 +1,59 @@
+{
+  "id": 393233,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-03T14:38:55.000Z",
+  "code_updated_at": "2019-12-03T17:01:42.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/393233-优学院全能脚本",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 411777,
+      "name": "Conastin",
+      "created_at": "2019-12-03T14:37:17.000Z",
+      "url": "https://greasyfork.org/users/411777-conastin",
+      "scripts": [
+        {
+          "id": 445570,
+          "daily_installs": 0,
+          "total_installs": 1535,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-05-26T06:04:26.000Z",
+          "code_updated_at": "2022-06-11T16:28:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "免费下载文档【应届毕业生网|文小蜜】",
+          "description": "免费下载文档，取消微信关注公众号和付费下载的限制。",
+          "url": "https://greasyfork.org/scripts/445570-%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD%E6%96%87%E6%A1%A3-%E5%BA%94%E5%B1%8A%E6%AF%95%E4%B8%9A%E7%94%9F%E7%BD%91-%E6%96%87%E5%B0%8F%E8%9C%9C",
+          "code_url": "https://update.greasyfork.org/scripts/445570/%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD%E6%96%87%E6%A1%A3%E3%80%90%E5%BA%94%E5%B1%8A%E6%AF%95%E4%B8%9A%E7%94%9F%E7%BD%91%7C%E6%96%87%E5%B0%8F%E8%9C%9C%E3%80%91.user.js",
+          "code_size": 2596,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "优学院全能脚本",
+  "description": "优学院全能测试脚本",
+  "url": "https://greasyfork.org/scripts/393233-%E4%BC%98%E5%AD%A6%E9%99%A2%E5%85%A8%E8%83%BD%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/393233/%E4%BC%98%E5%AD%A6%E9%99%A2%E5%85%A8%E8%83%BD%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 15821,
+  "license": null,
+  "version": "0.66",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

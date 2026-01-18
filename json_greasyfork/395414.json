@@ -1,0 +1,59 @@
+{
+  "id": 395414,
+  "daily_installs": 0,
+  "total_installs": 485,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-18T21:00:15.000Z",
+  "code_updated_at": "2020-01-18T22:51:34.000Z",
+  "namespace": "https://greasyfork.org/en/users/24764-buzzardrock",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 24764,
+      "name": "drove712",
+      "created_at": "2015-12-25T04:25:07.000Z",
+      "url": "https://greasyfork.org/users/24764-drove712",
+      "scripts": [
+        {
+          "id": 395414,
+          "daily_installs": 0,
+          "total_installs": 485,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-01-18T21:00:15.000Z",
+          "code_updated_at": "2020-01-18T22:51:34.000Z",
+          "namespace": "https://greasyfork.org/en/users/24764-buzzardrock",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RARBG - Linkify",
+          "description": "Adds a magnet link button to each result.",
+          "url": "https://greasyfork.org/scripts/395414-rarbg-linkify",
+          "code_url": "https://update.greasyfork.org/scripts/395414/RARBG%20-%20Linkify.user.js",
+          "code_size": 22640,
+          "license": "MIT License",
+          "version": "3.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RARBG - Linkify",
+  "description": "Adds a magnet link button to each result.",
+  "url": "https://greasyfork.org/scripts/395414-rarbg-linkify",
+  "code_url": "https://update.greasyfork.org/scripts/395414/RARBG%20-%20Linkify.user.js",
+  "code_size": 22640,
+  "license": "MIT License",
+  "version": "3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

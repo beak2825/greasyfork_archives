@@ -1,0 +1,59 @@
+{
+  "id": 394044,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-21T16:09:57.000Z",
+  "code_updated_at": "2020-01-06T14:54:44.000Z",
+  "namespace": "https://greasyfork.org/users/427017",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 427017,
+      "name": "incognitoND",
+      "created_at": "2019-12-21T15:56:58.000Z",
+      "url": "https://greasyfork.org/users/427017-incognitond",
+      "scripts": [
+        {
+          "id": 394044,
+          "daily_installs": 0,
+          "total_installs": 43,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-21T16:09:57.000Z",
+          "code_updated_at": "2020-01-06T14:54:44.000Z",
+          "namespace": "https://greasyfork.org/users/427017",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ND Twitter Embedder",
+          "description": "Embed Twitterlinks",
+          "url": "https://greasyfork.org/scripts/394044-nd-twitter-embedder",
+          "code_url": "https://update.greasyfork.org/scripts/394044/ND%20Twitter%20Embedder.user.js",
+          "code_size": 1095,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ND Twitter Embedder",
+  "description": "Embed Twitterlinks",
+  "url": "https://greasyfork.org/scripts/394044-nd-twitter-embedder",
+  "code_url": "https://update.greasyfork.org/scripts/394044/ND%20Twitter%20Embedder.user.js",
+  "code_size": 1095,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

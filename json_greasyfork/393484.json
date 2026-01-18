@@ -1,0 +1,33 @@
+{
+  "id": 393484,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-08T14:55:25.000Z",
+  "code_updated_at": "2019-12-08T14:55:25.000Z",
+  "namespace": "https://github.com/ThomasTerp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 104150,
+      "name": "ThomasTerp",
+      "created_at": "2017-02-20T00:36:01.000Z",
+      "url": "https://greasyfork.org/users/104150-thomasterp"
+    }
+  ],
+  "name": "Google Calendar Modifcations",
+  "description": "Various modifications for Google Calendar.",
+  "url": "https://greasyfork.org/scripts/393484-google-calendar-modifcations",
+  "code_url": "https://update.greasyfork.org/scripts/393484/Google%20Calendar%20Modifcations.user.js",
+  "code_size": 2464,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

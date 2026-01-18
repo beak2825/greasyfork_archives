@@ -1,0 +1,34 @@
+{
+  "id": 393432,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-07T10:52:32.000Z",
+  "code_updated_at": "2019-12-07T10:52:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 413145,
+      "name": "OSNINX",
+      "created_at": "2019-12-07T10:50:21.000Z",
+      "url": "https://greasyfork.org/users/413145-osninx",
+      "scripts": []
+    }
+  ],
+  "name": "LZT Background",
+  "description": "Set custom background..",
+  "url": "https://greasyfork.org/scripts/393432-lzt-background",
+  "code_url": "https://update.greasyfork.org/scripts/393432/LZT%20Background.user.js",
+  "code_size": 920,
+  "license": null,
+  "version": "0.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

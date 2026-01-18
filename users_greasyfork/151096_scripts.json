@@ -1,0 +1,35 @@
+[
+  {
+    "id": 394688,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-05T23:50:04.000Z",
+    "code_updated_at": "2020-01-05T23:50:03.000Z",
+    "namespace": "https://greasyfork.org/users/151096",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 151096,
+        "name": "FunnyPocketBook",
+        "created_at": "2017-08-31T09:26:21.000Z",
+        "url": "https://greasyfork.org/users/151096-funnypocketbook"
+      }
+    ],
+    "name": "Tobias: Premium Exchange - Buy Resources",
+    "description": "Automatically buy resources up to a predefined amount of resources",
+    "url": "https://greasyfork.org/scripts/394688-tobias-premium-exchange-buy-resources",
+    "code_url": "https://update.greasyfork.org/scripts/394688/Tobias%3A%20Premium%20Exchange%20-%20Buy%20Resources.user.js",
+    "code_size": 14783,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -63,6 +63,171 @@
     "version": "0.3",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 395016,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-11T14:05:07.000Z",
+    "code_updated_at": "2020-01-11T14:06:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 245244,
+        "name": "xiandan",
+        "created_at": "2019-02-08T15:17:30.000Z",
+        "url": "https://greasyfork.org/users/245244-xiandan"
+      }
+    ],
+    "name": "JustMySocksAffiliates",
+    "description": "整理JustMySocks推广数据",
+    "url": "https://greasyfork.org/scripts/395016-justmysocksaffiliates",
+    "code_url": "https://update.greasyfork.org/scripts/395016/JustMySocksAffiliates.user.js",
+    "code_size": 3614,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 395015,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-11T14:03:18.000Z",
+    "code_updated_at": "2020-01-13T11:45:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 245244,
+        "name": "xiandan",
+        "created_at": "2019-02-08T15:17:30.000Z",
+        "url": "https://greasyfork.org/users/245244-xiandan"
+      }
+    ],
+    "name": "Seagm最小化客服窗口",
+    "description": "Seagm页面加载后自动最小化客服窗口",
+    "url": "https://greasyfork.org/scripts/395015-seagm%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%A2%E6%9C%8D%E7%AA%97%E5%8F%A3",
+    "code_url": "https://update.greasyfork.org/scripts/395015/Seagm%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%A2%E6%9C%8D%E7%AA%97%E5%8F%A3.user.js",
+    "code_size": 1036,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 392368,
+    "daily_installs": 0,
+    "total_installs": 408,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-13T12:28:34.000Z",
+    "code_updated_at": "2021-05-15T10:47:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 245244,
+        "name": "xiandan",
+        "created_at": "2019-02-08T15:17:30.000Z",
+        "url": "https://greasyfork.org/users/245244-xiandan"
+      }
+    ],
+    "name": "隐藏搜索历史",
+    "description": "隐藏搜索引擎下拉框的历史记录，目前仅适配Google",
+    "url": "https://greasyfork.org/scripts/392368-%E9%9A%90%E8%97%8F%E6%90%9C%E7%B4%A2%E5%8E%86%E5%8F%B2",
+    "code_url": "https://update.greasyfork.org/scripts/392368/%E9%9A%90%E8%97%8F%E6%90%9C%E7%B4%A2%E5%8E%86%E5%8F%B2.user.js",
+    "code_size": 2546,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 392361,
+    "daily_installs": 0,
+    "total_installs": 1766,
+    "fan_score": "75.7",
+    "good_ratings": 12,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-13T10:29:07.000Z",
+    "code_updated_at": "2019-11-27T08:04:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 245244,
+        "name": "xiandan",
+        "created_at": "2019-02-08T15:17:30.000Z",
+        "url": "https://greasyfork.org/users/245244-xiandan"
+      }
+    ],
+    "name": "磁力搜自动采集",
+    "description": "添加一个采集按钮到页面右上角，执行自动采集解析规则的操作",
+    "url": "https://greasyfork.org/scripts/392361-%E7%A3%81%E5%8A%9B%E6%90%9C%E8%87%AA%E5%8A%A8%E9%87%87%E9%9B%86",
+    "code_url": "https://update.greasyfork.org/scripts/392361/%E7%A3%81%E5%8A%9B%E6%90%9C%E8%87%AA%E5%8A%A8%E9%87%87%E9%9B%86.user.js",
+    "code_size": 9463,
+    "license": null,
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 392357,
+    "daily_installs": 0,
+    "total_installs": 16726,
+    "fan_score": "86.7",
+    "good_ratings": 31,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2019-11-13T09:34:18.000Z",
+    "code_updated_at": "2021-11-17T06:56:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 245244,
+        "name": "xiandan",
+        "created_at": "2019-02-08T15:17:30.000Z",
+        "url": "https://greasyfork.org/users/245244-xiandan"
+      }
+    ],
+    "name": "谷歌翻译绕过代码块",
+    "description": "让谷歌翻译插件翻译网页的时候，绕过代码块和一些无需翻译的元素",
+    "url": "https://greasyfork.org/scripts/392357-%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E7%BB%95%E8%BF%87%E4%BB%A3%E7%A0%81%E5%9D%97",
+    "code_url": "https://update.greasyfork.org/scripts/392357/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E7%BB%95%E8%BF%87%E4%BB%A3%E7%A0%81%E5%9D%97.user.js",
+    "code_size": 2074,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

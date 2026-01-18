@@ -1,0 +1,33 @@
+{
+  "id": 394112,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-23T15:52:01.000Z",
+  "code_updated_at": "2021-01-27T10:35:23.000Z",
+  "namespace": "https://greasyfork.org/users/420865",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 420865,
+      "name": "greas67yfork",
+      "created_at": "2019-12-16T04:36:46.000Z",
+      "url": "https://greasyfork.org/users/420865-greas67yfork"
+    }
+  ],
+  "name": "漫画连读",
+  "description": "用于一整页显示一章的漫画。",
+  "url": "https://greasyfork.org/scripts/394112-%E6%BC%AB%E7%94%BB%E8%BF%9E%E8%AF%BB",
+  "code_url": "https://update.greasyfork.org/scripts/394112/%E6%BC%AB%E7%94%BB%E8%BF%9E%E8%AF%BB.user.js",
+  "code_size": 2845,
+  "license": null,
+  "version": "0.0.1.20210127103523",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

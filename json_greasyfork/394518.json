@@ -1,0 +1,33 @@
+{
+  "id": 394518,
+  "daily_installs": 0,
+  "total_installs": 984,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-02T02:54:24.000Z",
+  "code_updated_at": "2020-01-02T03:35:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 322276,
+      "name": "sungf",
+      "created_at": "2019-07-31T09:04:47.000Z",
+      "url": "https://greasyfork.org/users/322276-sungf"
+    }
+  ],
+  "name": "笔趣阁 biqukan 小说朗读",
+  "description": "笔趣阁 朗读",
+  "url": "https://greasyfork.org/scripts/394518-%E7%AC%94%E8%B6%A3%E9%98%81-biqukan-%E5%B0%8F%E8%AF%B4%E6%9C%97%E8%AF%BB",
+  "code_url": "https://update.greasyfork.org/scripts/394518/%E7%AC%94%E8%B6%A3%E9%98%81%20biqukan%20%E5%B0%8F%E8%AF%B4%E6%9C%97%E8%AF%BB.user.js",
+  "code_size": 989,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

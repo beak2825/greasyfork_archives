@@ -1,0 +1,59 @@
+{
+  "id": 394789,
+  "daily_installs": 1,
+  "total_installs": 2863,
+  "fan_score": "64.6",
+  "good_ratings": 7,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-08T03:20:21.000Z",
+  "code_updated_at": "2022-05-11T02:33:19.000Z",
+  "namespace": "https://greasyfork.org/users/433254",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 433254,
+      "name": "wxjerry",
+      "created_at": "2020-01-08T02:47:52.000Z",
+      "url": "https://greasyfork.org/users/433254-wxjerry",
+      "scripts": [
+        {
+          "id": 394789,
+          "daily_installs": 1,
+          "total_installs": 2863,
+          "fan_score": "64.6",
+          "good_ratings": 7,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-01-08T03:20:21.000Z",
+          "code_updated_at": "2022-05-11T02:33:19.000Z",
+          "namespace": "https://greasyfork.org/users/433254",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "91wii 去广告",
+          "description": "去除91wii页面广告包含顶端及左右两侧广告",
+          "url": "https://greasyfork.org/scripts/394789-91wii-%E5%8E%BB%E5%B9%BF%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/394789/91wii%20%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+          "code_size": 2065,
+          "license": null,
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "91wii 去广告",
+  "description": "去除91wii页面广告包含顶端及左右两侧广告",
+  "url": "https://greasyfork.org/scripts/394789-91wii-%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/394789/91wii%20%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 2065,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

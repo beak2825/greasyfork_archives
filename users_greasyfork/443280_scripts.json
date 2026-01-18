@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396264,
+    "daily_installs": 0,
+    "total_installs": 171,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-10T04:06:45.000Z",
+    "code_updated_at": "2020-02-18T11:22:57.000Z",
+    "namespace": "fufuying@lihkg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443280,
+        "name": "fufufufu",
+        "created_at": "2020-02-10T04:04:48.000Z",
+        "url": "https://greasyfork.org/users/443280-fufufufu"
+      }
+    ],
+    "name": "AmazonBot",
+    "description": ":)",
+    "url": "https://greasyfork.org/scripts/396264-amazonbot",
+    "code_url": "https://update.greasyfork.org/scripts/396264/AmazonBot.user.js",
+    "code_size": 6731,
+    "license": null,
+    "version": "3.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

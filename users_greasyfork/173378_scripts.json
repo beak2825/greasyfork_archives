@@ -96,6 +96,39 @@
     "version": "2021.03.26",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 397057,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-28T20:36:25.000Z",
+    "code_updated_at": "2021-08-29T01:01:07.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/389934-wme-ser-outreach",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 173378,
+        "name": "Al Camp",
+        "created_at": "2018-03-04T23:32:30.000Z",
+        "url": "https://greasyfork.org/users/173378-al-camp"
+      }
+    ],
+    "name": "WME Beta SER_Outreach",
+    "description": "captures editor information from WME for addition to SER outreach database",
+    "url": "https://greasyfork.org/scripts/397057-wme-beta-ser-outreach",
+    "code_url": "https://update.greasyfork.org/scripts/397057/WME%20Beta%20SER_Outreach.user.js",
+    "code_size": 22089,
+    "license": null,
+    "version": "2021.08.28",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

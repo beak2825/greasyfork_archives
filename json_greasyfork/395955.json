@@ -1,0 +1,59 @@
+{
+  "id": 395955,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-02T06:14:49.000Z",
+  "code_updated_at": "2020-02-02T06:14:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 178990,
+      "name": "momo1037",
+      "created_at": "2018-04-09T07:29:12.000Z",
+      "url": "https://greasyfork.org/users/178990-momo1037",
+      "scripts": [
+        {
+          "id": 395955,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-02T06:14:49.000Z",
+          "code_updated_at": "2020-02-02T06:14:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TRPL Bookmarks",
+          "description": "Add bookmarks to the rust programming language website.",
+          "url": "https://greasyfork.org/scripts/395955-trpl-bookmarks",
+          "code_url": "https://update.greasyfork.org/scripts/395955/TRPL%20Bookmarks.user.js",
+          "code_size": 1387,
+          "license": null,
+          "version": "1.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TRPL Bookmarks",
+  "description": "Add bookmarks to the rust programming language website.",
+  "url": "https://greasyfork.org/scripts/395955-trpl-bookmarks",
+  "code_url": "https://update.greasyfork.org/scripts/395955/TRPL%20Bookmarks.user.js",
+  "code_size": 1387,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

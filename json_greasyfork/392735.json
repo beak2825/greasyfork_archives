@@ -1,0 +1,34 @@
+{
+  "id": 392735,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-21T13:05:59.000Z",
+  "code_updated_at": "2020-08-20T06:54:54.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/400035-sh-m",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 400035,
+      "name": "SH M",
+      "created_at": "2019-11-21T12:56:53.000Z",
+      "url": "https://greasyfork.org/users/400035-sh-m",
+      "scripts": []
+    }
+  ],
+  "name": "哔哩哔哩会员解析",
+  "description": "2020-08-20更新。[内嵌解析哔哩哔哩]会员视频 [Tampermonkey | Violentmonkey | Greasymonkey 4.0+]",
+  "url": "https://greasyfork.org/scripts/392735-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%BC%9A%E5%91%98%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/392735/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%BC%9A%E5%91%98%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 16501,
+  "license": null,
+  "version": "0.0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 393871,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-17T22:52:56.000Z",
+  "code_updated_at": "2019-12-17T22:52:56.000Z",
+  "namespace": "https://greasyfork.org/users/304922",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 421457,
+      "name": "Igor Abramov",
+      "created_at": "2019-12-17T22:50:42.000Z",
+      "url": "https://greasyfork.org/users/421457-igor-abramov",
+      "scripts": [
+        {
+          "id": 393871,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-17T22:52:56.000Z",
+          "code_updated_at": "2019-12-17T22:52:56.000Z",
+          "namespace": "https://greasyfork.org/users/304922",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BM Lin Price Converter (Long\\Short)",
+          "description": "BM Lin Price Converter -> Translates the Prices to Yuan",
+          "url": "https://greasyfork.org/scripts/393871-bm-lin-price-converter-long-short",
+          "code_url": "https://update.greasyfork.org/scripts/393871/BM%20Lin%20Price%20Converter%20%28Long%5CShort%29.user.js",
+          "code_size": 1512,
+          "license": null,
+          "version": "0.0.1.20191217225256",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BM Lin Price Converter (Long\\Short)",
+  "description": "BM Lin Price Converter -> Translates the Prices to Yuan",
+  "url": "https://greasyfork.org/scripts/393871-bm-lin-price-converter-long-short",
+  "code_url": "https://update.greasyfork.org/scripts/393871/BM%20Lin%20Price%20Converter%20%28Long%5CShort%29.user.js",
+  "code_size": 1512,
+  "license": null,
+  "version": "0.0.1.20191217225256",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

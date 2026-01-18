@@ -1,0 +1,59 @@
+{
+  "id": 396174,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-07T20:07:58.000Z",
+  "code_updated_at": "2020-02-08T20:50:08.000Z",
+  "namespace": "mailto:griddic@mail.ru",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 442489,
+      "name": "griddic",
+      "created_at": "2020-02-07T19:38:47.000Z",
+      "url": "https://greasyfork.org/users/442489-griddic",
+      "scripts": [
+        {
+          "id": 396174,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-07T20:07:58.000Z",
+          "code_updated_at": "2020-02-08T20:50:08.000Z",
+          "namespace": "mailto:griddic@mail.ru",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "gitlab jobs links highliter",
+          "description": "Highlite all links in gitlab-ci jobs logs.",
+          "url": "https://greasyfork.org/scripts/396174-gitlab-jobs-links-highliter",
+          "code_url": "https://update.greasyfork.org/scripts/396174/gitlab%20jobs%20links%20highliter.user.js",
+          "code_size": 1610,
+          "license": null,
+          "version": "0.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "gitlab jobs links highliter",
+  "description": "Highlite all links in gitlab-ci jobs logs.",
+  "url": "https://greasyfork.org/scripts/396174-gitlab-jobs-links-highliter",
+  "code_url": "https://update.greasyfork.org/scripts/396174/gitlab%20jobs%20links%20highliter.user.js",
+  "code_size": 1610,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

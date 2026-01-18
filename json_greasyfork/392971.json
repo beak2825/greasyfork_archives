@@ -1,0 +1,59 @@
+{
+  "id": 392971,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-27T02:50:07.000Z",
+  "code_updated_at": "2019-11-27T02:50:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 401657,
+      "name": "PYGC",
+      "created_at": "2019-11-27T02:46:34.000Z",
+      "url": "https://greasyfork.org/users/401657-pygc",
+      "scripts": [
+        {
+          "id": 392971,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-27T02:50:07.000Z",
+          "code_updated_at": "2019-11-27T02:50:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "chipverify text selectable",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/392971-chipverify-text-selectable",
+          "code_url": "https://update.greasyfork.org/scripts/392971/chipverify%20text%20selectable.user.js",
+          "code_size": 484,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "chipverify text selectable",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/392971-chipverify-text-selectable",
+  "code_url": "https://update.greasyfork.org/scripts/392971/chipverify%20text%20selectable.user.js",
+  "code_size": 484,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

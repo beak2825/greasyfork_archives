@@ -1,0 +1,59 @@
+{
+  "id": 394616,
+  "daily_installs": 1,
+  "total_installs": 5939,
+  "fan_score": "81.6",
+  "good_ratings": 17,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-04T12:17:13.000Z",
+  "code_updated_at": "2021-12-05T19:37:25.000Z",
+  "namespace": "http://pxer.pea3nut.org/sfp",
+  "support_url": "https://github.com/FoXZilla/Pxer/issues/new/choose",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 432281,
+      "name": "PeA花生",
+      "created_at": "2020-01-04T12:02:18.000Z",
+      "url": "https://greasyfork.org/users/432281-pea%E8%8A%B1%E7%94%9F",
+      "scripts": [
+        {
+          "id": 394616,
+          "daily_installs": 1,
+          "total_installs": 5939,
+          "fan_score": "81.6",
+          "good_ratings": 17,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-01-04T12:17:13.000Z",
+          "code_updated_at": "2021-12-05T19:37:25.000Z",
+          "namespace": "http://pxer.pea3nut.org/sfp",
+          "support_url": "https://github.com/FoXZilla/Pxer/issues/new/choose",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pxer: the tool for pixiv.net",
+          "description": "Maybe the best tool for pixiv.net for capture pictures",
+          "url": "https://greasyfork.org/scripts/394616-pxer-the-tool-for-pixiv-net",
+          "code_url": "https://update.greasyfork.org/scripts/394616/Pxer%3A%20the%20tool%20for%20pixivnet.user.js",
+          "code_size": 318061,
+          "license": null,
+          "version": "2021.12.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pxer: the tool for pixiv.net",
+  "description": "Maybe the best tool for pixiv.net for capture pictures",
+  "url": "https://greasyfork.org/scripts/394616-pxer-the-tool-for-pixiv-net",
+  "code_url": "https://update.greasyfork.org/scripts/394616/Pxer%3A%20the%20tool%20for%20pixivnet.user.js",
+  "code_size": 318061,
+  "license": null,
+  "version": "2021.12.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

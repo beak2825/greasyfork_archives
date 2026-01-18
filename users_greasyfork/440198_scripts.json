@@ -1,0 +1,35 @@
+[
+  {
+    "id": 395919,
+    "daily_installs": 0,
+    "total_installs": 104,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-01T03:22:41.000Z",
+    "code_updated_at": "2020-02-01T03:26:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 440198,
+        "name": "tszdanger",
+        "created_at": "2020-02-01T03:21:18.000Z",
+        "url": "https://greasyfork.org/users/440198-tszdanger"
+      }
+    ],
+    "name": "HITSZ假期懒人系统",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/395919-hitsz%E5%81%87%E6%9C%9F%E6%87%92%E4%BA%BA%E7%B3%BB%E7%BB%9F",
+    "code_url": "https://update.greasyfork.org/scripts/395919/HITSZ%E5%81%87%E6%9C%9F%E6%87%92%E4%BA%BA%E7%B3%BB%E7%BB%9F.user.js",
+    "code_size": 2400,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396786,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-23T13:37:46.000Z",
+    "code_updated_at": "2020-02-23T13:37:46.000Z",
+    "namespace": "https://github.com/sarentumulus/TamperMonkey-Scripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 446224,
+        "name": "sarentumulus",
+        "created_at": "2020-02-17T11:24:31.000Z",
+        "url": "https://greasyfork.org/users/446224-sarentumulus"
+      }
+    ],
+    "name": "信管网辅助插件",
+    "description": "为信管网注册学员下载课件、直播视频及打印课后习题报告提供辅助功能",
+    "url": "https://greasyfork.org/scripts/396786-%E4%BF%A1%E7%AE%A1%E7%BD%91%E8%BE%85%E5%8A%A9%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/396786/%E4%BF%A1%E7%AE%A1%E7%BD%91%E8%BE%85%E5%8A%A9%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 9348,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

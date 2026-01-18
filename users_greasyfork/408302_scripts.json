@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393052,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-28T15:50:42.000Z",
+    "code_updated_at": "2019-11-28T16:04:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 408302,
+        "name": "half2me",
+        "created_at": "2019-11-28T15:48:18.000Z",
+        "url": "https://greasyfork.org/users/408302-half2me"
+      }
+    ],
+    "name": "Berry Blocker",
+    "description": "Remove cloudberry from the Nespresso site",
+    "url": "https://greasyfork.org/scripts/393052-berry-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/393052/Berry%20Blocker.user.js",
+    "code_size": 1611,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

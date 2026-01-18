@@ -1,0 +1,59 @@
+{
+  "id": 396194,
+  "daily_installs": 0,
+  "total_installs": 662,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-08T10:03:35.000Z",
+  "code_updated_at": "2020-02-08T10:03:34.000Z",
+  "namespace": "https://greasyfork.org/users/160017",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 442709,
+      "name": "DiegoFPV",
+      "created_at": "2020-02-08T10:02:29.000Z",
+      "url": "https://greasyfork.org/users/442709-diegofpv",
+      "scripts": [
+        {
+          "id": 396194,
+          "daily_installs": 0,
+          "total_installs": 662,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-08T10:03:35.000Z",
+          "code_updated_at": "2020-02-08T10:03:34.000Z",
+          "namespace": "https://greasyfork.org/users/160017",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hordes UI Mod & Party Selector",
+          "description": "Various UI mods for Hordes.io. & Party Selector",
+          "url": "https://greasyfork.org/scripts/396194-hordes-ui-mod-party-selector",
+          "code_url": "https://update.greasyfork.org/scripts/396194/Hordes%20UI%20Mod%20%20Party%20Selector.user.js",
+          "code_size": 151991,
+          "license": null,
+          "version": "1.3.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hordes UI Mod & Party Selector",
+  "description": "Various UI mods for Hordes.io. & Party Selector",
+  "url": "https://greasyfork.org/scripts/396194-hordes-ui-mod-party-selector",
+  "code_url": "https://update.greasyfork.org/scripts/396194/Hordes%20UI%20Mod%20%20Party%20Selector.user.js",
+  "code_size": 151991,
+  "license": null,
+  "version": "1.3.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

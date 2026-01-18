@@ -1,0 +1,59 @@
+{
+  "id": 396621,
+  "daily_installs": 0,
+  "total_installs": 286,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-19T14:52:45.000Z",
+  "code_updated_at": "2020-10-23T15:19:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 447213,
+      "name": "肥太郎",
+      "created_at": "2020-02-19T14:43:42.000Z",
+      "url": "https://greasyfork.org/users/447213-%E8%82%A5%E5%A4%AA%E9%83%8E",
+      "scripts": [
+        {
+          "id": 396621,
+          "daily_installs": 0,
+          "total_installs": 286,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-19T14:52:45.000Z",
+          "code_updated_at": "2020-10-23T15:19:57.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "广州小学优课挂机",
+          "description": "挂机",
+          "url": "https://greasyfork.org/scripts/396621-%E5%B9%BF%E5%B7%9E%E5%B0%8F%E5%AD%A6%E4%BC%98%E8%AF%BE%E6%8C%82%E6%9C%BA",
+          "code_url": "https://update.greasyfork.org/scripts/396621/%E5%B9%BF%E5%B7%9E%E5%B0%8F%E5%AD%A6%E4%BC%98%E8%AF%BE%E6%8C%82%E6%9C%BA.user.js",
+          "code_size": 580,
+          "license": null,
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "广州小学优课挂机",
+  "description": "挂机",
+  "url": "https://greasyfork.org/scripts/396621-%E5%B9%BF%E5%B7%9E%E5%B0%8F%E5%AD%A6%E4%BC%98%E8%AF%BE%E6%8C%82%E6%9C%BA",
+  "code_url": "https://update.greasyfork.org/scripts/396621/%E5%B9%BF%E5%B7%9E%E5%B0%8F%E5%AD%A6%E4%BC%98%E8%AF%BE%E6%8C%82%E6%9C%BA.user.js",
+  "code_size": 580,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

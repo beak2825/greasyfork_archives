@@ -1,0 +1,34 @@
+{
+  "id": 396319,
+  "daily_installs": 0,
+  "total_installs": 113,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-11T09:51:14.000Z",
+  "code_updated_at": "2020-03-13T02:47:01.000Z",
+  "namespace": "http://nect.tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 443801,
+      "name": "nectx",
+      "created_at": "2020-02-11T09:47:08.000Z",
+      "url": "https://greasyfork.org/users/443801-nectx",
+      "scripts": []
+    }
+  ],
+  "name": "超星网课建课助手 local",
+  "description": "帮助老师快捷建超星网课的小工具",
+  "url": "https://greasyfork.org/scripts/396319-%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E5%BB%BA%E8%AF%BE%E5%8A%A9%E6%89%8B-local",
+  "code_url": "https://update.greasyfork.org/scripts/396319/%E8%B6%85%E6%98%9F%E7%BD%91%E8%AF%BE%E5%BB%BA%E8%AF%BE%E5%8A%A9%E6%89%8B%20local.user.js",
+  "code_size": 53597,
+  "license": "GPL License",
+  "version": "0.7.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

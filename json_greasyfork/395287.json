@@ -1,0 +1,33 @@
+{
+  "id": 395287,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-16T15:39:37.000Z",
+  "code_updated_at": "2020-04-27T01:16:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 104201,
+      "name": "黄盐",
+      "created_at": "2017-02-20T05:00:54.000Z",
+      "url": "https://greasyfork.org/users/104201-%E9%BB%84%E7%9B%90"
+    }
+  ],
+  "name": "导入价格",
+  "description": "驴妈妈价格→阿目云产品，适用于【门票】【酒店套餐】【自由行】【酒店】品类，采用项目方式",
+  "url": "https://greasyfork.org/scripts/395287-%E5%AF%BC%E5%85%A5%E4%BB%B7%E6%A0%BC",
+  "code_url": "https://update.greasyfork.org/scripts/395287/%E5%AF%BC%E5%85%A5%E4%BB%B7%E6%A0%BC.user.js",
+  "code_size": 548853,
+  "license": null,
+  "version": "2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

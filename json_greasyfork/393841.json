@@ -1,0 +1,59 @@
+{
+  "id": 393841,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-17T13:08:44.000Z",
+  "code_updated_at": "2019-12-17T13:08:44.000Z",
+  "namespace": "https://greasyfork.org/users/421357",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 421357,
+      "name": "oopp1800",
+      "created_at": "2019-12-17T13:06:43.000Z",
+      "url": "https://greasyfork.org/users/421357-oopp1800",
+      "scripts": [
+        {
+          "id": 393841,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-17T13:08:44.000Z",
+          "code_updated_at": "2019-12-17T13:08:44.000Z",
+          "namespace": "https://greasyfork.org/users/421357",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Baidu Tieba Escape Core Area",
+          "description": "默认进入“看贴”板块，而非“核心区”",
+          "url": "https://greasyfork.org/scripts/393841-baidu-tieba-escape-core-area",
+          "code_url": "https://update.greasyfork.org/scripts/393841/Baidu%20Tieba%20Escape%20Core%20Area.user.js",
+          "code_size": 489,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Baidu Tieba Escape Core Area",
+  "description": "默认进入“看贴”板块，而非“核心区”",
+  "url": "https://greasyfork.org/scripts/393841-baidu-tieba-escape-core-area",
+  "code_url": "https://update.greasyfork.org/scripts/393841/Baidu%20Tieba%20Escape%20Core%20Area.user.js",
+  "code_size": 489,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

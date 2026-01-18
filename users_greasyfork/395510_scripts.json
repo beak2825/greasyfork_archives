@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392709,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-20T19:27:22.000Z",
+    "code_updated_at": "2019-11-20T19:27:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395510,
+        "name": "pite pote",
+        "created_at": "2019-11-06T20:05:11.000Z",
+        "url": "https://greasyfork.org/users/395510-pite-pote"
+      }
+    ],
+    "name": "18-25 barre fixed",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/392709-18-25-barre-fixed",
+    "code_url": "https://update.greasyfork.org/scripts/392709/18-25%20barre%20fixed.user.js",
+    "code_size": 1811,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

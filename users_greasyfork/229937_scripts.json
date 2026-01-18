@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393118,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-30T08:48:18.000Z",
+    "code_updated_at": "2019-11-30T08:48:18.000Z",
+    "namespace": "1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 229937,
+        "name": "Het",
+        "created_at": "2018-12-02T13:26:56.000Z",
+        "url": "https://greasyfork.org/users/229937-het"
+      }
+    ],
+    "name": "PON Userlist Clan Sort",
+    "description": "Some chat frame improvements for pathofninja.ru",
+    "url": "https://greasyfork.org/scripts/393118-pon-userlist-clan-sort",
+    "code_url": "https://update.greasyfork.org/scripts/393118/PON%20Userlist%20Clan%20Sort.user.js",
+    "code_size": 5672,
+    "license": null,
+    "version": "0.11",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

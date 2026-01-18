@@ -1,0 +1,33 @@
+{
+  "id": 393227,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-03T09:05:41.000Z",
+  "code_updated_at": "2019-12-03T11:30:43.000Z",
+  "namespace": "Script Namespace",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 326442,
+      "name": "CuluXuHerc3",
+      "created_at": "2019-08-15T11:30:19.000Z",
+      "url": "https://greasyfork.org/users/326442-culuxuherc3"
+    }
+  ],
+  "name": "CuluXuHerc3's blockLaurel",
+  "description": "suppress comments from useless users",
+  "url": "https://greasyfork.org/scripts/393227-culuxuherc3-s-blocklaurel",
+  "code_url": "https://update.greasyfork.org/scripts/393227/CuluXuHerc3%27s%20blockLaurel.user.js",
+  "code_size": 1741,
+  "license": null,
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 396798,
+  "daily_installs": 0,
+  "total_installs": 639,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-23T23:03:41.000Z",
+  "code_updated_at": "2025-03-31T22:00:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 302528,
+      "name": "Spaghettitron",
+      "created_at": "2019-05-17T02:51:18.000Z",
+      "url": "https://greasyfork.org/users/302528-spaghettitron"
+    }
+  ],
+  "name": "MSPFA extras",
+  "description": "Adds custom quality of life features to MSPFA.",
+  "url": "https://greasyfork.org/scripts/396798-mspfa-extras",
+  "code_url": "https://update.greasyfork.org/scripts/396798/MSPFA%20extras.user.js",
+  "code_size": 203965,
+  "license": null,
+  "version": "1.15.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396738,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-22T14:16:15.000Z",
+    "code_updated_at": "2020-02-22T14:18:07.000Z",
+    "namespace": "Met dank aan Cyril de Wit",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448471,
+        "name": "MrStefan",
+        "created_at": "2020-02-22T14:14:36.000Z",
+        "url": "https://greasyfork.org/users/448471-mrstefan"
+      }
+    ],
+    "name": "Eduarte - Rommel organizeren",
+    "description": "Vervang tekst op Eduarte",
+    "url": "https://greasyfork.org/scripts/396738-eduarte-rommel-organizeren",
+    "code_url": "https://update.greasyfork.org/scripts/396738/Eduarte%20-%20Rommel%20organizeren.user.js",
+    "code_size": 3340,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

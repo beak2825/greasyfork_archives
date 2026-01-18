@@ -1,0 +1,59 @@
+{
+  "id": 395434,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-19T09:46:48.000Z",
+  "code_updated_at": "2020-01-19T09:46:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 125346,
+      "name": "ulpyuxa",
+      "created_at": "2017-05-19T02:03:04.000Z",
+      "url": "https://greasyfork.org/users/125346-ulpyuxa",
+      "scripts": [
+        {
+          "id": 377730,
+          "daily_installs": 0,
+          "total_installs": 986,
+          "fan_score": "72.2",
+          "good_ratings": 10,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-02-13T10:57:58.000Z",
+          "code_updated_at": "2020-02-22T19:28:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "替换网页中的内容",
+          "description": "替换网页中的文本内容",
+          "url": "https://greasyfork.org/scripts/377730-%E6%9B%BF%E6%8D%A2%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E5%86%85%E5%AE%B9",
+          "code_url": "https://update.greasyfork.org/scripts/377730/%E6%9B%BF%E6%8D%A2%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E5%86%85%E5%AE%B9.user.js",
+          "code_size": 11361,
+          "license": null,
+          "version": "2.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "替换网页中的内容（改）",
+  "description": "替换网页中的文本内容（改）",
+  "url": "https://greasyfork.org/scripts/395434-%E6%9B%BF%E6%8D%A2%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E5%86%85%E5%AE%B9-%E6%94%B9",
+  "code_url": "https://update.greasyfork.org/scripts/395434/%E6%9B%BF%E6%8D%A2%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%88%E6%94%B9%EF%BC%89.user.js",
+  "code_size": 9377,
+  "license": null,
+  "version": "1.01",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

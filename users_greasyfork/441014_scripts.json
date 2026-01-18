@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396033,
+    "daily_installs": 0,
+    "total_installs": 200,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-03T19:46:04.000Z",
+    "code_updated_at": "2020-02-03T19:46:04.000Z",
+    "namespace": "Luxotek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 441014,
+        "name": "Cameron R",
+        "created_at": "2020-02-03T19:32:54.000Z",
+        "url": "https://greasyfork.org/users/441014-cameron-r"
+      }
+    ],
+    "name": "Wish.com leave only Just pay shipping!",
+    "description": "Removes all non-free non-Just pay shipping! from wish.com",
+    "url": "https://greasyfork.org/scripts/396033-wish-com-leave-only-just-pay-shipping",
+    "code_url": "https://update.greasyfork.org/scripts/396033/Wishcom%20leave%20only%20Just%20pay%20shipping%21.user.js",
+    "code_size": 603,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

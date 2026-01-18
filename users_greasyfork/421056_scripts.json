@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393811,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-16T15:52:32.000Z",
+    "code_updated_at": "2019-12-16T15:52:31.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 421056,
+        "name": "Patryk Jakubik",
+        "created_at": "2019-12-16T15:41:41.000Z",
+        "url": "https://greasyfork.org/users/421056-patryk-jakubik"
+      }
+    ],
+    "name": "Shopify - Always log-in from Partner Dashboard",
+    "description": "If your Shopify store session expires, this will redirect you",
+    "url": "https://greasyfork.org/scripts/393811-shopify-always-log-in-from-partner-dashboard",
+    "code_url": "https://update.greasyfork.org/scripts/393811/Shopify%20-%20Always%20log-in%20from%20Partner%20Dashboard.user.js",
+    "code_size": 815,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

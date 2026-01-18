@@ -130,5 +130,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 392790,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-22T16:57:47.000Z",
+    "code_updated_at": "2019-11-22T16:57:46.000Z",
+    "namespace": "netflix-recherche-senscritique",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2056,
+        "name": "Kazaam",
+        "created_at": "2014-05-23T09:13:36.000Z",
+        "url": "https://greasyfork.org/users/2056-kazaam"
+      }
+    ],
+    "name": "Netflix : Recherche SensCritique",
+    "description": "Permet de recherche les produits sur SensCritique",
+    "url": "https://greasyfork.org/scripts/392790-netflix-recherche-senscritique",
+    "code_url": "https://update.greasyfork.org/scripts/392790/Netflix%20%3A%20Recherche%20SensCritique.user.js",
+    "code_size": 2589,
+    "license": null,
+    "version": "0.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 392784,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-22T14:37:29.000Z",
+    "code_updated_at": "2022-06-13T10:00:20.000Z",
+    "namespace": "prime-recherche-senscritique",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2056,
+        "name": "Kazaam",
+        "created_at": "2014-05-23T09:13:36.000Z",
+        "url": "https://greasyfork.org/users/2056-kazaam"
+      }
+    ],
+    "name": "Prime : Recherche SensCritique",
+    "description": "Permet de rechercher rapidement un produit sur SensCritique.",
+    "url": "https://greasyfork.org/scripts/392784-prime-recherche-senscritique",
+    "code_url": "https://update.greasyfork.org/scripts/392784/Prime%20%3A%20Recherche%20SensCritique.user.js",
+    "code_size": 1842,
+    "license": "MIT License",
+    "version": "0.1.6",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 392783,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-22T14:37:13.000Z",
+    "code_updated_at": "2019-11-22T15:13:18.000Z",
+    "namespace": "canal-recherche-senscritique",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2056,
+        "name": "Kazaam",
+        "created_at": "2014-05-23T09:13:36.000Z",
+        "url": "https://greasyfork.org/users/2056-kazaam"
+      }
+    ],
+    "name": "Canal+ : Recherche SensCritique",
+    "description": "Permet de rechercher rapidement un produit sur SensCritique.",
+    "url": "https://greasyfork.org/scripts/392783-canal-recherche-senscritique",
+    "code_url": "https://update.greasyfork.org/scripts/392783/Canal%2B%20%3A%20Recherche%20SensCritique.user.js",
+    "code_size": 2003,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 392782,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-22T14:36:54.000Z",
+    "code_updated_at": "2019-11-22T14:49:48.000Z",
+    "namespace": "ocs-recherche-senscritique",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2056,
+        "name": "Kazaam",
+        "created_at": "2014-05-23T09:13:36.000Z",
+        "url": "https://greasyfork.org/users/2056-kazaam"
+      }
+    ],
+    "name": "OCS : Recherche SensCritique",
+    "description": "Permet de rechercher rapidement un produit sur SensCritique.",
+    "url": "https://greasyfork.org/scripts/392782-ocs-recherche-senscritique",
+    "code_url": "https://update.greasyfork.org/scripts/392782/OCS%20%3A%20Recherche%20SensCritique.user.js",
+    "code_size": 1798,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

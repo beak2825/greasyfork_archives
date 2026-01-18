@@ -1,0 +1,59 @@
+{
+  "id": 394817,
+  "daily_installs": 0,
+  "total_installs": 207,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-08T11:43:23.000Z",
+  "code_updated_at": "2020-01-08T11:43:23.000Z",
+  "namespace": "https://greasyfork.org/en/users/433381-sks",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 433381,
+      "name": "Sks",
+      "created_at": "2020-01-08T11:28:51.000Z",
+      "url": "https://greasyfork.org/users/433381-sks",
+      "scripts": [
+        {
+          "id": 394817,
+          "daily_installs": 0,
+          "total_installs": 207,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-01-08T11:43:23.000Z",
+          "code_updated_at": "2020-01-08T11:43:23.000Z",
+          "namespace": "https://greasyfork.org/en/users/433381-sks",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hordes UI Mod Before GM Chat filter Removed",
+          "description": "Various UI mods for Hordes.io.",
+          "url": "https://greasyfork.org/scripts/394817-hordes-ui-mod-before-gm-chat-filter-removed",
+          "code_url": "https://update.greasyfork.org/scripts/394817/Hordes%20UI%20Mod%20Before%20GM%20Chat%20filter%20Removed.user.js",
+          "code_size": 135578,
+          "license": null,
+          "version": "1.2.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hordes UI Mod Before GM Chat filter Removed",
+  "description": "Various UI mods for Hordes.io.",
+  "url": "https://greasyfork.org/scripts/394817-hordes-ui-mod-before-gm-chat-filter-removed",
+  "code_url": "https://update.greasyfork.org/scripts/394817/Hordes%20UI%20Mod%20Before%20GM%20Chat%20filter%20Removed.user.js",
+  "code_size": 135578,
+  "license": null,
+  "version": "1.2.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

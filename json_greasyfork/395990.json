@@ -1,0 +1,59 @@
+{
+  "id": 395990,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-03T03:27:50.000Z",
+  "code_updated_at": "2020-02-03T03:27:50.000Z",
+  "namespace": "YD",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 440760,
+      "name": "Dong Y",
+      "created_at": "2020-02-03T03:22:45.000Z",
+      "url": "https://greasyfork.org/users/440760-dong-y",
+      "scripts": [
+        {
+          "id": 395990,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-03T03:27:50.000Z",
+          "code_updated_at": "2020-02-03T03:27:50.000Z",
+          "namespace": "YD",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TJUPT hilighter",
+          "description": "highlight free & halfdown torrents",
+          "url": "https://greasyfork.org/scripts/395990-tjupt-hilighter",
+          "code_url": "https://update.greasyfork.org/scripts/395990/TJUPT%20hilighter.user.js",
+          "code_size": 920,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TJUPT hilighter",
+  "description": "highlight free & halfdown torrents",
+  "url": "https://greasyfork.org/scripts/395990-tjupt-hilighter",
+  "code_url": "https://update.greasyfork.org/scripts/395990/TJUPT%20hilighter.user.js",
+  "code_size": 920,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

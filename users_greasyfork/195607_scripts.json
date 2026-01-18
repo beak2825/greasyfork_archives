@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 392436,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-14T18:37:01.000Z",
+    "code_updated_at": "2024-11-12T03:18:42.000Z",
+    "namespace": "https://gitlab.com/WMEScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 195607,
+        "name": "tunisiano187",
+        "created_at": "2018-07-10T19:29:44.000Z",
+        "url": "https://greasyfork.org/users/195607-tunisiano187"
+      }
+    ],
+    "name": "WMESTSdatas",
+    "description": "Settings for the WMESendToSlack script",
+    "url": "https://greasyfork.org/scripts/392436-wmestsdatas",
+    "code_url": "https://update.greasyfork.org/scripts/392436/1489886/WMESTSdatas.js",
+    "code_size": 67584,
+    "license": null,
+    "version": "2024.11.11.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

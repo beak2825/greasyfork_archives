@@ -1,0 +1,34 @@
+{
+  "id": 396407,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-14T03:06:30.000Z",
+  "code_updated_at": "2021-01-06T14:59:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 414607,
+      "name": "柒宝",
+      "created_at": "2019-12-09T10:05:33.000Z",
+      "url": "https://greasyfork.org/users/414607-%E6%9F%92%E5%AE%9D",
+      "scripts": []
+    }
+  ],
+  "name": "获取ss（youneed）",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/396407-%E8%8E%B7%E5%8F%96ss-youneed",
+  "code_url": "https://update.greasyfork.org/scripts/396407/%E8%8E%B7%E5%8F%96ss%EF%BC%88youneed%EF%BC%89.user.js",
+  "code_size": 1840,
+  "license": null,
+  "version": "0.1.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

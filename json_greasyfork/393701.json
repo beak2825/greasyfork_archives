@@ -1,0 +1,59 @@
+{
+  "id": 393701,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-14T03:16:09.000Z",
+  "code_updated_at": "2019-12-14T03:18:56.000Z",
+  "namespace": "https://duanyll.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 417480,
+      "name": "duanyll",
+      "created_at": "2019-12-14T03:09:56.000Z",
+      "url": "https://greasyfork.org/users/417480-duanyll",
+      "scripts": [
+        {
+          "id": 393701,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-14T03:16:09.000Z",
+          "code_updated_at": "2019-12-14T03:18:56.000Z",
+          "namespace": "https://duanyll.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Zhihu Smart Block",
+          "description": "按每天使用时间屏蔽知乎, 不屏蔽从百度谷歌必应打开的知乎页面以便查找资料",
+          "url": "https://greasyfork.org/scripts/393701-zhihu-smart-block",
+          "code_url": "https://update.greasyfork.org/scripts/393701/Zhihu%20Smart%20Block.user.js",
+          "code_size": 2920,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Zhihu Smart Block",
+  "description": "按每天使用时间屏蔽知乎, 不屏蔽从百度谷歌必应打开的知乎页面以便查找资料",
+  "url": "https://greasyfork.org/scripts/393701-zhihu-smart-block",
+  "code_url": "https://update.greasyfork.org/scripts/393701/Zhihu%20Smart%20Block.user.js",
+  "code_size": 2920,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

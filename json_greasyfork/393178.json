@@ -1,0 +1,59 @@
+{
+  "id": 393178,
+  "daily_installs": 0,
+  "total_installs": 109,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-01T15:49:04.000Z",
+  "code_updated_at": "2019-12-01T15:49:03.000Z",
+  "namespace": "https://github.com/harryhare/Bonnae-News",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 410862,
+      "name": "lizidashen",
+      "created_at": "2019-12-01T15:16:08.000Z",
+      "url": "https://greasyfork.org/users/410862-lizidashen",
+      "scripts": [
+        {
+          "id": 393178,
+          "daily_installs": 0,
+          "total_installs": 109,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-01T15:49:04.000Z",
+          "code_updated_at": "2019-12-01T15:49:03.000Z",
+          "namespace": "https://github.com/harryhare/Bonnae-News",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bonnae News With Text ExtraVersion",
+          "description": "for Bonnae broadcast on douban.com",
+          "url": "https://greasyfork.org/scripts/393178-bonnae-news-with-text-extraversion",
+          "code_url": "https://update.greasyfork.org/scripts/393178/Bonnae%20News%20With%20Text%20ExtraVersion.user.js",
+          "code_size": 6281,
+          "license": "GPL 3.0",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bonnae News With Text ExtraVersion",
+  "description": "for Bonnae broadcast on douban.com",
+  "url": "https://greasyfork.org/scripts/393178-bonnae-news-with-text-extraversion",
+  "code_url": "https://update.greasyfork.org/scripts/393178/Bonnae%20News%20With%20Text%20ExtraVersion.user.js",
+  "code_size": 6281,
+  "license": "GPL 3.0",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393491,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-08T19:11:37.000Z",
+    "code_updated_at": "2019-12-08T19:11:37.000Z",
+    "namespace": "https://greasyfork.org/de/users/414179-werner78",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 414179,
+        "name": "Werner78",
+        "created_at": "2019-12-08T18:26:49.000Z",
+        "url": "https://greasyfork.org/users/414179-werner78"
+      }
+    ],
+    "name": "Disable comments on nicolive video screen",
+    "description": "ニコニコ動画",
+    "url": "https://greasyfork.org/scripts/393491-disable-comments-on-nicolive-video-screen",
+    "code_url": "https://update.greasyfork.org/scripts/393491/Disable%20comments%20on%20nicolive%20video%20screen.user.js",
+    "code_size": 420,
+    "license": null,
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392609,
+    "daily_installs": 0,
+    "total_installs": 3477,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-18T18:43:58.000Z",
+    "code_updated_at": "2019-11-18T18:43:57.000Z",
+    "namespace": "shivnarr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 399151,
+        "name": "GABRIEL PLOTKIN",
+        "created_at": "2019-11-18T18:41:02.000Z",
+        "url": "https://greasyfork.org/users/399151-gabriel-plotkin"
+      }
+    ],
+    "name": "NitroTypeCheatScript",
+    "description": "This script displays the text to type in nitrotype.com - S. S. Narr",
+    "url": "https://greasyfork.org/scripts/392609-nitrotypecheatscript",
+    "code_url": "https://update.greasyfork.org/scripts/392609/NitroTypeCheatScript.user.js",
+    "code_size": 930,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 396097,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-05T20:00:15.000Z",
+  "code_updated_at": "2022-02-01T20:29:55.000Z",
+  "namespace": "https://greasyfork.org/users/10154",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 10154,
+      "name": "Maak",
+      "created_at": "2015-04-02T22:03:39.000Z",
+      "url": "https://greasyfork.org/users/10154-maak",
+      "scripts": [
+        {
+          "id": 8936,
+          "daily_installs": 0,
+          "total_installs": 622,
+          "fan_score": "39.6",
+          "good_ratings": 3,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2015-04-02T22:05:21.000Z",
+          "code_updated_at": "2025-06-08T09:51:40.000Z",
+          "namespace": "https://greasyfork.org/users/10154",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tidy up your Dashboard",
+          "description": "Tidy Up Your Dashboard is a Userscript which brings along a lot of features for improving the user experience on Warzone.",
+          "url": "https://greasyfork.org/scripts/8936-tidy-up-your-dashboard",
+          "code_url": "https://update.greasyfork.org/scripts/8936/Tidy%20up%20your%20Dashboard.user.js",
+          "code_size": 132477,
+          "license": null,
+          "version": "3.4.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pick Simulation",
+  "description": "Try to take over the world!",
+  "url": "https://greasyfork.org/scripts/396097-pick-simulation",
+  "code_url": "https://update.greasyfork.org/scripts/396097/Pick%20Simulation.user.js",
+  "code_size": 20559,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

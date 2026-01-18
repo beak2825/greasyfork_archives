@@ -30,6 +30,39 @@
     "version": "3.9.7",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 396063,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-04T16:06:03.000Z",
+    "code_updated_at": "2020-02-04T17:00:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 178994,
+        "name": "ジョニー君",
+        "created_at": "2018-04-09T07:56:00.000Z",
+        "url": "https://greasyfork.org/users/178994-%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%BC%E5%90%9B"
+      }
+    ],
+    "name": "Via Browser Dark Mode Tweak",
+    "description": "prevent via browser dark mode image dimming",
+    "url": "https://greasyfork.org/scripts/396063-via-browser-dark-mode-tweak",
+    "code_url": "https://update.greasyfork.org/scripts/396063/Via%20Browser%20Dark%20Mode%20Tweak.user.js",
+    "code_size": 673,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

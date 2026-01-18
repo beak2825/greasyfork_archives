@@ -1,0 +1,59 @@
+{
+  "id": 393958,
+  "daily_installs": 0,
+  "total_installs": 1905,
+  "fan_score": "75.9",
+  "good_ratings": 15,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2019-12-19T11:10:26.000Z",
+  "code_updated_at": "2020-01-15T15:08:49.000Z",
+  "namespace": "youtube.com/arrows.constant.binding",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 5349,
+      "name": "Artem Zaytsev",
+      "created_at": "2014-09-15T20:05:48.000Z",
+      "url": "https://greasyfork.org/users/5349-artem-zaytsev",
+      "scripts": [
+        {
+          "id": 393958,
+          "daily_installs": 0,
+          "total_installs": 1905,
+          "fan_score": "75.9",
+          "good_ratings": 15,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2019-12-19T11:10:26.000Z",
+          "code_updated_at": "2020-01-15T15:08:49.000Z",
+          "namespace": "youtube.com/arrows.constant.binding",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[youtube.com] Arrow buttons constant binding",
+          "description": "The arrow buttons don't depend on slider/seekbar focus. Left/Right - always playback, Down/Up - always sound volume.",
+          "url": "https://greasyfork.org/scripts/393958-youtube-com-arrow-buttons-constant-binding",
+          "code_url": "https://update.greasyfork.org/scripts/393958/%5Byoutubecom%5D%20Arrow%20buttons%20constant%20binding.user.js",
+          "code_size": 3165,
+          "license": null,
+          "version": "0.0.1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[youtube.com] Arrow buttons constant binding",
+  "description": "The arrow buttons don't depend on slider/seekbar focus. Left/Right - always playback, Down/Up - always sound volume.",
+  "url": "https://greasyfork.org/scripts/393958-youtube-com-arrow-buttons-constant-binding",
+  "code_url": "https://update.greasyfork.org/scripts/393958/%5Byoutubecom%5D%20Arrow%20buttons%20constant%20binding.user.js",
+  "code_size": 3165,
+  "license": null,
+  "version": "0.0.1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

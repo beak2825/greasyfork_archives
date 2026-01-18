@@ -1,0 +1,68 @@
+[
+  {
+    "id": 394182,
+    "daily_installs": 0,
+    "total_installs": 850,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-25T14:09:52.000Z",
+    "code_updated_at": "2020-02-17T20:36:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 390311,
+        "name": "Duo Bot",
+        "created_at": "2019-10-23T19:56:02.000Z",
+        "url": "https://greasyfork.org/users/390311-duo-bot"
+      }
+    ],
+    "name": "DuoHelper",
+    "description": "Finish lesson quicker or get help with questions you don't know the answer to!",
+    "url": "https://greasyfork.org/scripts/394182-duohelper",
+    "code_url": "https://update.greasyfork.org/scripts/394182/DuoHelper.user.js",
+    "code_size": 13098,
+    "license": null,
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393866,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-17T20:47:06.000Z",
+    "code_updated_at": "2019-12-17T20:47:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 390311,
+        "name": "Duo Bot",
+        "created_at": "2019-10-23T19:56:02.000Z",
+        "url": "https://greasyfork.org/users/390311-duo-bot"
+      }
+    ],
+    "name": "Paidlikes auto",
+    "description": "Like/follow automatically on Facebook, opne auto on paidlikes",
+    "url": "https://greasyfork.org/scripts/393866-paidlikes-auto",
+    "code_url": "https://update.greasyfork.org/scripts/393866/Paidlikes%20auto.user.js",
+    "code_size": 4228,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

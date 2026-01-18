@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393517,
+    "daily_installs": 0,
+    "total_installs": 912,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-09T13:58:50.000Z",
+    "code_updated_at": "2019-12-09T14:01:49.000Z",
+    "namespace": "btsow",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 38821,
+        "name": "2xx8",
+        "created_at": "2016-04-15T05:51:47.000Z",
+        "url": "https://greasyfork.org/users/38821-2xx8"
+      }
+    ],
+    "name": "BTSOW",
+    "description": "Add button to download torrent file.Remove Ads",
+    "url": "https://greasyfork.org/scripts/393517-btsow",
+    "code_url": "https://update.greasyfork.org/scripts/393517/BTSOW.user.js",
+    "code_size": 898,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

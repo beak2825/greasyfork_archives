@@ -1,0 +1,34 @@
+{
+  "id": 396598,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-18T23:14:38.000Z",
+  "code_updated_at": "2022-03-10T15:42:32.000Z",
+  "namespace": "sami@kankaristo.fi",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 234430,
+      "name": "Sami Kankaristo",
+      "created_at": "2018-12-22T19:51:23.000Z",
+      "url": "https://greasyfork.org/users/234430-sami-kankaristo",
+      "scripts": []
+    }
+  ],
+  "name": "AliExpress userscript",
+  "description": "Some improvements to AliExpress",
+  "url": "https://greasyfork.org/scripts/396598-aliexpress-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/396598/AliExpress%20userscript.user.js",
+  "code_size": 8168,
+  "license": null,
+  "version": "0.6.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

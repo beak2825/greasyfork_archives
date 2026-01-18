@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392934,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-26T06:29:43.000Z",
+    "code_updated_at": "2019-11-26T06:29:43.000Z",
+    "namespace": "https://hackforums.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 401348,
+        "name": "Pillows",
+        "created_at": "2019-11-26T06:27:00.000Z",
+        "url": "https://greasyfork.org/users/401348-pillows"
+      }
+    ],
+    "name": "Hide Stanley Bot",
+    "description": "Name says it all",
+    "url": "https://greasyfork.org/scripts/392934-hide-stanley-bot",
+    "code_url": "https://update.greasyfork.org/scripts/392934/Hide%20Stanley%20Bot.user.js",
+    "code_size": 590,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

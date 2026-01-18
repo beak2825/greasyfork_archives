@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 397094,
+    "daily_installs": 0,
+    "total_installs": 1649,
+    "fan_score": "70.6",
+    "good_ratings": 27,
+    "ok_ratings": 6,
+    "bad_ratings": 2,
+    "created_at": "2020-02-29T20:13:01.000Z",
+    "code_updated_at": "2023-03-27T17:08:24.000Z",
+    "namespace": "YouTubeVideoPreviewPlayer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 50,
+        "name": "Couchy",
+        "created_at": "2014-03-06T02:18:23.000Z",
+        "url": "https://greasyfork.org/users/50-couchy"
+      }
+    ],
+    "name": "YouTube Video Preview and Ratings Keyless",
+    "description": "Instant video previews in popup player by hovering or clicking video thumbs. Video ratings and resolution data shown on the thumbs. Gets video information without using a YouTube API key, which can be banned or limited.",
+    "url": "https://greasyfork.org/scripts/397094-youtube-video-preview-and-ratings-keyless",
+    "code_url": "https://update.greasyfork.org/scripts/397094/YouTube%20Video%20Preview%20and%20Ratings%20Keyless.user.js",
+    "code_size": 49423,
+    "license": null,
+    "version": "20230327",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

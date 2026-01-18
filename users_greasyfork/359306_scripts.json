@@ -195,6 +195,39 @@
     "version": "1.3",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 394091,
+    "daily_installs": 0,
+    "total_installs": 756,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-23T02:21:10.000Z",
+    "code_updated_at": "2020-01-03T09:25:27.000Z",
+    "namespace": "http://zhihu.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 359306,
+        "name": "hao_jiu",
+        "created_at": "2019-09-02T03:21:41.000Z",
+        "url": "https://greasyfork.org/users/359306-hao-jiu"
+      }
+    ],
+    "name": "【知乎】摸鱼神奇(标题移除，右侧条目栏移除)",
+    "description": "摸鱼嘿嘿嘿",
+    "url": "https://greasyfork.org/scripts/394091-%E7%9F%A5%E4%B9%8E-%E6%91%B8%E9%B1%BC%E7%A5%9E%E5%A5%87-%E6%A0%87%E9%A2%98%E7%A7%BB%E9%99%A4-%E5%8F%B3%E4%BE%A7%E6%9D%A1%E7%9B%AE%E6%A0%8F%E7%A7%BB%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/394091/%E3%80%90%E7%9F%A5%E4%B9%8E%E3%80%91%E6%91%B8%E9%B1%BC%E7%A5%9E%E5%A5%87%28%E6%A0%87%E9%A2%98%E7%A7%BB%E9%99%A4%EF%BC%8C%E5%8F%B3%E4%BE%A7%E6%9D%A1%E7%9B%AE%E6%A0%8F%E7%A7%BB%E9%99%A4%29.user.js",
+    "code_size": 2456,
+    "license": null,
+    "version": "2.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

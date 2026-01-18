@@ -1,0 +1,59 @@
+{
+  "id": 393953,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-19T08:17:05.000Z",
+  "code_updated_at": "2019-12-19T08:17:04.000Z",
+  "namespace": "Go Donate, Plant a Tree",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 423152,
+      "name": "csysadmin",
+      "created_at": "2019-12-19T08:15:19.000Z",
+      "url": "https://greasyfork.org/users/423152-csysadmin",
+      "scripts": [
+        {
+          "id": 393953,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-19T08:17:05.000Z",
+          "code_updated_at": "2019-12-19T08:17:04.000Z",
+          "namespace": "Go Donate, Plant a Tree",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "#teamtrees Trees Left!?",
+          "description": "Show how many trees are left until we hit the 20,000,000 tree goal.",
+          "url": "https://greasyfork.org/scripts/393953-teamtrees-trees-left",
+          "code_url": "https://update.greasyfork.org/scripts/393953/teamtrees%20Trees%20Left%21.user.js",
+          "code_size": 873,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "#teamtrees Trees Left!?",
+  "description": "Show how many trees are left until we hit the 20,000,000 tree goal.",
+  "url": "https://greasyfork.org/scripts/393953-teamtrees-trees-left",
+  "code_url": "https://update.greasyfork.org/scripts/393953/teamtrees%20Trees%20Left%21.user.js",
+  "code_size": 873,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

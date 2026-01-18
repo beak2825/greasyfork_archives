@@ -1,0 +1,59 @@
+{
+  "id": 396951,
+  "daily_installs": 0,
+  "total_installs": 316,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-26T19:13:08.000Z",
+  "code_updated_at": "2022-06-04T19:35:34.000Z",
+  "namespace": "mailto:gooseserbus@gmail.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 450355,
+      "name": "GooseSerbus",
+      "created_at": "2020-02-26T18:58:58.000Z",
+      "url": "https://greasyfork.org/users/450355-gooseserbus",
+      "scripts": [
+        {
+          "id": 396951,
+          "daily_installs": 0,
+          "total_installs": 316,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-26T19:13:08.000Z",
+          "code_updated_at": "2022-06-04T19:35:34.000Z",
+          "namespace": "mailto:gooseserbus@gmail.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Re-enable Spellcheck on Duolingo",
+          "description": "This re-enables spellcheck on textareas on Duolingo where it's disabled",
+          "url": "https://greasyfork.org/scripts/396951-re-enable-spellcheck-on-duolingo",
+          "code_url": "https://update.greasyfork.org/scripts/396951/Re-enable%20Spellcheck%20on%20Duolingo.user.js",
+          "code_size": 704,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Re-enable Spellcheck on Duolingo",
+  "description": "This re-enables spellcheck on textareas on Duolingo where it's disabled",
+  "url": "https://greasyfork.org/scripts/396951-re-enable-spellcheck-on-duolingo",
+  "code_url": "https://update.greasyfork.org/scripts/396951/Re-enable%20Spellcheck%20on%20Duolingo.user.js",
+  "code_size": 704,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

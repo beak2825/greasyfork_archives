@@ -1,0 +1,59 @@
+{
+  "id": 394308,
+  "daily_installs": 0,
+  "total_installs": 930,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-27T08:05:26.000Z",
+  "code_updated_at": "2019-12-27T08:05:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 428948,
+      "name": "ydxt",
+      "created_at": "2019-12-27T07:31:36.000Z",
+      "url": "https://greasyfork.org/users/428948-ydxt",
+      "scripts": [
+        {
+          "id": 394308,
+          "daily_installs": 0,
+          "total_installs": 930,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-27T08:05:26.000Z",
+          "code_updated_at": "2019-12-27T08:05:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "大陆快速下载arxiv.org论文",
+          "description": "加速arXiv网站pdf下载速度.将任何网页内指向arxiv.org的pdf链接重写为arxiv中文镜像站xxx.itp.ac.cn的对应链接，加速pdf加载。 Redirect arxiv.org to xxx.itp.ac.cn/pdf. 修改自Redirect arxiv.org to xxx.itp.ac.cn/pdf，原作者：LTGuo",
+          "url": "https://greasyfork.org/scripts/394308-%E5%A4%A7%E9%99%86%E5%BF%AB%E9%80%9F%E4%B8%8B%E8%BD%BDarxiv-org%E8%AE%BA%E6%96%87",
+          "code_url": "https://update.greasyfork.org/scripts/394308/%E5%A4%A7%E9%99%86%E5%BF%AB%E9%80%9F%E4%B8%8B%E8%BD%BDarxivorg%E8%AE%BA%E6%96%87.user.js",
+          "code_size": 1324,
+          "license": null,
+          "version": "0.11",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "大陆快速下载arxiv.org论文",
+  "description": "加速arXiv网站pdf下载速度.将任何网页内指向arxiv.org的pdf链接重写为arxiv中文镜像站xxx.itp.ac.cn的对应链接，加速pdf加载。 Redirect arxiv.org to xxx.itp.ac.cn/pdf. 修改自Redirect arxiv.org to xxx.itp.ac.cn/pdf，原作者：LTGuo",
+  "url": "https://greasyfork.org/scripts/394308-%E5%A4%A7%E9%99%86%E5%BF%AB%E9%80%9F%E4%B8%8B%E8%BD%BDarxiv-org%E8%AE%BA%E6%96%87",
+  "code_url": "https://update.greasyfork.org/scripts/394308/%E5%A4%A7%E9%99%86%E5%BF%AB%E9%80%9F%E4%B8%8B%E8%BD%BDarxivorg%E8%AE%BA%E6%96%87.user.js",
+  "code_size": 1324,
+  "license": null,
+  "version": "0.11",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

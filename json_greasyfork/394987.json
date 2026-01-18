@@ -1,0 +1,34 @@
+{
+  "id": 394987,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-10T19:39:48.000Z",
+  "code_updated_at": "2025-01-23T21:33:21.000Z",
+  "namespace": "https://www.neverdrains.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 434107,
+      "name": "david-hosier",
+      "created_at": "2020-01-10T19:37:18.000Z",
+      "url": "https://greasyfork.org/users/434107-david-hosier",
+      "scripts": []
+    }
+  ],
+  "name": "Drains Tournament Manager Favorites Highlighter",
+  "description": "Highlights your favorited players in tournaments so that you can more easily follow their ranking.",
+  "url": "https://greasyfork.org/scripts/394987-drains-tournament-manager-favorites-highlighter",
+  "code_url": "https://update.greasyfork.org/scripts/394987/Drains%20Tournament%20Manager%20Favorites%20Highlighter.user.js",
+  "code_size": 3337,
+  "license": null,
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

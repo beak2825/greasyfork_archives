@@ -1,0 +1,35 @@
+[
+  {
+    "id": 395273,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-16T11:12:23.000Z",
+    "code_updated_at": "2020-01-16T11:14:14.000Z",
+    "namespace": "https://github.com/shfeat/tampermonkey-extension",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 310817,
+        "name": "shfeat",
+        "created_at": "2019-06-19T06:11:56.000Z",
+        "url": "https://greasyfork.org/users/310817-shfeat"
+      }
+    ],
+    "name": "网站图片（背景图，svg，canvas）抓取预览下载",
+    "description": "将站点所有的图片（背景图，svg，canvas）抓取提供预览，直接点击下载，批量打包下载。",
+    "url": "https://greasyfork.org/scripts/395273-%E7%BD%91%E7%AB%99%E5%9B%BE%E7%89%87-%E8%83%8C%E6%99%AF%E5%9B%BE-svg-canvas-%E6%8A%93%E5%8F%96%E9%A2%84%E8%A7%88%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/395273/%E7%BD%91%E7%AB%99%E5%9B%BE%E7%89%87%EF%BC%88%E8%83%8C%E6%99%AF%E5%9B%BE%EF%BC%8Csvg%EF%BC%8Ccanvas%EF%BC%89%E6%8A%93%E5%8F%96%E9%A2%84%E8%A7%88%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 13830,
+    "license": "MIT License",
+    "version": "2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

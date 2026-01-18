@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396781,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-23T12:12:50.000Z",
+    "code_updated_at": "2020-02-23T12:14:12.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448826,
+        "name": "bershanskiy",
+        "created_at": "2020-02-23T11:51:56.000Z",
+        "url": "https://greasyfork.org/users/448826-bershanskiy"
+      }
+    ],
+    "name": "Dark Mode - KinoHype.me",
+    "description": "Automatically enables Dark Mode on KinoHype.me based on user's system-wide setting.",
+    "url": "https://greasyfork.org/scripts/396781-dark-mode-kinohype-me",
+    "code_url": "https://update.greasyfork.org/scripts/396781/Dark%20Mode%20-%20KinoHypeme.user.js",
+    "code_size": 1229,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

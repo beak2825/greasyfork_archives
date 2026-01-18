@@ -1,0 +1,59 @@
+{
+  "id": 392713,
+  "daily_installs": 0,
+  "total_installs": 490,
+  "fan_score": "64.6",
+  "good_ratings": 7,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-21T03:44:46.000Z",
+  "code_updated_at": "2019-11-23T20:12:28.000Z",
+  "namespace": "http://monodog.net/",
+  "support_url": "mailto:wung.thy@gmail.com",
+  "contribution_url": "https://qr.alipay.com/fkx02998fhy75rwy0pjx2eb",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 399849,
+      "name": "theiions",
+      "created_at": "2019-11-21T02:36:14.000Z",
+      "url": "https://greasyfork.org/users/399849-theiions",
+      "scripts": [
+        {
+          "id": 392713,
+          "daily_installs": 0,
+          "total_installs": 490,
+          "fan_score": "64.6",
+          "good_ratings": 7,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-21T03:44:46.000Z",
+          "code_updated_at": "2019-11-23T20:12:28.000Z",
+          "namespace": "http://monodog.net/",
+          "support_url": "mailto:wung.thy@gmail.com",
+          "contribution_url": "https://qr.alipay.com/fkx02998fhy75rwy0pjx2eb",
+          "contribution_amount": null,
+          "name": "YGestures",
+          "description": "for Android Browser without Touch Gestures(particularly Yandex)【向手机版yandex浏览器注入前进&后退手势&&网页文本粘贴功能，并可临时禁用某一手势】",
+          "url": "https://greasyfork.org/scripts/392713-ygestures",
+          "code_url": "https://update.greasyfork.org/scripts/392713/YGestures.user.js",
+          "code_size": 7673,
+          "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+          "version": "0.6.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YGestures",
+  "description": "for Android Browser without Touch Gestures(particularly Yandex)【向手机版yandex浏览器注入前进&后退手势&&网页文本粘贴功能，并可临时禁用某一手势】",
+  "url": "https://greasyfork.org/scripts/392713-ygestures",
+  "code_url": "https://update.greasyfork.org/scripts/392713/YGestures.user.js",
+  "code_size": 7673,
+  "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+  "version": "0.6.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

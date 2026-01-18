@@ -1,0 +1,33 @@
+{
+  "id": 393526,
+  "daily_installs": 0,
+  "total_installs": 77,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-09T23:51:57.000Z",
+  "code_updated_at": "2019-12-11T23:11:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 414969,
+      "name": "Illusivee",
+      "created_at": "2019-12-09T23:49:56.000Z",
+      "url": "https://greasyfork.org/users/414969-illusivee"
+    }
+  ],
+  "name": "Social Club Custom Crew Color",
+  "description": "Adds a text box for creating custom crew colors easily.",
+  "url": "https://greasyfork.org/scripts/393526-social-club-custom-crew-color",
+  "code_url": "https://update.greasyfork.org/scripts/393526/Social%20Club%20Custom%20Crew%20Color.user.js",
+  "code_size": 1206,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

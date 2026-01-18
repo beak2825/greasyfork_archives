@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392911,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-25T16:58:41.000Z",
+    "code_updated_at": "2019-11-25T17:07:10.000Z",
+    "namespace": "http://blog.chaofan.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 401191,
+        "name": "iwys",
+        "created_at": "2019-11-25T16:51:44.000Z",
+        "url": "https://greasyfork.org/users/401191-iwys"
+      }
+    ],
+    "name": "Hello, TamperMonkey",
+    "description": "Hello world of a tampermonkey script",
+    "url": "https://greasyfork.org/scripts/392911-hello-tampermonkey",
+    "code_url": "https://update.greasyfork.org/scripts/392911/Hello%2C%20TamperMonkey.user.js",
+    "code_size": 642,
+    "license": null,
+    "version": "0.4-alpha",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

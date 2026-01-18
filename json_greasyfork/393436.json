@@ -1,0 +1,34 @@
+{
+  "id": 393436,
+  "daily_installs": 0,
+  "total_installs": 2975,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2019-12-07T13:15:16.000Z",
+  "code_updated_at": "2020-11-02T09:31:38.000Z",
+  "namespace": "https://greasyfork.org/users/413177",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 413177,
+      "name": "Relaia",
+      "created_at": "2019-12-07T13:13:07.000Z",
+      "url": "https://greasyfork.org/users/413177-relaia",
+      "scripts": []
+    }
+  ],
+  "name": "MouseHunt - Valour Rift Simulator",
+  "description": "Click the Boss icon beside the floor progress bar to simulate your run!",
+  "url": "https://greasyfork.org/scripts/393436-mousehunt-valour-rift-simulator",
+  "code_url": "https://update.greasyfork.org/scripts/393436/MouseHunt%20-%20Valour%20Rift%20Simulator.user.js",
+  "code_size": 20243,
+  "license": null,
+  "version": "1.23",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393174,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-01T14:31:54.000Z",
+    "code_updated_at": "2019-12-01T14:31:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 410847,
+        "name": "flyingairplane",
+        "created_at": "2019-12-01T14:28:17.000Z",
+        "url": "https://greasyfork.org/users/410847-flyingairplane"
+      }
+    ],
+    "name": "maotai autoaccess",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/393174-maotai-autoaccess",
+    "code_url": "https://update.greasyfork.org/scripts/393174/maotai%20autoaccess.user.js",
+    "code_size": 592,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

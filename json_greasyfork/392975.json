@@ -1,0 +1,34 @@
+{
+  "id": 392975,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-27T05:43:03.000Z",
+  "code_updated_at": "2020-04-14T00:37:03.000Z",
+  "namespace": "http://oixm.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 221438,
+      "name": "CDF321",
+      "created_at": "2018-10-25T09:18:01.000Z",
+      "url": "https://greasyfork.org/users/221438-cdf321",
+      "scripts": []
+    }
+  ],
+  "name": "SVIP7（自动刷新页面）",
+  "description": "每隔一段时间自动刷新页面，可自定义刷新间隔时间，适合挂机、PT 等需要保持心跳的网页",
+  "url": "https://greasyfork.org/scripts/392975-svip7-%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E9%A1%B5%E9%9D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/392975/SVIP7%EF%BC%88%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E9%A1%B5%E9%9D%A2%EF%BC%89.user.js",
+  "code_size": 1631,
+  "license": null,
+  "version": "1.0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

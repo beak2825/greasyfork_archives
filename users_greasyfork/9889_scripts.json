@@ -1,0 +1,68 @@
+[
+  {
+    "id": 392779,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-22T12:33:44.000Z",
+    "code_updated_at": "2019-11-22T12:33:43.000Z",
+    "namespace": "ao3-flash",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 9889,
+        "name": "flash",
+        "created_at": "2015-03-22T09:14:21.000Z",
+        "url": "https://greasyfork.org/users/9889-flash"
+      }
+    ],
+    "name": "AO3: Blurb Chapter Index Links",
+    "description": "Adds a clickable link to the \"Chapters:\" text in the story blurb, its target the story's chapter index/navigation.",
+    "url": "https://greasyfork.org/scripts/392779-ao3-blurb-chapter-index-links",
+    "code_url": "https://update.greasyfork.org/scripts/392779/AO3%3A%20Blurb%20Chapter%20Index%20Links.user.js",
+    "code_size": 2094,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 392778,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-22T12:26:41.000Z",
+    "code_updated_at": "2019-11-22T12:26:40.000Z",
+    "namespace": "AO3-flash",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 9889,
+        "name": "flash",
+        "created_at": "2015-03-22T09:14:21.000Z",
+        "url": "https://greasyfork.org/users/9889-flash"
+      }
+    ],
+    "name": "AO3: Chapter Links Cleaner",
+    "description": "Removes anchors from previous/next button links, so they can show as visited on the full-page chapter index.",
+    "url": "https://greasyfork.org/scripts/392778-ao3-chapter-links-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/392778/AO3%3A%20Chapter%20Links%20Cleaner.user.js",
+    "code_size": 579,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

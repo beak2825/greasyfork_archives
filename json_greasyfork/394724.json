@@ -1,0 +1,34 @@
+{
+  "id": 394724,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-06T10:29:45.000Z",
+  "code_updated_at": "2020-01-06T10:29:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 302007,
+      "name": "Kateřina Šabršulová",
+      "created_at": "2019-05-15T07:24:25.000Z",
+      "url": "https://greasyfork.org/users/302007-kate%C5%99ina-%C5%A1abr%C5%A1ulov%C3%A1",
+      "scripts": []
+    }
+  ],
+  "name": "Polyglot Additional Instructions Provider",
+  "description": "The script collects 'Additional Instructions' from SymLite and provides it to linguists when they open a job in Polyglot.",
+  "url": "https://greasyfork.org/scripts/394724-polyglot-additional-instructions-provider",
+  "code_url": "https://update.greasyfork.org/scripts/394724/Polyglot%20Additional%20Instructions%20Provider.user.js",
+  "code_size": 2746,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

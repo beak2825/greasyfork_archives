@@ -1,0 +1,59 @@
+{
+  "id": 394661,
+  "daily_installs": 0,
+  "total_installs": 2730,
+  "fan_score": "43.6",
+  "good_ratings": 5,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2020-01-05T09:48:58.000Z",
+  "code_updated_at": "2020-06-30T08:19:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 432499,
+      "name": "chanknight",
+      "created_at": "2020-01-05T09:33:17.000Z",
+      "url": "https://greasyfork.org/users/432499-chanknight",
+      "scripts": [
+        {
+          "id": 394661,
+          "daily_installs": 0,
+          "total_installs": 2730,
+          "fan_score": "43.6",
+          "good_ratings": 5,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2020-01-05T09:48:58.000Z",
+          "code_updated_at": "2020-06-30T08:19:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "百度清爽模式，专注学习工作",
+          "description": "去首页新闻，去右侧搜索热点，去部分广告，搜索内容居中。学习工作不会被大数据推荐打扰，有帮助到您的话，小小打赏一下。",
+          "url": "https://greasyfork.org/scripts/394661-%E7%99%BE%E5%BA%A6%E6%B8%85%E7%88%BD%E6%A8%A1%E5%BC%8F-%E4%B8%93%E6%B3%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C",
+          "code_url": "https://update.greasyfork.org/scripts/394661/%E7%99%BE%E5%BA%A6%E6%B8%85%E7%88%BD%E6%A8%A1%E5%BC%8F%EF%BC%8C%E4%B8%93%E6%B3%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C.user.js",
+          "code_size": 87058,
+          "license": null,
+          "version": "2020.06.30",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "百度清爽模式，专注学习工作",
+  "description": "去首页新闻，去右侧搜索热点，去部分广告，搜索内容居中。学习工作不会被大数据推荐打扰，有帮助到您的话，小小打赏一下。",
+  "url": "https://greasyfork.org/scripts/394661-%E7%99%BE%E5%BA%A6%E6%B8%85%E7%88%BD%E6%A8%A1%E5%BC%8F-%E4%B8%93%E6%B3%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C",
+  "code_url": "https://update.greasyfork.org/scripts/394661/%E7%99%BE%E5%BA%A6%E6%B8%85%E7%88%BD%E6%A8%A1%E5%BC%8F%EF%BC%8C%E4%B8%93%E6%B3%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C.user.js",
+  "code_size": 87058,
+  "license": null,
+  "version": "2020.06.30",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

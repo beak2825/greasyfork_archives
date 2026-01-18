@@ -1,0 +1,33 @@
+{
+  "id": 394251,
+  "daily_installs": 0,
+  "total_installs": 139,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-26T13:23:03.000Z",
+  "code_updated_at": "2019-12-26T13:23:03.000Z",
+  "namespace": "https://greasyfork.org/users/428705",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 428705,
+      "name": "bilal kelala",
+      "created_at": "2019-12-26T13:11:02.000Z",
+      "url": "https://greasyfork.org/users/428705-bilal-kelala"
+    }
+  ],
+  "name": "EgyBest next and previous buttons",
+  "description": "هذا الكود يضيف لك امكانية الولوج الى الحلقة التالية او السابقة بسهولة فقط بالضغط على الزر تحت مشغل الحلقة",
+  "url": "https://greasyfork.org/scripts/394251-egybest-next-and-previous-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/394251/EgyBest%20next%20and%20previous%20buttons.user.js",
+  "code_size": 1850,
+  "license": null,
+  "version": "0.1",
+  "locale": "ar",
+  "deleted": false,
+  "visibility": "public"
+}

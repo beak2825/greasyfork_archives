@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 396152,
+    "daily_installs": 1,
+    "total_installs": 1365,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-02-07T10:35:02.000Z",
+    "code_updated_at": "2025-11-06T04:56:38.000Z",
+    "namespace": "https://github.com/RudeySH/lastfm-bulk-edit",
+    "support_url": "https://github.com/RudeySH/lastfm-bulk-edit/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 748962,
+        "name": "RudeySH",
+        "created_at": "2021-03-18T21:36:44.000Z",
+        "url": "https://greasyfork.org/users/748962-rudeysh"
+      }
+    ],
+    "name": "Last.fm Bulk Edit",
+    "description": "Bulk edit your scrobbles for any artist or album on Last.fm at once.",
+    "url": "https://greasyfork.org/scripts/396152-last-fm-bulk-edit",
+    "code_url": "https://update.greasyfork.org/scripts/396152/Lastfm%20Bulk%20Edit.user.js",
+    "code_size": 103915,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.6.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

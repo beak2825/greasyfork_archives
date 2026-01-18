@@ -1,0 +1,34 @@
+{
+  "id": 395992,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-03T04:06:45.000Z",
+  "code_updated_at": "2020-02-04T04:10:05.000Z",
+  "namespace": "https://greasyfork.org/users/6398, http://ooiks.com/blog/mousehunt-autobot, https://devcnn.wordpress.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 241809,
+      "name": "Arthur Ye",
+      "created_at": "2019-01-24T15:13:15.000Z",
+      "url": "https://greasyfork.org/users/241809-arthur-ye",
+      "scripts": []
+    }
+  ],
+  "name": "MouseHunt AutoBot (Yeman's version) - Github",
+  "description": "Currently the most advanced script for automizing MouseHunt and MH BETA UI. Supports ALL new areas and FIREFOX. Revamped of original by Ooi + Enhanced Version by CnN and Yeman",
+  "url": "https://greasyfork.org/scripts/395992-mousehunt-autobot-yeman-s-version-github",
+  "code_url": "https://update.greasyfork.org/scripts/395992/MouseHunt%20AutoBot%20%28Yeman%27s%20version%29%20-%20Github.user.js",
+  "code_size": 685039,
+  "license": "GPL-3.0+; http://www.gnu.org/copyleft/gpl.html",
+  "version": "2.8.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

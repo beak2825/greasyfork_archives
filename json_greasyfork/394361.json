@@ -1,0 +1,33 @@
+{
+  "id": 394361,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-28T13:41:32.000Z",
+  "code_updated_at": "2019-12-28T14:15:46.000Z",
+  "namespace": "https://greasyfork.org/ja/users/426180",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 426180,
+      "name": "Coda2001",
+      "created_at": "2019-12-20T10:44:40.000Z",
+      "url": "https://greasyfork.org/users/426180-coda2001"
+    }
+  ],
+  "name": "Open 2ch NG",
+  "description": "「おーぷん2ちゃんねる」でNGネーム・アイコンに関連するレスを見えなくする",
+  "url": "https://greasyfork.org/scripts/394361-open-2ch-ng",
+  "code_url": "https://update.greasyfork.org/scripts/394361/Open%202ch%20NG.user.js",
+  "code_size": 10143,
+  "license": null,
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

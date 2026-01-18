@@ -1,0 +1,59 @@
+{
+  "id": 393421,
+  "daily_installs": 0,
+  "total_installs": 217,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-07T02:44:32.000Z",
+  "code_updated_at": "2019-12-07T02:44:32.000Z",
+  "namespace": "https://greasyfork.org/users/413030",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 413030,
+      "name": "seralynne",
+      "created_at": "2019-12-07T02:41:18.000Z",
+      "url": "https://greasyfork.org/users/413030-seralynne",
+      "scripts": [
+        {
+          "id": 393421,
+          "daily_installs": 0,
+          "total_installs": 217,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-07T02:44:32.000Z",
+          "code_updated_at": "2019-12-07T02:44:32.000Z",
+          "namespace": "https://greasyfork.org/users/413030",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove leading spaces in AO3",
+          "description": "Removes the leading indents for paragraphs in AO3 works.",
+          "url": "https://greasyfork.org/scripts/393421-remove-leading-spaces-in-ao3",
+          "code_url": "https://update.greasyfork.org/scripts/393421/Remove%20leading%20spaces%20in%20AO3.user.js",
+          "code_size": 473,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove leading spaces in AO3",
+  "description": "Removes the leading indents for paragraphs in AO3 works.",
+  "url": "https://greasyfork.org/scripts/393421-remove-leading-spaces-in-ao3",
+  "code_url": "https://update.greasyfork.org/scripts/393421/Remove%20leading%20spaces%20in%20AO3.user.js",
+  "code_size": 473,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

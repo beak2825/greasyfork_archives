@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 393812,
+    "daily_installs": 1,
+    "total_installs": 3508,
+    "fan_score": "75.7",
+    "good_ratings": 12,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-16T16:06:13.000Z",
+    "code_updated_at": "2019-12-16T16:13:22.000Z",
+    "namespace": "https://greasyfork.org/users/421059",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 421059,
+        "name": "shenyi97",
+        "created_at": "2019-12-16T16:00:39.000Z",
+        "url": "https://greasyfork.org/users/421059-shenyi97"
+      }
+    ],
+    "name": "S1挂机",
+    "description": "限定stage1st论坛专用每5分钟自动刷新",
+    "url": "https://greasyfork.org/scripts/393812-s1%E6%8C%82%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/393812/S1%E6%8C%82%E6%9C%BA.user.js",
+    "code_size": 1569,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

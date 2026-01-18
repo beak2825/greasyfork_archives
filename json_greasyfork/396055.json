@@ -1,0 +1,34 @@
+{
+  "id": 396055,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-04T12:37:49.000Z",
+  "code_updated_at": "2020-03-09T09:18:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 441276,
+      "name": "rrfheff",
+      "created_at": "2020-02-04T12:35:53.000Z",
+      "url": "https://greasyfork.org/users/441276-rrfheff",
+      "scripts": []
+    }
+  ],
+  "name": "auto update iconfont",
+  "description": "自动更新iconfont",
+  "url": "https://greasyfork.org/scripts/396055-auto-update-iconfont",
+  "code_url": "https://update.greasyfork.org/scripts/396055/auto%20update%20iconfont.user.js",
+  "code_size": 9954,
+  "license": null,
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

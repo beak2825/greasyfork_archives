@@ -1,0 +1,33 @@
+{
+  "id": 395823,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-30T02:38:48.000Z",
+  "code_updated_at": "2020-01-30T02:41:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 439142,
+      "name": "Yoda Serv",
+      "created_at": "2020-01-29T00:39:35.000Z",
+      "url": "https://greasyfork.org/users/439142-yoda-serv"
+    }
+  ],
+  "name": "BrTeam Search",
+  "description": "Search BrTeam from IMDB page",
+  "url": "https://greasyfork.org/scripts/395823-brteam-search",
+  "code_url": "https://update.greasyfork.org/scripts/395823/BrTeam%20Search.user.js",
+  "code_size": 994,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

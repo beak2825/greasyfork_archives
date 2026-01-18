@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396821,
+    "daily_installs": 0,
+    "total_installs": 339,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-24T09:04:32.000Z",
+    "code_updated_at": "2023-10-08T06:24:30.000Z",
+    "namespace": "https://github.com/idcpj",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 162892,
+        "name": "陈鹏杰",
+        "created_at": "2017-12-13T05:05:41.000Z",
+        "url": "https://greasyfork.org/users/162892-%E9%99%88%E9%B9%8F%E6%9D%B0"
+      }
+    ],
+    "name": "FUCK 提示跳转外部网站",
+    "description": "自动关闭烦人的跳转到外部网站的安全提醒",
+    "url": "https://greasyfork.org/scripts/396821-%E6%8F%90%E7%A4%BA%E8%B7%B3%E8%BD%AC%E5%A4%96%E9%83%A8%E7%BD%91%E7%AB%99",
+    "code_url": "https://update.greasyfork.org/scripts/396821/FUCK%20%E6%8F%90%E7%A4%BA%E8%B7%B3%E8%BD%AC%E5%A4%96%E9%83%A8%E7%BD%91%E7%AB%99.user.js",
+    "code_size": 1630,
+    "license": null,
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 393594,
+    "daily_installs": 0,
+    "total_installs": 130,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-11T20:58:50.000Z",
+    "code_updated_at": "2019-12-11T20:58:50.000Z",
+    "namespace": "https://greasyfork.org/users/396351",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 396351,
+        "name": "teldosas",
+        "created_at": "2019-11-09T09:46:38.000Z",
+        "url": "https://greasyfork.org/users/396351-teldosas"
+      }
+    ],
+    "name": "Google Slides - Offline Presentation",
+    "description": "It allows you to save a Google Slides presentation as a working html file using the browser's \"complete webpage save\" feature",
+    "url": "https://greasyfork.org/scripts/393594-google-slides-offline-presentation",
+    "code_url": "https://update.greasyfork.org/scripts/393594/Google%20Slides%20-%20Offline%20Presentation.user.js",
+    "code_size": 7226,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 393304,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-04T14:50:29.000Z",
+    "code_updated_at": "2019-12-04T17:34:30.000Z",
+    "namespace": "https://greasyfork.org/users/396351",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 396351,
+        "name": "teldosas",
+        "created_at": "2019-11-09T09:46:38.000Z",
+        "url": "https://greasyfork.org/users/396351-teldosas"
+      }
+    ],
+    "name": "WordReference.com to Single-page app (with Fullsceen)",
+    "description": "It turns wordreference.com dictionary into a single-page application, that is it doesn't reload the full page when navigating to a different word. It also minimizes distractions by hiding the left and right columns and by providing fullscreen mode.",
+    "url": "https://greasyfork.org/scripts/393304-wordreference-com-to-single-page-app-with-fullsceen",
+    "code_url": "https://update.greasyfork.org/scripts/393304/WordReferencecom%20to%20Single-page%20app%20%28with%20Fullsceen%29.user.js",
+    "code_size": 5911,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

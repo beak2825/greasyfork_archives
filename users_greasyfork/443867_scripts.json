@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396324,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2020-02-11T12:54:41.000Z",
+    "code_updated_at": "2020-02-11T12:54:40.000Z",
+    "namespace": "fufuying@lihkg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443867,
+        "name": "caocao11111",
+        "created_at": "2020-02-11T12:50:53.000Z",
+        "url": "https://greasyfork.org/users/443867-caocao11111"
+      }
+    ],
+    "name": "AmazonBot",
+    "description": "Five demands, not one less",
+    "url": "https://greasyfork.org/scripts/396324-amazonbot",
+    "code_url": "https://update.greasyfork.org/scripts/396324/AmazonBot.user.js",
+    "code_size": 1845,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

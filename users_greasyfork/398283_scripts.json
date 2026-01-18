@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 393593,
+    "daily_installs": 0,
+    "total_installs": 168,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-11T19:21:08.000Z",
+    "code_updated_at": "2023-07-18T23:32:09.000Z",
+    "namespace": "MunzeeMap",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 398283,
+        "name": "sohcah",
+        "created_at": "2019-11-15T19:02:27.000Z",
+        "url": "https://greasyfork.org/users/398283-sohcah"
+      }
+    ],
+    "name": "Munzee Map Sandbox",
+    "description": "Improves Munzee Map Sandbox",
+    "url": "https://greasyfork.org/scripts/393593-munzee-map-sandbox",
+    "code_url": "https://update.greasyfork.org/scripts/393593/Munzee%20Map%20Sandbox.user.js",
+    "code_size": 12869,
+    "license": null,
+    "version": "1.13.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

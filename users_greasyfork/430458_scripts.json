@@ -1,0 +1,35 @@
+[
+  {
+    "id": 394475,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-31T12:38:34.000Z",
+    "code_updated_at": "2019-12-31T12:38:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 430458,
+        "name": "qwelol",
+        "created_at": "2019-12-31T11:58:32.000Z",
+        "url": "https://greasyfork.org/users/430458-qwelol"
+      }
+    ],
+    "name": "steam fast copy",
+    "description": "fas copy steam items price",
+    "url": "https://greasyfork.org/scripts/394475-steam-fast-copy",
+    "code_url": "https://update.greasyfork.org/scripts/394475/steam%20fast%20copy.user.js",
+    "code_size": 5291,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

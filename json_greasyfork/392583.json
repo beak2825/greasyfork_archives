@@ -1,0 +1,59 @@
+{
+  "id": 392583,
+  "daily_installs": 1,
+  "total_installs": 267,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-18T06:41:07.000Z",
+  "code_updated_at": "2019-11-18T06:43:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 398902,
+      "name": "NewBody-LC",
+      "created_at": "2019-11-18T02:16:03.000Z",
+      "url": "https://greasyfork.org/users/398902-newbody-lc",
+      "scripts": [
+        {
+          "id": 392583,
+          "daily_installs": 1,
+          "total_installs": 267,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-18T06:41:07.000Z",
+          "code_updated_at": "2019-11-18T06:43:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "51脚本网站去广告",
+          "description": "去掉51脚本网站的一些广告",
+          "url": "https://greasyfork.org/scripts/392583-51%E8%84%9A%E6%9C%AC%E7%BD%91%E7%AB%99%E5%8E%BB%E5%B9%BF%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/392583/51%E8%84%9A%E6%9C%AC%E7%BD%91%E7%AB%99%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+          "code_size": 658,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "51脚本网站去广告",
+  "description": "去掉51脚本网站的一些广告",
+  "url": "https://greasyfork.org/scripts/392583-51%E8%84%9A%E6%9C%AC%E7%BD%91%E7%AB%99%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/392583/51%E8%84%9A%E6%9C%AC%E7%BD%91%E7%AB%99%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 658,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

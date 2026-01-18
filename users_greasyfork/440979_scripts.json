@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396023,
+    "daily_installs": 0,
+    "total_installs": 930,
+    "fan_score": "35.9",
+    "good_ratings": 3,
+    "ok_ratings": 4,
+    "bad_ratings": 0,
+    "created_at": "2020-02-03T16:18:01.000Z",
+    "code_updated_at": "2020-03-14T11:00:03.000Z",
+    "namespace": "https://greasyfork.org/users/440979",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 440979,
+        "name": "DasWiesel",
+        "created_at": "2020-02-03T16:12:40.000Z",
+        "url": "https://greasyfork.org/users/440979-daswiesel"
+      }
+    ],
+    "name": "MAL Public Score in Animelist",
+    "description": "Adds new column with public score to the animelist",
+    "url": "https://greasyfork.org/scripts/396023-mal-public-score-in-animelist",
+    "code_url": "https://update.greasyfork.org/scripts/396023/MAL%20Public%20Score%20in%20Animelist.user.js",
+    "code_size": 6465,
+    "license": null,
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

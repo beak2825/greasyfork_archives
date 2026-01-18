@@ -1,0 +1,34 @@
+{
+  "id": 395084,
+  "daily_installs": 0,
+  "total_installs": 139,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-13T05:55:51.000Z",
+  "code_updated_at": "2020-01-13T10:09:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 434640,
+      "name": "AvErciSTanumBUTHrOiSmeLandavitEr",
+      "created_at": "2020-01-12T12:31:57.000Z",
+      "url": "https://greasyfork.org/users/434640-avercistanumbuthroismelandaviter",
+      "scripts": []
+    }
+  ],
+  "name": "XLR Add Button For Facilities",
+  "description": "For rows that have a facility (OTU4, band, fiber, etc), this adds a button to load the CLR for the facility",
+  "url": "https://greasyfork.org/scripts/395084-xlr-add-button-for-facilities",
+  "code_url": "https://update.greasyfork.org/scripts/395084/XLR%20Add%20Button%20For%20Facilities.user.js",
+  "code_size": 2101,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 395009,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-11T11:24:01.000Z",
+  "code_updated_at": "2022-04-24T20:03:58.000Z",
+  "namespace": "https://greasyfork.org/fr/scripts/395009-wme-p2smapschine",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 429680,
+      "name": "Xavier TXS",
+      "created_at": "2019-12-29T17:04:18.000Z",
+      "url": "https://greasyfork.org/users/429680-xavier-txs",
+      "scripts": []
+    }
+  ],
+  "name": "WME P2SMapsChine",
+  "description": "This script create buttons to permalink page on several Maps.",
+  "url": "https://greasyfork.org/scripts/395009-wme-p2smapschine",
+  "code_url": "https://update.greasyfork.org/scripts/395009/WME%20P2SMapsChine.user.js",
+  "code_size": 13511,
+  "license": null,
+  "version": "0.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

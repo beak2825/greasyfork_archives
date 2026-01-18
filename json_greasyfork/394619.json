@@ -1,0 +1,33 @@
+{
+  "id": 394619,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-04T13:38:10.000Z",
+  "code_updated_at": "2020-01-04T13:38:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 432306,
+      "name": "MartinoMensio",
+      "created_at": "2020-01-04T13:33:03.000Z",
+      "url": "https://greasyfork.org/users/432306-martinomensio"
+    }
+  ],
+  "name": "Agenzia delle Entrate - Login helper",
+  "description": "Stores username, password and pin in localStorage to log-in faster",
+  "url": "https://greasyfork.org/scripts/394619-agenzia-delle-entrate-login-helper",
+  "code_url": "https://update.greasyfork.org/scripts/394619/Agenzia%20delle%20Entrate%20-%20Login%20helper.user.js",
+  "code_size": 1783,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

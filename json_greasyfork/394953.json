@@ -1,0 +1,34 @@
+{
+  "id": 394953,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-10T09:18:59.000Z",
+  "code_updated_at": "2020-01-10T10:25:28.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/35559-toolkit-for-he",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 433978,
+      "name": "Fantogrim",
+      "created_at": "2020-01-10T09:06:37.000Z",
+      "url": "https://greasyfork.org/users/433978-fantogrim",
+      "scripts": []
+    }
+  ],
+  "name": "Toolkit for HW (edited from smartish's Toolkit for HE)",
+  "description": "Tools for Hacker Wars.",
+  "url": "https://greasyfork.org/scripts/394953-toolkit-for-hw-edited-from-smartish-s-toolkit-for-he",
+  "code_url": "https://update.greasyfork.org/scripts/394953/Toolkit%20for%20HW%20%28edited%20from%20smartish%27s%20Toolkit%20for%20HE%29.user.js",
+  "code_size": 18071,
+  "license": null,
+  "version": "0.9.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396085,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-05T08:08:21.000Z",
+    "code_updated_at": "2020-02-05T08:08:21.000Z",
+    "namespace": "http://jira.it.qwilt.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 244199,
+        "name": "Vitaly Belman",
+        "created_at": "2019-02-03T07:41:57.000Z",
+        "url": "https://greasyfork.org/users/244199-vitaly-belman"
+      }
+    ],
+    "name": "JIRA auto fill",
+    "description": "Auto fills fields in JIRA posts",
+    "url": "https://greasyfork.org/scripts/396085-jira-auto-fill",
+    "code_url": "https://update.greasyfork.org/scripts/396085/JIRA%20auto%20fill.user.js",
+    "code_size": 10259,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

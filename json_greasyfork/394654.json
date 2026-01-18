@@ -1,0 +1,33 @@
+{
+  "id": 394654,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-05T08:03:54.000Z",
+  "code_updated_at": "2020-01-05T08:03:53.000Z",
+  "namespace": "iilj",
+  "support_url": "https://github.com/iilj/CafeCodeEnhancer/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 432475,
+      "name": "iilj",
+      "created_at": "2020-01-05T07:43:34.000Z",
+      "url": "https://greasyfork.org/users/432475-iilj"
+    }
+  ],
+  "name": "CafeCoder Enhancer",
+  "description": "CafeCoder のUIを改善し，コンテストを快適にします（たぶん）",
+  "url": "https://greasyfork.org/scripts/394654-cafecoder-enhancer",
+  "code_url": "https://update.greasyfork.org/scripts/394654/CafeCoder%20Enhancer.user.js",
+  "code_size": 16778,
+  "license": null,
+  "version": "2020.01.05.5",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

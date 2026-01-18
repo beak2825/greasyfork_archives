@@ -1,0 +1,35 @@
+[
+  {
+    "id": 394591,
+    "daily_installs": 7,
+    "total_installs": 13393,
+    "fan_score": "30.3",
+    "good_ratings": 4,
+    "ok_ratings": 1,
+    "bad_ratings": 2,
+    "created_at": "2020-01-03T16:07:03.000Z",
+    "code_updated_at": "2020-01-03T16:07:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 432026,
+        "name": "LuminexT.",
+        "created_at": "2020-01-03T15:43:48.000Z",
+        "url": "https://greasyfork.org/users/432026-luminext"
+      }
+    ],
+    "name": "MooMoo.io Hat Hack Hotkey Special Instakill By LuminexT",
+    "description": "Try to be the God or Goddess in MooMoo.io!",
+    "url": "https://greasyfork.org/scripts/394591-moomoo-io-hat-hack-hotkey-special-instakill-by-luminext",
+    "code_url": "https://update.greasyfork.org/scripts/394591/MooMooio%20Hat%20Hack%20Hotkey%20Special%20Instakill%20By%20LuminexT.user.js",
+    "code_size": 1645,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

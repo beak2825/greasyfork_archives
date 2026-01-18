@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396011,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-03T11:41:57.000Z",
+    "code_updated_at": "2020-02-03T11:41:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 179497,
+        "name": "warpech",
+        "created_at": "2018-04-11T13:39:07.000Z",
+        "url": "https://greasyfork.org/users/179497-warpech"
+      }
+    ],
+    "name": "PR: Expand All \"Load more\" buttons",
+    "description": "Expand All \"Load more\" buttons in pull request reviews.",
+    "url": "https://greasyfork.org/scripts/396011-pr-expand-all-load-more-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/396011/PR%3A%20Expand%20All%20%22Load%20more%22%20buttons.user.js",
+    "code_size": 2094,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

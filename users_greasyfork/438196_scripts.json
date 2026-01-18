@@ -1,0 +1,35 @@
+[
+  {
+    "id": 395634,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-25T04:56:13.000Z",
+    "code_updated_at": "2020-11-11T16:31:52.000Z",
+    "namespace": "https://greasyfork.org/users/438196",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 438196,
+        "name": "ssshoshi",
+        "created_at": "2020-01-25T04:52:35.000Z",
+        "url": "https://greasyfork.org/users/438196-ssshoshi"
+      }
+    ],
+    "name": "VRAPI Enhancements",
+    "description": "Add map links with pushpin above map in VRAPI dashboard.",
+    "url": "https://greasyfork.org/scripts/395634-vrapi-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/395634/VRAPI%20Enhancements.user.js",
+    "code_size": 2897,
+    "license": null,
+    "version": "0.33",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

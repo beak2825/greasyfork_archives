@@ -1,0 +1,34 @@
+{
+  "id": 397032,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-28T10:24:17.000Z",
+  "code_updated_at": "2020-02-28T10:24:17.000Z",
+  "namespace": "randomtdev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 451288,
+      "name": "ultra56",
+      "created_at": "2020-02-28T10:22:05.000Z",
+      "url": "https://greasyfork.org/users/451288-ultra56",
+      "scripts": []
+    }
+  ],
+  "name": "Nexus Download Fix",
+  "description": "Fixing the dumb new download system for nexusmods",
+  "url": "https://greasyfork.org/scripts/397032-nexus-download-fix",
+  "code_url": "https://update.greasyfork.org/scripts/397032/Nexus%20Download%20Fix.user.js",
+  "code_size": 10709,
+  "license": null,
+  "version": "1.5.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 392808,
+  "daily_installs": 0,
+  "total_installs": 453,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-23T06:27:18.000Z",
+  "code_updated_at": "2019-11-23T06:27:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 400530,
+      "name": "Jelly Static",
+      "created_at": "2019-11-23T06:25:21.000Z",
+      "url": "https://greasyfork.org/users/400530-jelly-static"
+    }
+  ],
+  "name": "破除哔哩哔哩专栏文本复制限制",
+  "description": "破除哔哩哔哩专栏无法复制",
+  "url": "https://greasyfork.org/scripts/392808-%E7%A0%B4%E9%99%A4%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%B8%93%E6%A0%8F%E6%96%87%E6%9C%AC%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6",
+  "code_url": "https://update.greasyfork.org/scripts/392808/%E7%A0%B4%E9%99%A4%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%B8%93%E6%A0%8F%E6%96%87%E6%9C%AC%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6.user.js",
+  "code_size": 536,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

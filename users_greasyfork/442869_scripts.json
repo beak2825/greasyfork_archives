@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396217,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-08T22:04:48.000Z",
+    "code_updated_at": "2020-02-08T22:04:48.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 442869,
+        "name": "pignosis",
+        "created_at": "2020-02-08T22:02:37.000Z",
+        "url": "https://greasyfork.org/users/442869-pignosis"
+      }
+    ],
+    "name": "ROBUX server port RBLX hack",
+    "description": "I am not in any way shape or form responsible if you're banned from roblox.",
+    "url": "https://greasyfork.org/scripts/396217-robux-server-port-rblx-hack",
+    "code_url": "https://update.greasyfork.org/scripts/396217/771139/ROBUX%20server%20port%20RBLX%20hack.js",
+    "code_size": 3180,
+    "license": null,
+    "version": "0.0.1.20200208220448",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

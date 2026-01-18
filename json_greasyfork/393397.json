@@ -1,0 +1,33 @@
+{
+  "id": 393397,
+  "daily_installs": 0,
+  "total_installs": 1424,
+  "fan_score": "61.0",
+  "good_ratings": 6,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-06T12:23:26.000Z",
+  "code_updated_at": "2019-12-18T14:17:07.000Z",
+  "namespace": "https://greasyfork.org/users/91873",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 91873,
+      "name": "无极限",
+      "created_at": "2017-01-03T13:15:15.000Z",
+      "url": "https://greasyfork.org/users/91873-%E6%97%A0%E6%9E%81%E9%99%90"
+    }
+  ],
+  "name": "B站 自动播放 & 网页宽屏",
+  "description": "Bilibili Autoplay & WideScreen",
+  "url": "https://greasyfork.org/scripts/393397-b%E7%AB%99-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E7%BD%91%E9%A1%B5%E5%AE%BD%E5%B1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/393397/B%E7%AB%99%20%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%20%20%E7%BD%91%E9%A1%B5%E5%AE%BD%E5%B1%8F.user.js",
+  "code_size": 2684,
+  "license": null,
+  "version": "1.0.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

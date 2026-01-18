@@ -1,0 +1,34 @@
+{
+  "id": 396715,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-21T23:54:05.000Z",
+  "code_updated_at": "2023-01-10T16:01:36.000Z",
+  "namespace": "https://www.weibo.com/timeline4arthur",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 445434,
+      "name": "Timeline Arthur",
+      "created_at": "2020-02-15T12:22:02.000Z",
+      "url": "https://greasyfork.org/users/445434-timeline-arthur",
+      "scripts": []
+    }
+  ],
+  "name": "小宇宙控制台",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/396715-%E5%B0%8F%E5%AE%87%E5%AE%99%E6%8E%A7%E5%88%B6%E5%8F%B0",
+  "code_url": "https://update.greasyfork.org/scripts/396715/%E5%B0%8F%E5%AE%87%E5%AE%99%E6%8E%A7%E5%88%B6%E5%8F%B0.user.js",
+  "code_size": 46714,
+  "license": null,
+  "version": "0.4.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

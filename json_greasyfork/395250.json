@@ -1,0 +1,33 @@
+{
+  "id": 395250,
+  "daily_installs": 0,
+  "total_installs": 102,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-16T00:01:18.000Z",
+  "code_updated_at": "2023-03-04T17:36:20.000Z",
+  "namespace": "https://catherine.v0cyc1pp.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 4316,
+      "name": "greg10",
+      "created_at": "2014-08-09T05:36:04.000Z",
+      "url": "https://greasyfork.org/users/4316-greg10"
+    }
+  ],
+  "name": "google_http_warning2",
+  "description": "Google検索結果でhttpは警告色で目立つようにする。（新デザイン用2023.3.5）",
+  "url": "https://greasyfork.org/scripts/395250-google-http-warning2",
+  "code_url": "https://update.greasyfork.org/scripts/395250/google_http_warning2.user.js",
+  "code_size": 1452,
+  "license": "GPL 3.0",
+  "version": "0.8",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

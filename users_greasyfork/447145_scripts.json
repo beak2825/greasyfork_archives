@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396614,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-19T12:03:59.000Z",
+    "code_updated_at": "2020-02-26T04:47:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 447145,
+        "name": "yyyynn",
+        "created_at": "2020-02-19T11:56:46.000Z",
+        "url": "https://greasyfork.org/users/447145-yyyynn"
+      }
+    ],
+    "name": "OpenUrl for vdruid",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/396614-openurl-for-vdruid",
+    "code_url": "https://update.greasyfork.org/scripts/396614/OpenUrl%20for%20vdruid.user.js",
+    "code_size": 1103,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 392704,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-20T16:27:03.000Z",
+  "code_updated_at": "2019-11-20T16:27:03.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 151891,
+      "name": "T4Tea",
+      "created_at": "2017-09-07T13:30:08.000Z",
+      "url": "https://greasyfork.org/users/151891-t4tea"
+    }
+  ],
+  "name": "Netease Full Article",
+  "description": "Show full article on Netease mobile version.",
+  "url": "https://greasyfork.org/scripts/392704-netease-full-article",
+  "code_url": "https://update.greasyfork.org/scripts/392704/Netease%20Full%20Article.user.js",
+  "code_size": 562,
+  "license": null,
+  "version": "0.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

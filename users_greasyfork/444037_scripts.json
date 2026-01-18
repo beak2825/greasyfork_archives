@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396343,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-12T03:13:08.000Z",
+    "code_updated_at": "2020-02-12T03:13:07.000Z",
+    "namespace": "fufuying@lihkg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 444037,
+        "name": "skifox",
+        "created_at": "2020-02-12T02:51:29.000Z",
+        "url": "https://greasyfork.org/users/444037-skifox"
+      }
+    ],
+    "name": "AmazonBot",
+    "description": ":)",
+    "url": "https://greasyfork.org/scripts/396343-amazonbot",
+    "code_url": "https://update.greasyfork.org/scripts/396343/AmazonBot.user.js",
+    "code_size": 3881,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

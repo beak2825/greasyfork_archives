@@ -1,0 +1,68 @@
+[
+  {
+    "id": 393110,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-30T01:37:37.000Z",
+    "code_updated_at": "2019-11-30T01:37:37.000Z",
+    "namespace": "https://greasyfork.org/users/406969",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 406969,
+        "name": "OlafOrangi",
+        "created_at": "2019-11-27T20:37:10.000Z",
+        "url": "https://greasyfork.org/users/406969-olaforangi"
+      }
+    ],
+    "name": "OGame Delay Helper",
+    "description": "Hilft beim Verzögern von Flotten",
+    "url": "https://greasyfork.org/scripts/393110-ogame-delay-helper",
+    "code_url": "https://update.greasyfork.org/scripts/393110/OGame%20Delay%20Helper.user.js",
+    "code_size": 2597,
+    "license": null,
+    "version": "1",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 393011,
+    "daily_installs": 0,
+    "total_installs": 83,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-27T20:55:08.000Z",
+    "code_updated_at": "2019-12-10T03:24:03.000Z",
+    "namespace": "https://greasyfork.org/users/406969",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 406969,
+        "name": "OlafOrangi",
+        "created_at": "2019-11-27T20:37:10.000Z",
+        "url": "https://greasyfork.org/users/406969-olaforangi"
+      }
+    ],
+    "name": "Marketplace Helper",
+    "description": "Berechnet die Ressource zu Ressource Handelskurse auf dem Marktplatz",
+    "url": "https://greasyfork.org/scripts/393011-marketplace-helper",
+    "code_url": "https://update.greasyfork.org/scripts/393011/Marketplace%20Helper.user.js",
+    "code_size": 2565,
+    "license": null,
+    "version": "1.6",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393581,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-11T10:41:50.000Z",
+    "code_updated_at": "2019-12-11T10:43:38.000Z",
+    "namespace": "out",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 181582,
+        "name": "MarinesPanda",
+        "created_at": "2018-04-23T15:19:01.000Z",
+        "url": "https://greasyfork.org/users/181582-marinespanda"
+      }
+    ],
+    "name": "Keylol Game Info Clipboard",
+    "description": "快捷复制游戏信息",
+    "url": "https://greasyfork.org/scripts/393581-keylol-game-info-clipboard",
+    "code_url": "https://update.greasyfork.org/scripts/393581/Keylol%20Game%20Info%20Clipboard.user.js",
+    "code_size": 65780,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

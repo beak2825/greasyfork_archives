@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392795,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-22T21:15:47.000Z",
+    "code_updated_at": "2019-11-22T21:15:46.000Z",
+    "namespace": "http://hackaday.com/*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 91645,
+        "name": "Wooloomooloo",
+        "created_at": "2017-01-02T17:23:02.000Z",
+        "url": "https://greasyfork.org/users/91645-wooloomooloo"
+      }
+    ],
+    "name": "Hackaday De-dark",
+    "description": "Invert colour scheme from a dark one to a light one",
+    "url": "https://greasyfork.org/scripts/392795-hackaday-de-dark",
+    "code_url": "https://update.greasyfork.org/scripts/392795/Hackaday%20De-dark.user.js",
+    "code_size": 499,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

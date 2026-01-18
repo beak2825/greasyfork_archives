@@ -1,0 +1,33 @@
+{
+  "id": 394379,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-28T22:35:47.000Z",
+  "code_updated_at": "2019-12-29T09:40:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 429467,
+      "name": "阿婆腳皮獸",
+      "created_at": "2019-12-28T22:33:26.000Z",
+      "url": "https://greasyfork.org/users/429467-%E9%98%BF%E5%A9%86%E8%85%B3%E7%9A%AE%E7%8D%B8"
+    }
+  ],
+  "name": "巴哈姆特 - 小屋漫畫連載閱讀器",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/394379-%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9-%E5%B0%8F%E5%B1%8B%E6%BC%AB%E7%95%AB%E9%80%A3%E8%BC%89%E9%96%B1%E8%AE%80%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/394379/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%20-%20%E5%B0%8F%E5%B1%8B%E6%BC%AB%E7%95%AB%E9%80%A3%E8%BC%89%E9%96%B1%E8%AE%80%E5%99%A8.user.js",
+  "code_size": 1980,
+  "license": null,
+  "version": "0.5",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

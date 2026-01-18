@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397118,
+    "daily_installs": 0,
+    "total_installs": 114,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-01T04:04:19.000Z",
+    "code_updated_at": "2020-03-01T04:18:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 227273,
+        "name": "Skiftcha",
+        "created_at": "2018-11-21T03:01:21.000Z",
+        "url": "https://greasyfork.org/users/227273-skiftcha"
+      }
+    ],
+    "name": "Disable title blinking",
+    "description": "Раздражает мигание названия вкладки? Отвлекает? Теперь моргать не будет. Пока только для mail.ru, но можно скопировать и применять его на любом другом сайте",
+    "url": "https://greasyfork.org/scripts/397118-disable-title-blinking",
+    "code_url": "https://update.greasyfork.org/scripts/397118/Disable%20title%20blinking.user.js",
+    "code_size": 712,
+    "license": null,
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

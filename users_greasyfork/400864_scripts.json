@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392857,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-24T12:14:58.000Z",
+    "code_updated_at": "2019-11-24T12:19:34.000Z",
+    "namespace": "https://www.twitter.com/stella_satera",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 400864,
+        "name": "stella_satera",
+        "created_at": "2019-11-24T11:55:20.000Z",
+        "url": "https://greasyfork.org/users/400864-stella-satera"
+      }
+    ],
+    "name": "To watch anime uploaded by the rights holder",
+    "description": "2019/11/24 18:10:26",
+    "url": "https://greasyfork.org/scripts/392857-to-watch-anime-uploaded-by-the-rights-holder",
+    "code_url": "https://update.greasyfork.org/scripts/392857/To%20watch%20anime%20uploaded%20by%20the%20rights%20holder.user.js",
+    "code_size": 1672,
+    "license": null,
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 395901,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-31T15:06:52.000Z",
+  "code_updated_at": "2020-01-31T15:06:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 437750,
+      "name": "Seba",
+      "created_at": "2020-01-23T08:58:04.000Z",
+      "url": "https://greasyfork.org/users/437750-seba",
+      "scripts": []
+    }
+  ],
+  "name": "MPD regular schema tags highlighter",
+  "description": "Create context menu",
+  "url": "https://greasyfork.org/scripts/395901-mpd-regular-schema-tags-highlighter",
+  "code_url": "https://update.greasyfork.org/scripts/395901/MPD%20regular%20schema%20tags%20highlighter.user.js",
+  "code_size": 6573,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397210,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-02T13:09:24.000Z",
+    "code_updated_at": "2020-03-14T13:01:15.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 41797,
+        "name": "kiyo",
+        "created_at": "2016-05-03T18:18:39.000Z",
+        "url": "https://greasyfork.org/users/41797-kiyo"
+      }
+    ],
+    "name": "Web漫画アンテナ 既読対応",
+    "description": "マイリストのページで既読漫画の背景色を変えます",
+    "url": "https://greasyfork.org/scripts/397210-web%E6%BC%AB%E7%94%BB%E3%82%A2%E3%83%B3%E3%83%86%E3%83%8A-%E6%97%A2%E8%AA%AD%E5%AF%BE%E5%BF%9C",
+    "code_url": "https://update.greasyfork.org/scripts/397210/Web%E6%BC%AB%E7%94%BB%E3%82%A2%E3%83%B3%E3%83%86%E3%83%8A%20%E6%97%A2%E8%AA%AD%E5%AF%BE%E5%BF%9C.user.js",
+    "code_size": 3592,
+    "license": null,
+    "version": "0.17",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

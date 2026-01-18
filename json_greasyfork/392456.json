@@ -1,0 +1,33 @@
+{
+  "id": 392456,
+  "daily_installs": 0,
+  "total_installs": 64,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-15T08:42:50.000Z",
+  "code_updated_at": "2019-11-15T08:42:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 100835,
+      "name": "nilref",
+      "created_at": "2017-02-08T02:32:47.000Z",
+      "url": "https://greasyfork.org/users/100835-nilref"
+    }
+  ],
+  "name": "豆瓣小组|Ctrl+Enter发表评论",
+  "description": "豆瓣小组Ctrl+Enter发表评论，不需要再用鼠标点击发送。",
+  "url": "https://greasyfork.org/scripts/392456-%E8%B1%86%E7%93%A3%E5%B0%8F%E7%BB%84-ctrl-enter%E5%8F%91%E8%A1%A8%E8%AF%84%E8%AE%BA",
+  "code_url": "https://update.greasyfork.org/scripts/392456/%E8%B1%86%E7%93%A3%E5%B0%8F%E7%BB%84%7CCtrl%2BEnter%E5%8F%91%E8%A1%A8%E8%AF%84%E8%AE%BA.user.js",
+  "code_size": 578,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

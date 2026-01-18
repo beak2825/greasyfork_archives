@@ -1,0 +1,35 @@
+[
+  {
+    "id": 397174,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-03-02T01:15:11.000Z",
+    "code_updated_at": "2020-03-02T01:15:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 452582,
+        "name": "Peanutzzz",
+        "created_at": "2020-03-02T01:06:06.000Z",
+        "url": "https://greasyfork.org/users/452582-peanutzzz"
+      }
+    ],
+    "name": "Tongji Courses Clock",
+    "description": "同济大学courses网上教学平台课程表时间提醒",
+    "url": "https://greasyfork.org/scripts/397174-tongji-courses-clock",
+    "code_url": "https://update.greasyfork.org/scripts/397174/Tongji%20Courses%20Clock.user.js",
+    "code_size": 2388,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

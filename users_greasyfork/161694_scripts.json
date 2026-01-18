@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 392517,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-16T21:26:57.000Z",
+    "code_updated_at": "2019-11-16T21:26:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 161694,
+        "name": "ayunami2000",
+        "created_at": "2017-12-03T01:53:29.000Z",
+        "url": "https://greasyfork.org/users/161694-ayunami2000"
+      }
+    ],
+    "name": "ushistory.org summarizer - bruh im not bouta read all dat",
+    "description": "extracts bolded words & cooresponding paragraphs and underlines them in the browser console. also outputs a list of all the bolded words",
+    "url": "https://greasyfork.org/scripts/392517-ushistory-org-summarizer-bruh-im-not-bouta-read-all-dat",
+    "code_url": "https://update.greasyfork.org/scripts/392517/ushistoryorg%20summarizer%20-%20bruh%20im%20not%20bouta%20read%20all%20dat.user.js",
+    "code_size": 1371,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

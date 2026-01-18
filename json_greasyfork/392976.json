@@ -1,0 +1,33 @@
+{
+  "id": 392976,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-27T06:55:36.000Z",
+  "code_updated_at": "2020-02-18T20:41:31.000Z",
+  "namespace": "Tehapollo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 163780,
+      "name": "Tehapollo",
+      "created_at": "2017-12-19T23:57:17.000Z",
+      "url": "https://greasyfork.org/users/163780-tehapollo"
+    }
+  ],
+  "name": "Phill Linked In 2.0",
+  "description": "Easier Copy",
+  "url": "https://greasyfork.org/scripts/392976-phill-linked-in-2-0",
+  "code_url": "https://update.greasyfork.org/scripts/392976/Phill%20Linked%20In%2020.user.js",
+  "code_size": 6249,
+  "license": null,
+  "version": "2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

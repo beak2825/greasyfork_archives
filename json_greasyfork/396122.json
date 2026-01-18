@@ -1,0 +1,59 @@
+{
+  "id": 396122,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-06T17:18:34.000Z",
+  "code_updated_at": "2020-07-26T05:14:38.000Z",
+  "namespace": "https://greasyfork.org/ja/users/17828-amaicoffee",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 17828,
+      "name": "amaicoffee",
+      "created_at": "2015-10-12T16:34:14.000Z",
+      "url": "https://greasyfork.org/users/17828-amaicoffee",
+      "scripts": [
+        {
+          "id": 396122,
+          "daily_installs": 0,
+          "total_installs": 57,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-06T17:18:34.000Z",
+          "code_updated_at": "2020-07-26T05:14:38.000Z",
+          "namespace": "https://greasyfork.org/ja/users/17828-amaicoffee",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Narou Ranking NG",
+          "description": "小説家になろう（厳密には小説を読もう）ランキングでのNGフィルタリング機能を提供",
+          "url": "https://greasyfork.org/scripts/396122-narou-ranking-ng",
+          "code_url": "https://update.greasyfork.org/scripts/396122/Narou%20Ranking%20NG.user.js",
+          "code_size": 6551,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Narou Ranking NG",
+  "description": "小説家になろう（厳密には小説を読もう）ランキングでのNGフィルタリング機能を提供",
+  "url": "https://greasyfork.org/scripts/396122-narou-ranking-ng",
+  "code_url": "https://update.greasyfork.org/scripts/396122/Narou%20Ranking%20NG.user.js",
+  "code_size": 6551,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393752,
+    "daily_installs": 0,
+    "total_installs": 847,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-15T04:55:17.000Z",
+    "code_updated_at": "2020-06-10T07:40:41.000Z",
+    "namespace": "xcxcli",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 407051,
+        "name": "xcxcli",
+        "created_at": "2019-11-28T00:56:16.000Z",
+        "url": "https://greasyfork.org/users/407051-xcxcli"
+      }
+    ],
+    "name": "Fast-Codeforces",
+    "description": "Make Codeforces convenient",
+    "url": "https://greasyfork.org/scripts/393752-fast-codeforces",
+    "code_url": "https://update.greasyfork.org/scripts/393752/Fast-Codeforces.user.js",
+    "code_size": 23078,
+    "license": null,
+    "version": "0.3.5.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

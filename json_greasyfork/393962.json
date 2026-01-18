@@ -1,0 +1,59 @@
+{
+  "id": 393962,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-19T11:40:00.000Z",
+  "code_updated_at": "2019-12-19T11:39:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 423621,
+      "name": "charlzyx",
+      "created_at": "2019-12-19T11:10:18.000Z",
+      "url": "https://greasyfork.org/users/423621-charlzyx",
+      "scripts": [
+        {
+          "id": 393962,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-19T11:40:00.000Z",
+          "code_updated_at": "2019-12-19T11:39:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "git-scm-doc",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/393962-git-scm-doc",
+          "code_url": "https://update.greasyfork.org/scripts/393962/git-scm-doc.user.js",
+          "code_size": 790,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "git-scm-doc",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/393962-git-scm-doc",
+  "code_url": "https://update.greasyfork.org/scripts/393962/git-scm-doc.user.js",
+  "code_size": 790,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 393417,
+  "daily_installs": 0,
+  "total_installs": 813,
+  "fan_score": "59.8",
+  "good_ratings": 7,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2019-12-07T01:10:40.000Z",
+  "code_updated_at": "2025-02-03T17:22:07.000Z",
+  "namespace": "http://zequi.es",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 413001,
+      "name": "Zequi García Collantes",
+      "created_at": "2019-12-07T00:52:54.000Z",
+      "url": "https://greasyfork.org/users/413001-zequi-garc%C3%ADa-collantes",
+      "scripts": [
+        {
+          "id": 393417,
+          "daily_installs": 0,
+          "total_installs": 813,
+          "fan_score": "59.8",
+          "good_ratings": 7,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2019-12-07T01:10:40.000Z",
+          "code_updated_at": "2025-02-03T17:22:07.000Z",
+          "namespace": "http://zequi.es",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "El País - CLEANED PAGE & Sin Límite de noticias 😁",
+          "description": "Limpieza visual de ELPAIS.COM quitando publi y un montón de módulos molestos que no aportan mucho a la lectura. Además nos saltamos el Muro de nº de noticias y el Muro de Login.",
+          "url": "https://greasyfork.org/scripts/393417-el-pa%C3%ADs-cleaned-page-sin-l%C3%ADmite-de-noticias",
+          "code_url": "https://update.greasyfork.org/scripts/393417/El%20Pa%C3%ADs%20-%20CLEANED%20PAGE%20%20Sin%20L%C3%ADmite%20de%20noticias%20%F0%9F%98%81.user.js",
+          "code_size": 21086,
+          "license": "MIT License",
+          "version": "0.70",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "El País - CLEANED PAGE & Sin Límite de noticias 😁",
+  "description": "Limpieza visual de ELPAIS.COM quitando publi y un montón de módulos molestos que no aportan mucho a la lectura. Además nos saltamos el Muro de nº de noticias y el Muro de Login.",
+  "url": "https://greasyfork.org/scripts/393417-el-pa%C3%ADs-cleaned-page-sin-l%C3%ADmite-de-noticias",
+  "code_url": "https://update.greasyfork.org/scripts/393417/El%20Pa%C3%ADs%20-%20CLEANED%20PAGE%20%20Sin%20L%C3%ADmite%20de%20noticias%20%F0%9F%98%81.user.js",
+  "code_size": 21086,
+  "license": "MIT License",
+  "version": "0.70",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

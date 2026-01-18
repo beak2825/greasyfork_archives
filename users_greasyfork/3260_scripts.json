@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 396337,
+    "daily_installs": 1,
+    "total_installs": 3080,
+    "fan_score": "70.3",
+    "good_ratings": 25,
+    "ok_ratings": 2,
+    "bad_ratings": 3,
+    "created_at": "2020-02-11T20:35:35.000Z",
+    "code_updated_at": "2024-01-14T09:40:09.000Z",
+    "namespace": "driver8.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3260,
+        "name": "driver8",
+        "created_at": "2014-07-07T03:26:11.000Z",
+        "url": "https://greasyfork.org/users/3260-driver8"
+      }
+    ],
+    "name": "Instagram full-size media scroll wall",
+    "description": "Creates a scrollable wall of full-size images from any user's instagram page, \"tagged\" page, or the instagram homepage. Just click the \"Load Images\" button at the top of the list of images/posts.",
+    "url": "https://greasyfork.org/scripts/396337-instagram-full-size-media-scroll-wall",
+    "code_url": "https://update.greasyfork.org/scripts/396337/Instagram%20full-size%20media%20scroll%20wall.user.js",
+    "code_size": 24703,
+    "license": "GNU AGPLv3",
+    "version": "0.2.4.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 396087,
+    "daily_installs": 0,
+    "total_installs": 572,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-05T10:57:02.000Z",
+    "code_updated_at": "2020-02-05T12:24:40.000Z",
+    "namespace": "driver8.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3260,
+        "name": "driver8",
+        "created_at": "2014-07-07T03:26:11.000Z",
+        "url": "https://greasyfork.org/users/3260-driver8"
+      }
+    ],
+    "name": "Steam Filter Games by Geforce NOW Availability/Compatibility",
+    "description": "Adds a button to Steam Community games list pages (https://steamcommunity.com/id/<user_id>/games/?tab=all) that will filter out all games that are not supported by Geforce NOW, leaving only supported games visible.",
+    "url": "https://greasyfork.org/scripts/396087-steam-filter-games-by-geforce-now-availability-compatibility",
+    "code_url": "https://update.greasyfork.org/scripts/396087/Steam%20Filter%20Games%20by%20Geforce%20NOW%20AvailabilityCompatibility.user.js",
+    "code_size": 2631,
+    "license": null,
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

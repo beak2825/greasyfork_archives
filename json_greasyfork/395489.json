@@ -1,0 +1,34 @@
+{
+  "id": 395489,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-21T05:54:33.000Z",
+  "code_updated_at": "2022-04-20T16:49:05.000Z",
+  "namespace": "YTV",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 82165,
+      "name": "АликФильма",
+      "created_at": "2016-11-23T04:38:40.000Z",
+      "url": "https://greasyfork.org/users/82165-%D0%B0%D0%BB%D0%B8%D0%BA%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0",
+      "scripts": []
+    }
+  ],
+  "name": "Видео в окно",
+  "description": "Maximize all video players",
+  "url": "https://greasyfork.org/scripts/395489-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE-%D0%B2-%D0%BE%D0%BA%D0%BD%D0%BE",
+  "code_url": "https://update.greasyfork.org/scripts/395489/%D0%92%D0%B8%D0%B4%D0%B5%D0%BE%20%D0%B2%20%D0%BE%D0%BA%D0%BD%D0%BE.user.js",
+  "code_size": 23255,
+  "license": null,
+  "version": "0.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393726,
+    "daily_installs": 0,
+    "total_installs": 249,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-14T15:17:07.000Z",
+    "code_updated_at": "2019-12-14T15:17:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 232287,
+        "name": "Daniel Liu",
+        "created_at": "2018-12-13T05:49:49.000Z",
+        "url": "https://greasyfork.org/users/232287-daniel-liu"
+      }
+    ],
+    "name": "批量删除发布的微博",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/393726-%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E5%8F%91%E5%B8%83%E7%9A%84%E5%BE%AE%E5%8D%9A",
+    "code_url": "https://update.greasyfork.org/scripts/393726/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E5%8F%91%E5%B8%83%E7%9A%84%E5%BE%AE%E5%8D%9A.user.js",
+    "code_size": 831,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

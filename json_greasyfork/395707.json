@@ -1,0 +1,66 @@
+{
+  "id": 395707,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-27T13:18:18.000Z",
+  "code_updated_at": "2020-04-06T21:00:15.000Z",
+  "namespace": "https://greasyfork.org/users/438750",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 438750,
+      "name": "ITKewai",
+      "created_at": "2020-01-27T13:13:44.000Z",
+      "url": "https://greasyfork.org/users/438750-itkewai",
+      "scripts": []
+    },
+    {
+      "id": 454452,
+      "name": "fabio1999ita",
+      "created_at": "2020-03-05T10:52:29.000Z",
+      "url": "https://greasyfork.org/users/454452-fabio1999ita",
+      "scripts": [
+        {
+          "id": 397675,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-03-10T16:00:44.000Z",
+          "code_updated_at": "2020-03-10T19:23:38.000Z",
+          "namespace": "https://greasyfork.org/users/454452",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DOSID LOGIN",
+          "description": "Add a button for DO sid login!",
+          "url": "https://greasyfork.org/scripts/397675-dosid-login",
+          "code_url": "https://update.greasyfork.org/scripts/397675/DOSID%20LOGIN.user.js",
+          "code_size": 3564,
+          "license": null,
+          "version": "0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DOPE HELPER + DOSID",
+  "description": "Add a button for DO sid login!",
+  "url": "https://greasyfork.org/scripts/395707-dope-helper-dosid",
+  "code_url": "https://update.greasyfork.org/scripts/395707/DOPE%20HELPER%20%2B%20DOSID.user.js",
+  "code_size": 24264,
+  "license": null,
+  "version": "0.3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 392505,
+    "daily_installs": 0,
+    "total_installs": 121,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-16T14:00:55.000Z",
+    "code_updated_at": "2021-04-10T05:10:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 304696,
+        "name": "ruanimal",
+        "created_at": "2019-05-25T13:31:29.000Z",
+        "url": "https://greasyfork.org/users/304696-ruanimal"
+      }
+    ],
+    "name": "36dm下载链接提取",
+    "description": "提取36dm网站的动漫列表的下载链接",
+    "url": "https://greasyfork.org/scripts/392505-36dm%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/392505/36dm%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96.user.js",
+    "code_size": 3317,
+    "license": null,
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 394607,
+    "daily_installs": 1,
+    "total_installs": 11729,
+    "fan_score": "87.7",
+    "good_ratings": 34,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2020-01-04T04:01:27.000Z",
+    "code_updated_at": "2020-01-04T04:05:11.000Z",
+    "namespace": "http://v.youku.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 432141,
+        "name": "Neal Xu",
+        "created_at": "2020-01-04T03:52:11.000Z",
+        "url": "https://greasyfork.org/users/432141-neal-xu"
+      }
+    ],
+    "name": "Youku HD",
+    "description": "解开优酷 VIP 专属, 蓝光HD HDR, 移除视频水印",
+    "url": "https://greasyfork.org/scripts/394607-youku-hd",
+    "code_url": "https://update.greasyfork.org/scripts/394607/Youku%20HD.user.js",
+    "code_size": 1076,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 396953,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-26T20:32:04.000Z",
+  "code_updated_at": "2020-02-26T20:32:03.000Z",
+  "namespace": "famousblackb",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 450365,
+      "name": "FamousBlackB",
+      "created_at": "2020-02-26T20:24:45.000Z",
+      "url": "https://greasyfork.org/users/450365-famousblackb",
+      "scripts": [
+        {
+          "id": 396953,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-02-26T20:32:04.000Z",
+          "code_updated_at": "2020-02-26T20:32:03.000Z",
+          "namespace": "famousblackb",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "a-parser.com API python3",
+          "description": "Python3 API for a-parser.com API",
+          "url": "https://greasyfork.org/scripts/396953-a-parser-com-api-python3",
+          "code_url": "https://update.greasyfork.org/scripts/396953/a-parsercom%20API%20python3.user.js",
+          "code_size": 634,
+          "license": "MIT License",
+          "version": "1.00",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "a-parser.com API python3",
+  "description": "Python3 API for a-parser.com API",
+  "url": "https://greasyfork.org/scripts/396953-a-parser-com-api-python3",
+  "code_url": "https://update.greasyfork.org/scripts/396953/a-parsercom%20API%20python3.user.js",
+  "code_size": 634,
+  "license": "MIT License",
+  "version": "1.00",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

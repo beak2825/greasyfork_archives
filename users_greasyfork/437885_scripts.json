@@ -1,0 +1,68 @@
+[
+  {
+    "id": 395788,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-29T09:20:19.000Z",
+    "code_updated_at": "2020-01-31T11:28:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 437885,
+        "name": "AnastasiaMukhlynina",
+        "created_at": "2020-01-23T18:29:58.000Z",
+        "url": "https://greasyfork.org/users/437885-anastasiamukhlynina"
+      }
+    ],
+    "name": "wiki References remover",
+    "description": "ru.wikipedia.org References remover",
+    "url": "https://greasyfork.org/scripts/395788-wiki-references-remover",
+    "code_url": "https://update.greasyfork.org/scripts/395788/wiki%20References%20remover.user.js",
+    "code_size": 1566,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 395587,
+    "daily_installs": 0,
+    "total_installs": 242,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-23T18:32:10.000Z",
+    "code_updated_at": "2020-01-28T17:44:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 437885,
+        "name": "AnastasiaMukhlynina",
+        "created_at": "2020-01-23T18:29:58.000Z",
+        "url": "https://greasyfork.org/users/437885-anastasiamukhlynina"
+      }
+    ],
+    "name": "Youtube Downloader",
+    "description": "Youtube video Downloader",
+    "url": "https://greasyfork.org/scripts/395587-youtube-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/395587/Youtube%20Downloader.user.js",
+    "code_size": 1437,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

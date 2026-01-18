@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393572,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-11T04:32:23.000Z",
+    "code_updated_at": "2019-12-19T09:15:43.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 416078,
+        "name": "TianyiLi",
+        "created_at": "2019-12-11T04:20:32.000Z",
+        "url": "https://greasyfork.org/users/416078-tianyili"
+      }
+    ],
+    "name": "github outline - github.com",
+    "description": "Get Readme file outline at github",
+    "url": "https://greasyfork.org/scripts/393572-github-outline-github-com",
+    "code_url": "https://update.greasyfork.org/scripts/393572/github%20outline%20-%20githubcom.user.js",
+    "code_size": 3560,
+    "license": null,
+    "version": "1.05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

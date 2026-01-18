@@ -1,0 +1,34 @@
+{
+  "id": 393447,
+  "daily_installs": 0,
+  "total_installs": 64,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-07T19:53:34.000Z",
+  "code_updated_at": "2019-12-07T20:26:40.000Z",
+  "namespace": "https://greasyfork.org/zh-TW/scripts/393447",
+  "support_url": "https://github.com/plko/Bahamut-webBBS-Add-on",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 413243,
+      "name": "plko",
+      "created_at": "2019-12-07T19:40:28.000Z",
+      "url": "https://greasyfork.org/users/413243-plko",
+      "scripts": []
+    }
+  ],
+  "name": "Bahamut webBBS Add-on",
+  "description": "巴哈姆特webBBS版用的黑名單插件，修改自PttChrome-and-term.ptt.cc-Enhanced-Add-on",
+  "url": "https://greasyfork.org/scripts/393447-bahamut-webbbs-add-on",
+  "code_url": "https://update.greasyfork.org/scripts/393447/Bahamut%20webBBS%20Add-on.user.js",
+  "code_size": 26399,
+  "license": "MIT License",
+  "version": "0.9b",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

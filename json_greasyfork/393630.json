@@ -1,0 +1,34 @@
+{
+  "id": 393630,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-12T10:39:32.000Z",
+  "code_updated_at": "2019-12-12T10:39:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 398252,
+      "name": "Omer Tapdiqov",
+      "created_at": "2019-11-15T15:46:21.000Z",
+      "url": "https://greasyfork.org/users/398252-omer-tapdiqov",
+      "scripts": []
+    }
+  ],
+  "name": "Icon-6 (Tower Freeze)",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/393630-icon-6-tower-freeze",
+  "code_url": "https://update.greasyfork.org/scripts/393630/Icon-6%20%28Tower%20Freeze%29.user.js",
+  "code_size": 6842,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

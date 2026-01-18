@@ -1,0 +1,33 @@
+{
+  "id": 392398,
+  "daily_installs": 0,
+  "total_installs": 584,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-14T07:30:26.000Z",
+  "code_updated_at": "2019-11-14T08:09:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 186689,
+      "name": "CookieIco",
+      "created_at": "2018-05-20T02:29:17.000Z",
+      "url": "https://greasyfork.org/users/186689-cookieico"
+    }
+  ],
+  "name": "喵国建设者作弊器 Kittens Game Cheat",
+  "description": "可以添加任意数量的资源，注意，这将极大地破坏您的游戏体验。You can add as many resources as you like in the game, and this will greatly ruin your gaming experience.",
+  "url": "https://greasyfork.org/scripts/392398-%E5%96%B5%E5%9B%BD%E5%BB%BA%E8%AE%BE%E8%80%85%E4%BD%9C%E5%BC%8A%E5%99%A8-kittens-game-cheat",
+  "code_url": "https://update.greasyfork.org/scripts/392398/%E5%96%B5%E5%9B%BD%E5%BB%BA%E8%AE%BE%E8%80%85%E4%BD%9C%E5%BC%8A%E5%99%A8%20Kittens%20Game%20Cheat.user.js",
+  "code_size": 3603,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

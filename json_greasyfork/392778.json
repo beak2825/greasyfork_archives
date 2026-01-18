@@ -1,0 +1,59 @@
+{
+  "id": 392778,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-22T12:26:41.000Z",
+  "code_updated_at": "2019-11-22T12:26:40.000Z",
+  "namespace": "AO3-flash",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 9889,
+      "name": "flash",
+      "created_at": "2015-03-22T09:14:21.000Z",
+      "url": "https://greasyfork.org/users/9889-flash",
+      "scripts": [
+        {
+          "id": 30108,
+          "daily_installs": 0,
+          "total_installs": 128,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2017-05-29T22:51:40.000Z",
+          "code_updated_at": "2017-05-29T22:58:59.000Z",
+          "namespace": "localhost",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TP-Link Router Interface Enhancer",
+          "description": "Adds an extra \"Client Name\" column or information to several sub-pages of the TP-Link router web-interface.",
+          "url": "https://greasyfork.org/scripts/30108-tp-link-router-interface-enhancer",
+          "code_url": "https://update.greasyfork.org/scripts/30108/TP-Link%20Router%20Interface%20Enhancer.user.js",
+          "code_size": 2693,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AO3: Chapter Links Cleaner",
+  "description": "Removes anchors from previous/next button links, so they can show as visited on the full-page chapter index.",
+  "url": "https://greasyfork.org/scripts/392778-ao3-chapter-links-cleaner",
+  "code_url": "https://update.greasyfork.org/scripts/392778/AO3%3A%20Chapter%20Links%20Cleaner.user.js",
+  "code_size": 579,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

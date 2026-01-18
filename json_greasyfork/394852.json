@@ -1,0 +1,59 @@
+{
+  "id": 394852,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-09T02:13:11.000Z",
+  "code_updated_at": "2020-01-09T02:13:10.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 433532,
+      "name": "luis morales",
+      "created_at": "2020-01-09T02:12:10.000Z",
+      "url": "https://greasyfork.org/users/433532-luis-morales",
+      "scripts": [
+        {
+          "id": 394852,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-01-09T02:13:11.000Z",
+          "code_updated_at": "2020-01-09T02:13:10.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "New script - thelistmaker.net",
+          "description": "1/8/2020, 6:02:31 PM",
+          "url": "https://greasyfork.org/scripts/394852-new-script-thelistmaker-net",
+          "code_url": "https://update.greasyfork.org/scripts/394852/New%20script%20-%20thelistmakernet.user.js",
+          "code_size": 310,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "New script - thelistmaker.net",
+  "description": "1/8/2020, 6:02:31 PM",
+  "url": "https://greasyfork.org/scripts/394852-new-script-thelistmaker-net",
+  "code_url": "https://update.greasyfork.org/scripts/394852/New%20script%20-%20thelistmakernet.user.js",
+  "code_size": 310,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 394201,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-26T01:08:27.000Z",
+    "code_updated_at": "2019-12-26T02:30:12.000Z",
+    "namespace": "https://github.com/cxumol/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428487,
+        "name": "cxumol",
+        "created_at": "2019-12-26T01:07:15.000Z",
+        "url": "https://greasyfork.org/users/428487-cxumol"
+      }
+    ],
+    "name": "V2EX favorates collection extractor",
+    "description": "lazy livid did not implement https://www.v2ex.com/t/95800 ; please read https://www.v2ex.com/t/632448 for instruction",
+    "url": "https://greasyfork.org/scripts/394201-v2ex-favorates-collection-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/394201/V2EX%20favorates%20collection%20extractor.user.js",
+    "code_size": 5225,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

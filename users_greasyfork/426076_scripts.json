@@ -1,0 +1,35 @@
+[
+  {
+    "id": 394023,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-21T03:05:30.000Z",
+    "code_updated_at": "2020-01-05T08:20:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 426076,
+        "name": "wanlitest",
+        "created_at": "2019-12-20T09:42:34.000Z",
+        "url": "https://greasyfork.org/users/426076-wanlitest"
+      }
+    ],
+    "name": "伯俊ERP助手",
+    "description": "在页面右侧添加悬浮收藏夹，一键复制店仓信息，一键填充员工或者用户所需信息，填充密码，重置密码，重置日结时间",
+    "url": "https://greasyfork.org/scripts/394023-%E4%BC%AF%E4%BF%8Aerp%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/394023/%E4%BC%AF%E4%BF%8AERP%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 43937,
+    "license": null,
+    "version": "0.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

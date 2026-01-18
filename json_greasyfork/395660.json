@@ -1,0 +1,59 @@
+{
+  "id": 395660,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-25T19:34:27.000Z",
+  "code_updated_at": "2020-01-25T19:34:27.000Z",
+  "namespace": "https://greasyfork.org/users/438347",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 438347,
+      "name": "Boanerges",
+      "created_at": "2020-01-25T19:28:06.000Z",
+      "url": "https://greasyfork.org/users/438347-boanerges",
+      "scripts": [
+        {
+          "id": 395660,
+          "daily_installs": 0,
+          "total_installs": 34,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-01-25T19:34:27.000Z",
+          "code_updated_at": "2020-01-25T19:34:27.000Z",
+          "namespace": "https://greasyfork.org/users/438347",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "8kun NSFW Remover",
+          "description": "Removes NSFW boards from the board list on 8chan.",
+          "url": "https://greasyfork.org/scripts/395660-8kun-nsfw-remover",
+          "code_url": "https://update.greasyfork.org/scripts/395660/8kun%20NSFW%20Remover.user.js",
+          "code_size": 624,
+          "license": "GPLv3",
+          "version": "0.0.1.20200125193427",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "8kun NSFW Remover",
+  "description": "Removes NSFW boards from the board list on 8chan.",
+  "url": "https://greasyfork.org/scripts/395660-8kun-nsfw-remover",
+  "code_url": "https://update.greasyfork.org/scripts/395660/8kun%20NSFW%20Remover.user.js",
+  "code_size": 624,
+  "license": "GPLv3",
+  "version": "0.0.1.20200125193427",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

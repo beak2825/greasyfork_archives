@@ -1,0 +1,33 @@
+{
+  "id": 393348,
+  "daily_installs": 0,
+  "total_installs": 567,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-05T15:28:56.000Z",
+  "code_updated_at": "2025-02-19T01:21:43.000Z",
+  "namespace": "https://github.com/maiersk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 412631,
+      "name": "maiersk",
+      "created_at": "2019-12-05T15:09:07.000Z",
+      "url": "https://greasyfork.org/users/412631-maiersk"
+    }
+  ],
+  "name": "vipexam no ip limit",
+  "description": "中科vipexam, umajor, joblib no ip limit",
+  "url": "https://greasyfork.org/scripts/393348-vipexam-no-ip-limit",
+  "code_url": "https://update.greasyfork.org/scripts/393348/vipexam%20no%20ip%20limit.user.js",
+  "code_size": 6963,
+  "license": "MIT License",
+  "version": "0.2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

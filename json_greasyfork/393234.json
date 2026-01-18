@@ -1,0 +1,33 @@
+{
+  "id": 393234,
+  "daily_installs": 0,
+  "total_installs": 204,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-03T15:00:41.000Z",
+  "code_updated_at": "2021-01-07T17:47:22.000Z",
+  "namespace": "knoa.jp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 78927,
+      "name": "knoa",
+      "created_at": "2016-11-09T15:09:24.000Z",
+      "url": "https://greasyfork.org/users/78927-knoa"
+    }
+  ],
+  "name": "SHOWROOM ちょこっとツール",
+  "description": "SHOWROOM をちょこっとだけ使いやすくします。",
+  "url": "https://greasyfork.org/scripts/393234-showroom-%E3%81%A1%E3%82%87%E3%81%93%E3%81%A3%E3%81%A8%E3%83%84%E3%83%BC%E3%83%AB",
+  "code_url": "https://update.greasyfork.org/scripts/393234/SHOWROOM%20%E3%81%A1%E3%82%87%E3%81%93%E3%81%A3%E3%81%A8%E3%83%84%E3%83%BC%E3%83%AB.user.js",
+  "code_size": 78198,
+  "license": null,
+  "version": "0.4.5",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

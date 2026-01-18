@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 392510,
+    "daily_installs": 0,
+    "total_installs": 556,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-16T16:39:38.000Z",
+    "code_updated_at": "2019-12-25T17:17:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 156006,
+        "name": "Alex Cornellier",
+        "created_at": "2017-10-14T18:52:11.000Z",
+        "url": "https://greasyfork.org/users/156006-alex-cornellier"
+      }
+    ],
+    "name": "Duolingo mods",
+    "description": "Duolingo keyboard shortcuts",
+    "url": "https://greasyfork.org/scripts/392510-duolingo-mods",
+    "code_url": "https://update.greasyfork.org/scripts/392510/Duolingo%20mods.user.js",
+    "code_size": 4440,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

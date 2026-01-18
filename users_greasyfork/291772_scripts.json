@@ -96,6 +96,39 @@
     "version": "2020.01.30",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 394494,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-01T04:18:41.000Z",
+    "code_updated_at": "2020-01-01T04:18:41.000Z",
+    "namespace": "Brush-JIM",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 291772,
+        "name": "Brush-JIM",
+        "created_at": "2019-04-13T09:26:03.000Z",
+        "url": "https://greasyfork.org/users/291772-brush-jim"
+      }
+    ],
+    "name": "优学院答题",
+    "description": "优学院自动答题，配合优学院看视频脚本使用",
+    "url": "https://greasyfork.org/scripts/394494-%E4%BC%98%E5%AD%A6%E9%99%A2%E7%AD%94%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/394494/774223/%E4%BC%98%E5%AD%A6%E9%99%A2%E7%AD%94%E9%A2%98.js",
+    "code_size": 9787,
+    "license": null,
+    "version": "2020.01.01",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

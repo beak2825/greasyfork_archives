@@ -1,0 +1,33 @@
+{
+  "id": 395455,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-20T07:26:11.000Z",
+  "code_updated_at": "2020-03-27T16:36:55.000Z",
+  "namespace": "tuxuuman:intercon.io:ac",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 153300,
+      "name": "tuxuuman",
+      "created_at": "2017-09-20T04:45:40.000Z",
+      "url": "https://greasyfork.org/users/153300-tuxuuman"
+    }
+  ],
+  "name": "[app.intercom.io] Поиск заданий",
+  "description": "Автоматический поиск и принятия заданий",
+  "url": "https://greasyfork.org/scripts/395455-app-intercom-io-%D0%BF%D0%BE%D0%B8%D1%81%D0%BA-%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B9",
+  "code_url": "https://update.greasyfork.org/scripts/395455/%5Bappintercomio%5D%20%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B9.user.js",
+  "code_size": 5134,
+  "license": null,
+  "version": "0.2.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

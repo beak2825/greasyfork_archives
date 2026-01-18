@@ -1,0 +1,35 @@
+[
+  {
+    "id": 395380,
+    "daily_installs": 0,
+    "total_installs": 82,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-18T15:13:48.000Z",
+    "code_updated_at": "2020-01-18T15:16:02.000Z",
+    "namespace": "https://greasyfork.org/users/4606",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4606,
+        "name": "fiveplusone",
+        "created_at": "2014-08-20T23:35:46.000Z",
+        "url": "https://greasyfork.org/users/4606-fiveplusone"
+      }
+    ],
+    "name": "turkopticon with HIT Info autopopulate",
+    "description": "This version of the Turkopticon script auto-populates \"HIT ID\" and \"HIT Name\" when possible",
+    "url": "https://greasyfork.org/scripts/395380-turkopticon-with-hit-info-autopopulate",
+    "code_url": "https://update.greasyfork.org/scripts/395380/turkopticon%20with%20HIT%20Info%20autopopulate.user.js",
+    "code_size": 8387,
+    "license": null,
+    "version": "2020.01.18.1420",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396288,
+    "daily_installs": 0,
+    "total_installs": 310,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-10T13:48:33.000Z",
+    "code_updated_at": "2020-06-09T03:00:26.000Z",
+    "namespace": "undefined",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443491,
+        "name": "fang New",
+        "created_at": "2020-02-10T13:43:29.000Z",
+        "url": "https://greasyfork.org/users/443491-fang-new"
+      }
+    ],
+    "name": "原页面打开",
+    "description": "强制哔哩哔哩的链接在原页面打开",
+    "url": "https://greasyfork.org/scripts/396288-%E5%8E%9F%E9%A1%B5%E9%9D%A2%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/396288/%E5%8E%9F%E9%A1%B5%E9%9D%A2%E6%89%93%E5%BC%80.user.js",
+    "code_size": 683,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

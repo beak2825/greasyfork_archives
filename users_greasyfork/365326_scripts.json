@@ -1,0 +1,101 @@
+[
+  {
+    "id": 394053,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-21T21:22:29.000Z",
+    "code_updated_at": "2019-12-21T21:22:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 365326,
+        "name": "ankifyh",
+        "created_at": "2019-09-05T15:37:01.000Z",
+        "url": "https://greasyfork.org/users/365326-ankifyh"
+      }
+    ],
+    "name": "自动点击下一页(本人修改版)",
+    "description": "滚动页面接近底部时自动拼接下一页; 适用于 谷歌/百度, 其他各类需要手动点击\"下一页/下一章/下一篇\"按钮的网站",
+    "url": "https://greasyfork.org/scripts/394053-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E9%A1%B5-%E6%9C%AC%E4%BA%BA%E4%BF%AE%E6%94%B9%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/394053/%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E9%A1%B5%28%E6%9C%AC%E4%BA%BA%E4%BF%AE%E6%94%B9%E7%89%88%29.user.js",
+    "code_size": 3666,
+    "license": null,
+    "version": "0.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 394033,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-21T07:28:28.000Z",
+    "code_updated_at": "2019-12-21T07:53:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 365326,
+        "name": "ankifyh",
+        "created_at": "2019-09-05T15:37:01.000Z",
+        "url": "https://greasyfork.org/users/365326-ankifyh"
+      }
+    ],
+    "name": "页面打开后向下滚动一段距离",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/394033-%E9%A1%B5%E9%9D%A2%E6%89%93%E5%BC%80%E5%90%8E%E5%90%91%E4%B8%8B%E6%BB%9A%E5%8A%A8%E4%B8%80%E6%AE%B5%E8%B7%9D%E7%A6%BB",
+    "code_url": "https://update.greasyfork.org/scripts/394033/%E9%A1%B5%E9%9D%A2%E6%89%93%E5%BC%80%E5%90%8E%E5%90%91%E4%B8%8B%E6%BB%9A%E5%8A%A8%E4%B8%80%E6%AE%B5%E8%B7%9D%E7%A6%BB.user.js",
+    "code_size": 386,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 393996,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-20T15:26:47.000Z",
+    "code_updated_at": "2019-12-20T15:26:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 365326,
+        "name": "ankifyh",
+        "created_at": "2019-09-05T15:37:01.000Z",
+        "url": "https://greasyfork.org/users/365326-ankifyh"
+      }
+    ],
+    "name": "所有小写字母全部变大写",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/393996-%E6%89%80%E6%9C%89%E5%B0%8F%E5%86%99%E5%AD%97%E6%AF%8D%E5%85%A8%E9%83%A8%E5%8F%98%E5%A4%A7%E5%86%99",
+    "code_url": "https://update.greasyfork.org/scripts/393996/%E6%89%80%E6%9C%89%E5%B0%8F%E5%86%99%E5%AD%97%E6%AF%8D%E5%85%A8%E9%83%A8%E5%8F%98%E5%A4%A7%E5%86%99.user.js",
+    "code_size": 1528,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

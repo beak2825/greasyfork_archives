@@ -1,0 +1,34 @@
+{
+  "id": 396098,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-05T20:27:11.000Z",
+  "code_updated_at": "2020-02-13T20:32:20.000Z",
+  "namespace": "redcore.com.br",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 433250,
+      "name": "andrpedro",
+      "created_at": "2020-01-08T02:27:57.000Z",
+      "url": "https://greasyfork.org/users/433250-andrpedro",
+      "scripts": []
+    }
+  ],
+  "name": "P&W - Better CSS",
+  "description": "Politics and War - Better CSS.",
+  "url": "https://greasyfork.org/scripts/396098-p-w-better-css",
+  "code_url": "https://update.greasyfork.org/scripts/396098/PW%20-%20Better%20CSS.user.js",
+  "code_size": 2445,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

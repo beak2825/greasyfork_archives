@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392648,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-19T16:34:51.000Z",
+    "code_updated_at": "2019-11-19T16:34:51.000Z",
+    "namespace": "dex.gos",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45944,
+        "name": "Dex",
+        "created_at": "2016-05-28T04:13:46.000Z",
+        "url": "https://greasyfork.org/users/45944-dex"
+      }
+    ],
+    "name": "Gates of Survival - Boost Box Maintainer",
+    "description": "Does stuff with the collapsable boost box in the game. Right now that just means saving, and continuously re-applying, the collapsed (or not) state of the box.",
+    "url": "https://greasyfork.org/scripts/392648-gates-of-survival-boost-box-maintainer",
+    "code_url": "https://update.greasyfork.org/scripts/392648/Gates%20of%20Survival%20-%20Boost%20Box%20Maintainer.user.js",
+    "code_size": 4273,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 395876,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-31T05:59:50.000Z",
+    "code_updated_at": "2020-01-31T05:59:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 439929,
+        "name": "дима розуменко",
+        "created_at": "2020-01-31T05:56:40.000Z",
+        "url": "https://greasyfork.org/users/439929-%D0%B4%D0%B8%D0%BC%D0%B0-%D1%80%D0%BE%D0%B7%D1%83%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE"
+      }
+    ],
+    "name": "hibiomes top skript",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/395876-hibiomes-top-skript",
+    "code_url": "https://update.greasyfork.org/scripts/395876/hibiomes%20top%20skript.user.js",
+    "code_size": 336,
+    "license": null,
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

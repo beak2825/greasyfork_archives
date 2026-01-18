@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393175,
+    "daily_installs": 0,
+    "total_installs": 386,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-01T15:04:24.000Z",
+    "code_updated_at": "2019-12-01T15:08:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 410859,
+        "name": "Moba Voice",
+        "created_at": "2019-12-01T15:02:28.000Z",
+        "url": "https://greasyfork.org/users/410859-moba-voice"
+      }
+    ],
+    "name": "YLHBOTv2RV",
+    "description": "YouLikeHits Subscriber BOT",
+    "url": "https://greasyfork.org/scripts/393175-ylhbotv2rv",
+    "code_url": "https://update.greasyfork.org/scripts/393175/YLHBOTv2RV.user.js",
+    "code_size": 306,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

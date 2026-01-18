@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393262,
+    "daily_installs": 0,
+    "total_installs": 136,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-04T05:41:49.000Z",
+    "code_updated_at": "2019-12-04T05:41:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 97579,
+        "name": "界元",
+        "created_at": "2017-01-25T16:44:53.000Z",
+        "url": "https://greasyfork.org/users/97579-%E7%95%8C%E5%85%83"
+      }
+    ],
+    "name": "百度页脚透明显示",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/393262-%E7%99%BE%E5%BA%A6%E9%A1%B5%E8%84%9A%E9%80%8F%E6%98%8E%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/393262/%E7%99%BE%E5%BA%A6%E9%A1%B5%E8%84%9A%E9%80%8F%E6%98%8E%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 411,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

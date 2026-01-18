@@ -1,0 +1,59 @@
+{
+  "id": 394466,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-31T03:58:21.000Z",
+  "code_updated_at": "2020-01-03T04:51:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 430081,
+      "name": "TerenceCK",
+      "created_at": "2019-12-31T03:53:29.000Z",
+      "url": "https://greasyfork.org/users/430081-terenceck",
+      "scripts": [
+        {
+          "id": 394466,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-12-31T03:58:21.000Z",
+          "code_updated_at": "2020-01-03T04:51:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Replace Bright Blue Font on D365FO",
+          "description": "Replace Bright Blue Font on Dynamics 365 for Finance and Operations",
+          "url": "https://greasyfork.org/scripts/394466-replace-bright-blue-font-on-d365fo",
+          "code_url": "https://update.greasyfork.org/scripts/394466/Replace%20Bright%20Blue%20Font%20on%20D365FO.user.js",
+          "code_size": 1515,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Replace Bright Blue Font on D365FO",
+  "description": "Replace Bright Blue Font on Dynamics 365 for Finance and Operations",
+  "url": "https://greasyfork.org/scripts/394466-replace-bright-blue-font-on-d365fo",
+  "code_url": "https://update.greasyfork.org/scripts/394466/Replace%20Bright%20Blue%20Font%20on%20D365FO.user.js",
+  "code_size": 1515,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

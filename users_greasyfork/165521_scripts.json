@@ -1,0 +1,35 @@
+[
+  {
+    "id": 395632,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-25T02:38:33.000Z",
+    "code_updated_at": "2020-01-26T03:22:36.000Z",
+    "namespace": "https://greasyfork.org/users/165521",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165521,
+        "name": "Zwork101",
+        "created_at": "2018-01-04T14:34:44.000Z",
+        "url": "https://greasyfork.org/users/165521-zwork101"
+      }
+    ],
+    "name": "Add bp.tf prices to marketplace",
+    "description": "Whenever you view a marketplace item, it will list the bp.tf price",
+    "url": "https://greasyfork.org/scripts/395632-add-bp-tf-prices-to-marketplace",
+    "code_url": "https://update.greasyfork.org/scripts/395632/Add%20bptf%20prices%20to%20marketplace.user.js",
+    "code_size": 1958,
+    "license": null,
+    "version": "0.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

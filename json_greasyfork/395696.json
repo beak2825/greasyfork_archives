@@ -1,0 +1,33 @@
+{
+  "id": 395696,
+  "daily_installs": 0,
+  "total_installs": 122,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-01-27T06:47:17.000Z",
+  "code_updated_at": "2020-01-27T06:47:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 299303,
+      "name": "gzzchh",
+      "created_at": "2019-05-08T13:03:38.000Z",
+      "url": "https://greasyfork.org/users/299303-gzzchh"
+    }
+  ],
+  "name": "MCBBS Banner屏蔽",
+  "description": "广告司马",
+  "url": "https://greasyfork.org/scripts/395696-mcbbs-banner%E5%B1%8F%E8%94%BD",
+  "code_url": "https://update.greasyfork.org/scripts/395696/MCBBS%20Banner%E5%B1%8F%E8%94%BD.user.js",
+  "code_size": 377,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

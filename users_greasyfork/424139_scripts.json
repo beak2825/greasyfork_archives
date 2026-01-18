@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 393978,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-12-19T21:07:31.000Z",
+    "code_updated_at": "2019-12-19T21:07:30.000Z",
+    "namespace": "ogun@cock.li",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 424139,
+        "name": "Ogun",
+        "created_at": "2019-12-19T20:44:58.000Z",
+        "url": "https://greasyfork.org/users/424139-ogun"
+      }
+    ],
+    "name": "emerald-dl",
+    "description": "Emerald article viewer/dowloader",
+    "url": "https://greasyfork.org/scripts/393978-emerald-dl",
+    "code_url": "https://update.greasyfork.org/scripts/393978/emerald-dl.user.js",
+    "code_size": 643,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

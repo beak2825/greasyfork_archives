@@ -1,0 +1,35 @@
+[
+  {
+    "id": 395255,
+    "daily_installs": 0,
+    "total_installs": 104,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-01-16T01:42:28.000Z",
+    "code_updated_at": "2020-01-16T01:42:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 224945,
+        "name": "hlyf",
+        "created_at": "2018-11-10T09:47:48.000Z",
+        "url": "https://greasyfork.org/users/224945-hlyf"
+      }
+    ],
+    "name": "Twitch Relaoder 2000",
+    "description": "2000 byebye",
+    "url": "https://greasyfork.org/scripts/395255-twitch-relaoder-2000",
+    "code_url": "https://update.greasyfork.org/scripts/395255/Twitch%20Relaoder%202000.user.js",
+    "code_size": 2179,
+    "license": null,
+    "version": "0.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

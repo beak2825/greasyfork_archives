@@ -1,0 +1,33 @@
+{
+  "id": 396803,
+  "daily_installs": 0,
+  "total_installs": 284,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2020-02-23T23:35:22.000Z",
+  "code_updated_at": "2020-02-23T23:36:07.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/396803",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 428771,
+      "name": "jtojanen",
+      "created_at": "2019-12-26T20:13:07.000Z",
+      "url": "https://greasyfork.org/users/428771-jtojanen"
+    }
+  ],
+  "name": "XCTrails Respotter",
+  "description": "Helps to recenter XCTrails into given coordinates/geocode",
+  "url": "https://greasyfork.org/scripts/396803-xctrails-respotter",
+  "code_url": "https://update.greasyfork.org/scripts/396803/XCTrails%20Respotter.user.js",
+  "code_size": 12175,
+  "license": "The Coffeeware License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

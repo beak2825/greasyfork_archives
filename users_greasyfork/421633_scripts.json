@@ -1,0 +1,35 @@
+[
+  {
+    "id": 393898,
+    "daily_installs": 0,
+    "total_installs": 22545,
+    "fan_score": "25.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 3,
+    "created_at": "2019-12-18T10:18:46.000Z",
+    "code_updated_at": "2021-04-07T09:24:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 421633,
+        "name": "Vez Plays",
+        "created_at": "2019-12-18T10:18:04.000Z",
+        "url": "https://greasyfork.org/users/421633-vez-plays"
+      }
+    ],
+    "name": "Omega+Easy= Tricksplit, Doublesplit, AutoFeed + AutoSettings + Triplesplit + FreezeCell",
+    "description": "Show mass + dark theme, tricksplit with E or 4, triplesplit with 3, doublesplit with D or 2, faster feeding with Q, and split with 1",
+    "url": "https://greasyfork.org/scripts/393898-omega-easy-tricksplit-doublesplit-autofeed-autosettings-triplesplit-freezecell",
+    "code_url": "https://update.greasyfork.org/scripts/393898/Omega%2BEasy%3D%20Tricksplit%2C%20Doublesplit%2C%20AutoFeed%20%2B%20AutoSettings%20%2B%20Triplesplit%20%2B%20FreezeCell.user.js",
+    "code_size": 3283,
+    "license": null,
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

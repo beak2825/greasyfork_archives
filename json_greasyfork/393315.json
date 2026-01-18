@@ -1,0 +1,34 @@
+{
+  "id": 393315,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-04T23:23:46.000Z",
+  "code_updated_at": "2019-12-04T23:23:46.000Z",
+  "namespace": "https://greasyfork.org/users/191824",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 191824,
+      "name": "Denis Gusev",
+      "created_at": "2018-06-18T22:42:38.000Z",
+      "url": "https://greasyfork.org/users/191824-denis-gusev",
+      "scripts": []
+    }
+  ],
+  "name": "Подсветка очереди ДКВУ 16 цветов",
+  "description": "...",
+  "url": "https://greasyfork.org/scripts/393315-%D0%BF%D0%BE%D0%B4%D1%81%D0%B2%D0%B5%D1%82%D0%BA%D0%B0-%D0%BE%D1%87%D0%B5%D1%80%D0%B5%D0%B4%D0%B8-%D0%B4%D0%BA%D0%B2%D1%83-16-%D1%86%D0%B2%D0%B5%D1%82%D0%BE%D0%B2",
+  "code_url": "https://update.greasyfork.org/scripts/393315/%D0%9F%D0%BE%D0%B4%D1%81%D0%B2%D0%B5%D1%82%D0%BA%D0%B0%20%D0%BE%D1%87%D0%B5%D1%80%D0%B5%D0%B4%D0%B8%20%D0%94%D0%9A%D0%92%D0%A3%2016%20%D1%86%D0%B2%D0%B5%D1%82%D0%BE%D0%B2.user.js",
+  "code_size": 2924,
+  "license": null,
+  "version": "0.01",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

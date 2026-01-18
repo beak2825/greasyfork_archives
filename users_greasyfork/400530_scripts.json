@@ -1,0 +1,35 @@
+[
+  {
+    "id": 392809,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-23T06:29:57.000Z",
+    "code_updated_at": "2019-11-23T06:29:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 400530,
+        "name": "Jelly Static",
+        "created_at": "2019-11-23T06:25:21.000Z",
+        "url": "https://greasyfork.org/users/400530-jelly-static"
+      }
+    ],
+    "name": "修改Google搜索结果新页面默认打开方式",
+    "description": "通过修改搜索结果的a标签属性实现效果",
+    "url": "https://greasyfork.org/scripts/392809-%E4%BF%AE%E6%94%B9google%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%96%B0%E9%A1%B5%E9%9D%A2%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/392809/%E4%BF%AE%E6%94%B9Google%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%96%B0%E9%A1%B5%E9%9D%A2%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F.user.js",
+    "code_size": 553,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

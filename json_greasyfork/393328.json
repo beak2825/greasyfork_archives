@@ -1,0 +1,34 @@
+{
+  "id": 393328,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-05T03:25:26.000Z",
+  "code_updated_at": "2019-12-05T03:25:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 412418,
+      "name": "Godlinbupt",
+      "created_at": "2019-12-05T03:21:53.000Z",
+      "url": "https://greasyfork.org/users/412418-godlinbupt",
+      "scripts": []
+    }
+  ],
+  "name": "CodeLab Page Tour Loader",
+  "description": "加载 codelab-page-tour 启动脚本",
+  "url": "https://greasyfork.org/scripts/393328-codelab-page-tour-loader",
+  "code_url": "https://update.greasyfork.org/scripts/393328/CodeLab%20Page%20Tour%20Loader.user.js",
+  "code_size": 734,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

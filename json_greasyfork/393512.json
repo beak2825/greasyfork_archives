@@ -1,0 +1,40 @@
+{
+  "id": 393512,
+  "daily_installs": 0,
+  "total_installs": 153,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-12-09T07:34:38.000Z",
+  "code_updated_at": "2026-01-08T03:36:21.000Z",
+  "namespace": "http://ihzxy.com",
+  "support_url": "http://ihzxy.com",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 414371,
+      "name": "ihzxy-沉香",
+      "created_at": "2019-12-09T07:21:22.000Z",
+      "url": "https://greasyfork.org/users/414371-ihzxy-%E6%B2%89%E9%A6%99",
+      "scripts": []
+    },
+    {
+      "id": 1294291,
+      "name": "喜树",
+      "created_at": "2024-04-28T10:20:43.000Z",
+      "url": "https://greasyfork.org/users/1294291-%E5%96%9C%E6%A0%91"
+    }
+  ],
+  "name": "星柚助手",
+  "description": "杭州星柚--星柚综合业务平台 Chrome浏览器插件 对外系统扩展插件；",
+  "url": "https://greasyfork.org/scripts/393512-%E6%98%9F%E6%9F%9A%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/393512/%E6%98%9F%E6%9F%9A%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 135421,
+  "license": "MIT License",
+  "version": "20260108001",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 393051,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-28T15:34:27.000Z",
+  "code_updated_at": "2020-09-02T11:37:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 400154,
+      "name": "wanglin1",
+      "created_at": "2019-11-22T01:38:05.000Z",
+      "url": "https://greasyfork.org/users/400154-wanglin1",
+      "scripts": []
+    }
+  ],
+  "name": "B站视频下载",
+  "description": "B站flv视频下载",
+  "url": "https://greasyfork.org/scripts/393051-b%E7%AB%99%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/393051/B%E7%AB%99%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 5324,
+  "license": null,
+  "version": "0.7.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

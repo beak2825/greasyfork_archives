@@ -1,0 +1,35 @@
+[
+  {
+    "id": 396932,
+    "daily_installs": 0,
+    "total_installs": 77,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2020-02-26T08:58:12.000Z",
+    "code_updated_at": "2020-03-03T19:12:21.000Z",
+    "namespace": "http://sironet.eu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 450132,
+        "name": "namePlayer",
+        "created_at": "2020-02-26T08:50:59.000Z",
+        "url": "https://greasyfork.org/users/450132-nameplayer"
+      }
+    ],
+    "name": "Zap-Hosting DarkMode",
+    "description": "This is a Zap-Hosting.com Dark Theme",
+    "url": "https://greasyfork.org/scripts/396932-zap-hosting-darkmode",
+    "code_url": "https://update.greasyfork.org/scripts/396932/Zap-Hosting%20DarkMode.user.js",
+    "code_size": 7527,
+    "license": null,
+    "version": "B0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

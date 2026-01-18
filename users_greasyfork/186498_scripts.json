@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 392518,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-16T21:47:30.000Z",
+    "code_updated_at": "2021-01-16T18:16:28.000Z",
+    "namespace": "https://greasyfork.org/users/186498",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 186498,
+        "name": "Bahha",
+        "created_at": "2018-05-18T23:14:25.000Z",
+        "url": "https://greasyfork.org/users/186498-bahha"
+      }
+    ],
+    "name": "Watchseries",
+    "description": "Make watchseries great by removing one step to get to the streams",
+    "url": "https://greasyfork.org/scripts/392518-watchseries",
+    "code_url": "https://update.greasyfork.org/scripts/392518/Watchseries.user.js",
+    "code_size": 1790,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

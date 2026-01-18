@@ -1,0 +1,59 @@
+{
+  "id": 393083,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-29T08:39:38.000Z",
+  "code_updated_at": "2019-11-29T09:18:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 191220,
+      "name": "csxz",
+      "created_at": "2018-06-15T09:15:27.000Z",
+      "url": "https://greasyfork.org/users/191220-csxz",
+      "scripts": [
+        {
+          "id": 555695,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-13T09:13:44.000Z",
+          "code_updated_at": "2025-11-13T09:49:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Scope Tagger",
+          "description": "**",
+          "url": "https://greasyfork.org/scripts/555695-scope-tagger",
+          "code_url": "https://update.greasyfork.org/scripts/555695/Scope%20Tagger.user.js",
+          "code_size": 14422,
+          "license": "MIT License",
+          "version": "0.21",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CVF-add-ECCV2018",
+  "description": "when open http://openaccess.thecvf.com/menu.py, add ECCV2018.",
+  "url": "https://greasyfork.org/scripts/393083-cvf-add-eccv2018",
+  "code_url": "https://update.greasyfork.org/scripts/393083/CVF-add-ECCV2018.user.js",
+  "code_size": 699,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

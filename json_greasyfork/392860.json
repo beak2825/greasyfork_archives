@@ -1,0 +1,59 @@
+{
+  "id": 392860,
+  "daily_installs": 0,
+  "total_installs": 165,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-24T14:45:00.000Z",
+  "code_updated_at": "2019-11-24T14:45:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 400887,
+      "name": "Jiaheng",
+      "created_at": "2019-11-24T14:40:50.000Z",
+      "url": "https://greasyfork.org/users/400887-jiaheng",
+      "scripts": [
+        {
+          "id": 392860,
+          "daily_installs": 0,
+          "total_installs": 165,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-24T14:45:00.000Z",
+          "code_updated_at": "2019-11-24T14:45:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "知乎，掘金删除adblock 屏蔽提示",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/392860-%E7%9F%A5%E4%B9%8E-%E6%8E%98%E9%87%91%E5%88%A0%E9%99%A4adblock-%E5%B1%8F%E8%94%BD%E6%8F%90%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/392860/%E7%9F%A5%E4%B9%8E%EF%BC%8C%E6%8E%98%E9%87%91%E5%88%A0%E9%99%A4adblock%20%E5%B1%8F%E8%94%BD%E6%8F%90%E7%A4%BA.user.js",
+          "code_size": 794,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "知乎，掘金删除adblock 屏蔽提示",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/392860-%E7%9F%A5%E4%B9%8E-%E6%8E%98%E9%87%91%E5%88%A0%E9%99%A4adblock-%E5%B1%8F%E8%94%BD%E6%8F%90%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/392860/%E7%9F%A5%E4%B9%8E%EF%BC%8C%E6%8E%98%E9%87%91%E5%88%A0%E9%99%A4adblock%20%E5%B1%8F%E8%94%BD%E6%8F%90%E7%A4%BA.user.js",
+  "code_size": 794,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

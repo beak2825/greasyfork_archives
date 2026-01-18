@@ -1,0 +1,34 @@
+{
+  "id": 392987,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-27T09:28:35.000Z",
+  "code_updated_at": "2021-09-29T15:35:59.000Z",
+  "namespace": "HCU",
+  "support_url": "https://ea-studio.github.io/hcu-tools/richtig-gutes-zeug/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 404059,
+      "name": "karamme",
+      "created_at": "2019-11-27T09:00:38.000Z",
+      "url": "https://greasyfork.org/users/404059-karamme",
+      "scripts": []
+    }
+  ],
+  "name": "Richtig Gutes Zeug",
+  "description": "Vereinfacht die Raumbuchung über das interne Portal der HCU Hamburg (Vereinfachte Datums- und Uhrzeitwahl, Zwischenspeicherung des gewünschten Termins, Farbliche Markierungen, Weiterleitung zur gesuchten Woche) und ermöglicht einen Dialog zur Ermittlung der Emailadressen für Lehrveranstaltungen und Prüfungen.",
+  "url": "https://greasyfork.org/scripts/392987-richtig-gutes-zeug",
+  "code_url": "https://update.greasyfork.org/scripts/392987/Richtig%20Gutes%20Zeug.user.js",
+  "code_size": 23337,
+  "license": null,
+  "version": "0.3.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}
