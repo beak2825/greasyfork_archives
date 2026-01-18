@@ -2,14 +2,16 @@
 // @name         去他妈的 Coursera 反 AI Prompt
 // @name:en      Fuck Coursera Anti-AI Prompt
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  在 Coursera 页面渲染初期强行拦截并删除 AI 注入文本，防止 AI 辅助插件失效。
+// @version      0.3
+// @description  在 Coursera 页面渲染初期强行拦截并删除 AI 注入文本。
 // @description:en Automatically removes the hidden AI-prevention text injection found on Coursera.
 // @author       David
+// @match        https://www.coursera.org/*
+// @match        https://coursera.org/*
 // @match        *://*.coursera.org/*
 // @run-at       document-start
 // @grant        none
-// @license      MIT
+// @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/559437/%E5%8E%BB%E4%BB%96%E5%A6%88%E7%9A%84%20Coursera%20%E5%8F%8D%20AI%20Prompt.user.js
 // @updateURL https://update.greasyfork.org/scripts/559437/%E5%8E%BB%E4%BB%96%E5%A6%88%E7%9A%84%20Coursera%20%E5%8F%8D%20AI%20Prompt.meta.js
 // ==/UserScript==

@@ -17,6 +17,7 @@
 // @match        *://survivx.org
 // @match        *://kxs.rip/*
 // @grant        none
+// @icon         https://files.catbox.moe/onhbvw.png
 // @downloadURL https://update.greasyfork.org/scripts/557204/%5BV4%5D%20Duality%20Client.user.js
 // @updateURL https://update.greasyfork.org/scripts/557204/%5BV4%5D%20Duality%20Client.meta.js
 // ==/UserScript==

@@ -12048,6 +12048,18 @@
             this.history = {}; // itemHrid:enhancementLevel -> { buy, sell }
             this.isInitialized = false;
             this.isLoaded = false;
+            this.characterId = null;
+        }
+
+        /**
+         * Get character-specific storage key
+         * @returns {string} Storage key with character ID suffix
+         */
+        getStorageKey() {
+            if (this.characterId) {
+                return `tradeHistory_${this.characterId}`;
+            }
+            return 'tradeHistory'; // Fallback for no character ID
         }
 
         /**
@@ -12075,6 +12087,9 @@
                 return;
             }
 
+            // Get current character ID
+            this.characterId = dataManager.getCurrentCharacterId();
+
             // Load existing history from storage
             await this.loadHistory();
 
@@ -12091,7 +12106,8 @@
          */
         async loadHistory() {
             try {
-                const saved = await storage.getJSON('tradeHistory', 'settings', {});
+                const storageKey = this.getStorageKey();
+                const saved = await storage.getJSON(storageKey, 'settings', {});
                 this.history = saved || {};
                 this.isLoaded = true;
             } catch (error) {
@@ -12106,7 +12122,8 @@
          */
         async saveHistory() {
             try {
-                await storage.setJSON('tradeHistory', this.history, 'settings', true);
+                const storageKey = this.getStorageKey();
+                await storage.setJSON(storageKey, this.history, 'settings', true);
             } catch (error) {
                 console.error('[TradeHistory] Failed to save history:', error);
             }
@@ -12182,11 +12199,31 @@
             // Don't clear history data, just stop tracking
             this.isInitialized = false;
         }
+
+        /**
+         * Handle character switch - clear old data and reinitialize
+         */
+        async handleCharacterSwitch() {
+            // Clear old character's data from memory
+            this.history = {};
+            this.isLoaded = false;
+            this.isInitialized = false;
+
+            // Reinitialize with new character
+            await this.initialize();
+        }
     }
 
     // Create and export singleton instance
     const tradeHistory = new TradeHistory();
     tradeHistory.setupSettingListener();
+
+    // Setup character switch handler
+    dataManager.on('character_switched', () => {
+        if (config.getSetting('market_tradeHistory')) {
+            tradeHistory.handleCharacterSwitch();
+        }
+    });
 
     /**
      * Trade History Display Module
@@ -12457,10 +12494,10 @@
                 return '#888'; // Grey if no market data
             }
 
-            if (lastBuy < currentAsk) {
-                return config.COLOR_PROFIT; // Green - you bought cheaper
-            } else if (lastBuy > currentAsk) {
-                return config.COLOR_LOSS; // Red - you paid more
+            if (currentAsk > lastBuy) {
+                return config.COLOR_LOSS; // Red - current price is higher (worse deal now)
+            } else if (currentAsk < lastBuy) {
+                return config.COLOR_PROFIT; // Green - current price is lower (better deal now)
             } else {
                 return '#888'; // Grey - same price
             }
@@ -12477,10 +12514,10 @@
                 return '#888'; // Grey if no market data
             }
 
-            if (lastSell > currentBid) {
-                return config.COLOR_PROFIT; // Green - you sold for more
-            } else if (lastSell < currentBid) {
-                return config.COLOR_LOSS; // Red - you sold for less
+            if (currentBid > lastSell) {
+                return config.COLOR_PROFIT; // Green - current price is higher (better deal now to sell)
+            } else if (currentBid < lastSell) {
+                return config.COLOR_LOSS; // Red - current price is lower (worse deal now to sell)
             } else {
                 return '#888'; // Grey - same price
             }

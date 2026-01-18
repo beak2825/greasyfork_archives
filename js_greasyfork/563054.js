@@ -3,7 +3,7 @@
 // @namespace   MasterJohnson
 // @match       https://fairview.deadfrontier.com/*
 // @grant       unsafeWindow
-// @version     1.1
+// @version     1.2
 // @author      MasterJohnson
 // @license     MIT
 // @description Shows item market value on hover with dynamic border and auto-copy
@@ -25,7 +25,7 @@ tooltip.style.cssText = `
     pointer-events: none;
     z-index: 9999;
     display: none;
-    border: 1px solid gray; /* sharp border */
+    border: 1px solid gray;
     box-sizing: border-box;
     min-width: 100px;
     text-align: center;
@@ -76,7 +76,6 @@ class MarketHover {
                 this.tooltip.style.top  = `${e.pageY + 12}px`;
                 this.tooltip.style.display = 'block';
 
-                // Clear previous timer
                 if (this.timerId) clearInterval(this.timerId);
 
                 // Countdown for auto-copy
@@ -166,3 +165,11 @@ class MarketHover {
 setTimeout(() => {
     new MarketHover(tooltip);
 }, set_timer * 1000);
+
+// Ensure tooltip disappears if mouse is not over any item
+document.addEventListener('mousemove', e => {
+    const hoveredItem = e.target.closest('.item');
+    if (!hoveredItem) {
+        tooltip.style.display = 'none';
+    }
+});

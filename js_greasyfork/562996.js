@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DBD Detailed Match History
 // @namespace    https://github.com/Bloodpoint-Farming
-// @version      1.0.1
+// @version      1.0.2
 // @description  Changes match history to show BP/category for all players and BP/hour.
 // @author       Snoggles
 // @match        https://stats.deadbydaylight.com/match-history*
@@ -240,6 +240,8 @@
         const matchesSorted = Array.from(matchDataStore.values()).sort((a, b) => b.matchStat.matchStartTime - a.matchStat.matchStartTime);
         const currentIndex = matchesSorted.findIndex(m => m.matchStat.matchStartTime === match.matchStat.matchStartTime);
 
+        // Calc BP/hour and queue time only if last match was recent
+        // Otherwise, report time since last match and skip nonsensical BP/hour calc.
         let bpHour = null;
         let bpHourHtml = ''
         let downtimeHtml = ''
@@ -250,18 +252,28 @@
             const prevEnd = prevMatch.matchStat.matchStartTime + prevMatch.matchStat.matchDuration;
 
             const hourDiff = (currentEnd - prevEnd) / 3600;
-            if (hourDiff > 0) {
+            const hourDiffRound = Math.round(hourDiff)
+            if (hourDiff > 0 && hourDiff < 1) {
                 bpHour = Math.round(match.playerStat.bloodpointsEarned / hourDiff);
             }
 
             const downtimeSec = currentStart - prevEnd;
-            const downtimeText = downtimeSec !== null && downtimeSec >= 0 ? formatDuration(downtimeSec) : '-'
-            downtimeHtml = `
+
+            if (hourDiff < 1) {
+                const downtimeText = downtimeSec !== null && downtimeSec >= 0 ? formatDuration(downtimeSec) : '-'
+                downtimeHtml = `
                 <div class="dbd-downtime-container">
                     <span class="dbd-downtime-value">${downtimeText}</span>
                     <span class="dbd-downtime-label">between matches</span>
                 </div>
             `;
+            } else {
+                // We need to show *something* here so it's obvious why BP/hour is absent.
+                downtimeHtml = `
+                <div class="dbd-downtime-container">
+                    ${hourDiffRound} hour${hourDiffRound === 1 ? '' : 's'} since last match
+                </div>`
+            }
         }
 
 

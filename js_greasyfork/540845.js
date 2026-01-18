@@ -12,7 +12,7 @@
 // @match        *://hianime.bz/*
 // @match        *://hianime.pe/*
 // @grant        GM_openInTab
-// @version      1.2
+// @version      1.2.1
 // @license      0BSD
 // @downloadURL https://update.greasyfork.org/scripts/540845/HiAnime%20Links%2B%20%28Plus%20on%20Poster%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/540845/HiAnime%20Links%2B%20%28Plus%20on%20Poster%29.meta.js
@@ -260,37 +260,40 @@
   const title = document.getElementsByClassName('film-name')[0];
   if (!title) return;
 
+  const titleText = title?.textContent?.trim() || '';
+
+  const malLink = syncData?.mal_id
+    ? `https://myanimelist.net/anime/${syncData.mal_id}`
+    : `https://myanimelist.net/search/all?q=${titleText}&cat=all#anime`;
+
+  const anilistLink = syncData?.anilist_id
+    ? `https://anilist.co/anime/${syncData.anilist_id}`
+    : `https://anilist.co/search/anime?search=${titleText}`;
+
   if (window.location.pathname.startsWith('/watch/')) {
     const pcRight = document.querySelector('.player-controls .pc-right');
     if (!pcRight) return;
 
-    if (syncData.mal_id) {
-      const a = createLink(`https://myanimelist.net/anime/${syncData.mal_id}`, 'MyAnimeList');
-      a.style.float = 'left';
-      a.style.padding = '6px';
-      a.innerHTML = `<img width="25" height="25" src="${malBase64Img}">`;
-      pcRight.insertBefore(a, pcRight.firstChild)
-    }
+    const aMAL = createLink(malLink, 'MyAnimeList');
+    aMAL.style.float = 'left';
+    aMAL.style.padding = '6px';
+    aMAL.innerHTML = `<img width="25" height="25" src="${malBase64Img}">`;
+    pcRight.insertBefore(aMAL, pcRight.firstChild)
 
-    if (syncData.anilist_id) {
-      const a = createLink(`https://anilist.co/anime/${syncData.anilist_id}`, 'AniList');
-      a.style.float = 'left';
-      a.style.padding = '6px';
-      a.innerHTML = `<img width="25" height="25" src="${anilstBase64Img}">`;
-      pcRight.insertBefore(a, pcRight.firstChild)
-    }
+    const aAnilist = createLink(anilistLink, 'AniList');
+    aAnilist.style.float = 'left';
+    aAnilist.style.padding = '6px';
+    aAnilist.innerHTML = `<img width="25" height="25" src="${anilstBase64Img}">`;
+    pcRight.insertBefore(aAnilist, pcRight.firstChild)
+
   } else {
-    if (syncData.mal_id) {
-      const a = createLink(`https://myanimelist.net/anime/${syncData.mal_id}`, 'MyAnimeList');
-      a.innerHTML = ` <img width="25" height="25" src="${malBase64Img}">`;
-      title.appendChild(a);
-    }
+    const aMAL = createLink(malLink, 'MyAnimeList');
+    aMAL.innerHTML = ` <img width="25" height="25" src="${malBase64Img}">`;
+    title.appendChild(aMAL);
 
-    if (syncData.anilist_id) {
-      const a = createLink(`https://anilist.co/anime/${syncData.anilist_id}`, 'AniList');
-      a.innerHTML = ` <img width="25" height="25" src="${anilstBase64Img}">`;
-      title.appendChild(a);
-    }
+    const aAnilist = createLink(anilistLink, 'AniList');
+    aAnilist.innerHTML = ` <img width="25" height="25" src="${anilstBase64Img}">`;
+    title.appendChild(aAnilist);
   }
 
   /**
