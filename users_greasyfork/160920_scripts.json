@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391324,
+    "daily_installs": 1,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-18T17:07:45.000Z",
+    "code_updated_at": "2019-10-18T17:07:44.000Z",
+    "namespace": "https://greasyfork.org/de/users/160920-flo-pinguin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 160920,
+        "name": "Flo Pin",
+        "created_at": "2017-11-26T20:00:33.000Z",
+        "url": "https://greasyfork.org/users/160920-flo-pin"
+      }
+    ],
+    "name": "Random Link Follower",
+    "description": "This userscript follows random links after a specified delay (Variable delaySeconds). It is intended to be used in conjunction with my Internet Archive Saver script (But keep in mind: Internet Archive will maybe ban your IP if you save too much pages in little time). However, it can also be used for fun, to see where the links take you.",
+    "url": "https://greasyfork.org/scripts/391324-random-link-follower",
+    "code_url": "https://update.greasyfork.org/scripts/391324/Random%20Link%20Follower.user.js",
+    "code_size": 2341,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

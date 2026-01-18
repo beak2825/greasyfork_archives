@@ -1,0 +1,34 @@
+{
+  "id": 391399,
+  "daily_installs": 1,
+  "total_installs": 256,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-20T10:42:22.000Z",
+  "code_updated_at": "2019-10-20T14:51:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 389014,
+      "name": "Elliot Harrysson",
+      "created_at": "2019-10-20T10:39:04.000Z",
+      "url": "https://greasyfork.org/users/389014-elliot-harrysson",
+      "scripts": []
+    }
+  ],
+  "name": "Curse-Direct",
+  "description": "Removes the 5 second wait time for downloading on curseforge.com and instead links directly to the file.",
+  "url": "https://greasyfork.org/scripts/391399-curse-direct",
+  "code_url": "https://update.greasyfork.org/scripts/391399/Curse-Direct.user.js",
+  "code_size": 1271,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

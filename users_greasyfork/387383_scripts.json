@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391223,
+    "daily_installs": 0,
+    "total_installs": 171,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-15T15:57:57.000Z",
+    "code_updated_at": "2025-09-29T23:32:59.000Z",
+    "namespace": "https://www.sofoxcentral.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 387383,
+        "name": "TheSofox",
+        "created_at": "2019-10-15T15:54:15.000Z",
+        "url": "https://greasyfork.org/users/387383-thesofox"
+      }
+    ],
+    "name": "Furaffinity Webcomic Autoloader SX",
+    "description": "Gives you the option to load all the subsequent comic pages on a FurAffinity comic page automatically.",
+    "url": "https://greasyfork.org/scripts/391223-furaffinity-webcomic-autoloader-sx",
+    "code_url": "https://update.greasyfork.org/scripts/391223/Furaffinity%20Webcomic%20Autoloader%20SX.user.js",
+    "code_size": 2954,
+    "license": null,
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391157,
+    "daily_installs": 0,
+    "total_installs": 484,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-14T06:59:00.000Z",
+    "code_updated_at": "2024-10-13T05:20:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 386796,
+        "name": "EmeraldSlash",
+        "created_at": "2019-10-14T03:11:04.000Z",
+        "url": "https://greasyfork.org/users/386796-emeraldslash"
+      }
+    ],
+    "name": "YouTube Focus Mode",
+    "description": "Put YouTube in focus mode! Hides all unasked for content (recommendations, subscriptions, related, etc.) on the home, watch, and search results pages.",
+    "url": "https://greasyfork.org/scripts/391157-youtube-focus-mode",
+    "code_url": "https://update.greasyfork.org/scripts/391157/YouTube%20Focus%20Mode.user.js",
+    "code_size": 5143,
+    "license": null,
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

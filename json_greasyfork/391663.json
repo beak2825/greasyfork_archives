@@ -1,0 +1,59 @@
+{
+  "id": 391663,
+  "daily_installs": 0,
+  "total_installs": 493,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-27T15:52:20.000Z",
+  "code_updated_at": "2020-07-09T02:01:38.000Z",
+  "namespace": "https://greasyfork.org/pt-BR/scripts/391663-get-channel-points-twitch",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 392551,
+      "name": "Spielberg",
+      "created_at": "2019-10-27T15:49:38.000Z",
+      "url": "https://greasyfork.org/users/392551-spielberg",
+      "scripts": [
+        {
+          "id": 391663,
+          "daily_installs": 0,
+          "total_installs": 493,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-10-27T15:52:20.000Z",
+          "code_updated_at": "2020-07-09T02:01:38.000Z",
+          "namespace": "https://greasyfork.org/pt-BR/scripts/391663-get-channel-points-twitch",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Get Channel Points Twitch",
+          "description": "Script that automatically get Twitch channel point chests.",
+          "url": "https://greasyfork.org/scripts/391663-get-channel-points-twitch",
+          "code_url": "https://update.greasyfork.org/scripts/391663/Get%20Channel%20Points%20Twitch.user.js",
+          "code_size": 642,
+          "license": null,
+          "version": "1.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Get Channel Points Twitch",
+  "description": "Script that automatically get Twitch channel point chests.",
+  "url": "https://greasyfork.org/scripts/391663-get-channel-points-twitch",
+  "code_url": "https://update.greasyfork.org/scripts/391663/Get%20Channel%20Points%20Twitch.user.js",
+  "code_size": 642,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

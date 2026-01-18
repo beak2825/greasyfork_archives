@@ -1,0 +1,59 @@
+{
+  "id": 391510,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-23T17:32:55.000Z",
+  "code_updated_at": "2019-10-23T17:32:54.000Z",
+  "namespace": "http://www.turkeyforum.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 289144,
+      "name": "emre1393",
+      "created_at": "2019-04-04T12:39:39.000Z",
+      "url": "https://greasyfork.org/users/289144-emre1393",
+      "scripts": [
+        {
+          "id": 391510,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-10-23T17:32:55.000Z",
+          "code_updated_at": "2019-10-23T17:32:54.000Z",
+          "namespace": "http://www.turkeyforum.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "turkeyforum yönlendirmesiz link",
+          "description": "turkeyforum'da linklerin başındaki yönlendirme linki olan 50 karakteri siler",
+          "url": "https://greasyfork.org/scripts/391510-turkeyforum-y%C3%B6nlendirmesiz-link",
+          "code_url": "https://update.greasyfork.org/scripts/391510/turkeyforum%20y%C3%B6nlendirmesiz%20link.user.js",
+          "code_size": 890,
+          "license": null,
+          "version": "0.1",
+          "locale": "tr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "turkeyforum yönlendirmesiz link",
+  "description": "turkeyforum'da linklerin başındaki yönlendirme linki olan 50 karakteri siler",
+  "url": "https://greasyfork.org/scripts/391510-turkeyforum-y%C3%B6nlendirmesiz-link",
+  "code_url": "https://update.greasyfork.org/scripts/391510/turkeyforum%20y%C3%B6nlendirmesiz%20link.user.js",
+  "code_size": 890,
+  "license": null,
+  "version": "0.1",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

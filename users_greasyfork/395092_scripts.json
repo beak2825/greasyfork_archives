@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391999,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-05T12:20:47.000Z",
+    "code_updated_at": "2019-11-07T13:16:43.000Z",
+    "namespace": "https://github.com/mestiez",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395092,
+        "name": "mestiez",
+        "created_at": "2019-11-05T12:09:37.000Z",
+        "url": "https://greasyfork.org/users/395092-mestiez"
+      }
+    ],
+    "name": "GitHub Collapse Project Columns",
+    "description": "makes project columns collapsible",
+    "url": "https://greasyfork.org/scripts/391999-github-collapse-project-columns",
+    "code_url": "https://update.greasyfork.org/scripts/391999/GitHub%20Collapse%20Project%20Columns.user.js",
+    "code_size": 2799,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

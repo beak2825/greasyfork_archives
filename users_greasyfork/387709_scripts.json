@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 391265,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-16T16:21:57.000Z",
+    "code_updated_at": "2019-10-16T23:48:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 387709,
+        "name": "MisterMan",
+        "created_at": "2019-10-16T16:19:56.000Z",
+        "url": "https://greasyfork.org/users/387709-misterman"
+      }
+    ],
+    "name": "Youtube Miniplayer Autocloser",
+    "description": "it just blows my mind that they're so insistent on making us use this that they've literally removed the option to disable it",
+    "url": "https://greasyfork.org/scripts/391265-youtube-miniplayer-autocloser",
+    "code_url": "https://update.greasyfork.org/scripts/391265/Youtube%20Miniplayer%20Autocloser.user.js",
+    "code_size": 1186,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

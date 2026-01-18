@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391672,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-27T22:25:17.000Z",
+    "code_updated_at": "2020-04-10T11:33:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 234147,
+        "name": "Marvins13",
+        "created_at": "2018-12-21T10:42:39.000Z",
+        "url": "https://greasyfork.org/users/234147-marvins13"
+      }
+    ],
+    "name": "ClearExport",
+    "description": "clears the export",
+    "url": "https://greasyfork.org/scripts/391672-clearexport",
+    "code_url": "https://update.greasyfork.org/scripts/391672/ClearExport.user.js",
+    "code_size": 430859,
+    "license": null,
+    "version": "1.6.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

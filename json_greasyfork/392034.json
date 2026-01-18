@@ -1,0 +1,33 @@
+{
+  "id": 392034,
+  "daily_installs": 0,
+  "total_installs": 1179,
+  "fan_score": "53.7",
+  "good_ratings": 10,
+  "ok_ratings": 1,
+  "bad_ratings": 2,
+  "created_at": "2019-11-05T23:35:47.000Z",
+  "code_updated_at": "2024-03-28T04:35:03.000Z",
+  "namespace": "https://skoshy.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 6185,
+      "name": "skoshy",
+      "created_at": "2014-10-20T02:42:56.000Z",
+      "url": "https://greasyfork.org/users/6185-skoshy"
+    }
+  ],
+  "name": "YouTube Hide Chat by Default",
+  "description": "Hides chat on YouTube live streams by default",
+  "url": "https://greasyfork.org/scripts/392034-youtube-hide-chat-by-default",
+  "code_url": "https://update.greasyfork.org/scripts/392034/YouTube%20Hide%20Chat%20by%20Default.user.js",
+  "code_size": 7201,
+  "license": null,
+  "version": "0.8.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

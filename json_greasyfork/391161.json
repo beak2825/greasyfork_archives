@@ -1,0 +1,59 @@
+{
+  "id": 391161,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-14T11:02:42.000Z",
+  "code_updated_at": "2019-10-14T11:02:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 386948,
+      "name": "h3l",
+      "created_at": "2019-10-14T10:54:47.000Z",
+      "url": "https://greasyfork.org/users/386948-h3l",
+      "scripts": [
+        {
+          "id": 391161,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-10-14T11:02:42.000Z",
+          "code_updated_at": "2019-10-14T11:02:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "图灵显示豆瓣链接，分数",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/391161-%E5%9B%BE%E7%81%B5%E6%98%BE%E7%A4%BA%E8%B1%86%E7%93%A3%E9%93%BE%E6%8E%A5-%E5%88%86%E6%95%B0",
+          "code_url": "https://update.greasyfork.org/scripts/391161/%E5%9B%BE%E7%81%B5%E6%98%BE%E7%A4%BA%E8%B1%86%E7%93%A3%E9%93%BE%E6%8E%A5%EF%BC%8C%E5%88%86%E6%95%B0.user.js",
+          "code_size": 1578,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "图灵显示豆瓣链接，分数",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/391161-%E5%9B%BE%E7%81%B5%E6%98%BE%E7%A4%BA%E8%B1%86%E7%93%A3%E9%93%BE%E6%8E%A5-%E5%88%86%E6%95%B0",
+  "code_url": "https://update.greasyfork.org/scripts/391161/%E5%9B%BE%E7%81%B5%E6%98%BE%E7%A4%BA%E8%B1%86%E7%93%A3%E9%93%BE%E6%8E%A5%EF%BC%8C%E5%88%86%E6%95%B0.user.js",
+  "code_size": 1578,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

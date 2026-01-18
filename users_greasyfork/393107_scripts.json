@@ -64,5 +64,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 391994,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-05T08:17:32.000Z",
+    "code_updated_at": "2019-11-08T07:02:11.000Z",
+    "namespace": "https://www.waze.com/user/editor/B4ckTrace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 393107,
+        "name": "B4ckTrace",
+        "created_at": "2019-10-29T14:49:08.000Z",
+        "url": "https://greasyfork.org/users/393107-b4cktrace"
+      }
+    ],
+    "name": "Normal RA detect",
+    "description": "Detects (Non)Normal roundabouts",
+    "url": "https://greasyfork.org/scripts/391994-normal-ra-detect",
+    "code_url": "https://update.greasyfork.org/scripts/391994/Normal%20RA%20detect.user.js",
+    "code_size": 7424,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 391794,
+    "daily_installs": 0,
+    "total_installs": 76,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-31T14:03:47.000Z",
+    "code_updated_at": "2020-01-30T15:31:48.000Z",
+    "namespace": "https://www.waze.com/user/editor/B4ckTrace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 393107,
+        "name": "B4ckTrace",
+        "created_at": "2019-10-29T14:49:08.000Z",
+        "url": "https://greasyfork.org/users/393107-b4cktrace"
+      }
+    ],
+    "name": "WME IRAN Rule Checker",
+    "description": "Checks segments and places according to waze rules in Iran",
+    "url": "https://greasyfork.org/scripts/391794-wme-iran-rule-checker",
+    "code_url": "https://update.greasyfork.org/scripts/391794/WME%20IRAN%20Rule%20Checker.user.js",
+    "code_size": 86470,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 391731,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-29T15:02:58.000Z",
+    "code_updated_at": "2019-11-28T13:29:52.000Z",
+    "namespace": "https://www.waze.com/user/editor/B4ckTrace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 393107,
+        "name": "B4ckTrace",
+        "created_at": "2019-10-29T14:49:08.000Z",
+        "url": "https://greasyfork.org/users/393107-b4cktrace"
+      }
+    ],
+    "name": "NCC City Mapper",
+    "description": "Displays city names in the WME map",
+    "url": "https://greasyfork.org/scripts/391731-ncc-city-mapper",
+    "code_url": "https://update.greasyfork.org/scripts/391731/NCC%20City%20Mapper.user.js",
+    "code_size": 26746,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,33 @@
+{
+  "id": 391201,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-15T07:07:05.000Z",
+  "code_updated_at": "2019-12-18T07:15:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 371941,
+      "name": "q3929708",
+      "created_at": "2019-09-16T08:16:39.000Z",
+      "url": "https://greasyfork.org/users/371941-q3929708"
+    }
+  ],
+  "name": "mmmmm",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/391201-mmmmm",
+  "code_url": "https://update.greasyfork.org/scripts/391201/mmmmm.user.js",
+  "code_size": 6288,
+  "license": null,
+  "version": "0.4.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

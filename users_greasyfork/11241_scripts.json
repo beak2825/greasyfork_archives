@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391008,
+    "daily_installs": 0,
+    "total_installs": 137,
+    "fan_score": "39.6",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2019-10-11T04:57:28.000Z",
+    "code_updated_at": "2019-10-11T04:57:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 11241,
+        "name": "wzol",
+        "created_at": "2015-05-10T06:44:11.000Z",
+        "url": "https://greasyfork.org/users/11241-wzol"
+      }
+    ],
+    "name": "IsThereAnyDeal with thumbnails",
+    "description": "Displaying game thumbnails next to the deals",
+    "url": "https://greasyfork.org/scripts/391008-isthereanydeal-with-thumbnails",
+    "code_url": "https://update.greasyfork.org/scripts/391008/IsThereAnyDeal%20with%20thumbnails.user.js",
+    "code_size": 2636,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

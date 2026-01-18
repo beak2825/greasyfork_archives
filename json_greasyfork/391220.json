@@ -1,0 +1,33 @@
+{
+  "id": 391220,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-15T14:29:18.000Z",
+  "code_updated_at": "2019-10-15T14:29:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 386061,
+      "name": "Cristian Macedo",
+      "created_at": "2019-10-11T21:13:37.000Z",
+      "url": "https://greasyfork.org/users/386061-cristian-macedo"
+    }
+  ],
+  "name": "QA Helper",
+  "description": "A tool to help in the Live QA process, highlighting important info for some of the QA items.",
+  "url": "https://greasyfork.org/scripts/391220-qa-helper",
+  "code_url": "https://update.greasyfork.org/scripts/391220/QA%20Helper.user.js",
+  "code_size": 9402,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

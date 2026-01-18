@@ -1,0 +1,33 @@
+{
+  "id": 391640,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-26T22:05:29.000Z",
+  "code_updated_at": "2020-02-01T22:52:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 392374,
+      "name": "kozy",
+      "created_at": "2019-10-26T21:43:23.000Z",
+      "url": "https://greasyfork.org/users/392374-kozy"
+    }
+  ],
+  "name": "Discord-Add Seconds",
+  "description": "Click on the date/time to add seconds",
+  "url": "https://greasyfork.org/scripts/391640-discord-add-seconds",
+  "code_url": "https://update.greasyfork.org/scripts/391640/Discord-Add%20Seconds.user.js",
+  "code_size": 632,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

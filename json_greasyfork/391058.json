@@ -1,0 +1,33 @@
+{
+  "id": 391058,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2019-10-11T23:57:12.000Z",
+  "code_updated_at": "2021-08-07T22:17:56.000Z",
+  "namespace": "https://greasyfork.org/users/386075",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 386075,
+      "name": "kroleg",
+      "created_at": "2019-10-11T23:45:37.000Z",
+      "url": "https://greasyfork.org/users/386075-kroleg"
+    }
+  ],
+  "name": "kroleg talkrooms",
+  "description": "Скрипт изменяет внешний вид чата и отключает плавный автоскролл",
+  "url": "https://greasyfork.org/scripts/391058-kroleg-talkrooms",
+  "code_url": "https://update.greasyfork.org/scripts/391058/kroleg%20talkrooms.user.js",
+  "code_size": 49881,
+  "license": null,
+  "version": "0.0.8",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

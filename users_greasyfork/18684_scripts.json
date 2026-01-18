@@ -262,5 +262,38 @@
     "locale": "nl",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 391783,
+    "daily_installs": 0,
+    "total_installs": 537,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-31T08:08:22.000Z",
+    "code_updated_at": "2019-12-04T11:54:42.000Z",
+    "namespace": "http://www.tomputtemans.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18684,
+        "name": "Glodenox",
+        "created_at": "2015-10-24T00:23:14.000Z",
+        "url": "https://greasyfork.org/users/18684-glodenox"
+      }
+    ],
+    "name": "WME Fix Map Object",
+    "description": "Temporary fix for the changes made in the WME internal data structure that breaks any script that interacts with the map. Also monitors and reports the usage of these copied over properties.",
+    "url": "https://greasyfork.org/scripts/391783-wme-fix-map-object",
+    "code_url": "https://update.greasyfork.org/scripts/391783/WME%20Fix%20Map%20Object.user.js",
+    "code_size": 2794,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

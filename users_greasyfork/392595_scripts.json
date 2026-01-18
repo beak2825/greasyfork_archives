@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391670,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-27T20:49:17.000Z",
+    "code_updated_at": "2019-10-27T21:00:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 392595,
+        "name": "sxul",
+        "created_at": "2019-10-27T20:44:02.000Z",
+        "url": "https://greasyfork.org/users/392595-sxul"
+      }
+    ],
+    "name": "Tracking WeiBo pictures uploader - 追踪微博图床上传者",
+    "description": "在页面右下角显示图片上传者的微博链接。",
+    "url": "https://greasyfork.org/scripts/391670-tracking-weibo-pictures-uploader-%E8%BF%BD%E8%B8%AA%E5%BE%AE%E5%8D%9A%E5%9B%BE%E5%BA%8A%E4%B8%8A%E4%BC%A0%E8%80%85",
+    "code_url": "https://update.greasyfork.org/scripts/391670/Tracking%20WeiBo%20pictures%20uploader%20-%20%E8%BF%BD%E8%B8%AA%E5%BE%AE%E5%8D%9A%E5%9B%BE%E5%BA%8A%E4%B8%8A%E4%BC%A0%E8%80%85.user.js",
+    "code_size": 1915,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

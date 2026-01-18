@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 391992,
+    "daily_installs": 0,
+    "total_installs": 167,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-05T07:43:30.000Z",
+    "code_updated_at": "2020-12-05T10:40:42.000Z",
+    "namespace": "https://greasyfork.org/users/394849",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394849,
+        "name": "4Aiur",
+        "created_at": "2019-11-04T15:43:06.000Z",
+        "url": "https://greasyfork.org/users/394849-4aiur"
+      }
+    ],
+    "name": "Acfun 自动投香蕉",
+    "description": "默认视频5蕉/文章1蕉（建议自己控制数量）",
+    "url": "https://greasyfork.org/scripts/391992-acfun-%E8%87%AA%E5%8A%A8%E6%8A%95%E9%A6%99%E8%95%89",
+    "code_url": "https://update.greasyfork.org/scripts/391992/Acfun%20%E8%87%AA%E5%8A%A8%E6%8A%95%E9%A6%99%E8%95%89.user.js",
+    "code_size": 1560,
+    "license": "GNU GPL v3",
+    "version": "1.0.3.RELEASE",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

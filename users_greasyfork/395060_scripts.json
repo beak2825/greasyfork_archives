@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391998,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-05T10:41:40.000Z",
+    "code_updated_at": "2020-02-05T15:07:06.000Z",
+    "namespace": "DARE Enhancement",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 395060,
+        "name": "quentin_sap",
+        "created_at": "2019-11-05T10:03:22.000Z",
+        "url": "https://greasyfork.org/users/395060-quentin-sap"
+      }
+    ],
+    "name": "DARE Enhancement",
+    "description": "DARE Enhancement + \"Alt + G\" to display / \"Alt + S\" to display Toast / Show Info about Notif",
+    "url": "https://greasyfork.org/scripts/391998-dare-enhancement",
+    "code_url": "https://update.greasyfork.org/scripts/391998/DARE%20Enhancement.user.js",
+    "code_size": 6703,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

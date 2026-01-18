@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391649,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-27T06:00:41.000Z",
+    "code_updated_at": "2019-10-27T06:00:41.000Z",
+    "namespace": "https://greasyfork.org/users/392432",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 392432,
+        "name": "ziv",
+        "created_at": "2019-10-27T05:57:09.000Z",
+        "url": "https://greasyfork.org/users/392432-ziv"
+      }
+    ],
+    "name": "SAG - Copy Info",
+    "description": "Adds a copy info button to account generator.",
+    "url": "https://greasyfork.org/scripts/391649-sag-copy-info",
+    "code_url": "https://update.greasyfork.org/scripts/391649/SAG%20-%20Copy%20Info.user.js",
+    "code_size": 903,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

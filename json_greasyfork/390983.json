@@ -1,0 +1,33 @@
+{
+  "id": 390983,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-10T18:32:03.000Z",
+  "code_updated_at": "2019-10-26T08:20:57.000Z",
+  "namespace": "DusanAndWarric",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 385750,
+      "name": "Vaclav Zahradnik",
+      "created_at": "2019-10-10T18:21:36.000Z",
+      "url": "https://greasyfork.org/users/385750-vaclav-zahradnik"
+    }
+  ],
+  "name": "New Inline Tier Charts+",
+  "description": "This will provide an inline tier chart for Dawn of the Dragons.Maps created by Brayden.Tiers collected by Warric. Big tab by kylereese.",
+  "url": "https://greasyfork.org/scripts/390983-new-inline-tier-charts",
+  "code_url": "https://update.greasyfork.org/scripts/390983/New%20Inline%20Tier%20Charts%2B.user.js",
+  "code_size": 16423,
+  "license": null,
+  "version": "3.7.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

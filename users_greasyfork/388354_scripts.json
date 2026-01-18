@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391320,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-18T14:39:48.000Z",
+    "code_updated_at": "2019-10-18T14:39:48.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 388354,
+        "name": "пк пк",
+        "created_at": "2019-10-18T14:36:23.000Z",
+        "url": "https://greasyfork.org/users/388354-%D0%BF%D0%BA-%D0%BF%D0%BA"
+      }
+    ],
+    "name": "Twitch box clicker",
+    "description": "Twitch box-clicker",
+    "url": "https://greasyfork.org/scripts/391320-twitch-box-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/391320/Twitch%20box%20clicker.user.js",
+    "code_size": 652,
+    "license": null,
+    "version": "0.0.1.20191018143948",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

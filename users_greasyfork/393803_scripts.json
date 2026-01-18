@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 391823,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-01T04:29:11.000Z",
+    "code_updated_at": "2019-11-01T04:35:00.000Z",
+    "namespace": "https://greasyfork.org/users/393803",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 393803,
+        "name": "drsh",
+        "created_at": "2019-11-01T04:06:22.000Z",
+        "url": "https://greasyfork.org/users/393803-drsh"
+      }
+    ],
+    "name": "Disable Gumtree Advertisement Consent",
+    "description": "Disable the automatic checking of the advertisement consent checkbox when replying to ads. This only affects visitors that are not logged in.",
+    "url": "https://greasyfork.org/scripts/391823-disable-gumtree-advertisement-consent",
+    "code_url": "https://update.greasyfork.org/scripts/391823/Disable%20Gumtree%20Advertisement%20Consent.user.js",
+    "code_size": 767,
+    "license": null,
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

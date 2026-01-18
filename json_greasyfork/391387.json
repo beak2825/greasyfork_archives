@@ -1,0 +1,59 @@
+{
+  "id": 391387,
+  "daily_installs": 1,
+  "total_installs": 16294,
+  "fan_score": "27.4",
+  "good_ratings": 6,
+  "ok_ratings": 3,
+  "bad_ratings": 6,
+  "created_at": "2019-10-20T06:39:04.000Z",
+  "code_updated_at": "2019-10-21T20:17:43.000Z",
+  "namespace": "http://yohoho.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 388919,
+      "name": "Steviegt6",
+      "created_at": "2019-10-20T06:36:42.000Z",
+      "url": "https://greasyfork.org/users/388919-steviegt6",
+      "scripts": [
+        {
+          "id": 391387,
+          "daily_installs": 1,
+          "total_installs": 16294,
+          "fan_score": "27.4",
+          "good_ratings": 6,
+          "ok_ratings": 3,
+          "bad_ratings": 6,
+          "created_at": "2019-10-20T06:39:04.000Z",
+          "code_updated_at": "2019-10-21T20:17:43.000Z",
+          "namespace": "http://yohoho.io/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Yohoho.io Cheats",
+          "description": "Cheats for the popular IO game, Yohoho.IO! Press 'p' to change your pet. 'l' to change the pet's level, 'x' to change your xp, 'i' to change your island, 'c' to change your character, and 'o' to change your coins.",
+          "url": "https://greasyfork.org/scripts/391387-yohoho-io-cheats",
+          "code_url": "https://update.greasyfork.org/scripts/391387/Yohohoio%20Cheats.user.js",
+          "code_size": 9223,
+          "license": "MIT License",
+          "version": "1.2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Yohoho.io Cheats",
+  "description": "Cheats for the popular IO game, Yohoho.IO! Press 'p' to change your pet. 'l' to change the pet's level, 'x' to change your xp, 'i' to change your island, 'c' to change your character, and 'o' to change your coins.",
+  "url": "https://greasyfork.org/scripts/391387-yohoho-io-cheats",
+  "code_url": "https://update.greasyfork.org/scripts/391387/Yohohoio%20Cheats.user.js",
+  "code_size": 9223,
+  "license": "MIT License",
+  "version": "1.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

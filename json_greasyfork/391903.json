@@ -1,0 +1,59 @@
+{
+  "id": 391903,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-02T23:33:40.000Z",
+  "code_updated_at": "2019-11-02T23:33:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 394354,
+      "name": "bob542353",
+      "created_at": "2019-11-02T21:48:07.000Z",
+      "url": "https://greasyfork.org/users/394354-bob542353",
+      "scripts": [
+        {
+          "id": 391900,
+          "daily_installs": 0,
+          "total_installs": 154,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-02T22:37:19.000Z",
+          "code_updated_at": "2019-11-02T22:42:57.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Download Reddit videos by replacing links",
+          "description": "simply replaces v.redd.it links with Myvid.download links - feel free to fork and use any other service",
+          "url": "https://greasyfork.org/scripts/391900-download-reddit-videos-by-replacing-links",
+          "code_url": "https://update.greasyfork.org/scripts/391900/Download%20Reddit%20videos%20by%20replacing%20links.user.js",
+          "code_size": 657,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "newgr 1",
+  "description": "wwwwwww",
+  "url": "https://greasyfork.org/scripts/391903-newgr-1",
+  "code_url": "https://update.greasyfork.org/scripts/391903/newgr%201.user.js",
+  "code_size": 610,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

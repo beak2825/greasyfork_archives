@@ -1,0 +1,59 @@
+{
+  "id": 391374,
+  "daily_installs": 0,
+  "total_installs": 103,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-19T19:30:13.000Z",
+  "code_updated_at": "2019-10-19T19:31:14.000Z",
+  "namespace": "https://www.ahrefs.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 388756,
+      "name": "Nickdrewe",
+      "created_at": "2019-10-19T19:25:37.000Z",
+      "url": "https://greasyfork.org/users/388756-nickdrewe",
+      "scripts": [
+        {
+          "id": 391374,
+          "daily_installs": 0,
+          "total_installs": 103,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-10-19T19:30:13.000Z",
+          "code_updated_at": "2019-10-19T19:31:14.000Z",
+          "namespace": "https://www.ahrefs.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ahrefs sticky table headings",
+          "description": "Add sticky table headings to Ahrefs.",
+          "url": "https://greasyfork.org/scripts/391374-ahrefs-sticky-table-headings",
+          "code_url": "https://update.greasyfork.org/scripts/391374/Ahrefs%20sticky%20table%20headings.user.js",
+          "code_size": 1500,
+          "license": null,
+          "version": "0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ahrefs sticky table headings",
+  "description": "Add sticky table headings to Ahrefs.",
+  "url": "https://greasyfork.org/scripts/391374-ahrefs-sticky-table-headings",
+  "code_url": "https://update.greasyfork.org/scripts/391374/Ahrefs%20sticky%20table%20headings.user.js",
+  "code_size": 1500,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

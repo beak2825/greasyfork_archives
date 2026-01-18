@@ -1,0 +1,59 @@
+{
+  "id": 391944,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-04T03:05:21.000Z",
+  "code_updated_at": "2019-11-04T19:45:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 394656,
+      "name": "PepperedJerky",
+      "created_at": "2019-11-04T03:02:25.000Z",
+      "url": "https://greasyfork.org/users/394656-pepperedjerky",
+      "scripts": [
+        {
+          "id": 391944,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-11-04T03:05:21.000Z",
+          "code_updated_at": "2019-11-04T19:45:49.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Udemy Bookmark Remover",
+          "description": "Removes bookmarks in video seekbars",
+          "url": "https://greasyfork.org/scripts/391944-udemy-bookmark-remover",
+          "code_url": "https://update.greasyfork.org/scripts/391944/Udemy%20Bookmark%20Remover.user.js",
+          "code_size": 748,
+          "license": null,
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Udemy Bookmark Remover",
+  "description": "Removes bookmarks in video seekbars",
+  "url": "https://greasyfork.org/scripts/391944-udemy-bookmark-remover",
+  "code_url": "https://update.greasyfork.org/scripts/391944/Udemy%20Bookmark%20Remover.user.js",
+  "code_size": 748,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

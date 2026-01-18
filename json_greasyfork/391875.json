@@ -1,0 +1,59 @@
+{
+  "id": 391875,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-02T11:27:20.000Z",
+  "code_updated_at": "2020-01-10T09:27:01.000Z",
+  "namespace": "dirtyWork",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 392173,
+      "name": "Hitler",
+      "created_at": "2019-10-26T03:55:06.000Z",
+      "url": "https://greasyfork.org/users/392173-hitler",
+      "scripts": [
+        {
+          "id": 395437,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-01-19T11:18:16.000Z",
+          "code_updated_at": "2020-01-22T11:22:04.000Z",
+          "namespace": "d3patch",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "d3.sp2",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/395437-d3-sp2",
+          "code_url": "https://update.greasyfork.org/scripts/395437/d3sp2.user.js",
+          "code_size": 85496,
+          "license": null,
+          "version": "0.7.1",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "d3.api",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/391875-d3-api",
+  "code_url": "https://update.greasyfork.org/scripts/391875/d3api.user.js",
+  "code_size": 85542,
+  "license": null,
+  "version": "0.0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 391025,
+    "daily_installs": 0,
+    "total_installs": 1549,
+    "fan_score": "59.8",
+    "good_ratings": 7,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2019-10-11T15:35:23.000Z",
+    "code_updated_at": "2020-02-26T20:11:24.000Z",
+    "namespace": "hbl917070",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 50637,
+        "name": "深海異音",
+        "created_at": "2016-06-23T19:34:20.000Z",
+        "url": "https://greasyfork.org/users/50637-%E6%B7%B1%E6%B5%B7%E7%95%B0%E9%9F%B3"
+      }
+    ],
+    "name": "css - YouTube 隱藏「更多影片」",
+    "description": "YouTube 隱藏「更多影片」",
+    "url": "https://greasyfork.org/scripts/391025-css-youtube-%E9%9A%B1%E8%97%8F-%E6%9B%B4%E5%A4%9A%E5%BD%B1%E7%89%87",
+    "code_url": "https://update.greasyfork.org/scripts/391025/css%20-%20YouTube%20%E9%9A%B1%E8%97%8F%E3%80%8C%E6%9B%B4%E5%A4%9A%E5%BD%B1%E7%89%87%E3%80%8D.user.js",
+    "code_size": 1903,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

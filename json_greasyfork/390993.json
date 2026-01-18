@@ -1,0 +1,33 @@
+{
+  "id": 390993,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-10T21:55:24.000Z",
+  "code_updated_at": "2023-01-13T10:13:37.000Z",
+  "namespace": "https://greasyfork.org/users/385753",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 385753,
+      "name": "scri P",
+      "created_at": "2019-10-10T18:38:37.000Z",
+      "url": "https://greasyfork.org/users/385753-scri-p"
+    }
+  ],
+  "name": "5ch id check",
+  "description": "定期更新される自前のNGあぼーん砲。荒らしと広告を消します。拡張機能 Tampermonkey を入れてから、このスクリプトをインストールします。読み込み高速化のため拡張機能 uBlock origin も入れましょう。",
+  "url": "https://greasyfork.org/scripts/390993-5ch-id-check",
+  "code_url": "https://update.greasyfork.org/scripts/390993/5ch%20id%20check.user.js",
+  "code_size": 45203,
+  "license": null,
+  "version": "2.67",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

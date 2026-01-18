@@ -1,0 +1,34 @@
+{
+  "id": 391537,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-24T09:09:32.000Z",
+  "code_updated_at": "2019-10-24T09:09:32.000Z",
+  "namespace": "https://store.steampowered.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 116798,
+      "name": "Lele Huang",
+      "created_at": "2017-04-13T13:52:03.000Z",
+      "url": "https://greasyfork.org/users/116798-lele-huang",
+      "scripts": []
+    }
+  ],
+  "name": "Steam 自动兑换",
+  "description": "从 Humble Bundle 兑换 Steam CD-Key 时，直接点击 Redeem 跳转到 Steam 后，可以自动兑换，不需要再手动点击。",
+  "url": "https://greasyfork.org/scripts/391537-steam-%E8%87%AA%E5%8A%A8%E5%85%91%E6%8D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/391537/Steam%20%E8%87%AA%E5%8A%A8%E5%85%91%E6%8D%A2.user.js",
+  "code_size": 536,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

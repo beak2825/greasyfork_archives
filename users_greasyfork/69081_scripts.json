@@ -1,0 +1,68 @@
+[
+  {
+    "id": 391881,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-02T14:05:51.000Z",
+    "code_updated_at": "2025-10-22T10:17:21.000Z",
+    "namespace": "ohadcn-kneset-agendas",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 69081,
+        "name": "ohad cohen",
+        "created_at": "2016-09-27T11:57:46.000Z",
+        "url": "https://greasyfork.org/users/69081-ohad-cohen"
+      }
+    ],
+    "name": "Knesset Agendas Editor Addon",
+    "description": "Help Knesset Agendas Editors And Reviewers",
+    "url": "https://greasyfork.org/scripts/391881-knesset-agendas-editor-addon",
+    "code_url": "https://update.greasyfork.org/scripts/391881/Knesset%20Agendas%20Editor%20Addon.user.js",
+    "code_size": 9256,
+    "license": null,
+    "version": "1.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 391880,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-02T13:59:14.000Z",
+    "code_updated_at": "2019-11-02T13:59:13.000Z",
+    "namespace": "ohadcn-omnifm-next",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 69081,
+        "name": "ohad cohen",
+        "created_at": "2016-09-27T11:57:46.000Z",
+        "url": "https://greasyfork.org/users/69081-ohad-cohen"
+      }
+    ],
+    "name": "omni.fm playlist auto next",
+    "description": "This script let you auto play next audio on <a href=\"https://omny.fm/\">omni.fm</a> when listening from a playlist.",
+    "url": "https://greasyfork.org/scripts/391880-omni-fm-playlist-auto-next",
+    "code_url": "https://update.greasyfork.org/scripts/391880/omnifm%20playlist%20auto%20next.user.js",
+    "code_size": 1349,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

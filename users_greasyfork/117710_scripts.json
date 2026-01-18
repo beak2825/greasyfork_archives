@@ -63,6 +63,39 @@
     "version": "0.1.5",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 391687,
+    "daily_installs": 1,
+    "total_installs": 853,
+    "fan_score": "43.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2019-10-28T08:10:39.000Z",
+    "code_updated_at": "2021-05-06T14:11:55.000Z",
+    "namespace": "de.sidneys.userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 117710,
+        "name": "sidneys",
+        "created_at": "2017-04-18T00:54:10.000Z",
+        "url": "https://greasyfork.org/users/117710-sidneys"
+      }
+    ],
+    "name": "iOSGods: Direct App Store .IPA Download",
+    "description": "Download .IPA files directly from the iOSGods App Store (app.iosgods.com) without a \"ViP\" subscription.",
+    "url": "https://greasyfork.org/scripts/391687-iosgods-direct-app-store-ipa-download",
+    "code_url": "https://update.greasyfork.org/scripts/391687/iOSGods%3A%20Direct%20App%20Store%20IPA%20Download.user.js",
+    "code_size": 3377,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

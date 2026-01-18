@@ -1,0 +1,34 @@
+{
+  "id": 391946,
+  "daily_installs": 0,
+  "total_installs": 120,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-11-04T05:07:50.000Z",
+  "code_updated_at": "2025-09-14T15:59:56.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 394023,
+      "name": "lucianjp",
+      "created_at": "2019-11-01T19:35:18.000Z",
+      "url": "https://greasyfork.org/users/394023-lucianjp",
+      "scripts": []
+    }
+  ],
+  "name": "GGn add to collection shortcut [+]",
+  "description": "Adds a [+]/[-] to the quick list when searching a bundle to add/remove it to collection right away",
+  "url": "https://greasyfork.org/scripts/391946-ggn-add-to-collection-shortcut",
+  "code_url": "https://update.greasyfork.org/scripts/391946/GGn%20add%20to%20collection%20shortcut%20%5B%2B%5D.user.js",
+  "code_size": 2782,
+  "license": null,
+  "version": "0.9.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

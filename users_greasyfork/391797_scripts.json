@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391606,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-25T16:11:47.000Z",
+    "code_updated_at": "2021-03-01T18:01:22.000Z",
+    "namespace": "http://dillards.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 391797,
+        "name": "Michael Moncrief",
+        "created_at": "2019-10-25T16:09:47.000Z",
+        "url": "https://greasyfork.org/users/391797-michael-moncrief"
+      }
+    ],
+    "name": "Jira Mingle",
+    "description": "Adds border color based on project color.",
+    "url": "https://greasyfork.org/scripts/391606-jira-mingle",
+    "code_url": "https://update.greasyfork.org/scripts/391606/Jira%20Mingle.user.js",
+    "code_size": 3799,
+    "license": null,
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

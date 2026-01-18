@@ -31,5 +31,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 392011,
+    "daily_installs": 0,
+    "total_installs": 452,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-05T14:47:06.000Z",
+    "code_updated_at": "2019-11-05T14:47:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=973354623@qq.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394599,
+        "name": "橙汁",
+        "created_at": "2019-11-03T17:54:53.000Z",
+        "url": "https://greasyfork.org/users/394599-%E6%A9%99%E6%B1%81"
+      }
+    ],
+    "name": "赛尔号官网页面精简化",
+    "description": "精简赛尔号官方页面，去除其他游戏的滚动展示、十周年页面跳转事件，只保留游戏主体与下方信息等关键内容。",
+    "url": "https://greasyfork.org/scripts/392011-%E8%B5%9B%E5%B0%94%E5%8F%B7%E5%AE%98%E7%BD%91%E9%A1%B5%E9%9D%A2%E7%B2%BE%E7%AE%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/392011/%E8%B5%9B%E5%B0%94%E5%8F%B7%E5%AE%98%E7%BD%91%E9%A1%B5%E9%9D%A2%E7%B2%BE%E7%AE%80%E5%8C%96.user.js",
+    "code_size": 951,
+    "license": "GNU General Public License version 2; https://opensource.org/licenses/GPL-2.0",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 392009,
+    "daily_installs": 0,
+    "total_installs": 183,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-05T14:40:49.000Z",
+    "code_updated_at": "2019-11-05T14:40:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=973354623@qq.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394599,
+        "name": "橙汁",
+        "created_at": "2019-11-03T17:54:53.000Z",
+        "url": "https://greasyfork.org/users/394599-%E6%A9%99%E6%B1%81"
+      }
+    ],
+    "name": "赛尔号页面免刷新提示",
+    "description": "去除赛尔号页面的刷新确认提示。",
+    "url": "https://greasyfork.org/scripts/392009-%E8%B5%9B%E5%B0%94%E5%8F%B7%E9%A1%B5%E9%9D%A2%E5%85%8D%E5%88%B7%E6%96%B0%E6%8F%90%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/392009/%E8%B5%9B%E5%B0%94%E5%8F%B7%E9%A1%B5%E9%9D%A2%E5%85%8D%E5%88%B7%E6%96%B0%E6%8F%90%E7%A4%BA.user.js",
+    "code_size": 763,
+    "license": "GNU General Public License version 2; https://opensource.org/licenses/GPL-2.0",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 391995,
+    "daily_installs": 0,
+    "total_installs": 681,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-11-05T08:37:17.000Z",
+    "code_updated_at": "2019-11-05T08:37:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=973354623@qq.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394599,
+        "name": "橙汁",
+        "created_at": "2019-11-03T17:54:53.000Z",
+        "url": "https://greasyfork.org/users/394599-%E6%A9%99%E6%B1%81"
+      }
+    ],
+    "name": "赛尔号官网夜间版开放",
+    "description": "使赛尔号官网开放夜间版，在夜间也可以通过赛尔号官网进入游戏。",
+    "url": "https://greasyfork.org/scripts/391995-%E8%B5%9B%E5%B0%94%E5%8F%B7%E5%AE%98%E7%BD%91%E5%A4%9C%E9%97%B4%E7%89%88%E5%BC%80%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/391995/%E8%B5%9B%E5%B0%94%E5%8F%B7%E5%AE%98%E7%BD%91%E5%A4%9C%E9%97%B4%E7%89%88%E5%BC%80%E6%94%BE.user.js",
+    "code_size": 1055,
+    "license": "GNU General Public License version 2; https://opensource.org/licenses/GPL-2.0",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

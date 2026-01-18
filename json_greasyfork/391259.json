@@ -1,0 +1,34 @@
+{
+  "id": 391259,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-16T13:24:57.000Z",
+  "code_updated_at": "2019-10-16T13:24:56.000Z",
+  "namespace": "DCT Diagnosis Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 189596,
+      "name": "Peaceof Furriani",
+      "created_at": "2018-06-05T09:24:55.000Z",
+      "url": "https://greasyfork.org/users/189596-peaceof-furriani",
+      "scripts": []
+    }
+  ],
+  "name": "DCT Diagnosis",
+  "description": "Diagnosis for LK Mango Office",
+  "url": "https://greasyfork.org/scripts/391259-dct-diagnosis",
+  "code_url": "https://update.greasyfork.org/scripts/391259/DCT%20Diagnosis.user.js",
+  "code_size": 25532,
+  "license": null,
+  "version": "0.0.1.20191016132456",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

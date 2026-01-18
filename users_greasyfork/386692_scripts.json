@@ -1,0 +1,35 @@
+[
+  {
+    "id": 391147,
+    "daily_installs": 0,
+    "total_installs": 158,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2019-10-13T20:15:51.000Z",
+    "code_updated_at": "2019-10-13T21:43:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 386692,
+        "name": "KING.JS",
+        "created_at": "2019-10-13T20:05:14.000Z",
+        "url": "https://greasyfork.org/users/386692-king-js"
+      }
+    ],
+    "name": "algoritmo base>[[",
+    "description": "ALGORITMO QUE EU USO EM MEUS BOTS, ELE FUNCIONAM A TECLA \"3\", ELE A BASE FULL GENS DEPOIS UMA HIBRID CRIADA PELO (KAKAROTTO'CREDITOS'), DEFESA TECLA 0.",
+    "url": "https://greasyfork.org/scripts/391147-algoritmo-base",
+    "code_url": "https://update.greasyfork.org/scripts/391147/algoritmo%20base%3E%5B%5B.user.js",
+    "code_size": 15174,
+    "license": null,
+    "version": "0.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

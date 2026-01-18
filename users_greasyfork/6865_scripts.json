@@ -262,5 +262,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 391688,
+    "daily_installs": 0,
+    "total_installs": 2930,
+    "fan_score": "83.9",
+    "good_ratings": 20,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-28T09:37:55.000Z",
+    "code_updated_at": "2025-12-21T10:24:16.000Z",
+    "namespace": "做最终做到的事，成为最终成为的人。",
+    "support_url": null,
+    "contribution_url": "https://github.com/wdssmq#%E4%BA%8C%E7%BB%B4%E7%A0%81",
+    "contribution_amount": "5.93",
+    "users": [
+      {
+        "id": 6865,
+        "name": "wdssmq",
+        "created_at": "2014-11-15T05:00:20.000Z",
+        "url": "https://greasyfork.org/users/6865-wdssmq"
+      }
+    ],
+    "name": "「水水」qBittorrent 管理脚本",
+    "description": "通过 WebUI 的 API 批量替换 Tracker",
+    "url": "https://greasyfork.org/scripts/391688-%E6%B0%B4%E6%B0%B4-qbittorrent-%E7%AE%A1%E7%90%86%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/391688/%E3%80%8C%E6%B0%B4%E6%B0%B4%E3%80%8DqBittorrent%20%E7%AE%A1%E7%90%86%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 18362,
+    "license": "MIT License",
+    "version": "1.0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

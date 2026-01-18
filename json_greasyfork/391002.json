@@ -1,0 +1,33 @@
+{
+  "id": 391002,
+  "daily_installs": 0,
+  "total_installs": 241,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-11T02:52:53.000Z",
+  "code_updated_at": "2019-10-11T02:52:52.000Z",
+  "namespace": "简化知乎网页样式|隐藏伪装标题",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 218062,
+      "name": "vizo",
+      "created_at": "2018-10-08T05:26:16.000Z",
+      "url": "https://greasyfork.org/users/218062-vizo"
+    }
+  ],
+  "name": "知乎界面简化",
+  "description": "zhihu_sm",
+  "url": "https://greasyfork.org/scripts/391002-%E7%9F%A5%E4%B9%8E%E7%95%8C%E9%9D%A2%E7%AE%80%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/391002/%E7%9F%A5%E4%B9%8E%E7%95%8C%E9%9D%A2%E7%AE%80%E5%8C%96.user.js",
+  "code_size": 1897,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

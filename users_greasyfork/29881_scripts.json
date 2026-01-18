@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 391260,
+    "daily_installs": 0,
+    "total_installs": 284,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2019-10-16T13:29:05.000Z",
+    "code_updated_at": "2020-03-23T14:11:02.000Z",
+    "namespace": "https://github.com/dyingsunlight/tampermonkey",
+    "support_url": "https://github.com/dyingsunlight/tampermonkey/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 29881,
+        "name": "Dogfish",
+        "created_at": "2016-02-10T09:19:22.000Z",
+        "url": "https://greasyfork.org/users/29881-dogfish"
+      }
+    ],
+    "name": "过滤知乎首页推荐(fuck-zhihu-homepage)",
+    "description": "过滤首页推荐的所有的知乎专栏，和知乎视频",
+    "url": "https://greasyfork.org/scripts/391260-%E8%BF%87%E6%BB%A4%E7%9F%A5%E4%B9%8E%E9%A6%96%E9%A1%B5%E6%8E%A8%E8%8D%90-zhihu-homepage",
+    "code_url": "https://update.greasyfork.org/scripts/391260/%E8%BF%87%E6%BB%A4%E7%9F%A5%E4%B9%8E%E9%A6%96%E9%A1%B5%E6%8E%A8%E8%8D%90%28fuck-zhihu-homepage%29.user.js",
+    "code_size": 2380,
+    "license": null,
+    "version": "0.15",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

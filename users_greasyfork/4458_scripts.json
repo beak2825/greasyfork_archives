@@ -30,6 +30,39 @@
     "version": "0.46",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 391072,
+    "daily_installs": 0,
+    "total_installs": 11244,
+    "fan_score": "84.4",
+    "good_ratings": 49,
+    "ok_ratings": 0,
+    "bad_ratings": 3,
+    "created_at": "2019-10-12T00:39:59.000Z",
+    "code_updated_at": "2019-10-12T01:04:29.000Z",
+    "namespace": "greasyfork.org/users/4458",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4458,
+        "name": "bimzcy",
+        "created_at": "2014-08-14T09:04:07.000Z",
+        "url": "https://greasyfork.org/users/4458-bimzcy"
+      }
+    ],
+    "name": "Steam历史最低价格",
+    "description": "显示每款游戏在SteamDB里的历史最低价格",
+    "url": "https://greasyfork.org/scripts/391072-steam%E5%8E%86%E5%8F%B2%E6%9C%80%E4%BD%8E%E4%BB%B7%E6%A0%BC",
+    "code_url": "https://update.greasyfork.org/scripts/391072/Steam%E5%8E%86%E5%8F%B2%E6%9C%80%E4%BD%8E%E4%BB%B7%E6%A0%BC.user.js",
+    "code_size": 2627,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

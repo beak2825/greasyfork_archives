@@ -1,0 +1,59 @@
+{
+  "id": 391773,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2019-10-31T00:56:02.000Z",
+  "code_updated_at": "2019-10-31T00:56:01.000Z",
+  "namespace": "xamov",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 393489,
+      "name": "FaZee #SN",
+      "created_at": "2019-10-31T00:54:29.000Z",
+      "url": "https://greasyfork.org/users/393489-fazee-sn",
+      "scripts": [
+        {
+          "id": 391773,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-10-31T00:56:02.000Z",
+          "code_updated_at": "2019-10-31T00:56:01.000Z",
+          "namespace": "xamov",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VLONE SOLDIER",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/391773-vlone-soldier",
+          "code_url": "https://update.greasyfork.org/scripts/391773/VLONE%20SOLDIER.user.js",
+          "code_size": 422,
+          "license": null,
+          "version": "66.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VLONE SOLDIER",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/391773-vlone-soldier",
+  "code_url": "https://update.greasyfork.org/scripts/391773/VLONE%20SOLDIER.user.js",
+  "code_size": 422,
+  "license": null,
+  "version": "66.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 390971,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2019-10-10T12:37:31.000Z",
+    "code_updated_at": "2019-10-10T13:30:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 147836,
+        "name": "765126614",
+        "created_at": "2017-08-09T09:32:29.000Z",
+        "url": "https://greasyfork.org/users/147836-765126614"
+      }
+    ],
+    "name": "Bilibili ad-video finder",
+    "description": "基于弹幕分析规避营销号",
+    "url": "https://greasyfork.org/scripts/390971-bilibili-ad-video-finder",
+    "code_url": "https://update.greasyfork.org/scripts/390971/Bilibili%20ad-video%20finder.user.js",
+    "code_size": 1450,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]
