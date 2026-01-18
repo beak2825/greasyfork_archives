@@ -5,8 +5,8 @@
 // @description:zh-CN 在查看 Greasy Fork 代码页时，通过判断 @require 行中是否有 jquery，显示特大号红色 jQuery 警告。
 // @namespace         RainSlide
 // @author            RainSlide
-// @icon              https://greasyfork.org/packs/media/images/blacklogo96-b2384000fca45aa17e45eb417cbcbb59.png
-// @version           1.2.1
+// @icon              https://greasyfork.org/vite/assets/blacklogo96-CxYTSM_T.png
+// @version           1.2.2
 // @license           blessing
 // @match             https://greasyfork.org/*/scripts/*/code
 // @grant             none

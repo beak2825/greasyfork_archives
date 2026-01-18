@@ -4,6 +4,7 @@
 // @license MIT
 // @match      https://ome.tv/*
 // @match      https://ometv.chat/*
+// @match      https://ome.chat/*
 // @match      https://umingle.com/*
 // @match      https://chatroulette.com/*
 // @match      https://%2A.chatroulette.com/*
@@ -45,7 +46,7 @@
 // @match      https://yubo.live/*
 // @match      https://%2A.yubo.live/*
 // @grant       none
-// @version      8.2
+// @version      8.3
 // @author      Clownz
 // @description Advanced IP Info Tool with Enhanced Time Zone & Location Data + Resizable UI
 // @downloadURL https://update.greasyfork.org/scripts/544290/ometv%20ip%20puller%20by%20clownz.user.js

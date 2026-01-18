@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube hotkeys
 // @namespace    http://tampermonkey.net/
-// @version      1.3.2
+// @version      1.4
 // @description  quick hotkeys for quality, speed, time jumps, subtitles and replay (for RU, UA, EN, DE, FR, SP)
 // @author       Roman Sergeev aka naxombl4 aka Brutal Doomer
 // @license      MIT
@@ -13,7 +13,15 @@
 // ==/UserScript==
 
 /**
- * Happy 20 years of YouTube!
+ * v1.4   changed some functionality from div#player to video tag
+ *        as a consequence, speed change is now uncapped
+ *        changed speed steps to 0.0625x -> 0.125x -> 0.1875x -> 0.25x -> +0.25x per step onwards
+ *        changed seek popups style (e.g. +-30s) to be independent of YouTube's
+ *        fixed YT's issue of sometimes ignoring the saved timestamp when opening the video previously unfinished (t=905s in the URL for example)
+ *        added a check and a forced 1x speed when having caught up watching a livestream
+ *        added alt+s speed reset hotkey
+ *        reworked replay call
+ * v1.3.2.1 hotfix of some left logs + jump text sometimes not shown properly
  * v1.3.2 added time jumps (like +-5s, +-10s)
  *        !WARNING! this overrides browser's default execution of alt+(left/right arrow) for navigation, feel free to comment after : sign on line 248
  * v1.3.1 organized Player into a class
@@ -29,8 +37,12 @@
  *        added comments
  * v1.1   x hotkey for subtitles, alt+q for 480p quality, plus some readability alignments.
  *
+ * Note that speed is uncapped, and goes by 0.0625 steps below 0.25, and by 0.25 steps above 2, until it reaches browser limits.
+ * Speed is altered directly in the <video> element, bypassing YT's player UI, so pressing shift + <> will change speed based on UI speed slider position.
+ * Keep that in mind and use either of the methods, mixing them will result in funny behavior.
  * Hotkeys are:
  * numpad + and - for +-0.25x speed (shift = +-0.5, alt = +-1);
+ * alt+s for resetting speed to 1x;
  * shift+q for 1080p quality, ctrl+q for 720p quality, alt+q for 480p quality;
  * shift+(left/right arrow) for +-30s, alt+(left/right arrow) for +-1min, alt+shift+(left/right arrow) for +-5min
  * q, s and x for quality, speed and subtitle menus (just open, no choosing);
@@ -43,14 +55,12 @@
 (function() {
     'use strict';
 
-    // speed/quality popup copycat (at the middle top of the player)
-    const POPUP_ID = "customPopup";
+    const POPUP_CN = "customPopup";
+    const POPUP_ID1 = "customPopupSpeed"; // speed/quality popup copycat (at the middle top of the player)
+    const POPUP_ID2 = "customPopupShift"; // time shift popup
     GM_addStyle(`
-div#`+POPUP_ID+` {
+div.`+POPUP_CN+` {
   position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translatex(-50%);
   z-index: 10;
   padding: 10px 12px;
   border-radius: 3px;
@@ -59,11 +69,18 @@ div#`+POPUP_ID+` {
   background-color: #000a;
   pointer-events: none;
   opacity: 0;
+  transform: translate(-50%);
+}
+div#`+POPUP_ID1+` {
+  top: 10%;
+  left: 50%;
+}
+div#`+POPUP_ID2+` {
+  top: 40%;
 }
     `);
 
     const PLAYER_ID = "movie_player";
-    const REGEXP_R = /Повтор|Повторити|Replay|Nochmal|Revoir|Ver de nuevo/i;
     const DISPATCH = {
         "81": /Качество|Якість|Quality|Qualität|Qualité|Calidad/i, // q: quality regexp
         "83": /Скорость|Швидкість|Speed|Wiedergabegeschwindigkeit|Vitesse de lecture|Velocidad de reproducción/i, // s: speed regexp
@@ -71,19 +88,21 @@ div#`+POPUP_ID+` {
     }
 
     const CONSECUTIVE_CLICK_EMULATION_DELAY = 100; // milliseconds delay for YouTube elements to pop up (some hotkeys call the player menus)
-    const SPEEDMIN = 0.25;
-    const SPEEDMAX = 2;
-    const SPEEDALT = 0.25;
+    const SPEEDALT = 0.25; // precise binary values so no error accumulation
+    const SPEEDALTSMALL = 0.0625;
     const TIMESHIFT = [
         [undefined, "error"],
-        [55 , " 1 minute"], // account for 5 seconds already included. Spaces in text are en spaces (U+2002)
-        [25 , "30 seconds"],
-        [295, " 5 minutes"]
+        [55 , "1 minute"], // account for 5 seconds already included. Spaces in text are en spaces (U+2002)
+        [25 , "30 sec"],
+        [295, "5 minutes"]
     ];
 
     var player;
 
     function Player(div) {
+        var videos = div.getElementsByTagName("video");
+        var video = videos ? videos[0] : undefined;
+        const live = div.getVideoData().isLive;
         const QUALITY = {
             large: "480p",
             medium: "360p",
@@ -92,10 +111,6 @@ div#`+POPUP_ID+` {
             auto: "auto"
         }
         const POPUP_STATIC_SHOWN_FOR = 300;
-        const TIME_SHIFT_SHOWN_FOR = 700;
-        const ALIGN_TOP = h => h/2 + 5; // time shift bubble positioning functions depending on player scroll width and height
-        const ALIGN_LEFT_LEFT = w => w * 0.1 - 15; // reverse ingeneered (linearly interpolated)
-        const ALIGN_LEFT_RIGHT = w => w * 0.8 - 30;
 
         var levels = div.getAvailableQualityLevels(); // array of quality strings inside YT player: see QUALITY keys
         var qualityTexts = levels.map(x => { // corresponding array of displayed "selected quality" strings
@@ -103,29 +118,31 @@ div#`+POPUP_ID+` {
             return m ? (m[0] + "p") : (QUALITY[x] || "null");
         });
 
-        // copycat of YT default speed/volume top player popup. Feedbacks change of speed/quality.
-        var popup = false;
-        var popupHidingTimeout;
-        for (const child of div.children) // search for it to prevent duplication
-            if (child.id === POPUP_ID) {
-                popup = child;
-                break;
-            }
+        
+        var popup = false; // copycat of YT default speed/volume top player popup. Feedbacks change of speed/quality.
+        var popup2 = false; // custom time shift popup
+        for (const child of div.children) { // search for them to prevent duplication
+            if (child.id === POPUP_ID1) popup = child;
+            if (child.id === POPUP_ID2) popup2 = child;
+        }
         if (!popup) {
             popup = document.createElement("div");
-            popup.id = POPUP_ID;
+            popup.id = POPUP_ID1;
+            popup.className = POPUP_CN;
             div.appendChild(popup);
+        }
+        if (!popup2) {
+            popup2 = document.createElement("div");
+            popup2.id = POPUP_ID2;
+            popup2.className = POPUP_CN;
+            div.appendChild(popup2);
         }
 
         var list = cn("ytp-panel-menu").children; // list of main settings items
         var sb = cn("ytp-settings-button"); // settings button - main to click on
-        var rebtn = cn("ytp-play-button"); // replay button
-        var jumpBubbleHolder = cn("ytp-doubletap-ui-legacy");
-        var jumpBubble = cn("ytp-doubletap-static-circle");
-        var jumpText = cn("ytp-doubletap-tooltip-label");
 
         function cn(className) { var cns = document.getElementsByClassName(className); return cns[cns.length - 1]; } // (get by) classname
-        function sopen() { return cn("ytp-settings-menu").style.display != "none"; } // whether settings window is open
+        function sopen() { const menu = cn("ytp-settings-menu"); return menu && menu.offsetParent !== null; } // whether settings window is open
         function dc(element) { element.dispatchEvent(new Event("click")); } // dispatch click
         function tev(element, show) { element.style.display = show ? "block" : "none"; } // toggle element visibility
         function dcList(regexp) {
@@ -133,53 +150,95 @@ div#`+POPUP_ID+` {
                 if (regexp.test(list[i].textContent))
                     return dc(list[i]);
         }
-
-        this.showPopup = function(text) {
-            popup.textContent = text;
-            popup.style.transition = "none"; // a trick to show it immediately, but hide with fade-out
-            popup.style.opacity = 1;
+        function seekTo(t) {
+            if (div && typeof div.seekTo === "function") {
+                div.seekTo(t, true);
+            } else if (video) {
+                video.currentTime = t;
+            }
+        }
+        function currentTime() { return video ? video.currentTime : div.getCurrentTime(); }
+        function showPopup(p, text) {
+            p.textContent = text;
+            p.style.transition = "none"; // a trick to show it immediately, but hide with fade-out
+            p.style.opacity = 1;
             setTimeout(() => {
-                popup.style.transition = "opacity 0.3s ease-out";
-                popup.style.opacity = 0;
+                p.style.transition = "opacity 0.3s ease-out";
+                p.style.opacity = 0;
             }, POPUP_STATIC_SHOWN_FOR);
         }
+        function bufferedEnd() {
+            if (!video.buffered.length) return null;
+            return video.buffered.end(video.buffered.length - 1);
+        }
+        function atLiveEdge() {
+            return bufferedEnd() - video.currentTime < 1;
+        }
+
+        if (live && !video.__liveEdgeHooked) {
+            video.__liveEdgeHooked = true;
+            video.addEventListener("timeupdate", () => { if (video.playbackRate > 1 && atLiveEdge()) video.playbackRate = 1; });
+        }
+
+        this.showPopupTop = function(text) { showPopup(popup, text); }
+        this.showPopupSide = function(text) { showPopup(popup2, text); }
 
         this.setQualityByText = function(text) {
             var index = levels.indexOf(text);
             if (index == -1) index = 0; // choose the best if selected isn't present
             div.setPlaybackQualityRange(levels[index]);
-            this.showPopup(qualityTexts[index]);
+            this.showPopupTop(qualityTexts[index]);
         }
 
         this.shift = function(delta, text) {
-            div.seekTo(div.getCurrentTime() + delta, true);
+            seekTo(currentTime() + delta);
             const right = delta > 0;
-            const w = div.scrollWidth, h = div.scrollHeight;
-            tev(jumpBubbleHolder, true);
-            jumpBubbleHolder.setAttribute("data-side", right ? "forward" : "back");
-            jumpBubble.style.top = ALIGN_TOP(h) + "px"; // for some reason, is set on YT in absolute numbers
-            jumpBubble.style.left = (right ? ALIGN_LEFT_RIGHT(w) : ALIGN_LEFT_LEFT(w)) + "px";
-            jumpText.textContent = text;
-            clearTimeout(popupHidingTimeout);
-            popupHidingTimeout = setTimeout(() => tev(jumpBubbleHolder, false), TIME_SHIFT_SHOWN_FOR);
+            popup2.style.left = right ? "90%" : "10%";
+            this.showPopupSide(text);
         }
 
-        this.isActive = function() { return document.activeElement === div; }
-        this.getSpeed = function() { return div.getPlaybackRate(); }
-        this.setSpeed = function(speed) { div.setPlaybackRate(speed); }
-        this.dispatchReplayButtonClick = function() { if (REGEXP_R.test(rebtn.title)) dc(rebtn); }
+        //this.isActive = function() { return document.activeElement === div; }
+        this.getSpeed = function() { return video ? video.playbackRate : div.getPlaybackRate(); }
+        this.setSpeed = function(speed) { if (video) video.playbackRate = speed; else div.setPlaybackRate(speed); } // throws NotSupportedError on range violation
         this.dispatchSettingsButtonClick = function() { dc(sb); }
         this.dispatchSettingsItemClick = function(regexp) { dcList(regexp); }
         this.settingsAreOpen = function() { return sopen(); }
         this.closeSettings = function() { if (this.settingsAreOpen()) this.dispatchSettingsButtonClick(); }
-
-        return this;
+        this.atTheEnd = function() { return div.getPlayerState() == 0; }
+        this.restart = function() { video.currentTime = 0; div.playVideo(); video.play(); }
     }
 
-    // floor1 and ceil1 are internal for round1 - round playback speed to nearest multiplier of SPEEDALT
-    function floor1(x, step) { return Math.floor(x / step) * step; }
-    function ceil1(x, step) { return Math.ceil (x / step) * step; }
-    function round1(x, delta) { return (delta > 0) ? Math.min(SPEEDMAX, floor1(x + delta, SPEEDALT)) : Math.max(SPEEDMIN, ceil1(x + delta, SPEEDALT)); }
+    /***** Bugfix for the occasional ignoring of URL time parameter (video starts from zero) *****/
+    // might be called as a part of callback, but I don't want to put it in front of Player declaration
+    function parseStartTime() {
+        const p = new URLSearchParams(location.search);
+        const t = p.get("t") || p.get("start");
+        if (!t) return null;
+
+        // supports 1h2m3s, 90s, 123
+        let seconds = 0;
+        if (/^\d+$/.test(t)) return +t;
+
+        const m = t.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/);
+        if (!m) return null;
+
+        seconds =
+            (parseInt(m[1] || 0) * 3600) +
+            (parseInt(m[2] || 0) * 60) +
+            (parseInt(m[3] || 0));
+
+        return seconds || null;
+    }
+
+    function updatePlayerTimeFromURL(div) {
+        var time = parseStartTime();
+        if (time == null) return;
+        var videos = div.getElementsByTagName("video");
+        if (!videos) return;
+        var video = videos[0];
+        if (video.currentTime >= time - 0.5) return;
+        video.currentTime = time;
+    }
 
     // ChatGPT helped with this: observer waits for a real player (on /watch page) to load, then loads its available quality levels
     function awaitPlayerLoad(callback) {
@@ -190,6 +249,7 @@ div#`+POPUP_ID+` {
         const tryInitialize = () => {
             const div = document.getElementById(PLAYER_ID);
             if (isRealPlayer(div)) {
+                updatePlayerTimeFromURL(div);
                 callback(div);
                 return true;
             }
@@ -219,50 +279,85 @@ div#`+POPUP_ID+` {
         player.setQualityByText(desiredQuality);
     }
 
+    // TODO maybe move this block to Player too
+    function nextSpeedStep(currentSpeed, isIncreasing) {
+        if (currentSpeed == SPEEDALTSMALL && !isIncreasing) return 0; // kinda crutchy because allowed values are (1/16...16) + {0}
+        if (isIncreasing) return currentSpeed < SPEEDALT ? SPEEDALTSMALL : SPEEDALT;
+        return currentSpeed > SPEEDALT ? -SPEEDALT : -SPEEDALTSMALL;
+    }
+
+    function newSpeed(currentSpeed, steps) {
+        for (var i = 0; i < Math.abs(steps); ++i) {
+            try {
+                var intermediateSpeed = currentSpeed + nextSpeedStep(currentSpeed, steps > 0);
+                player.setSpeed(intermediateSpeed);
+                currentSpeed = intermediateSpeed;
+            } catch (e) { // ignore the error, return the last successful increment/decrement
+                return currentSpeed;
+            }
+        }
+        return currentSpeed;
+    }
+
     // v1.3 simplified to using player API
-    function changeSpeed(shift) {
-        var oldSpeed = player.getSpeed();
-        var newSpeed = round1(oldSpeed, shift);
-        player.setSpeed(newSpeed);
-        player.showPopup(newSpeed + "x");
+    // v1.4 now using steps and extended 1/16...16 scale (with error fallbacks for different browsers)
+    function changeSpeed(steps) {
+        var speed = newSpeed(player.getSpeed(), steps);
+        player.showPopupTop(speed + "x");
+    }
+    function resetSpeed() {
+        player.setSpeed(1);
+        player.showPopupTop("1x");
     }
 
     function changeTime(forward, asc) {
         if (!asc || asc&4) return;
         var delta = TIMESHIFT[asc][0] * (forward ? 1 : -1);
         var text = TIMESHIFT[asc][1];
-        console.log(delta);
-        console.log(text);
         player.shift(delta, text);
+    }
+
+    function isTypingContext(elem) {
+        if (!elem) return false;
+
+        // Native text inputs
+        if (elem.tagName === "INPUT" || elem.tagName === "TEXTAREA") {
+            return !elem.readOnly && !elem.disabled;
+        }
+
+        // contenteditable or inside it
+        if (elem.isContentEditable) return true;
+
+        return false;
     }
 
     // add global hotkeys
     window.addEventListener("keydown", function (event) {
         if (!player) return;
-        if (document.activeElement.id == "contenteditable-root" ||
-            document.activeElement.id == "search") return; // whether writing a comment or searching
+        if (isTypingContext(document.activeElement)) return; // whether writing a comment or searching
 
         var asc = event.altKey + (event.shiftKey << 1) + (event.ctrlKey << 2);
         var key = event.keyCode;
 
         switch (key) {
-            case 37: // left and right with alt/ctrl/shift for advanced jumps
+            case 37: // left and right with alt/shift for advanced jumps
             case 39: if (asc&1) event.preventDefault(); // comment out after colon sign to restore browser default behavior on alt+arrow
                 return changeTime(key == 39, asc);
             case 81: // q for quality
                 if (asc) changeQuality(asc);
             case 83: // s for speed
+                if (asc == 1) resetSpeed();
             case 88: // x for subtitles
                 return !asc && clickMenu(DISPATCH[key]);
             case 107:
             case 109: // + and - for speed. Default +(=) and - are untouched, because in YT they change captions size
                 if (asc&4) return; // do not conflict with default zoom (ctrl plus/minus)
-                var shift = (key == 109 ? -SPEEDALT : SPEEDALT) * Math.max(1, event.shiftKey * 2 + event.altKey * 4); // any formula you want
+                var shift = (key == 109 ? -1 : 1) * Math.max(1, event.shiftKey * 2 + event.altKey * 4); // any formula you want
                 changeSpeed(shift);
                 player.closeSettings();
                 break;
             //case 68: if(!acs) cn("html5-video-info-panel").classList.toggle("displayNone"); break; // doesn't work (stats for nerds)
-            case 82: if(!asc && player.isActive()) player.dispatchReplayButtonClick(); // replay (sometimes works)
+            case 82: if(!asc && player.atTheEnd()) player.restart(); // replay
         }
     });
 

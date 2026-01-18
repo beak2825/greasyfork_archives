@@ -4,7 +4,7 @@
 // @namespace            https://github.com/utags/links-helper
 // @homepageURL          https://github.com/utags/links-helper#readme
 // @supportURL           https://github.com/utags/links-helper/issues
-// @version              0.11.5
+// @version              0.12.0
 // @description          Open external links in a new tab, open internal links matching the specified rules in a new tab, convert text to hyperlinks, convert image links to image tags(<img>), parse Markdown style links and image tags, parse BBCode style links and image tags
 // @description:zh-CN    支持所有网站在新标签页中打开第三方网站链接（外链），在新标签页中打开符合指定规则的本站链接，解析文本链接为超链接，微信公众号文本转可点击的超链接，图片链接转图片标签，解析 Markdown 格式链接与图片标签，解析 BBCode 格式链接与图片标签
 // @icon                 https://wsrv.nl/?w=128&h=128&url=https%3A%2F%2Fraw.githubusercontent.com%2Futags%2Flinks-helper%2Frefs%2Fheads%2Fmain%2Fassets%2Ficon.png
@@ -740,7 +740,7 @@
     }
   }
   var style_default =
-    ':host{all:initial;--browser-extension-settings-background-color: #f2f2f7;--browser-extension-settings-text-color: #444444;--browser-extension-settings-link-color: #217dfc;--browser-extension-settings-border-radius: 8px;--browser-extension-settings-group-background-color: #ffffff;--browser-extension-settings-group-separator-color: #cccccc;--darkreader-border--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-separator-color: #181a1b;--sb-track-color: #00000000;--sb-thumb-color: #33334480;--sb-size: 2px;--font-family: "helvetica neue", "microsoft yahei", arial, sans-serif}:host .browser_extension_settings_v2_wrapper{position:fixed;top:10px;right:30px;display:none;z-index:2147483647;border-radius:var(--browser-extension-settings-border-radius);-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important;display:flex;background-color:var(--browser-extension-settings-background-color);font-family:var(--font-family);border-radius:var(--browser-extension-settings-border-radius)}:host .browser_extension_settings_v2_wrapper h1,:host .browser_extension_settings_v2_wrapper h2{border:none;color:var(--browser-extension-settings-text-color);padding:0;font-family:var(--font-family);line-height:normal;letter-spacing:normal}:host .browser_extension_settings_v2_wrapper h1{font-size:26px;font-weight:800;margin:18px 0}:host .browser_extension_settings_v2_wrapper h2{font-size:18px;font-weight:600;margin:14px 0}:host .browser_extension_settings_v2_wrapper footer{display:flex;justify-content:center;flex-direction:column;font-size:11px;margin:10px auto 0px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .browser_extension_settings_v2_wrapper footer a{color:var(--browser-extension-settings-link-color) !important;font-family:var(--font-family);text-decoration:none;padding:0}:host .browser_extension_settings_v2_wrapper footer p{text-align:center;padding:0;margin:2px;line-height:13px;font-size:11px;color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .thin_scrollbar{scrollbar-color:var(--sb-thumb-color) var(--sb-track-color);scrollbar-width:thin}:host .thin_scrollbar::-webkit-scrollbar{width:var(--sb-size)}:host .thin_scrollbar::-webkit-scrollbar-track{background:var(--sb-track-color);border-radius:10px}:host .thin_scrollbar::-webkit-scrollbar-thumb{background:var(--sb-thumb-color);border-radius:10px}.browser_extension_settings_v2_main{min-width:300px;max-height:90vh;overflow-y:auto;overflow-x:hidden;border-radius:var(--browser-extension-settings-border-radius);box-sizing:border-box;padding:10px 15px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}.browser_extension_settings_v2_main h2{text-align:center;margin:5px 0 0}.browser_extension_settings_v2_main .close-button{cursor:pointer;width:18px;height:18px;opacity:.5;transition:opacity .2s}.browser_extension_settings_v2_main .close-button:hover{opacity:1}.browser_extension_settings_v2_main .option_groups{background-color:var(--browser-extension-settings-group-separator-color);padding:0;border-style:solid;border-color:var(--browser-extension-settings-group-background-color);border-width:6px 15px;border-radius:10px;display:flex;flex-direction:column;gap:1px;margin:10px 0 0}.browser_extension_settings_v2_main .option_groups .action{font-size:14px;padding:6px 0 6px 0;color:var(--browser-extension-settings-link-color);cursor:pointer}.browser_extension_settings_v2_main .bes_external_link{font-size:14px;padding:6px 0 6px 0}.browser_extension_settings_v2_main .bes_external_link a,.browser_extension_settings_v2_main .bes_external_link a:visited,.browser_extension_settings_v2_main .bes_external_link a:hover{color:var(--browser-extension-settings-link-color);font-family:var(--font-family);text-decoration:none;cursor:pointer}.browser_extension_settings_v2_main .option_groups textarea{background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-size:12px;margin:10px 0 10px 0;padding:4px 8px;height:100px;width:100%;border:1px solid #a9a9a9;border-radius:4px;box-sizing:border-box}.browser_extension_settings_v2_main .switch_option,.browser_extension_settings_v2_main .select_option{display:flex;justify-content:space-between;align-items:center;padding:6px 0 6px 0;font-size:14px}.browser_extension_settings_v2_main .option_groups>*{background-color:var(--browser-extension-settings-group-background-color)}.browser_extension_settings_v2_main .bes_option>.bes_icon{width:24px;height:24px;margin-right:10px}.browser_extension_settings_v2_main .bes_option>.bes_title{margin-right:10px;flex-grow:1}.browser_extension_settings_v2_main .bes_option>.bes_select{color:var(--browser-extension-settings-text-color);box-sizing:border-box;background-color:var(--browser-extension-settings-group-background-color);height:24px;padding:0 2px 0 2px;margin:0;border-radius:6px;border:1px solid #ccc}.browser_extension_settings_v2_main .option_groups .bes_tip{position:relative;margin:0;padding:0 15px 0 0;border:none;max-width:none;font-size:14px}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor{cursor:help;text-decoration:underline}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content{position:absolute;bottom:15px;left:0;background-color:#fff;color:var(--browser-extension-settings-text-color);text-align:left;overflow-y:auto;max-height:300px;padding:10px;display:none;border-radius:5px;-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor:hover+.bes_tip_content,.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content:hover{display:block}.browser_extension_settings_v2_main .option_groups .bes_tip p,.browser_extension_settings_v2_main .option_groups .bes_tip pre{margin:revert;padding:revert}.browser_extension_settings_v2_main .option_groups .bes_tip pre{font-family:Consolas,panic sans,bitstream vera sans mono,Menlo,microsoft yahei,monospace;font-size:13px;letter-spacing:.015em;line-height:120%;white-space:pre;overflow:auto;background-color:#f5f5f5;word-break:normal;overflow-wrap:normal;padding:.5em;border:none}.browser_extension_settings_v2_main .bes_switch_container{--button-width: 51px;--button-height: 24px;--toggle-diameter: 20px;--color-off: #e9e9eb;--color-on: #34c759;width:var(--button-width);height:var(--button-height);position:relative;padding:0;margin:0;flex:none;user-select:none}.browser_extension_settings_v2_main input[type=checkbox]{opacity:0;width:0;height:0;position:absolute}.browser_extension_settings_v2_main .bes_switch{width:100%;height:100%;display:block;background-color:var(--color-off);border-radius:calc(var(--button-height)/2);border:none;cursor:pointer;transition:all .2s ease-out}.browser_extension_settings_v2_main .bes_switch::before{display:none}.browser_extension_settings_v2_main .bes_slider{width:var(--toggle-diameter);height:var(--toggle-diameter);position:absolute;left:2px;top:calc(50% - var(--toggle-diameter)/2);border-radius:50%;background:#fff;box-shadow:0px 3px 8px rgba(0,0,0,.15),0px 3px 1px rgba(0,0,0,.06);transition:all .2s ease-out;cursor:pointer}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch{background-color:var(--color-on)}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch .bes_slider{left:calc(var(--button-width) - var(--toggle-diameter) - 2px)}@media(max-width: 500px){:host{right:10px}.browser_extension_settings_v2_main{max-height:85%}}'
+    ':host{all:initial;--browser-extension-settings-background-color: #f2f2f7;--browser-extension-settings-text-color: #444444;--browser-extension-settings-link-color: #217dfc;--browser-extension-settings-border-radius: 8px;--browser-extension-settings-group-background-color: #ffffff;--browser-extension-settings-group-separator-color: #cccccc;--darkreader-border--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-separator-color: #181a1b;--sb-track-color: #00000000;--sb-thumb-color: #33334480;--sb-size: 2px;--font-family: "helvetica neue", "microsoft yahei", arial, sans-serif}:host .browser_extension_settings_v2_wrapper{position:fixed;top:10px;right:30px;display:none;z-index:2147483647;border-radius:var(--browser-extension-settings-border-radius);-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important;display:flex;background-color:var(--browser-extension-settings-background-color);font-family:var(--font-family);border-radius:var(--browser-extension-settings-border-radius)}:host .browser_extension_settings_v2_wrapper h1,:host .browser_extension_settings_v2_wrapper h2{border:none;color:var(--browser-extension-settings-text-color);padding:0;font-family:var(--font-family);line-height:normal;letter-spacing:normal}:host .browser_extension_settings_v2_wrapper h1{font-size:26px;font-weight:800;margin:18px 0}:host .browser_extension_settings_v2_wrapper h2{font-size:18px;font-weight:600;margin:14px 0}:host .browser_extension_settings_v2_wrapper footer{display:flex;justify-content:center;flex-direction:column;font-size:11px;margin:10px auto 0px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .browser_extension_settings_v2_wrapper footer a{color:var(--browser-extension-settings-link-color) !important;font-family:var(--font-family);text-decoration:none;padding:0}:host .browser_extension_settings_v2_wrapper footer p{text-align:center;padding:0;margin:2px;line-height:13px;font-size:11px;color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .thin_scrollbar{scrollbar-color:var(--sb-thumb-color) var(--sb-track-color);scrollbar-width:thin}:host .thin_scrollbar::-webkit-scrollbar{width:var(--sb-size)}:host .thin_scrollbar::-webkit-scrollbar-track{background:var(--sb-track-color);border-radius:10px}:host .thin_scrollbar::-webkit-scrollbar-thumb{background:var(--sb-thumb-color);border-radius:10px}.browser_extension_settings_v2_main{min-width:300px;max-height:90vh;overflow-y:auto;overflow-x:hidden;border-radius:var(--browser-extension-settings-border-radius);box-sizing:border-box;padding:10px 15px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}.browser_extension_settings_v2_main h2{text-align:center;margin:5px 0 0}.browser_extension_settings_v2_main .close-button{cursor:pointer;width:18px;height:18px;opacity:.5;transition:opacity .2s}.browser_extension_settings_v2_main .close-button:hover{opacity:1}.browser_extension_settings_v2_main .option_groups{background-color:var(--browser-extension-settings-group-separator-color);padding:0;border-style:solid;border-color:var(--browser-extension-settings-group-background-color);border-width:6px 15px;border-radius:10px;display:flex;flex-direction:column;gap:1px;margin:10px 0 0}.browser_extension_settings_v2_main .option_groups .action{font-size:14px;padding:6px 0 6px 0;color:var(--browser-extension-settings-link-color);cursor:pointer}.browser_extension_settings_v2_main .bes_external_link{font-size:14px;padding:6px 0 6px 0}.browser_extension_settings_v2_main .bes_external_link a,.browser_extension_settings_v2_main .bes_external_link a:visited,.browser_extension_settings_v2_main .bes_external_link a:hover{color:var(--browser-extension-settings-link-color);font-family:var(--font-family);text-decoration:none;cursor:pointer}.browser_extension_settings_v2_main .option_groups textarea{background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-size:12px;margin:10px 0 10px 0;padding:4px 8px;height:100px;width:100%;border:1px solid #a9a9a9;border-radius:4px;box-sizing:border-box}.browser_extension_settings_v2_main .switch_option,.browser_extension_settings_v2_main .select_option{display:flex;justify-content:space-between;align-items:center;padding:6px 0 6px 0;font-size:14px}.browser_extension_settings_v2_main .option_groups>*{background-color:var(--browser-extension-settings-group-background-color)}.browser_extension_settings_v2_main .bes_option>.bes_icon{width:24px;height:24px;margin-right:10px}.browser_extension_settings_v2_main .bes_option>.bes_title{margin-right:10px;flex-grow:1}.browser_extension_settings_v2_main .bes_option>.bes_select{color:var(--browser-extension-settings-text-color);box-sizing:border-box;background-color:var(--browser-extension-settings-group-background-color);height:24px;padding:0 2px 0 2px;margin:0;border-radius:6px;border:1px solid #ccc}.browser_extension_settings_v2_main .option_groups .bes_tip{position:relative;margin:0;margin-top:-1px;padding:6px 15px 6px 0;border:none;max-width:none;font-size:14px}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor{cursor:help;text-decoration:underline}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content{position:absolute;bottom:15px;left:0;background-color:#fff;color:var(--browser-extension-settings-text-color);text-align:left;overflow-y:auto;max-height:300px;padding:10px;display:none;border-radius:5px;-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor:hover+.bes_tip_content,.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content:hover{display:block}.browser_extension_settings_v2_main .option_groups .bes_tip p,.browser_extension_settings_v2_main .option_groups .bes_tip pre{margin:revert;padding:revert}.browser_extension_settings_v2_main .option_groups .bes_tip pre{font-family:Consolas,panic sans,bitstream vera sans mono,Menlo,microsoft yahei,monospace;font-size:13px;letter-spacing:.015em;line-height:120%;white-space:pre;overflow:auto;background-color:#f5f5f5;word-break:normal;overflow-wrap:normal;padding:.5em;border:none}.browser_extension_settings_v2_main .bes_switch_container{--button-width: 51px;--button-height: 24px;--toggle-diameter: 20px;--color-off: #e9e9eb;--color-on: #34c759;width:var(--button-width);height:var(--button-height);position:relative;padding:0;margin:0;flex:none;user-select:none}.browser_extension_settings_v2_main input[type=checkbox]{opacity:0;width:0;height:0;position:absolute}.browser_extension_settings_v2_main .bes_switch{width:100%;height:100%;display:block;background-color:var(--color-off);border-radius:calc(var(--button-height)/2);border:none;cursor:pointer;transition:all .2s ease-out}.browser_extension_settings_v2_main .bes_switch::before{display:none}.browser_extension_settings_v2_main .bes_slider{width:var(--toggle-diameter);height:var(--toggle-diameter);position:absolute;left:2px;top:calc(50% - var(--toggle-diameter)/2);border-radius:50%;background:#fff;box-shadow:0px 3px 8px rgba(0,0,0,.15),0px 3px 1px rgba(0,0,0,.06);transition:all .2s ease-out;cursor:pointer}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch{background-color:var(--color-on)}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch .bes_slider{left:calc(var(--button-width) - var(--toggle-diameter) - 2px)}@media(max-width: 500px){:host{right:10px}.browser_extension_settings_v2_main{max-height:85%}}'
   function createSwitch(options = {}) {
     const container = createElement("label", { class: "bes_switch_container" })
     const checkbox = createElement(
@@ -1621,6 +1621,18 @@
       "Open new tab in background for *all sites*",
     "settings.enableOpenNewTabInBackgroundForCurrentSite":
       "Open new tab in background for the current site",
+    "settings.enableImageProxyForAllSites":
+      "Enable image proxy for *all sites*",
+    "settings.enableImageProxyForCurrentSite":
+      "Enable image proxy for the current site",
+    "settings.imageProxyDomains": "Image proxy domains",
+    "settings.imageProxyDomainsPlaceholder":
+      '/* One domain per line, use "!" to exclude, "*" for all domains */',
+    "settings.imageProxyDomainsTipTitle": "Image proxy domain examples",
+    "settings.imageProxyDomainsTipContent":
+      "<p>Image proxy domain list</p>\n  <p>\n  - One domain per line (without http/https)<br>\n  - '*' matches all domains<br>\n  - Exclusion rules: prefix '!' to exclude specific domains<br>\n  <pre>i.imgur.com\nimgur.com\n!abc.com\n*</pre>\n  </p>",
+    "settings.enableImageProxyWebp":
+      "Convert proxied images to WebP when possible",
     "settings.convertTextToLinks": "Convert text links to hyperlinks",
     "settings.convertLinksToImages": "Convert image links to image tags",
     "settings.eraseLinks": "Erase Links",
@@ -1656,6 +1668,20 @@
       "\u5728*\u6240\u6709\u7F51\u7AD9*\u542F\u7528\u5728\u540E\u53F0\u6253\u5F00\u65B0\u6807\u7B7E\u9875",
     "settings.enableOpenNewTabInBackgroundForCurrentSite":
       "\u5728\u5F53\u524D\u7F51\u7AD9\u542F\u7528\u5728\u540E\u53F0\u6253\u5F00\u65B0\u6807\u7B7E\u9875",
+    "settings.enableImageProxyForAllSites":
+      "\u5728*\u6240\u6709\u7F51\u7AD9*\u542F\u7528\u5C06\u56FE\u7247\u94FE\u63A5\u8F6C\u4E3A\u4EE3\u7406\u94FE\u63A5",
+    "settings.enableImageProxyForCurrentSite":
+      "\u5728\u5F53\u524D\u7F51\u7AD9\u542F\u7528\u5C06\u56FE\u7247\u94FE\u63A5\u8F6C\u4E3A\u4EE3\u7406\u94FE\u63A5",
+    "settings.imageProxyDomains":
+      "\u8981\u901A\u8FC7\u4EE3\u7406\u52A0\u8F7D\u7684\u56FE\u7247\u57DF\u540D",
+    "settings.imageProxyDomainsPlaceholder":
+      '/* \u6BCF\u884C\u4E00\u4E2A\u57DF\u540D\uFF0C\u652F\u6301\u4F7F\u7528 "!" \u6392\u9664\uFF0C"*" \u4EE3\u8868\u5168\u90E8\u57DF\u540D */',
+    "settings.imageProxyDomainsTipTitle":
+      "\u56FE\u7247\u4EE3\u7406\u57DF\u540D\u793A\u4F8B",
+    "settings.imageProxyDomainsTipContent":
+      "<p>\u56FE\u7247\u4EE3\u7406\u57DF\u540D\u5217\u8868</p>\n  <p>\n  - \u6BCF\u884C\u4E00\u4E2A\u57DF\u540D\uFF08\u4E0D\u9700\u8981 http/https\uFF09<br>\n  - '*' \u4EE3\u8868\u5339\u914D\u6240\u6709\u57DF\u540D<br>\n  - \u6392\u9664\u89C4\u5219\uFF1A\u4EE5 '!' \u5F00\u5934\u8868\u793A\u6392\u9664\u5BF9\u5E94\u57DF\u540D<br>\n  <pre>i.imgur.com\nimgur.com\n!abc.com\n*</pre>\n  </p>",
+    "settings.enableImageProxyWebp":
+      "\u5C06\u4EE3\u7406\u56FE\u7247\u5C3D\u91CF\u8F6C\u6362\u4E3A WebP \u683C\u5F0F",
     "settings.convertTextToLinks":
       "\u5C06\u6587\u672C\u94FE\u63A5\u8F6C\u6362\u4E3A\u8D85\u94FE\u63A5",
     "settings.convertLinksToImages":
@@ -1800,6 +1826,18 @@
       }
     }
   }
+  function* getAllImages(root = document) {
+    const elements = root.querySelectorAll("img")
+    for (const element of elements) {
+      yield element
+    }
+    const allElements = root.querySelectorAll("*")
+    for (const element of allElements) {
+      if (element.shadowRoot) {
+        yield* __yieldStar(getAllImages(element.shadowRoot))
+      }
+    }
+  }
   var lastTarget
   var handleMouseOver = (event) => {
     const target = event.target
@@ -1863,7 +1901,68 @@
     ],
   }
   var cachedRules = {}
+  var imageProxyOptions = {
+    enableProxy: false,
+    domains: [],
+    enableWebp: false,
+  }
+  var setImageProxyOptions = (options) => {
+    imageProxyOptions = __spreadValues(
+      __spreadValues({}, imageProxyOptions),
+      options
+    )
+  }
   var getHostname = (url) => (/https?:\/\/([^/]+)/.exec(url) || [])[1]
+  var shouldProxyUrl = (url) => {
+    if (
+      !imageProxyOptions.enableProxy ||
+      imageProxyOptions.domains.length === 0
+    ) {
+      return false
+    }
+    const hostname2 = getHostname(url)
+    if (
+      !hostname2 ||
+      hostname2 === "wsrv.nl" ||
+      hostname2 === "localhost" ||
+      hostname2 === "127.0.0.1"
+    ) {
+      return false
+    }
+    for (let domain of imageProxyOptions.domains) {
+      domain = domain.trim()
+      if (!domain) {
+        continue
+      }
+      const isExclude = domain.startsWith("!")
+      const pattern = isExclude ? domain.slice(1).trim() : domain
+      if (!pattern) {
+        continue
+      }
+      if (pattern === "*") {
+        return !isExclude
+      }
+      if (hostname2 === pattern || hostname2.endsWith(".".concat(pattern))) {
+        return !isExclude
+      }
+    }
+    return false
+  }
+  var toProxyUrlIfNeeded = (url) => {
+    if (!shouldProxyUrl(url)) {
+      return void 0
+    }
+    const isGif = /\.gif($|\?)/i.test(url)
+    const urlEncoded = encodeURIComponent(url)
+    const ddgUrl = "https://external-content.duckduckgo.com/iu/?u=".concat(
+      urlEncoded
+    )
+    const qp = ""
+      .concat(isGif ? "&n=-1" : "")
+      .concat(imageProxyOptions.enableWebp ? "&output=webp" : "", "&default=")
+      .concat(urlEncoded)
+    return "https://wsrv.nl/?url=".concat(encodeURIComponent(ddgUrl)).concat(qp)
+  }
   var processRule = (rule, href) => {
     var _a
     let pattern
@@ -1948,13 +2047,41 @@
     }
     const href = anchor.href
     const text = anchor.textContent || href
-    const newHref = convertImgUrl(href)
-    if (newHref) {
-      anchorElementToImgElement(anchor, newHref, text)
+    const convertedHref = convertImgUrl(href)
+    if (convertedHref) {
+      const finalHref = toProxyUrlIfNeeded(convertedHref) || convertedHref
+      anchorElementToImgElement(anchor, finalHref, text)
     } else if (
       /^https:[^?]+\.(?:jpg|jpeg|jpe|bmp|png|gif|webp|ico|svg)/i.test(href)
     ) {
-      anchorElementToImgElement(anchor, href, text)
+      const finalHref = toProxyUrlIfNeeded(href) || href
+      anchorElementToImgElement(anchor, finalHref, text)
+    }
+  }
+  var proxyExistingImages = (flag) => {
+    for (const img of getAllImages()) {
+      const src = getAttribute(img, "src")
+      if (!src) {
+        continue
+      }
+      if (img.__links_helper_scaned === flag) {
+        continue
+      }
+      const proxied = toProxyUrlIfNeeded(src)
+      if (proxied && proxied !== src) {
+        img.removeAttribute("src")
+        setAttribute(img, "loading", "lazy")
+        setAttribute(img, "referrerpolicy", "no-referrer")
+        setAttribute(img, "src", proxied)
+        const parent = img.parentElement
+        if (parent && parent.tagName === "A") {
+          const href = getAttribute(parent, "href")
+          if (href && href === src) {
+            setAttribute(parent, "href", proxied)
+          }
+        }
+      }
+      img.__links_helper_scaned = flag
     }
   }
   var base = location.origin
@@ -2384,6 +2511,9 @@
   var enableOpenInternalLinksInCurrentTab = false
   var enableLinkToImg = false
   var enableTextToLinks = false
+  var enableImageProxy = false
+  var enableImageProxyWebp = false
+  var imageProxyDomains = []
   var cachedFlag = 0
   if (false) {
     const runtime =
@@ -2459,6 +2589,34 @@
         title: i2("settings.enableTreatSubdomainsAsSameSiteForCurrentSite"),
         defaultValue: false,
         group: ++groupNumber,
+      },
+      enableImageProxyForAllSites: {
+        title: i2("settings.enableImageProxyForAllSites"),
+        defaultValue: false,
+        group: ++groupNumber,
+      },
+      ["enableImageProxyForCurrentSite_".concat(host)]: {
+        title: i2("settings.enableImageProxyForCurrentSite"),
+        defaultValue: void 0,
+        group: groupNumber,
+      },
+      imageProxyDomains: {
+        title: i2("settings.imageProxyDomains"),
+        defaultValue: "i.imgur.com",
+        placeholder: i2("settings.imageProxyDomainsPlaceholder"),
+        type: "textarea",
+        group: groupNumber,
+      },
+      imageProxyDomainsTip: {
+        title: i2("settings.imageProxyDomainsTipTitle"),
+        type: "tip",
+        tipContent: i2("settings.imageProxyDomainsTipContent"),
+        group: groupNumber,
+      },
+      enableImageProxyWebp: {
+        title: i2("settings.enableImageProxyWebp"),
+        defaultValue: false,
+        group: groupNumber,
       },
       ["enableTextToLinksForCurrentSite_".concat(host)]: {
         title: i2("settings.enableTextToLinksForCurrentSite"),
@@ -2542,6 +2700,29 @@
     )
     {
       const siteSetting = getSettingsValue(
+        "enableImageProxyForCurrentSite_".concat(host)
+      )
+      const globalSetting = getSettingsValue("enableImageProxyForAllSites")
+      enableImageProxy = Boolean(
+        siteSetting != null ? siteSetting : globalSetting
+      )
+    }
+    {
+      const domainsValue =
+        getSettingsValue("imageProxyDomains") || "i.imgur.com"
+      imageProxyDomains = domainsValue
+        .split(/[\s,]+/)
+        .map((item) => item.trim())
+        .filter(Boolean)
+    }
+    enableImageProxyWebp = Boolean(getSettingsValue("enableImageProxyWebp"))
+    setImageProxyOptions({
+      enableProxy: enableImageProxy,
+      domains: imageProxyDomains,
+      enableWebp: enableImageProxyWebp,
+    })
+    {
+      const siteSetting = getSettingsValue(
         "enableOpenNewTabInBackgroundForCurrentSite_".concat(host)
       )
       const globalSetting = getSettingsValue("enableOpenNewTabInBackground")
@@ -2603,6 +2784,9 @@
       scanAndConvertChildNodes(doc.body)
     }
     scanAnchors()
+    if (enableImageProxy && imageProxyDomains.length > 0) {
+      proxyExistingImages(cachedFlag)
+    }
     bindOnError()
   }, 500)
   async function main() {
@@ -2664,6 +2848,25 @@
             if (globalSetting !== void 0 && siteSetting === void 0) {
               const checkbox = settingsMainView.querySelector(
                 '[data-key="enableOpenNewTabInBackgroundForCurrentSite_'.concat(
+                  host,
+                  '"] input[type="checkbox"]'
+                )
+              )
+              if (checkbox) {
+                checkbox.checked = globalSetting
+              }
+            }
+          }
+          {
+            const siteSetting = getSettingsValue(
+              "enableImageProxyForCurrentSite_".concat(host)
+            )
+            const globalSetting = getSettingsValue(
+              "enableImageProxyForAllSites"
+            )
+            if (globalSetting !== void 0 && siteSetting === void 0) {
+              const checkbox = settingsMainView.querySelector(
+                '[data-key="enableImageProxyForCurrentSite_'.concat(
                   host,
                   '"] input[type="checkbox"]'
                 )

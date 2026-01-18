@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn OC Role Restrictions
 // @namespace    https://xentac.github.io
-// @version      0.7
+// @version      0.8
 // @description  Highlight role restrictions and best roles in OC 2.0 (modified copy of "Torn OC Role Evaluator"). Well paired with https://greasyfork.org/en/scripts/526834-oc-success-chance-2-0.
 // @author       underko[3362751], xentac[3354782]
 // @match        https://www.torn.com/factions.php*
@@ -179,9 +179,13 @@
   function getFactionId() {
     let factionId = "";
     try {
-      document
-        .querySelector(".forum-thread")
-        .href.split("#")[1]
+      const ft = document.querySelector(".forum-thread");
+      if (!ft.href) {
+        return null;
+      }
+
+      ft.href
+        .split("#")[1]
         .split("&")
         .forEach((elem) => {
           if (elem[0] == "a") {

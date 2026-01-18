@@ -2,7 +2,7 @@
 // @name         Brainslug: Racing Banner Changer (PDA Safe)
 // @namespace    brainslug.torn.racing
 // @version      0.6.5
-// @description  Banner class pencil (PDA safe)
+// @description  Banner class changer (PDA Compatible)
 // @author       Brainslug
 // @contributor  MoDuL (PDA compatibility conversion)
 // @match        https://www.torn.com/page.php?sid=racing*
@@ -118,7 +118,7 @@
     root.id = ROOT_ID;
 
     root.innerHTML =
-      '<div id="' + BTN_ID + '">' + pencilSvg() + "</div>" +
+      '<div id="' + BTN_ID + '" title="Change banner">' + pencilSvg() + "</div>" +
       '<div id="' + PANEL_ID + '">' +
         '<div class="ttl">Banner class</div>' +
         '<select id="' + SELECT_ID + '"></select>' +

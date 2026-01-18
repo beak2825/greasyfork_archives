@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         Anilist Granular Name & Title Language Settings
 // @namespace    http://tampermonkey.net/
-// @version      1.9
+// @version      1.91
 // @description  Completely customizable title display preferences (Native, English, Phonetic) for Anime/Manga/Characters/Staff based on origin country.
 // @author       Slop
 // @match        https://anilist.co/*
 // @grant        GM_registerMenuCommand
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @license MIT
+// @grant        unsafeWindow
+// @license MIT 
 // @downloadURL https://update.greasyfork.org/scripts/560156/Anilist%20Granular%20Name%20%20Title%20Language%20Settings.user.js
 // @updateURL https://update.greasyfork.org/scripts/560156/Anilist%20Granular%20Name%20%20Title%20Language%20Settings.meta.js
 // ==/UserScript==
@@ -27,8 +28,6 @@
 
     // Load saved preferences or use defaults
     let PREF = GM_getValue('granular_pref', DEFAULT_PREF);
-
-
 
     const CACHE_KEY_PREFIX = 'anilist_granular_';
     const BATCH_DELAY = 100;
@@ -241,7 +240,7 @@
     // --- Helper Functions ---
 
     function getCacheKey(id, type) {
-        return `${CACHE_KEY_PREFIX}${type}_${id} `;
+        return `${CACHE_KEY_PREFIX}${type}_${id}`;
     }
 
     function getCachedData(id, type) {
@@ -320,8 +319,6 @@
         }
 
         if (mediaIds.length === 0 && charIds.length === 0 && staffIds.length === 0) return;
-
-
 
         const query = `
 query($mediaIds: [Int], $charIds: [Int], $staffIds: [Int]) {
@@ -403,8 +400,6 @@ query($mediaIds: [Int], $charIds: [Int], $staffIds: [Int]) {
     async function fetchReviews(reviewIds) {
         if (!reviewIds || reviewIds.length === 0) return;
 
-
-
         // AniList has a bug where one 404 in a batched query nullifies ALL results
         // So we must fetch each review individually
         // Also, we need to rate-limit to avoid 429 errors
@@ -465,8 +460,6 @@ query($mediaIds: [Int], $charIds: [Int], $staffIds: [Int]) {
                 await delay(REQUEST_DELAY);
             }
         }
-
-
     }
 
     function updateReviewCard(card, mediaId) {
@@ -723,21 +716,146 @@ query($mediaIds: [Int], $charIds: [Int], $staffIds: [Int]) {
         processReviews();
     }
 
+    // --- Vuex Direct Manipulation (Favorites Fix) ---
+    // Uses unsafeWindow to access the Page Context Vue Store directly.
+    // *Could* migrate the whole script to use this method instead of DOM manipulation in V2 but that would require a complete rewrite of the script.
+
+    function updateVuexEntity(id, type, data) {
+        const store = getVueStore();
+        if (!store || !store.state.entities) return;
+
+        const entityType = type === 'MEDIA' ? 'media' :
+            type === 'CHARACTER' ? 'character' :
+                type === 'STAFF' ? 'staff' : null;
+        if (!entityType) return;
+
+        const entity = store.state.entities[entityType][id];
+        if (!entity) return;
+
+        const newName = getPrefferedName(data, type);
+        if (!newName) return;
+
+        // Direct update
+        if (type === 'MEDIA') {
+            if (entity.title && entity.title.userPreferred !== newName) {
+                console.log('[Granular] Updating MEDIA ' + id + ' to ' + newName);
+                entity.title.userPreferred = newName;
+                // Handle English fallback logic if needed
+                if (PREF[data.countryOfOrigin] === 'english') entity.title.english = newName;
+            }
+        } else {
+            if (entity.name && entity.name.userPreferred !== newName) {
+                // console.log('[Granular] Updating ' + type + ' ' + id + ' to ' + newName);
+                entity.name.userPreferred = newName;
+            }
+        }
+    }
+
+    function getVueStore() {
+        try {
+            const app = unsafeWindow.document.querySelector('#app') || unsafeWindow.document.querySelector('.app');
+            if (app && app.__vue__) {
+                return app.__vue__.$store;
+            } else {
+                console.warn('[Granular] App found:', !!app, 'Has __vue__:', !!(app && app.__vue__));
+            }
+        } catch (e) {
+            console.error('[Granular] Error accessing Vue store:', e);
+        }
+        return null;
+    }
+
+    function scanVuexStore() {
+        try {
+            // console.log('[Granular] Scanning...');
+            const store = getVueStore();
+            if (!store || !store.state.entities) {
+                if (!window._granularStoreWarned) {
+                    console.warn('[Granular] Store or entities missing');
+                    window._granularStoreWarned = true;
+                }
+                return;
+            }
+
+            const entities = store.state.entities;
+            const types = [
+                { key: 'media', type: 'MEDIA' },
+                { key: 'character', type: 'CHARACTER' },
+                { key: 'staff', type: 'STAFF' }
+            ];
+
+            let updateCount = 0;
+            types.forEach(({ key, type }) => {
+                const entityMap = entities[key];
+                if (!entityMap) return;
+
+                Object.keys(entityMap).forEach(id => {
+                    const cached = getCachedData(id, type);
+                    if (cached) {
+                        updateVuexEntity(id, type, cached);
+                    } else {
+                        queueFetch(id, type);
+                    }
+                });
+            });
+        } catch (e) {
+            console.error('[Granular] Scan Error:', e);
+        }
+    }
+
+    // Poll frequently for lazy loaded content
+    setInterval(scanVuexStore, 2000);
+    // Initial scan
+    setTimeout(scanVuexStore, 1000);
+    console.log('[Granular] Script Initialized and Polling Started');
+
+    // --- Main Execution ---
+
+    // --- Debug Helper ---
+    function createDebugPanel() {
+        let panel = document.getElementById('granular-debug');
+        if (!panel) {
+            panel = document.createElement('div');
+            panel.id = 'granular-debug';
+            panel.style.position = 'fixed';
+            panel.style.bottom = '10px';
+            panel.style.right = '10px';
+            panel.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            panel.style.color = '#fff';
+            panel.style.padding = '10px';
+            panel.style.borderRadius = '5px';
+            panel.style.zIndex = '99999';
+            panel.style.fontSize = '12px';
+            panel.style.fontFamily = 'monospace';
+            panel.style.pointerEvents = 'none';
+            panel.style.maxWidth = '300px';
+            panel.innerText = 'Granular Script Loaded';
+            document.body.appendChild(panel);
+        }
+        return panel;
+    }
+
+    function debugLog(msg) {
+        // console.log('[Granular]', msg);
+        const panel = createDebugPanel();
+        const line = document.createElement('div');
+        line.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        panel.insertBefore(line, panel.firstChild);
+        if (panel.children.length > 20) panel.removeChild(panel.lastChild);
+    }
+
     // --- MutationObserver ---
 
     const observer = new MutationObserver((mutations) => {
         let shouldProcess = false;
         for (const m of mutations) {
-            // Check for new nodes being added
             if (m.addedNodes.length > 0) {
                 shouldProcess = true;
                 break;
             }
-            // Check for attribute changes on banner elements (lazy-loading)
             if (m.type === 'attributes' && m.attributeName === 'style') {
                 const target = m.target;
                 if (target.classList && target.classList.contains('banner')) {
-                    // A banner's style changed - might be lazy-load completing
                     const card = target.closest('.review-card');
                     if (card && card.dataset.granularReviewProcessed !== 'true') {
                         shouldProcess = true;
@@ -755,5 +873,17 @@ query($mediaIds: [Int], $charIds: [Int], $staffIds: [Int]) {
     observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
 
     processPage();
+
+    // Poll Vuex Store periodically to handle lazy loaded entities (like scrolling down favorites)
+    // 2 seconds is a reasonable balance between responsiveness and performance
+    // Poll Vuex Store handled by injected script
+
+    // Listen for fetch requests on unsafeWindow (since event is dispatched from page context)
+    unsafeWindow.addEventListener('granular-request-fetch', (e) => {
+        const { id, type } = e.detail;
+        if (id && type) {
+            queueFetch(id, type);
+        }
+    }, false);
 
 })();

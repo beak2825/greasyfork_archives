@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Quicklink Support
 // @namespace    https://whatslink.info
-// @version      2026-01-16
+// @version      2026-01-19
 // @description  What's the link to quicklink support
 // @author       Johnbi
 // @license      MIT
 // @match        https://whatslink.info/**
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=whatslink.info
+// @icon         https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://whatslink.info&size=64
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/562936/Quicklink%20Support.user.js
 // @updateURL https://update.greasyfork.org/scripts/562936/Quicklink%20Support.meta.js

@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name           Torrenter
 // @namespace      http://www.google.com/search?q=mabakay
-// @version        2.3.6
+// @version        2.3.7
 // @description    Adds links to torrent sites on popular movie websites.
 // @description:pl Dodaje linki do stron z torrentami na popularnych stronach o filmach.
 // @author         mabakay
-// @copyright      2010 - 2024, mabakay
-// @date           28 Oct 2024
+// @copyright      2010 - 2026, mabakay
+// @date           18 Jan 2026
 // @license        MIT
 // @run-at         document-end
 // @icon64URL      https://raw.githubusercontent.com/mabakay/torrenter/master/torrenter_64.png
@@ -38,15 +38,15 @@ class TorrenterConfigurator {
     getConfiguration() {
         return {
             engines: [
-                "https://thepiratebay10.org/search/{title}[ {year}]/0/7/0",
-                "https://torrentgalaxy.to/torrents.php?search={title}[ {year}]&sort=seeders&order=desc",
+                "https://thepiratebay.org/search/{title}[ {year}]/0/7/0",
+                "https://torrentgalaxy.hair/lmsearch?q={title}[ {year}]&category=lmsearch",
                 "https://1337x.to/sort-search/{title}[ {year}]/seeders/desc/1/",
-                "https://torrentz2eu.org/index.html?q={title}[ {year}]",
-                "https://yts.mx/browse-movies/{title}[/all/all/0/seeds/{year}/all]",
-                "https://eztv.re/search/{title}[ {year}]",
+                "https://www.torrentz.eu.com/index.html?q={title}[ {year}]",
+                "https://yts.bz/browse-movies/{title}[/all/all/0/seeds/{year}/all]",
+                "https://eztvx.to/search/{title}[ {year}]",
                 "https://www.torlock.com/?q={title}[ {year}]&sort=seeds&order=desc",
-                "https://www.torrentdownloads.me/search/?new=1&s_cat=0&search={title}[ {year}]",
-                "https://www.limetorrents.lol/search/all/{title}[ {year}]/seeds/1/"
+                "https://www.torrentdownloads.pro/search/?new=1&s_cat=0&search={title}[ {year}]",
+                "https://www.limetorrents.fun/search/all/{title}[ {year}]/seeds/1/"
             ],
             showEngines: this.getConfigurationProperty("showEngines", true),
             showUserEngines: this.getConfigurationProperty("showUserEngines", false),

@@ -3,15 +3,16 @@
 // @name:zh-CN   YouTube 网速显示
 // @name:zh-TW   YouTube 網速顯示
 // @namespace    https://greasyfork.org/scripts/562975-youtube-speed-mbps
-// @version      1.2.1
-// @description  Display real-time connection speed (MB/s) in the YouTube player UI without opening Stats for nerds. Shows download speed directly in the player controls for easy monitoring.
-// @description:zh-CN  在 YouTube 播放器界面直接显示实时连接速度 (MB/s)，无需打开"详细统计信息"。速度数值显示在播放器控制栏中，方便随时监控网络状态。
-// @description:zh-TW  在 YouTube 播放器介面直接顯示即時連線速度 (MB/s)，無需開啟「詳細統計資訊」。速度數值顯示在播放器控制列中，方便隨時監控網路狀態。
+// @version      1.2.2
+// @description  Display real-time connection speed (MB/s) in the YouTube player UI.
+// @description:zh-CN  在 YouTube 播放器界面直接显示实时连接速度 (MB/s)，鼠标悬停变色，美化布局。
+// @description:zh-TW  在 YouTube 播放器介面直接顯示即時連線速度 (MB/s)，滑鼠懸停變色，美化佈局。
 // @author       nodeseek
 // @match        https://www.youtube.com/*
 // @match        https://m.youtube.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_addStyle
 // @run-at       document-idle
 // @license      MIT
 // @icon         https://www.youtube.com/favicon.ico
@@ -20,8 +21,6 @@
 // @copyright    2025,kankankankankankan(https://github.com/kankankankankankan/youtube-speed)
 // @supportURL   https://github.com/kankankankankankan/youtube-speed
 // @homepageURL  https://github.com/kankankankankankan/youtube-speed
-
-
 // @downloadURL https://update.greasyfork.org/scripts/562975/YouTube%20Speed%20Display.user.js
 // @updateURL https://update.greasyfork.org/scripts/562975/YouTube%20Speed%20Display.meta.js
 // ==/UserScript==
@@ -34,6 +33,49 @@
     const UPDATE_MS = 1000;
     const ROUTE_POLL_MS = 400;
     const DEBUG = new URL(location.href).searchParams.get("yt_speed_debug") === "1";
+
+    // ==================== CSS Styles (美化部分) ====================
+    // 这里定义了布局、间距、字体和 Hover 红色效果
+    GM_addStyle(`
+        #${WIDGET_ID} {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 109%; /* 稍微调整字体大小以匹配原生控件 */
+            font-weight: 500;
+            line-height: 1;
+            color: #eee;
+            user-select: none;
+            cursor: default; /* 或者 pointer */
+            font-variant-numeric: tabular-nums; /* 等宽数字，防止抖动 */
+            white-space: nowrap;
+            box-sizing: border-box;
+            height: 100%;
+            padding: 0 10px; /* 增加左右内边距，解决间距问题 */
+            margin-left: 5px; /* 左侧增加一点额外间距 */
+            min-width: 80px; /* 设定最小宽度，防止数字变化导致右侧按钮跳动 */
+            text-align: center;
+            transition: color 0.2s ease; /* 颜色渐变动画 */
+        }
+        /* 鼠标悬停变红 */
+        #${WIDGET_ID}:hover {
+            color: #ff0000 !important;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+        }
+        /* 覆盖模式下的样式 (Fallback) */
+        #${WIDGET_ID}.yt-speed-overlay {
+            position: absolute;
+            right: 12px;
+            bottom: 60px;
+            z-index: 999999;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+            height: auto;
+            margin-left: 0;
+        }
+    `);
 
     // ==================== State Variables ====================
     let lastText = "0.00 MB/s";
@@ -198,37 +240,16 @@
     }
 
     function createWidget(mode) {
-        const el = document.createElement("span");
+        const el = document.createElement("div"); // 改用 div 方便 flex 布局
         el.id = WIDGET_ID;
         el.textContent = lastText;
         el.setAttribute("aria-label", "Connection speed (MB/s)");
-        el.style.cssText = `
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            line-height: 1;
-            color: #fff;
-            user-select: none;
-            pointer-events: none;
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap;
-            box-sizing: border-box;
-            text-shadow: none;
-        `;
+        el.setAttribute("title", "Connection Speed"); // 增加 Tooltip
 
-        if (mode === "controls" || mode === "controls-fallback") {
-            el.style.height = "100%";
-            el.style.marginRight = "8px";
-            el.style.padding = "0 4px";
-        } else {
-            el.style.position = "absolute";
-            el.style.right = "12px";
-            el.style.bottom = "54px";
-            el.style.zIndex = "999999";
-            el.style.padding = "0";
-            el.style.textShadow = "0 1px 2px rgba(0,0,0,0.6)";
+        if (mode !== "controls" && mode !== "controls-fallback") {
+            el.classList.add("yt-speed-overlay");
         }
+        
         return el;
     }
 
@@ -289,12 +310,13 @@
 
         if (kbps == null || !Number.isFinite(kbps) || kbps <= 0) {
             if (Date.now() - lastGoodAt < 10000) setText(lastText);
-            else setText("N/A MB/s");
+            else setText("N/A");
             if (DEBUG && res.reason) log("no kbps:", res.reason);
             return;
         }
 
         const mbps = kbps / 8 / 1024;
+
         const text = `${mbps.toFixed(2)} MB/s`;
         lastGoodAt = Date.now();
         setText(text);

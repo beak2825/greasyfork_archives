@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         DBD Detailed Match History
 // @namespace    https://github.com/Bloodpoint-Farming
-// @version      1.0.2
+// @version      1.0.8
 // @description  Changes match history to show BP/category for all players and BP/hour.
 // @author       Snoggles
 // @match        https://stats.deadbydaylight.com/match-history*
 // @run-at       document-start
 // @license      MIT
 // @supportURL   https://github.com/Bloodpoint-Farming/dbd-detailed-match-history
+// @icon         https://bloodpoint-farming.github.io/dbd-detailed-match-history/img/bloodpoints-96.webp
 // @downloadURL https://update.greasyfork.org/scripts/562996/DBD%20Detailed%20Match%20History.user.js
 // @updateURL https://update.greasyfork.org/scripts/562996/DBD%20Detailed%20Match%20History.meta.js
 // ==/UserScript==
@@ -160,16 +161,16 @@
         `;
     }
 
-    function createPlayerRow(player, isKiller, isUser = false, bpHour = null) {
+    function createPlayerRow(player, isKiller, isUser = false) {
         const loadout = player.characterLoadout || {};
         const postGame = player.postGameStat || {};
 
         // Post game stats - find the 4 values
         const statKeys = isKiller
-            ? ['Hunter', 'Deviousness', 'Brutality', 'Sacrifice']
-            : ['Objectives', 'Altruism', 'Boldness', 'Survival'];
+            ? ['Brutality', 'Deviousness', 'Hunter', 'Sacrifice']
+            : ['Objectives', 'Survival', 'Altruism', 'Boldness'];
 
-        const statsHtml = statKeys.map(key => {
+        const scoreCategoriesHtml = statKeys.map(key => {
             const fullKey = isKiller ? `DBD_SlasherScoreCat_${key}` : `DBD_CamperScoreCat_${key}`;
             const score = postGame[fullKey] || 0;
             const isLow = score < 10000;
@@ -219,7 +220,7 @@
                 </td>
                 ${loadoutHtml}
                 <td></td>
-                ${statsHtml}
+                ${scoreCategoriesHtml}
                 <td></td>
                 <td class="dbd-bp-cell">${player.bloodpointsEarned?.toLocaleString() || 0}</td>
                 <td></td>
@@ -247,9 +248,9 @@
         let downtimeHtml = ''
         if (currentIndex < matchesSorted.length - 1) {
             const currentStart = match.matchStat.matchStartTime;
-            const currentEnd = currentStart + match.matchStat.matchDuration;
+            const currentEnd = currentStart + match.playerStat.playerTimeInMatch;
             const prevMatch = matchesSorted[currentIndex + 1];
-            const prevEnd = prevMatch.matchStat.matchStartTime + prevMatch.matchStat.matchDuration;
+            const prevEnd = prevMatch.matchStat.matchStartTime + prevMatch.playerStat.playerTimeInMatch;
 
             const hourDiff = (currentEnd - prevEnd) / 3600;
             const hourDiffRound = Math.round(hourDiff)
@@ -277,7 +278,7 @@
         }
 
 
-        const allPlayers = [match.playerStat].map(p => createPlayerRow(p, p.playerRole === 'VE_Slasher', true, bpHour));
+        const allPlayers = [match.playerStat].map(p => createPlayerRow(p, p.playerRole === 'VE_Slasher', true));
         const opponentRows = match.opponentStat.map(p => createPlayerRow(p, p.playerRole === 'VE_Slasher', false));
 
         const rowsHtml = allPlayers.concat(opponentRows).join('');
@@ -403,12 +404,12 @@
         matches.forEach((match, index) => {
             const matchId = `${match.matchStat.matchStartTime}_${match.matchStat.map.name}`;
             const elementId = `dbd-match-${match.matchStat.matchStartTime}`; // Use start time for ID stability
-            let existing = document.getElementById(elementId);
+            let card = document.getElementById(elementId);
 
-            if (!existing) {
-                const newCard = createEnhancedCard(match, index);
-                newCard.id = elementId;
-                newCard.dataset.dbdMatchId = matchId;
+            if (!card) {
+                card = createEnhancedCard(match, index);
+                card.id = elementId;
+                card.dataset.dbdMatchId = matchId;
 
                 // Find correct position in wrapper to maintain reverse-chronological order
                 const nextInSorted = matches[index + 1];
@@ -419,11 +420,14 @@
                 }
 
                 if (referenceNode) {
-                    wrapper.insertBefore(newCard, referenceNode);
+                    wrapper.insertBefore(card, referenceNode);
                 } else {
-                    wrapper.appendChild(newCard);
+                    wrapper.appendChild(card);
                 }
             }
+
+            // Ensure only the latest match is expanded after adding new data or re-processing
+            card.setAttribute('data-dbd-expanded', index === 0 ? 'true' : 'false');
         });
     }
 
@@ -720,6 +724,7 @@
             }
         });
         observer.observe(document.body, { childList: true, subtree: true });
+
 
         // Initial scan
         processAllCards();

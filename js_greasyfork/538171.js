@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            WME Road Name Helper NP
 // @description     Check suffix and common word abbreviations without leaving WME
-// @version         2025.12.27.01
+// @version         2026.01.18.01
 // @author          Kid4rm90s
 // @license         MIT
 // @match           *://*.waze.com/*editor*
@@ -20,8 +20,8 @@
 (function () {
   ('use strict');
   const updateMessage = `
-Version 2025.12.27.01:
-<strong>Fixed :</strong><br> - Temporary fix for alerts not displaying properly.
+Version 2026.01.18.01:
+<strong>Fixed :</strong><br> - Fixed name checking for NH39 - KTM Ring Rd.<br>- Fixed for wrong suggestion for KTM Ring Rd.<br>- Fixed for NH77 - Bharatpur Ringroad now suggested as NH77 - Bharatpur Ring Rd.<br>
 `;
   const scriptVersion = GM_info.script.version.toString();
   const scriptName = GM_info.script.name;
@@ -231,6 +231,7 @@ Version 2025.12.27.01:
     रा७९: 'रारा७९',
     रा८०: 'रारा८०',
     AH02: 'AH2',
+    Ringroad: 'Ring Rd',
   };
 
   // Suffixes that should be preserved in title case (case-insensitive)
@@ -328,6 +329,7 @@ Version 2025.12.27.01:
     'AH9',
     'AH10',
     'AH42',
+    'KTM',
   ];
 
   // Highway Suffix Suggestion Data (EXACT match only)
@@ -920,21 +922,21 @@ Version 2025.12.27.01:
         sdk.Events.on({
           eventName: 'wme-map-move-end',
           eventHandler: debouncedScan,
-        })
+        }),
       );
 
       eventSubscriptions.push(
         sdk.Events.on({
           eventName: 'wme-map-zoom-changed',
           eventHandler: debouncedScan,
-        })
+        }),
       );
 
       eventSubscriptions.push(
         sdk.Events.on({
           eventName: 'wme-after-edit',
           eventHandler: debouncedScan,
-        })
+        }),
       );
 
       // Initial scan
@@ -1150,19 +1152,68 @@ Version 2025.12.27.01:
     let changed = false;
     let reasons = [];
 
-    // Check for highway patterns first (e.g., "NH41 - रा४१" should become "NH41 - रारा४१")
+    // Check for highway patterns first (e.g., "NH41 - रा४१" should become "NH41 - रारा०१")
     const hwyPattern = /^(NH\d{2})\s*-\s*(.+)$/i;
     const hwyMatch = streetName.match(hwyPattern);
     if (hwyMatch) {
       const hwyCode = hwyMatch[1];
       const hwyPart = hwyMatch[2].trim();
 
-      // Preserve highway names ending with "Hwy" (e.g., "NH41 - Prithvi Hwy")
-      if (hwyPart.match(/\s+Hwy$/i)) {
+      // Preserve highway names ending with approved abbreviations or "Hwy" or "Ring Rd"
+      // This includes: "NH41 - Prithvi Hwy", "NH39 - KTM Ring Rd", "NH77 - Bharatpur Ring Rd"
+      const approvedSuffixPattern = new RegExp(`\\s+(${Object.keys(wmessa_approvedAbbr).join('|')}|Hwy|Ring\\s+Rd)$`, 'i');
+      if (hwyPart.match(approvedSuffixPattern)) {
         return { needsFix: false };
       }
 
-      // Check if the highway part needs fixing
+      // Check if the highway part needs fixing (e.g., "Ringroad" -> "Ring Rd")
+      const hwyWords = hwyPart.split(/\s+/);
+      let hwyProposedWords = [...hwyWords];
+      let hwyChanged = false;
+
+      for (let i = 0; i < hwyWords.length; i++) {
+        const word = hwyWords[i];
+        const wordLower = word.toLowerCase();
+
+        // Check for "Ringroad" -> "Ring Rd"
+        if (wordLower === 'ringroad') {
+          hwyProposedWords[i] = 'Ring';
+          hwyProposedWords.push('Rd');
+          hwyChanged = true;
+          break;
+        }
+
+        // Check general suggestions
+        const generalSuggestionKeyCi = Object.keys(wmessa_generalWordSuggestions).find((k) => k.toLowerCase() === wordLower);
+        if (generalSuggestionKeyCi) {
+          const suggestedGeneralAbbr = wmessa_generalWordSuggestions[generalSuggestionKeyCi];
+          if (suggestedGeneralAbbr.toLowerCase() !== wordLower) {
+            hwyProposedWords[i] = suggestedGeneralAbbr;
+            hwyChanged = true;
+          }
+        }
+
+        // Check suffix suggestions
+        const devanagariSuggestion = wmessa_suggestedAbbr[word];
+        if (devanagariSuggestion && devanagariSuggestion !== word) {
+          hwyProposedWords[i] = devanagariSuggestion;
+          hwyChanged = true;
+        }
+      }
+
+      if (hwyChanged) {
+        const newHwyPart = wmessa_titleCase(hwyProposedWords.join(' '));
+        const newSuggestion = `${hwyCode.toUpperCase()} - ${newHwyPart}`;
+        if (streetName !== newSuggestion) {
+          return {
+            needsFix: true,
+            suggested: newSuggestion,
+            reason: `Highway format: ${hwyPart} → ${newHwyPart}`,
+          };
+        }
+      }
+
+      // Check if exact highway mapping exists
       const hwyKey = `${hwyCode.toUpperCase()}-`;
       const suggestedHwy = wmessa_suggestedHwyAbbr[hwyKey];
 
@@ -1172,19 +1223,6 @@ Version 2025.12.27.01:
           suggested: suggestedHwy,
           reason: `Highway format: ${streetName} → ${suggestedHwy}`,
         };
-      }
-
-      // Also check if just the Devanagari part needs fixing
-      const devanagariSuggestion = wmessa_suggestedAbbr[hwyPart];
-      if (devanagariSuggestion) {
-        const newSuggestion = `${hwyCode.toUpperCase()} - ${devanagariSuggestion}`;
-        if (streetName !== newSuggestion) {
-          return {
-            needsFix: true,
-            suggested: newSuggestion,
-            reason: `Highway Devanagari: ${hwyPart} → ${devanagariSuggestion}`,
-          };
-        }
       }
     }
 
@@ -1747,7 +1785,14 @@ Version 2025.12.27.01:
   }
   /*
 Changelog:
-2025.12.27.01
+Version 2026.01.18.01:
+- Fixed name checking for NH39 - KTM Ring Rd.
+- Fixed for wrong suggestion for KTM Ring Rd.
+- Fixed for NH77 - Bharatpur Ringroad now suggested as NH77 - Bharatpur Ring Rd.
+Version 2026.01.16.01:
+ - Fixed name checking for NH39 - KTM Ring Rd.
+ - Fixed for wrong suggestion for KTM.
+2026.01.16.01
 - Temporary fix for alerts not displaying properly.
 2025.12.02.01
 - Added sidebar panel "RNH" (Road Name Helper) for scanning road names

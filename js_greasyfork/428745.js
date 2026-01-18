@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        DuckDuckgGo Image Direct Link Patch
 // @namespace   https://greasyfork.org/en/users/85671-jcunews
-// @version     1.0.3
+// @version     1.0.4
 // @license     AGPL v3
 // @author      jcunews
 // @description Make DuckDuckgGo Image search result entry's image size information as link to the direct image resource.
@@ -28,7 +28,6 @@
       if (!dt.some((d, i) => {
         if (d.url === u) {
           a.href = d.image;
-          dt.splice(i, 1);
           return true
         }
       })) a.href = 'javascript:void("Image URL is not found")';

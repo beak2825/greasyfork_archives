@@ -118,7 +118,7 @@
 // @author       DuoHacker Community
 // @match        https://*.duolingo.com/*
 // @match        https://*.duolingo.cn/*
-// @icon         https://github.com/helloticc/DuoHacker/blob/main/DuoHacker.png?raw=true
+// @icon         https://github.com/FutureCLI/DuoHacker/blob/main/images/Logo_TypePNG_DuoHacker.png?raw=true
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/561041/Duolingo%20DuoHacker.user.js
@@ -155,11 +155,11 @@ const isMobile = /Android|iPhone|iPad|iPod|Mobile|BlackBerry|IEMobile|Opera Mini
 let liteMode = localStorage.getItem('duohacker_lite_mode');
 if (isMobile) {
     liteMode = true;
-    localStorage.setItem('duohacker_lite_mode', 'false');
+    localStorage.setItem('duohacker_lite_mode', 'true');
 } else {
     if (liteMode === null) {
         liteMode = true;
-        localStorage.setItem('duohacker_lite_mode', 'false');
+        localStorage.setItem('duohacker_lite_mode', 'true');
     } else {
         liteMode = liteMode === 'false';
     }
@@ -2916,7 +2916,7 @@ const initInterface = () => {
            border: 2px solid #1E88E5; /* Viền xanh */
          "
     >
-      <img src="https://github.com/helloticc/DuoHacker/blob/main/DuoHacker.png?raw=true"
+      <img src="https://github.com/FutureCLI/DuoHacker/blob/main/images/Logo_TypePNG_DuoHacker.png?raw=true"
            alt="Rocket"
            style="
              width: 110%;
@@ -3435,7 +3435,7 @@ const initInterface = () => {
 </div>
 <div id="_fab_container">
     <div id="_fab">
-        <img src="https://github.com/helloticc/DuoHacker/blob/main/DuoHacker.png?raw=true" alt="Toggle Menu">
+        <img src="https://github.com/FutureCLI/DuoHacker/blob/main/images/Logo_TypePNG_DuoHacker.png?raw=true" alt="Toggle Menu">
     </div>
 </div>
 `;

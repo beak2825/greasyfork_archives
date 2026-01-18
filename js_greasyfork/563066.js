@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rem4rk's Locked Items Manager
 // @namespace    https://www.torn.com/
-// @version      1.0
+// @version      1.1
 // @description  This userscript allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Perfect for protecting high-value items, collections, or anything you want to keep safe!
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/item.php*
@@ -101,33 +101,52 @@
         }, 2000);
     }
 
-    // ========== BANNER SYSTEM ==========
-    function showLockedItemsBanner(pageAction) {
+    function showInfoToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'torn-lock-info-toast';
+        toast.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(to right, #5bc0de, #31b0d5);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 9999999;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(400px);
+            max-width: 400px;
+        `;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        // Trigger animation
+        setTimeout(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(0)';
+        }, 10);
+
+        // Remove after 4 seconds
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(400px)';
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 4000);
+    }
+
+    // ========== BANNER SYSTEM (NOW TOAST) ==========
+    function showLockedItemsToast(pageAction) {
         if (!hasLockedItems()) return;
 
-        let banner = document.getElementById('torn-locked-items-banner');
-
-        if (!banner) {
-            banner = document.createElement('div');
-            banner.id = 'torn-locked-items-banner';
-            banner.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                background: linear-gradient(to right, #d9534f, #c9302c);
-                color: white;
-                padding: 12px 20px;
-                text-align: center;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-                z-index: 999999;
-                font-family: Arial, sans-serif;
-                font-size: 14px;
-                font-weight: bold;
-            `;
-            banner.textContent = `You have some locked items. This means they have been made untradeable. If you would like to ${pageAction}, you must go to your inventory first to unlock the item.`;
-            document.body.appendChild(banner);
-        }
+        const message = `Locked items hidden. To ${pageAction}, unlock them in your inventory.`;
+        showInfoToast(message);
     }
 
     // Add CSS for hidden items
@@ -404,7 +423,7 @@
             itemRows.forEach(processItemMarketItem);
         }
 
-        showLockedItemsBanner('add them to the Item Market');
+        showLockedItemsToast('list them on the market');
         observeItemMarket();
 
         const observer = new MutationObserver(() => {
@@ -452,7 +471,7 @@
             items.forEach(processBazaarItem);
         }
 
-        showLockedItemsBanner('add them to your Bazaar');
+        showLockedItemsToast('add them to your bazaar');
         observeBazaar();
 
         const observer = new MutationObserver(() => {
@@ -495,7 +514,7 @@
             items.forEach(processTradeItem);
         }
 
-        showLockedItemsBanner('add them to a Trade');
+        showLockedItemsToast('trade them');
         observeTrade();
 
         const observer = new MutationObserver(() => {
@@ -538,7 +557,7 @@
             items.forEach(processFactionItem);
         }
 
-        showLockedItemsBanner('donate them to your Faction');
+        showLockedItemsToast('donate them');
         observeFaction();
 
         const observer = new MutationObserver(() => {
@@ -590,7 +609,7 @@
             sellItems.forEach(processShopItem);
         }
 
-        showLockedItemsBanner('sell them');
+        showLockedItemsToast('sell them');
         observeShops();
 
         const observer = new MutationObserver(() => {

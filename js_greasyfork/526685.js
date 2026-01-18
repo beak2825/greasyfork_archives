@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MangaDex Customizer
 // @namespace    https://github.com/rRoler/UserScripts
-// @version      1.0.2
+// @version      1.0.3
 // @description  Customize MangaDex title pages by adding custom alt titles, changing the main title and cover, and adding custom tags\links. All data is stored inside userscript storage.
 // @author       Roler
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=mangadex.org
@@ -19,6 +19,15 @@
 
 (function() {
     'use strict';
+
+    const deprecationKey = 'deprecation-acknowledged';
+    const isDeprecationAcknowledged = GM_getValue(deprecationKey, false);
+    if (!isDeprecationAcknowledged) {
+        const message = "⚠️ Userscript Deprecation Notice!\n\n" +
+            "The MangaDex Customizer userscript is no longer maintained and will not receive updates."
+        alert(message);
+        GM_setValue(deprecationKey, true);
+    }
 
     const userScriptId = `mdc-${crypto.randomUUID()}`;
 

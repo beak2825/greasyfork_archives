@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Adobe Firefly Auto-Clicker Pro v5.5
-// @version      5.5
+// @name         Adobe Firefly Auto-Clicker Pro v5.6
+// @version      5.6
 // @description  Standard / Fixed-time / Timer Replay (auto-capture) with CN UI.
 // @author       VoidMuser
 // @license      MIT
@@ -9,14 +9,14 @@
 // @run-at       document-start
 // @grant        none
 // @namespace    
-// @downloadURL https://update.greasyfork.org/scripts/557799/Adobe%20Firefly%20Auto-Clicker%20Pro%20v55.user.js
-// @updateURL https://update.greasyfork.org/scripts/557799/Adobe%20Firefly%20Auto-Clicker%20Pro%20v55.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557799/Adobe%20Firefly%20Auto-Clicker%20Pro%20v56.user.js
+// @updateURL https://update.greasyfork.org/scripts/557799/Adobe%20Firefly%20Auto-Clicker%20Pro%20v56.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    const VERSION = '5.5';
+    const VERSION = '5.6';
     const LOG = (msg, ...args) => console.log(`[Firefly Clicker Pro] v${VERSION} ${msg}`, ...args);
     const WARN = (msg, ...args) => console.warn(`[Firefly Clicker Pro] v${VERSION} ${msg}`, ...args);
     const ERR = (msg, ...args) => console.error(`[Firefly Clicker Pro] v${VERSION} ${msg}`, ...args);
@@ -2129,9 +2129,10 @@
             updateReplayPanelUI();
             updateUI('自动捕获中：准备触发一次“生成”...', '#ffb74d');
 
-            if (!state.capturedPayload && state.lastGeneratePayload && (Date.now() - state.lastGeneratePayload.capturedAt < FIXED_RECAPTURE_MS)) {
-                state.capturedPayload = state.lastGeneratePayload;
-            }
+            // FIXED in v5.6: 移除自动复用 lastGeneratePayload 逻辑，强制重新捕获，确保使用最新 Prompt
+            // if (!state.capturedPayload && state.lastGeneratePayload && (Date.now() - state.lastGeneratePayload.capturedAt < FIXED_RECAPTURE_MS)) {
+            //    state.capturedPayload = state.lastGeneratePayload;
+            // }
             if (!state.capturedPayload) autoCaptureFromGenerateClickOnce().catch(() => { });
             fixedMainLoop();
         } else {
@@ -2159,9 +2160,10 @@
             updateReplayPanelUI();
             updateUI('自动捕获中：准备触发一次“生成”...', '#ffb74d');
 
-            if (!state.capturedPayload && state.lastGeneratePayload && (Date.now() - state.lastGeneratePayload.capturedAt < FIXED_RECAPTURE_MS)) {
-                state.capturedPayload = state.lastGeneratePayload;
-            }
+            // FIXED in v5.6: 移除自动复用 lastGeneratePayload 逻辑（定时回放模式），强制用户点击一次“生成”以捕获最新数据
+            // if (!state.capturedPayload && state.lastGeneratePayload && (Date.now() - state.lastGeneratePayload.capturedAt < FIXED_RECAPTURE_MS)) {
+            //    state.capturedPayload = state.lastGeneratePayload;
+            // }
             if (state.capturedPayload) {
                 state.replayWaitingCapture = false;
                 updateReplayPanelUI();

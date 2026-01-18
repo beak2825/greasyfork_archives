@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Naver Webtoon Mobile Scroll Saver + cleaner
 // @namespace    https://greasyfork.org/en/users/1529082-minjae-kim
-// @version      1.20
-// @description  save scroll position and clean ads and promotional elements
+// @version      1.21
+// @description  Saves scroll position + Cleans ads and promotional elements
 // @author       Minjae Kim
 // @match        https://m.comic.naver.com/webtoon/detail*
 // @license      MIT
@@ -20,24 +20,22 @@ style.innerHTML = `
     }
 `;
 document.head.appendChild(style);
-console.log("Hide Successful");
 
 
 //CLONE NEXT EPISODE BUTTON BELOW COMMENTS
 const originalNext = document.querySelector('.link_next._moveArticle');
 
 if (originalNext) {
-    // 2. Clone it (this copies the look and the '다음화' text)
+    // Clone the next episode button
     const cloneNext = originalNext.cloneNode(true);
 
-    // 3. Make the clone trigger the original when clicked
+    // Make the clone trigger the original when clicked
     cloneNext.addEventListener('click', (e) => {
         e.preventDefault(); // Prevent page from jumping due to href="#none"
         originalNext.click(); // Trigger the site's internal logic
     });
 
-    // 4. Place it somewhere else (e.g., at the top of the body or a specific div)
-    // Change 'document.body' to whatever container you want
+    // Place it at footer
     const destination = document.querySelector('.footer');
     destination.appendChild(cloneNext); 
 }
@@ -47,7 +45,7 @@ if (originalNext) {
 (function() {
     'use strict';
 
-    // 1. Extract titleId and episode number from URL
+    // Extract titleId and episode number from URL
     const params = new URLSearchParams(window.location.search);
     const titleId = params.get('titleId');
     const episodeNo = params.get('no');
@@ -55,11 +53,11 @@ if (originalNext) {
     // Unique key per series
     const storageKey = "webtoon_last_pos_" + titleId;
 
-    // 2. RESTORE: Find the saved ID and scroll to it
+    // RESTORE: Find the saved ID and scroll to it
     window.addEventListener('load', () => {
         const savedData = JSON.parse(localStorage.getItem(storageKey) || "{}");
         
-        // Only restore if we are on the same episode that was saved
+        // Only restore if on the same episode that was saved
         if (savedData.episode === episodeNo && savedData.imageId) {
             const observer = new MutationObserver((mutations, obs) => {
                 const targetEl = document.getElementById(savedData.imageId);
@@ -74,7 +72,7 @@ if (originalNext) {
         }
     });
 
-    // 3. SAVE: Detect which "toon_xx" is in view
+    // SAVE: Detect which "toon_xx" is in view
     let isScrolling;
     window.addEventListener('scroll', () => {
         window.clearTimeout(isScrolling);

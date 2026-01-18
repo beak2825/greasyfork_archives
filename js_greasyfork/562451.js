@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         CryptoClicks Auto Roll
 // @namespace    https://tampermonkey.net/
-// @version      1.0
-// @description  Automates the roll process by monitoring the Turnstile token to bypass iframe restrictions.
+// @version      1.1
+// @description  Optimized version.
 // @author       Rubystance
 // @license      MIT
 // @match        https://cryptoclicks.net/*
@@ -24,67 +24,86 @@
     }
 
     let lastActivity = Date.now();
-    setInterval(() => {
 
-        if (Date.now() - lastActivity > 120000) {
-            console.warn('[AutoRoll] Watchdog timeout - reloading page');
+    const watchdog = setInterval(() => {
+        if (Date.now() - lastActivity > 180000) {
+            console.warn('[AutoRoll] Freeze detected - Restarting...');
             location.reload();
         }
-    }, 10000);
+    }, 20000);
 
     function startProcess() {
+
+        const timerExist = document.querySelector('.time-left, #timer');
+        if (timerExist && timerExist.innerText.includes(':')) {
+            console.log('[AutoRoll] Waiting for Faucet timer to end...');
+            setTimeout(startProcess, 60000);
+            return;
+        }
+
         const btnModal = document.querySelector('#btn-modal');
         if (btnModal && btnModal.offsetParent !== null) {
             console.log('[AutoRoll] Opening Modal...');
             btnModal.click();
-            setTimeout(selectCloudflare, 2000);
+            lastActivity = Date.now();
+            setTimeout(selectCloudflare, 3000);
         } else {
 
-            setTimeout(startProcess, 30000);
+            setTimeout(startProcess, 10000);
         }
     }
 
     function selectCloudflare() {
         const select = document.querySelector('select');
         if (select) {
-            console.log('[AutoRoll] Selecting Cloudflare/Turnstile...');
+            console.log('[AutoRoll] Selecting Cloudflare...');
             select.value = "3";
             select.dispatchEvent(new Event('change', { bubbles: true }));
             lastActivity = Date.now();
             checkCaptchaSolved();
+        } else {
+            console.log('[AutoRoll] Select not found, retrying...');
+            setTimeout(startProcess, 5000);
         }
     }
 
     function checkCaptchaSolved() {
-        console.log('[AutoRoll] Waiting for Captcha resolution...');
-
+        let attempts = 0;
         const checkInterval = setInterval(() => {
-
             const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]');
             const rollButton = document.querySelector('#rollFaucet');
 
             if (turnstileResponse && turnstileResponse.value.length > 10) {
-                console.log('[AutoRoll] Captcha Solved! Preparing to Roll...');
+                console.log('[AutoRoll] Captcha Solved!');
                 clearInterval(checkInterval);
                 lastActivity = Date.now();
 
-                const delay = Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
+                const delay = Math.floor(Math.random() * 2000) + 1500;
 
                 setTimeout(() => {
-                    if (rollButton) {
+                    if (rollButton && !rollButton.disabled) {
                         rollButton.click();
-                        console.log('[AutoRoll] Button Clicked Successfully!');
+                        console.log('[AutoRoll] Roll executed successfully!');
+
+                        setTimeout(() => location.reload(), 5000);
                     }
                 }, delay);
             }
 
+            attempts++;
+            if (attempts > 60) {
+                clearInterval(checkInterval);
+                location.reload();
+            }
+
             lastActivity = Date.now();
-        }, 1500);
+        }, 2000);
     }
 
-    window.addEventListener('load', () => {
-        console.log('[AutoRoll] Script initialized');
-        setTimeout(startProcess, 3000);
-    });
+    if (document.readyState === 'complete') {
+        setTimeout(startProcess, 4000);
+    } else {
+        window.addEventListener('load', () => setTimeout(startProcess, 4000));
+    }
 
 })();

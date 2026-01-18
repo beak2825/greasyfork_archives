@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name          abdullah abbas Junction Angle
-// @description   Show the angle between two selected segments with multi-language support (Ar-IQ, Kur-Sorani, En-US)
+// @description   Show the angle between two selected segments with multi-language support (Ar-IQ, Kur-Sorani, En-US) and Side-by-Side Settings
 // @match         https://beta.waze.com/*editor*
 // @match         https://www.waze.com/*editor*
 // @exclude       https://www.waze.com/*user/*editor/*
-// @version       2026.01.17.07
+// @version       2026.01.18.09
 // @author        Abdullah Abbas
 // @grant         GM_addElement
 // @namespace     https://greasyfork.org/scripts/35547-wme-junction-angle-info/
@@ -17,7 +17,7 @@
 function run_ja() {
     "use strict";
 
-    var junctionangle_version = "2026.01.17.07";
+    var junctionangle_version = "2026.01.18.09";
     var ja_options = {};
     var ja_mapLayer;
 
@@ -62,88 +62,94 @@ function run_ja() {
             name: "abdullah abbas Junction Angle",
             settingsTitle: "Junction Angle Settings",
             uiLanguage: "Interface Language",
-            enableScript: "Enable",
+            generalSettings: "General Settings",
+            enableScript: "Enable Script",
             resetToDefault: "Reset to default",
-            defaultOn: "Show layer by default",
             override: "Check \"override instruction\"",
-            overrideAngles: "Show angles of \"override\"",
             guess: "Estimate routing instructions",
-            roundaboutnav: "WIKI: Roundabouts",
-            ghissues: "Report an Issue",
-            noInstructionColor: "Best Continuation",
-            continueInstructionColor: "Continue",
-            keepInstructionColor: "Keep",
-            exitInstructionColor: "Exit",
-            turnInstructionColor: "Turn",
-            uTurnInstructionColor: "U-Turn",
-            noTurnColor: "Disallowed",
-            problemColor: "Avoid",
-            roundaboutColor: "Roundabout",
-            roundaboutOverlayColor: "Overlay",
+            decimals: "Decimals",
+            textSize: "Text Size",
+            circleSize: "Circle Size",
+            lineLength: "Line Length",
+            lineWidth: "Line Width",
+            visualSettings: "Visual Settings",
+            colors: "Color Settings",
+            turnInstructionColor: "Turn Color",
+            uTurnInstructionColor: "U-Turn Color",
+            exitInstructionColor: "Exit Color",
+            keepInstructionColor: "Keep Color",
+            noTurnColor: "Disallowed Color",
+            problemColor: "Problem Color",
+            noInstructionColor: "No Instruction",
+            continueInstructionColor: "Continue Color",
+            roundaboutColor: "Roundabout Color",
             roundaboutOverlayDisplay: "Show Roundabout Overlay",
+            roundaboutOverlayColor: "Overlay Color",
             rOverNever: "Never",
             rOverSelected: "Selected",
-            rOverAlways: "Always",
-            decimals: "Decimals",
-            pointSize: "Point Size"
+            rOverAlways: "Always"
         },
         "ar-IQ": {
             name: "abdullah abbas Junction Angle",
             settingsTitle: "إعدادات زوايا التقاطع",
             uiLanguage: "لغة الواجهة",
-            enableScript: "تفعيل",
+            generalSettings: "الإعدادات العامة",
+            enableScript: "تفعيل السكريبت",
             resetToDefault: "استعادة الافتراضي",
-            defaultOn: "إظهار الطبقة افتراضياً",
             override: "تحقق من تجاوز التعليمات",
-            overrideAngles: "إظهار زوايا التجاوز",
             guess: "تقدير التوجيه",
-            roundaboutnav: "ويكي: الدوارات",
-            ghissues: "الإبلاغ عن مشكلة",
-            noInstructionColor: "أفضل استمرار",
-            continueInstructionColor: "تابع",
-            keepInstructionColor: "التزم",
-            exitInstructionColor: "مخرج",
-            turnInstructionColor: "انعطاف",
-            uTurnInstructionColor: "استدارة",
-            noTurnColor: "ممنوع",
-            problemColor: "تجنب",
-            roundaboutColor: "الدوار",
-            roundaboutOverlayColor: "تظليل",
-            roundaboutOverlayDisplay: "إظهار تظليل الدوار",
+            decimals: "المراتب العشرية",
+            textSize: "حجم النص",
+            circleSize: "حجم الدائرة",
+            lineLength: "طول الخط",
+            lineWidth: "سمك الخط",
+            visualSettings: "إعدادات المظهر",
+            colors: "إعدادات الألوان",
+            turnInstructionColor: "لون الانعطاف",
+            uTurnInstructionColor: "لون الاستدارة",
+            exitInstructionColor: "لون الخروج",
+            keepInstructionColor: "لون الالتزام",
+            noTurnColor: "لون المنع",
+            problemColor: "لون المشكلة",
+            noInstructionColor: "لون بلا توجيه",
+            continueInstructionColor: "لون المتابعة",
+            roundaboutColor: "لون الدوار",
+            roundaboutOverlayDisplay: "تظليل الدوار",
+            roundaboutOverlayColor: "لون التظليل",
             rOverNever: "أبداً",
             rOverSelected: "عند التحديد",
-            rOverAlways: "دائماً",
-            decimals: "المراتب العشرية",
-            pointSize: "حجم الخط"
+            rOverAlways: "دائماً"
         },
         "ckb-IQ": {
             name: "abdullah abbas Junction Angle",
             settingsTitle: "ڕێکخستنەکانی گۆشەی یەکتربڕ",
             uiLanguage: "زمانی ڕووکار",
+            generalSettings: "ڕێکخستنە گشتییەکان",
             enableScript: "چالاککردن",
             resetToDefault: "گەڕاندنەوە بۆ بنەڕەت",
-            defaultOn: "نیشاندانی لایەر لە سەرەتا",
             override: "پشکنینی تێپەڕاندن (Override)",
-            overrideAngles: "نیشاندانی گۆشەکانی تێپەڕاندن",
-            guess: "خەمڵاندنی ڕێنماییەکانی ڕێگا",
-            roundaboutnav: "ویکی: بازنە (Fellke)",
-            ghissues: "تۆمارکردنی کێشە",
-            noInstructionColor: "باشترین بەردەوامی",
-            continueInstructionColor: "بەردەوام",
-            keepInstructionColor: "مانەوە",
-            exitInstructionColor: "دەرچوون",
-            turnInstructionColor: "پێچ",
-            uTurnInstructionColor: "پێچکردنەوە",
-            noTurnColor: "قەدەغە",
-            problemColor: "خراپ/تێكچوو",
-            roundaboutColor: "بازنە (Fellke)",
-            roundaboutOverlayColor: "سێبەر",
+            guess: "خەمڵاندنی ڕێنماییەکان",
+            decimals: "دەیی (Decimals)",
+            textSize: "قەبارەی نووسین",
+            circleSize: "قەبارەی بازنە",
+            lineLength: "درێژی هێڵ",
+            lineWidth: "ئەستووری هێڵ",
+            visualSettings: "ڕێکخستنی شێوە",
+            colors: "ڕەنگەکان",
+            turnInstructionColor: "ڕەنگی پێچ",
+            uTurnInstructionColor: "ڕەنگی پێچکردنەوە",
+            exitInstructionColor: "ڕەنگی دەرچوون",
+            keepInstructionColor: "ڕەنگی مانەوە",
+            noTurnColor: "ڕەنگی قەدەغە",
+            problemColor: "ڕەنگی کێشە",
+            noInstructionColor: "بێ ڕێنمایی",
+            continueInstructionColor: "ڕەنگی بەردەوام",
+            roundaboutColor: "ڕەنگی بازنە",
             roundaboutOverlayDisplay: "نیشاندانی سێبەر",
+            roundaboutOverlayColor: "ڕەنگی سێبەر",
             rOverNever: "هەرگیز",
             rOverSelected: "دیاریکراو",
-            rOverAlways: "هەمیشە",
-            decimals: "دەیی (Decimals)",
-            pointSize: "قەبارەی هێڵ"
+            rOverAlways: "هەمیشە"
         }
     };
 
@@ -155,26 +161,26 @@ function run_ja() {
 
     // --- Settings Structure ---
     var ja_settings = {
-        uiLanguage: { elementType: "select", elementId: "_jaSelUiLanguage", defaultValue: "en-US", options: ["en-US", "ar-IQ", "ckb-IQ"]},
-        enableScript: { elementType: "checkbox", elementId: "_jaCbEnableScript", defaultValue: true },
-        defaultOn: { elementType: "checkbox", elementId: "_jaCbShowLayer", defaultValue: true },
-        override: { elementType: "checkbox", elementId: "_jaCbOverride", defaultValue: true, group: "guess" },
-        overrideAngles: { elementType: "checkbox", elementId: "_jaCboverrideAngles", defaultValue: false, group: "override" },
-        guess: { elementType: "checkbox", elementId: "_jaCbGuessRouting", defaultValue: true },
-        // Colors
-        noInstructionColor: { elementType: "color", elementId: "_jaTbNoInstructionColor", defaultValue: "#aaaaaa", group: "guess"},
-        continueInstructionColor: { elementType: "color", elementId: "_jaTbContinueInstructionColor", defaultValue: "#ffffff", group: "guess"},
-        keepInstructionColor: { elementType: "color", elementId: "_jaTbKeepInstructionColor", defaultValue: "#ffff00", group: "guess"},
-        exitInstructionColor: { elementType: "color", elementId: "_jaTbExitInstructionColor", defaultValue: "#00ffff", group: "guess"},
-        turnInstructionColor: { elementType: "color", elementId: "_jaTbTurnInstructionColor", defaultValue: "#00ff00", group: "guess"},
-        uTurnInstructionColor: { elementType: "color", elementId: "_jaTbUTurnInstructionColor", defaultValue: "#0055ff", group: "guess"},
-        noTurnColor: { elementType: "color", elementId: "_jaTbNoTurnColor", defaultValue: "#ff0000", group: "guess"},
-        problemColor: { elementType: "color", elementId: "_jaTbProblemColor", defaultValue: "#ff0099", group: "guess"},
-        roundaboutOverlayDisplay: { elementType: "select", elementId: "_jaSelRoundaboutOverlayDisplay", defaultValue: "rOverAlways", options: ["rOverNever","rOverSelected","rOverAlways"]},
-        roundaboutOverlayColor: { elementType: "color", elementId: "_jaTbRoundaboutOverlayColor", defaultValue: "#2F4F4F", group: "roundaboutOverlayDisplay"},
-        roundaboutColor: { elementType: "color", elementId: "_jaTbRoundaboutColor", defaultValue: "#4B0082", group: "roundaboutOverlayDisplay"},
-        decimals: { elementType: "number", elementId: "_jaTbDecimals", defaultValue: 2, min: 0, max: 2},
-        pointSize: { elementType: "number", elementId: "_jaTbPointSize", defaultValue: 12, min: 6, max: 20}
+        uiLanguage: { elementType: "select", elementId: "_jaSelUiLanguage", defaultValue: "en-US", options: ["en-US", "ar-IQ", "ckb-IQ"], group: "language"},
+        enableScript: { elementType: "checkbox", elementId: "_jaCbEnableScript", defaultValue: true, group: "general" },
+        guess: { elementType: "checkbox", elementId: "_jaCbGuessRouting", defaultValue: true, group: "general" },
+        override: { elementType: "checkbox", elementId: "_jaCbOverride", defaultValue: true, group: "general" },
+        textSize: { elementType: "range", elementId: "_jaTbTextSize", defaultValue: 12, min: 8, max: 30, group: "visual" },
+        circleSize: { elementType: "range", elementId: "_jaTbCircleSize", defaultValue: 16, min: 10, max: 50, group: "visual" },
+        lineLength: { elementType: "range", elementId: "_jaTbLineLength", defaultValue: 30, min: 15, max: 100, group: "visual" },
+        lineWidth: { elementType: "range", elementId: "_jaTbLineWidth", defaultValue: 2, min: 1, max: 10, group: "visual" },
+        decimals: { elementType: "number", elementId: "_jaTbDecimals", defaultValue: 2, min: 0, max: 2, group: "visual"},
+        turnInstructionColor: { elementType: "color", elementId: "_jaTbTurnInstructionColor", defaultValue: "#00ff00", group: "colors"},
+        uTurnInstructionColor: { elementType: "color", elementId: "_jaTbUTurnInstructionColor", defaultValue: "#0055ff", group: "colors"},
+        exitInstructionColor: { elementType: "color", elementId: "_jaTbExitInstructionColor", defaultValue: "#00ffff", group: "colors"},
+        keepInstructionColor: { elementType: "color", elementId: "_jaTbKeepInstructionColor", defaultValue: "#ffff00", group: "colors"},
+        noTurnColor: { elementType: "color", elementId: "_jaTbNoTurnColor", defaultValue: "#ff0000", group: "colors"},
+        problemColor: { elementType: "color", elementId: "_jaTbProblemColor", defaultValue: "#ff0099", group: "colors"},
+        noInstructionColor: { elementType: "color", elementId: "_jaTbNoInstructionColor", defaultValue: "#aaaaaa", group: "colors"},
+        continueInstructionColor: { elementType: "color", elementId: "_jaTbContinueInstructionColor", defaultValue: "#ffffff", group: "colors"},
+        roundaboutColor: { elementType: "color", elementId: "_jaTbRoundaboutColor", defaultValue: "#4B0082", group: "colors"},
+        roundaboutOverlayDisplay: { elementType: "select", elementId: "_jaSelRoundaboutOverlayDisplay", defaultValue: "rOverAlways", options: ["rOverNever","rOverSelected","rOverAlways"], group: "colors"},
+        roundaboutOverlayColor: { elementType: "color", elementId: "_jaTbRoundaboutOverlayColor", defaultValue: "#2F4F4F", group: "colors"},
     };
 
     var ja_arrow = {
@@ -197,7 +203,6 @@ function run_ja() {
     }
 
     function junctionangle_init() {
-        // Events
         window.W.selectionManager.events.register("selectionchanged", null, ja_calculate);
         window.W.model.segments.on({ "objectschanged": ja_calculate, "objectsremoved": ja_calculate });
         window.W.model.nodes.on({ "objectschanged": ja_calculate, "objectsremoved": ja_calculate });
@@ -206,7 +211,6 @@ function run_ja() {
         ja_load();
         setupHtml();
 
-        // Create Layer with pointer-events protection through CSS
         if (window.W.map.getLayersBy("uniqueName","junction_angles").length === 0) {
             ja_mapLayer = new window.OpenLayers.Layer.Vector(ja_t("name"), {
                 displayInLayerSwitcher: true,
@@ -254,86 +258,227 @@ function run_ja() {
         var ja_settings_header = document.createElement('h4');
         var style = document.createElement('style');
         var form = document.createElement('form');
-        var section = document.createElement('div');
+
+        var mainWrapper = document.createElement('div');
+        mainWrapper.className = "ja-main-wrapper";
+
+        var langContainer = document.createElement('div');
+        langContainer.className = "ja-section ja-lang-section";
+        var midSection = document.createElement('div');
+        midSection.className = "ja-mid-container";
+        var generalCol = document.createElement('div');
+        generalCol.className = "ja-mid-col";
+        var visualCol = document.createElement('div');
+        visualCol.className = "ja-mid-col";
+        var colorContainer = document.createElement('div');
+        colorContainer.className = "ja-section ja-colors-section";
+        var colorGrid = document.createElement('div');
+        colorGrid.className = "ja-colors-grid";
         var ja_reset_button = document.createElement('button');
+
         var userTabs = document.getElementById('user-info');
         var ja_info = document.createElement('ul');
         var ja_version_elem = document.createElement('li');
         var jatab = document.createElement('li');
+
+        var currentLang = ja_getOption("uiLanguage");
+        var isRTL = (currentLang === "ar-IQ" || currentLang === "ckb-IQ");
+        form.dir = isRTL ? "rtl" : "ltr";
 
         ja_settings_dom_panel.className = "side-panel-section";
         ja_settings_dom_content.className = "tab-content";
         ja_settings_header.appendChild(document.createTextNode(ja_t("settingsTitle")));
         ja_settings_dom_content.appendChild(ja_settings_header);
 
-        // CSS FIX: pointer-events: none ensures clicks pass through the layer to the map
         style.textContent = `
-            #jaOptions > *:first-child { margin-top: 1em; }
-            #jaOptions * { vertical-align: middle; }
-            #jaOptions label { display: inline; margin-left: 5px; margin-right: 5px; }
-            #jaOptions .controls-container { margin-bottom: 8px; }
-            #jaOptions input, select { display: inline; margin-right: 7px; box-sizing: border-box; border: 1px solid #cccccc; border-radius: 5px; padding: 3px; }
-            #jaOptions input[type="number"] { width: 4em; padding: 6px; }
-            #jaOptions input[type="color"] { width: 30px; height: 30px; padding: 2px; border: none; cursor: pointer; }
-            /* Critical fix for selection issues */
-            .junction-angles, .junction-angles svg, .junction-angles div { pointer-events: none !important; }
-        `;
+            #jaOptions { font-family: "Open Sans", sans-serif; font-size: 12px; }
+            #jaOptions * { box-sizing: border-box; }
 
-        section.className = "form-group";
-        form.className = "attributes-form side-panel-section";
-        section.id = "jaOptions";
-
-        Object.getOwnPropertyNames(ja_settings).forEach(function (a) {
-            var setting = ja_settings[a];
-            var ja_controls_container = document.createElement('div');
-            var ja_input = document.createElement('input');
-            var ja_label = document.createElement('label');
-
-            if (a === "defaultOn") return;
-
-            ja_controls_container.className = "controls-container";
-            ja_input.type = setting.elementType;
-
-            if (setting.elementType === 'select') {
-                ja_input = document.createElement('select');
-                ja_input.id = setting.elementId;
-                for(var i = 0; i < setting.options.length; i++) {
-                    var ja_select_option = document.createElement('option');
-                    ja_select_option.value = setting.options[i];
-                    var labelText = setting.options[i];
-                    if (a === "uiLanguage") {
-                        if(labelText === "en-US") labelText = "English (US)";
-                        if(labelText === "ar-IQ") labelText = "العربية (العراق)";
-                        if(labelText === "ckb-IQ") labelText = "کوردی (سۆرانی)";
-                    } else {
-                        labelText = ja_t(setting.options[i]);
-                    }
-                    ja_select_option.appendChild(document.createTextNode(labelText));
-                    ja_input.appendChild(ja_select_option);
-                }
-            } else {
-                ja_input.id = setting.elementId;
-                if(setting.elementType === 'number') {
-                    ja_input.setAttribute("min", setting.min);
-                    ja_input.setAttribute("max", setting.max);
-                }
+            .ja-main-wrapper {
+                border: 2px solid #59899e;
+                border-radius: 8px;
+                padding: 10px;
+                background-color: #ffffff;
+                margin-bottom: 10px;
             }
 
-            ja_controls_container.appendChild(ja_input);
-            ja_input.onchange = function() { ja_onchange(this); };
-            ja_label.setAttribute("for", setting.elementId);
-            ja_label.appendChild(document.createTextNode(ja_t(a)));
-            ja_controls_container.appendChild(ja_label);
-            section.appendChild(ja_controls_container);
+            .ja-header {
+                font-weight: bold; font-size: 13px; color: #59899e;
+                border-bottom: 2px solid #59899e; margin-bottom: 8px;
+                padding-bottom: 2px; width: 100%; display: block;
+            }
+
+            .ja-section { margin-bottom: 10px; }
+            .ja-mid-container { display: flex; gap: 8px; margin-bottom: 10px; }
+            .ja-mid-col { flex: 1; min-width: 0; background: #f9f9f9; padding: 6px; border-radius: 6px; border: 1px solid #eee; }
+
+            .ja-colors-section { background: #fdfdfd; padding: 6px; border-radius: 6px; border: 1px solid #eee; }
+            .ja-colors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 8px; }
+
+            .ja-control { display: flex; align-items: center; margin-bottom: 5px; min-height: 24px; }
+
+            /* Unified Label Styling */
+            .ja-control label {
+                margin: 0; padding: 0 5px; font-weight: normal; flex-grow: 1;
+                white-space: normal; line-height: 1.1; overflow: visible;
+            }
+
+            .ja-control input[type="checkbox"] { margin: 0; flex-shrink: 0; }
+            .ja-control input[type="color"] { border: 1px solid #ccc; width: 22px; height: 22px; padding: 1px; border-radius: 3px; cursor: pointer; flex-shrink: 0; }
+            .ja-control input[type="range"] { width: 100%; height: 5px; margin: 4px 0; }
+
+            .ja-slider-row { display: flex; flex-direction: column; margin-bottom: 6px; border-bottom: 1px dashed #eee; padding-bottom: 3px; }
+            .ja-slider-header { display: flex; justify-content: space-between; font-size: 11px; color: #555; }
+            .ja-slider-val { font-weight: bold; color: #000; }
+
+            .ja-lang-select { width: 100%; padding: 3px; border: 1px solid #ccc; border-radius: 4px; margin-top: 3px; }
+
+            .junction-angles { pointer-events: none !important; }
+        `;
+
+        form.className = "attributes-form side-panel-section";
+        form.id = "jaOptions";
+
+        var genHeader = document.createElement('div');
+        genHeader.className = "ja-header";
+        genHeader.innerText = ja_t("generalSettings");
+        generalCol.appendChild(genHeader);
+
+        var visHeader = document.createElement('div');
+        visHeader.className = "ja-header";
+        visHeader.innerText = ja_t("visualSettings");
+        visualCol.appendChild(visHeader);
+
+        var colHeader = document.createElement('div');
+        colHeader.className = "ja-header";
+        colHeader.innerText = ja_t("colors");
+        colorContainer.appendChild(colHeader);
+
+        Object.getOwnPropertyNames(ja_settings).forEach(function (key) {
+            var setting = ja_settings[key];
+            var container;
+
+            if (setting.group === "language") container = langContainer;
+            else if (setting.group === "general") container = generalCol;
+            else if (setting.group === "visual") container = visualCol;
+            else if (setting.group === "colors") container = colorGrid;
+            else container = generalCol;
+
+            var wrapper = document.createElement('div');
+            var label = document.createElement('label');
+            label.setAttribute("for", setting.elementId);
+            label.innerText = ja_t(key);
+
+            var input;
+            if (setting.elementType === 'select') {
+                input = document.createElement('select');
+                input.id = setting.elementId;
+                input.className = "ja-lang-select";
+                for(var i=0; i<setting.options.length; i++){
+                    var opt = document.createElement('option');
+                    opt.value = setting.options[i];
+                    var txt = setting.options[i];
+                    if (key === "uiLanguage") {
+                         if(txt === "en-US") txt = "English (US)";
+                         if(txt === "ar-IQ") txt = "العربية (العراق)";
+                         if(txt === "ckb-IQ") txt = "کوردی (سۆرانی)";
+                    } else {
+                        txt = ja_t(txt);
+                    }
+                    opt.text = txt;
+                    input.appendChild(opt);
+                }
+                input.onchange = function() { ja_onchange(this); };
+
+                // Unified styling for all select inputs including language
+                wrapper.className = "ja-control";
+                wrapper.style.display = "flex";
+                wrapper.style.flexDirection = "column";
+                wrapper.style.alignItems = "stretch";
+                label.style.textAlign = "start";
+                label.style.marginBottom = "2px";
+                if(setting.group === "language") {
+                     label.style.fontWeight = "bold";
+                     label.style.color = "#59899e"; // Optional: to make it look like a mini-header
+                }
+                wrapper.appendChild(label);
+                wrapper.appendChild(input);
+
+            } else if (setting.elementType === 'range') {
+                wrapper.className = "ja-slider-row";
+                var header = document.createElement('div');
+                header.className = "ja-slider-header";
+                var valSpan = document.createElement('span');
+                valSpan.className = "ja-slider-val";
+                valSpan.id = setting.elementId + "_val";
+                valSpan.innerText = ja_getOption(key);
+
+                header.appendChild(document.createTextNode(ja_t(key)));
+                header.appendChild(valSpan);
+
+                input = document.createElement('input');
+                input.type = "range";
+                input.id = setting.elementId;
+                input.min = setting.min;
+                input.max = setting.max;
+                input.step = 1;
+                input.oninput = function() {
+                    document.getElementById(this.id + "_val").innerText = this.value;
+                    ja_onchange(this);
+                };
+
+                wrapper.appendChild(header);
+                wrapper.appendChild(input);
+
+            } else if (setting.elementType === 'checkbox') {
+                wrapper.className = "ja-control";
+                input = document.createElement('input');
+                input.type = "checkbox";
+                input.id = setting.elementId;
+                input.onchange = function() { ja_onchange(this); };
+                wrapper.appendChild(input);
+                wrapper.appendChild(label);
+
+            } else if (setting.elementType === 'color') {
+                wrapper.className = "ja-control";
+                input = document.createElement('input');
+                input.type = "color";
+                input.id = setting.elementId;
+                input.onchange = function() { ja_onchange(this); };
+                wrapper.appendChild(label);
+                wrapper.appendChild(input);
+
+            } else {
+                wrapper.className = "ja-control";
+                input = document.createElement('input');
+                input.type = setting.elementType;
+                input.id = setting.elementId;
+                if(setting.min) input.min = setting.min;
+                if(setting.max) input.max = setting.max;
+                input.onchange = function() { ja_onchange(this); };
+                wrapper.appendChild(label);
+                wrapper.appendChild(input);
+            }
+
+            container.appendChild(wrapper);
         });
 
+        colorContainer.appendChild(colorGrid);
+        mainWrapper.appendChild(langContainer);
+        midSection.appendChild(generalCol);
+        midSection.appendChild(visualCol);
+        mainWrapper.appendChild(midSection);
+        mainWrapper.appendChild(colorContainer);
+
         ja_reset_button.type = "button";
-        ja_reset_button.className = "btn btn-default";
+        ja_reset_button.className = "btn btn-default btn-block";
+        ja_reset_button.style.marginTop = "8px";
         ja_reset_button.addEventListener("click", ja_reset, true);
         ja_reset_button.appendChild(document.createTextNode(ja_t("resetToDefault")));
-        section.appendChild(document.createElement('div'));
-        section.appendChild(ja_reset_button);
-        form.appendChild(section);
+
+        mainWrapper.appendChild(ja_reset_button);
+
+        form.appendChild(mainWrapper);
         ja_settings_dom_content.appendChild(form);
 
         if (userTabs) {
@@ -347,6 +492,7 @@ function run_ja() {
 
             ja_info.className = "list-unstyled -side-panel-section";
             ja_info.style.fontSize = "11px";
+            ja_info.style.textAlign = "center";
             ja_version_elem.appendChild(document.createTextNode(ja_t("name") + ": v" + junctionangle_version));
             ja_info.appendChild(ja_version_elem);
             ja_settings_dom.appendChild(ja_info);
@@ -366,21 +512,12 @@ function run_ja() {
     function ja_calculate_real() {
         if (typeof ja_mapLayer === 'undefined' || !ja_mapLayer.visibility) return;
 
-        // SAFEGUARD: Always clean first
         ja_mapLayer.destroyFeatures();
-        // Removed setZIndex(9999) to prevent blocking WME layers
-
-        // SAFEGUARD: Try-catch block to prevent breaking WME selection
         try {
             var selection = getselfeat();
-
-            // If nothing selected, exit cleanly
-            if (!selection || selection.length === 0) {
-                return;
-            }
+            if (!selection || selection.length === 0) return;
 
             var effective_selection = selection;
-
             var ja_nodes = [];
             effective_selection.forEach(function(element) {
                 var obj = element._wmeObject ? element._wmeObject : (element.model ? element.model : element);
@@ -436,7 +573,7 @@ function run_ja() {
                 ja_selected_angles = [...new Set(ja_selected_angles.map(JSON.stringify))].map(JSON.parse);
 
                 var point;
-                var ja_label_distance = 25 * (1 + (0.2 * parseInt(ja_getOption("decimals"))));
+                var ja_label_distance = parseInt(ja_getOption("lineLength"));
 
                 if(!node.getOLGeometry()) return;
 
@@ -562,11 +699,13 @@ function run_ja() {
             new window.OpenLayers.Feature.Vector(point, { angle: angleString, ja_type: ja_junction_type }) :
             new window.OpenLayers.Feature.Vector(point, { angle: ja_round(a) + "°", ja_type: "generic" });
 
+        var lineWidthVal = parseInt(ja_getOption("lineWidth")) || 2;
+
         ja_mapLayer.addFeatures([
             new window.OpenLayers.Feature.Vector(
                 new window.OpenLayers.Geometry.LineString([node.getOLGeometry(), point]),
                 {},
-                {strokeOpacity: 0.6, strokeWidth: 1.2, strokeDashstyle: "solid", strokeColor: "#ff9966"}
+                {strokeOpacity: 0.6, strokeWidth: lineWidthVal, strokeDashstyle: "solid", strokeColor: "#ff9966"}
             )
         ]);
         ja_mapLayer.addFeatures([anglePoint]);
@@ -710,6 +849,7 @@ function run_ja() {
                         ja_options.roundaboutColor = "#4B0082";
                         ja_options.roundaboutOverlayColor = "#2F4F4F";
                     } else {
+                        // Defaults
                         ja_options.turnInstructionColor = "#00ff00";
                         ja_options.uTurnInstructionColor = "#0055ff";
                         ja_options.exitInstructionColor = "#00ffff";
@@ -720,11 +860,19 @@ function run_ja() {
                         ja_options.noInstructionColor = "#aaaaaa";
                         ja_options.roundaboutOverlayColor = "#2F4F4F";
                         ja_options.roundaboutColor = "#4B0082";
+                        ja_options.textSize = 12;
+                        ja_options.circleSize = 16;
+                        ja_options.lineLength = 30;
+                        ja_options.lineWidth = 2;
                     }
                 }
             } catch (e){}
         }
         if(!ja_options.uiLanguage) ja_options.uiLanguage = "en-US";
+        if(!ja_options.textSize) ja_options.textSize = 12;
+        if(!ja_options.circleSize) ja_options.circleSize = 16;
+        if(!ja_options.lineLength) ja_options.lineLength = 30;
+        if(!ja_options.lineWidth) ja_options.lineWidth = 2;
     };
 
     var ja_apply = function() {
@@ -734,6 +882,10 @@ function run_ja() {
             if(elem) {
                 if(setting.elementType === "checkbox") elem.checked = ja_getOption(a);
                 else elem.value = ja_getOption(a);
+
+                // Update slider value display if it exists
+                var valDisp = document.getElementById(setting.elementId + "_val");
+                if(valDisp) valDisp.innerText = ja_getOption(a);
             }
         });
         if(window.W.map.getLayersBy("uniqueName","junction_angles")[0]) {
@@ -759,13 +911,20 @@ function run_ja() {
     }
 
     function ja_get_style_rule(routingType, fillColorOption) {
+        var pSize = parseInt(ja_getOption("circleSize")) || 16;
+        var tSize = parseInt(ja_getOption("textSize")) || 12;
+        var decimals = parseInt(ja_getOption("decimals")) || 2;
+
+        // Dynamic radius
+        var dynamicRadius = pSize + (decimals > 0 ? 2 * decimals : 0);
+
         return new window.OpenLayers.Rule({
             filter: new window.OpenLayers.Filter.Comparison({
                 type: window.OpenLayers.Filter.Comparison.EQUAL_TO, property: "ja_type", value: routingType
             }),
             symbolizer: {
-                pointRadius: 3 + parseInt(ja_getOption("pointSize"), 10) + (parseInt(ja_getOption("decimals")) > 0 ? 4 * parseInt(ja_getOption("decimals")) : 0),
-                fontSize: (parseInt(ja_getOption("pointSize")) - 1) + "px",
+                pointRadius: dynamicRadius,
+                fontSize: tSize + "px",
                 fillColor: ja_getOption(fillColorOption),
                 strokeColor: "#183800",
                 fontColor: ja_get_contrast_color(ja_getOption(fillColorOption))
@@ -774,10 +933,13 @@ function run_ja() {
     }
 
     function ja_style() {
+        var pSize = parseInt(ja_getOption("circleSize")) || 16;
+        var tSize = parseInt(ja_getOption("textSize")) || 12;
+
         return new window.OpenLayers.Style({
             fillColor: "#ffcc88", strokeColor: "#ff9966", strokeWidth: 2,
             label: "${angle}", fontWeight: "bold",
-            pointRadius: parseInt(ja_getOption("pointSize"), 10), fontSize: "10px"
+            pointRadius: pSize, fontSize: tSize + "px"
         }, {
             rules: [
                 new window.OpenLayers.Rule({ symbolizer: {} }),

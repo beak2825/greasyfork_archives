@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Lunar Client
+// @name         Lunar Client 
 // @namespace    https://deadshot.io/
 // @version      1.0
-// @description  Lunar Client with draggable title bars, crosshair editor, selectable stats (OS, CPU, FPS, Ping), autosave, glow, etc.
-// @author       Aguy123
+// @description  Lunar Client with draggable title bars, crosshair editor with OPACITY, etc.
+// @author       Aguy123 
 // @match        *://*/*
 // @grant        none
 // @run-at       document-idle
@@ -21,9 +21,18 @@ const d=document, L=localStorage;
 // --- Default state ---
 const defaultState = {
   style:'Circle', overlay:'Dot', size:60, glow:10, color:'#00eaff',
+  opacity: 1.0, // Default Opacity
   enabled:true, editorX:null, editorY:null, uiX:null, uiY:null
 };
+
+// Load state from storage, or use default
 let state = JSON.parse(L.getItem('lc_state')) || defaultState;
+
+// IMPORTANT: Fix for old save data without opacity
+if (typeof state.opacity === 'undefined') {
+    state.opacity = 1.0;
+}
+
 function saveState(){ L.setItem('lc_state', JSON.stringify(state)); }
 
 // --- Canvas for Crosshair ---
@@ -58,6 +67,8 @@ editor.style=`
   border-radius:10px;padding:10px;min-width:220px;z-index:2147483647;
   cursor:default;display:none;
 `;
+
+// Updated HTML to include a smoother Opacity Slider
 editor.innerHTML=`
   <div id="editorTitle" style="text-align:center;cursor:grab;margin-bottom:6px;font-weight:bold;">Crosshair Editor</div>
   <div><label>Enabled:</label> <input type="checkbox" id="chToggle"></div>
@@ -73,6 +84,10 @@ editor.innerHTML=`
     </select>
   </div>
   <div><label>Size: <span id="sizeVal">${state.size}</span></label><input type="range" id="chSize" min="5" max="200" style="width:100%;"></div>
+  
+  <!-- Modified Opacity Input -->
+  <div><label>Opacity: <span id="opacityVal">${state.opacity}</span></label><input type="range" id="chOpacity" min="0.1" max="1" step="0.05" style="width:100%;"></div>
+  
   <div><label>Glow: <span id="glowVal">${state.glow}</span></label><input type="range" id="chGlow" min="0" max="50" style="width:100%;"></div>
   <div><label>Color:</label> <input type="color" id="chColor"></div>
   <button id="btnReset" style="width:100%;padding:5px;margin-top:5px;">Reset</button>
@@ -150,21 +165,44 @@ showBtn.onclick=()=>{ui.style.display='block'; showBtn.style.display='none';};
 // --- Crosshair Inputs ---
 const chToggle=d.getElementById('chToggle'),chStyle=d.getElementById('chStyle'),
 chOverlay=d.getElementById('chOverlay'),chSize=d.getElementById('chSize'),
+chOpacity=d.getElementById('chOpacity'),
 chGlow=d.getElementById('chGlow'),chColor=d.getElementById('chColor'),
-sizeVal=d.getElementById('sizeVal'),glowVal=d.getElementById('glowVal'),
+sizeVal=d.getElementById('sizeVal'),opacityVal=d.getElementById('opacityVal'),glowVal=d.getElementById('glowVal'),
 btnReset=d.getElementById('btnReset');
 
-chToggle.checked=state.enabled;chStyle.value=state.style;chOverlay.value=state.overlay;
-chSize.value=state.size;chGlow.value=state.glow;chColor.value=state.color;
+// Initialize Input Values
+chToggle.checked=state.enabled;
+chStyle.value=state.style;
+chOverlay.value=state.overlay;
+chSize.value=state.size;
+chOpacity.value=state.opacity;
+chGlow.value=state.glow;
+chColor.value=state.color;
+opacityVal.textContent=state.opacity;
 
 function update(fn){fn();saveState();drawCrosshair();}
+
 chToggle.onchange=()=>update(()=>state.enabled=chToggle.checked);
 chStyle.onchange=()=>update(()=>state.style=chStyle.value);
 chOverlay.onchange=()=>update(()=>state.overlay=chOverlay.value);
 chSize.oninput=()=>update(()=>{state.size=+chSize.value;sizeVal.textContent=state.size;});
+
+// Fixed Opacity Logic
+chOpacity.oninput=()=>update(()=>{
+    state.opacity = parseFloat(chOpacity.value); // Ensure it's a number
+    opacityVal.textContent = state.opacity.toFixed(2); // Display cleanly
+});
+
 chGlow.oninput=()=>update(()=>{state.glow=+chGlow.value;glowVal.textContent=state.glow;});
 chColor.oninput=()=>update(()=>state.color=chColor.value);
-btnReset.onclick=()=>{state={...defaultState,editorX:editor.offsetLeft,editorY:editor.offsetTop,uiX:ui.offsetLeft,uiY:ui.offsetTop};saveState();location.reload();};
+
+// Reset Function
+btnReset.onclick=()=>{
+    state={...defaultState,editorX:editor.offsetLeft,editorY:editor.offsetTop,uiX:ui.offsetLeft,uiY:ui.offsetTop};
+    state.opacity = 1.0; // Enforce opacity reset
+    saveState();
+    location.reload();
+};
 
 // --- Draw Crosshair ---
 function drawCrosshair(){
@@ -172,6 +210,10 @@ function drawCrosshair(){
  if(!state.enabled)return;
  ctx.save();
  ctx.translate(canvas.width/2,canvas.height/2);
+ 
+ // --- APPLY OPACITY ---
+ ctx.globalAlpha = state.opacity;
+ 
  ctx.strokeStyle=ctx.fillStyle=state.color;
  ctx.lineWidth=Math.max(1,Math.min(3,state.size/50));
  if(state.glow>0){ctx.shadowColor=state.color;ctx.shadowBlur=state.glow;}

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Download Weibo Images & Videos (Only support new version weibo UI)
 // @name:zh-CN   下载微博图片和视频（仅支持新版界面）
-// @version      1.3.9
+// @version      1.3.10
 // @description  Download images and videos from new version weibo UI webpage.
 // @description:zh-CN 从新版微博界面下载图片和视频。
 // @author       OWENDSWANG
@@ -812,7 +812,7 @@
         } else {
             resJson = await httpRequest('https://' + location.host + '/ajax/statuses/show?id=' + id);
         }
-        console.log(resJson);
+        // console.log(resJson);
         let status = resJson;
         let retweetPostId, retweetUserName, retweetUserId, retweetPostUid, retweetPostTime, retweetText, retweetRegion;
         if(resJson.hasOwnProperty('retweeted_status')) {
@@ -902,7 +902,7 @@
         const postLink = header.querySelector('.head-info_time_6sFQg,._time_1tpft_33');
         const postId = postLink.href.split('/')[postLink.href.split('/').length - 1];
         let retweetPostId;
-        const retweetPostLink = card.querySelector('div.retweet a.head-info_time_6sFQg');
+        const retweetPostLink = card.querySelector('div.retweet a.head-info_time_6sFQg, div.retweet a._time_1t79r_33');
         if (retweetPostLink) {
             retweetPostId = retweetPostLink.href.split('/')[retweetPostLink.href.split('/').length - 1];
         }
@@ -914,13 +914,15 @@
         dlBtn.className = 'woo-like-main toolbar_btn_Cg9tz _btn_198pe_22 download-button';
         dlBtn.setAttribute('tabindex', '0');
         dlBtn.setAttribute('title', '下载');
-        dlBtn.innerHTML = '<span class="woo-like-iconWrap"><svg class="woo-like-icon" viewBox="0 0 100 100"><path d="m25,0l50,0l0,50l25,0l-50,50l-50,-50l25,0l0,-50" fill="currentColor"></path><path d="m30,5l40,0l0,50l20,0l-40,40l-40,-40l20,0l0,-50" fill="white"></path></svg></span><span class="woo-like-count">' + (GM_getValue('wbDl-' + (retweetPostId || postId), null) ? '已下载' : '下载') + '</span>';
+        // console.log(retweetPostId, postId, 'wbDl-' + (retweetPostId || postId), GM_getValue('wbDl-' + (retweetPostId || postId), null));
+        dlBtn.innerHTML = '<span class="woo-like-iconWrap"><svg class="woo-like-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="m25,0l50,0l0,50l25,0l-50,50l-50,-50l25,0l0,-50" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="miter" stroke-linecap="butt"/></svg></span><span class="woo-like-count">' + (GM_getValue('wbDl-' + (retweetPostId || postId), null) ? '已下载' : '下载') + '</span>';
         dlBtn.addEventListener('click', async function(event) {
             event.preventDefault();
             const dlBtnText = dlBtn.querySelector('span.woo-like-count');
             dlBtnText.textContent = '下载中';
             const [downloadList, packName] = await handlePostDownloadById(postId);
             await handleDownloadList(downloadList, packName);
+            // console.log(retweetPostId, postId, 'wbDl-' + (retweetPostId || postId), GM_getValue('wbDl-' + (retweetPostId || postId), null));
             GM_setValue('wbDl-' + (retweetPostId || postId), true);
             dlBtnText.textContent = '已下载';
         });
@@ -939,7 +941,7 @@
         const postLink = header.querySelector('.head-info_time_6sFQg,._time_1tpft_33');
         const postId = postLink.href.split('/')[postLink.href.split('/').length - 1];
         let retweetPostId;
-        const retweetPostLink = card.querySelector('div.retweet a.head-info_time_6sFQg');
+        const retweetPostLink = card.querySelector('div.retweet a.head-info_time_6sFQg, div.retweet a._time_1t79r_33');
         if (retweetPostLink) {
             retweetPostId = retweetPostLink.href.split('/')[retweetPostLink.href.split('/').length - 1];
         }
@@ -2047,7 +2049,7 @@
                             const postLink = contentDom.querySelector('a.head-info_time_6sFQg');
                             const postId = postLink.href.split('/')[postLink.href.split('/').length - 1];
                             let retweetPostId;
-                            const retweetPostLink = contentDom.querySelector('div.retweet a.head-info_time_6sFQg');
+                            const retweetPostLink = contentDom.querySelector('div.retweet a.head-info_time_6sFQg, div.retweet a._time_1t79r_33');
                             if (retweetPostLink) {
                                 retweetPostId = retweetPostLink.href.split('/')[retweetPostLink.href.split('/').length - 1];
                             }

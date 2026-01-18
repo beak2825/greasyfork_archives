@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://www.torn.com/factions.php*
 // @grant       none
-// @version     1.0
+// @version     1.01
 // @author      bilbosaggings[2323763]
 // @description makes member list statuses into clicky links to initiate an attack against the user. for pda mostly
 // @downloadURL https://update.greasyfork.org/scripts/563052/TornPDA_Utility_Quick_Faction_Attack.user.js
@@ -43,10 +43,10 @@ const waitForElement = async (selector, target = document.body) => {
     for(const r of rows){
       const l = r.querySelector('[class*="honorWrap"] > a')?.href
 
-      const u = parseInt(l.split('XID=')[1].trim())
+      const u = parseInt(l.split('XID=')[1].trim());
 
-      const s = r.querySelector('.table-cell.status')
-      s.innerHTML = `<a href="https://www.torn.com/loader.php?sid=attack&user2ID=${u}">${s.innerHTML}</a>`
+      const s = r.querySelector('.table-cell.status');
+      s.innerHTML = `<a href="https://www.torn.com/loader.php?sid=attack&user2ID=${u}" target="_blank">${s.innerHTML}</a>`;
     }
   })
 })()

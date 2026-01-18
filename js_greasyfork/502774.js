@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Diep.io+ (fixed Destroyer Cooldown & Anti aim)
+// @name         Diep.io+ (fixed Autorespawn)
 // @namespace    http://tampermonkey.net/
-// @version      2.4.1
+// @version      2.4.2
 // @description  work in progress...
 // @author       r!PsAw
 // @match        https://diep.io/*
@@ -9,8 +9,8 @@
 // @grant        none
 // @license      Mi300 don't steal my scripts ;)
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/502774/Diepio%2B%20%28fixed%20Destroyer%20Cooldown%20%20Anti%20aim%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/502774/Diepio%2B%20%28fixed%20Destroyer%20Cooldown%20%20Anti%20aim%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/502774/Diepio%2B%20%28fixed%20Autorespawn%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/502774/Diepio%2B%20%28fixed%20Autorespawn%29.meta.js
 // ==/UserScript==
 
 /*
@@ -75,9 +75,6 @@ let predefined_functions = {
         mouse: {
             move: null,
         },
-        player: {
-            spawn: null,
-        },
     },
     inputs_simulator: {
         mouse: {
@@ -88,6 +85,9 @@ let predefined_functions = {
         keys: {
             press: null,
             unpress: null,
+        },
+        player: {
+            spawn: null,
         },
     },
     state_getter: {
@@ -398,6 +398,16 @@ const mapN = {
 //spawn _cpp__oe960b366917 $ka
 //move mouse? _cpp__o0e188399ce9 $ma
 
+function simulate_spawn(name){
+    if(window.input && window.input.execute){
+        window.input.execute('game_spawn ' + name);
+        setTimeout(() => {
+        if(document.querySelector("#game-over-continue")) document.querySelector("#game-over-continue").click();
+        if(document.querySelector("#spawn-button")) document.querySelector("#spawn-button").click();
+        }, 200);
+    }
+}
+
 function define_pf_for_N(){
     if(!window.N) return console.warn('%cwindow.N was not defined, quitting define_pf_for_N()...', 'color: red');
     const obj = window.N;
@@ -408,13 +418,7 @@ function define_pf_for_N(){
     define_pf(obj, mapN._set_key_down, ['inputs_simulator', 'keys', 'press']);
     define_pf(obj, mapN._set_key_up, ['inputs_simulator', 'keys', 'unpress']);
     define_pf(obj, mapN._has_tank, ['state_getter', 'wasm_communicator', 'doesHaveTank']);
-}
-
-function define_pf_for_n(){
-    if(!window.n) return console.warn('%cwindow.n was not defined, quitting define_pf_for_n()...', 'color: red');
-    const obj = window.n;
-    define_pf(obj, 'set_mouse_pos', ['inputs_handler', 'mouse', 'move']);
-    define_pf(obj, 'spawn_player', ['inputs_handler', 'player', 'spawn']);
+    predefined_functions.inputs_simulator.player.spawn = simulate_spawn;
 }
 
 const prop = '_cp5_destroy';
@@ -436,31 +440,6 @@ Object.defineProperty(Object.prototype, prop, {
                 let msg = [prop in Object.prototype, prop in {}];
                 msg[0]? console.log('%cObject.prototype still has _cp5_destroy', 'color: red') : null;
                 msg[1]? console.log('%cnew created Object still has _cp5_destroy', 'color: red') : null;
-            }
-        }
-    },
-    configurable: true,
-});
-
-const prop2 = 'grant_reward';
-Object.defineProperty(Object.prototype, prop2, {
-    get: function() {
-        return undefined
-    },
-    set: function(new_val) {
-        if (this.spawn_player) {
-            window.n = this;
-            define_pf_for_n(); //automatically fills up everything inside predefined_functions
-            console.log('n found! Deleting Object hook for n...');
-            delete Object.prototype[prop2]
-            //not required but nice to have for debugging
-            if (!(prop2 in Object.prototype) && !(prop2 in {})) {
-                console.log('%cn Object hook successfully deleted!', 'color: green');
-            } else {
-                console.warn('n Object hook was not removed, despite n being found! Checking cases...');
-                let msg = [prop2 in Object.prototype, prop2 in {}];
-                msg[0] ? console.log('%cObject.prototype still has grant_reward', 'color: red') : null;
-                msg[1] ? console.log('%cnew created Object still has grant_reward', 'color: red') : null;
             }
         }
     },
@@ -2448,6 +2427,7 @@ function get_respawn_name_by_type(type){
 
 function respawn() {
     check_and_save_name();
+    console.log(player);
     let death_score = get_death_score();
     if (
         modules.Functional.Auto_respawn.settings.Auto_respawn.active &&
@@ -2460,8 +2440,8 @@ function respawn() {
         }
         let type = modules.Functional.Auto_respawn.settings.Name.selected;
         let temp_name = get_respawn_name_by_type(type);
-        if(predefined_functions.inputs_handler.player.spawn != null){
-            predefined_functions.inputs_handler.player.spawn(temp_name);
+        if(predefined_functions.inputs_simulator.player.spawn != null){
+            predefined_functions.inputs_simulator.player.spawn(temp_name);
         }
     }
 }

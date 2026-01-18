@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DiepCheatz Aim Bot, Esp, Prediction
 // @description  Advance Menu, Aimbot, Prediction, Esp, Line, FOV Aim, Smart System
-// @version      1.1.4
+// @version      1.1.5
 // @author       DDatiOS
 // @match        https://diep.io/*
 // @icon         https://www.google.com/s2/favicons?domain=diep.io
@@ -12,10 +12,196 @@
 // @updateURL https://update.greasyfork.org/scripts/556889/DiepCheatz%20Aim%20Bot%2C%20Esp%2C%20Prediction.meta.js
 // ==/UserScript==
 
+
+(function () {
+    'use strict';
+
+    if (document.getElementById("dd-warning-popup")) return;
+
+    const fa = document.createElement("link");
+    fa.rel = "stylesheet";
+    fa.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";
+    document.head.appendChild(fa);
+
+    const style = document.createElement("style");
+    style.textContent = `
+    @keyframes ddWarnIn {
+        from { opacity: 0; transform: translate(-50%, -60%) scale(0.85); }
+        to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .dd-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(6px);
+        z-index: 99998;
+    }
+
+    .dd-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 380px;
+        padding: 20px;
+        border-radius: 16px;
+        background: linear-gradient(145deg, #1a0f0f, #0d0707);
+        border: 1px solid rgba(255, 80, 80, 0.6);
+        box-shadow:
+            0 0 30px rgba(255, 60, 60, 0.6),
+            inset 0 0 10px rgba(255,255,255,0.04);
+        color: #fff;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        animation: ddWarnIn 0.35s ease forwards;
+        z-index: 99999;
+    }
+
+    .dd-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .dd-header i {
+        font-size: 26px;
+        color: #ff5c5c;
+        line-height: 1;
+        filter: drop-shadow(0 0 8px #ff5c5c);
+    }
+
+    .dd-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #ff6b6b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .dd-body {
+        font-size: 14px;
+        line-height: 1.55;
+        opacity: 0.92;
+        margin-bottom: 16px;
+    }
+
+    .dd-body b {
+        color: #ffd1d1;
+    }
+
+    .dd-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .dd-btn {
+        flex: 1;
+        padding: 11px 12px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        line-height: 1;
+        white-space: nowrap;
+        transition: 0.25s;
+    }
+
+    .dd-btn i {
+        font-size: 16px;
+        line-height: 1;
+        display: block;
+    }
+
+    .dd-discord {
+        background: linear-gradient(135deg, #5865F2, #404EED);
+        color: #fff;
+        box-shadow: 0 0 14px rgba(88,101,242,0.6);
+    }
+
+    .dd-discord:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 22px rgba(88,101,242,0.9);
+    }
+
+    .dd-close {
+        background: rgba(255,255,255,0.08);
+        color: #ccc;
+    }
+
+    .dd-close:hover {
+        background: rgba(255,255,255,0.15);
+    }
+
+    .dd-footer {
+        margin-top: 12px;
+        text-align: center;
+        font-size: 11px;
+        opacity: 0.55;
+    }
+    `;
+    document.head.appendChild(style);
+
+    const overlay = document.createElement("div");
+    overlay.className = "dd-overlay";
+
+    const popup = document.createElement("div");
+    popup.className = "dd-popup";
+    popup.id = "dd-warning-popup";
+
+    popup.innerHTML = `
+        <div class="dd-header">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div class="dd-title">Script Patched</div>
+        </div>
+
+        <div class="dd-body">
+            This script has been detected and patched by the developer.<br><br>
+            To avoid faster patches caused by public sharing,
+            future updates will only be released inside our
+            <b>private Discord server</b>.
+        </div>
+
+        <div class="dd-actions">
+            <button class="dd-btn dd-discord">
+                <i class="fa-brands fa-discord"></i>
+                <span>Join Discord</span>
+            </button>
+
+            <button class="dd-btn dd-close">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Close</span>
+            </button>
+        </div>
+
+        <div class="dd-footer">
+            Private release • Anti-patch policy
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(popup);
+
+    popup.querySelector(".dd-discord").onclick = () => {
+        window.open("https://discord.gg/EwT9YWt5dm", "_blank");
+    };
+
+    popup.querySelector(".dd-close").onclick = () => {
+        popup.remove();
+        overlay.remove();
+    };
+})();
+
 //Script Made By DDatiOS
 //Discord : ddatios._.
 
-alert("This is the last version i think :) I'm not working on this project anymore | any question pls contact my discord: ddatios._.");
 
 //still have some bugs but good enough for now
 
@@ -2278,14 +2464,14 @@ alert("This is the last version i think :) I'm not working on this project anymo
     gui.appendChild(menu);
     document.body.appendChild(gui);
 
-    const hint = document.createElement('div');
+    /*const hint = document.createElement('div');
     hint.id = 'open-hint';
     hint.innerHTML = 'Press <span>ESC</span> to open menu';
     document.body.appendChild(hint);
     setTimeout(() => {
       hint.classList.add('fade-out');
       setTimeout(() => hint.remove(), 500);
-    }, 4000);
+    }, 4000);*/
 
     let isOpen = !1;
     const menuEl = document.getElementById('ios-menu'),

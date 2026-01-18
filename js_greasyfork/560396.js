@@ -7,9 +7,9 @@
 // @grant       GM_getValue
 // @grant       GM_registerMenuCommand
 // @require     https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
-// @version     5.2
+// @version     5.3
 // @author      jackiechan285
-// @description Adds a native-styled command menu triggered by "/" in the Gemini input box. Unifies tools and file upload sources, providing instant access by just typing, with seamless navigation and interaction. 
+// @description Adds a native-styled command menu triggered by "/" in the Gemini input box. Unifies tools and file upload sources, providing instant access by just typing, with seamless navigation and interaction.
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=gemini.google.com
 // @downloadURL https://update.greasyfork.org/scripts/560396/Gemini%20Command%20Menu.user.js
 // @updateURL https://update.greasyfork.org/scripts/560396/Gemini%20Command%20Menu.meta.js
@@ -59,11 +59,12 @@
         min-width: unset !important;
     }
     .command-menu-overlay .menu-item-label {
-        color: var(--gem-sys-color--on-surface-low) !important;
-        padding-top: 6px !important;
-        padding-bottom: 4px !important;
+        color: rgb(154, 155, 156) !important;
+        padding: 6px 24px 4px 16px !important;
+        font-family: Google Sans, Roboto, sans-serif !important;
         font-size: 13px !important;
         font-weight: 600 !important;
+        line-height: 20px !important;
     }
   `;
   GM_addStyle(CUSTOM_CSS);
@@ -88,15 +89,13 @@
   let cachedMenuData = GM_getValue('menu_items_cache_v2', { tools: [], addFiles: [] });
 
   let cachedNgAttrs = GM_getValue('ngAttributes_v3', {
-    container: '_ngcontent-ng-c133789645', // Tools Menu
-    item: '_ngcontent-ng-c2899984923',      // Tools Menu Items
-    section: '_ngcontent-ng-c1591666905'    // At Mentions Menu (Section Headers)
+    container: '_ngcontent-ng-c133789645',
+    item: '_ngcontent-ng-c2899984923'
   });
 
   let sessionState = {
     toolsDone: cachedMenuData.tools.length > 0,
-    filesDone: cachedMenuData.addFiles.length > 0,
-    mentionsDone: false // Track if we've scanned the @ menu
+    filesDone: cachedMenuData.addFiles.length > 0
   };
 
   const observedCards = new WeakSet();
@@ -105,7 +104,7 @@
     isOpen: false,
     activeIndex: 0,
     query: '',
-    visibleItems: [], // Flat list of actionable items
+    visibleItems: [],
     menuElement: null
   };
 
@@ -138,12 +137,11 @@
 
   // --- Context Menu ---
   GM_registerMenuCommand("Reset Menu Cache (Re-scan)", () => {
-    if (confirm("Reset menu cache? Open 'Plus', 'Tools', and '@' menus in Gemini to re-populate.")) {
+    if (confirm("Reset menu cache? Open 'Plus' and 'Tools' menus in Gemini to re-populate.")) {
         cachedMenuData = { tools: [], addFiles: [] };
         GM_setValue('menu_items_cache_v2', cachedMenuData);
         sessionState.toolsDone = false;
         sessionState.filesDone = false;
-        sessionState.mentionsDone = false;
         alert("Cache cleared. Please open the menus to re-scan.");
     }
   });
@@ -165,31 +163,10 @@
     return label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
   }
 
-  // Generic Menu Scraper
   function scrapeMenu(card, type) {
     if (card.classList.contains('gemini-command-ui')) return null;
     if (card.closest('[hidden]') || card.offsetParent === null) return null;
 
-    // --- At Mentions Scraper (Styles Only) ---
-    if (type === 'mentions') {
-        let changed = false;
-        // Look for the specific label style or the container's tag
-        const label = card.querySelector('.menu-item-label') || card;
-        const attr = extractNgAttr(label);
-
-        if (attr && attr !== cachedNgAttrs.section) {
-            console.log(`[Gemini Command] New Section Attribute: ${attr}`);
-            cachedNgAttrs.section = attr;
-            changed = true;
-        }
-
-        if (changed) {
-            GM_setValue('ngAttributes_v3', cachedNgAttrs);
-        }
-        return []; // We don't save items from @ menu, only styles
-    }
-
-    // --- Tools/Files Scraper ---
     console.log(`[Gemini Command] Scanning ${type}...`);
 
     // Tools: Capture container/item styles
@@ -265,7 +242,6 @@
   function observeAndScrape(cardElement, type) {
     if (type === 'tools' && sessionState.toolsDone) return;
     if (type === 'files' && sessionState.filesDone) return;
-    if (type === 'mentions' && sessionState.mentionsDone) return;
 
     if (cardElement.classList.contains('gemini-command-ui')) return;
     if (observedCards.has(cardElement)) return;
@@ -276,15 +252,6 @@
     let timer;
     const performScrape = () => {
         const items = scrapeMenu(cardElement, type);
-
-        // Special case for 'mentions': we just need to find the attribute once
-        if (type === 'mentions') {
-            // Check if we found the attribute in cachedNgAttrs
-            // Since scrapeMenu updates the cache directly for styles
-            sessionState.mentionsDone = true;
-            if (observer) observer.disconnect();
-            return;
-        }
 
         if (items && items.length > 0) {
             if (type === 'tools') {
@@ -315,8 +282,6 @@
 
   function createSectionHeader(title) {
       const div = document.createElement('div');
-      // Apply the 'at mentions' attribute
-      if (cachedNgAttrs.section) div.setAttribute(cachedNgAttrs.section, '');
       div.className = 'menu-item-label gds-label-l ng-star-inserted';
       div.textContent = title;
       return div;
@@ -568,11 +533,9 @@
   function filterItems() {
     const q = state.query.toLowerCase();
 
-    // Separately filter but keep them in memory for section rendering
     const filteredTools = cachedMenuData.tools.filter(item => item.label.toLowerCase().includes(q));
     const filteredFiles = cachedMenuData.addFiles.filter(item => item.label.toLowerCase().includes(q));
 
-    // Flatten for navigation state
     state.visibleItems = [...filteredTools, ...filteredFiles];
 
     if (state.activeIndex >= state.visibleItems.length) {
@@ -580,7 +543,6 @@
     }
 
     if (state.visibleItems.length > 0) {
-      // Pass sections separately so render() can insert headers
       UI.render(filteredTools, filteredFiles, state.activeIndex, state.query);
     } else {
       closeMenu();
@@ -769,12 +731,6 @@
     if (!sessionState.filesDone) {
         const addFilesCards = document.querySelectorAll('mat-card.upload-file-card-container');
         addFilesCards.forEach(card => observeAndScrape(card, 'files'));
-    }
-
-    // Scrape @ Menu (for section headers styles)
-    if (!sessionState.mentionsDone) {
-        const mentionsMenus = document.querySelectorAll('.mat-mdc-menu-panel.at-mentions-menu');
-        mentionsMenus.forEach(menu => observeAndScrape(menu, 'mentions'));
     }
   });
 

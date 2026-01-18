@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn War Stuff Enhanced
 // @namespace    namespace
-// @version      1.9.1
+// @version      1.9.2
 // @description  Show travel status and hospital time and sort by hospital time on war page. Fork of https://greasyfork.org/en/scripts/448681-torn-war-stuff
 // @author       xentac
 // @license      MIT
@@ -197,6 +197,14 @@
     return n;
   }
 
+  const member_status = new Map();
+  const member_lis = new Map();
+
+  let last_request = null;
+  const MIN_TIME_SINCE_LAST_REQUEST = 10000;
+
+  const description_cache = new Map();
+
   const descriptions_observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
@@ -206,6 +214,10 @@
             childList: true,
             subtree: true,
           });
+          // Check to see if the node already exists on add
+          for (const child of node.childNodes) {
+            faction_war_check(child);
+          }
         }
       }
       for (const node of mutation.removedNodes) {
@@ -217,18 +229,22 @@
     }
   });
 
+  const faction_war_check = (node) => {
+    if (node.classList && node.classList.contains("faction-war")) {
+      console.log(
+        "[TornWarStuffEnhanced] Observed mutation of .faction-war node",
+      );
+      found_war = true;
+      extract_all_member_lis();
+      update_statuses();
+      faction_war_observer.disconnect();
+    }
+  };
+
   const faction_war_observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
-        if (node.classList && node.classList.contains("faction-war")) {
-          console.log(
-            "[TornWarStuffEnhanced] Observed mutation of .faction-war node",
-          );
-          found_war = true;
-          extract_all_member_lis();
-          update_statuses();
-          faction_war_observer.disconnect();
-        }
+        faction_war_check(node);
       }
     }
   });
@@ -236,11 +252,16 @@
   const found_faction_war_list = (factwarlist) => {
     console.log("[TornWarStuffEnhanced] Found #faction_war_list_id");
     if (factwarlist.querySelector(".faction-war")) {
+      console.log("[TornWarStuffEnhanced] .faction-war already exists");
       found_war = true;
       extract_all_member_lis();
       update_statuses();
+      return;
     }
-    console.log("[TornWarStuffEnhanced] Found adding descriptions observer");
+    if (found_war) {
+      return;
+    }
+    console.log("[TornWarStuffEnhanced] Adding descriptions observer");
     descriptions_observer.observe(factwarlist, { childList: true });
     const descriptions = factwarlist.querySelector(".descriptions");
     if (descriptions) {
@@ -252,38 +273,20 @@
         subtree: true,
       });
     }
-    if (factwarlist.querySelector(".faction-war")) {
-      console.log("[TornWarStuffEnhanced] .faction-war already exists");
-      found_war = true;
-      extract_all_member_lis();
-      update_statuses();
-      faction_war_observer.disconnect();
-    }
   };
 
-  const document_observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (!node.querySelector) {
-          return;
-        }
-        const factwarlist = node.querySelector("#faction_war_list_id");
-        if (factwarlist) {
-          found_faction_war_list(factwarlist);
-          document_observer.disconnect();
-        }
-      }
+  const document_observer = new MutationObserver(() => {
+    const factwarlist = document.querySelector("#faction_war_list_id");
+    if (factwarlist) {
+      console.log(
+        "[TornWarStuffEnhanced] Found #faction_war_list_id within a mutation.",
+      );
+      found_faction_war_list(factwarlist);
+      document_observer.disconnect();
     }
   });
 
-  document_observer.observe(document.body, {
-    subtree: true,
-    childList: true,
-  });
-  console.log(
-    "[TornWarStuffEnhanced] #faction_war_list_id observer installed.",
-  );
-
+  // Check to see if #faction_war_list_id already exists
   const factwarlist = document.querySelector("#faction_war_list_id");
   if (factwarlist) {
     console.log(
@@ -293,13 +296,27 @@
     document_observer.disconnect();
   }
 
-  const member_status = new Map();
-  const member_lis = new Map();
+  // Observe all page changes till we find #faction_war_list_id
+  document_observer.observe(document.body, {
+    subtree: true,
+    childList: true,
+  });
+  console.log(
+    "[TornWarStuffEnhanced] #faction_war_list_id observer installed.",
+  );
 
-  let last_request = null;
-  const MIN_TIME_SINCE_LAST_REQUEST = 10000;
-
-  const description_cache = new Map();
+  // Wait 10 seconds and check one last time for #faction_war_list_id
+  // Then remove the observer even if we don't find it
+  setTimeout(() => {
+    const factwarlist = document.querySelector("#faction_war_list_id");
+    if (factwarlist) {
+      console.log(
+        "[TornWarStuffEnhanced] Found #faction_war_list_id in document after 10 seconds.",
+      );
+      found_faction_war_list(factwarlist);
+    }
+    document_observer.disconnect();
+  }, 10000);
 
   async function update_statuses() {
     if (!running) {

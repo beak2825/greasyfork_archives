@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube 2 columns fix
 // @namespace    http://tampermonkey.net/
-// @version      1
+// @version      1.03
 // @description  Youtube watch page with 1 column videos
 // @author       You
 // @match        *://www.youtube.com/*
@@ -40,11 +40,10 @@ ytd-watch-flexy #secondary-inner .yt-lockup-view-model__content-image {
 flex-shrink: 0 !important;
 width: 170px !important;
 height: auto !important;
-border-radius: 4px !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-view-model--wrapper.lockup {
 margin: 0 !important;
-padding: 0 !important;
+margin-bottom: 0 !important;
 min-height: 0 !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-view-model--vertical {
@@ -57,8 +56,8 @@ padding: 0 !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-metadata-view-model__text-container {
 margin-left: 6px !important;
-margin-top: -2px !important;
-line-height: 17px !important;
+margin-top: -4px !important;
+line-height: normal !important;
 max-width: 260px !important;
 }
 ytd-watch-flexy #secondary-inner .ytd-compact-video-renderer {
@@ -75,11 +74,17 @@ display: none;
 ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__metadata-row--metadata-row-wrap {
 display: flex;
 }
+ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__badge {
+display: flex;
+}
 ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__metadata-row--metadata-row-inline {
 display: flex;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-view-model--vertical .yt-lockup-view-model__content-image {
 padding-bottom: 0 !important;
+}
+ytd-watch-flexy #secondary-inner .yt-lockup-metadata-view-model__avatar {
+display: none;
 }`;
 style.textContent = cssOutput;
 document.head.appendChild(style);

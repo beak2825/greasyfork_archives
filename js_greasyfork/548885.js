@@ -1,17 +1,17 @@
 // ==UserScript==
 // @name         Roblox Friends Banned Account Name Revealer
 // @namespace    https://github.com/GooglyBlox
-// @version      1.2
+// @version      1.3
 // @description  Shows real display name and username for banned accounts on friends page
 // @author       GooglyBlox
 // @match        https://www.roblox.com/users/*/friends*
 // @match        https://www.roblox.com/users/friends*
+// @connect      users.roblox.com
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/548885/Roblox%20Friends%20Banned%20Account%20Name%20Revealer.user.js
 // @updateURL https://update.greasyfork.org/scripts/548885/Roblox%20Friends%20Banned%20Account%20Name%20Revealer.meta.js
 // ==/UserScript==
-
 (function() {
     'use strict';
 
@@ -40,6 +40,7 @@
             listItem.dataset.processed = 'true';
 
             const userInfo = await fetchUserInfo(userId);
+
             if (userInfo && userInfo.isBanned) {
                 const nameElement = container.querySelector('.avatar-name');
                 const labelElements = container.querySelectorAll('.avatar-card-label');
@@ -57,23 +58,8 @@
         }
     }
 
-    const observer = new MutationObserver((mutations) => {
-        let shouldProcess = false;
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                const hasRelevantNodes = Array.from(mutation.addedNodes).some(node =>
-                    node.nodeType === 1 &&
-                    (node.classList?.contains('avatar-card') || node.querySelector?.('.avatar-card'))
-                );
-                if (hasRelevantNodes) {
-                    shouldProcess = true;
-                }
-            }
-        });
-
-        if (shouldProcess) {
-            setTimeout(processDeletedAccounts, 100);
-        }
+    const observer = new MutationObserver(() => {
+        processDeletedAccounts();
     });
 
     observer.observe(document.body, {
@@ -81,9 +67,7 @@
         subtree: true
     });
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', processDeletedAccounts);
-    } else {
-        processDeletedAccounts();
-    }
+    processDeletedAccounts();
+    setTimeout(processDeletedAccounts, 1000);
+    setTimeout(processDeletedAccounts, 3000);
 })();

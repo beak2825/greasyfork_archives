@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name          Bazaar Filler
+// @name          Bazaar Filler 
 // @namespace     http://tampermonkey.net/
-// @version       5.3 
-// @author        WTV1
-// @description   Advanced Bazaar Filler with Market and Bazaar Price Points + Fill All + Trade Fill + Visual Qty and Price currently on Bazaar
+// @version       5.8
+// @author        WTV1 
+// @description   Exact 5.3 features + Color-only trends (text stays "FILL")
 // @match         https://www.torn.com/bazaar.php*
 // @match         https://www.torn.com/trade.php*
 // @require       https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
@@ -22,6 +22,7 @@
 
     const isPDA = window.innerWidth <= 700;
     let settings = {};
+    let trendData = null; // New global for trend colors
 
     function loadSettings() {
         settings = {
@@ -35,8 +36,19 @@
     }
     loadSettings();
 
+    // Fetch trend data for button coloring
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxtyZmClPhnEbdX8vl00kwWAXheSSgLv620CVZOFOgJjoCT0_JhXcu4A2wtJ0u9mm1a/exec";
+    function fetchTrendColors() {
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: WEB_APP_URL,
+            onload: (res) => { try { trendData = JSON.parse(res.responseText); } catch(e){} }
+        });
+    }
+    fetchTrendColors();
+
     const styleBlock = `
-        /* --- 4.7 CORE STYLES --- */
+        /* --- 5.3 CORE STYLES --- */
         .filler-header-links { float: right; margin-right: 10px; height: 34px; display: flex; align-items: center; }
         .fill-all-btn { cursor: pointer; margin-left: 15px; font-size: 12px; color: #7cfc00; text-transform: uppercase; font-weight: bold; }
         .fill-qty-btn { cursor: pointer; margin-left: 15px; font-size: 12px; color: #00aaff; text-transform: uppercase; font-weight: bold; }
@@ -58,22 +70,15 @@
         .item-toggle-btn { width: 24px; height: 24px; cursor: pointer; border: 1px solid #444; border-radius: 3px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; color: #ffde00; font-size: 14px; font-weight: bold; }
         .filler-skip-checkbox { cursor: pointer; width: 20px; height: 20px; accent-color: #ff3b3b; margin: 0; opacity: 0.8; }
 
-        /* --- WEAPON & ARMOR OVERLAY FIXES --- */
+        /* TREND OVERRIDES (Added to 5.3) */
+        .row-fill-btn.trend-cold { background: #0077bb !important; border-color: #00aaff !important; color: #ffffff !important; }
+        .row-fill-btn.trend-hot { background: #cc7000 !important; border-color: #ff8c00 !important; color: #ffffff !important; }
+
         .title-wrap { position: relative !important; }
-        .stat-row-filler-overlay {
-            position: absolute !important;
-            right: 45px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 5;
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
+        .stat-row-filler-overlay { position: absolute !important; right: 45px; top: 50%; transform: translateY(-50%); z-index: 5; display: flex; gap: 5px; align-items: center; }
         .name-wrap.bold { display: flex !important; align-items: center; gap: 10px; width: 100%; }
         .armor-inline-btns { display: flex; gap: 5px; align-items: center; }
 
-        /* --- POPUP STYLES --- */
         .draggable-popup { position: fixed !important; z-index: 999999998; background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 5px; width: 220px; display: none; box-shadow: 0 8px 30px rgba(0,0,0,0.9); overflow: hidden; font-family: Arial, sans-serif; touch-action: none; }
         .popup-header { background: #222; padding: 12px; cursor: move; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; font-weight: bold; color: #ffde00; font-size: 12px; user-select: none; }
         .mv-banner { background: #111; padding: 6px; text-align: center; font-weight: bold; border-bottom: 1px solid #333; font-size: 11px; color: #fff; }
@@ -236,19 +241,38 @@
 
         $("li, [class*='listItem___'], [class*='row___']").each(function () {
             const $row = $(this);
-            if ($row.find(".row-fill-btn").length > 0) return;
+            if ($row.find(".row-fill-btn").length > 0) {
+                // UPDATE COLOR FOR EXISTING BUTTONS
+                if (trendData) {
+                    const id = $row.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
+                    if (id && trendData[id]) {
+                        const h = trendData[id].history, latest = h[h.length-1], hi = Math.max(...h), lo = Math.min(...h);
+                        const $b = $row.find('.row-fill-btn');
+                        if (latest <= lo) $b.addClass('trend-cold');
+                        else if (latest >= hi) $b.addClass('trend-hot');
+                    }
+                }
+                return;
+            }
             const itemId = $row.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
             if (!itemId || $row.find('input').length === 0) return;
 
             const isSkipped = settings.skippedItems[itemId] ? "checked" : "";
             const cbHTML = `<input type="checkbox" class="filler-skip-checkbox" data-id="${itemId}" ${isSkipped}>`;
-
             const isWeapon = $row.find('i[class*="damage"], i[class*="accuracy"]').length > 0;
 
             if (isPDA && isAdd) {
                 $row.addClass("filler-relative");
                 $(`<div class="pda-skip-container">${cbHTML}</div>`).appendTo($row);
                 const $fW = $('<div class="fill-wrapper-left"><div class="row-fill-btn">FILL</div></div>').appendTo($row);
+
+                // Set trend color immediately if data exists
+                if (trendData && trendData[itemId]) {
+                    const h = trendData[itemId].history, latest = h[h.length-1], hi = Math.max(...h), lo = Math.min(...h);
+                    if (latest <= lo) $fW.find('.row-fill-btn').addClass('trend-cold');
+                    else if (latest >= hi) $fW.find('.row-fill-btn').addClass('trend-hot');
+                }
+
                 $fW.find('.row-fill-btn').on('touchstart click', (e) => { e.preventDefault(); handleFillSingleRow($row, itemId, $fW.find('.row-fill-btn')); });
                 $('<div class="add-wrapper"><div class="item-toggle-btn">$</div></div>').appendTo($row).on('touchstart click', (e) => { e.preventDefault(); e.stopPropagation(); showDualTable(e, $row, itemId, $row.find('[class*="name"]').first().text().trim()); });
             } else if (!isPDA) {
@@ -305,12 +329,8 @@
     obs.observe(document.body, { childList: true, subtree: true });
     inject();
 
-    // --- TRENDS FIX ---
+    // --- TRENDS FIX (Exact from 5.3) ---
     (function() {
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxtyZmClPhnEbdX8vl00kwWAXheSSgLv620CVZOFOgJjoCT0_JhXcu4A2wtJ0u9mm1a/exec";
-        let trendData = null;
-        function fetchTrends() { GM_xmlhttpRequest({ method: "GET", url: WEB_APP_URL, onload: (res) => { try { trendData = JSON.parse(res.responseText); } catch(e){} } }); }
-        fetchTrends();
         const trendObserver = new MutationObserver(() => {
             const $popup = $('.draggable-popup');
             const $mvLine = $popup.find('.mv-banner');
@@ -328,7 +348,7 @@
         trendObserver.observe(document.body, { childList: true, subtree: true });
     })();
 
-    // 4.7 TRADE FILL
+    // 5.3 TRADE FILL
     function injectTradeFill() {
         if (!window.location.href.includes('trade.php')) return;
         const topFooter = $(".items-footer.clearfix").first();
@@ -348,14 +368,13 @@
     tradeObs.observe(document.body, { childList: true, subtree: true });
     injectTradeFill();
 
-    // --- STOCK INDICATOR FIX ---
+    // --- STOCK INDICATOR FIX (Exact from 5.3) ---
     (function() {
         let myBazaarData = null, lastFetch = 0, isFetching = false;
         function updateStock() {
             const $p = $('.draggable-popup'), $h = $p.find('.popup-header');
             if ($p.is(':visible') && $h.length > 0) {
                 const itemId = $p.find('.item-label').attr('data-id');
-                const name = $p.find('.item-label').text().trim();
                 if (myBazaarData && itemId) {
                     let itm = myBazaarData.find(i => String(i.ID || i.item_id) === String(itemId));
                     const txt = itm ? `On Bazaar: ${itm.quantity.toLocaleString()} @ $${itm.price.toLocaleString()}` : "On Bazaar: 0";

@@ -1,10 +1,12 @@
 "use strict";
 // ==UserScript==
-// @name         WME Road Shield Assistant (BETA ONLY)
-// @namespace    https://greasyfork.org/en/users/1442373-mikhail-veygman-karlsosha
-// @version      2026.01.13.001
+// @name         WME Road Shield Assistant
+// @namespace    https://greasyfork.org/en/users/286957-skidooguy
+// @version      2025.12.22.001
 // @description  Adds shield information display to WME
 // @author       SkiDooGuy, jm6087, Karlsosha
+// @match        https://www.waze.com/editor*
+// @match        https://www.waze.com/*/editor*
 // @match        https://beta.waze.com/editor*
 // @match        https://beta.waze.com/*/editor*
 // @exclude      https://www.waze.com/user/editor*
@@ -14,8 +16,8 @@
 // @grant        unsafeWindow
 // @connect      greasyfork.org
 // @contributionURL https://github.com/WazeDev/Thank-The-Authors
-// @downloadURL https://update.greasyfork.org/scripts/562334/WME%20Road%20Shield%20Assistant%20%28BETA%20ONLY%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/562334/WME%20Road%20Shield%20Assistant%20%28BETA%20ONLY%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562334/WME%20Road%20Shield%20Assistant.user.js
+// @updateURL https://update.greasyfork.org/scripts/562334/WME%20Road%20Shield%20Assistant.meta.js
 // ==/UserScript==
 /* global W */
 /* global WazeWrap */
@@ -348,9 +350,511 @@ function rsaInit() {
         21: 40,
         22: 30,
     };
-    const CountryDataSheetInfo = {};
-    const RoadAbbr = {};
-    let mainSheetLoaded = false;
+    const RoadAbbr = {
+        //Canada
+        40: {
+            Alberta: {
+                "^Hwy 1$": 5000, // 5000: National-Trans-Canada Highway
+                "^Hwy 1A\\b": 5011, // 5011: Alberta - Provincial Hwy
+                "^Hwy 2\\b": 5011, // 5011: Alberta - Provincial Hwy
+                "^Hwy 3$": 5015, // 5015: Alberta - Crowsnext Hwy
+                "^Hwy 3A\\b": 5011, // 5011: Alberta - Provincial Hwy
+                "^Hwy 16$": 5000, // 5000: National-Trans-Canada Highway
+                "^Hwy 16A\\b": 5011, // 5011: Alberta - Provincial Hwy
+                "^Hwy ([4-9]|1[0-57-9]|[2-9]\\d{1}|2\\d{2})\\b": 5011,
+                "^Hwy ([3-9]\\d{2})\\b": 5012,
+            },
+            "British Columbia": {
+                "^Hwy 1\\b": 5000, // 5000: National-Trans-Canada Highway
+                "^Hwy 2\\b": 5001, // 5001: BC - Provincial Hwy
+                "^Hwy 3\\b": 5002, // 5002: BC - Crowsnest Hwy
+                "^Hwy 16\\b": 5000, // 5000: National-Trans-Canada Highway
+                "^Hwy 113\\b": 5004, // 5004: BC - Nisga'a Hwy
+                "^Hwy\\s+([4-9]|[1-9][0-57-9]|10\\d|11[0-24-9]|1[2-9]\\d|[2-9]\\d{1,2})[a-zA-Z]*\\b": 5001, // 5001: BC - Provincial Hwy
+            },
+            Saskatchewan: {
+                "^Hwy 1\\b": 5000, // 5000: National - Trans-Canada Hwy
+                "^Hwy 16\\b": 5000, // 5000: National - Trans-Canada Hwy
+                "^Hwy ([2-9]|1[0-57-9]|[2-9]\\d|[1-3]\\d{2})\\b": 5030, // 5030: Saskatchewan - Provincial Hwy
+                "^Hwy (9\\d{2})\\b": 5031, // 5031: Saskatchewan - Northern Secondary Hwy
+                "^Hwy ([6-7]\\d{2})\\b": 5032, // 5032: Saskatchewan - Municipal Road
+            },
+            Manitoba: {
+                "^Hwy 1\\b": 5000, // 5000: National - Trans-Canada Hwy
+                "^Hwy 16\\b": 5000, // 5000: National - Trans-Canada Hwy
+                "^Hwy ([2-9]|1[0-57-9]|[2-9]\\d|1\\d{2})\\b": 5038, // 5038: Manitoba - Provincial Trunk Highway
+                "^Hwy ([2-9]\\d{2})\\b": 5039, // 5039: Manitoba - Provincial Rd
+            },
+            Ontario: {
+                "^QEW\\b": 5058, // 5058: Ontario QEW
+                "(^Hwy 17\\b|Hwy 17$)": new Set([5000, 5057]), // 5000: National - Trans-Canada Hwy
+                "^Hwy 407\\b": new Set([5207, 5206]), // 5060: Ontario ETR
+                "^Hwy 412\\b": 5059, // 5059: Ontario Toll Hwy
+                "^Hwy 418\\b": new Set([5059, 5057]), // 5059: Ontario Toll Hwy
+                // "Hwy [1-9]\\d{0,2}\\b": 5057, // 5057: Ontario King's Hwy 1-16
+                // "Hwy (1[89]|[2-9]d|[1-3]d{2}|40[0-6])\\b": 5057, // 5057: Ontario King's Hwy 18-406
+                // "Hwy (40[89]|41[01])\\b": 5057, // 5057: Ontario King's Hwy 408-411
+                // "Hwy (41[3-7])\\b": 5057, // 5057: Ontario King's Hwy 413-417
+                "^CR-[1-9]\\d{0,2}\\b": 5063,
+                "^Hwy\\s+([1-9]|[1-68-9]\\d|[1-3]\\d{2}|40[0-68-9]|41[0-13-79]|4[2-9]\\d|[7-9]\\d{2})[A-Z]*\\b": 5057,
+                "^Hwy\\s+[5-6]\\d{2}\\b": 5061, // 5061: Ontario Secondary Hwy 500-699
+                // "Hwy (80d|8[1-9]d)\\b": 5057, // 5057: Ontario Tertiary Hwy
+                "^(Muskoka|Wellington|Winchester|Regional) (Road|Rd) [1-9]\\d{0,2}\\b": new Set([
+                    5065, 5063, 5077,
+                ]), // Ontario Regional
+            },
+            Quebec: {
+                "Rte Transcanadienne": 5093, // 5093: Quebec: Route Transcanadienne
+                "^Aut [1-9]\\d{1,2}\\b": 5090, // 5090: Quebec Autoroute 1-999
+                "^Rte [1-9]\\d{0,2}\\b": 5091, // 5091: Quebec Route 100-399
+                "R (10d|1[1-9]d|[2-9]d{2}|1[0-4]d{2}|15[0-5]d)\b": 5092, // 5092: Quebec Route 100-1559
+            },
+            "New Brunswick": {
+                "^Rte 2\\b": 5000, // 5000: Trans-Canada Hwy
+                "^Rte 16\\b": 5000, // 5000: Trans-Canada Hwy
+                "^Rte 1\\b": 5112, // 5112: NB Arterial Highway 1
+                "^Rte ([3-9]|1[0-57-9]|[2-9]\\d)\\b": 5112, // 5112: NB Arterial Highway 17-99
+                "^Rte (10\\d|11[02-9]|1[2-9]\\d)\\b": 5113, // 5113: NB Collector Highway 100-199
+                "^Rte (111|[2-9]\\d{2})\\b": 5114, // 5114: NB Local Highway 200-999
+            },
+            "Nova Scotia": {
+                "^Hwy ([1-9]\\d{0,1})\\b": 5116, // 5116: NS Trunk Hwy 1-99
+                "^Hwy 104\\b": new Set([5115, 5000]), // In NS 104 has 2 different shields
+                "^Hwy (10[5-6])\\b": 5000, // 5000: National Trans Canada Highway 105-106
+                "^Hwy (10[0-37-9]|1[1-9]\\d)\\b": 5115, // 5115: NS Aterial Hwy 107-199
+                "^Hwy ([2-3]\\d{2})\\b": 5117, // 5117: NS Collector Hwy 200-399
+            },
+            "Newfoundland and Labrador": {
+                "^Hwy 1": 5000, // 5000: National - Trans-Canada Hwy 1
+                "^Rte ([2-9]|[1-9]\\d|[1-5]\\d{2})\\b": 5129, // NLR: Newfoundland Labrador Route 2-599
+            },
+            "Prince Edward Island": {
+                "^Rte 1$": 5000, // 5000: National Trans-Canada Hwy
+                "^Rte ([2-9]|[1-9]\\d{1,2})\\b": 5144, // 5144: PEI - Provincial Highway
+            },
+            "Yukon Territory": {
+                "^Hwy 1\\b": 5146, // 5145: Yukon - Territorial Hwy - Orange
+                "Hwy 2": 5146, // 5146: Yukon - Territorial Hwy - Amber
+                "Hwy 3": 5147, // 5147: Yukon - Territorial Hwy - Maroon
+                "Hwy 4": 5148, // 5148: Yukon - Territorial Hwy - Brown
+                "Hwy 5": 5149, // 5149: Yukon - Territorial Hwy - Blue
+                "Hwy 6": 5150, // 5150: Yukon - Territorial Hwy - Teal
+                "Hwy 7": 5147, // 5147: Yukon - Territorial Hwy - Maroon
+                "Hwy 8": 5148, // 5148: Yukon - Territorial Hwy - Brown
+                "Hwy 9": 5151, // 5151: Yukon - Territorial Hwy - Black
+                "Hwy 10": 5151, // 5151: Yukon - Territorial Hwy - Black
+                "Hwy 11": 5149, // 5149: Yukon - Territorial Hwy - Blue
+                "Hwy 37": 5147, // 5147: Yukon - Territorial Hwy - Maroon
+            },
+            "Northwest Territories": {
+                "Hwy ([1-9]|10)\b": 5152, // 5152: NWT - Territorial Hwy 1-10
+            },
+        },
+        // France
+        73: {
+            "": {
+                "D\\d+[^:]*": 1092,
+                "N\\d+[^:]*": 1072,
+                "A\\d+[^:]*": 1072,
+                "M\\d+[^:]*": 1067,
+                "C\\d+[^:]*": 3333,
+                "T\\d+[^:]*": 3037,
+            },
+        },
+        // Germany
+        81: { "": { "(A\\d{1,3})": 1012, "(B\\d{1,3})": 1094 } },
+        // India
+        101: {
+            "*": { "NH-[1-9]\\d{0,2}[A-Z]*\\b": 3342, },
+            Rajasthan: {
+                "SH-[1-9]\\d{0,2}[A-Z]*\\b": 3384,
+            },
+            "Madhya Pradesh": {
+                "SH-[1-9]\\d{0,2}[A-Z]*\\b": 3378,
+            },
+            "Uttar Pradesh": {
+                "SH-[1-9]\\d{0,2}[A-Z]*\\b": 3389,
+            },
+        },
+        // Mexico
+        145: {
+            "*": { "^MEX-[1-9]\\d{0,2}[A-Z]*\\b": new Set([1107, 1106]) },
+            "Quintana Roo": { "Q.ROO-[1-9]\\d{0,2}\\b": 1000 },
+            Yucatán: { "YUC-[1-9]\\d{0,2}\\b": 1000 },
+            Campeche: { "CAM-[1-9]\\d{0,2}\\b": 1000 },
+        },
+        // Ukraine
+        232: {
+            "": {
+                "(E\\d{2,3})": 1048,
+                "(М-\\d{2})": 1071,
+                "(Н-\\d{2})": 1071,
+                "(Р-\\d{2})": 1008,
+                "(Т-\\d{2}-\\d{2,3})": 1008,
+                "(О\\d{6,7})": 1085,
+                "(С\\d{6,7})": 1085,
+            },
+        },
+        // US
+        235: {
+            "*": {
+                "^I-[1-9]\\d{0,2}(?!\s+(?:W|E|East|West))\\b": 5,
+                "^I-[1-9]\\d{0,2}\\s{1,}\\b(?:Bus|BUS|Business|BUSINESS)\\b": 2003,
+                "^US-[1-9]\\d{0,2}[A-Z]*\\b": 6,
+            },
+            Alabama: { "^CR-[1-9]\\d{0,2}\\b": 2002, "^SR-[1-9]\\d{0,2}\\b": 2019 },
+            Alaska: {
+                "CR-[1-9]\\d{0,2}": 2002,
+                "SR-[1-9]\\d{0,2}": 2017,
+                "AK-[1-9]\\d{0,2}": 2017,
+                "A-[1-9]\\d{0,2}": 2017,
+            },
+            Arizona: { "CR-[1-9]\\d{0,2}": 2002, "SR-[1-9]\\d{0,2}": 2022 },
+            Arkansas: { "^CR-[1-9]\\d{0,2}\\b": 2002, "^AR-[1-9]\\d{0,2}\\b": 2020, "^AR-$1 SPUR\\b": 2020 },
+            California: { "^CR-[1-9]\\d{0,2}\\b": 2002, "^SH-[1-9]\\d{0,2}\\b": 1082, "^SR-[1-9]\\d{0,2}\\b": 1082 },
+            Colorado: {
+                "^CR-[1-9]\\d{0,2}[a-zA-Z]*\\b": 2002,
+                "^SH-[1-9]\\d{0,2}[a-zA-Z]*\\b": 2025,
+                "^SR-[1-9]\\d{0,2}\\b": 2025,
+            },
+            Connecticut: {
+                "^CR-[1-9]\\d{0,2}": 2002,
+                "^SH-[1-9]\\d{0,2}": 2027,
+                "^SR-[1-9]\\d{0,2}": 2027,
+                "\\b(?:Wilbur Cross(?: Parkway| Pkwy))\\b": 2027,
+            },
+            Delaware: { "^CR-[1-9]\\d{0,2}\\b": 2002, "^SH-[1-9]\\d{0,2}\\b": 7, "^SR-[1-9]\\d{0,2}\\b": 7 },
+            "District of Columbia": { "DC-[1-9]\\d{0,2}": 7 },
+            Florida: {
+                "^CR-[1-9]\\d{0,2}": 2002,
+                "^SH-[1-9]\\d{0,2}": 2030,
+                "^SR-[1-9]\\d{0,2}": 2030,
+                "^Florida.* (Turnpike|Tpk|Tpke)\\b": 2033,
+            },
+            Georgia: { "^CR-[1-9]\\d{0,2}\\b": 2002, "^SH-[1-9]\\d{0,2}\\b": 2036, "^SR-[1-9]\\d{0,2}\\b": 2036 },
+            Hawaii: {
+                "H-[1-9]\\d{0,2}": 5,
+                "CR-[1-9]\\d{0,2}": 2002,
+                "SH-[1-9]\\d{0,2}": 2041,
+                "SR-[1-9]\\d{0,2}": 2041,
+            },
+            Idaho: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2043,
+                "^SR-[1-9]\\d{0,2}\\b": 2043,
+                "^ID-[1-9]\\d{0,2}\\b": 2043,
+            },
+            Illinois: {
+                "^CH-[1-9]\\d{0,2}": 2002,
+                "^CR-[1-9]\\d{0,3}": 2002,
+                "^SH-[1-9]\\d{0,2}": 2044,
+                "^SR-[1-9]\\d{0,2}": 2044,
+            },
+            Indiana: {
+                "^CH-[1-9]\\d{0,2}": 2002,
+                "^CR-[1-9]\\d{0,2}": 2002,
+                "^SH-[1-9]\\d{0,2}": 2045,
+                "^SR-[1-9]\\d{0,2}": 2045,
+                "^IN-[1-9]\\d{0,2}": 2045,
+            },
+            Iowa: {
+                "CH-[1-9]\\d{0,2}": 2002,
+                "CR-[1-9]\\d{0,2}": 2002,
+                "SH-[1-9]\\d{0,2}": 7,
+                "SR-[1-9]\\d{0,2}": 7,
+                "IA-[1-9]\\d{0,2}": 7,
+            },
+            Kansas: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2046,
+                "^SR-[1-9]\\d{0,2}\\b": 2046,
+                "^K-[1-9]\\d{0,2}\\b": 2046,
+            },
+            Kentucky: {
+                "^US-[1-9]\\d{0,2}\\s+(?:BUS|Bus|Business)\\b": 2005,
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 7,
+                "^SR-[1-9]\\d{0,2}\\b": 7,
+                "^KY-[1-9]\\d{0,3}\\b": 7,
+                "^AA (Highway|Hwy)\\b": 2050,
+            },
+            Louisiana: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 1117,
+                "^SR-[1-9]\\d{0,3}\\b": 1117,
+                "^LA-[1-9]\\d{0,3}\\b": new Set([1117, 1115]),
+            },
+            Maine: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2051,
+                "^SR-[1-9]\\d{0,2}(?!\\s*(?:BUS|Bus|Business))\\b": 2051,
+                "^SR-[1-9]\\d{0,2}\\s+(?:BUS|Bus|Business)\\b": 2052,
+            },
+            Maryland: {
+                "^CH-[1-9]\\d{0,2}": 2002,
+                "^CR-[1-9]\\d{0,2}": 2002,
+                "^SH-[1-9]\\d{0,2}": 2053,
+                "^SR-[1-9]\\d{0,2}": 2053,
+                "^MD-[1-9]\\d{0,2}": 2053,
+            },
+            Massachusetts: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2055,
+                "^SR-[1-9]\\d{0,2}[a-zA-Z]*\\b": 2055,
+            },
+            Michigan: { "^CR-[1-9]\\d{0,2}\\b": 2056, "^M-[1-9]\\d{0,2}\\b": 2056, "^SR-[1-9]\\d{0,2}\\b": 2056 },
+            Minnesota: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2180,
+                "^SH-[1-9]\\d{0,2}\\b": 2060,
+                "^SR-[1-9]\\d{0,2}\\b": 2060,
+                "^MN-[1-9]\\d{0,2}\\b": 2060,
+            },
+            Mississippi: { "^SH-[1-9]\\d{0,2}\\b": 7, "^SR-[1-9]\\d{0,2}\\b": 7, "^MS-[1-9]\\d{0,2}\\b": 7 },
+            Missouri: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2061,
+                "^SH-[A-Z]\\w{0,2}\\b": 2062,
+                "^SR-[1-9]\\d{0,2}\\b": 2061,
+                "^MO-[1-9]\\d{0,2}\\b": 2061,
+            },
+            Montana: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2063,
+                "^SR-[1-9]\\d{0,2}\\b": 2063,
+                "^MT-[1-9]\\d{0,2}\\b": 2063,
+            },
+            Nebraska: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 7,
+                "^SR-[1-9]\\d{0,2}\\b": 7,
+                "^L-[1-9]\\d{0,2}\\b": 7,
+                "^N-[1-9]\\d{0,2}\\b": 2072,
+                "^S-[1-9]\\d{0,2}\\b": 7,
+            },
+            Nevada: {
+                "^US-[1-9]\\d{0,2}\\s+(?:ALT|Alt)\\b": 2004,
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2086,
+                "^SR-[1-9]\\d{0,2}\\b": 2086,
+                "^NV-[1-9]\\d{0,2}\\b": 2086,
+            },
+            "New Hampshire": {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2076,
+                "^SR-[1-9]\\d{0,2}[a-zA-Z]*\\b": 2076,
+            },
+            "New Jersey": {
+                "^CH-[1-9]\\d{0,2}": 2002,
+                "^CR-[1-9]\\d{0,2}": 2083,
+                "^SH-[1-9]\\d{0,2}": 7,
+                "^SR-[1-9]\\d{0,2}": 7,
+                "^NJ-[1-9]\\d{0,2}": 7,
+                "^Garden State (Parkway|Pkwy)": 2079,
+                "^Palisades Interstate (Parkway|Pkwy)": 2082,
+                "^Atlantic City (Expressway|Expy|Expwy)": 2000,
+            },
+            "New Mexico": {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2085,
+                "^SR-[1-9]\\d{0,2}\\b": 2085,
+            },
+            "New York": {
+                "^CH-[1-9]\\d{0,2}": 2002,
+                "^CR-[1-9]\\d{0,2}[A-Z]*\\b": 2002,
+                "^SH-[1-9]\\d{0,2}": 2087,
+                "^SR-[1-9]\\d{0,2}": 2087,
+                "^NY-[1-9]\\d{0,2}": 2087,
+                "\\bPalisades Interstate (Parkway|Pkwy)\\b": 2082,
+                "\\b(?:Saw Mill River(?: Parkway| Pkwy)|SMP)\\b": 2092,
+                "\\b(?:Taconic State(?: Parkway| Pkwy)|TSP)\\b": 2092,
+                "\\b(?:Bear Mountain State(?: Parkway| Pkwy)|BMP)\\b": 2092,
+                "\\b(?:Cross County(?: Parkway| Pkwy)|CCP)\\b": 2092,
+                "\\b(?:Hutchinson River(?: Parkway| Pkwy)|HRP)\\b": 2092,
+                "\\b(?:Korean War Veterans(?: Parkway| Pkwy)|KWVP)\\b": 2092,
+                "\\b(?:Pelham(?: Parkway| Pkwy)|PP)\\b": 2092,
+                "\\b(?:Sprain Brook(?: Parkway| Pkwy)|SBP)\\b": 2092,
+                "\\b(?:Belt(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Cross Island(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Grand Central(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Jackie Robinson(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Bronx River(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Hutchison River(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Mosholu(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Northern State(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Harlem River(?: Drive| Dr))\\b": 2090,
+                "\\b(?:Robert Moses(?: Causeway| Cswy))\\b": 2090,
+                "\\b(?:Sagtikos State(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Southern State(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Sunken Meadow State(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Wantagh State(?: Parkway| Pkwy))\\b": 2090,
+                "\\b(?:Loop(?: Parkway| Dr))\\b": 2091,
+                "\\b(?:Bethpage State(?: Parkway| Pkwy))\\b": 2091,
+                "\\b(?:Meadowbrook State(?: Parkway| Pkwy))\\b": 2091,
+                "\\b(?:Lake Ontario State(?: Parkway| Pkwy))\\b": 2093,
+                "\\b(?:Niagara Scenic(?: Parkway| Pkwy))\\b": 2094,
+            },
+            "North Carolina": {
+                "^US-[1-9]\\d{0,2}\\s+(?:BUS|Bus|Business)\\b": 2005,
+                "^US-[1-9]\\d{0,2}\\s+(?:BYP|Byp|Bypass)\\b": 2006,
+                "^US-[1-9]\\d{0,2}\\s+(?:CONN|Conn|Connector)\\b": 2007,
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2065,
+                "^SR-[1-9]\\d{0,2}\\b": 2065,
+                "^NC-[1-9]\\d{0,2}\\b": 2065,
+            },
+            "North Dakota": {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2070,
+                "^SR-[1-9]\\d{0,2}\\b": 2070,
+                "^ND-[1-9]\\d{0,3}\\b": 2070,
+            },
+            Ohio: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,3}\\b": 2181,
+                "^SH-[1-9]\\d{0,2}\\b": 2095,
+                "^SR-[1-9]\\d{0,2}\\b": 2095,
+            },
+            Oklahoma: { "^SH-[1-9]\\d{0,2}\\b": 2097, "^SR-[1-9]\\d{0,2}\\b": 2097 },
+            Oregon: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2099,
+                "^SR-[1-9]\\d{0,2}\\b": 2099,
+                "^OR-[1-9]\\d{0,2}\\b": 2099,
+            },
+            Pennsylvania: {
+                "^US-[1-9]\\d{0,2}\\s+(?:BUS|Bus|Business)\\b": 2005,
+                "^CH-[1-9]\\d{0,2}": 2002,
+                "^CR-[1-9]\\d{0,2}": 2002,
+                "^SH-[1-9]\\d{0,2}": 2101,
+                "^PA-[1-9]\\d{0,2}\\b": 2101,
+                "^Hwy\\s[1-9]\\d{0,2}\\b": 2101,
+                "^SR-[1-9]\\d{0,2}\\s+(?:BUS|Bus|Business)\\b": 2104,
+                "^SR-[1-9]\\d{0,2}(?!\\s*(?:BUS|Bus|Business))\\b": 2101,
+            },
+            "Rhode Island": {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2108,
+                "^SR-[1-9]\\d{0,2}\\b": 2108,
+                "^RI-[1-9]\\d{0,2}\\b": 2108,
+            },
+            "South Carolina": {
+                "^CH-[1-9]\\d{0,2}": 2002,
+                "^CR-[1-9]\\d{0,2}": 2002,
+                "^SH-[1-9]\\d{0,2}": 2109,
+                "^SR-[1-9]\\d{0,2}": 2109,
+                "^SC-[1-9]\\d{0,2}": 2109,
+            },
+            "South Dakota": {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9A-Z]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2114,
+                "^SR-[1-9]\\d{0,2}\\b": 2114,
+                "^SD-[1-9]\\d{0,3}\\b": 2114,
+            },
+            Tennessee: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2115,
+                "^TN-[1-9]\\d{0,2}\\b": 2115,
+                "^SR-[1-9]\\d{0,2}\\b": 2116,
+            },
+            Texas: {
+                "^I-[1-9]\\d{0,2}[A-Z]+\\s": new Set([5, 2206]),
+                "^SH-[1-9]\\d{0,3}": new Set([2117, 2123]),
+                "^[Ss][Pp][Uu][Rr] [1-9]\\d{0,3}\\b": 2126,
+                "\\b[Ll][Oo][Oo][Pp] [1-9]\\d{0,3}\\b": 2122,
+                "^SR-[1-9]\\d{0,3}": 2117,
+                "^FM-[1-9]\\d{0,3}": 2121,
+                "^Beltway [1-9]\\d{0,3}\\b": 2119,
+                "^Sam Houston (Tollway|Tlwy|Parkway|Pkwy)\\b": 2198,
+                "^President George Bush (Turnpike|Tpke|Tpk)\\b": 2123,
+                "^Park (Road|Rd)\\b": 2144,
+                "^Westpark (Tollway|Tlwy)\\b": 2199,
+                "^Fort Bend (Tollway|Tlwy|Parkway|Pkwy)\\b": 2196,
+            },
+            Utah: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2127,
+                "^SR-[1-9]\\d{0,2}\\b": 2127,
+            },
+            Vermont: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2131,
+                "^SR-[1-9]\\d{0,2}\\b": 2131,
+                "^VT-[1-9]\\d{0,2}\\b": 2131,
+            },
+            Virginia: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}]\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2128,
+                "^SR-[1-9]\\d{0,2}\\b": 2128,
+                "^Blue Ridge Pkwy\\b": 2069,
+            },
+            Washington: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2133,
+                "^SR-[1-9]\\d{0,2}(?!\\s*(?:Spur|SPUR|BUS|Bus|Business))\\b": 2133,
+                "^SR-[1-9]\\d{0,2}\\s+(?:Spur|SPUR|BUS|Bus|Business)": 2134,
+                "^FS-[1-9]\\d{0,3}\\b": 2011,
+            },
+            "West Virginia": {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2138,
+                "^SR-[1-9]\\d{0,2}\\b": 2138,
+                "^WV-[1-9]\\d{0,2}\\b": 2138,
+            },
+            Wisconsin: {
+                "^CH-[A-Z]+\\b": 2137,
+                "^CR-[1-9]\\d{0,2}": 2137,
+                "^SH-[1-9]\\d{0,2}": 2135,
+                "^SR-[1-9]\\d{0,2}": 2135,
+                "^WIS-[1-9]\\d{0,2}\\b": 2135,
+                "^WIS SPUR": 2135,
+            },
+            Wyoming: {
+                "^CH-[1-9]\\d{0,2}\\b": 2002,
+                "^CR-[1-9]\\d{0,2}\\b": 2002,
+                "^SH-[1-9]\\d{0,2}\\b": 2143,
+                "^SR-[1-9]\\d{0,2}\\b": 2143,
+                "^WY-[1-9]\\d{0,2}\\b": 2143,
+            },
+        },
+        // Uruguay
+        236: { "": { Ruta: 1111 } },
+        // Réunion
+        262: { "": { "D\\d+[^:]*": 1092, "N\\d+[^:]*": 1072 } },
+        // Guadeloupe
+        590: { "": { "D\\d+[^:]*": 1092, "N\\d+[^:]*": 1072 } },
+        // French Guyana
+        594: { "": { "D\\d+[^:]*": 1092, "N\\d+[^:]*": 1072 } },
+        // Martinique
+        596: { "": { "D\\d+[^:]*": 1092, "N\\d+[^:]*": 1072 } },
+        // Wallis and Futuna
+        681: { "": { "D\\d+[^:]*": 1092, "N\\d+[^:]*": 1072 } },
+        // French Polynesia
+        689: { "": { "D\\d+[^:]*": 1092, "N\\d+[^:]*": 1072 } },
+    };
     const iconsAllowingNoText = new Set([
         2000, // Atlantic City Expy
         2079, // Garden State Parkway

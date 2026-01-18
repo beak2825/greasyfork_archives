@@ -14,7 +14,7 @@
 // @description:ko Twitter/X에서 마지막 읽기 위치를 추적하고 동기화합니다. 수동 및 자동 옵션 포함. 새로운 게시물을 확인하면서 현재 위치를 잃지 않도록 이상적입니다. 트윗 ID를 사용하여 정확한 위치 지정을 하고, 리포스트를 지원합니다。
 // @icon https://x.com/favicon.ico
 // @namespace http://tampermonkey.net/
-// @version 2026.1.14
+// @version 2026.1.18
 // @author Copiis
 // @license MIT
 // @match https://x.com/*
@@ -482,6 +482,41 @@
     const AUTO_DOWNLOAD_KEY = 'autoDownloadEnabled';
     let autoDownloadEnabled = GM_getValue(AUTO_DOWNLOAD_KEY, false);
 
+    async function saveLastReadPost(postData) {
+    if (!postData || !postData.account || !postData.tweetId) {
+        console.warn("⚠️ Ungültige Daten – Speichern abgebrochen", postData);
+        return;
+    }
+
+    const storageKey = STORAGE_KEY(postData.account);
+    const historyKey = `postHistory_${postData.account}`;
+
+    try {
+        // Aktuelle Position speichern
+        GM_setValue(storageKey, JSON.stringify(postData));
+
+        // Historie laden + neuen Eintrag anhängen
+        let history = GM_getValue(historyKey, []);
+        history.push({
+            ...postData,
+            savedAt: new Date().toISOString()
+        });
+
+        // Nur die neuesten 50 behalten
+        if (history.length > 50) {
+            history = history.slice(-50);
+        }
+
+        GM_setValue(historyKey, history);
+
+        console.log(`💾 Position + Historie gespeichert (${history.length}/50 Einträge)`);
+
+    } catch (err) {
+        console.error("❌ Fehler beim Speichern:", err);
+        showPopup("saveError", 6000);
+    }
+}
+
     function toggleAutoDownload() {
         autoDownloadEnabled = !autoDownloadEnabled;
         GM_setValue(AUTO_DOWNLOAD_KEY, autoDownloadEnabled);
@@ -518,122 +553,108 @@
 }
 
     async function loadLastReadPostFromFile() {
-        try {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = ".json";
-            input.style.display = "none";
-            if (!document.body) {
-                console.error("❌ document.body nicht verfügbar.");
-                showPopup("fileDialogError", 5000);
+    try {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.style.display = "none";
+        document.body.appendChild(input);
+
+        input.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                showPopup("fileSelectError", 5000);
+                document.body.removeChild(input);
                 return;
             }
-            document.body.appendChild(input);
-            input.addEventListener("change", async (event) => {
-                const file = event.target.files[0];
-                if (!file) {
-                    console.warn("⚠️ Keine Datei ausgewählt.");
-                    showPopup("fileSelectError", 5000);
-                    document.body.removeChild(input);
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        if (!data || typeof data !== "object" || !data.tweetId || !data.authorHandler) {
-                            console.warn("⚠️ Ungültige oder unvollständige Leseposition in der Datei:", data);
-                            showPopup("invalidPosition", 5000);
-                            document.body.removeChild(input);
-                            return;
-                        }
-                        const account = await getCurrentUserHandle();
-                        data.account = account;
-                        lastReadPost = data;
-                        await saveLastReadPost(data);
-                        console.log(`✅ Leseposition für Account ${account} aus Datei geladen und als neueste gesetzt:`, lastReadPost);
-                        showPopup("fileLoadSuccess", 3000);
-                        updateHighlightedPost();
-                        if (!isScriptActivated) {
-                            isScriptActivated = true;
-                            console.log("🛠️ Skript durch Import aktiviert.");
-                            observeForNewPosts();
-                        }
-                        redirectToHomeAndSearch(true);
-                    } catch (err) {
-                        console.error("❌ Fehler beim Parsen der Datei:", err);
-                        showPopup("fileReadError", 5000);
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    if (!data || !data.current || !data.current.tweetId || !data.current.authorHandler) {
+                        showPopup("invalidPosition", 5000);
                         document.body.removeChild(input);
+                        return;
                     }
-                };
-                reader.readAsText(file);
-            });
-            input.click();
-        } catch (err) {
-            console.error("❌ Fehler beim Öffnen des Datei-Dialogs:", err);
-            showPopup("fileDialogError", 5000);
-        }
+
+                    const account = await getCurrentUserHandle();
+
+                    // Aktuelle Position übernehmen
+                    lastReadPost = {
+                        ...data.current,
+                        account
+                    };
+
+                    // Historie übernehmen (max. 50 Einträge)
+                    const historyKey = `postHistory_${account}`;
+                    let importedHistory = data.history || [];
+                    if (importedHistory.length > 50) {
+                        importedHistory = importedHistory.slice(-50);
+                    }
+
+                    GM_setValue(historyKey, importedHistory);
+                    GM_setValue(STORAGE_KEY(account), JSON.stringify(lastReadPost));
+
+                    showPopup("fileLoadSuccess", 4000);
+
+                    updateHighlightedPost();
+
+                    if (!isScriptActivated) {
+                        isScriptActivated = true;
+                        observeForNewPosts();
+                    }
+
+                    redirectToHomeAndSearch(true);
+
+                } catch (err) {
+                    console.error("❌ JSON Parse Fehler:", err);
+                    showPopup("fileReadError", 5000);
+                } finally {
+                    document.body.removeChild(input);
+                }
+            };
+
+            reader.readAsText(file);
+        });
+
+        input.click();
+
+    } catch (err) {
+        console.error("❌ Datei-Dialog Fehler:", err);
+        showPopup("fileDialogError", 5000);
     }
+}
 
     async function loadLastReadPost(callback) {
-        try {
-            const account = await getCurrentUserHandle();
-            const storageKey = STORAGE_KEY(account);
-            const storedPost = GM_getValue(storageKey, null);
-            if (storedPost) {
-                const parsedPost = JSON.parse(storedPost);
-                if (parsedPost.tweetId && parsedPost.authorHandler && parsedPost.timestamp) {
-                    callback(parsedPost);
-                } else {
-                    console.log(`⏹️ Keine gültige Leseposition für Account ${account} gefunden.`);
-                    callback(null);
-                }
+    try {
+        const account = await getCurrentUserHandle();
+        const storageKey = STORAGE_KEY(account);
+        const historyKey = `postHistory_${account}`;
+        const storedPost = GM_getValue(storageKey, null);
+        const storedHistory = GM_getValue(historyKey, []);
+        if (storedPost) {
+            const parsedPost = JSON.parse(storedPost);
+            if (parsedPost.tweetId && parsedPost.authorHandler && parsedPost.timestamp) {
+                // Neu: Historie laden und bereinigen (älter als 7 Tage entfernen)
+                const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+                const filteredHistory = storedHistory.filter(h => new Date(h.timestamp).getTime() > sevenDaysAgo);
+                GM_setValue(historyKey, filteredHistory);
+                console.log(`📜 Geladene Post-Historie: ${filteredHistory.length} Einträge.`);
+                callback(parsedPost);
             } else {
-                console.log(`⏹️ Keine gespeicherte Leseposition für Account ${account} gefunden.`);
+                console.log(`⏹️ Keine gültige Leseposition für Account ${account} gefunden.`);
                 callback(null);
             }
-        } catch (err) {
-            console.error("❌ Fehler beim Laden der Leseposition:", err);
+        } else {
+            console.log(`⏹️ Keine gespeicherte Leseposition für Account ${account} gefunden.`);
             callback(null);
         }
+    } catch (err) {
+        console.error("❌ Fehler beim Laden der Leseposition:", err);
+        callback(null);
     }
-
-    // Verbesserte saveLastReadPost-Funktion mit erweiterter Retry-Logik und Benachrichtigung
-    async function saveLastReadPost(post) {
-    if (!window.location.href.includes("/home")) {
-        console.log("⏹️ Speicherung übersprungen: Nicht auf der Home-Seite.");
-        return;
-    }
-    if (!post || !post.tweetId || !post.authorHandler || !post.timestamp) {
-        console.log("❌ Ungültige Leseposition, Speicherung abgebrochen:", post);
-        return;
-    }
-    const account = await getCurrentUserHandle();
-    const storageKey = STORAGE_KEY(account);
-    let attempts = 0;
-    const maxAttempts = 5;
-    const retryDelay = 500;
-    // Verbessert: Asynchrone Retry-Logik mit Promise für bessere Fehlerbehandlung
-    return new Promise((resolve, reject) => {
-        function trySave() {
-            try {
-                const postData = JSON.stringify(post);
-                GM_setValue(storageKey, postData);
-                console.log(`💾 Leseposition für Account ${account} erfolgreich gespeichert:`, postData);
-                resolve();
-            } catch (err) {
-                attempts++;
-                console.error(`❌ Fehler beim Speichern (Versuch ${attempts}/${maxAttempts}):`, err);
-                if (attempts < maxAttempts) {
-                    setTimeout(trySave, retryDelay * attempts);
-                } else {
-                    showPopup("saveError", 5000);
-                    reject(err);
-                }
-            }
-        }
-        trySave();
-    });
 }
 
     async function downloadLastReadPost() {
@@ -641,73 +662,70 @@
         console.log("⏹️ Download übersprungen: Nicht auf der Home-Seite.");
         return;
     }
+
     try {
         if (!lastReadPost || !lastReadPost.tweetId || !lastReadPost.authorHandler) {
-            console.warn("⚠️ Keine gültige Leseposition zum Speichern:", lastReadPost);
             showPopup("noValidPosition", 5000);
             return;
         }
+
         const postKey = `${lastReadPost.tweetId}-${lastReadPost.authorHandler}`;
         if (downloadedPosts.has(postKey)) {
-            console.log("⏹️ Leseposition bereits heruntergeladen:", postKey);
             showPopup("alreadyDownloaded", 5000);
             return;
         }
-        if (!currentPost || currentPost.tweetId !== lastReadPost.tweetId || currentPost.authorHandler !== lastReadPost.authorHandler) {
-            console.warn("⚠️ currentPost und lastReadPost nicht synchron, aktualisiere currentPost:", currentPost, lastReadPost);
-            currentPost = { ...lastReadPost };
-        }
-        console.log("🛠️ DEBUG: Starte Download-Prozess für Leseposition:", lastReadPost);
+
         const account = await getCurrentUserHandle();
-        const fileName = `${account}_${lastReadPost.tweetId}-${lastReadPost.authorHandler}.json`;
-        console.log("📄 Generierter Dateiname:", fileName);
-        const fileContent = JSON.stringify(lastReadPost, null, 2);
+        const historyKey = `postHistory_${account}`;
+        const history = GM_getValue(historyKey, []);
+
+        // Nur die neuesten 50 Einträge exportieren
+        const exportHistory = history.slice(-50);
+
+        // ────────────────────────────────────────────────
+        // NEUER DATEINAME – ohne Tweet-ID
+        // ────────────────────────────────────────────────
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0, 10);                    // 2026-01-18
+        const timeStr = now.toISOString().slice(11, 16).replace(':', '');  // 1435
+
+        const postAuthor = lastReadPost.authorHandler || 'unknown';
+
+        const fileName = `${account}_${postAuthor}_${dateStr}_${timeStr}.json`;
+        // ────────────────────────────────────────────────
+
+        const exportData = {
+            account: account,
+            current: { ...lastReadPost },
+            history: exportHistory,
+            exportedAt: now.toISOString(),
+            version: "1.0"
+        };
+
+        const fileContent = JSON.stringify(exportData, null, 2);
         const blob = new Blob([fileContent], { type: "application/json" });
         const url = URL.createObjectURL(blob);
+
         const a = document.createElement("a");
         a.href = url;
         a.download = fileName;
         a.style.display = "none";
         document.body.appendChild(a);
-        console.log("🔗 Download-Element erstellt:", a);
-        try {
-            a.click();
-            console.log(`💾 Leseposition als Datei gespeichert: ${fileName}`);
-            showPopup("downloadSuccess", 10000, { fileName });
-            downloadedPosts.add(postKey);
-            saveDownloadedPosts();
-        } catch (clickErr) {
-            console.error("❌ Fehler beim Auslösen des Downloads:", clickErr);
-            if (!navigator.clipboard) {
-                console.error("❌ Clipboard-API nicht verfügbar.");
-                showPopup("downloadClipboardFailed", 15000);
-                promptManualFallback(lastReadPost);
-                return;
-            }
-            navigator.clipboard.writeText(fileContent).then(() => {
-                console.log("📋 Leseposition in Zwischenablage kopiert.");
-                showPopup("downloadFailed", 15000, { fileName });
-                downloadedPosts.add(postKey);
-                saveDownloadedPosts();
-            }).catch(clipErr => {
-                console.error("❌ Fehler beim Kopieren in die Zwischenablage:", clipErr);
-                showPopup("downloadClipboardFailed", 15000);
-                promptManualFallback(lastReadPost);
-            });
-        }
+        a.click();
+
+        downloadedPosts.add(postKey);
+        saveDownloadedPosts();
+
+        showPopup("downloadSuccess", 8000, { fileName });
+
         setTimeout(() => {
-            try {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                console.log("🧹 Download-Element entfernt und URL freigegeben.");
-            } catch (cleanupErr) {
-                console.error("❌ Fehler beim Aufräumen:", cleanupErr);
-            }
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }, 3000);
+
     } catch (err) {
-        console.error("❌ Fehler beim Speichern der Datei:", err);
-        showPopup("downloadClipboardFailed", 15000);
-        promptManualFallback(lastReadPost);
+        console.error("❌ Download-Fehler:", err);
+        showPopup("downloadFailed", 10000);
     }
 }
 
@@ -1132,7 +1150,7 @@
     let storedData = null;
     const account = await getCurrentUserHandle();
     if (!fromFile) {
-        await loadLastReadPost(async (data) => {
+        await loadLastReadPost(async (data) => { // Neu: loadLastReadPost lädt nun auch Historie
             if (!data) {
                 if (DEBUG) console.log(`❌ Keine Leseposition für Account ${account} gefunden.`);
                 showPopup("searchNoPosition", 5000);
@@ -1228,7 +1246,7 @@
     let scrollCount = 0;
     const search = async () => {
         scrollCount++;
-        if (scrollCount > 150) { // Erhöht auf 150 für längere Suchen
+        if (scrollCount > 150) {
             console.warn("⚠️ Maximale Scroll-Versuche erreicht, starte Fallback.");
             showPopup("tweetIdNotFound", 5000);
             findAndSetClosestPost();
@@ -1256,7 +1274,7 @@
         let posts = getVisiblePosts().map(p => p.element);
         totalLoadedPosts = Array.from(document.querySelectorAll('article')).length;
         if (DEBUG) console.log(`🔍 Prüfe ${posts.length} sichtbare Posts (Gesamt: ${totalLoadedPosts}). Scroll-Versuch: ${stagnantScrollCount + 1}, Zyklusphase: ${scrollCyclePhase}`);
-        if (totalLoadedPosts > 1500) { // Erhöht auf 1500
+        if (totalLoadedPosts > 1500) {
             if (DEBUG) console.log("⚠️ Über 1500 Posts geladen – Suche abgebrochen.");
             showPopup("tweetIdNotFound", 5000);
             findAndSetClosestPost();
@@ -1287,8 +1305,8 @@
             lastScrollHeight = currentScrollHeight;
             let scrollStep = calculateScrollStep();
             window.scrollBy({ top: scrollStep, behavior: "smooth" });
-            await new Promise(resolve => setTimeout(resolve, 300)); // Reduziert von 700 auf 300ms
-            requestAnimationFrame(() => setTimeout(search, 300)); // Reduziert von 500 auf 300ms
+            await new Promise(resolve => setTimeout(resolve, 300));
+            requestAnimationFrame(() => setTimeout(search, 300));
             return;
         }
         posts.forEach(post => io.observe(post));
@@ -1348,7 +1366,6 @@
                 return;
             }
         }
-        // Früherer Einstieg in Slow-Scroll-Modus, wenn Ziel nah ist
         const idDiff = Math.abs(Number(newestLoadedId - targetId));
         if (allLoadedIds.length > 0 && (oldestLoadedId <= targetId && targetId <= newestLoadedId) || idDiff < 1000000000000000n) {
             isSlowScrollMode = true;
@@ -1373,31 +1390,42 @@
             stagnantScrollCount = 0;
         }
         lastScrollHeight = currentScrollHeight;
-        let scrollStep = calculateScrollStep();
+        let scrollStep = calculateScrollStep(); // Neu: Nutzt nun die dynamische Schätzung
         window.scrollBy({ top: scrollStep, behavior: "smooth" });
-        await new Promise(resolve => setTimeout(resolve, 300)); // Reduziert von 700 auf 300ms
-        requestAnimationFrame(() => setTimeout(search, 300)); // Reduziert von 500 auf 300ms
+        await new Promise(resolve => setTimeout(resolve, 300));
+        requestAnimationFrame(() => setTimeout(search, 300));
     };
-    await new Promise(resolve => setTimeout(resolve, 300)); // Reduziert von 500 auf 300ms
+    await new Promise(resolve => setTimeout(resolve, 300));
     search();
 }
 
     function calculateScrollStep() {
-    const baseStep = window.innerHeight * 1.5; // Erhöht auf 1.5x Viewport für schnellere Sprünge
-
+    const baseStep = window.innerHeight * 1.5;
     let step;
     if (isSlowScrollMode) {
-        step = baseStep * 0.5; // Präziser, kleiner Schritt
+        step = baseStep * 0.5;
     } else {
-        step = baseStep * 3;   // Schneller, noch größerer Schritt (von 2x auf 3x)
+        step = baseStep * 3;
     }
-
-    // Richtung anwenden
+    // Neu: Dynamische Anpassung basierend auf Historie-Schätzung
+    const account = getCurrentUserHandle(); // Sync-Aufruf, da es hier schnell gehen muss
+    const historyKey = `postHistory_${account}`;
+    const history = GM_getValue(historyKey, []);
+    if (history.length >= 10) { // Mindestens 10 Einträge für Schätzung
+        const timestamps = history.map(h => new Date(h.timestamp).getTime()).sort((a, b) => a - b);
+        const timeSpan = (timestamps[timestamps.length - 1] - timestamps[0]) / (3600 * 1000); // Stunden
+        const density = history.length / Math.max(timeSpan, 1); // Posts pro Stunde
+        const targetTimeDiff = (Date.now() - new Date(lastReadPost.timestamp).getTime()) / (3600 * 1000); // Stunden zur Zielposition
+        const estimatedPostsToSkip = Math.round(density * targetTimeDiff);
+        const densityFactor = Math.min(estimatedPostsToSkip / 100, 5); // Max. Faktor 5, um Overshooting zu vermeiden
+        step *= densityFactor;
+        if (DEBUG) console.log(`🛠️ Dichte-Schätzung: ${density.toFixed(2)} Posts/Stunde, geschätzte zu überspringende Posts: ${estimatedPostsToSkip}, Faktor: ${densityFactor}`);
+    } else {
+        if (DEBUG) console.log(`🛠️ Keine ausreichende Historie für Dichte-Schätzung.`);
+    }
     if (searchDirection === 'up') {
         step = -step;
     }
-
-    // Zähler für große Scrolls
     if (!isSlowScrollMode) {
         largeScrollCount++;
         if (largeScrollCount >= maxLargeScrolls) {
@@ -1405,7 +1433,6 @@
             if (DEBUG) console.log("🛠️ Max. große Scrolls erreicht → Wechsel zu Slow-Scroll-Mode.");
         }
     }
-
     if (DEBUG) console.log(`🛠️ Scroll-Schritt: ${step}px (Slow: ${isSlowScrollMode}, Richtung: ${searchDirection})`);
     return step;
 }
@@ -1785,13 +1812,45 @@
         return button;
     }
 
-    function showPopup(messageKey, duration = 3000, params = {}) {
+    function showPopup(messageKey, duration = 5000, params = {}) {
     const lang = getUserLanguage();
     const message = getTranslatedMessage(messageKey, lang, params);
+
+    // Automatische, sinnvolle Dauer je nach Art der Meldung
+    let displayDuration = duration;
+    const fadeDuration = 4000;           // einheitlich 4 Sekunden Ausblenden für alle
+
+    // Wichtige Fehler & Aufforderungen zum Handeln → länger sichtbar
+    if (['downloadFailed', 'downloadClipboardFailed', 'saveError',
+         'fileReadError', 'fileDialogError', 'invalidPosition',
+         'fileSelectError'].includes(messageKey)) {
+        displayDuration = 8000;
+    }
+    // Warnungen & etwas ernstere Hinweise
+    else if (['noValidPosition', 'tweetIdNotFound', 'postDeletedFallback',
+              'newPostsDetectionDelayed', 'oldPositionWarning'].includes(messageKey)) {
+        displayDuration = 7000;
+    }
+    // Normale Infos & Statusänderungen
+    else if (['alreadyDownloaded', 'searchNoPosition', 'searchScrollPrompt',
+              'fallbackSearchCancelled', 'redirectToHome',
+              'newPostsDetectionDelayed', 'autoDownloadToggled'].includes(messageKey)) {
+        displayDuration = 6000;
+    }
+    // Kurze positive Rückmeldungen
+    else if (['downloadSuccess', 'fileLoadSuccess'].includes(messageKey)) {
+        displayDuration = 4000;
+    }
+    // Standard-Fallback (wenn nichts passt)
+    else {
+        displayDuration = 5500;
+    }
+
     if (popup) {
         popup.style.opacity = "0";
-        setTimeout(() => popup.remove(), 300);
+        setTimeout(() => popup?.remove(), fadeDuration + 200);
     }
+
     popup = document.createElement("div");
     popup.style.position = "fixed";
     popup.style.top = "20px";
@@ -1806,20 +1865,22 @@
     popup.style.zIndex = "10000";
     popup.style.maxWidth = "500px";
     popup.style.whiteSpace = "pre-wrap";
-    popup.style.transition = "opacity 1s ease";  // Langsames Ein- und Ausfaden für alle Popups
+    popup.style.transition = `opacity ${fadeDuration / 1000}s ease`;
     popup.style.opacity = "0";
     popup.textContent = message;
+
     if (document.body) {
         document.body.appendChild(popup);
-        setTimeout(() => { popup.style.opacity = "1"; }, 100);
+        setTimeout(() => { popup.style.opacity = "1"; }, 120);
+
         setTimeout(() => {
             try {
                 popup.style.opacity = "0";
-                setTimeout(() => popup.remove(), 1000);  // Wartezeit auf 1s erhöht, passend zur Transition
+                setTimeout(() => popup?.remove(), fadeDuration + 200);
             } catch (err) {
                 console.error("❌ Fehler beim Entfernen des Popups:", err);
             }
-        }, duration);
+        }, displayDuration);
     } else {
         console.error("❌ document.body nicht verfügbar für showPopup.");
     }

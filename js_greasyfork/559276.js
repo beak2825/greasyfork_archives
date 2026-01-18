@@ -3,7 +3,7 @@
 // @namespace    https://fanis.dev/userscripts
 // @author       Fanis Hatzidakis
 // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-// @version      1.3.1
+// @version      1.4.0
 // @description  Summarize web articles via OpenAI API. Modular architecture with configurable selectors and inspection mode.
 // @match        *://*/*
 // @exclude      about:*
@@ -40,7 +40,6 @@
 
     const CFG = {
         model: 'gpt-5-nano',
-        temperature: 0.2,
         DEBUG: false,
     };
 
@@ -127,13 +126,15 @@
         summary_small: 'You will receive INPUT as article text. Create a concise summary at approximately 20% of the original length while staying in the SAME language as input. Focus on the most important points and key facts. CRITICAL: Do NOT change facts, numbers, names, or core meaning. Preserve important quotes, statistics, and proper nouns exactly as they appear. Condense the content aggressively to achieve the 20% length target while maintaining readability. Return ONLY the summary text without any formatting, code blocks, or JSON.'
     };
 
-    // Simplification style levels (controls how aggressively language is simplified)
-    const SIMPLIFICATION_LEVELS = {
-        'Conservative': 0.1,
-        'Balanced': 0.2,
-        'Aggressive': 0.4
+    // Simplification style levels
+    const SIMPLIFICATION_LEVELS = ['Conservative', 'Balanced', 'Aggressive'];
+
+    // Style instructions appended to prompts
+    const STYLE_INSTRUCTIONS = {
+        'Conservative': ' Minimize rephrasing. Preserve original wording and sentence structure where possible.',
+        'Balanced': '',
+        'Aggressive': ' Maximize simplification. Use simpler vocabulary and shorter sentences.'
     };
-    const SIMPLIFICATION_ORDER = ['Conservative', 'Balanced', 'Aggressive'];
 
     // Default article container selectors (ordered by specificity)
     const DEFAULT_SELECTORS = [
@@ -177,6 +178,12 @@
     // Cache settings
     const CACHE_LIMIT = 50;
     const CACHE_TRIM_TO = 30;
+
+    // Max output tokens per summary mode
+    const MAX_OUTPUT_TOKENS = {
+        large: 4000,
+        small: 2000
+    };
 
     /**
      * Utility functions for Summarize The Web
@@ -699,7 +706,7 @@
     /**
      * Call OpenAI API to digest text
      */
-    async function digestText(storage, text, mode, prompt, temperature, cacheGet, cacheSet, openKeyDialog, openInfo) {
+    async function digestText(storage, text, mode, prompt, styleLevel, cacheGet, cacheSet, openKeyDialog, openInfo) {
         const KEY = await storage.get(STORAGE_KEYS.OPENAI_KEY, '');
         if (!KEY) {
             openKeyDialog('OpenAI API key missing.');
@@ -718,13 +725,21 @@
         // Get the actual API model name (not the UI identifier)
         const apiModelName = MODEL_OPTIONS[CFG.model]?.apiModel || CFG.model;
 
+        // Append style instructions to prompt
+        const styleInstruction = STYLE_INSTRUCTIONS[styleLevel] || '';
+        const fullPrompt = prompt + styleInstruction;
+
         const requestBody = {
             model: apiModelName,
-            temperature: temperature,
-            max_output_tokens: mode.includes('small') ? 2000 : 4000,
-            instructions: prompt,
+            max_output_tokens: mode.includes('small') ? MAX_OUTPUT_TOKENS.small : MAX_OUTPUT_TOKENS.large,
+            instructions: fullPrompt,
             input: safeInput
         };
+
+        // GPT-5 models are reasoning models - minimize reasoning for summarization
+        if (apiModelName.startsWith('gpt-5')) {
+            requestBody.reasoning = { effort: 'minimal' };
+        }
 
         // Add service_tier for priority models
         if (MODEL_OPTIONS[CFG.model]?.priority) {
@@ -735,13 +750,30 @@
 
         const resText = await xhrPost('https://api.openai.com/v1/responses', body, apiHeaders(KEY));
         const payload = JSON.parse(resText);
+        log('API response payload:', JSON.stringify(payload, null, 2));
 
         if (payload.usage) {
             updateApiTokens(storage, 'digest', payload.usage);
         }
 
+        // Check for incomplete response
+        if (payload.status === 'incomplete') {
+            const reason = payload.incomplete_details?.reason || 'unknown';
+            let errorMsg = 'API response incomplete';
+            if (reason === 'max_output_tokens') {
+                const reasoningTokens = payload.usage?.output_tokens_details?.reasoning_tokens || 0;
+                if (reasoningTokens > 0) {
+                    errorMsg = `Model used all tokens on reasoning (${reasoningTokens} tokens). Try a different model or increase max_output_tokens in config.js`;
+                } else {
+                    errorMsg = 'Response exceeded max_output_tokens limit. Try selecting less text or increase the limit in config.js';
+                }
+            }
+            throw Object.assign(new Error(errorMsg), { status: 400, isIncomplete: true });
+        }
+
         const outStr = extractOutputText(payload);
-        if (!outStr) throw Object.assign(new Error('No output from API'), { status: 400 });
+        log('Extracted output:', outStr ? outStr.substring(0, 100) + '...' : 'null');
+        if (!outStr) throw Object.assign(new Error('No output from API. The model returned an empty response.'), { status: 400 });
 
         // Strip markdown code fences if present
         const cleaned = outStr.replace(/^```(?:json)?\s*|\s*```$/g, '').trim();
@@ -769,10 +801,12 @@
      * Handle API errors with friendly messages
      */
     function friendlyApiError(err, openKeyDialog, openInfo) {
+        console.log('API Error details:', err, 'Body:', err.body);
         const s = err?.status || 0;
         if (s === 401) { openKeyDialog('Unauthorized (401). Please enter a valid OpenAI key.'); return; }
         if (s === 429) { openInfo('Rate limited by API (429). Try again in a minute.'); return; }
-        if (s === 400) { openInfo('Bad request (400). The API could not parse the text. Try selecting less text.'); return; }
+        if (err.isIncomplete) { openInfo(err.message); return; }
+        if (s === 400) { openInfo(err.message || 'Bad request (400). The API could not parse the text. Try selecting less text.'); return; }
         openInfo(`Unknown error${s ? ' (' + s + ')' : ''}. Check your network or try again.`);
     }
 
@@ -1192,7 +1226,7 @@
         const wrap = document.createElement('div');
         wrap.className = 'wrap';
 
-        const optionsHtml = SIMPLIFICATION_ORDER.map(level => `
+        const optionsHtml = SIMPLIFICATION_LEVELS.map(level => `
         <div class="option ${level === currentLevel ? 'selected' : ''}" data-level="${level}">
             <div class="option-title">${level}</div>
             <div class="option-desc">${descriptions[level]}</div>
@@ -1230,7 +1264,7 @@
         const close = () => host.remove();
 
         btnSave.addEventListener('click', async () => {
-            if (SIMPLIFICATION_LEVELS[selectedLevel] === undefined) return;
+            if (!SIMPLIFICATION_LEVELS.includes(selectedLevel)) return;
             await setSimplification(selectedLevel);
             btnSave.textContent = 'Saved!';
             btnSave.style.background = '#34a853';
@@ -2841,10 +2875,6 @@
         const sizeLabel = mode.includes('large') ? 'Large' : 'Small';
         const isSelectedText = !container;
 
-        const footerButtons = isSelectedText
-            ? `<button class="digest-summary-close-btn">Close</button>`
-            : `<button class="digest-summary-restore">Restore Original Article</button>`;
-
         summaryOverlay.innerHTML = `
         <div class="digest-summary-container">
             <div class="digest-summary-header">
@@ -2856,7 +2886,7 @@
             </div>
             <div class="digest-summary-footer">
                 <div class="digest-summary-footer-text">Summarize The Web</div>
-                ${footerButtons}
+                <button class="digest-summary-close-btn">Close</button>
             </div>
         </div>
     `;
@@ -2865,7 +2895,6 @@
 
         const closeBtn = summaryOverlay.querySelector('.digest-summary-close');
         const closeBtnFooter = summaryOverlay.querySelector('.digest-summary-close-btn');
-        const restoreBtn = summaryOverlay.querySelector('.digest-summary-restore');
 
         const closeHandler = () => {
             removeSummaryOverlay();
@@ -2877,7 +2906,7 @@
             closeBtnFooter.addEventListener('click', removeSummaryOverlay);
         } else {
             closeBtn.addEventListener('click', closeHandler);
-            restoreBtn.addEventListener('click', closeHandler);
+            closeBtnFooter.addEventListener('click', closeHandler);
         }
 
         summaryOverlay.addEventListener('click', (e) => {
@@ -3023,11 +3052,12 @@
         let SIMPLIFICATION_LEVEL = 'Balanced';
         try {
             const v = await storage.get(STORAGE_KEYS.SIMPLIFICATION_STRENGTH, '');
-            if (v && SIMPLIFICATION_LEVELS[v] !== undefined) {
+            log('Loaded simplification style from storage:', v, 'valid:', SIMPLIFICATION_LEVELS.includes(v));
+            if (v && SIMPLIFICATION_LEVELS.includes(v)) {
                 SIMPLIFICATION_LEVEL = v;
-                CFG.temperature = SIMPLIFICATION_LEVELS[v];
             }
         } catch {}
+        log('Using simplification level:', SIMPLIFICATION_LEVEL);
 
         // Overlay state
         let OVERLAY_COLLAPSED = { value: false };
@@ -3129,7 +3159,7 @@
                     text,
                     mode,
                     prompt,
-                    CFG.temperature,
+                    SIMPLIFICATION_LEVEL,
                     (t, m) => cache.get(t, m),
                     async (t, m, r) => await cache.set(t, m, r),
                     (msg) => openKeyDialog(storage, msg, apiKeyDialogShown),
@@ -3168,11 +3198,11 @@
 
         // Settings functions
         async function setSimplification(level) {
-            if (SIMPLIFICATION_LEVELS[level] === undefined) return;
+            if (!SIMPLIFICATION_LEVELS.includes(level)) return;
             SIMPLIFICATION_LEVEL = level;
-            CFG.temperature = SIMPLIFICATION_LEVELS[level];
             await storage.set(STORAGE_KEYS.SIMPLIFICATION_STRENGTH, level);
             await cache.clear();
+            location.reload();
         }
 
         async function setModel(modelId) {
